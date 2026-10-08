@@ -398,16 +398,28 @@ def test_json_flag_keeps_read_bytes_identical(mini_repo):
     assert flagged.stdout == plain.stdout
 
 
-def test_capability_backed_commands_take_no_added_json_flag(repo_root):
-    """F11 never extends a command that backs a command capability.
+def test_capability_backed_commands_take_only_the_approved_noop_json_flag(
+        repo_root):
+    """Backed commands take no functional --json (F11, as amended by S14).
 
     ``capture`` and ``garden-seed-create`` already shipped a functional
-    --json before this round; every other backed parser takes none.
+    --json before this round. SPEC 9.4 (b) extends every other backed
+    JSON-by-default command with the approved no-op flag instead: a ``json``
+    action is allowed only with a PLAN D16 ``cli.<subcommand>`` approval,
+    and only in the no-op shape (store_true, default False). Payload purity
+    stays guarded by test_no_capability_schema_gains_a_json_property.
     """
     import los
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payloads import subparsers
 
+    approvals = yaml.safe_load(
+        (repo_root / "tests/architecture/surface-approvals.yaml")
+        .read_text(encoding="utf-8"))
+    allowed = {entry["key"][len("cli."):] for entry in approvals["approvals"]
+               if entry.get("plan_ref") == "PLAN D16"
+               and entry["key"].startswith("cli.")}
+    assert allowed, "no D16 approvals: the (b) set would be vacuous"
     parsers = subparsers(los.build_parser())
     grandfathered = {"capture", "garden-seed-create"}
     for definition in command_definitions(repo_root).values():
@@ -415,8 +427,15 @@ def test_capability_backed_commands_take_no_added_json_flag(repo_root):
         if command in grandfathered:
             continue
         parser = parsers[command]
-        assert not any(action.dest == "json" for action in parser._actions), \
-            command
+        flagged = [action for action in parser._actions
+                   if action.dest == "json"]
+        assert len(flagged) <= 1, command
+        if not flagged:
+            continue
+        assert command in allowed, f"{command}: unapproved --json"
+        action = flagged[0]
+        assert type(action).__name__ == "_StoreTrueAction", command
+        assert action.default is False and action.const is True, command
 
 
 def test_no_capability_schema_gains_a_json_property(repo_root):

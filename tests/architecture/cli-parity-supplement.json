@@ -90,6 +90,7 @@
      ],
      "condition_not_met": [],
      "supersedes": null,
+     "json": false,
      "func": "learning_os.commands.observation.cmd_observe"
     },
     "stdout": ""
@@ -163,6 +164,7 @@
      "provider": "manual-bundle",
      "expected_snapshot": "<manifest snapshot id>",
      "request_id": null,
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_prepare"
     },
     "stdout": ""
@@ -189,6 +191,7 @@
      "lock_timeout": null,
      "command": "ai-action-import-delivery",
      "path": "/path/to/approved-delivery",
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_import_delivery"
     },
     "stdout": ""
@@ -248,6 +251,7 @@
      "name": "ai-action.delivery.apply",
      "payload_file": "/path/to/approved-apply-v2.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -341,6 +345,7 @@
      "name": "stage.progress.update",
      "payload_file": "ENVELOPE.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -387,6 +392,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -622,6 +628,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_unit_plan_revise",
      "_parser_factory": "los.build_parser"
     },
@@ -671,6 +678,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_unit_plan_revise",
      "_parser_factory": "los.build_parser"
     },
@@ -717,6 +725,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -755,8 +764,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT]\n                            unit_id\nlos unit-plan-revise: error: argument --apply-reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --apply-reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -788,6 +797,7 @@
      "name": "module.plan.import",
      "payload_file": "envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -821,6 +831,7 @@
      "name": "note.analysis.save_batch",
      "payload_file": "<out>/envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -885,6 +896,7 @@
      "name": "capture.create",
      "payload_file": "envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -979,6 +991,7 @@
      "name": "<name>",
      "payload_file": "envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -1301,6 +1314,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -1347,6 +1361,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -1391,6 +1406,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -1424,6 +1440,7 @@
      "name": "module.plan.import",
      "payload_file": "operations/gateway-requests/AML-source-rigor-P3-envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -1526,6 +1543,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -1660,8 +1678,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES]\n                   requirement\nlos observe: error: unrecognized arguments: --conditions unfamiliar-example\n",
-     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY"
+     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: unrecognized arguments: --conditions unfamiliar-example\n"
     },
     "stdout": ""
    }
@@ -1745,8 +1763,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES]\n                   requirement\nlos observe: error: the following arguments are required: --result\n",
-     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY"
+     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: --result\n"
     },
     "stdout": ""
    }
@@ -1858,6 +1876,7 @@
      "name": "learner.observation.append",
      "payload_file": "envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -1897,6 +1916,7 @@
      "check": false,
      "reviewed_sha256": null,
      "session_id": null,
+     "json": false,
      "func": "learning_os.commands.goal.cmd_goal"
     },
     "stdout": ""
@@ -1970,8 +1990,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES]\n                   requirement\nlos observe: error: the following arguments are required: requirement, --activity, --result\n",
-     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY"
+     "first_line": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY",
+     "stderr": "usage: los observe [-h] [--workspace WORKSPACE] --activity ACTIVITY\n                   --result {correct,incorrect,partial,abandoned}\n                   [--assistance ASSISTANCE] [--tags TAGS] [--note NOTE]\n                   [--condition CONDITION]\n                   [--condition-not-met CONDITION_NOT_MET]\n                   [--supersedes SUPERSEDES] [--json]\n                   requirement\nlos observe: error: the following arguments are required: requirement, --activity, --result\n"
     },
     "stdout": ""
    }
@@ -2073,6 +2093,7 @@
      "source_ref": "X",
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.abilities.cmd_ability_candidate_append"
     },
     "stdout": ""
@@ -2119,6 +2140,7 @@
      "source_ref": "X",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.abilities.cmd_ability_candidate_append"
     },
     "stdout": ""
@@ -2285,6 +2307,7 @@
      "supersedes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.abilities.cmd_ability_observation_append"
     },
     "stdout": ""
@@ -2340,6 +2363,7 @@
      "supersedes": "Y2",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.abilities.cmd_ability_observation_append"
     },
     "stdout": ""
@@ -2388,6 +2412,7 @@
      "reason": "X",
      "material_uri": "X",
      "expected_snapshot": null,
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_append_slices"
     },
     "stdout": ""
@@ -2434,6 +2459,7 @@
      "reason": "X",
      "material_uri": "Y2",
      "expected_snapshot": null,
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_append_slices"
     },
     "stdout": ""
@@ -2471,6 +2497,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_apply_delivery"
     },
     "stdout": ""
@@ -2506,6 +2533,7 @@
      "artifact_sha256": {},
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_apply_delivery"
     },
     "stdout": ""
@@ -2543,6 +2571,7 @@
      "provider": "X",
      "expected_snapshot": "X",
      "request_id": null,
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_prepare"
     },
     "stdout": ""
@@ -2580,6 +2609,7 @@
      "provider": "Y2",
      "expected_snapshot": null,
      "request_id": null,
+     "json": false,
      "func": "learning_os.commands.ai.cmd_ai_action_prepare"
     },
     "stdout": ""
@@ -2669,6 +2699,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.atlas.cmd_atlas_question_save"
     },
     "stdout": ""
@@ -2699,6 +2730,7 @@
      "question": {},
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.atlas.cmd_atlas_question_save"
     },
     "stdout": ""
@@ -3013,8 +3045,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -3048,6 +3080,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.collection_entry.cmd_collection_entry_revise"
     },
     "stdout": ""
@@ -3071,8 +3104,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los collection-entry-revise [-h] (--file FILE | --record RECORD)\n                                   [--check]\n                                   [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                                   [--approve]\n                                   [--expected-snapshot EXPECTED_SNAPSHOT]\n                                   [--expected-revision EXPECTED_REVISION]\n                                   [--json]\nlos collection-entry-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -3104,6 +3137,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.atlas.cmd_concept_relations_change"
     },
     "stdout": ""
@@ -3134,6 +3168,7 @@
      "change": {},
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.atlas.cmd_concept_relations_change"
     },
     "stdout": ""
@@ -3167,6 +3202,7 @@
      "check": true,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.workspace.cmd_coordination_section_revise"
     },
     "stdout": ""
@@ -3201,6 +3237,7 @@
      "check": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.workspace.cmd_coordination_section_revise"
     },
     "stdout": ""
@@ -3240,6 +3277,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.detour.cmd_detour_create"
     },
     "stdout": ""
@@ -3277,6 +3315,7 @@
      "classification": "required-now",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.detour.cmd_detour_create"
     },
     "stdout": ""
@@ -3309,6 +3348,7 @@
      "resolution": "X",
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.detour.cmd_detour_resolve"
     },
     "stdout": ""
@@ -3341,6 +3381,7 @@
      "resolution": "Y2",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.detour.cmd_detour_resolve"
     },
     "stdout": ""
@@ -3427,8 +3468,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                goal_id [goal_id ...]\nlos goal: error: argument --defer: not allowed with argument --reject\n",
-     "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]"
+     "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]",
+     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json]\n                goal_id [goal_id ...]\nlos goal: error: argument --defer: not allowed with argument --reject\n"
     },
     "stdout": ""
    }
@@ -3466,6 +3507,7 @@
      "check": false,
      "reviewed_sha256": null,
      "session_id": null,
+     "json": false,
      "func": "learning_os.commands.goal.cmd_goal"
     },
     "stdout": ""
@@ -3489,8 +3531,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                goal_id [goal_id ...]\nlos goal: error: argument --reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]"
+     "first_line": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]",
+     "stderr": "usage: los goal [-h] (--reject | --defer | --close) [--note NOTE]\n                [--revisit-on REVISIT_ON] [--check]\n                [--reviewed-sha256 REVIEWED_SHA256] [--session-id SESSION_ID]\n                [--json]\n                goal_id [goal_id ...]\nlos goal: error: argument --reviewed-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -3613,6 +3655,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.inbox.cmd_inbox_resolve"
     },
     "stdout": ""
@@ -3650,6 +3693,7 @@
      ],
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.inbox.cmd_inbox_resolve"
     },
     "stdout": ""
@@ -3755,8 +3799,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -3788,6 +3832,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_legacy_archive_lock_publish"
     },
     "stdout": ""
@@ -3811,8 +3856,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los legacy-archive-lock-publish [-h] (--file FILE | --record RECORD)\n                                       [--approve]\n                                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                                       [--expected-revision EXPECTED_REVISION]\n                                       [--json]\nlos legacy-archive-lock-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -3845,6 +3890,7 @@
      "expected_snapshot": null,
      "expected_revision": [],
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.lineage_restamp.cmd_lineage_restamp",
      "_parser_factory": "los.build_parser"
     },
@@ -3877,6 +3923,7 @@
      "expected_snapshot": null,
      "expected_revision": [],
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.lineage_restamp.cmd_lineage_restamp",
      "_parser_factory": "los.build_parser"
     },
@@ -3899,8 +3946,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\n                           [--claims-sha256 CLAIMS_SHA256] [--check]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION]\n                           [--review-report REVIEW_REPORT]\nlos lineage-restamp: error: argument --claims-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]"
+     "first_line": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]",
+     "stderr": "usage: los lineage-restamp [-h] [--claim-ids CLAIM_ID [CLAIM_ID ...]]\n                           [--claims-sha256 CLAIMS_SHA256] [--check]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION]\n                           [--review-report REVIEW_REPORT] [--json]\nlos lineage-restamp: error: argument --claims-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -3925,8 +3972,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |"
+     "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
+     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -3958,6 +4005,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_masters_planning_catalog_update"
     },
     "stdout": ""
@@ -3981,8 +4029,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |"
+     "first_line": "usage: los masters-planning-catalog-update [-h] (--file FILE |",
+     "stderr": "usage: los masters-planning-catalog-update [-h] (--file FILE |\n                                           --record RECORD) [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\nlos masters-planning-catalog-update: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4008,8 +4056,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |"
+     "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
+     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4043,6 +4091,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_masters_planning_comparison_publish"
     },
     "stdout": ""
@@ -4067,8 +4116,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |"
+     "first_line": "usage: los masters-planning-comparison-publish [-h] (--file FILE |",
+     "stderr": "usage: los masters-planning-comparison-publish [-h] (--file FILE |\n                                               --record RECORD) [--approve]\n                                               [--expected-snapshot EXPECTED_SNAPSHOT]\n                                               [--expected-revision EXPECTED_REVISION]\n                                               [--json]\n                                               candidate_module_id\nlos masters-planning-comparison-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4319,6 +4368,7 @@
      "notes": "X",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_attempt"
     },
     "stdout": ""
@@ -4359,6 +4409,7 @@
      "notes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_attempt"
     },
     "stdout": ""
@@ -4387,8 +4438,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\n                          --result {registered,withdrawn,sat,passed,failed}\n                          [--grade GRADE] [--notes NOTES]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION]\n                          module_id\nlos module-attempt: error: argument --grade: invalid float value: 'notafloat'\n",
-     "first_line": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE"
+     "first_line": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE",
+     "stderr": "usage: los module-attempt [-h] --termin {1,2,3} --date DATE\n                          --result {registered,withdrawn,sat,passed,failed}\n                          [--grade GRADE] [--notes NOTES]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          module_id\nlos module-attempt: error: argument --grade: invalid float value: 'notafloat'\n"
     },
     "stdout": ""
    }
@@ -4473,6 +4524,7 @@
      "plan_sha256": "sha256:abababababababababababababababababababababababababababababababab",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.material.cmd_module_materials_compact"
     },
     "stdout": ""
@@ -4504,6 +4556,7 @@
      "plan_sha256": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.material.cmd_module_materials_compact"
     },
     "stdout": ""
@@ -4526,8 +4579,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    module_id\nlos module-materials-compact: error: argument --plan-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]"
+     "first_line": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]",
+     "stderr": "usage: los module-materials-compact [-h] [--check] [--plan-sha256 PLAN_SHA256]\n                                    [--expected-snapshot EXPECTED_SNAPSHOT]\n                                    [--expected-revision EXPECTED_REVISION]\n                                    [--json]\n                                    module_id\nlos module-materials-compact: error: argument --plan-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -4553,8 +4606,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n",
-     "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)"
+     "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -4594,6 +4647,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -4619,8 +4673,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT]\n                              module_id\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)"
+     "first_line": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)",
+     "stderr": "usage: los module-plan-import [-h] (--file FILE | --promotion PROMOTION)\n                              [--file-sha256 FILE_SHA256]\n                              [--package-sha256 PACKAGE_SHA256] [--approve]\n                              [--check] [--staged-basis UNIT_ID]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\n                              [--apply-reviewed-sha256 SHA256]\n                              [--review-report REVIEW_REPORT] [--json]\n                              module_id\nlos module-plan-import: error: argument --promotion: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -4657,6 +4711,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_sitting"
     },
     "stdout": ""
@@ -4692,6 +4747,7 @@
      "withdrawal_deadline": "X",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_sitting"
     },
     "stdout": ""
@@ -4726,6 +4782,7 @@
      "body_file_sha256": "sha256:abababababababababababababababababababababababababababababababab",
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.analysis.cmd_note_analysis_save"
     },
     "stdout": ""
@@ -4760,6 +4817,7 @@
      "body_file_sha256": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.analysis.cmd_note_analysis_save"
     },
     "stdout": ""
@@ -4785,8 +4843,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\n                              [--body-file-sha256 BODY_FILE_SHA256]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION]\nlos note-analysis-save: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE"
+     "first_line": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE",
+     "stderr": "usage: los note-analysis-save [-h] --analysis ANALYSIS --body-file BODY_FILE\n                              [--body-file-sha256 BODY_FILE_SHA256]\n                              [--expected-snapshot EXPECTED_SNAPSHOT]\n                              [--expected-revision EXPECTED_REVISION] [--json]\nlos note-analysis-save: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -4818,6 +4876,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.analysis.cmd_note_analysis_save_batch"
     },
     "stdout": ""
@@ -4848,6 +4907,7 @@
      "bundle": {},
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.analysis.cmd_note_analysis_save_batch"
     },
     "stdout": ""
@@ -4882,6 +4942,7 @@
      "body_file_sha256": "sha256:abababababababababababababababababababababababababababababababab",
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_create"
     },
     "stdout": ""
@@ -4916,6 +4977,7 @@
      "body_file_sha256": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_create"
     },
     "stdout": ""
@@ -4941,8 +5003,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\n                       [--body-file-sha256 BODY_FILE_SHA256]\n                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION]\nlos note-create: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE"
+     "first_line": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE",
+     "stderr": "usage: los note-create [-h] --note NOTE --body-file BODY_FILE\n                       [--body-file-sha256 BODY_FILE_SHA256]\n                       [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\nlos note-create: error: argument --body-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -4977,6 +5039,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_evidence"
     },
     "stdout": ""
@@ -5010,6 +5073,7 @@
      "ref": "X",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_evidence"
     },
     "stdout": ""
@@ -5127,6 +5191,7 @@
      "approve": true,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_revise"
     },
     "stdout": ""
@@ -5161,6 +5226,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.note.cmd_note_revise"
     },
     "stdout": ""
@@ -5185,8 +5251,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION]\n                       note_id\nlos note-revise: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]"
+     "first_line": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]",
+     "stderr": "usage: los note-revise [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       note_id\nlos note-revise: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5231,6 +5297,7 @@
      "supersedes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.observation.cmd_observation_append"
     },
     "stdout": ""
@@ -5276,6 +5343,7 @@
      "supersedes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.observation.cmd_observation_append"
     },
     "stdout": ""
@@ -5316,6 +5384,7 @@
      "condition": [],
      "condition_not_met": [],
      "supersedes": null,
+     "json": false,
      "func": "learning_os.commands.observation.cmd_observe"
     },
     "stdout": ""
@@ -5356,6 +5425,7 @@
      "condition": [],
      "condition_not_met": [],
      "supersedes": null,
+     "json": false,
      "func": "learning_os.commands.observation.cmd_observe"
     },
     "stdout": ""
@@ -5469,6 +5539,7 @@
      "label": "X",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_attach"
     },
     "stdout": ""
@@ -5505,6 +5576,7 @@
      "label": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_attach"
     },
     "stdout": ""
@@ -5530,8 +5602,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--label LABEL] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION]\n                       path_id stage_id\nlos path-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]"
+     "first_line": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
+     "stderr": "usage: los path-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                       [--label LABEL] [--expected-snapshot EXPECTED_SNAPSHOT]\n                       [--expected-revision EXPECTED_REVISION] [--json]\n                       path_id stage_id\nlos path-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -5563,6 +5635,7 @@
      "replace": true,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_note"
     },
     "stdout": ""
@@ -5596,6 +5669,7 @@
      "replace": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_note"
     },
     "stdout": ""
@@ -5631,6 +5705,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_progress"
     },
     "stdout": ""
@@ -5664,6 +5739,7 @@
      "status": "active",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.path.cmd_path_progress"
     },
     "stdout": ""
@@ -5826,8 +5902,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION]\nlos project-create: error: argument --project: not allowed with argument --file\n",
-     "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)"
+     "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
+     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -5859,6 +5935,7 @@
      "file_sha256": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.project.cmd_project_create"
     },
     "stdout": ""
@@ -5882,8 +5959,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION]\nlos project-create: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)"
+     "first_line": "usage: los project-create [-h] (--file FILE | --project PROJECT)",
+     "stderr": "usage: los project-create [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\nlos project-create: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -5962,8 +6039,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION]\n                          project_id\nlos project-update: error: argument --project: not allowed with argument --file\n",
-     "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)"
+     "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
+     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -5997,6 +6074,7 @@
      "file_sha256": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.project.cmd_project_update"
     },
     "stdout": ""
@@ -6021,8 +6099,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION]\n                          project_id\nlos project-update: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)"
+     "first_line": "usage: los project-update [-h] (--file FILE | --project PROJECT)",
+     "stderr": "usage: los project-update [-h] (--file FILE | --project PROJECT)\n                          [--file-sha256 FILE_SHA256]\n                          [--expected-snapshot EXPECTED_SNAPSHOT]\n                          [--expected-revision EXPECTED_REVISION] [--json]\n                          project_id\nlos project-update: error: argument --project: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6110,6 +6188,7 @@
      "check": true,
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.material.cmd_route_patch"
     },
     "stdout": ""
@@ -6145,6 +6224,7 @@
      "check": false,
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.material.cmd_route_patch"
     },
     "stdout": ""
@@ -6391,6 +6471,7 @@
      "session_id": null,
      "channel": null,
      "include_stale": false,
+     "json": false,
      "func": "learning_os.commands.review.cmd_session_end"
     },
     "stdout": ""
@@ -6422,6 +6503,7 @@
      "session_id": null,
      "channel": null,
      "include_stale": false,
+     "json": false,
      "func": "learning_os.commands.review.cmd_session_end"
     },
     "stdout": ""
@@ -6456,6 +6538,7 @@
      "approve": true,
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.review.cmd_shelving_apply"
     },
     "stdout": ""
@@ -6491,6 +6574,7 @@
      "approve": false,
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.review.cmd_shelving_apply"
     },
     "stdout": ""
@@ -6523,6 +6607,7 @@
      "summary": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.review.cmd_shelving_prepare"
     },
     "stdout": ""
@@ -6555,6 +6640,7 @@
      "summary": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.review.cmd_shelving_prepare"
     },
     "stdout": ""
@@ -6577,8 +6663,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\n                            [--items-file-sha256 ITEMS_FILE_SHA256]\n                            [--summary SUMMARY]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            unit_id\nlos shelving-prepare: error: argument --items-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]"
+     "first_line": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]",
+     "stderr": "usage: los shelving-prepare [-h] [--items-file ITEMS_FILE]\n                            [--items-file-sha256 ITEMS_FILE_SHA256]\n                            [--summary SUMMARY]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION] [--json]\n                            unit_id\nlos shelving-prepare: error: argument --items-file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -6615,6 +6701,7 @@
      "resource_id": "X",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source.cmd_source_feedback"
     },
     "stdout": ""
@@ -6652,6 +6739,7 @@
      "resource_id": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source.cmd_source_feedback"
     },
     "stdout": ""
@@ -6677,8 +6765,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION]\nlos source-intake: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]"
+     "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
+     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -6712,6 +6800,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source_catalog.cmd_source_intake_record"
     },
     "stdout": ""
@@ -6735,8 +6824,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION]\nlos source-intake: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]"
+     "first_line": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]",
+     "stderr": "usage: los source-intake [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-intake: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6761,8 +6850,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION]\nlos source-revise: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]"
+     "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
+     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -6796,6 +6885,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source_catalog.cmd_source_record_revise"
     },
     "stdout": ""
@@ -6819,8 +6909,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION]\nlos source-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]"
+     "first_line": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]",
+     "stderr": "usage: los source-revise [-h] (--file FILE | --record RECORD) [--check]\n                         [--expected-diff-sha256 EXPECTED_DIFF_SHA256]\n                         [--approve] [--expected-snapshot EXPECTED_SNAPSHOT]\n                         [--expected-revision EXPECTED_REVISION] [--json]\nlos source-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -6856,6 +6946,7 @@
      "label": "X",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_attach"
     },
     "stdout": ""
@@ -6892,6 +6983,7 @@
      "label": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_attach"
     },
     "stdout": ""
@@ -6917,8 +7009,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                        [--label LABEL]\n                        [--expected-snapshot EXPECTED_SNAPSHOT]\n                        [--expected-revision EXPECTED_REVISION]\n                        unit_id stage_id\nlos stage-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]"
+     "first_line": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]",
+     "stderr": "usage: los stage-attach [-h] --file FILE [--file-sha256 FILE_SHA256]\n                        [--label LABEL]\n                        [--expected-snapshot EXPECTED_SNAPSHOT]\n                        [--expected-revision EXPECTED_REVISION] [--json]\n                        unit_id stage_id\nlos stage-attach: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -6950,6 +7042,7 @@
      "replace": true,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_note"
     },
     "stdout": ""
@@ -6983,6 +7076,7 @@
      "replace": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_note"
     },
     "stdout": ""
@@ -7018,6 +7112,7 @@
      "progress_next": "X",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_progress"
     },
     "stdout": ""
@@ -7053,6 +7148,7 @@
      "progress_next": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage.cmd_stage_progress"
     },
     "stdout": ""
@@ -7099,6 +7195,7 @@
      "supersedes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage_result.cmd_stage_result"
     },
     "stdout": ""
@@ -7145,6 +7242,7 @@
      "supersedes": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.stage_result.cmd_stage_result"
     },
     "stdout": ""
@@ -7295,6 +7393,7 @@
      "retire_reason": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_map_import"
     },
     "stdout": ""
@@ -7334,6 +7433,7 @@
      "retire_reason": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_map_import"
     },
     "stdout": ""
@@ -7358,8 +7458,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\n                           [--replace] [--check]\n                           [--intentional-reorder REASON]\n                           [--intentional-state-reset REASON]\n                           [--retire-stage STAGE_ID] [--retire-reason REASON]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION]\n                           unit_id\nlos unit-map-import: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]"
+     "first_line": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]",
+     "stderr": "usage: los unit-map-import [-h] --file FILE [--file-sha256 FILE_SHA256]\n                           [--replace] [--check]\n                           [--intentional-reorder REASON]\n                           [--intentional-state-reset REASON]\n                           [--retire-stage STAGE_ID] [--retire-reason REASON]\n                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                           [--expected-revision EXPECTED_REVISION] [--json]\n                           unit_id\nlos unit-map-import: error: argument --file-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -7385,8 +7485,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |"
+     "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
+     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -7421,6 +7521,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_unit_material_synthesis_publish"
     },
     "stdout": ""
@@ -7445,8 +7546,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |"
+     "first_line": "usage: los unit-material-synthesis-publish [-h] (--file FILE |",
+     "stderr": "usage: los unit-material-synthesis-publish [-h] (--file FILE |\n                                           --record RECORD) [--check]\n                                           [--approve]\n                                           [--expected-snapshot EXPECTED_SNAPSHOT]\n                                           [--expected-revision EXPECTED_REVISION]\n                                           [--json]\n                                           unit_id\nlos unit-material-synthesis-publish: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -7480,6 +7581,7 @@
      "attachment_sha256": [],
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_note"
     },
     "stdout": ""
@@ -7514,6 +7616,7 @@
      "attachment_sha256": [],
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_note"
     },
     "stdout": ""
@@ -7536,8 +7639,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\n                     [--attachment ATTACHMENT]\n                     [--attachment-sha256 ATTACHMENT_SHA256]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     [--expected-revision EXPECTED_REVISION]\n                     unit_id\nlos unit-note: error: argument --attachment-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n",
-     "first_line": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]"
+     "first_line": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]",
+     "stderr": "usage: los unit-note [-h] [--title TITLE] [--text TEXT] [--stage-id STAGE_ID]\n                     [--attachment ATTACHMENT]\n                     [--attachment-sha256 ATTACHMENT_SHA256]\n                     [--expected-snapshot EXPECTED_SNAPSHOT]\n                     [--expected-revision EXPECTED_REVISION] [--json]\n                     unit_id\nlos unit-note: error: argument --attachment-sha256: expected SHA-256 as sha256:<64 lowercase hexadecimal digits>\n"
     },
     "stdout": ""
    }
@@ -7563,8 +7666,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT]\n                            unit_id\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n",
-     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: not allowed with argument --file\n"
     },
     "stdout": ""
    }
@@ -7603,6 +7706,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": null,
+     "json": false,
      "func": "learning_os.commands.module.cmd_unit_plan_revise",
      "_parser_factory": "los.build_parser"
     },
@@ -7628,8 +7732,8 @@
    "result": {
     "error": {
      "exit": 2,
-     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT]\n                            unit_id\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n",
-     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)"
+     "first_line": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)",
+     "stderr": "usage: los unit-plan-revise [-h] (--file FILE | --record RECORD)\n                            [--file-sha256 FILE_SHA256] [--check]\n                            [--staged-basis UNIT_ID] [--report-out PATH]\n                            [--expected-snapshot EXPECTED_SNAPSHOT]\n                            [--expected-revision EXPECTED_REVISION]\n                            [--apply-reviewed-sha256 SHA256]\n                            [--review-report REVIEW_REPORT] [--json]\n                            unit_id\nlos unit-plan-revise: error: argument --record: expected a JSON object: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n"
     },
     "stdout": ""
    }
@@ -7665,6 +7769,7 @@
      "purpose": "X",
      "expected_snapshot": "X",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_source_selection"
     },
     "stdout": ""
@@ -7701,6 +7806,7 @@
      "purpose": "Y2",
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.unit.cmd_unit_source_selection"
     },
     "stdout": ""
@@ -7735,6 +7841,7 @@
      "expected_revision": [
       "X"
      ],
+     "json": false,
      "func": "learning_os.commands.workspace.cmd_workspace_next_action"
     },
     "stdout": ""
@@ -7767,6 +7874,7 @@
      "next_action": "X",
      "expected_snapshot": "Y2",
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.workspace.cmd_workspace_next_action"
     },
     "stdout": ""
@@ -7918,6 +8026,7 @@
      "name": "stage.note.write",
      "payload_file": "envelope.json",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -8039,6 +8148,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.collection_entry.cmd_collection_entry_revise"
     },
     "stdout": ""
@@ -8070,6 +8180,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source_catalog.cmd_source_intake_record"
     },
     "stdout": ""
@@ -8101,6 +8212,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.source_catalog.cmd_source_record_revise"
     },
     "stdout": ""
@@ -8133,6 +8245,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_unit_material_synthesis_publish"
     },
     "stdout": ""
@@ -8162,6 +8275,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_legacy_archive_lock_publish"
     },
     "stdout": ""
@@ -8191,6 +8305,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_masters_planning_catalog_update"
     },
     "stdout": ""
@@ -8222,6 +8337,7 @@
      "approve": false,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.vnext.cmd_masters_planning_comparison_publish"
     },
     "stdout": ""
@@ -8250,6 +8366,7 @@
      "command": "note-analysis-prepare",
      "drafts": "-",
      "out": "X",
+     "json": false,
      "func": "learning_os.commands.analysis.cmd_note_analysis_prepare"
     },
     "stdout": ""
@@ -8314,6 +8431,7 @@
      "name": "X",
      "payload_file": "-",
      "replay_only": false,
+     "json": false,
      "func": "learning_os.commands.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
@@ -8354,6 +8472,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": "-",
+     "json": false,
      "func": "learning_os.commands.module.cmd_module_plan_import",
      "_parser_factory": "los.build_parser"
     },
@@ -8393,6 +8512,7 @@
      "expected_revision": [],
      "apply_reviewed_sha256": null,
      "review_report": "-",
+     "json": false,
      "func": "learning_os.commands.module.cmd_unit_plan_revise",
      "_parser_factory": "los.build_parser"
     },
@@ -8424,6 +8544,7 @@
      "expected_snapshot": null,
      "expected_revision": [],
      "review_report": "-",
+     "json": false,
      "func": "learning_os.commands.lineage_restamp.cmd_lineage_restamp",
      "_parser_factory": "los.build_parser"
     },
@@ -8454,6 +8575,7 @@
      "file_sha256": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.project.cmd_project_create"
     },
     "stdout": ""
@@ -8485,6 +8607,7 @@
      "file_sha256": null,
      "expected_snapshot": null,
      "expected_revision": [],
+     "json": false,
      "func": "learning_os.commands.project.cmd_project_update"
     },
     "stdout": ""

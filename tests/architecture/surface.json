@@ -624,6 +624,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": [
      "connection",
@@ -920,6 +933,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": [
      "abandoned",
@@ -1027,6 +1053,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -1187,6 +1226,19 @@
     ],
     "required": false,
     "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
    }
   ],
   "ai-action-import-delivery": [
@@ -1211,6 +1263,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -1282,6 +1347,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -1509,6 +1587,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -1876,6 +1967,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -2090,6 +2194,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -2153,6 +2270,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -2237,6 +2367,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -2337,6 +2480,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -2409,6 +2565,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -2625,6 +2794,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -2898,6 +3080,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "append",
     "choices": null,
     "default_repr": "None",
@@ -3153,6 +3348,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -3276,6 +3484,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -3352,6 +3573,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -3444,6 +3678,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -3856,6 +4103,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -4026,6 +4286,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -4157,6 +4430,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -4262,6 +4548,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": [
      1,
@@ -4316,6 +4615,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -4413,6 +4725,19 @@
     ],
     "required": false,
     "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
    }
   ],
   "note-analysis-save-batch": [
@@ -4465,6 +4790,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -4533,6 +4871,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -4628,6 +4979,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -4802,6 +5166,19 @@
     ],
     "required": false,
     "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
    }
   ],
   "observation-append": [
@@ -4906,6 +5283,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -5055,6 +5445,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -5275,6 +5678,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -5347,6 +5763,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -5452,6 +5881,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -5779,6 +6221,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -5908,6 +6363,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -6106,6 +6574,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -6473,6 +6954,19 @@
     "action": "store_true",
     "choices": null,
     "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
     "dest": "push",
     "metavar": null,
     "nargs": 0,
@@ -6557,6 +7051,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -6652,6 +7159,19 @@
     ],
     "required": false,
     "type": "sha256_value"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6755,6 +7275,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -6880,6 +7413,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -6982,6 +7528,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -7090,6 +7649,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -7162,6 +7734,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -7274,6 +7859,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -7376,6 +7974,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -7747,6 +8358,19 @@
     "action": "store_true",
     "choices": null,
     "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
     "dest": "replace",
     "metavar": null,
     "nargs": 0,
@@ -7875,6 +8499,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -7962,6 +8599,19 @@
     "option_strings": [
      "--help",
      "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -8111,6 +8761,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -8252,6 +8915,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -8347,6 +9023,19 @@
     "type": null
    },
    {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
     "action": "store",
     "choices": null,
     "default_repr": "None",
@@ -8372,17 +9061,17 @@
   "snapshot_id": "method: (self) -> 'str'"
  },
  "request_schemas": {
-  "ability.candidate.append.schema.json": "372c77079597c573bf3e1fc52c8d46c7507957352282189e76791b294267a4f1",
+  "ability.candidate.append.schema.json": "dc0649a39cc67ff804449d9bdbaf501c071fecae9ef520e15d4e7f2e42798f9e",
   "ability.context.schema.json": "d21aa0f27fcf6031dc1c0950f876cdeff55393b9ec4b4e4cd0cc8dc0f4e04155",
-  "ai-action.delivery.apply.schema.json": "65aa50f49d2c2d67f9c59c35fc72113dd879b538d241079dba7f71c961c9dbeb",
+  "ai-action.delivery.apply.schema.json": "297cc65a13d390aab6092965bdb4775535672cd0516f600434b3760d25a09893",
   "atlas.context.schema.json": "3e2224edad71e99c749e009b5077d4c9bcafb4cf791793d91b4f0d151e481a63",
-  "atlas.question.save.schema.json": "9d3f33fadbce90f7dec166db1eaed414818d437ab88c4d1b2fd950a3ae7506f4",
+  "atlas.question.save.schema.json": "6d05bfb5c9658ae233f5c6f8575774f5765f66b0c7b5dee9a927e5d36ffcbed5",
   "backup.manifest.schema.json": "f9f2772c3c75888faad52835a7fd47cb1245926eac52889cf6efa24415063795",
   "capture.create.schema.json": "6f445836e3d754b3cb3681f2cac283334791b761b874d92d37a158c6154a4590",
-  "cli.ai-action-append-slices.schema.json": "bf997f4355188a2d82749eb2e441dad1f83ab3e655c71529af917973556287df",
-  "cli.ai-action-import-delivery.schema.json": "bf726a5bed2a6db81d99bfe594337fff0058cf7f98bc3848f0979484777c0b26",
+  "cli.ai-action-append-slices.schema.json": "77e02038807a08459a99eacc69430c9055dbb8339bf36476493ec5dcbcac769e",
+  "cli.ai-action-import-delivery.schema.json": "023e18a0013f449b45bdfd9e7aab4ad34973ded2908e6012f9100b1e0b8e8016",
   "cli.ai-action-list.schema.json": "b56c7991fdf57f8bca23fbaefa61af2b4d21e3966a3a412f43e9136b8295a78f",
-  "cli.ai-action-prepare.schema.json": "88863b6bee7d5ed88f598b1edecb994b042c8d134ec704fdd12163cf6bd917e6",
+  "cli.ai-action-prepare.schema.json": "f09cd3f0efadd51b175d763df8b89161071b94c43ca40fc13505e52ddc6b9429",
   "cli.ai-action-status.schema.json": "85faf4104b9e239ca312a6a6577fc49cd14b0ca7ec5b1b3edadba36b80abaa92",
   "cli.ai-action-validate-delivery.schema.json": "c80a94a2150f428ae50339996312c23f38c25294a5935f9c7d4d841e1a9d41c0",
   "cli.atlas-context.schema.json": "b898a5dac8911987af2f50ccde0a72e4ab8bc06d12b50bfb2f85cae65eaf9015",
@@ -8390,10 +9079,10 @@
   "cli.backup-verify.schema.json": "59f35cfb0f4ad3db3ff9ca842c7e45bbad26de26ced6f9b85554b62a57ce5d83",
   "cli.bootstrap.schema.json": "d54f64b798fff435aa70f7e642bc2c47d4e357870315821230c3652f5ad398d2",
   "cli.capabilities.schema.json": "3d8d103df64ff4c01fea8ab89c12ee22602da9cb25d5e15ea305964367acd1bd",
-  "cli.capability.schema.json": "a4f1982566ff141ce1933ea4869aee7725311902d858725c8bdae72adcdce9ac",
+  "cli.capability.schema.json": "10d2504875ad3ba3a96e1b5fd4b25def15fab6c480dc4e250cfbad846b7b43c6",
   "cli.dossier.schema.json": "a61cab55a496d8935a89f0bbc739ef8a2ff844a0ffab2040a1c1bfdd63f41036",
   "cli.generate.schema.json": "0c240bbdf20a214ccd13af70fc9b242d6035cb989ab82ff6846d0ad2e419f5cc",
-  "cli.goal.schema.json": "676eded65e04ac08e6201a065b93bae4e9e022e72e08488c5768ffbfe9afb12b",
+  "cli.goal.schema.json": "ec303abb0a84fdc82c8a8ee69f184bd4164e3c77c88fd00799992e974f78f279",
   "cli.health-report.schema.json": "a480af321bb8778f2af84890d3dc3394a3c22fb5fde9b286ee36bfa180e85f75",
   "cli.inbox-list.schema.json": "66332a0205a448af0672f533fb023391649492d50d6668888417b96973d13db1",
   "cli.inbox-read.schema.json": "6a482517643b03ec8860437a4f136775ae502fbdea15ac34b5c13a23d5847009",
@@ -8403,9 +9092,9 @@
   "cli.legacy-archive-status.schema.json": "115ea82203227d583922106ee5a535e5b6ccc67510dc60ab95e558ca02ed0505",
   "cli.masters-planning-dashboard.schema.json": "44419c692920fc48bd88b8c841f915965bf0d6372f055ab56e7192091efc890b",
   "cli.module-list.schema.json": "42d9872b6508b1e66c7b73e992f915cbdec0c8f8beea838384e2e38cd64a7a13",
-  "cli.note-analysis-prepare.schema.json": "804dcd62089c251c50a22f21877b5e377ad09e92d7b9108253ec2e272f9c723e",
+  "cli.note-analysis-prepare.schema.json": "6c81584ed7b20182e62e17df0520d8aef341dcb742bc1d97a655f83cc962a40f",
   "cli.note-read.schema.json": "f933d3f9abdad0452e1b6a8c362d53bd3b486917662048dc9b106eb203011ce6",
-  "cli.observe.schema.json": "e8ace313bb2dfc5a07805e54a42ed1f7097986d1a4529daaf3aa312c13f9141e",
+  "cli.observe.schema.json": "def52ac506f69d3bc1bbea0236261e4cdfb6ec20256725bb355815c18d685135",
   "cli.operations.schema.json": "6d4fdb50cb672aa3feed5daf304f08af42337192962f8eb60c6100d111ec3bf3",
   "cli.plan-edit-context.schema.json": "56fe1776ba9611adf8ce77e7857e1ef25e566b902e225b5b21c96572336f23d6",
   "cli.plan-template.schema.json": "e1b1bc3c45b85a5eeab5d2c11c74291c8113c99358ecf41db2253acdadde1854",
@@ -8416,69 +9105,69 @@
   "cli.runtime-session.schema.json": "190b689b04106247d4179741eabb0ef28b4c155d54a64887bd0bf35ab07d81a0",
   "cli.search.schema.json": "8895b2acc7e85b66cc7ca71d4f01667d5d72fa7438d1eb38370ea00957e96d6d",
   "cli.semantic.schema.json": "5332dcd08b7ba522d88f299d24eb7779f9843ebb5ffc62a964e2e6615796af37",
-  "cli.session-end.schema.json": "0b1648d9082a70030d73509a628832a24fc264640cf99071a62ece0d015b5ae4",
+  "cli.session-end.schema.json": "3c37c5a83e215ecde946bdef09651d34e792ab4616fb1f0f710502f9b696a00f",
   "cli.status.schema.json": "2c6f3485f49c15724ba12d8f58aae455d83ad6e066796cc9c78f77e70a025329",
   "cli.unit-list.schema.json": "c952f43394484d2c25f492186ab48c960464e3ba0484f8f4c68fc4808f1e6700",
   "cli.validate.schema.json": "40a61d1158907fa8ca5a07365c286fae46614bd6fbabb00621ae35f885b168d0",
-  "collection.entry.revise.schema.json": "a6cca7ba39d435ce89e7dc63c2921b50b2a117a20dabbb02dc96051dd7eb7b16",
-  "concept.relations.change.schema.json": "a00047887b0dccd9480de088787b5905d49be01e123d4e89d647c9878b495612",
-  "coordination.section.revise.schema.json": "67566675b84cebc4f8f9cd68fcbe8e377f8766ab158ca45bb451c4b5e3e38c64",
-  "detour.create.schema.json": "5527c8a5486211cab24875b4e91b7ab5037063ab7c444f8589fcc747412fb750",
-  "detour.resolve.schema.json": "2407e34b309dc342bca4389569b1a41ad1d5c916ebb1a15024c64ba1a3e56e83",
+  "collection.entry.revise.schema.json": "9ccf1a2ad0791d0ef51802074e1046990d0289033307720afeebcd1a5463a132",
+  "concept.relations.change.schema.json": "9deba6225f07b0affc42ee7f47c4a7915c3278cb66bec29f60bdeed0a194cd99",
+  "coordination.section.revise.schema.json": "4141c074522c1aaadc77666f608938ddb68ee32d073af66994124d6465dd0654",
+  "detour.create.schema.json": "5caf71ea411aca949e06537ef96aceddadacd7eec75421a969f03b6a9bb7edf3",
+  "detour.resolve.schema.json": "59d8550ddd0dd7cda388e3506cce112517a8c351fb8c8155532e7d76456eaacc",
   "garden.seed.create.schema.json": "80cdff8212024229029b2bd657cb0fe44445add49e158eed1953026c11b97be6",
   "health.report.schema.json": "7fa39cb762c56f310bf42830f75854132ac5cec28756a5b43d842a4aead2ce7c",
   "inbox.content.schema.json": "f196c246be47d78ced7a3d33d350e755ae0f95b42584304b42ac62c0caa36341",
   "inbox.list.schema.json": "f1191ad2ea79e2e2238dfc38018bde90d4cbafa278ea99b001ab4d9be26e4f6e",
-  "inbox.resolve.schema.json": "a8eccc236561394be6494ed62d67487c93a89aa9e8c36451d822c122db1a49ec",
-  "learner.ability-observation.append.schema.json": "96e447e09be449869c1ad0890a3039d0010696953e87da5a29599cb95e2db76d",
-  "learner.observation.append.schema.json": "3255da542f5c894d0ce3b02e92323cb54930b5ce86957ca1ce81b1af98719824",
-  "learner.stage-result.append.schema.json": "ca918e48fd97369c42f7e3bb0dac4cda997cfd0ad0d98737821c18346a555435",
+  "inbox.resolve.schema.json": "2985779e307bd8a32aec50fd1f428363b40708a1a2d6e39c5f57ad16d200b53f",
+  "learner.ability-observation.append.schema.json": "c8b410db515cbf2ec65d70d3f89c42bcc9469183be50e44fcffad0b24cfac4dd",
+  "learner.observation.append.schema.json": "49392fa92db7b39f0cb2f04135e98b50c2e08aa3e60cd2c6ad8b7be81a175ff0",
+  "learner.stage-result.append.schema.json": "43765f1b98f75477442453eb5b94d549fad0823dee99f8340eed18e9e2803bca",
   "legacy.archive.inspect.schema.json": "10e7fbf24098707e1b7070965122c2b4c55046dcdb03f6055e48a6a9143b335d",
-  "legacy.archive.lock.publish.schema.json": "a2194dc7ca9e7aee278843ffac82b3f95a32ac4bb778f887a143d208d336dee3",
+  "legacy.archive.lock.publish.schema.json": "6db5fa061d93a23e23f713eeda1dfa6d3da43bbf585db43244f164a52293b04f",
   "legacy.archive.status.schema.json": "4f234a27b9245a45aa92e97c822c08fbbea3f394099269c1288e822dea1741e6",
-  "lineage.restamp.schema.json": "3287f871f09c8405aec09f396ff7ec85c78cc334db9a235d0fca672d45d6621f",
-  "masters-planning.catalog.update.schema.json": "27f7f2a2b621962ef466f9b858fe995a4a1e31a0f26408c8e63d920a8836abb2",
-  "masters-planning.comparison.publish.schema.json": "f782b657b2d9815daf6309aeddf766c422f3a87b3d62e0e7d33523dd8e6cb435",
+  "lineage.restamp.schema.json": "75c5a2623dbdc79b4727ce205b104ee0b502394f6b057610c6db4d96c818869b",
+  "masters-planning.catalog.update.schema.json": "d014f1726e311f9b49d29e80d84faf5ba2489e9756150d126f9173d46f477cfd",
+  "masters-planning.comparison.publish.schema.json": "43b92a6a0fa71e8632ef2591674374737691294d90d5bfe17760be38b718386b",
   "masters-planning.dashboard.schema.json": "c825b374e28c80747620142dbdac0dc591dea29e1d13e5cbd09b63ec5001e4aa",
   "material.context.schema.json": "e15fe944cdf9f22cf53117b58452fd9a044992300e228851ab0ebe6e0586e7eb",
   "material.span.schema.json": "dbbd4cfaa9a7a16b79c5e3b66a2362b9563f25178c4820896548954350ee72fb",
-  "module.attempt.record.schema.json": "6a354b931af080c276f5a82a46004f739af08e32fd50eca4d99483471c3ed2ca",
-  "module.materials.compact.schema.json": "416755528cbdfc323e56cfda9d1b314e66c9c81340ebc392bb49f4cec7debfff",
-  "module.plan.import.schema.json": "73c24834e612adccef56c9d950269155da85e0c1b551e163d821b0288fff79c6",
-  "module.sitting.update.schema.json": "b8af05d17970fc25ab1e4a874ed018f056c0cf57a0f236e26a1fb535bda097e3",
-  "note.analysis.save.schema.json": "b46a70cb4090b49032f89ca03aeaaff680579d8a49425c474b61de50783a5b62",
-  "note.analysis.save_batch.schema.json": "c93069104cf2a9302b44847dd4ecebfca368e1c1e9e9cda65a446a843cdacda8",
+  "module.attempt.record.schema.json": "c785ce60d063b21df1b94ac32ed33e331bab4adbb6099b3b4d0c5359c63ff390",
+  "module.materials.compact.schema.json": "c69818a2f073308be040b93eb6ce524991173a6802b0ffaa0e7e9f059cdab603",
+  "module.plan.import.schema.json": "70164308ed186ca610377affc2d3b31dc44d7a87a0db24061c4be92ed9241e4d",
+  "module.sitting.update.schema.json": "1969dd7f573812b68a9f177908bab53d068b1a75e6a1261e85a169103a0f95c7",
+  "note.analysis.save.schema.json": "2369288cbfc6231713b5a881050191794e4084e82ff783646b6d61df714692b4",
+  "note.analysis.save_batch.schema.json": "a5667c8f2cae4471659ab012a39a650bcb81ffb4f1d100e14d4cf7301b99bf79",
   "note.content.schema.json": "2c4a6277c590091154514a4e9ee6d3fdfd1ef3b1be05329c16cacf02ae635930",
-  "note.create.schema.json": "ea782b1fe0f1f6a4d799445e0a59b0f60998884ec19aeb72698ca3af8ddae8ed",
-  "note.evidence.add.schema.json": "262d0ee6b3e33ee74a72fcd8e75f002e87113fbc1ba7dd878da088516539166c",
-  "note.revise.schema.json": "d1602cbd1ef095067e5b4523bef1730a751a3c170b71efec29df691e43872858",
+  "note.create.schema.json": "86a56d3cb5539eccbe3e21dbae9778e165df399fba1a578215ca6716a3f8cfac",
+  "note.evidence.add.schema.json": "0681486b5ceaa41a186c7f441d2962eb560dbe94078a467bb3cccce2c3fd9d60",
+  "note.revise.schema.json": "5e6056be8b2906bebc1ccbbd675d7a3dc28bf1c875d27e239cb2170b687e7437",
   "note.search.schema.json": "db820abae976955a8ae984a157b652c4caabecd04a0326db746b7d8fcbd0f72a",
   "operator.bootstrap.schema.json": "5ecea058b264e577cd441941aee435ae712f5d74d52e90886fffcba8c6db3c0a",
-  "path.attachment.add.schema.json": "824974639287de2726e847ce9aa2731b16094a7b3e52e14cd68cf4a26fe67e21",
-  "path.note.write.schema.json": "77b0b5666fb43cc6464b1a012ddd369eb5522fa0fbd37249daa224f41363804e",
-  "path.progress.update.schema.json": "2dd4b9a0345af2ecc3f72e85fcde073a07da1c4e7b24c782585b596379114405",
+  "path.attachment.add.schema.json": "fce27154ca9681a2f6377008d50fe7669ede46f821271b3e0a8889af748ec445",
+  "path.note.write.schema.json": "7cf480f31c3e8069d899687ceaf47a8ff61b60e31fff3e351818be18663f1b21",
+  "path.progress.update.schema.json": "7b25598d9500b49562d7343ef0f0728fce84d473866edd49a4adfde304d2d9c2",
   "plan.edit-context.schema.json": "2d27fedab69fa8b67686c3829bafec0e7b3a420d5474f06e642635d0ec2634ea",
   "plan.template.schema.json": "4d9c587646ec5b7f6b786a29d7a2d1e3802bead4d5165506d42bc5969bb8b908",
-  "project.create.schema.json": "564e6d563f45960200f5a5003c4f2c89aa76b17844b944f971d31201ce29fd30",
+  "project.create.schema.json": "c09ec4599cf5ce686c6b69b7250f41f20c7cdf7fb252b687c4555c89fbff7b5a",
   "project.inspect.schema.json": "f2c294899fc6d87e8b2fc098270a45e648afe7f7c3481673a9d99d43bf49a8c5",
   "project.list.schema.json": "d52dd5e7c5b220c9e762f3d999d025920cdd4aab6f5b43228bd2cc51dcc4553a",
-  "project.update.schema.json": "7174bf5747b845cac6eaada5a9e60fc031a324c0b5c45a23b7e7eb6f70a66210",
-  "review.apply.schema.json": "c89ca9da251c7d380a81091817e323b030ef952f592158d8dcf9257a00ded346",
-  "review.prepare.schema.json": "22ed89f6f433cec83f8b54fbf36e544b5e1c4ba3f794a3ee9b908c7b2b8b195e",
-  "route.patch.schema.json": "78b9265a440db32d2f4cd7eb1b7ae4db298fab41c8944adff7710a31ae0382fc",
+  "project.update.schema.json": "da66ab80b981fe3b4fa6e2d3bef80a500b74825bcb19b80fc3198e959de6cd96",
+  "review.apply.schema.json": "54ae13a642cec09049d4888cc28be9490afc3f141627d80d216104643c8d7ff1",
+  "review.prepare.schema.json": "05fa9bf180c7607eb25a5fa5077805780c44a1abd4fa0d0acf3e18954f89bce6",
+  "route.patch.schema.json": "061219a010f7c395add361654d9d7131260784dd8a7d96cb857bf9c509573bc6",
   "runtime.session.schema.json": "8aa7082f453ea93eb1b11979884add637aaf2a782a98cbaf47aada2bbe269823",
-  "source.feedback.record.schema.json": "7ee79ecc3733f6638e2e400b79b1b56c3b4ade6151088df9975897de1dcdab1e",
-  "source.intake.record.schema.json": "9243b371db8c2300267c65ce8f6965dad5fdc89475b05d4577d071d6bc707fd4",
-  "source.record.revise.schema.json": "da3e2dbd9213c4b5fd8af3691e089b441f434c8f03374a9f5afa69518d02a940",
-  "stage.attachment.add.schema.json": "fe2ba000bf2e6e1a7ae8f4e108fbadc7ee0ab90eea33fd3429d54c93f9f39868",
-  "stage.note.write.schema.json": "bfb529cc76074e2ccd2a5c51ce0c574b087afd554159d6d8d636973763351d88",
-  "stage.progress.update.schema.json": "1778f3c8bc418b7278a34e99569463552e3d1f57c11d56c2f5fa484851bea69f",
-  "unit.map.import.schema.json": "97aa2a49202d642773a41657eff7a302df6836e62b3fc19c4ba553c3560e4283",
-  "unit.material-synthesis.publish.schema.json": "0766671359d652b488f308841d9001f39cb3a251e5738a291b83ec654dfd4d8c",
-  "unit.note.append.schema.json": "197fba296dd85ea03323d0507f07bd5b60497b3e29f29babaf5a14645c248e1c",
-  "unit.plan.revise.schema.json": "4d7e7c8b790b90d99bf3df324e2cc71f5e17f0c9496aa76e7e066ae9b21f262f",
-  "unit.source-selection.set.schema.json": "a08fab2024f5884de39ab3f0105d6013987ffd7c792c89b72bfbfdd12a84b96c",
-  "workspace.next-action.update.schema.json": "db32c3bb9ed5f9b43453947aa2738734ea084064f2fcbb3b14c7e1fab951f590"
+  "source.feedback.record.schema.json": "7e26570ed48e9dfadfa767d17c86cc700ae63ecb6e6d5bea50cf584618635711",
+  "source.intake.record.schema.json": "2f11cae5f3c17683166ce0aff83217f9f03afc2ab64ee512ae5b49b0f4f35a91",
+  "source.record.revise.schema.json": "bde5d8386141df410a245852ec66faad1c03ddfedc03073d6794b0518ebaa604",
+  "stage.attachment.add.schema.json": "3813cb384524fa10502166ca2b331bd69e63606d9256275bab43f717a40d413d",
+  "stage.note.write.schema.json": "8641379ca2f3a07d435a3b3d1215034bdb8511c5ca558c49ab82147b36c9f51d",
+  "stage.progress.update.schema.json": "c6532b438c4d8986eaae4a8d253a09dc64d0246ac1baf1a266785ae49d407986",
+  "unit.map.import.schema.json": "d8743e8a2957bd72a0016a484b15dea54afdb769d486629a5d7cf0ccbfe7ab60",
+  "unit.material-synthesis.publish.schema.json": "9c6fc9358e6b0853772170bd0e814ed1f651e1393898f8479b483fabc6fe61cf",
+  "unit.note.append.schema.json": "22283493af6f2f95f2395012b0e83117d503f5d24644218daf582104e4351c9d",
+  "unit.plan.revise.schema.json": "f9e2c22bb7b9e0e3cedb3bc7e552c8cec14b773178138dff2a5b22071f2fb08a",
+  "unit.source-selection.set.schema.json": "e65f3e21dffcca76550fa96dd926f161c59fd6987148c96a82df608b3eb651d2",
+  "workspace.next-action.update.schema.json": "4115ba96af8e7adc75568b45674beb19af0618d833b700795a8d13c62e869d80"
  },
  "tools": {
   "seal_envelope.py": [
