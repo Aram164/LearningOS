@@ -11,3 +11,4 @@ approvals:
   - {key: "cli.__root__", change: added, plan_ref: "PLAN A11", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "cli.*", change: changed, plan_ref: "PLAN A11 (shape completion: converter)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "tools.*", change: changed, plan_ref: "PLAN A11 (shape completion: converter)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.*", change: added, plan_ref: "PLAN D2 (S12: request schemas created)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

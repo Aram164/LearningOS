@@ -3,8 +3,8 @@
 Part 1 (SPEC §8.1): every generic kind regex equals every occurrence of that
 prefix's pattern in ``system/schema/*.schema.json``, apart from the listed
 looser variants; the goal alternation equals the scan detectors ((q)).
-Part 2 (SPEC §3.3 A6): every id-shaped stdout string parses; the
-request-schema inventory assertion waits for S12 as one recorded exception.
+Part 2 (SPEC §3.3 A6): every id-shaped stdout string parses; undecided
+id-fields.yaml rows are recorded exceptions until the planner decides them.
 """
 
 from __future__ import annotations
@@ -203,6 +203,81 @@ def test_digest_refuses_uppercase_and_malformed():
     assert validator.is_valid("sha256:" + "ab" * 32) is False
 
 
+def _navigate(doc: dict, pointer: str) -> dict | None:
+    node: dict | None = doc
+    for part in [p for p in pointer.split("/") if p]:
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node if isinstance(node, dict) else None
+
+
+def test_inventory_digest_representations():
+    """Amendment (ad) at every scalar digest inventory pointer."""
+    import hashlib
+
+    from learning_os.contracts.requests import request_schema
+
+    rows = yaml.safe_load(
+        (ROOT / "tests/architecture/id-fields.yaml").read_text(
+            encoding="utf-8"))["fields"]
+    digest_rows = [r for r in rows if r.get("kind") == "digest"]
+    assert digest_rows, "no digest inventory rows"
+    # Unaffected non-digest pointers are skipped silently.
+    assert len(digest_rows) < len(rows)
+    # Production contracts must stay byte-identical (read-only check).
+    watched = [
+        ROOT / "system/schema/note.schema.json",
+        ROOT / "system/schema/capabilities/source.record.revise.schema.json",
+    ]
+    watched += sorted((ROOT / "system/schema/requests").glob("*.schema.json"))
+    before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in watched if p.is_file()}
+    # Plain-string digests (no argparse sha256_value, hence no pattern by
+    # _json_type): payload schemas stay bare `string` for byte-identity, so
+    # both spellings remain accepted at the schema boundary.
+    PLAIN_STRING_DIGESTS = frozenset({
+        ("ai-action.delivery.apply", "/properties/delivery_sha256"),
+        ("coordination.section.revise",
+         "/properties/expected_content_sha256"),
+        ("module.plan.import", "/properties/package_sha256"),
+    })
+    checked = 0
+    for row in sorted(digest_rows,
+                      key=lambda r: (r["operation"], r["pointer"])):
+        effective = request_schema(ROOT, row["operation"])
+        node = _navigate(effective, row["pointer"])
+        assert node is not None, f"{row['operation']} {row['pointer']} missing"
+        key = (row["operation"], row["pointer"])
+        validator = Draft202012Validator(node)
+        if key in PLAIN_STRING_DIGESTS:
+            assert "pattern" not in node, row
+            assert validator.is_valid("sha256:" + "ab" * 32) is True, row
+            assert validator.is_valid("ab" * 32) is True, row
+        else:
+            # No inventory pointer is the bare-only recorded_source_digest;
+            # every other digest inventory pointer keeps prefixed.
+            assert node.get("pattern") == "^sha256:[a-f0-9]{64}$", (
+                f"{row['operation']} {row['pointer']}: want prefixed pattern")
+            assert validator.is_valid("sha256:" + "ab" * 32) is True, row
+            assert validator.is_valid("ab" * 32) is False, row
+        checked += 1
+    assert checked == len(digest_rows)
+    # Negative control: a bare-only production pointer required as prefixed
+    # must fail; an unaffected non-production pointer passes silently.
+    note_schema = json.loads(
+        (ROOT / "system/schema/note.schema.json").read_text(encoding="utf-8"))
+    bare_node = note_schema["properties"]["material_analysis"][
+        "properties"]["recorded_source_digest"]
+    assert bare_node.get("pattern") != "^sha256:[a-f0-9]{64}$"
+    bare_validator = Draft202012Validator(bare_node)
+    assert bare_validator.is_valid("sha256:" + "ab" * 32) is False
+    assert bare_validator.is_valid("ab" * 32) is True
+    after = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+             for p in watched if p.is_file()}
+    assert after == before, "digest check changed a committed contract file"
+
+
 def _stdout_strings():
     for path in sorted((ROOT / "tests/scenarios/recorded").rglob("*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -258,15 +333,19 @@ def test_stdout_ids_parse():
     assert not failures, "\n".join(failures[:20])
 
 
-def _request_schemas_exist() -> bool:
-    directory = ROOT / "system/schema/requests"
-    return directory.is_dir() and any(directory.glob("*.schema.json"))
+def _review_signatures() -> Counter[str]:
+    """One exception per undecided id-fields.yaml row (SPEC 10.1)."""
+    path = ROOT / "tests/architecture/id-fields.yaml"
+    rows = yaml.safe_load(path.read_text(encoding="utf-8"))["fields"]
+    current: Counter[str] = Counter()
+    for row in rows:
+        if "review" in row:
+            current[f"{row['operation']}::{row['pointer']}::review"] += 1
+    return current
 
 
 def test_current_exceptions_are_recorded():
-    current: Counter[str] = Counter()
-    if not _request_schemas_exist():
-        current["*::request-schemas-missing"] = 1
+    current = _review_signatures()
     data = yaml.safe_load(RATCHETS_PATH.read_text(encoding="utf-8"))
     recorded = {entry["signature"]: entry["count"]
                 for entry in data["checks"].get(CHECK_ID, [])}

@@ -1648,7 +1648,123 @@ checks:
     approved_by: null
   A14-vocabulary: []
   A6-idroundtrip:
-  - signature: '*::request-schemas-missing'
+  - signature: ai-action.delivery.apply::/properties/artifact_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ai-action.delivery.apply::/properties/delivery_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ai-action.delivery.apply::/properties/delivery_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::/properties/request_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::/properties/action_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::/properties/request_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::/properties/target_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-status::/properties/request_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-validate-delivery::/properties/delivery_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::/properties/reviewed_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::/properties/session_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inspect::/properties/id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inspect::/properties/more_ids/items::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.operations::/properties/request_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.related::/properties/id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.session-end::/properties/session_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: collection.entry.revise::/properties/expected_diff_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: coordination.section.revise::/properties/expected_content_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.resolve::/properties/drop_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: lineage.restamp::/properties/claim_ids/items::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: lineage.restamp::/properties/claims_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.materials.compact::/properties/plan_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.plan.import::/properties/apply_reviewed_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.plan.import::/properties/package_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.inspect::/properties/id::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.inspect::/properties/more_ids/items::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.intake.record::/properties/expected_diff_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.record.revise::/properties/expected_diff_sha256::review
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.plan.revise::/properties/apply_reviewed_sha256::review
     count: 1
     since: baseline
     approved_by: null
