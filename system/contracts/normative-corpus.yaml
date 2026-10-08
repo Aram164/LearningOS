@@ -269,16 +269,6 @@ documents:
       endpoints, add the narrowest edge with context and citation,
       and refuse the duplicate.
 
-  - path: system/procedures/add-evaluate-source.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §6: registry search,
-      reviewed intake, the evaluation and attach revisions, a curated
-      collection, and the documented verify.
-
   - path: system/procedures/update-coordination.md
     class: procedure
     status: current
@@ -336,16 +326,6 @@ documents:
       Executable Scrut transcript of WORKFLOWS §25b: the drafts
       file from observed bytes to submitted envelope, with stale,
       tamper, and live-bytes refusals.
-
-  - path: system/procedures/source-routing-and-feedback.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §26: the stage
-      feedback judgment from bare refusal to committed receipt,
-      staying on its stage.
 
   - path: system/procedures/read-an-operation.md
     class: procedure

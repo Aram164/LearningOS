@@ -1459,6 +1459,10 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: "system/WORKFLOWS.md::## 6. Add or evaluate a source"
+    count: 1
+    since: baseline
+    approved_by: null
   - signature: "system/WORKFLOWS.md::## 11. Complete and archive a workspace"
     count: 1
     since: baseline
@@ -1496,6 +1500,10 @@ checks:
     since: baseline
     approved_by: null
   - signature: "system/WORKFLOWS.md::## 25a. Revise an existing plan"
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "system/WORKFLOWS.md::## 26. Source routing and feedback"
     count: 1
     since: baseline
     approved_by: null
