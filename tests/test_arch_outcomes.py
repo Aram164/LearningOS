@@ -499,3 +499,21 @@ def test_cli_listed_exception_returns_mapped_exit(monkeypatch, capsys):
     assert capsys.readouterr().err == "los: stale\n"
     assert run(AIActionError("ai")) == 1
     assert run(WriteRefused("w")) == 2
+
+
+def test_explicit_falsy_metadata_is_an_override_not_absence():
+    """(ac): exit_code=0 and gateway_message='' are explicit overrides —
+    the checks test None-ness, not truthiness."""
+    assert exit_for(WriteRefused("w", exit_code=0), "cli") == 0
+    assert exit_for(StaleSnapshot("s", exit_code=0), "cli") == 0
+    assert exit_for(WriteRefused("w", exit_code=0),
+                    "gateway.dispatch") == 0
+    assert exit_for(StaleSnapshot("s", exit_code=0),
+                    "gateway.dispatch") == 0
+    error = _classify_failure(
+        2, "raw complaint",
+        failure=WriteRefused("raw complaint", gateway_message=""),
+        refusal=None)
+    assert error["message"] == ""
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["retryable"] is False

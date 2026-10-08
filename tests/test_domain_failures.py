@@ -134,3 +134,48 @@ def test_not_found_one_shot_candidates_preserve_message_and_suggestions():
         listed = failures.NotFound("unit", value, candidates)
         assert str(listed) == suggest.not_found("unit", value, candidates)
         assert listed.suggestions == suggest.suggestions(value, candidates)
+
+
+def test_not_found_iterator_keeps_legacy_count_and_fuzzy_behavior():
+    """One-shot candidates: the old helper formats the message from a
+    single traversal — no +N count, no fuzzy fill — while suggestions
+    retain exactly the printed ids. The constructor preserves that
+    message; the helper itself is not repaired."""
+    many = [f"unit-{i}" for i in range(8)]
+    exc = failures.NotFound("unit", "unit-", iter(many))
+    assert str(exc) == (
+        "unit not found: unit- "
+        "(did you mean: unit-0, unit-1, unit-2, unit-3, unit-4?)")
+    assert "+3 more" not in str(exc)
+    assert exc.suggestions == [
+        "unit-0", "unit-1", "unit-2", "unit-3", "unit-4"]
+    assert str(exc) == suggest.not_found("unit", "unit-", iter(many))
+    fuzzy = failures.NotFound("unit", "unit-11", iter(["unit-1", "unit-10"]))
+    assert str(fuzzy) == "unit not found: unit-11"
+    assert fuzzy.suggestions == []
+    assert str(fuzzy) == suggest.not_found(
+        "unit", "unit-11", iter(["unit-1", "unit-10"]))
+
+
+def test_not_found_reiterable_candidates_show_counts_and_fuzzy_fill():
+    """List controls: >5 prefix matches carry the exact +N count, close
+    ids fill the fuzzy tier, and true misses stay bare — with
+    suggestions exactly the printed ids in every case."""
+    many = [f"unit-{i}" for i in range(8)]
+    exc = failures.NotFound("unit", "unit-", many)
+    assert str(exc) == (
+        "unit not found: unit- "
+        "(did you mean: unit-0, unit-1, unit-2, unit-3, unit-4, +3 more?)")
+    assert exc.suggestions == [
+        "unit-0", "unit-1", "unit-2", "unit-3", "unit-4"]
+    assert str(exc) == suggest.not_found("unit", "unit-", many)
+    fuzzy = failures.NotFound("unit", "unit-11", ["unit-1", "unit-10"])
+    assert str(fuzzy) == (
+        "unit not found: unit-11 (did you mean: unit-1, unit-10?)")
+    assert fuzzy.suggestions == ["unit-1", "unit-10"]
+    bare = failures.NotFound("unit", "zzz-nope", ["unit-1"])
+    assert str(bare) == "unit not found: zzz-nope"
+    assert bare.suggestions == []
+    bare_iter = failures.NotFound("unit", "zzz-nope", iter(["unit-1"]))
+    assert str(bare_iter) == "unit not found: zzz-nope"
+    assert bare_iter.suggestions == []
