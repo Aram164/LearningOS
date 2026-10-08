@@ -39,7 +39,13 @@ from learning_os.material_synthesis import MaterialSynthesisError
 from learning_os.ops._legacy_plumbing import (
     _refusal_from_failure,
 )
-from learning_os.ops.outcomes import TABLE, classify, exit_for, resolve
+from learning_os.ops.outcomes import (
+    TABLE,
+    classify,
+    error_object,
+    exit_for,
+    resolve,
+)
 from learning_os.ops.pipeline import (
     _classify_failure,
     _post_commit_error,
@@ -425,8 +431,17 @@ def test_replaced_helpers_match_old_copies():
             _old_refusal_from_failure(exc)), exc
     for exc in REFUSAL_CASES + [None]:
         message = "complaint" if exc is None else str(exc)
-        assert _classify_failure(2, message, failure=exc, refusal=None) == (
-            _old_classify_failure(2, message, failure=exc, refusal=None)), exc
+        new = _classify_failure(2, message, failure=exc, refusal=None)
+        old = _old_classify_failure(2, message, failure=exc, refusal=None)
+        if isinstance(exc, WriteRefused) and exc.reason is not None:
+            # S14 D3: specified enrichment; prove it is purely additive.
+            stripped = dict(new)
+            stripped["details"] = {
+                key: value for key, value in new["details"].items()
+                if key not in ("reason", "suggestions", "remedy")}
+            assert stripped == old, exc
+        else:
+            assert new == old, exc
     assert _classify_failure(2, "m", failure=None,
                              refusal=("STALE_SNAPSHOT", True)) == (
         _old_classify_failure(2, "m", failure=None,
@@ -519,3 +534,69 @@ def test_explicit_falsy_metadata_is_an_override_not_absence():
     assert error["message"] == ""
     assert error["code"] == "INVALID_REQUEST"
     assert error["retryable"] is False
+
+
+def test_error_object_add_only_merge():
+    """SPEC 9.2: pre-existing keys survive; new keys added only when set."""
+
+    error = error_object(
+        "INVALID_REQUEST", "nope", retryable=False,
+        details={"stage": "core.projection", "committed": True, "other": 1},
+        reason="NOT_FOUND")
+    assert error == {
+        "code": "INVALID_REQUEST", "message": "nope", "retryable": False,
+        "details": {"stage": "core.projection", "committed": True,
+                    "other": 1, "reason": "NOT_FOUND"},
+    }
+    bare = error_object("X", "m", retryable=True)
+    assert bare == {"code": "X", "message": "m", "retryable": True,
+                    "details": {}}
+    same = error_object("X", "m", retryable=False,
+                        details={"reason": "NOT_FOUND"}, reason="NOT_FOUND")
+    assert same["details"] == {"reason": "NOT_FOUND"}
+
+
+def test_error_object_conflicting_key_raises():
+    """SPEC 9.2: a details entry colliding with a new key is a bug."""
+
+    with pytest.raises(AssertionError):
+        error_object("X", "m", retryable=False,
+                     details={"reason": "NOT_FOUND"}, reason="MALFORMED_ID")
+    with pytest.raises(AssertionError):
+        error_object("X", "m", retryable=False,
+                     details={"suggestions": ["a"]}, suggestions=["b"])
+    with pytest.raises(AssertionError):
+        error_object("X", "m", retryable=False,
+                     details={"remedy": "a"}, remedy="b")
+
+
+def test_gateway_error_delegates_with_identical_bytes():
+    """SPEC 9.2: the delegation preserves every pre-existing shape."""
+
+    from learning_os.ops.pipeline import _gateway_error
+
+    assert _gateway_error("C", "m") == {
+        "code": "C", "message": "m", "retryable": False, "details": {}}
+    assert _gateway_error("C", "m", retryable=True,
+                          details={"stage": "s"}) == {
+        "code": "C", "message": "m", "retryable": True,
+        "details": {"stage": "s"}}
+
+
+def test_classify_failure_passes_refusal_details():
+    """SPEC 9.2: a reason-carrying WriteRefused enriches the error."""
+
+    failure = NotFound("unit", "u-missing", ["u-alpha", "u-beta"])
+    error = _classify_failure(2, str(failure), failure=failure)
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["details"]["reason"] == "NOT_FOUND"
+    assert error["details"]["suggestions"] == failure.suggestions
+    assert "remedy" not in error["details"]
+
+    malformed = MalformedId("unit", "???")
+    error = _classify_failure(2, str(malformed), failure=malformed)
+    assert error["details"] == {"reason": "MALFORMED_ID"}
+
+    plain = WriteRefused("plain refusal")
+    error = _classify_failure(2, str(plain), failure=plain)
+    assert error["details"] == {}

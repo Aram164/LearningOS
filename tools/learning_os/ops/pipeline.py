@@ -65,7 +65,7 @@ from learning_os.ops.legacy import (
     gesture_refusal,
     prepare_dispatch,
 )
-from learning_os.ops.outcomes import classify, resolve
+from learning_os.ops.outcomes import classify, error_object, resolve
 from learning_os.ops.registry import REGISTRY
 from learning_os.transactions import (
     TransactionResult,
@@ -210,13 +210,11 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
 
 
 def _gateway_error(code: str, message: str, *, retryable: bool = False,
-                   details: dict | None = None) -> dict:
-    return {
-        "code": code,
-        "message": message,
-        "retryable": retryable,
-        "details": dict(details or {}),
-    }
+                   details: dict | None = None, reason: str | None = None,
+                   suggestions: list | None = None,
+                   remedy: str | None = None) -> dict:
+    return error_object(code, message, retryable=retryable, details=details,
+                        reason=reason, suggestions=suggestions, remedy=remedy)
 
 
 def _classify_failure(code: int, message: str, *,
@@ -244,8 +242,16 @@ def _classify_failure(code: int, message: str, *,
                 if (isinstance(failure, WriteRefused)
                         and failure.gateway_message is not None):
                     message = failure.gateway_message
+                reason = remedy = suggestions = None
+                if (isinstance(failure, WriteRefused)
+                        and failure.reason is not None):
+                    reason = failure.reason
+                    suggestions = getattr(failure, "suggestions", None)
+                    remedy = failure.remedy
                 return _gateway_error(resolved["code"], message,
-                                      retryable=resolved["retryable"])
+                                      retryable=resolved["retryable"],
+                                      reason=reason, suggestions=suggestions,
+                                      remedy=remedy)
     return _gateway_error(INVALID_REQUEST, message)
 
 

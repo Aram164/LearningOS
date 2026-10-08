@@ -255,3 +255,25 @@ def exit_for(exc: BaseException, context: str) -> int | None:
     if row is None:
         return None
     return resolve(row, exc)["exit"]
+
+
+def error_object(code, message, *, retryable, details=None, reason=None,
+                 suggestions=None, remedy=None) -> dict:
+    """Build one V2 error object, merging optional typed details (SPEC 9.2).
+
+    `details` is copied; `reason`, `suggestions` and `remedy` are added only
+    when not None. A `details` entry for one of those three keys with a
+    different value is a programming error (AssertionError); every other
+    pre-existing key survives untouched.
+    """
+
+    merged = dict(details) if details else {}
+    for key, value in (("reason", reason), ("suggestions", suggestions),
+                       ("remedy", remedy)):
+        if value is None:
+            continue
+        if key in merged and merged[key] != value:
+            raise AssertionError(f"error details conflict for {key!r}")
+        merged[key] = value
+    return {"code": code, "message": message, "retryable": retryable,
+            "details": merged}
