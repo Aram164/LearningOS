@@ -87,7 +87,7 @@ def _compact_check_args(root: Path, draft: Path):
 def _route_patch_check_text(root: Path, unit_id: str, rid: str,
                             changes: dict) -> str:
     """The --check refusal text, or "" when the check passes."""
-    from learning_os.commands.support import ValidationFailed
+    from learning_os.domain.failures import ValidationFailed
 
     args = argparse.Namespace(
         root=str(root), unit_id=unit_id, route_id=rid, changes=changes,

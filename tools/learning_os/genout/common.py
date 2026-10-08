@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 from .. import __version__
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..fingerprint import CANONICAL_ROOTS
 from ..githistory import GitHistoryError, _lookup, last_commit_date, read_history
 

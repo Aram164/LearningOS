@@ -5,7 +5,7 @@ import subprocess
 import pytest
 
 from learning_os import githistory
-from learning_os.errors import TransactionFailure
+from learning_os.domain.failures import TransactionFailure
 from learning_os.genout import generate_all
 from learning_os.genout.common import _git_last_commit, stable_generated_at
 from learning_os.loader import load_repo

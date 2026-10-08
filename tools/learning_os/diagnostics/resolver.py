@@ -34,7 +34,7 @@ from ..domain.codes import (
     UNKNOWN_CAPABILITY,
     VALIDATION_FAILED,
 )
-from ..errors import (
+from ..domain.failures import (
     ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,

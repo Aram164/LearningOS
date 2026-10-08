@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import yaml
 
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import load_revisions
 from .advisories import workspace_neglect_issues

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-from .errors import TransactionFailure
+from .domain.failures import TransactionFailure
 from .pathing import PathBoundaryError, read_text_inside
 
 

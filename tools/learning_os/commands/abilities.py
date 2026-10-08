@@ -18,12 +18,12 @@ from ..abilities import (
 from ..contracts.gateway import current_gateway_request
 from ..contracts.json_schema import validate_contract
 from ..domain.codes import UNCONFIRMED
+from ..domain.failures import WriteRefused
+from ..domain.suggest import suggest
 from ..learning_runtime import runtime_path
 from ..loader import load_repo
 from .reads import _print_stable, _snapshot
-from .suggest import suggest
 from .support import (
-    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,

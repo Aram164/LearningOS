@@ -33,11 +33,6 @@ from learning_os.commands.ai import _ai_refusal
 from learning_os.commands.capability import _classify_failure, _v2_exit_code
 from learning_os.commands.resume import _render as _render_resume
 from learning_os.commands.support import (
-    AmbiguousMigration,
-    StaleSnapshot,
-    Unconfirmed,
-    ValidationFailed,
-    WriteRefused,
     _operator_lock,
     _refusal_from_failure,
     _take_gateway_refusal,
@@ -48,7 +43,14 @@ from learning_os.contracts.gateway import (
     gateway_request_context,
 )
 from learning_os.contracts.write_scopes import WriteScopeError
-from learning_os.errors import TransactionFailure
+from learning_os.domain.failures import (
+    AmbiguousMigration,
+    StaleSnapshot,
+    TransactionFailure,
+    Unconfirmed,
+    ValidationFailed,
+    WriteRefused,
+)
 from learning_os.pathing import PathBoundaryError
 from learning_os.rules.common import Issue
 from learning_os.transactions import (

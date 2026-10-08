@@ -9,6 +9,8 @@ import json
 import yaml
 
 from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.failures import ValidationFailed, WriteRefused
+from learning_os.domain.suggest import expansion, with_suggestions
 from learning_os.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
@@ -38,10 +40,7 @@ from .reads import (
     _unit_note_scope,
 )
 from .resume import MAX_STAGE_RESULTS
-from .suggest import expansion, with_suggestions
 from .support import (
-    ValidationFailed,
-    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,

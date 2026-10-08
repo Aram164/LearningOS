@@ -13,6 +13,7 @@ from learning_os.backup_manifest import (
     verify_restored_system,
 )
 from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.failures import WriteRefused
 from learning_os.health import build_health_report
 from learning_os.legacy_archive import (
     inspect_legacy_archive,
@@ -37,7 +38,6 @@ from learning_os.material_synthesis import (
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
-    WriteRefused,
     _atomic_text,
     _dump_yaml,
     _expected_ok,

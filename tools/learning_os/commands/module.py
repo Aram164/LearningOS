@@ -19,6 +19,8 @@ import yaml
 from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.codes import REVISION_CONFLICT
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.masters_planning import (
@@ -53,9 +55,7 @@ from learning_os.semantics.lineage import (
 )
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
-from .suggest import not_found
 from .support import (
-    WriteRefused,
     _atomic_text,
     _dump_study_map,
     _dump_yaml,

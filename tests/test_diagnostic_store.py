@@ -454,7 +454,7 @@ def test_no_validation_body_reaches_the_store(tmp_path: Path):
     """Failure-path canary: validator prose is caller detail, not telemetry."""
     import pytest
 
-    from learning_os.errors import TransactionFailure
+    from learning_os.domain.failures import TransactionFailure
     from learning_os.transactions import TransactionService
 
     canary = "canary-validation-8b4f2d1e9a"

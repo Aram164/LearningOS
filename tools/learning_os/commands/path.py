@@ -8,9 +8,9 @@ import sys
 import yaml
 
 from .. import observations
-from .suggest import not_found
+from ..domain.failures import WriteRefused
+from ..domain.suggest import not_found
 from .support import (
-    WriteRefused,
     _allocate_attachment_path,
     _expected_ok,
     _expected_revisions_from_args,

@@ -50,7 +50,7 @@ from .contracts.write_scopes import (
 from .diagnostics import conventions as diag_conventions
 from .diagnostics import tracer as diag_tracer
 from .diagnostics.store import bind_store as _bind_diag_store
-from .errors import (
+from .domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
     ReplayEvidenceError,

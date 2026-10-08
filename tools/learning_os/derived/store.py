@@ -29,7 +29,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from .model import DerivedError, NodeState
 
 #: Top-level generated/ directory owned by this store. genout/outputs.py

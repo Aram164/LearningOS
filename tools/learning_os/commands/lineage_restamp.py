@@ -21,6 +21,7 @@ import sys
 from pathlib import Path
 
 from learning_os import githistory, observations
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
@@ -36,7 +37,6 @@ from learning_os.semantics.restamp import (
 )
 
 from .support import (
-    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,

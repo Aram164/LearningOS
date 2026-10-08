@@ -25,7 +25,7 @@ from jsonschema import Draft202012Validator
 
 from .contracts.gateway import GatewayRequestContext
 from .contracts.write_scopes import WriteScopeError, scope_matches, write_target
-from .errors import (
+from .domain.failures import (
     ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,

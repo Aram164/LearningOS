@@ -52,10 +52,10 @@ from learning_os.commands.capability import (  # noqa: E402
     _validate_payload,
 )
 from learning_os.commands.support import (  # noqa: E402
-    WriteRefused,
     _operator_lock,
     _read_structured_file,
 )
+from learning_os.domain.failures import WriteRefused  # noqa: E402
 from learning_os.fingerprint import canonical_fingerprint  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.material_synthesis import (  # noqa: E402

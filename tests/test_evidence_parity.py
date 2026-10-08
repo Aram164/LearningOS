@@ -15,7 +15,7 @@ import yaml
 
 from learning_os.contracts.gateway import GatewayRequestContext
 from learning_os.diagnostics.resolver import collect_authority, resolve
-from learning_os.errors import ReplayEvidenceError
+from learning_os.domain.failures import ReplayEvidenceError
 from learning_os.transactions import TransactionService, replay_for_request
 
 

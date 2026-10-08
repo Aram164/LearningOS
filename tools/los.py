@@ -137,8 +137,6 @@ from learning_os.commands.stage import (  # noqa: E402
 from learning_os.commands.stage_result import cmd_stage_result  # noqa: E402
 from learning_os.commands.support import (  # noqa: E402
     LOS_LOCK_TIMEOUT_ENV,
-    StaleSnapshot,
-    WriteRefused,
     _add_expected_revision_argument,
 )
 from learning_os.commands.unit import (  # noqa: E402
@@ -165,6 +163,7 @@ from learning_os.commands.workspace import (  # noqa: E402
 )
 from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
+from learning_os.domain.failures import StaleSnapshot, WriteRefused  # noqa: E402
 from learning_os.health import HealthReportError  # noqa: E402
 from learning_os.legacy_archive import LegacyArchiveError  # noqa: E402
 from learning_os.masters_planning import MastersPlanningError  # noqa: E402

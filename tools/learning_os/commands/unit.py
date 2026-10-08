@@ -17,6 +17,8 @@ from learning_os.contracts import (
     require_current_template,
     validate_contract,
 )
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import MaterialReferenceError, expand_map
@@ -25,9 +27,7 @@ from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
 from .reads import _print_stable, _refusal, _snapshot, _window
-from .suggest import not_found, with_suggestions
 from .support import (
-    WriteRefused,
     _dump_study_map,
     _dump_yaml,
     _expected_ok,

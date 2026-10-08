@@ -43,7 +43,7 @@ from ..derived.identity import (
 )
 from ..derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
 from ..derived.store import canonical_bytes, store_node
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..garden import garden_id, project_garden_entries
 from ..githistory import GitSnapshot, fresh_git_snapshot
 from ..loader import Repo, load_repo

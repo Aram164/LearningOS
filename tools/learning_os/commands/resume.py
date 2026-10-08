@@ -15,6 +15,7 @@ import re
 import sys
 from pathlib import Path
 
+from learning_os.domain.suggest import with_suggestions
 from learning_os.genout.common import _first_para
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.resume_dossier import (
@@ -34,7 +35,6 @@ from learning_os.observations import today as observed_today
 from learning_os.pathing import PathBoundaryError, resolved_inside
 from learning_os.semantics.goals import stale_observations
 
-from .suggest import with_suggestions
 from .support import _json_layout, _root
 
 

@@ -21,7 +21,6 @@ from pathlib import Path
 import yaml
 
 from learning_os import observations
-from learning_os.commands.suggest import not_found
 from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
@@ -29,16 +28,15 @@ from learning_os.contracts.gateway import (
 from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derived.model import DerivedError
 from learning_os.domain.codes import (
-    AMBIGUOUS_MIGRATION,
     IDEMPOTENCY_CONFLICT,
     INTERNAL_FAILURE,
-    INVALID_REQUEST,
     OUT_OF_SCOPE,
     REVISION_CONFLICT,
     STALE_SNAPSHOT,
-    UNCONFIRMED,
     VALIDATION_FAILED,
 )
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.fingerprint import (
     canonical_fingerprint,
     seed_source_fingerprint,
@@ -425,56 +423,6 @@ def _operator_lock(root: Path, *, shared: bool = False):
         finally:
             _HELD_OPERATOR_LOCKS.reset(context_token)
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
-
-
-class WriteRefused(Exception):
-    """A canonical write could not be performed; nothing was changed."""
-
-    #: The V2 error code this refusal carries, and whether the caller may
-    #: retry the same approved intent. The gateway classifies by this type,
-    #: never by message prose: refusals echo user input, and a mistyped id
-    #: may name snapshots, approvals, or any other lookalike.
-    gateway_code = INVALID_REQUEST
-    gateway_retryable = False
-
-
-class StaleSnapshot(WriteRefused):
-    """A supplied concurrency token no longer matches live state; nothing was changed.
-
-    The only refusal that maps to exit 3 (optimistic-concurrency conflict).
-    Raised only where a supplied snapshot — or the material-context
-    observations digest — differs from the live one. Never inferred from
-    message prose: refusals echo user input, and the word "snapshot" in a
-    mistyped id or a missing-flag hint is not a conflict.
-    """
-
-    gateway_code = STALE_SNAPSHOT
-    gateway_retryable = True
-
-
-class AmbiguousMigration(WriteRefused):
-    """A migration plan is not applicable; nothing was changed.
-
-    Raised only where a genuine migration plan refuses to apply — never
-    for an ambiguous lookup, which is an invalid request, not a migration.
-    """
-
-    gateway_code = AMBIGUOUS_MIGRATION
-    gateway_retryable = False
-
-
-class ValidationFailed(WriteRefused):
-    """A pre-transaction validation gate refused the write; nothing was changed."""
-
-    gateway_code = VALIDATION_FAILED
-    gateway_retryable = False
-
-
-class Unconfirmed(WriteRefused):
-    """The envelope's approval does not cover this write; nothing was changed."""
-
-    gateway_code = UNCONFIRMED
-    gateway_retryable = False
 
 
 #: The typed refusal a failed handler step recorded for the gateway.

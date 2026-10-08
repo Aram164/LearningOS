@@ -12,12 +12,12 @@ from pathlib import Path
 
 from learning_os import observations
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
+from learning_os.domain.failures import WriteRefused
 from learning_os.unit_notes import unit_note_sections
 
 from .support import (
     CLIENT_ENV,
     SESSION_LEDGER_STALE_HOURS,
-    WriteRefused,
     _current_session_id,
     _dump_study_map,
     _expected_ok,

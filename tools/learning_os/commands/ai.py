@@ -23,10 +23,9 @@ from learning_os.domain.codes import (
     STALE_SNAPSHOT,
     UNCONFIRMED,
 )
+from learning_os.domain.failures import Unconfirmed, WriteRefused
 
 from .support import (
-    Unconfirmed,
-    WriteRefused,
     _expected_revisions_from_args,
     _operator_lock,
     _publish,

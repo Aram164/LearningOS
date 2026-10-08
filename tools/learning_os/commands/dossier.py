@@ -13,6 +13,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.loader import load_repo
 from learning_os.material_refs import unit_routes
 from learning_os.materials_resolution import (
@@ -32,8 +34,7 @@ from learning_os.semantics.dossiers import (
 from learning_os.semantics.predicates import CONTRACT_VERSION
 
 from .reads import _print_stable, _refusal, _snapshot
-from .suggest import not_found
-from .support import WriteRefused, _operator_lock, _root
+from .support import _operator_lock, _root
 
 #: Operator-contract version hashed into every dossier key. There is no
 #: version constant for OPERATOR.md; this string tracks its title

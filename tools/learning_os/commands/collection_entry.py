@@ -20,12 +20,12 @@ from typing import Any
 import yaml
 
 from learning_os.contracts.json_schema import validate_contract
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import with_suggestions
 from learning_os.loader import load_repo
 from learning_os.revisions import artifact_revision
 
-from .suggest import with_suggestions
 from .support import (
-    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,

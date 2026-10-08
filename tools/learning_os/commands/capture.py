@@ -11,9 +11,9 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     request_artifact_id,
 )
+from learning_os.domain.failures import WriteRefused
 
 from .support import (
-    WriteRefused,
     _expected_revisions_from_args,
     _operator_lock,
     _read_content_bound_file,

@@ -36,6 +36,7 @@ import yaml
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
+from learning_os.domain.failures import WriteRefused
 from learning_os.loader import load_repo
 from learning_os.material_synthesis import (
     _COMPARED_BASIS_FIELDS,
@@ -56,7 +57,6 @@ from learning_os.rules.common import CANONICAL_TREES
 from learning_os.semantics.lineage import LEDGER_RELATIVE, dump_ledger, load_ledger
 
 from .support import (
-    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,

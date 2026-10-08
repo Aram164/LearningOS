@@ -10,8 +10,8 @@ from pathlib import Path
 
 import yaml
 
+from ..domain.failures import WriteRefused
 from .support import (
-    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _fresh_manifest,

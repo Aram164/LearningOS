@@ -14,7 +14,7 @@ from types import SimpleNamespace
 import pytest
 from stress_check import _generation_stress
 
-from learning_os.errors import TransactionFailure
+from learning_os.domain.failures import TransactionFailure
 from learning_os.genout import generate_all, write_outputs
 from learning_os.genout.outputs import _KEEP_TOP_DIRS
 from learning_os.genout.projection.stages import project_stages
@@ -427,7 +427,7 @@ def test_health_flags_shelves_missing_an_explicit_atlas_domain(mini_repo):
 @pytest.mark.parametrize("failure", ["revision", "status", "revision-timeout", "status-timeout", "missing-git"])
 def test_git_failure_does_not_publish_manifest(mini_repo, monkeypatch, failure):
     (mini_repo / ".git").mkdir(exist_ok=True)
-    from learning_os.errors import TransactionFailure
+    from learning_os.domain.failures import TransactionFailure
 
     repo = load_repo(mini_repo)
     manifest_path = mini_repo / "generated/manifest.json"
@@ -617,7 +617,7 @@ def test_boundary_functions_agree(mini_repo):
     assert read_history(mini_repo, "-1", "--format=%H") == ""
 
 def test_failing_git_status_refuses(mini_repo):
-    from learning_os.errors import TransactionFailure
+    from learning_os.domain.failures import TransactionFailure
     subprocess.run(["git", "init"], cwd=mini_repo, check=True)
     subprocess.run(["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
                     "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)

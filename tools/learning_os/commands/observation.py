@@ -25,6 +25,7 @@ from learning_os.contracts.gateway import (
     intent_sha256,
     verified_gateway_snapshot,
 )
+from learning_os.domain.suggest import with_suggestions
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.learning_runtime import (
     RuntimeInputError,
@@ -38,7 +39,6 @@ from learning_os.loader import load_repo
 from learning_os.revisions import artifact_revision
 
 from .capability import gesture_allowed
-from .suggest import with_suggestions
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,

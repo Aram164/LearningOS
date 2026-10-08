@@ -29,8 +29,8 @@ from repo_builders import (
 from test_learning_paths import add_path
 
 from learning_os.commands.note import NOTE_FIELDS
-from learning_os.commands.support import WriteRefused
 from learning_os.contracts.batch_notes import ANALYSIS_FIELDS
+from learning_os.domain.failures import WriteRefused
 
 # ------------------------------------------------------------------ #100
 

@@ -7,7 +7,7 @@ import os
 from pathlib import Path, PurePosixPath
 
 from ..derived.store import DERIVED_TOP_DIR
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..loader import Repo
 from ..manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
 from .atlas import build_domain_atlas

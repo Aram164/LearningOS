@@ -31,7 +31,7 @@ from learning_os.derived.store import (
     derived_dir,
     read_state,
 )
-from learning_os.errors import TransactionFailure
+from learning_os.domain.failures import TransactionFailure
 from learning_os.genout.concepts import build_backlinks
 from learning_os.genout.manifest import build_manifest
 from learning_os.genout.manifest_derived import (

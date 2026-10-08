@@ -22,8 +22,8 @@ from gateway_helpers import approved_v2_call
 from jsonschema import Draft202012Validator
 
 import los
-from learning_os.commands.support import WriteRefused
 from learning_os.contracts.payloads import payload_to_namespace, subparsers
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
 
 SHA = "sha256:" + "0" * 64

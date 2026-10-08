@@ -14,14 +14,14 @@ import yaml
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.commands.query import VALID_RECORD_TYPES
-from learning_os.commands.suggest import (
+from learning_os.commands.unit import UNIT_STATUSES
+from learning_os.domain.suggest import (
     MAX_SUGGESTIONS,
     not_found,
     ranked,
     suggest,
     with_suggestions,
 )
-from learning_os.commands.unit import UNIT_STATUSES
 
 SCHEMA = Path(__file__).resolve().parent.parent / "system" / "schema"
 

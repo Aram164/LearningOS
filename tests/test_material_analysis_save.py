@@ -455,8 +455,8 @@ def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
     import los
     from learning_os.commands import analysis as analysis_commands
     from learning_os.commands.capability import _dispatch
-    from learning_os.commands.support import WriteRefused
     from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.domain.failures import WriteRefused
 
     entries = [_batch_entry("txa", "transaction analysis a"),
                _batch_entry("txb", "transaction analysis b")]
@@ -515,7 +515,7 @@ def test_batch_bounds_refuse(mini_repo):
 
 def test_batch_handler_bounds_refuse_directly():
     from learning_os.commands.analysis import _read_batch_items
-    from learning_os.commands.support import WriteRefused
+    from learning_os.domain.failures import WriteRefused
 
     with pytest.raises(WriteRefused, match="non-empty notes list"):
         _read_batch_items({"notes": []})

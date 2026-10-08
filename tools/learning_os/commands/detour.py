@@ -7,7 +7,7 @@ import json
 import re
 import sys
 
-from .suggest import not_found
+from ..domain.suggest import not_found
 from .support import (
     _dump_study_map,
     _dump_yaml,

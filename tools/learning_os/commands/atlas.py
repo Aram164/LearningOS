@@ -15,13 +15,13 @@ from ..contracts.atlas_question import (
     QUESTION_FIELDS_ORDERED,
     QUESTION_HANDLER_OWNED,
 )
+from ..domain.failures import WriteRefused
+from ..domain.suggest import with_suggestions
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import artifact_revision
-from .suggest import with_suggestions
 from .support import (
-    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,

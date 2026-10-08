@@ -13,7 +13,7 @@ from repo_builders import curriculum_mini, stage_manifest_producers
 
 from learning_os import githistory
 from learning_os.derived.store import derived_dir
-from learning_os.errors import TransactionFailure
+from learning_os.domain.failures import TransactionFailure
 from learning_os.genout import derived_generation, manifest_derived, projection_verification
 from learning_os.genout.common import stable_generated_at
 from learning_os.loader import load_repo

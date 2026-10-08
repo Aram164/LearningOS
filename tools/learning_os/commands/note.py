@@ -9,11 +9,11 @@ from pathlib import Path
 import jsonschema
 
 from learning_os import observations
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 
-from .suggest import not_found
 from .support import (
-    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,

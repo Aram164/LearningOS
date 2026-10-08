@@ -28,6 +28,7 @@ from ..contracts.batch_notes import (
     BATCH_MAX_NOTES,
     BATCH_MIN_NOTES,
 )
+from ..domain.failures import WriteRefused
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..material_analysis import (
@@ -44,7 +45,6 @@ from ..materials_resolution import (
 from ..pathing import PathBoundaryError
 from ..revisions import artifact_revision
 from .support import (
-    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,

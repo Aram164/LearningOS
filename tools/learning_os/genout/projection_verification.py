@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 
 from ..derived.identity import canonical_snapshot_digest
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..githistory import fresh_git_snapshot, last_commit_dates, last_commit_timestamps
 from ..loader import load_repo
 from .common import _git_state

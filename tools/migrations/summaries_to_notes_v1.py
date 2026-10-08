@@ -31,7 +31,6 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.commands.support import WriteRefused
 from learning_os.contracts.gateway import intent_sha256
 from learning_os.contracts.migration_lifecycle import (
     MigrationLifecycleError,
@@ -39,6 +38,7 @@ from learning_os.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_analysis import observe_local_material

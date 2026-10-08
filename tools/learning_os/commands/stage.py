@@ -7,11 +7,11 @@ import json
 import sys
 
 from learning_os import observations
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.learning_runtime import requirement_id_for
 
-from .suggest import not_found
 from .support import (
-    WriteRefused,
     _allocate_attachment_path,
     _dump_study_map,
     _dump_yaml,

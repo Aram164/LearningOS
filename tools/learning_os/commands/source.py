@@ -7,7 +7,7 @@ import json
 import sys
 
 from .. import observations
-from .suggest import not_found, with_suggestions
+from ..domain.suggest import not_found, with_suggestions
 from .support import (
     _dump_study_map,
     _expected_ok,

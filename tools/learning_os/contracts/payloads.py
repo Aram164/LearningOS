@@ -18,6 +18,7 @@ import argparse
 import json
 import re
 
+from ..domain.failures import WriteRefused
 from .atlas_question import question_schema as atlas_question_schema
 from .batch_notes import bundle_schema as batch_notes_schema
 
@@ -324,9 +325,6 @@ def _check_payload_choices(field: str, action: argparse.Action,
         if candidate is None:
             continue
         if candidate not in allowed:
-            # Deferred: the commands package imports this module at dispatch.
-            from learning_os.commands.support import WriteRefused
-
             raise WriteRefused(
                 f"invalid payload: {field} must be one of {allowed}, "
                 f"got {candidate!r}"

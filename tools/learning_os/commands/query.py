@@ -9,7 +9,8 @@ from pathlib import Path
 
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
-from learning_os.errors import unreadable_refusal
+from learning_os.domain.failures import WriteRefused, unreadable_refusal
+from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
@@ -36,9 +37,7 @@ from .reads import (
     structural_payload,
     with_coordination_digests,
 )
-from .suggest import expansion, not_found, suggest
 from .support import (
-    WriteRefused,
     _delegate,
     _fresh_manifest,
     _fresh_manifest_and_repo,

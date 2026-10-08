@@ -245,7 +245,8 @@ def test_write_waits_for_a_shared_read(mini_repo, monkeypatch, capsys):
     """A shared read still excludes writers; the waiter is announced."""
     import pytest
 
-    from learning_os.commands.support import WriteRefused, _operator_lock
+    from learning_os.commands.support import _operator_lock
+    from learning_os.domain.failures import WriteRefused
 
     release, worker = _hold_shared_in_background(mini_repo)
     monkeypatch.setenv("LOS_LOCK_TIMEOUT", "1")
@@ -342,7 +343,8 @@ def test_git_environment_cannot_redirect_the_checkout_lock(mini_repo, tmp_path, 
 def test_broken_git_anchor_refuses_instead_of_using_a_second_lock(mini_repo):
     import pytest
 
-    from learning_os.commands.support import WriteRefused, _operator_lock_path
+    from learning_os.commands.support import _operator_lock_path
+    from learning_os.domain.failures import WriteRefused
 
     (mini_repo / ".git").write_text("gitdir: /missing-learningos-git-dir\n")
     with pytest.raises(WriteRefused, match="git directory"):
@@ -372,20 +374,21 @@ def test_failed_escalation_never_leaves_a_reentrant_unlocked_scope(mini_repo, mo
     import pytest
 
     from learning_os.commands import support
+    from learning_os.domain.failures import WriteRefused
 
     original = support._acquire_flock
 
     def fail_exclusive(handle, *, exclusive, **kwargs):
         if exclusive:
-            raise support.WriteRefused("exclusive acquisition failed")
+            raise WriteRefused("exclusive acquisition failed")
         return original(handle, exclusive=exclusive, **kwargs)
 
     monkeypatch.setattr(support, "_acquire_flock", fail_exclusive)
     with support._operator_lock(mini_repo, shared=True):
-        with pytest.raises(support.WriteRefused, match="exclusive acquisition failed"):
+        with pytest.raises(WriteRefused, match="exclusive acquisition failed"):
             with support._operator_lock(mini_repo):
                 pytest.fail("exclusive acquisition should fail")
-        with pytest.raises(support.WriteRefused, match="no longer held"):
+        with pytest.raises(WriteRefused, match="no longer held"):
             with support._operator_lock(mini_repo, shared=True):
                 pytest.fail("an unlocked outer scope cannot be reused")
 

@@ -24,7 +24,7 @@ from ..contracts.manifest_contract import (
     declared_version,
     enforce,
 )
-from ..errors import TransactionFailure, unreadable_refusal
+from ..domain.failures import TransactionFailure, unreadable_refusal
 from ..fingerprint import source_fingerprint
 from ..garden import project_garden_entries
 from ..loader import Repo

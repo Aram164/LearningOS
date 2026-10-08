@@ -26,12 +26,12 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os import observations
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.semantics.scan import intelligence_scan
 
-from .suggest import not_found
 from .support import (
     TOOLS,
-    WriteRefused,
     _atomic_text,
     _current_session_id,
     _load_session_paths,

@@ -23,7 +23,7 @@ from ..derived.engine import (
 )
 from ..derived.identity import canonical_snapshot_digest, digest_matching_files
 from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
-from ..errors import TransactionFailure
+from ..domain.failures import TransactionFailure
 from ..githistory import fresh_git_snapshot
 from ..loader import Repo, load_repo
 from .common import _git_state, stable_generated_at

@@ -84,10 +84,16 @@ def suggest(value: str, candidates: Iterable[str],
     return shown
 
 
+def suggestions(value: str, candidates: Iterable[str],
+                limit: int = MAX_SUGGESTIONS) -> list[str]:
+    """Exactly the ids ``with_suggestions`` prints for this query."""
+    return suggest(value, candidates, limit)
+
+
 def with_suggestions(base: str, value: str, candidates: Iterable[str],
                      limit: int = MAX_SUGGESTIONS) -> str:
     """``base`` plus a bounded suggestion suffix, or ``base`` unchanged."""
-    shown = suggest(value, candidates, limit)
+    shown = suggestions(value, candidates, limit)
     if not shown:
         return base
     extra = max(0, len(ranked(value, candidates)) - limit)

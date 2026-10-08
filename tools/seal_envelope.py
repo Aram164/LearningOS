@@ -98,13 +98,13 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.commands import support as _support
     from learning_os.commands.capability import _dispatch
-    from learning_os.commands.support import WriteRefused
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
         verified_gateway_snapshot,
     )
+    from learning_os.domain.failures import WriteRefused
     from learning_os.revisions import load_revisions
     from learning_os.transactions import transaction_artifacts
 

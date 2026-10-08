@@ -34,6 +34,7 @@ from learning_os.domain.codes import (
     UNKNOWN_CAPABILITY,
     VALIDATION_FAILED,
 )
+from learning_os.domain.failures import WriteRefused, _ReplayRecoveryError
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
     PostCommitFailure,
@@ -48,7 +49,6 @@ from learning_os.transactions import (
 )
 
 from .support import (
-    WriteRefused,
     _current_session_id,
     _load_session_paths,
     _operator_lock,
@@ -628,10 +628,6 @@ _REPLAY_DOMAIN_RESULT: dict[str, tuple[str, str]] = {
     "capture.create": ("captured", "work/inbox/"),
     "garden.seed.create": ("seed_path", "knowledge/garden/"),
 }
-
-
-class _ReplayRecoveryError(Exception):
-    """The committed receipt cannot prove what the original call wrote."""
 
 
 def _replayed_batch_result(payload: object,

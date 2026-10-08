@@ -1,15 +1,24 @@
-"""Dependency-light exception types shared across Core layers.
+"""Typed failures shared across Core layers (SPEC §8.3).
 
-Leaf packages may raise these errors without importing the transaction engine.
-The public compatibility surface remains ``learning_os.transactions``; this
-module exists to keep projection and validation code below orchestration in the
-dependency graph.
+Dependency-light exception types: leaf packages raise these errors without
+importing the transaction engine. The public compatibility surface remains
+``learning_os.transactions``; this module exists to keep projection,
+validation and refusal code below orchestration in the dependency graph.
 """
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
+
+from learning_os.domain import suggest
+from learning_os.domain.codes import (
+    AMBIGUOUS_MIGRATION,
+    INVALID_REQUEST,
+    STALE_SNAPSHOT,
+    UNCONFIRMED,
+    VALIDATION_FAILED,
+)
 
 
 class TransactionFailure(Exception):
@@ -162,3 +171,100 @@ def unreadable_refusal(root: Path, failures: list[tuple[Path, str]], action: str
     more = f"; and {len(failures) - 5} more" if len(failures) > 5 else ""
     return (f"cannot {action}: {len(failures)} file(s) could not be read, so the answer "
             f"would silently omit them — {shown}{more}")
+
+
+class WriteRefused(Exception):
+    """A canonical write could not be performed; nothing was changed."""
+
+    #: The V2 error code this refusal carries, and whether the caller may
+    #: retry the same approved intent. The gateway classifies by this type,
+    #: never by message prose: refusals echo user input, and a mistyped id
+    #: may name snapshots, approvals, or any other lookalike.
+    gateway_code = INVALID_REQUEST
+    gateway_retryable = False
+
+    def __init__(self, *args, site: str | None = None,
+                 reason: str | None = None, remedy: str | None = None,
+                 gateway_message: str | None = None,
+                 exit_code: int | None = None):
+        super().__init__(*args)
+        self.site = site
+        self.reason = reason
+        self.remedy = remedy
+        self.gateway_message = gateway_message
+        self.exit_code = exit_code
+
+
+class StaleSnapshot(WriteRefused):
+    """A supplied concurrency token no longer matches live state; nothing was changed.
+
+    The only refusal that maps to exit 3 (optimistic-concurrency conflict).
+    Raised only where a supplied snapshot — or the material-context
+    observations digest — differs from the live one. Never inferred from
+    message prose: refusals echo user input, and the word "snapshot" in a
+    mistyped id or a missing-flag hint is not a conflict.
+    """
+
+    gateway_code = STALE_SNAPSHOT
+    gateway_retryable = True
+
+
+class AmbiguousMigration(WriteRefused):
+    """A migration plan is not applicable; nothing was changed.
+
+    Raised only where a genuine migration plan refuses to apply — never
+    for an ambiguous lookup, which is an invalid request, not a migration.
+    """
+
+    gateway_code = AMBIGUOUS_MIGRATION
+    gateway_retryable = False
+
+
+class ValidationFailed(WriteRefused):
+    """A pre-transaction validation gate refused the write; nothing was changed."""
+
+    gateway_code = VALIDATION_FAILED
+    gateway_retryable = False
+
+
+class Unconfirmed(WriteRefused):
+    """The envelope's approval does not cover this write; nothing was changed."""
+
+    gateway_code = UNCONFIRMED
+    gateway_retryable = False
+
+
+class NotFound(WriteRefused):
+    """A lookup value matched nothing; carries bounded suggestions."""
+
+    gateway_code = INVALID_REQUEST
+    gateway_retryable = False
+
+    def __init__(self, kind: str, value: str, candidates: Iterable[str], *,
+                 site: str | None = None,
+                 gateway_message: str | None = None,
+                 exit_code: int | None = None):
+        super().__init__(
+            suggest.not_found(kind, value, candidates),
+            site=site, reason="NOT_FOUND",
+            gateway_message=gateway_message, exit_code=exit_code)
+        self.suggestions = suggest.suggestions(value, candidates)
+
+
+class MalformedId(WriteRefused):
+    """An id value is not canonical for its kind."""
+
+    def __init__(self, kind: str, value: object, *,
+                 site: str | None = None,
+                 gateway_message: str | None = None,
+                 exit_code: int | None = None):
+        super().__init__(f"malformed {kind} id: {value!r}", site=site,
+                         reason="MALFORMED_ID",
+                         gateway_message=gateway_message,
+                         exit_code=exit_code)
+        self.kind = kind
+        self.value = value
+
+
+class _ReplayRecoveryError(Exception):
+    """The committed receipt cannot prove what the original call wrote."""

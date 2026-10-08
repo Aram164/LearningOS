@@ -9,7 +9,12 @@ import sys
 from pathlib import Path, PurePosixPath
 
 from learning_os.derived import DerivedError, evaluate
-from learning_os.errors import unreadable_refusal
+from learning_os.domain.failures import (
+    StaleSnapshot,
+    WriteRefused,
+    unreadable_refusal,
+)
+from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.garden import garden_id
 from learning_os.genout.atlas import ATLAS_DOMAINS
@@ -33,11 +38,8 @@ from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
 
-from .suggest import expansion, not_found, with_suggestions
 from .support import (
     SESSION_ID_ENV,
-    StaleSnapshot,
-    WriteRefused,
     _fresh_manifest,
     _fresh_manifest_and_repo,
     _operator_lock,
