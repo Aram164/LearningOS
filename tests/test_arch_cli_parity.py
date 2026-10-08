@@ -237,7 +237,9 @@ def _run(parser, argv: list[str]) -> dict:
                 code = exc.code if isinstance(exc.code, int) else 2
                 stderr = stderr_buf.getvalue()
                 first = stderr.strip().splitlines()[0] if stderr.strip() else ""
-                return {"error": {"exit": code, "first_line": first}}
+                return {"error": {"exit": code, "first_line": first,
+                                  "stderr": stderr},
+                        "stdout": stdout_buf.getvalue()}
     data = dict(vars(namespace))
     for key, value in list(data.items()):
         if callable(value):
@@ -245,7 +247,8 @@ def _run(parser, argv: list[str]) -> dict:
             qualname = getattr(value, "__qualname__", "") \
                 or getattr(value, "__name__", "")
             data[key] = f"{module}.{qualname}" if module else str(qualname)
-    return {"namespace": _normalize_namespace(data)}
+    return {"namespace": _normalize_namespace(data),
+            "stdout": stdout_buf.getvalue()}
 
 
 def test_corpus_parity():
@@ -275,6 +278,8 @@ def test_corpus_parity():
             if recorded["namespace"] != actual["namespace"]:
                 failures.append(f"case {index} argv={argv}: namespace differs")
         elif "error" in recorded and "error" in actual:
+            if recorded["error"].get("stderr") != actual["error"]["stderr"]:
+                failures.append(f"case {index} argv={argv}: full stderr differs")
             if recorded["error"]["exit"] != actual["error"]["exit"] or \
                     recorded["error"]["first_line"] != actual["error"]["first_line"]:
                 failures.append(
@@ -296,3 +301,23 @@ def test_capability_schema_check_passes():
     finally:
         del sys.path[0]
     assert generate_capability_schemas.main(["--check"]) == 0, FIX
+
+
+def test_actual_old_source_supplement_parity():
+    """Additional old-source observations retain full stdout and stderr."""
+    import los
+
+    corpus = json.loads((ROOT / "tests/architecture/cli-parity-supplement.json")
+                        .read_text(encoding="utf-8"))
+    assert sum(row["count"] for row in corpus["sources"].values()) == 265
+    assert len(corpus["cases"]) == 265
+    parser = los.build_parser()
+    for row in corpus["cases"]:
+        recorded = copy.deepcopy(row["result"])
+        if "namespace" in recorded:
+            namespace = _normalize_namespace(recorded["namespace"])
+            handler = _handler_for_subcommand(namespace.get("command"))
+            if handler and handler.startswith("learning_os.adapters.cli.invoke:"):
+                namespace = _normalize_registered_namespace(namespace, handler)
+            recorded["namespace"] = namespace
+        assert _run(parser, row["argv"]) == recorded, row["source"]
