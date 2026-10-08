@@ -106,7 +106,7 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
             "ops : ai_actions : masters_planning : material_synthesis",
             "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
             "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-            "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+            "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
         ],
     },
     "A1 transaction writer access (PLAN A2, D4)": {
@@ -473,7 +473,7 @@ layers = [
   "ops : ai_actions : masters_planning : material_synthesis",
   "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
   "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
 ]
 ignore_imports = []
 
@@ -508,7 +508,7 @@ layers = [
   "ops : ai_actions : masters_planning : material_synthesis",
   "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
   "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
 ]
 ignore_imports = []
 
@@ -550,7 +550,7 @@ def test_contract_weakened_exhaustive_fails():
 
 def test_contract_weakened_layer_removed_fails():
     weakened = _TOML_THREE_CONTRACTS.replace(
-        '\n  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",',
+        '\n  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",',
         "", 1)
     failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
     assert failures, "a removed layer must fail"
