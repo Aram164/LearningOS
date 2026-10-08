@@ -8,7 +8,8 @@ validation and refusal code below orchestration in the dependency graph.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Iterator, Mapping, Sequence
+from itertools import tee
 from pathlib import Path
 
 from learning_os.domain import suggest
@@ -244,11 +245,16 @@ class NotFound(WriteRefused):
                  site: str | None = None,
                  gateway_message: str | None = None,
                  exit_code: int | None = None):
+        # Preserve the legacy helper's iterator behavior for the message,
+        # while giving its structured suggestions an independent traversal.
+        message_candidates, suggestion_candidates = (
+            tee(candidates) if isinstance(candidates, Iterator)
+            else (candidates, candidates))
         super().__init__(
-            suggest.not_found(kind, value, candidates),
+            suggest.not_found(kind, value, message_candidates),
             site=site, reason="NOT_FOUND",
             gateway_message=gateway_message, exit_code=exit_code)
-        self.suggestions = suggest.suggestions(value, candidates)
+        self.suggestions = suggest.suggestions(value, suggestion_candidates)
 
 
 class MalformedId(WriteRefused):

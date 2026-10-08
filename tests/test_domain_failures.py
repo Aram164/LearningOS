@@ -113,3 +113,24 @@ def test_suggestions_returns_exactly_the_shown_ids():
 
 def test_replay_recovery_error_is_one_class_object():
     assert capability._ReplayRecoveryError is failures._ReplayRecoveryError
+
+
+def test_not_found_one_shot_candidates_preserve_message_and_suggestions():
+    cases = [
+        ("unit-", [f"unit-{i}" for i in range(8)]),
+        ("unit-1x", ["unit-1", "unit-2", "module-9"]),
+        ("UNIT-1", ["unit-1", "unit-10"]),
+        ("zzz", []),
+    ]
+    for value, candidates in cases:
+        expected_message = suggest.not_found("unit", value, iter(candidates))
+        expected_ids = suggest.suggestions(value, iter(candidates))
+        exc = failures.NotFound("unit", value, iter(candidates))
+        assert str(exc) == expected_message
+        assert exc.suggestions == expected_ids
+        for candidate in exc.suggestions:
+            assert candidate in str(exc)
+        # Reiterable callers keep the pre-existing helper's exact formatting.
+        listed = failures.NotFound("unit", value, candidates)
+        assert str(listed) == suggest.not_found("unit", value, candidates)
+        assert listed.suggestions == suggest.suggestions(value, candidates)
