@@ -1,5 +1,15 @@
 schema: 1
-baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A4-plumbing-2, A14-vocabulary, A8-transcripts, A8-doc-commands, A6-idroundtrip]
+baselined:
+- A13-request-schemas
+- A14-vocabulary
+- A2-static
+- A3-prose
+- A3-prose-2
+- A4-plumbing
+- A4-plumbing-2
+- A6-idroundtrip
+- A8-doc-commands
+- A8-transcripts
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -103,11 +113,15 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: "tools/learning_os/commands/reads.py::_explanation_snippets::method::\n"
+  - signature: 'tools/learning_os/commands/reads.py::_explanation_snippets::method::
+
+      '
     count: 3
     since: baseline
     approved_by: null
-  - signature: "tools/learning_os/commands/reads.py::_match_verified::method::\n"
+  - signature: 'tools/learning_os/commands/reads.py::_match_verified::method::
+
+      '
     count: 3
     since: baseline
     approved_by: null
@@ -119,7 +133,8 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/genout/common.py::_git_state::substring::fatal: not a git repository'
+  - signature: 'tools/learning_os/genout/common.py::_git_state::substring::fatal:
+      not a git repository'
     count: 2
     since: baseline
     approved_by: null
@@ -127,15 +142,19 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: "tools/learning_os/materials_resolution.py::leading_material_locator::substring::\n"
+  - signature: 'tools/learning_os/materials_resolution.py::leading_material_locator::substring::
+
+      '
     count: 1
     since: baseline
     approved_by: null
-  - signature: "tools/learning_os/materials_resolution.py::leading_material_locator::substring::\\"
+  - signature: tools/learning_os/materials_resolution.py::leading_material_locator::substring::\
     count: 1
     since: baseline
     approved_by: null
-  - signature: "tools/learning_os/rules/contract.py::check_contract_documentation::method::\n"
+  - signature: 'tools/learning_os/rules/contract.py::check_contract_documentation::method::
+
+      '
     count: 1
     since: baseline
     approved_by: null
@@ -147,7 +166,9 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: "tools/library_reconciliation.py::_flow::method::\n..."
+  - signature: 'tools/library_reconciliation.py::_flow::method::
+
+      ...'
     count: 1
     since: baseline
     approved_by: null
@@ -164,7 +185,8 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/health.py::_time_machine_check::substring::No destinations configured
+  - signature: tools/learning_os/health.py::_time_machine_check::substring::No destinations
+      configured
     count: 1
     since: baseline
     approved_by: null
@@ -1451,182 +1473,1115 @@ checks:
     approved_by: null
   A4-plumbing-2: []
   A8-transcripts:
-  - signature: "system/WORKFLOWS.md::## 1. Start a workspace"
+  - signature: system/WORKFLOWS.md::## 1. Start a workspace
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 4. Add a concept"
+  - signature: system/WORKFLOWS.md::## 4. Add a concept
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 6. Add or evaluate a source"
+  - signature: system/WORKFLOWS.md::## 6. Add or evaluate a source
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 11. Complete and archive a workspace"
+  - signature: system/WORKFLOWS.md::## 11. Complete and archive a workspace
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 14. Move or rename a note"
+  - signature: system/WORKFLOWS.md::## 14. Move or rename a note
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 15. Deprecate or supersede"
+  - signature: system/WORKFLOWS.md::## 15. Deprecate or supersede
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 17. Ingest a handwritten note"
+  - signature: system/WORKFLOWS.md::## 17. Ingest a handwritten note
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 18. Start a module"
+  - signature: system/WORKFLOWS.md::## 18. Start a module
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 19. Close a module"
+  - signature: system/WORKFLOWS.md::## 19. Close a module
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 20. Carry work across semesters"
+  - signature: system/WORKFLOWS.md::## 20. Carry work across semesters
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 23. Process a lecture"
+  - signature: system/WORKFLOWS.md::## 23. Process a lecture
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 24. Turn the semester"
+  - signature: system/WORKFLOWS.md::## 24. Turn the semester
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 25a. Revise an existing plan"
+  - signature: system/WORKFLOWS.md::## 25a. Revise an existing plan
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 26. Source routing and feedback"
+  - signature: system/WORKFLOWS.md::## 26. Source routing and feedback
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 27. Promote a future Master's module"
+  - signature: system/WORKFLOWS.md::## 27. Promote a future Master's module
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 29. Review a stage's material angle"
+  - signature: system/WORKFLOWS.md::## 29. Review a stage's material angle
     count: 1
     since: baseline
     approved_by: null
   A8-doc-commands:
-  - signature: "system/ARCHITECTURE.md::142"
+  - signature: system/ARCHITECTURE.md::142
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/OPERATOR.md::71"
+  - signature: system/OPERATOR.md::71
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/PLAN-CREATION-SOP.md::148"
+  - signature: system/PLAN-CREATION-SOP.md::148
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/PLAN-CREATION-SOP.md::350"
+  - signature: system/PLAN-CREATION-SOP.md::350
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/PLAN-CREATION-SOP.md::541"
+  - signature: system/PLAN-CREATION-SOP.md::541
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/PLAN-CREATION-SOP.md::558"
+  - signature: system/PLAN-CREATION-SOP.md::558
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/SEMANTIC-CONTRACT.md::129"
+  - signature: system/SEMANTIC-CONTRACT.md::129
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/SEMANTIC-CONTRACT.md::221"
+  - signature: system/SEMANTIC-CONTRACT.md::221
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/SEMANTIC-CONTRACT.md::303"
+  - signature: system/SEMANTIC-CONTRACT.md::303
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::114"
+  - signature: system/WORKFLOWS.md::114
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::125"
+  - signature: system/WORKFLOWS.md::125
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::144"
+  - signature: system/WORKFLOWS.md::144
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::275"
+  - signature: system/WORKFLOWS.md::275
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-006-interface-layer-boundary-2026-08-03.md::31"
+  - signature: system/adr/ADR-006-interface-layer-boundary-2026-08-03.md::31
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-006-interface-layer-boundary-2026-08-03.md::98"
+  - signature: system/adr/ADR-006-interface-layer-boundary-2026-08-03.md::98
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-009-faceted-library-and-resource-identity-2026-08-08.md::303"
+  - signature: system/adr/ADR-009-faceted-library-and-resource-identity-2026-08-08.md::303
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md::148"
+  - signature: system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md::148
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md::149"
+  - signature: system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md::149
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md::26"
+  - signature: system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md::26
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/procedures/end-a-session.md::67"
+  - signature: system/procedures/end-a-session.md::67
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/procedures/build-write-envelope.md::27"
+  - signature: system/procedures/build-write-envelope.md::27
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/procedures/build-write-envelope.md::41"
+  - signature: system/procedures/build-write-envelope.md::41
     count: 2
     since: baseline
     approved_by: null
-  - signature: "system/procedures/capture-temporary-material.md::38"
+  - signature: system/procedures/capture-temporary-material.md::38
     count: 2
     since: baseline
     approved_by: null
-  - signature: "system/procedures/shelving-session-closure.md::28"
+  - signature: system/procedures/shelving-session-closure.md::28
     count: 2
     since: baseline
     approved_by: null
-  - signature: "system/procedures/unit-workflow.md::29"
+  - signature: system/procedures/unit-workflow.md::29
     count: 2
     since: baseline
     approved_by: null
-  - signature: "system/skills/lecture-unit-builder/SKILL.md::39"
+  - signature: system/skills/lecture-unit-builder/SKILL.md::39
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/skills/promotion-ritual/SKILL.md::14"
+  - signature: system/skills/promotion-ritual/SKILL.md::14
     count: 1
     since: baseline
     approved_by: null
   A14-vocabulary: []
   A6-idroundtrip:
   - signature: '*::request-schemas-missing'
+    count: 1
+    since: baseline
+    approved_by: null
+  A13-request-schemas:
+  - signature: ability.candidate.append::carries::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::changes::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::condition::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::from_ability::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::kind::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::source_ref::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.candidate.append::to_ability::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.context::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.context::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ai-action.delivery.apply::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ai-action.delivery.apply::delivery_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ai-action.delivery.apply::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.question.save::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.question.save::question::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::request_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::route_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-import-delivery::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-import-delivery::path::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::action_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::provider::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::target_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::target_kind::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-status::request_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-validate-delivery::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-validate-delivery::delivery_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.atlas-context::concept_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.atlas-context::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-manifest::materials_root::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-manifest::ui_root::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-verify::manifest::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-verify::restored_core::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-verify::restored_materials::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-verify::restored_ui::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.bootstrap::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.bootstrap::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.bootstrap::offset::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.capability::name::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.capability::payload_file::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::close::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::defer::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::reject::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inbox-read::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inspect::id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.legacy-archive-inspect::allowlist::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.legacy-archive-inspect::archive_root::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.masters-planning-dashboard::confirm_masters_planning::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.module-list::program_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.module-list::status::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.note-read::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.note-read::note_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.observe::activity::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.observe::assistance::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.observe::result::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.observe::tags::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-edit-context::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-edit-context::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-template::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-template::profile::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-template::title::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-template::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.project-list::status::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.related::id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.runtime-session::context_json::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.runtime-session::event::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.runtime-session::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.runtime-session::requirement::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.search::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.search::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.search::offset::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.session-end::commit_message::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.session-end::push::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::component_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::offset::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::status::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: collection.entry.revise::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: collection.entry.revise::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: collection.entry.revise::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: concept.relations.change::change::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: concept.relations.change::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: coordination.section.revise::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: coordination.section.revise::section::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::classification::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::title::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::detour_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::resolution::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: garden.seed.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.resolve::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::ability::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::activity::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::assistance::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::condition::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::condition_not_met::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::evidence_tag::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::result::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::supersedes::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::workspace::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::activity::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::assistance::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::context::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::requirement::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::result::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::tags::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::workspace::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::activity::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::assistance::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::result::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::stage::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::unit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::workspace::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.lock.publish::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.lock.publish::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.lock.publish::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: lineage.restamp::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.catalog.update::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.catalog.update::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.catalog.update::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::candidate_module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.context::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.context::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.context::offset::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.span::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.span::extract::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.span::route_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.span::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.attempt.record::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.attempt.record::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.materials.compact::check::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.materials.compact::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.materials.compact::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.plan.import::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.plan.import::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.sitting.update::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.sitting.update::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.analysis.save::analysis::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.analysis.save::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.analysis.save_batch::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.create::note::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.evidence.add::evidence_type::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.evidence.add::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.evidence.add::note_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.revise::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.revise::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.revise::note_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.attachment.add::label::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.attachment.add::path_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.attachment.add::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.note.write::path_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.note.write::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.progress.update::path_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.progress.update::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.progress.update::status::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.update::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.update::project_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::*::success
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::selected::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.prepare::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.prepare::summary::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.prepare::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: route.patch::changes::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: route.patch::check::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: route.patch::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: route.patch::route_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: route.patch::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::feedback::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::note::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::source_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.intake.record::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.intake.record::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.intake.record::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.record.revise::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.record.revise::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.record.revise::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.attachment.add::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.attachment.add::label::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.attachment.add::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.attachment.add::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.note.write::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.note.write::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.note.write::text::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.note.write::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.progress.update::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.progress.update::stage_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.progress.update::status::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.progress.update::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.map.import::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.map.import::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::approve::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::check::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.note.append::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.note.append::text::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.note.append::title::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.note.append::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.plan.revise::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.plan.revise::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::action::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::locator::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::purpose::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::source_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: workspace.next-action.update::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: workspace.next-action.update::workspace_id::description
     count: 1
     since: baseline
     approved_by: null
