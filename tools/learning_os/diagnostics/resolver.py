@@ -22,6 +22,18 @@ from pathlib import Path
 import yaml
 
 from ..contracts.gateway import GatewayRequestContext
+from ..domain.codes import (
+    AMBIGUOUS_MIGRATION,
+    IDEMPOTENCY_CONFLICT,
+    INVALID_REQUEST,
+    OUT_OF_SCOPE,
+    PROJECTION_FAILED,
+    REVISION_CONFLICT,
+    STALE_SNAPSHOT,
+    UNCONFIRMED,
+    UNKNOWN_CAPABILITY,
+    VALIDATION_FAILED,
+)
 from ..errors import (
     ReplayEvidenceError,
     TransactionFailure,
@@ -45,15 +57,15 @@ UI_RECEIVED_TO_STAGE = {
 #: IDEMPOTENCY_CONFLICT are deliberately absent: they name no stage, and the
 #: spans must supply it.
 CODE_TO_STAGE = {
-    "STALE_SNAPSHOT": "core.snapshot_guard",
-    "REVISION_CONFLICT": "core.revision_guard",
-    "INVALID_REQUEST": "core.admission",
-    "UNKNOWN_CAPABILITY": "core.admission",
-    "OUT_OF_SCOPE": "core.admission",
-    "AMBIGUOUS_MIGRATION": "core.admission",
-    "UNCONFIRMED": "core.approval",
-    "VALIDATION_FAILED": "core.validation",
-    "PROJECTION_FAILED": "core.projection",
+    STALE_SNAPSHOT: "core.snapshot_guard",
+    REVISION_CONFLICT: "core.revision_guard",
+    INVALID_REQUEST: "core.admission",
+    UNKNOWN_CAPABILITY: "core.admission",
+    OUT_OF_SCOPE: "core.admission",
+    AMBIGUOUS_MIGRATION: "core.admission",
+    UNCONFIRMED: "core.approval",
+    VALIDATION_FAILED: "core.validation",
+    PROJECTION_FAILED: "core.projection",
 }
 
 
@@ -484,7 +496,7 @@ def _conflict_proves_no_commit(records: list[dict],
     which is why this check runs before the contradiction branches.
     """
     codes = authority.response_codes or [authority.response_code]
-    if not codes or not all(code == "IDEMPOTENCY_CONFLICT" for code in codes):
+    if not codes or not all(code == IDEMPOTENCY_CONFLICT for code in codes):
         return False
     return _codes_cover_attempts(records, codes)
 

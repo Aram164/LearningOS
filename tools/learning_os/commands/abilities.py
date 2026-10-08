@@ -17,6 +17,7 @@ from ..abilities import (
 )
 from ..contracts.gateway import current_gateway_request
 from ..contracts.json_schema import validate_contract
+from ..domain.codes import UNCONFIRMED
 from ..learning_runtime import runtime_path
 from ..loader import load_repo
 from .reads import _print_stable, _snapshot
@@ -135,12 +136,12 @@ def cmd_ability_observation_append(args) -> int:
             return 2
         if not args.confirmation_ref.startswith(("conversation://", "note://")):
             print("los: confirmation-ref must point to Aram's confirmation", file=sys.stderr)
-            _record_gateway_refusal("UNCONFIRMED", False)
+            _record_gateway_refusal(UNCONFIRMED, False)
             return 2
         if (request.channel == "ui" and args.confirmation_ref !=
                 f"conversation://learningos-app/{request.idempotency_key}"):
             print("los: app confirmation-ref must name this exact request", file=sys.stderr)
-            _record_gateway_refusal("UNCONFIRMED", False)
+            _record_gateway_refusal(UNCONFIRMED, False)
             return 2
         try:
             history = read_ability_observations(repo)

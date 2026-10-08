@@ -16,6 +16,13 @@ from learning_os.ai_actions import (
     StaleDeliveryError,
 )
 from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.codes import (
+    IDEMPOTENCY_CONFLICT,
+    OUT_OF_SCOPE,
+    REVISION_CONFLICT,
+    STALE_SNAPSHOT,
+    UNCONFIRMED,
+)
 
 from .support import (
     Unconfirmed,
@@ -92,11 +99,11 @@ def _ai_refusal(exc: AIActionError) -> tuple[str, bool] | None:
     which the gateway reports as ``INVALID_REQUEST``.
     """
     if isinstance(exc, DeliveryScopeError):
-        return ("OUT_OF_SCOPE", False)
+        return (OUT_OF_SCOPE, False)
     if isinstance(exc, DeliveryIdempotencyConflict):
-        return ("IDEMPOTENCY_CONFLICT", False)
+        return (IDEMPOTENCY_CONFLICT, False)
     if isinstance(exc, DeliveryBindingError):
-        return ("UNCONFIRMED", False)
+        return (UNCONFIRMED, False)
     return None
 
 
@@ -126,9 +133,9 @@ def cmd_ai_action_apply_delivery(args) -> int:
                 _record_touched(root, touched)
     except StaleDeliveryError as exc:
         if isinstance(exc, DeliveryRevisionConflict):
-            _record_gateway_refusal("REVISION_CONFLICT", True)
+            _record_gateway_refusal(REVISION_CONFLICT, True)
         else:
-            _record_gateway_refusal("STALE_SNAPSHOT", True)
+            _record_gateway_refusal(STALE_SNAPSHOT, True)
         print(str(exc), file=sys.stderr)
         return 3
     except AIActionError as exc:

@@ -18,6 +18,7 @@ import yaml
 
 from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.codes import REVISION_CONFLICT
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.masters_planning import (
@@ -1952,7 +1953,7 @@ def _cmd_master_promotion_import(args) -> int:
                 "expected": plan.package_sha256,
                 "supplied": supplied_hash,
             }, ensure_ascii=False), file=sys.stderr)
-            _record_gateway_refusal("REVISION_CONFLICT", True)
+            _record_gateway_refusal(REVISION_CONFLICT, True)
             return 3
         if not args.check and supplied_hash is None:
             print(
@@ -2003,7 +2004,7 @@ def _cmd_master_promotion_import(args) -> int:
                 "expected": plan.expected_revisions,
                 "supplied": expected_revisions,
             }, ensure_ascii=False), file=sys.stderr)
-            _record_gateway_refusal("REVISION_CONFLICT", True)
+            _record_gateway_refusal(REVISION_CONFLICT, True)
             return 3
         validate_extra, gate_errors = _plan_apply_gate(root)
         code, errors, confirmation = _write_transaction(

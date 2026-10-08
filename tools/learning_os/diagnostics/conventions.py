@@ -17,6 +17,18 @@ recovery requirements, and the definitive-no-commit mirror.
 
 from __future__ import annotations
 
+from ..domain.codes import (
+    AMBIGUOUS_MIGRATION,
+    INVALID_REQUEST,
+    OUT_OF_SCOPE,
+    PROJECTION_FAILED,
+    REVISION_CONFLICT,
+    STALE_SNAPSHOT,
+    UNCONFIRMED,
+    UNKNOWN_CAPABILITY,
+    VALIDATION_FAILED,
+)
+
 VOCAB_VERSION = 2
 
 # ---------------------------------------------------------------------------
@@ -206,15 +218,15 @@ RECOVERY_REQUIREMENTS = frozenset({
 #: mirror deliberately excludes it for the same reason; the parity test
 #: fails if either side drifts.
 DEFINITIVE_NO_COMMIT_CODES = frozenset({
-    "INVALID_REQUEST",
-    "UNKNOWN_CAPABILITY",
-    "STALE_SNAPSHOT",
-    "REVISION_CONFLICT",
-    "OUT_OF_SCOPE",
-    "AMBIGUOUS_MIGRATION",
-    "VALIDATION_FAILED",
-    "PROJECTION_FAILED",
-    "UNCONFIRMED",
+    INVALID_REQUEST,
+    UNKNOWN_CAPABILITY,
+    STALE_SNAPSHOT,
+    REVISION_CONFLICT,
+    OUT_OF_SCOPE,
+    AMBIGUOUS_MIGRATION,
+    VALIDATION_FAILED,
+    PROJECTION_FAILED,
+    UNCONFIRMED,
 })
 
 # ---------------------------------------------------------------------------

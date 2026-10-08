@@ -4,7 +4,8 @@
 Generated, not authored: the payload surface of a capability is defined by the
 parser for its named command. Run after changing a command's arguments; the
 test suite asserts the checked-in files match what this produces. --check
-asks the same question without writing.
+asks the same question without writing, and also verifies the envelope
+schema's resultV2 error code enum still equals domain.codes.PUBLIC_CODES.
 """
 
 from __future__ import annotations
@@ -45,6 +46,20 @@ def main(argv: list[str] | None = None) -> int:
     schemas = _build_schemas(root)
     out = root / "system" / "schema" / "capabilities"
     if args.check:
+        # SPEC §8.2: the envelope schema's resultV2 error code enum is the
+        # public vocabulary; domain.codes.PUBLIC_CODES must equal it, in
+        # order. The schema file itself stays as it is.
+        from learning_os.domain.codes import PUBLIC_CODES  # noqa: E402
+        envelope = json.loads((root / "system" / "schema"
+                               / "capability-envelope.schema.json").read_text(
+                                   encoding="utf-8"))
+        enum = envelope["$defs"]["resultV2"]["properties"]["error"][
+            "oneOf"][1]["properties"]["code"]["enum"]
+        if list(PUBLIC_CODES) != enum:
+            print("domain.codes.PUBLIC_CODES drifted from the envelope code enum:")
+            print(f"  codes.py: {list(PUBLIC_CODES)!r}")
+            print(f"  schema:   {enum!r}")
+            return 1
         # The same verdict as
         # test_capability_dispatch.py::test_payload_schemas_match_the_cli_parser:
         # parsed-JSON equality per generated name. A missing or unreadable

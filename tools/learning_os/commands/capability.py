@@ -24,6 +24,16 @@ from learning_os.diagnostics import conventions as diag_conventions
 from learning_os.diagnostics import tracer as diag_tracer
 from learning_os.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.diagnostics.store import bind_store as _bind_diag_store
+from learning_os.domain.codes import (
+    IDEMPOTENCY_CONFLICT,
+    INTERNAL_FAILURE,
+    INVALID_REQUEST,
+    PROJECTION_FAILED,
+    STALE_SNAPSHOT,
+    UNCONFIRMED,
+    UNKNOWN_CAPABILITY,
+    VALIDATION_FAILED,
+)
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
     PostCommitFailure,
@@ -502,7 +512,7 @@ def _classify_failure(code: int, message: str, *,
         if mapped is not None:
             refused_code, retryable = mapped
             return _gateway_error(refused_code, message, retryable=retryable)
-    return _gateway_error("INVALID_REQUEST", message)
+    return _gateway_error(INVALID_REQUEST, message)
 
 
 def _v2_exit_code(handler_code: int, error: dict | None) -> int:
@@ -510,7 +520,7 @@ def _v2_exit_code(handler_code: int, error: dict | None) -> int:
 
     Every other refusal keeps the handler's own exit code.
     """
-    if error is not None and error.get("code") == "STALE_SNAPSHOT":
+    if error is not None and error.get("code") == STALE_SNAPSHOT:
         return 3
     return handler_code
 
@@ -526,21 +536,21 @@ def _projection_error(exc: ProjectionFailure) -> dict:
     if exc.rollback_complete:
         if exc.pre_existing_defect:
             return _gateway_error(
-                "VALIDATION_FAILED", str(exc), retryable=False,
+                VALIDATION_FAILED, str(exc), retryable=False,
                 details={"stage": "core.projection", "rollback_complete": True,
                          "pre_existing_defect": True})
         return _gateway_error(
-            "PROJECTION_FAILED", str(exc), retryable=True,
+            PROJECTION_FAILED, str(exc), retryable=True,
             details={"stage": "core.projection", "rollback_complete": True})
     return _gateway_error(
-        "INTERNAL_FAILURE", str(exc), retryable=True,
+        INTERNAL_FAILURE, str(exc), retryable=True,
         details={"stage": "core.projection", "rollback_complete": False})
 
 
 def _post_commit_error(exc: PostCommitFailure) -> dict:
     """Committed yet failed: never a definitive refusal."""
     return _gateway_error(
-        "INTERNAL_FAILURE", str(exc), retryable=True,
+        INTERNAL_FAILURE, str(exc), retryable=True,
         details={"stage": "core.commit", "committed": True})
 
 
@@ -968,7 +978,7 @@ def cmd_capability(args) -> int:
         response = _v2_response(
             envelope,
             ok=False,
-            error=_gateway_error("INVALID_REQUEST", str(exc)),
+            error=_gateway_error(INVALID_REQUEST, str(exc)),
         )
         _validate_capability_envelope(root, response, kind="result")
         print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -982,7 +992,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "INVALID_REQUEST",
+                    INVALID_REQUEST,
                     "envelope capability does not match requested capability",
                 ),
             )
@@ -999,7 +1009,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "UNKNOWN_CAPABILITY",
+                    UNKNOWN_CAPABILITY,
                     f"unknown or non-public capability: {args.name}",
                 ),
             )
@@ -1025,7 +1035,7 @@ def cmd_capability(args) -> int:
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error("UNCONFIRMED", str(exc)),
+                error=_gateway_error(UNCONFIRMED, str(exc)),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -1043,7 +1053,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "UNCONFIRMED",
+                    UNCONFIRMED,
                     gesture_refusal(context.capability, context.channel),
                 ),
             )
@@ -1073,7 +1083,7 @@ def cmd_capability(args) -> int:
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error("IDEMPOTENCY_CONFLICT", str(exc)),
+                error=_gateway_error(IDEMPOTENCY_CONFLICT, str(exc)),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -1089,7 +1099,7 @@ def cmd_capability(args) -> int:
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error("INTERNAL_FAILURE", str(exc), retryable=False),
+                error=_gateway_error(INTERNAL_FAILURE, str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -1106,7 +1116,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "INTERNAL_FAILURE", str(exc), retryable=False,
+                    INTERNAL_FAILURE, str(exc), retryable=False,
                     details={
                         "transaction_id": exc.transaction_id,
                         "conflicting_paths": [
@@ -1128,7 +1138,7 @@ def cmd_capability(args) -> int:
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error("INTERNAL_FAILURE", str(exc), retryable=True),
+                error=_gateway_error(INTERNAL_FAILURE, str(exc), retryable=True),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -1149,7 +1159,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "UNCONFIRMED",
+                    UNCONFIRMED,
                     "no committed receipt exists for this exact request",
                 ),
             )
@@ -1168,7 +1178,7 @@ def cmd_capability(args) -> int:
                         envelope,
                         ok=False,
                         error=_gateway_error(
-                            "STALE_SNAPSHOT",
+                            STALE_SNAPSHOT,
                             "canonical state changed since this request was approved",
                             retryable=True,
                             details={
@@ -1200,7 +1210,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "STALE_SNAPSHOT",
+                    STALE_SNAPSHOT,
                     "canonical state changed before the transaction write window",
                     retryable=True,
                     details={"expected": exc.expected, "actual": exc.actual},
@@ -1243,7 +1253,7 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "INTERNAL_FAILURE", str(exc), retryable=False,
+                    INTERNAL_FAILURE, str(exc), retryable=False,
                     details={
                         "transaction_id": exc.transaction_id,
                         "conflicting_paths": [
@@ -1258,7 +1268,7 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
+            return _close_attempt(attempt, 2, "error", {"code": INTERNAL_FAILURE})
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
             failure = exc
@@ -1270,14 +1280,14 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error(
-                    "INTERNAL_FAILURE", str(exc) or type(exc).__name__, retryable=True,
+                    INTERNAL_FAILURE, str(exc) or type(exc).__name__, retryable=True,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             # The precise stage is already on record: the transaction span
             # names the boundary that broke; this close carries the outcome.
-            return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
+            return _close_attempt(attempt, 2, "error", {"code": INTERNAL_FAILURE})
         confirmation = result if code == 0 else {}
         complaint = str(result.get("error") or f"{args.name} failed")
         carried = result.get("error_code")
