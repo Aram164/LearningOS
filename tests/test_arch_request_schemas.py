@@ -127,6 +127,46 @@ def test_forbidden_reference_forms_rejected(tmp_path: Path):
             request_schema(work, alias)
 
 
+def test_scheme_operations_rejected_despite_literal_file(tmp_path: Path):
+    directory = tmp_path / "repo" / "system/schema/requests"
+    directory.mkdir(parents=True)
+    for operation in ("file:probe", "urn:probe"):
+        literal = directory / f"{operation}.schema.json"
+        literal.write_text(json.dumps({
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"learningos/requests/{operation}",
+            "type": "object",
+        }), encoding="utf-8")
+        assert literal.is_file()
+        with pytest.raises(ValueError):
+            request_schema(tmp_path / "repo", operation)
+
+
+def test_scheme_ref_targets_rejected_despite_literal_file(tmp_path: Path):
+    import shutil
+
+    work = tmp_path / "repo"
+    shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
+    directory = work / "system/schema/requests"
+    for index, scheme in enumerate(("file", "urn")):
+        target = f"{scheme}:cli.inspect.schema.json"
+        literal = directory / target
+        literal.write_text(
+            (directory / "cli.inspect.schema.json").read_text(
+                encoding="utf-8"),
+            encoding="utf-8")
+        assert literal.is_file()
+        alias = f"alias.scheme{index}"
+        (directory / f"{alias}.schema.json").write_text(json.dumps({
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"learningos/requests/{alias}",
+            "x-governs": "artifact",
+            "$ref": target,
+        }), encoding="utf-8")
+        with pytest.raises(ValueError):
+            request_schema(work, alias)
+
+
 def test_reference_chains_and_cycles_rejected(tmp_path: Path):
     import shutil
 
@@ -244,6 +284,146 @@ def _current_exceptions() -> Counter[str]:
         if not _has_success(operation, data["x-los-cli-command"]["name"]):
             current[f"{operation}::*::success"] += 1
     return current
+
+
+def _a13_work_tree(tmp_path: Path) -> Path:
+    import shutil
+
+    work = tmp_path / "repo"
+    shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
+    id_fields = work / "tests/architecture/id-fields.yaml"
+    id_fields.parent.mkdir(parents=True)
+    shutil.copy(ID_FIELDS_PATH, id_fields)
+    scenarios = work / "tests/scenarios"
+    scenarios.mkdir(parents=True)
+    (scenarios / "cases").symlink_to(CASES_DIR, target_is_directory=True)
+    (scenarios / "recorded").symlink_to(
+        ROOT / "tests/scenarios/recorded", target_is_directory=True)
+    return work
+
+
+def _point_a13_at(monkeypatch, work: Path):
+    monkeypatch.setattr("test_arch_request_schemas.ROOT", work)
+    monkeypatch.setattr("test_arch_request_schemas.REQUESTS_DIR",
+                        work / "system/schema/requests")
+    monkeypatch.setattr("test_arch_request_schemas.ID_FIELDS_PATH",
+                        work / "tests/architecture/id-fields.yaml")
+    monkeypatch.setattr("test_arch_request_schemas.CASES_DIR",
+                        work / "tests/scenarios/cases")
+
+
+def test_collector_is_faithful_on_an_unmodified_copy(tmp_path: Path,
+                                                     monkeypatch):
+    production = _current_exceptions()
+    work = _a13_work_tree(tmp_path)
+    _point_a13_at(monkeypatch, work)
+    assert _current_exceptions() == production
+
+
+def test_collector_detects_corruption_through_effective_aliases(
+        tmp_path: Path, monkeypatch):
+    production = _current_exceptions()
+    work = _a13_work_tree(tmp_path)
+    requests = work / "system/schema/requests"
+
+    def rewrite(operation, mutate):
+        path = requests / f"{operation}.schema.json"
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        mutate(doc)
+        path.write_text(json.dumps(doc), encoding="utf-8")
+
+    # Corrupt primary annotation value (cli.atlas-context backs
+    # atlas.context).
+    rewrite("cli.atlas-context", lambda doc: doc["properties"][
+        "concept_id"].update({"x-los-id-kind": "unit"}))
+    # Corrupt scalar shape at a decided pointer.
+    rewrite("source.record.revise", lambda doc: doc["properties"][
+        "expected_diff_sha256"].update({"type": "integer"}))
+    # Blank a real description in an alias primary (cli.search backs
+    # note.search) and drop sibling CLI metadata.
+    rewrite("cli.search", lambda doc: doc["properties"]["query"].update(
+        {"description": ""}))
+    rewrite("cli.search",
+            lambda doc: doc["properties"]["type"].pop("x-los-cli"))
+    # Corrupt an annotation the alias inherits (cli.plan-template backs
+    # plan.template).
+    rewrite("cli.plan-template", lambda doc: doc["properties"][
+        "module_id"].update({"x-los-id-kind": "unit"}))
+    # Drop a required id row.
+    id_fields = work / "tests/architecture/id-fields.yaml"
+    rows = yaml.safe_load(id_fields.read_text(encoding="utf-8"))
+    kept = [row for row in rows["fields"]
+            if (row["operation"], row["pointer"])
+            != ("ability.context", "/properties/ability_id")]
+    assert len(kept) == len(rows["fields"]) - 1
+    rows["fields"] = kept
+    id_fields.write_text(yaml.safe_dump(rows), encoding="utf-8")
+
+    _point_a13_at(monkeypatch, work)
+    delta = set((_current_exceptions() - production).elements())
+    assert delta == {
+        "atlas.context::/properties/concept_id::id-annotation",
+        "cli.atlas-context::/properties/concept_id::id-annotation",
+        "source.record.revise::/properties/expected_diff_sha256"
+        "::id-annotation",
+        "ability.context::ability_id::id-row",
+        "cli.search::query::description",
+        "note.search::query::description",
+        "cli.search::type::cli",
+        "note.search::type::cli",
+        "cli.plan-template::/properties/module_id::id-annotation",
+        "plan.template::/properties/module_id::id-annotation",
+    }
+
+
+def test_sequence_success_must_belong_to_the_target_binding(
+        tmp_path: Path, monkeypatch):
+    work = tmp_path / "repo"
+    cases = work / "cases"
+    cases.mkdir(parents=True)
+    recorded = work / "tests/scenarios/recorded/synth.op"
+    recorded.mkdir(parents=True)
+
+    def add_case(case_id, actual):
+        (recorded / f"{case_id}.json").write_text(
+            json.dumps({"steps": actual}), encoding="utf-8")
+
+    # A preparatory gateway step succeeds; the target step is refused.
+    add_case("prep-ok-target-refused",
+             [{"operation": "other.op", "exit": 0,
+               "stdout_json": {"ok": True}},
+              {"operation": "synth.op", "exit": 2,
+               "stdout_json": {"ok": False}}])
+    # Same shape over the CLI: the other binding succeeds, ours refuses.
+    add_case("cli-prep-ok-target-refused",
+             [{"exit": 0, "stdout_json": {"ok": True}},
+              {"exit": 2, "stdout_json": {"ok": False}}])
+    # A target step that exits 0 with ok:false is still a refusal.
+    add_case("target-ok-false",
+             [{"operation": "synth.op", "exit": 0,
+               "stdout_json": {"ok": False}}])
+    (cases / "synth.op.yaml").write_text(yaml.safe_dump({"cases": [
+        {"id": "prep-ok-target-refused", "kind": "sequence", "steps": [
+            {"transport": "gateway"}, {"transport": "gateway"}]},
+        {"id": "cli-prep-ok-target-refused", "kind": "sequence", "steps": [
+            {"transport": "cli", "argv": ["other-cmd"]},
+            {"transport": "cli", "argv": ["synth-cmd", "x"]}]},
+        {"id": "target-ok-false", "kind": "sequence", "steps": [
+            {"transport": "gateway"}]},
+    ]}), encoding="utf-8")
+    monkeypatch.setattr("test_arch_request_schemas.CASES_DIR", cases)
+    monkeypatch.setattr("test_arch_request_schemas.ROOT", work)
+    assert _has_success("synth.op", "synth-cmd") is False
+    # Positive control: the target step succeeding counts.
+    (cases / "synth.ok.yaml").write_text(yaml.safe_dump({"cases": [
+        {"id": "target-ok", "kind": "sequence", "steps": [
+            {"transport": "gateway"}]}]}), encoding="utf-8")
+    (work / "tests/scenarios/recorded/synth.ok").mkdir(parents=True)
+    (work / "tests/scenarios/recorded/synth.ok/target-ok.json").write_text(
+        json.dumps({"steps": [
+            {"operation": "synth.ok", "exit": 0,
+             "stdout_json": {"ok": True}}]}), encoding="utf-8")
+    assert _has_success("synth.ok", "synth-cmd") is True
 
 
 def test_current_exceptions_are_recorded():
