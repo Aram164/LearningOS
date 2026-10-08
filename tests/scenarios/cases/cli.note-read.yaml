@@ -21,7 +21,7 @@ cases:
   - id: windowed
     kind: success
     transport: cli
-    argv: [note-read, note-demo, --offset, 10, --limit, 20, --expected-snapshot, "sha256:ac0eddef5a3c78e2abcc20ba5941b2ba613d600b9125e10d827683c5628c60bc"]
+    argv: [note-read, note-demo, --offset, 10, --limit, 20, --expected-snapshot, "sha256:d6f41dcebfc6a63db8cb45253d1f15307f73024981343c27697d8e705697f6f3"]
     expect: {site: null}
   - id: unknown-note
     kind: refusal
