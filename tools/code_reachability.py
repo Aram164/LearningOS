@@ -80,8 +80,6 @@ UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
         "shared migration lifecycle; runtime wiring retired by PLAN D13 (ADR-018)"
     ),
     "learning_os.adapters": "created empty by PLAN S02; filled in S04/S11/S13",
-    "learning_os.domain": "created empty by PLAN S02; filled in S04/S11/S13",
-    "learning_os.ops": "created empty by PLAN S02; filled in S04/S11/S13",
     "learning_os.store": "created empty by PLAN S02; filled in S04/S11/S13",
     "migrations.summaries_to_notes_v1": (
         "one-shot summary migration, directly executed (through v35)"
