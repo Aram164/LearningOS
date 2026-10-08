@@ -96,6 +96,102 @@ def _normalize_describe(doc: dict) -> dict:
     return normalized
 
 
+def test_only_the_documented_relocation_normalizes():
+    """SPEC (ap): arbitrary class/factory changes fail the real comparison."""
+    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+    expected = _normalize_describe(baseline)
+    # Positive control: the exact relocation maps onto the old bytes.
+    moved = copy.deepcopy(baseline)
+    moved["parser_class"] = (
+        "learning_os.adapters.cli_parser._LosArgumentParser")
+    for sub in moved["subparsers"].values():
+        if "_parser_factory" in sub.get("defaults", {}):
+            sub["defaults"]["_parser_factory"] = (
+                "learning_os.adapters.cli_parser.build_parser")
+    assert _normalize_describe(moved) == expected
+    # Arbitrary changes survive normalization, so the comparison fails.
+    for parser_class in ("argparse.ArgumentParser",
+                         "learning_os.adapters.cli_parser.Parser",
+                         "los.ArgumentParser"):
+        wrong = copy.deepcopy(baseline)
+        wrong["parser_class"] = parser_class
+        assert _normalize_describe(wrong)["parser_class"] == parser_class
+        assert _normalize_describe(wrong) != expected
+    name = next(iter(baseline["subparsers"]))
+    for factory in ("other.build_parser",
+                    "learning_os.adapters.cli_parser.build_parser2",
+                    "x.learning_os.adapters.cli_parser.build_parser"):
+        wrong = copy.deepcopy(baseline)
+        wrong["subparsers"][name].setdefault("defaults", {})[
+            "_parser_factory"] = factory
+        normalized = _normalize_describe(wrong)
+        assert normalized["subparsers"][name]["defaults"][
+            "_parser_factory"] == factory
+        assert normalized != expected
+
+
+def test_namespace_normalization_accepts_only_the_exact_factory():
+    assert _normalize_namespace(
+        {"_parser_factory":
+         "learning_os.adapters.cli_parser.build_parser"}) == \
+        {"_parser_factory": "los.build_parser"}
+    # The old bytes and anything else pass through untouched.
+    for factory in ("los.build_parser", "other.build_parser",
+                    "learning_os.adapters.cli_parser.build_parser2"):
+        assert _normalize_namespace(
+            {"command": "inspect",
+             "_parser_factory": factory}) == {
+                 "command": "inspect", "_parser_factory": factory}
+
+
+def test_registered_normalization_with_invoke_binding_and_root_options(
+        tmp_path, monkeypatch):
+    """Future (u) rule against an actual synthetic invoke binding.
+
+    Root options precede the subcommand, so the first non-dash token is
+    the root value, not the subcommand: selection must use the recorded
+    namespace's ``command``. Every unrelated value is kept.
+    """
+    directory = tmp_path / "requests"
+    directory.mkdir()
+    (directory / "cli.inspect.schema.json").write_text(json.dumps({
+        "x-los-cli-command": {
+            "name": "inspect",
+            "handler": "learning_os.adapters.cli.invoke:cli.inspect",
+        },
+    }), encoding="utf-8")
+    monkeypatch.setattr("test_arch_cli_parity.REQUESTS_DIR", directory)
+    argv = ["--root", "/tmp/x", "inspect", "note-demo"]
+    recorded = {"namespace": {
+        "command": "inspect", "id": "note-demo",
+        "func": "learning_os.commands.query.cmd_inspect",
+        "_parser_factory": "los.build_parser", "root": "/tmp/x",
+    }}
+    naive_first_token = next(
+        token for token in argv if not token.startswith("-"))
+    assert naive_first_token == "/tmp/x"
+    subcommand = recorded.get("namespace", {}).get("command")
+    assert subcommand == "inspect"
+    handler = _handler_for_subcommand(subcommand)
+    assert handler == "learning_os.adapters.cli.invoke:cli.inspect"
+    normalized = _normalize_registered_namespace(
+        _normalize_namespace(recorded["namespace"]), handler)
+    assert normalized == {
+        "command": "inspect", "id": "note-demo",
+        "func": "learning_os.adapters.cli.invoke",
+        "_operation": "cli.inspect",
+        "_parser_factory": "los.build_parser", "root": "/tmp/x",
+    }
+    normalized_defaults = _normalize_registered_defaults(
+        {"func": "learning_os.commands.query.cmd_inspect",
+         "_parser_factory": "los.build_parser"}, handler)
+    assert normalized_defaults == {
+        "func": "learning_os.adapters.cli.invoke",
+        "_operation": repr("cli.inspect"),
+        "_parser_factory": "los.build_parser",
+    }
+
+
 def test_generated_parser_matches_baseline_structure():
     import los
 

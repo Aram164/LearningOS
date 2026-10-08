@@ -318,6 +318,68 @@ def test_nested_sequence_stdout_is_scanned():
     assert list(_recorded_stdout_strings(data)) == ["unit-1"]
 
 
+def test_real_nested_sequence_stdout_is_scanned():
+    """`note-demo-seq-1` appears only inside a sequence step's stdout."""
+    assert "note-demo-seq-1" in set(_stdout_strings())
+
+
+def test_decided_scalar_pointers_accept_their_values():
+    from learning_os.contracts.requests import request_schema
+
+    module_node = _navigate(
+        request_schema(ROOT, "cli.plan-template"), "/properties/module_id")
+    assert _scalar_accepts("module", "module-1", module_node)
+    concept_node = _navigate(
+        request_schema(ROOT, "atlas.context"), "/properties/concept_id")
+    assert _scalar_accepts("concept", "concept-1", concept_node)
+    # Both digest spellings validate at the real prefixed-only pointer
+    # and at the real bare-only production pointer alike.
+    prefixed_node = _navigate(
+        request_schema(ROOT, "source.record.revise"),
+        "/properties/expected_diff_sha256")
+    assert prefixed_node["pattern"] == "^sha256:[a-f0-9]{64}$"
+    note_schema = json.loads(
+        (ROOT / "system/schema/note.schema.json").read_text(encoding="utf-8"))
+    bare_node = note_schema["properties"]["material_analysis"][
+        "properties"]["recorded_source_digest"]
+    assert bare_node["pattern"] == "^[0-9a-f]{64}$"
+    for node in (prefixed_node, bare_node):
+        assert _scalar_accepts("digest", "sha256:" + "ab" * 32, node)
+        assert _scalar_accepts("digest", "ab" * 32, node)
+
+
+def test_scalar_checker_refuses_wrong_type_and_containers():
+    from learning_os.contracts.requests import request_schema
+
+    assert not _scalar_accepts("module", "module-1", {"type": "integer"})
+    object_node = _navigate(
+        request_schema(ROOT, "unit.plan.revise"), "/properties/record")
+    assert object_node["type"] == "object"
+    assert not _scalar_accepts("unit", "unit-1", object_node)
+    assert not _scalar_accepts("digest", "sha256:" + "ab" * 32, object_node)
+
+
+def test_id_scan_changes_no_production_file():
+    import hashlib
+
+    watched = [
+        ROOT / "tools/learning_os/adapters/cli_types.py",
+        ROOT / "tools/learning_os/contracts/payloads.py",
+        ROOT / "tests/architecture/id-fields.yaml",
+        ROOT / "system/schema/note.schema.json",
+    ]
+    watched += sorted((ROOT / "system/schema/requests").glob("*.schema.json"))
+    watched += sorted(
+        (ROOT / "system/schema/capabilities").glob("*.schema.json"))
+    before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in watched}
+    assert len(list(_stdout_strings())) > 0
+    assert sum(_review_signatures().values()) == 18
+    after = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+             for p in watched}
+    assert after == before
+
+
 def _walk_strings(node):
     if isinstance(node, str):
         yield node
