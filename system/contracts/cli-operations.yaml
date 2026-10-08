@@ -34,7 +34,7 @@ operations:
     kind: tool
   cli.capability:
     cli_command: capability
-    kind: porcelain
+    kind: command
   cli.dossier:
     cli_command: dossier
     kind: porcelain
