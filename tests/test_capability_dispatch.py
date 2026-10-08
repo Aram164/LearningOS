@@ -138,6 +138,7 @@ def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
 @pytest.mark.parametrize("printed", ["plain success", "[]", ""])
 def test_non_object_handler_output_is_a_hard_gateway_failure(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch, printed: str):
+    import learning_os.commands.capture as capture_module
     import los
 
     def malformed_success(_args):
@@ -145,7 +146,9 @@ def test_non_object_handler_output_is_a_hard_gateway_failure(
             print(printed)
         return 0
 
-    monkeypatch.setattr(los, "cmd_capture", malformed_success)
+    # The generated parser resolves funcs from their source modules
+    # (SPEC 10.5), not via the los namespace, so patch the source.
+    monkeypatch.setattr(capture_module, "cmd_capture", malformed_success)
     definition = command_definitions(mini_repo)["capture.create"]
     with pytest.raises(WriteRefused, match="reported success"):
         _dispatch(
