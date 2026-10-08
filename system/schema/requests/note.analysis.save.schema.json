@@ -75,6 +75,27 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": false
     },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
     "expected_revision": {
       "type": "array",
       "items": {
@@ -90,27 +111,6 @@
         "nargs": null,
         "const": null,
         "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,

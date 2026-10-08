@@ -8,111 +8,6 @@
     "unit_id"
   ],
   "properties": {
-    "audit": {
-      "type": "boolean",
-      "description": "attach the deterministic unit planning audit to the full context",
-      "x-los-cli": {
-        "flags": [
-          "--audit"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "brief": {
-      "type": "boolean",
-      "description": "brief preparation form: identities, guards, id inventories, missing evidence, analysis refs, preflight checks, expand commands",
-      "x-los-cli": {
-        "flags": [
-          "--brief"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "include_neighbors": {
-      "type": "boolean",
-      "description": "with --brief: include the full neighboring-unit source-reuse map",
-      "x-los-cli": {
-        "flags": [
-          "--include-neighbors"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "include_related": {
-      "type": "boolean",
-      "description": "with --brief: list the same-source related analysis notes too",
-      "x-los-cli": {
-        "flags": [
-          "--include-related"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -133,6 +28,27 @@
         "transport_only": true,
         "envelope_owned": false
       }
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
     },
     "route_id": {
       "type": "string",
@@ -206,12 +122,98 @@
       "x-los-id-kind": "stage",
       "x-los-lookup": true
     },
-    "unit_id": {
-      "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+    "audit": {
+      "type": "boolean",
+      "description": "attach the deterministic unit planning audit to the full context",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
+        "flags": [
+          "--audit"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "brief": {
+      "type": "boolean",
+      "description": "brief preparation form: identities, guards, id inventories, missing evidence, analysis refs, preflight checks, expand commands",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "include_related": {
+      "type": "boolean",
+      "description": "with --brief: list the same-source related analysis notes too",
+      "x-los-cli": {
+        "flags": [
+          "--include-related"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "include_neighbors": {
+      "type": "boolean",
+      "description": "with --brief: include the full neighboring-unit source-reuse map",
+      "x-los-cli": {
+        "flags": [
+          "--include-neighbors"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -219,13 +221,11 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

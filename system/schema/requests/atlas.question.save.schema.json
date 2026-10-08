@@ -8,28 +8,25 @@
     "question"
   ],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "question": {
+      "type": "object",
+      "description": "question (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--expected-revision"
+          "--question"
         ],
         "position": null,
-        "action": "append",
+        "action": "store",
         "nargs": null,
         "const": null,
-        "default": [],
-        "type": null,
+        "default": null,
+        "type": "json_object",
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
       }
     },
     "expected_snapshot": {
@@ -53,25 +50,28 @@
         "envelope_owned": true
       }
     },
-    "question": {
-      "type": "object",
-      "description": "question (no description in the parser yet)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--question"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
-        "type": "json_object",
+        "default": [],
+        "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

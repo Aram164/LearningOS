@@ -6,69 +6,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "ability_id": {
-      "type": "string",
-      "description": "one ability identity to expand",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": "?",
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "ability",
-      "x-los-lookup": "tolerant"
-    },
-    "brief": {
-      "type": "boolean",
-      "description": "with an ability id: state summary with evidence totals and provenance pointers instead of full history and materials",
-      "x-los-cli": {
-        "flags": [
-          "--brief"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -89,6 +26,27 @@
         "transport_only": true,
         "envelope_owned": false
       }
+    },
+    "ability_id": {
+      "type": "string",
+      "description": "one ability identity to expand",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "ability",
+      "x-los-lookup": "tolerant"
     },
     "limit": {
       "type": "integer",
@@ -132,6 +90,27 @@
         "envelope_owned": false
       }
     },
+    "brief": {
+      "type": "boolean",
+      "description": "with an ability id: state summary with evidence totals and provenance pointers instead of full history and materials",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "section": {
       "type": "string",
       "enum": [
@@ -156,6 +135,27 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     }
   },

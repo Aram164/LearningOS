@@ -6,71 +6,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "compact": {
-      "type": "boolean",
-      "description": "bounded summary rows with totals and continuation instead of full unit bodies",
-      "x-los-cli": {
-        "flags": [
-          "--compact"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "component_id": {
-      "type": "string",
-      "description": "component_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--component-id"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "component",
-      "x-los-lookup": true
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -89,27 +24,6 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "limit": {
-      "type": "integer",
-      "description": "limit (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--limit"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 20,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
         "envelope_owned": false
       }
     },
@@ -136,6 +50,71 @@
       "x-los-id-kind": "module",
       "x-los-lookup": true
     },
+    "component_id": {
+      "type": "string",
+      "description": "component_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--component-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "component",
+      "x-los-lookup": true
+    },
+    "status": {
+      "type": "string",
+      "description": "status (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--status"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "bounded summary rows with totals and continuation instead of full unit bodies",
+      "x-los-cli": {
+        "flags": [
+          "--compact"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "offset": {
       "type": "integer",
       "description": "offset (no description in the parser yet)",
@@ -157,12 +136,33 @@
         "envelope_owned": false
       }
     },
-    "status": {
-      "type": "string",
-      "description": "status (no description in the parser yet)",
+    "limit": {
+      "type": "integer",
+      "description": "limit (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--status"
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 20,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
         ],
         "position": null,
         "action": "store",
@@ -175,7 +175,7 @@
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

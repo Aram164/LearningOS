@@ -8,38 +8,12 @@
     "project_id"
   ],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
+    "project_id": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "project_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
+        "flags": [],
+        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -47,11 +21,13 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
-      }
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "project",
+      "x-los-lookup": true
     },
     "file": {
       "type": "string",
@@ -66,6 +42,27 @@
         "const": null,
         "default": null,
         "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "project": {
+      "type": "object",
+      "description": "the project record as inline JSON",
+      "x-los-cli": {
+        "flags": [
+          "--project"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
         "choices": null,
         "metavar": null,
         "required": false,
@@ -98,33 +95,14 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": false
     },
-    "project": {
-      "type": "object",
-      "description": "the project record as inline JSON",
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--project"
+          "--expected-snapshot"
         ],
         "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "json_object",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "project_id": {
-      "type": "string",
-      "description": "project_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -132,13 +110,35 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
       },
-      "x-los-id-kind": "project",
-      "x-los-lookup": true
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

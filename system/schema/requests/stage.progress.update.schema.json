@@ -10,92 +10,26 @@
     "unit_id"
   ],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
       },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "progress_next": {
-      "type": "string",
-      "description": "record what comes next (requires --progress-summary)",
-      "x-los-cli": {
-        "flags": [
-          "--progress-next"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "progress_summary": {
-      "type": "string",
-      "description": "record where work stopped (stored on the stage row, surfaced by resume)",
-      "x-los-cli": {
-        "flags": [
-          "--progress-summary"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
     },
     "stage_id": {
       "type": "string",
@@ -150,12 +84,14 @@
         "envelope_owned": false
       }
     },
-    "unit_id": {
+    "progress_summary": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "record where work stopped (stored on the stage row, surfaced by resume)",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
+        "flags": [
+          "--progress-summary"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -163,13 +99,77 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "progress_next": {
+      "type": "string",
+      "description": "record what comes next (requires --progress-summary)",
+      "x-los-cli": {
+        "flags": [
+          "--progress-next"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
       },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

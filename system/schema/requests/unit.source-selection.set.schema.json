@@ -11,6 +11,67 @@
     "unit_id"
   ],
   "properties": {
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
+    },
+    "source_id": {
+      "type": "string",
+      "description": "source_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 1,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "source",
+      "x-los-lookup": true
+    },
+    "locator": {
+      "type": "string",
+      "description": "locator (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 2,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "action": {
       "type": "string",
       "enum": [
@@ -30,70 +91,6 @@
           "select",
           "remove"
         ],
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "locator": {
-      "type": "string",
-      "description": "locator (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 2,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
         "metavar": null,
         "required": true,
         "stdin": false,
@@ -122,12 +119,14 @@
         "envelope_owned": false
       }
     },
-    "source_id": {
+    "expected_snapshot": {
       "type": "string",
-      "description": "source_id (no description in the parser yet)",
+      "description": "expected_snapshot (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [],
-        "position": 1,
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -135,34 +134,35 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "source",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     },
-    "unit_id": {
-      "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

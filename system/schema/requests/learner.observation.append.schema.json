@@ -11,6 +11,48 @@
     "workspace"
   ],
   "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "workspace (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--workspace"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "requirement": {
+      "type": "string",
+      "description": "requirement (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--requirement"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "activity": {
       "type": "string",
       "description": "activity (no description in the parser yet)",
@@ -32,12 +74,86 @@
         "envelope_owned": false
       }
     },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "result (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--result"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "correct",
+          "incorrect",
+          "partial",
+          "abandoned"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "assistance": {
       "type": "string",
       "description": "assistance (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
           "--assistance"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "tags": {
+      "type": "string",
+      "description": "tags (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--tags"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "context": {
+      "type": "string",
+      "description": "context (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--context"
         ],
         "position": null,
         "action": "store",
@@ -101,12 +217,12 @@
         "envelope_owned": false
       }
     },
-    "context": {
+    "supersedes": {
       "type": "string",
-      "description": "context (no description in the parser yet)",
+      "description": "explicitly correct one earlier observation; preserves its bytes",
       "x-los-cli": {
         "flags": [
-          "--context"
+          "--supersedes"
         ],
         "position": null,
         "action": "store",
@@ -120,6 +236,27 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     },
     "expected_revision": {
@@ -144,143 +281,6 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "requirement": {
-      "type": "string",
-      "description": "requirement (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--requirement"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "result": {
-      "type": "string",
-      "enum": [
-        "correct",
-        "incorrect",
-        "partial",
-        "abandoned"
-      ],
-      "description": "result (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--result"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": [
-          "correct",
-          "incorrect",
-          "partial",
-          "abandoned"
-        ],
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "supersedes": {
-      "type": "string",
-      "description": "explicitly correct one earlier observation; preserves its bytes",
-      "x-los-cli": {
-        "flags": [
-          "--supersedes"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "tags": {
-      "type": "string",
-      "description": "tags (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--tags"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "workspace": {
-      "type": "string",
-      "description": "workspace (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--workspace"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
       }
     }
   },

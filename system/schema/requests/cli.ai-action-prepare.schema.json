@@ -31,12 +31,12 @@
         "envelope_owned": false
       }
     },
-    "expected_snapshot": {
+    "target_kind": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "target_kind (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--expected-snapshot"
+          "--target-kind"
         ],
         "position": null,
         "action": "store",
@@ -46,49 +46,7 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "provider": {
-      "type": "string",
-      "description": "provider (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--provider"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": "manual-bundle",
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "request_id": {
-      "type": "string",
-      "description": "optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ (refused before anything is persisted)",
-      "x-los-cli": {
-        "flags": [
-          "--request-id"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -115,12 +73,33 @@
         "envelope_owned": false
       }
     },
-    "target_kind": {
+    "provider": {
       "type": "string",
-      "description": "target_kind (no description in the parser yet)",
+      "description": "provider (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--target-kind"
+          "--provider"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": "manual-bundle",
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
         ],
         "position": null,
         "action": "store",
@@ -130,7 +109,28 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "request_id": {
+      "type": "string",
+      "description": "optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ (refused before anything is persisted)",
+      "x-los-cli": {
+        "flags": [
+          "--request-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false

@@ -6,27 +6,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "check": {
-      "type": "boolean",
-      "description": "recompute eligibility (all claims), or verify the plan for --claim-ids; write nothing",
-      "x-los-cli": {
-        "flags": [
-          "--check"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "claim_ids": {
       "type": "array",
       "items": {
@@ -75,6 +54,48 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": null
     },
+    "check": {
+      "type": "boolean",
+      "description": "recompute eligibility (all claims), or verify the plan for --claim-ids; write nothing",
+      "x-los-cli": {
+        "flags": [
+          "--check"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
     "expected_revision": {
       "type": "array",
       "items": {
@@ -90,27 +111,6 @@
         "nargs": null,
         "const": null,
         "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,

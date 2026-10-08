@@ -6,48 +6,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "channel": {
-      "type": "string",
-      "description": "channel ledger to close when no session id is named (default: operator)",
-      "x-los-cli": {
-        "flags": [
-          "--channel"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "close": {
-      "type": "boolean",
-      "description": "end this session's ownership window without committing: delete only its own session ledger (a bare review never closes)",
-      "x-los-cli": {
-        "flags": [
-          "--close"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "commit_message": {
       "type": "string",
       "description": "commit_message (no description in the parser yet)",
@@ -69,12 +27,12 @@
         "envelope_owned": false
       }
     },
-    "include_stale": {
+    "close": {
       "type": "boolean",
-      "description": "also stage this session's rows older than the stale threshold",
+      "description": "end this session's ownership window without committing: delete only its own session ledger (a bare review never closes)",
       "x-los-cli": {
         "flags": [
-          "--include-stale"
+          "--close"
         ],
         "position": null,
         "action": "store_true",
@@ -123,6 +81,48 @@
         "nargs": null,
         "const": null,
         "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "channel": {
+      "type": "string",
+      "description": "channel ledger to close when no session id is named (default: operator)",
+      "x-los-cli": {
+        "flags": [
+          "--channel"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "include_stale": {
+      "type": "boolean",
+      "description": "also stage this session's rows older than the stale threshold",
+      "x-los-cli": {
+        "flags": [
+          "--include-stale"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,

@@ -8,27 +8,6 @@
     "note_id"
   ],
   "properties": {
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -47,27 +26,6 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "limit": {
-      "type": "integer",
-      "description": "maximum characters, bounded to 16000",
-      "x-los-cli": {
-        "flags": [
-          "--limit"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 8000,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
         "envelope_owned": false
       }
     },
@@ -111,6 +69,48 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "maximum characters, bounded to 16000",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 8000,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     }
   },

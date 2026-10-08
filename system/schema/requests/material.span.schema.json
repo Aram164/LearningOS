@@ -9,48 +9,6 @@
     "unit_id"
   ],
   "properties": {
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "extract": {
-      "type": "boolean",
-      "description": "extract (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--extract"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -72,26 +30,26 @@
         "envelope_owned": false
       }
     },
-    "resource_index": {
-      "type": "integer",
-      "description": "zero-based canonical stage resource index; requires --stage",
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--resource-index"
-        ],
-        "position": null,
+        "flags": [],
+        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
         "default": null,
-        "type": "int",
+        "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
     },
     "route_id": {
       "type": "string",
@@ -137,12 +95,56 @@
       "x-los-id-kind": "stage",
       "x-los-lookup": true
     },
-    "unit_id": {
-      "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+    "resource_index": {
+      "type": "integer",
+      "description": "zero-based canonical stage resource index; requires --stage",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
+        "flags": [
+          "--resource-index"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "extract": {
+      "type": "boolean",
+      "description": "extract (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--extract"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -150,13 +152,11 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

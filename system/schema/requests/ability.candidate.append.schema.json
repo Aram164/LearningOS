@@ -13,6 +13,78 @@
     "to_ability"
   ],
   "properties": {
+    "from_ability": {
+      "type": "string",
+      "description": "from_ability (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--from-ability"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "to_ability": {
+      "type": "string",
+      "description": "to_ability (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--to-ability"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "equivalence",
+        "extension",
+        "connection"
+      ],
+      "description": "kind (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--kind"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "equivalence",
+          "extension",
+          "connection"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "carries": {
       "type": "string",
       "description": "carries (no description in the parser yet)",
@@ -79,28 +151,25 @@
         "envelope_owned": false
       }
     },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "source_ref": {
+      "type": "string",
+      "description": "source_ref (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--expected-revision"
+          "--source-ref"
         ],
         "position": null,
-        "action": "append",
+        "action": "store",
         "nargs": null,
         "const": null,
-        "default": [],
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
       }
     },
     "expected_snapshot": {
@@ -124,97 +193,28 @@
         "envelope_owned": true
       }
     },
-    "from_ability": {
-      "type": "string",
-      "description": "from_ability (no description in the parser yet)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--from-ability"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "kind": {
-      "type": "string",
-      "enum": [
-        "equivalence",
-        "extension",
-        "connection"
-      ],
-      "description": "kind (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--kind"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": [
-          "equivalence",
-          "extension",
-          "connection"
-        ],
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "source_ref": {
-      "type": "string",
-      "description": "source_ref (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--source-ref"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "to_ability": {
-      "type": "string",
-      "description": "to_ability (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--to-ability"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

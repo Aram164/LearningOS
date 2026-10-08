@@ -6,6 +6,46 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "predicate": {
+      "type": "string",
+      "description": "registered predicate name",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "input": {
       "type": "array",
       "items": {
@@ -30,27 +70,6 @@
         "envelope_owned": false
       }
     },
-    "json": {
-      "type": "boolean",
-      "description": "no-op: this command always prints JSON",
-      "x-los-cli": {
-        "flags": [
-          "--json"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": true,
-        "envelope_owned": false
-      }
-    },
     "list": {
       "type": "boolean",
       "description": "the registry, with inputs and authority",
@@ -63,25 +82,6 @@
         "nargs": 0,
         "const": true,
         "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "predicate": {
-      "type": "string",
-      "description": "registered predicate name",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": "?",
-        "const": null,
-        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,

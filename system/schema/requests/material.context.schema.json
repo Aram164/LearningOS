@@ -6,6 +6,46 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "query": {
+      "type": "string",
+      "description": "explanation need; optional when --concept or --material carries the need",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": "",
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "concept": {
       "type": "string",
       "description": "concept id or declared alias filter",
@@ -27,12 +67,12 @@
         "envelope_owned": false
       }
     },
-    "expected_observations": {
+    "purpose": {
       "type": "string",
-      "description": "observations digest from the previous page; required when continuing past offset 0",
+      "description": "purpose substring filter (anchors, best use, exercise value)",
       "x-los-cli": {
         "flags": [
-          "--expected-observations"
+          "--purpose"
         ],
         "position": null,
         "action": "store",
@@ -48,39 +88,18 @@
         "envelope_owned": false
       }
     },
-    "expected_snapshot": {
+    "unit": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "unit scope: direct route-bound evidence plus the unit's own approved assessments",
       "x-los-cli": {
         "flags": [
-          "--expected-snapshot"
+          "--unit"
         ],
         "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
         "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "include_anchors": {
-      "type": "boolean",
-      "description": "return complete anchor indexes instead of the bounded preview",
-      "x-los-cli": {
-        "flags": [
-          "--include-anchors"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
@@ -111,12 +130,12 @@
         "envelope_owned": false
       }
     },
-    "json": {
+    "include_anchors": {
       "type": "boolean",
-      "description": "no-op: this command always prints JSON",
+      "description": "return complete anchor indexes instead of the bounded preview",
       "x-los-cli": {
         "flags": [
-          "--json"
+          "--include-anchors"
         ],
         "position": null,
         "action": "store_true",
@@ -124,27 +143,6 @@
         "const": true,
         "default": false,
         "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "limit": {
-      "type": "integer",
-      "description": "limit (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--limit"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 5,
-        "type": "int",
         "choices": null,
         "metavar": null,
         "required": false,
@@ -174,6 +172,27 @@
         "envelope_owned": false
       }
     },
+    "limit": {
+      "type": "integer",
+      "description": "limit (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 5,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "offset": {
       "type": "integer",
       "description": "offset (no description in the parser yet)",
@@ -195,12 +214,12 @@
         "envelope_owned": false
       }
     },
-    "purpose": {
+    "expected_snapshot": {
       "type": "string",
-      "description": "purpose substring filter (anchors, best use, exercise value)",
+      "description": "expected_snapshot (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--purpose"
+          "--expected-snapshot"
         ],
         "position": null,
         "action": "store",
@@ -213,34 +232,15 @@
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     },
-    "query": {
+    "expected_observations": {
       "type": "string",
-      "description": "explanation need; optional when --concept or --material carries the need",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": "?",
-        "const": null,
-        "default": "",
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "unit": {
-      "type": "string",
-      "description": "unit scope: direct route-bound evidence plus the unit's own approved assessments",
+      "description": "observations digest from the previous page; required when continuing past offset 0",
       "x-los-cli": {
         "flags": [
-          "--unit"
+          "--expected-observations"
         ],
         "position": null,
         "action": "store",

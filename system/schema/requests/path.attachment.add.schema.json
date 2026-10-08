@@ -10,38 +10,12 @@
     "stage_id"
   ],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
+    "path_id": {
       "type": "string",
-      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+      "description": "path_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
+        "flags": [],
+        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -49,11 +23,34 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
-      }
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "path",
+      "x-los-lookup": true
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "stage_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 1,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "stage",
+      "x-los-lookup": true
     },
     "file": {
       "type": "string",
@@ -121,12 +118,14 @@
         "envelope_owned": false
       }
     },
-    "path_id": {
+    "expected_snapshot": {
       "type": "string",
-      "description": "path_id (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -134,34 +133,35 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "path",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     },
-    "stage_id": {
-      "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
-        "flags": [],
-        "position": 1,
-        "action": "store",
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "stage",
-      "x-los-lookup": true
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

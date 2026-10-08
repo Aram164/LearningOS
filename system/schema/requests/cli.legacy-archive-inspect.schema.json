@@ -9,24 +9,24 @@
     "archive_root"
   ],
   "properties": {
-    "allowlist": {
-      "type": "string",
-      "description": "allowlist (no description in the parser yet)",
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
       "x-los-cli": {
         "flags": [
-          "--allowlist"
+          "--json"
         ],
         "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
-        "transport_only": false,
+        "transport_only": true,
         "envelope_owned": false
       }
     },
@@ -51,24 +51,24 @@
         "envelope_owned": false
       }
     },
-    "json": {
-      "type": "boolean",
-      "description": "no-op: this command always prints JSON",
+    "allowlist": {
+      "type": "string",
+      "description": "allowlist (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--json"
+          "--allowlist"
         ],
         "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
-        "transport_only": true,
+        "transport_only": false,
         "envelope_owned": false
       }
     }

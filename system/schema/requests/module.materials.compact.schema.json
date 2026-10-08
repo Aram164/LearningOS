@@ -8,6 +8,27 @@
     "module_id"
   ],
   "properties": {
+    "module_id": {
+      "type": "string",
+      "description": "module_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "module",
+      "x-los-lookup": true
+    },
     "check": {
       "type": "boolean",
       "description": "check (no description in the parser yet)",
@@ -27,6 +48,51 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "sha256 of the exact reviewed compaction plan from --check; required to apply",
+      "x-los-cli": {
+        "flags": [
+          "--plan-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": null
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     },
     "expected_revision": {
@@ -52,72 +118,6 @@
         "transport_only": false,
         "envelope_owned": true
       }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "module_id": {
-      "type": "string",
-      "description": "module_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "module",
-      "x-los-lookup": true
-    },
-    "plan_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$",
-      "description": "sha256 of the exact reviewed compaction plan from --check; required to apply",
-      "x-los-cli": {
-        "flags": [
-          "--plan-sha256"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "sha256_value",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "digest",
-      "x-los-lookup": null
     }
   },
   "x-los-cli-command": {

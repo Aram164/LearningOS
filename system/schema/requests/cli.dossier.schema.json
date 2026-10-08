@@ -8,27 +8,6 @@
     "unit_id"
   ],
   "properties": {
-    "json": {
-      "type": "boolean",
-      "description": "include the full dossier content",
-      "x-los-cli": {
-        "flags": [
-          "--json"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": true,
-        "envelope_owned": false
-      }
-    },
     "unit_id": {
       "type": "string",
       "description": "unit whose semantic dossier to build or serve",
@@ -49,6 +28,27 @@
       },
       "x-los-id-kind": "unit",
       "x-los-lookup": true
+    },
+    "json": {
+      "type": "boolean",
+      "description": "include the full dossier content",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
     }
   },
   "x-los-cli-command": {

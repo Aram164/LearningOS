@@ -8,48 +8,6 @@
     "query"
   ],
   "properties": {
-    "content": {
-      "type": "boolean",
-      "description": "search complete durable note text with exact line snippets",
-      "x-los-cli": {
-        "flags": [
-          "--content"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -68,69 +26,6 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "limit": {
-      "type": "integer",
-      "description": "limit (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--limit"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 50,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "offset": {
-      "type": "integer",
-      "description": "offset (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--offset"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 0,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "page": {
-      "type": "boolean",
-      "description": "paged packet with totals and a snapshot-bound continuation instead of the full array",
-      "x-los-cli": {
-        "flags": [
-          "--page"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
         "envelope_owned": false
       }
     },
@@ -165,6 +60,111 @@
         "nargs": null,
         "const": null,
         "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "limit (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 50,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "content": {
+      "type": "boolean",
+      "description": "search complete durable note text with exact line snippets",
+      "x-los-cli": {
+        "flags": [
+          "--content"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "offset": {
+      "type": "integer",
+      "description": "offset (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--offset"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 0,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "page": {
+      "type": "boolean",
+      "description": "paged packet with totals and a snapshot-bound continuation instead of the full array",
+      "x-los-cli": {
+        "flags": [
+          "--page"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,

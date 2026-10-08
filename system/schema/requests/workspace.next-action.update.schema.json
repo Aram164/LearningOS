@@ -9,28 +9,46 @@
     "workspace_id"
   ],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "workspace_id": {
+      "type": "string",
+      "description": "workspace_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
+        "flags": [],
+        "position": 0,
+        "action": "store",
         "nargs": null,
         "const": null,
-        "default": [],
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "workspace",
+      "x-los-lookup": true
+    },
+    "next_action": {
+      "type": "string",
+      "description": "the new Next Action body (envelope-inline, never from stdin)",
+      "x-los-cli": {
+        "flags": [
+          "--next-action"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
       }
     },
     "expected_snapshot": {
@@ -54,47 +72,29 @@
         "envelope_owned": true
       }
     },
-    "next_action": {
-      "type": "string",
-      "description": "the new Next Action body (envelope-inline, never from stdin)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--next-action"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
-    },
-    "workspace_id": {
-      "type": "string",
-      "description": "workspace_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "workspace",
-      "x-los-lookup": true
     }
   },
   "x-los-cli-command": {

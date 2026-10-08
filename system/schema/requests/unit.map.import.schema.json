@@ -9,59 +9,12 @@
     "unit_id"
   ],
   "properties": {
-    "check": {
-      "type": "boolean",
-      "description": "print the concrete replacement diff and write nothing",
-      "x-los-cli": {
-        "flags": [
-          "--check"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
+    "unit_id": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "unit_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
+        "flags": [],
+        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -69,11 +22,13 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
-      }
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
     },
     "file": {
       "type": "string",
@@ -120,6 +75,48 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": false
     },
+    "replace": {
+      "type": "boolean",
+      "description": "replace the unit's current study map (learner state is carried forward); required when one exists",
+      "x-los-cli": {
+        "flags": [
+          "--replace"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "check": {
+      "type": "boolean",
+      "description": "print the concrete replacement diff and write nothing",
+      "x-los-cli": {
+        "flags": [
+          "--check"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "intentional_reorder": {
       "type": "string",
       "description": "reviewed reason for changing the relative order of surviving stages",
@@ -162,21 +159,24 @@
         "envelope_owned": false
       }
     },
-    "replace": {
-      "type": "boolean",
-      "description": "replace the unit's current study map (learner state is carried forward); required when one exists",
+    "retire_stage": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "acknowledge one stage this revision removes (repeatable)",
       "x-los-cli": {
         "flags": [
-          "--replace"
+          "--retire-stage"
         ],
         "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
-        "metavar": null,
+        "metavar": "STAGE_ID",
         "required": false,
         "stdin": false,
         "transport_only": false,
@@ -204,36 +204,14 @@
         "envelope_owned": false
       }
     },
-    "retire_stage": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "acknowledge one stage this revision removes (repeatable)",
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--retire-stage"
+          "--expected-snapshot"
         ],
         "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": "STAGE_ID",
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "unit_id": {
-      "type": "string",
-      "description": "unit_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -241,13 +219,35 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
       },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

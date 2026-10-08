@@ -6,25 +6,46 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "approve": {
-      "type": "boolean",
-      "description": "approve (no description in the parser yet)",
+    "file": {
+      "type": "string",
+      "description": "collection revise record as a YAML file",
       "x-los-cli": {
         "flags": [
-          "--approve"
+          "--file"
         ],
         "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
+      }
+    },
+    "record": {
+      "type": "object",
+      "description": "record (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--record"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
       }
     },
     "check": {
@@ -72,21 +93,18 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": null
     },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "approve": {
+      "type": "boolean",
+      "description": "approve (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--expected-revision"
+          "--approve"
         ],
         "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
@@ -117,46 +135,28 @@
         "envelope_owned": true
       }
     },
-    "file": {
-      "type": "string",
-      "description": "collection revise record as a YAML file",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--file"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "record": {
-      "type": "object",
-      "description": "record (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--record"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "json_object",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

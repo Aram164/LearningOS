@@ -13,137 +13,6 @@
     "start"
   ],
   "properties": {
-    "concept_id": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "x-los-id-kind": "concept",
-        "x-los-lookup": true
-      },
-      "description": "concept the gap concerns (repeatable)",
-      "x-los-cli": {
-        "flags": [
-          "--concept-id"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "end": {
-      "type": "integer",
-      "description": "last 1-based PDF page of the continuation range",
-      "x-los-cli": {
-        "flags": [
-          "--end"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "kind": {
-      "type": "string",
-      "description": "evidence gap kind: concept-coverage, prerequisite, notation, derivation, example, exercise or limitation",
-      "x-los-cli": {
-        "flags": [
-          "--kind"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "material_uri": {
-      "type": "string",
-      "description": "required when the route binds several files",
-      "x-los-cli": {
-        "flags": [
-          "--material-uri"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "reason": {
-      "type": "string",
-      "description": "why exactly these pages are needed",
-      "x-los-cli": {
-        "flags": [
-          "--reason"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "request_id": {
       "type": "string",
       "description": "request_id (no description in the parser yet)",
@@ -207,6 +76,137 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "end": {
+      "type": "integer",
+      "description": "last 1-based PDF page of the continuation range",
+      "x-los-cli": {
+        "flags": [
+          "--end"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "kind": {
+      "type": "string",
+      "description": "evidence gap kind: concept-coverage, prerequisite, notation, derivation, example, exercise or limitation",
+      "x-los-cli": {
+        "flags": [
+          "--kind"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "concept_id": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "x-los-id-kind": "concept",
+        "x-los-lookup": true
+      },
+      "description": "concept the gap concerns (repeatable)",
+      "x-los-cli": {
+        "flags": [
+          "--concept-id"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "reason": {
+      "type": "string",
+      "description": "why exactly these pages are needed",
+      "x-los-cli": {
+        "flags": [
+          "--reason"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "material_uri": {
+      "type": "string",
+      "description": "required when the route binds several files",
+      "x-los-cli": {
+        "flags": [
+          "--material-uri"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     }
   },

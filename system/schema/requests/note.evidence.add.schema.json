@@ -10,6 +10,27 @@
     "ref"
   ],
   "properties": {
+    "note_id": {
+      "type": "string",
+      "description": "note_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "note",
+      "x-los-lookup": true
+    },
     "evidence_type": {
       "type": "string",
       "enum": [
@@ -44,28 +65,23 @@
         "envelope_owned": false
       }
     },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "ref": {
+      "type": "string",
+      "description": "typed URI for the trail, e.g. material://\u2026, note://\u2026, https://\u2026",
       "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
+        "flags": [],
+        "position": 2,
+        "action": "store",
         "nargs": null,
         "const": null,
-        "default": [],
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
       }
     },
     "expected_snapshot": {
@@ -89,44 +105,28 @@
         "envelope_owned": true
       }
     },
-    "note_id": {
-      "type": "string",
-      "description": "note_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
       },
-      "x-los-id-kind": "note",
-      "x-los-lookup": true
-    },
-    "ref": {
-      "type": "string",
-      "description": "typed URI for the trail, e.g. material://\u2026, note://\u2026, https://\u2026",
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
-        "flags": [],
-        "position": 2,
-        "action": "store",
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

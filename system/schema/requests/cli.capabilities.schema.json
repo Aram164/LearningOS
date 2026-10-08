@@ -6,6 +6,25 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
+    "name": {
+      "type": "string",
+      "description": "one public capability, including its declared payload schema",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "compact": {
       "type": "boolean",
       "description": "JSON index of capability names; fetch one name for details",
@@ -45,25 +64,6 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "name": {
-      "type": "string",
-      "description": "one public capability, including its declared payload schema",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": "?",
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
         "envelope_owned": false
       }
     }

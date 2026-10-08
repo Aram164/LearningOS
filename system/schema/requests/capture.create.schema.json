@@ -6,28 +6,25 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    "text": {
+      "type": "string",
+      "description": "capture this text (else stdin)",
       "x-los-cli": {
         "flags": [
-          "--expected-revision"
+          "--text"
         ],
         "position": null,
-        "action": "append",
+        "action": "store",
         "nargs": null,
         "const": null,
-        "default": [],
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
       }
     },
     "file": {
@@ -75,6 +72,27 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": false
     },
+    "title": {
+      "type": "string",
+      "description": "optional title for text captures",
+      "x-los-cli": {
+        "flags": [
+          "--title"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "json": {
       "type": "boolean",
       "description": "confirm structurally instead of in prose (used by the app)",
@@ -96,46 +114,28 @@
         "envelope_owned": false
       }
     },
-    "text": {
-      "type": "string",
-      "description": "capture this text (else stdin)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--text"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "title": {
-      "type": "string",
-      "description": "optional title for text captures",
-      "x-los-cli": {
-        "flags": [
-          "--title"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

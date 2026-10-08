@@ -8,6 +8,48 @@
     "requirement"
   ],
   "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "requirement": {
+      "type": "string",
+      "description": "requirement (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--requirement"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "context_json": {
       "type": "string",
       "description": "context_json (no description in the parser yet)",
@@ -20,6 +62,27 @@
         "nargs": null,
         "const": null,
         "default": "{}",
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "previous_json": {
+      "type": "string",
+      "description": "previous runtime-session-v1 packet (with snapshot_id), not the bare session",
+      "x-los-cli": {
+        "flags": [
+          "--previous-json"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
@@ -69,69 +132,6 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": true
-      }
-    },
-    "json": {
-      "type": "boolean",
-      "description": "no-op: this command always prints JSON",
-      "x-los-cli": {
-        "flags": [
-          "--json"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "previous_json": {
-      "type": "string",
-      "description": "previous runtime-session-v1 packet (with snapshot_id), not the bare session",
-      "x-los-cli": {
-        "flags": [
-          "--previous-json"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "requirement": {
-      "type": "string",
-      "description": "requirement (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--requirement"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
       }
     }
   },

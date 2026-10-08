@@ -6,24 +6,24 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "json": {
-      "type": "boolean",
-      "description": "==SUPPRESS==",
+    "ui_root": {
+      "type": "string",
+      "description": "ui_root (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--json"
+          "--ui-root"
         ],
         "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
-        "transport_only": true,
+        "transport_only": false,
         "envelope_owned": false
       }
     },
@@ -90,24 +90,24 @@
         "envelope_owned": false
       }
     },
-    "ui_root": {
-      "type": "string",
-      "description": "ui_root (no description in the parser yet)",
+    "json": {
+      "type": "boolean",
+      "description": "==SUPPRESS==",
       "x-los-cli": {
         "flags": [
-          "--ui-root"
+          "--json"
         ],
         "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
         "required": false,
         "stdin": false,
-        "transport_only": false,
+        "transport_only": true,
         "envelope_owned": false
       }
     }

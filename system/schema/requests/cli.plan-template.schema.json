@@ -9,50 +9,6 @@
     "title"
   ],
   "properties": {
-    "json": {
-      "type": "boolean",
-      "description": "answer the plan-template-v1 query envelope instead of YAML (used by the interface)",
-      "x-los-cli": {
-        "flags": [
-          "--json"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": true,
-        "envelope_owned": false
-      }
-    },
-    "module_id": {
-      "type": "string",
-      "description": "module_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--module-id"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "module",
-      "x-los-lookup": true
-    },
     "profile": {
       "type": "string",
       "enum": [
@@ -120,6 +76,50 @@
       },
       "x-los-id-kind": "unit",
       "x-los-lookup": true
+    },
+    "module_id": {
+      "type": "string",
+      "description": "module_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--module-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "module",
+      "x-los-lookup": true
+    },
+    "json": {
+      "type": "boolean",
+      "description": "answer the plan-template-v1 query envelope instead of YAML (used by the interface)",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
     }
   },
   "x-los-cli-command": {

@@ -8,33 +8,36 @@
     "goal_id"
   ],
   "properties": {
-    "check": {
-      "type": "boolean",
-      "description": "preview exact decisions without writing",
+    "goal_id": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "x-los-id-kind": "goal",
+        "x-los-lookup": true
+      },
+      "description": "exact candidate goal ids from intelligence-scan",
       "x-los-cli": {
-        "flags": [
-          "--check"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "+",
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
       }
     },
-    "close": {
+    "reject": {
       "type": "boolean",
-      "description": "close (no description in the parser yet)",
+      "description": "reject (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--close"
+          "--reject"
         ],
         "position": null,
         "action": "store_true",
@@ -71,25 +74,22 @@
         "envelope_owned": false
       }
     },
-    "goal_id": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "x-los-id-kind": "goal",
-        "x-los-lookup": true
-      },
-      "description": "exact candidate goal ids from intelligence-scan",
+    "close": {
+      "type": "boolean",
+      "description": "close (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": "+",
-        "const": null,
-        "default": null,
+        "flags": [
+          "--close"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -116,12 +116,33 @@
         "envelope_owned": false
       }
     },
-    "reject": {
-      "type": "boolean",
-      "description": "reject (no description in the parser yet)",
+    "revisit_on": {
+      "type": "string",
+      "description": "for --defer only: let the goal reappear on this YYYY-MM-DD date",
       "x-los-cli": {
         "flags": [
-          "--reject"
+          "--revisit-on"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "check": {
+      "type": "boolean",
+      "description": "preview exact decisions without writing",
+      "x-los-cli": {
+        "flags": [
+          "--check"
         ],
         "position": null,
         "action": "store_true",
@@ -160,27 +181,6 @@
       },
       "x-los-id-kind": "digest",
       "x-los-lookup": null
-    },
-    "revisit_on": {
-      "type": "string",
-      "description": "for --defer only: let the goal reappear on this YYYY-MM-DD date",
-      "x-los-cli": {
-        "flags": [
-          "--revisit-on"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
     },
     "session_id": {
       "type": "string",

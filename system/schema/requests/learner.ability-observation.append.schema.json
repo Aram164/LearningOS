@@ -15,12 +15,96 @@
     "workspace"
   ],
   "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "workspace (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--workspace"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "ability": {
       "type": "string",
       "description": "ability (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
           "--ability"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "claim": {
+      "type": "string",
+      "description": "the precise claim Aram confirmed",
+      "x-los-cli": {
+        "flags": [
+          "--claim"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "work_ref": {
+      "type": "string",
+      "description": "pointer to the actual attempt",
+      "x-los-cli": {
+        "flags": [
+          "--work-ref"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "confirmation_ref": {
+      "type": "string",
+      "description": "pointer to Aram's confirmation of this claim",
+      "x-los-cli": {
+        "flags": [
+          "--confirmation-ref"
         ],
         "position": null,
         "action": "store",
@@ -57,12 +141,18 @@
         "envelope_owned": false
       }
     },
-    "assistance": {
+    "result": {
       "type": "string",
-      "description": "assistance (no description in the parser yet)",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "result (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--assistance"
+          "--result"
         ],
         "position": null,
         "action": "store",
@@ -70,7 +160,12 @@
         "const": null,
         "default": null,
         "type": null,
-        "choices": null,
+        "choices": [
+          "correct",
+          "incorrect",
+          "partial",
+          "abandoned"
+        ],
         "metavar": null,
         "required": true,
         "stdin": false,
@@ -78,12 +173,12 @@
         "envelope_owned": false
       }
     },
-    "claim": {
+    "assistance": {
       "type": "string",
-      "description": "the precise claim Aram confirmed",
+      "description": "assistance (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--claim"
+          "--assistance"
         ],
         "position": null,
         "action": "store",
@@ -123,51 +218,6 @@
         "envelope_owned": false
       }
     },
-    "condition_not_met": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "condition_not_met (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--condition-not-met"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "confirmation_ref": {
-      "type": "string",
-      "description": "pointer to Aram's confirmation of this claim",
-      "x-los-cli": {
-        "flags": [
-          "--confirmation-ref"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "evidence_tag": {
       "type": "array",
       "items": {
@@ -192,15 +242,15 @@
         "envelope_owned": false
       }
     },
-    "expected_revision": {
+    "condition_not_met": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "description": "condition_not_met (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--expected-revision"
+          "--condition-not-met"
         ],
         "position": null,
         "action": "append",
@@ -211,59 +261,6 @@
         "choices": null,
         "metavar": null,
         "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "result": {
-      "type": "string",
-      "enum": [
-        "correct",
-        "incorrect",
-        "partial",
-        "abandoned"
-      ],
-      "description": "result (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--result"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": [
-          "correct",
-          "incorrect",
-          "partial",
-          "abandoned"
-        ],
-        "metavar": null,
-        "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -290,12 +287,12 @@
         "envelope_owned": false
       }
     },
-    "work_ref": {
+    "expected_snapshot": {
       "type": "string",
-      "description": "pointer to the actual attempt",
+      "description": "expected_snapshot (no description in the parser yet)",
       "x-los-cli": {
         "flags": [
-          "--work-ref"
+          "--expected-snapshot"
         ],
         "position": null,
         "action": "store",
@@ -305,31 +302,34 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     },
-    "workspace": {
-      "type": "string",
-      "description": "workspace (no description in the parser yet)",
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
       "x-los-cli": {
         "flags": [
-          "--workspace"
+          "--expected-revision"
         ],
         "position": null,
-        "action": "store",
+        "action": "append",
         "nargs": null,
         "const": null,
-        "default": null,
+        "default": [],
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       }
     }
   },

@@ -6,27 +6,6 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "brief": {
-      "type": "boolean",
-      "description": "at most 5 ranked groups + totals; with --json, the agent entry path",
-      "x-los-cli": {
-        "flags": [
-          "--brief"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "days": {
       "type": "integer",
       "description": "retained for compatibility; staleness compares stored digests, not a window (default: 30)",
@@ -87,6 +66,27 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "brief": {
+      "type": "boolean",
+      "description": "at most 5 ranked groups + totals; with --json, the agent entry path",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
         "envelope_owned": false
       }
     }

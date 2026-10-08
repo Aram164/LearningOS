@@ -11,93 +11,6 @@
     "termin"
   ],
   "properties": {
-    "date": {
-      "type": "string",
-      "description": "sitting date (YYYY-MM-DD)",
-      "x-los-cli": {
-        "flags": [
-          "--date"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "grade": {
-      "type": "number",
-      "description": "optional grade (1.0-5.0; validation requires result passed unless the module is completed)",
-      "x-los-cli": {
-        "flags": [
-          "--grade"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "float",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "module_id": {
       "type": "string",
       "description": "module_id (no description in the parser yet)",
@@ -119,12 +32,42 @@
       "x-los-id-kind": "module",
       "x-los-lookup": true
     },
-    "notes": {
-      "type": "string",
-      "description": "optional note kept on the attempt row",
+    "termin": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "description": "which termin this attempt is for",
       "x-los-cli": {
         "flags": [
-          "--notes"
+          "--termin"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "int",
+        "choices": [
+          1,
+          2,
+          3
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "date": {
+      "type": "string",
+      "description": "sitting date (YYYY-MM-DD)",
+      "x-los-cli": {
+        "flags": [
+          "--date"
         ],
         "position": null,
         "action": "store",
@@ -134,7 +77,7 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": false,
+        "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
@@ -174,34 +117,91 @@
         "envelope_owned": false
       }
     },
-    "termin": {
-      "type": "integer",
-      "enum": [
-        1,
-        2,
-        3
-      ],
-      "description": "which termin this attempt is for",
+    "grade": {
+      "type": "number",
+      "description": "optional grade (1.0-5.0; validation requires result passed unless the module is completed)",
       "x-los-cli": {
         "flags": [
-          "--termin"
+          "--grade"
         ],
         "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
         "default": null,
-        "type": "int",
-        "choices": [
-          1,
-          2,
-          3
-        ],
+        "type": "float",
+        "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "optional note kept on the attempt row",
+      "x-los-cli": {
+        "flags": [
+          "--notes"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
       }
     }
   },

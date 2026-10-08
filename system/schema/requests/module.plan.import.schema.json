@@ -8,13 +8,76 @@
     "module_id"
   ],
   "properties": {
-    "apply_reviewed_sha256": {
+    "module_id": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$",
-      "description": "apply the exact reviewed file bytes through GatewayEnvelopeV2 without hand-assembling an envelope",
+      "description": "module_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "module",
+      "x-los-lookup": true
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed YAML plan for an existing canonical module",
       "x-los-cli": {
         "flags": [
-          "--apply-reviewed-sha256"
+          "--file"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "description": "inline MasterPlanning promotion package; live application is GatewayEnvelopeV2-only",
+      "x-los-cli": {
+        "flags": [
+          "--promotion"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact module-plan file bytes approved for import",
+      "x-los-cli": {
+        "flags": [
+          "--file-sha256"
         ],
         "position": null,
         "action": "store",
@@ -23,11 +86,34 @@
         "default": null,
         "type": "sha256_value",
         "choices": null,
-        "metavar": "SHA256",
+        "metavar": null,
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": true
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": false
+    },
+    "package_sha256": {
+      "type": "string",
+      "description": "exact promotion package hash returned by --check",
+      "x-los-cli": {
+        "flags": [
+          "--package-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
       },
       "x-los-id-kind": "digest",
       "x-los-lookup": null
@@ -74,6 +160,48 @@
         "envelope_owned": false
       }
     },
+    "staged_basis": {
+      "type": "string",
+      "description": "with --check, print the requested unit's post-package dossier basis without writing",
+      "x-los-cli": {
+        "flags": [
+          "--staged-basis"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "UNIT_ID",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
     "expected_revision": {
       "type": "array",
       "items": {
@@ -98,55 +226,13 @@
         "envelope_owned": true
       }
     },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "file": {
-      "type": "string",
-      "description": "reviewed YAML plan for an existing canonical module",
-      "x-los-cli": {
-        "flags": [
-          "--file"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "file_sha256": {
+    "apply_reviewed_sha256": {
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$",
-      "description": "SHA-256 of the exact module-plan file bytes approved for import",
+      "description": "apply the exact reviewed file bytes through GatewayEnvelopeV2 without hand-assembling an envelope",
       "x-los-cli": {
         "flags": [
-          "--file-sha256"
+          "--apply-reviewed-sha256"
         ],
         "position": null,
         "action": "store",
@@ -155,79 +241,14 @@
         "default": null,
         "type": "sha256_value",
         "choices": null,
-        "metavar": null,
+        "metavar": "SHA256",
         "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "digest",
-      "x-los-lookup": false
-    },
-    "module_id": {
-      "type": "string",
-      "description": "module_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "module",
-      "x-los-lookup": true
-    },
-    "package_sha256": {
-      "type": "string",
-      "description": "exact promotion package hash returned by --check",
-      "x-los-cli": {
-        "flags": [
-          "--package-sha256"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
       },
       "x-los-id-kind": "digest",
       "x-los-lookup": null
-    },
-    "promotion": {
-      "type": "object",
-      "description": "inline MasterPlanning promotion package; live application is GatewayEnvelopeV2-only",
-      "x-los-cli": {
-        "flags": [
-          "--promotion"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "json_object",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
     },
     "review_report": {
       "type": "string",
@@ -248,27 +269,6 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": true
-      }
-    },
-    "staged_basis": {
-      "type": "string",
-      "description": "with --check, print the requested unit's post-package dossier basis without writing",
-      "x-los-cli": {
-        "flags": [
-          "--staged-basis"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": "UNIT_ID",
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
       }
     }
   },

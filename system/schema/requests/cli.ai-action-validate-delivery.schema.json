@@ -8,25 +8,6 @@
     "delivery_id"
   ],
   "properties": {
-    "delivery_id": {
-      "type": "string",
-      "description": "delivery_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -45,6 +26,25 @@
         "required": false,
         "stdin": false,
         "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "delivery_id": {
+      "type": "string",
+      "description": "delivery_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
         "envelope_owned": false
       }
     }

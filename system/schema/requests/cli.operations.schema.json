@@ -27,27 +27,6 @@
         "envelope_owned": false
       }
     },
-    "limit": {
-      "type": "integer",
-      "description": "newest operations to list (at most 50)",
-      "x-los-cli": {
-        "flags": [
-          "--limit"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": 20,
-        "type": "int",
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "request_id": {
       "type": "string",
       "description": "explain one request instead of listing recent operations",
@@ -61,6 +40,27 @@
         "const": null,
         "default": null,
         "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "newest operations to list (at most 50)",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 20,
+        "type": "int",
         "choices": null,
         "metavar": null,
         "required": false,

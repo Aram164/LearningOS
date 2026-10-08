@@ -11,27 +11,6 @@
     "restored_ui"
   ],
   "properties": {
-    "checksums_only": {
-      "type": "boolean",
-      "description": "skip projection, validation, installer dry-run, and restored UI bundle smoke checks",
-      "x-los-cli": {
-        "flags": [
-          "--checksums-only"
-        ],
-        "position": null,
-        "action": "store_true",
-        "nargs": 0,
-        "const": true,
-        "default": false,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "json": {
       "type": "boolean",
       "description": "no-op: this command always prints JSON",
@@ -95,6 +74,27 @@
         "envelope_owned": false
       }
     },
+    "restored_ui": {
+      "type": "string",
+      "description": "restored_ui (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--restored-ui"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "restored_materials": {
       "type": "string",
       "description": "restored_materials (no description in the parser yet)",
@@ -116,22 +116,22 @@
         "envelope_owned": false
       }
     },
-    "restored_ui": {
-      "type": "string",
-      "description": "restored_ui (no description in the parser yet)",
+    "checksums_only": {
+      "type": "boolean",
+      "description": "skip projection, validation, installer dry-run, and restored UI bundle smoke checks",
       "x-los-cli": {
         "flags": [
-          "--restored-ui"
+          "--checksums-only"
         ],
         "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false

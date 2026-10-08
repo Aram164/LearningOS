@@ -9,6 +9,51 @@
     "unit_id"
   ],
   "properties": {
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
+    },
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "selected (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--selected"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": "+",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
     "approve": {
       "type": "boolean",
       "description": "approve (no description in the parser yet)",
@@ -21,6 +66,27 @@
         "nargs": 0,
         "const": true,
         "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
@@ -53,72 +119,6 @@
         "transport_only": false,
         "envelope_owned": true
       }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "selected": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "selected (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--selected"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": "+",
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
-    "unit_id": {
-      "type": "string",
-      "description": "unit_id (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [],
-        "position": 0,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
     }
   },
   "x-los-cli-command": {

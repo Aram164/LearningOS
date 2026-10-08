@@ -11,82 +11,26 @@
     "unit_id"
   ],
   "properties": {
-    "classification": {
+    "unit_id": {
       "type": "string",
-      "enum": [
-        "required-now",
-        "helpful-now",
-        "deferred",
-        "reference-only"
-      ],
-      "description": "classification (no description in the parser yet)",
+      "description": "unit_id (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [
-          "--classification"
-        ],
-        "position": null,
+        "flags": [],
+        "position": 0,
         "action": "store",
         "nargs": null,
         "const": null,
         "default": null,
         "type": null,
-        "choices": [
-          "required-now",
-          "helpful-now",
-          "deferred",
-          "reference-only"
-        ],
+        "choices": null,
         "metavar": null,
         "required": true,
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
-    },
-    "expected_revision": {
-      "type": "array",
-      "items": {
-        "type": "string"
       },
-      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
-      "x-los-cli": {
-        "flags": [
-          "--expected-revision"
-        ],
-        "position": null,
-        "action": "append",
-        "nargs": null,
-        "const": null,
-        "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
     },
     "stage_id": {
       "type": "string",
@@ -130,12 +74,46 @@
         "envelope_owned": false
       }
     },
-    "unit_id": {
+    "classification": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "enum": [
+        "required-now",
+        "helpful-now",
+        "deferred",
+        "reference-only"
+      ],
+      "description": "classification (no description in the parser yet)",
       "x-los-cli": {
-        "flags": [],
-        "position": 0,
+        "flags": [
+          "--classification"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "required-now",
+          "helpful-now",
+          "deferred",
+          "reference-only"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
         "action": "store",
         "nargs": null,
         "const": null,
@@ -143,13 +121,35 @@
         "type": null,
         "choices": null,
         "metavar": null,
-        "required": true,
+        "required": false,
         "stdin": false,
         "transport_only": false,
-        "envelope_owned": false
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
       },
-      "x-los-id-kind": "unit",
-      "x-los-lookup": true
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
     }
   },
   "x-los-cli-command": {

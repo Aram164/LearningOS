@@ -10,27 +10,6 @@
     "delivery_sha256"
   ],
   "properties": {
-    "artifact_sha256": {
-      "type": "object",
-      "description": "JSON object mapping every artifact_ref to its exact SHA-256",
-      "x-los-cli": {
-        "flags": [
-          "--artifact-sha256"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
-        "type": "json_object",
-        "choices": null,
-        "metavar": null,
-        "required": true,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": false
-      }
-    },
     "delivery_id": {
       "type": "string",
       "description": "delivery_id (no description in the parser yet)",
@@ -73,6 +52,48 @@
       "x-los-id-kind": "digest",
       "x-los-lookup": null
     },
+    "artifact_sha256": {
+      "type": "object",
+      "description": "JSON object mapping every artifact_ref to its exact SHA-256",
+      "x-los-cli": {
+        "flags": [
+          "--artifact-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
     "expected_revision": {
       "type": "array",
       "items": {
@@ -88,27 +109,6 @@
         "nargs": null,
         "const": null,
         "default": [],
-        "type": null,
-        "choices": null,
-        "metavar": null,
-        "required": false,
-        "stdin": false,
-        "transport_only": false,
-        "envelope_owned": true
-      }
-    },
-    "expected_snapshot": {
-      "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
-      "x-los-cli": {
-        "flags": [
-          "--expected-snapshot"
-        ],
-        "position": null,
-        "action": "store",
-        "nargs": null,
-        "const": null,
-        "default": null,
         "type": null,
         "choices": null,
         "metavar": null,
