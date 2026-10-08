@@ -243,7 +243,7 @@
         "choices": null,
         "metavar": null,
         "required": false,
-        "stdin": false,
+        "stdin": true,
         "transport_only": false,
         "envelope_owned": true
       }
