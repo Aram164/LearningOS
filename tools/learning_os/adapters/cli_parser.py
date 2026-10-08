@@ -212,28 +212,17 @@ def _add_property(target, dest: str, schema: dict) -> None:
     metavar = cli.get("metavar")
     if isinstance(metavar, list):
         metavar = tuple(metavar)
-    is_positional = not flags
-    if action in ("store_true", "store_false"):
-        kwargs: dict = {"dest": dest, "action": action, "default": default,
-                        "required": bool(cli["required"]), "help": help_value}
-        if flags:
-            target.add_argument(*flags, **kwargs)
-        else:  # pragma: no cover - no positional store_true exists
-            target.add_argument(dest, **kwargs)
-        return
-    type_name = cli.get("type")
-    converter = CONVERTERS[type_name] if type_name is not None else None
-    if is_positional:
-        target.add_argument(
-            dest, action=action, nargs=cli.get("nargs"), const=cli.get("const"),
-            default=default, type=converter, choices=cli.get("choices"),
-            help=help_value, metavar=metavar)
-    else:
-        target.add_argument(
-            *flags, dest=dest, action=action, nargs=cli.get("nargs"),
-            const=cli.get("const"), default=default, type=converter,
-            choices=cli.get("choices"), required=bool(cli["required"]),
-            help=help_value, metavar=metavar)
+    kwargs = {"action": action, "default": default, "help": help_value}
+    if flags:
+        kwargs.update(dest=dest, required=bool(cli["required"]))
+    if action in ("store_const", "append_const"):
+        kwargs["const"] = cli.get("const")
+    elif action not in ("store_true", "store_false", "count"):
+        type_name = cli.get("type")
+        kwargs.update(nargs=cli.get("nargs"), const=cli.get("const"),
+                      type=CONVERTERS[type_name] if type_name is not None else None,
+                      choices=cli.get("choices"), metavar=metavar)
+    target.add_argument(*(flags or [dest]), **kwargs)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -256,6 +245,8 @@ def build_parser() -> argparse.ArgumentParser:
         cmd = data.get("x-los-cli-command")
         if cmd is None:
             continue
+        if cmd["name"] in by_name:
+            raise ValueError(f"duplicate CLI binding: {cmd['name']}")
         by_name[cmd["name"]] = (path.name[: -len(".schema.json")], data)
     if set(by_name) != set(_SUBCOMMAND_ORDER):
         missing = sorted(set(_SUBCOMMAND_ORDER) - set(by_name))
@@ -278,6 +269,7 @@ def build_parser() -> argparse.ArgumentParser:
         # parser default, never a request property.
         for dest, schema in properties.items():
             _add_property(group_for.get(dest, p), dest, schema)
+        p.set_defaults(**cmd.get("defaults", {}))
         handler = cmd["handler"]
         func = _resolve_handler(handler)
         if handler.startswith("learning_os.adapters.cli.invoke:"):

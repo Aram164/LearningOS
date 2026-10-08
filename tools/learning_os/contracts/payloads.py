@@ -195,6 +195,16 @@ def json_object_fields(root: Path, operation: str) -> set[str]:
     }
 
 
+def _without_cli_annotations(node):
+    """Copy a request subschema with transport annotations removed at any depth."""
+    if isinstance(node, dict):
+        return {key: _without_cli_annotations(value) for key, value in node.items()
+                if not key.startswith("x-los-")}
+    if isinstance(node, list):
+        return [_without_cli_annotations(value) for value in node]
+    return node
+
+
 def payload_schema(
     name: str,
     root: Path,
@@ -213,15 +223,8 @@ def payload_schema(
         cli = subschema.get("x-los-cli", {})
         if cli.get("transport_only") or cli.get("envelope_owned"):
             continue
-        prop_schema = {k: v for k, v in subschema.items()
-                       if not k.startswith("x-los-") and k != "description"}
-        for nested_key in ("items", "additionalProperties"):
-            nested_value = prop_schema.get(nested_key)
-            if isinstance(nested_value, dict):
-                prop_schema[nested_key] = {
-                    k: v for k, v in nested_value.items()
-                    if not k.startswith("x-los-")
-                }
+        prop_schema = _without_cli_annotations(subschema)
+        prop_schema.pop("description", None)
         desc = subschema.get("description", "")
         if desc and "(no description in the parser yet)" not in desc \
                 and desc != "==SUPPRESS==":
@@ -309,7 +312,9 @@ def all_payload_schemas(
     derivation test alike, instead of silently declaring nothing.
     """
     for capability_name, field in (payload_records or {}):
-        if field not in json_object_fields(root, capability_name):
+        definition = definitions.get(capability_name)
+        if definition is None or not definition.cli_command \
+                or field not in json_object_fields(root, capability_name):
             raise ValueError(
                 f"payload_records {capability_name}.{field} declares no "
                 "json_object payload field"

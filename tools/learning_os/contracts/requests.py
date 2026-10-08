@@ -23,7 +23,7 @@ def _check_operation(operation: str) -> str:
         raise ValueError(f"invalid operation name: {operation!r}")
     if "/" in operation or "\\" in operation or ".." in operation:
         raise ValueError(f"invalid operation name: {operation!r}")
-    if "://" in operation or "#" in operation:
+    if ":" in operation or "#" in operation:
         raise ValueError(f"invalid operation name: {operation!r}")
     return operation
 
@@ -35,7 +35,7 @@ def _check_target(target: str) -> str:
         raise ValueError(f"invalid $ref target (separator): {target!r}")
     if ".." in target:
         raise ValueError(f"invalid $ref target (traversal): {target!r}")
-    if "://" in target:
+    if ":" in target:
         raise ValueError(f"invalid $ref target (URI scheme): {target!r}")
     if "#" in target:
         raise ValueError(f"invalid $ref target (fragment): {target!r}")
