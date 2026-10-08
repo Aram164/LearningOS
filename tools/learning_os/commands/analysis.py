@@ -28,6 +28,7 @@ from ..contracts.batch_notes import (
     BATCH_MAX_NOTES,
     BATCH_MIN_NOTES,
 )
+from ..domain import ids
 from ..domain.failures import WriteRefused
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
@@ -138,6 +139,10 @@ def _normalize_binding_material_uri(repo, binding: dict) -> dict:
         raise WriteRefused(
             f"binding.material names no file: {material!r} "
             "(expected material://SOURCE_ID/REL)")
+    # Canonical recognition is separate from the legacy safety diagnostics.
+    if ids.is_valid("material-uri", material):
+        material = ids.parse("material-uri", material)
+        parts = PurePosixPath(material[len(MATERIAL_SCHEME):]).parts
     rel = "/".join(parts[1:])
     materials_dir = repo.learningos_root / "materials"
     try:
