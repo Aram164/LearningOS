@@ -79,7 +79,6 @@ UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
     "learning_os.contracts.migration_lifecycle": (
         "shared migration lifecycle; runtime wiring retired by PLAN D13 (ADR-018)"
     ),
-    "learning_os.adapters": "created empty by PLAN S02; filled in S04/S11/S13",
     "learning_os.store": "created empty by PLAN S02; filled in S04/S11/S13",
     "migrations.summaries_to_notes_v1": (
         "one-shot summary migration, directly executed (through v35)"
@@ -315,8 +314,28 @@ def analyse(
         graph[module] = _imports(module, path, tree, modules)
         direct_graph[module] = _direct_imports(module, path, tree, modules)
 
+    # S12 generated parser loads handlers dynamically via importlib from
+    # request-schema x-los-cli-command.handler values. Those modules are live
+    # roots even though no syntax-visible import names them.
+    dynamic_roots: set[str] = set()
+    requests_dir = tools_root.parent / "system/schema/requests"
+    if requests_dir.is_dir():
+        for schema_path in sorted(requests_dir.glob("*.schema.json")):
+            try:
+                schema_data = json.loads(schema_path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            cmd = schema_data.get("x-los-cli-command")
+            if not isinstance(cmd, dict):
+                continue
+            handler = cmd.get("handler", "")
+            if not isinstance(handler, str) or ":" in handler:
+                continue
+            module_name, _, _ = handler.rpartition(".")
+            if module_name in modules:
+                dynamic_roots.add(module_name)
     reachable: set[str] = set()
-    queue = deque(root_modules)
+    queue = deque([*root_modules, *sorted(dynamic_roots)])
     while queue:
         module = queue.popleft()
         if module in reachable:

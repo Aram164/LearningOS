@@ -196,7 +196,7 @@ def _current_exceptions() -> Counter[str]:
         # Every *_id/*_ids/*_sha256/*_digest property has a row.
         have_pointers = set()
         for row in rows_by_op.get(operation, []):
-            # Pointer base property: /properties/<prop>(/...)? 
+            # Pointer base property: /properties/<prop>(/...)?
             parts = row["pointer"].split("/")
             if len(parts) >= 3 and parts[1] == "properties":
                 have_pointers.add(parts[2])
