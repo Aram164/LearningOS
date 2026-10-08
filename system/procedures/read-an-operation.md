@@ -70,7 +70,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
+  "snapshot_after": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
   "result": {
     "ok": true,
     "note_id": "note-ops-first",
@@ -81,7 +81,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
     "artifact_revisions": {
       "note-ops-first": 1
     },
-    "snapshot_after": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
+    "snapshot_after": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
     "replayed": false
   },
   "error": null
@@ -134,7 +134,7 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-001.yaml",
       "ledger:ops-first",
-      "observed:sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3"
+      "observed:sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -148,11 +148,11 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "snapshot_after": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
-    "snapshot_before": "sha256:ac0eddef5a3c78e2abcc20ba5941b2ba613d600b9125e10d827683c5628c60bc",
+    "snapshot_after": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
+    "snapshot_before": "sha256:d6f41dcebfc6a63db8cb45253d1f15307f73024981343c27697d8e705697f6f3",
     "transaction_id": "transaction-20261001-090000-001"
   },
-  "observed_snapshot": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
+  "observed_snapshot": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
   "request_id": "request-ops-first",
   "timeline": [
     {
@@ -250,7 +250,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
     "retryable": true,
     "details": {
       "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "actual": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3"
+      "actual": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a"
     }
   }
 }
@@ -284,7 +284,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     ],
     "authoritative_evidence": [
       "response:STALE_SNAPSHOT",
-      "observed:sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3"
+      "observed:sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a"
     ],
     "canonical_outcome": "NOT_COMMITTED",
     "execution_outcome": "refused",
@@ -302,7 +302,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     "snapshot_before": null,
     "transaction_id": null
   },
-  "observed_snapshot": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
+  "observed_snapshot": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
   "request_id": "request-ops-refused",
   "timeline": [
     {
@@ -416,7 +416,7 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-002.yaml",
       "ledger:ops-reuse-one",
-      "observed:sha256:b1390415b48130f5c4c8377118c503265a6d5d37b2fbe06db2d7995d95e4e979"
+      "observed:sha256:1736123ba88bcab7eaae775640b74faa587d20d926c5e90eb664b5f212193e6f"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -431,11 +431,11 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "snapshot_after": "sha256:241a5bcb1f966447a121d30b0261bcd4e1b18f6bcaae6408f5d6378d26865b83",
-    "snapshot_before": "sha256:886744bd11b1d22c263593392742ce358353846543222b5826556595d415c3e3",
+    "snapshot_after": "sha256:2476ab4f0ca888ccc1346a29a90eff18a6735fbf34b6dba0961480e99fab9509",
+    "snapshot_before": "sha256:b09dccd76b30bf9065c6c8dd3fda8b684bcfcc9caf74c75c1cf28686b5aeae2a",
     "transaction_id": "transaction-20261001-090000-002"
   },
-  "observed_snapshot": "sha256:b1390415b48130f5c4c8377118c503265a6d5d37b2fbe06db2d7995d95e4e979",
+  "observed_snapshot": "sha256:1736123ba88bcab7eaae775640b74faa587d20d926c5e90eb664b5f212193e6f",
   "request_id": "request-ops-reused",
   "timeline": [
     {

@@ -37,16 +37,16 @@ $ mkdir -p "$TMPDIR/backup" && cp -a "$LOS_REPO/../obsidian-ui" "$TMPDIR/backup/
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
 True
 ['core', 'materials', 'ui']
-380
-sha256:6251fd4b380423a4214802fa45a18325b08b3c1e62b62300ae808b72ba6d7759
+488
+sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
 ```
 
 ## The manifest binds data to Core's commit
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
-380
-sha256:6251fd4b380423a4214802fa45a18325b08b3c1e62b62300ae808b72ba6d7759
+488
+sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
 53
 True None
 ```
@@ -55,9 +55,9 @@ True None
 
 ```scrut
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
-380
+488
 ['core', 'materials', 'ui']
-sha256:6251fd4b380423a4214802fa45a18325b08b3c1e62b62300ae808b72ba6d7759
+sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
 ```
 
 ## Capture the pre-refusal state
@@ -101,7 +101,7 @@ copies match
 $ los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only
 {
   "ok": true,
-  "checked": 380,
+  "checked": 488,
   "issues": []
 }
 ```
@@ -130,7 +130,7 @@ $ printf 'tamper' >> "$TMPDIR/backup/restored-materials/source-demo-book/book.pd
 exit=1
 {
   "ok": false,
-  "checked": 380,
+  "checked": 488,
   "issues": [
     {
       "root": "materials",
