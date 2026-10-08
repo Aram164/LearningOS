@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.plan-edit-context",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit_id"
+  ],
+  "properties": {
+    "audit": {
+      "type": "boolean",
+      "description": "attach the deterministic unit planning audit to the full context",
+      "x-los-cli": {
+        "flags": [
+          "--audit"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "brief": {
+      "type": "boolean",
+      "description": "brief preparation form: identities, guards, id inventories, missing evidence, analysis refs, preflight checks, expand commands",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "include_neighbors": {
+      "type": "boolean",
+      "description": "with --brief: include the full neighboring-unit source-reuse map",
+      "x-los-cli": {
+        "flags": [
+          "--include-neighbors"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "include_related": {
+      "type": "boolean",
+      "description": "with --brief: list the same-source related analysis notes too",
+      "x-los-cli": {
+        "flags": [
+          "--include-related"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "route_id": {
+      "type": "string",
+      "description": "one exact route and its stage overrides",
+      "x-los-cli": {
+        "flags": [
+          "--route-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "route",
+      "x-los-lookup": true
+    },
+    "route_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "x-los-id-kind": "route",
+        "x-los-lookup": true
+      },
+      "description": "1 to 20 distinct routes of this unit, in requested order",
+      "x-los-cli": {
+        "flags": [
+          "--route-ids"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": "+",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "ROUTE_ID",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "one stage's own flags and placements, without the whole map",
+      "x-los-cli": {
+        "flags": [
+          "--stage-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "stage",
+      "x-los-lookup": true
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
+    }
+  },
+  "x-los-cli-command": {
+    "name": "plan-edit-context",
+    "help": "read compact plan or one material's edit context",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [
+      {
+        "required": false,
+        "dests": [
+          "route_id",
+          "route_ids",
+          "stage_id"
+        ]
+      }
+    ],
+    "defaults": {},
+    "handler": "learning_os.commands.material.cmd_plan_edit_context",
+    "parser_factory": false
+  }
+}

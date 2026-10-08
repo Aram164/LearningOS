@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.unit-list",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "compact": {
+      "type": "boolean",
+      "description": "bounded summary rows with totals and continuation instead of full unit bodies",
+      "x-los-cli": {
+        "flags": [
+          "--compact"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "component_id": {
+      "type": "string",
+      "description": "component_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--component-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "component",
+      "x-los-lookup": true
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "limit (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 20,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "module_id": {
+      "type": "string",
+      "description": "module_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--module-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "module",
+      "x-los-lookup": true
+    },
+    "offset": {
+      "type": "integer",
+      "description": "offset (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--offset"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 0,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "status": {
+      "type": "string",
+      "description": "status (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--status"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "unit-list",
+    "help": "list units with optional module/component/status filters",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.unit.cmd_unit_list",
+    "parser_factory": false
+  }
+}

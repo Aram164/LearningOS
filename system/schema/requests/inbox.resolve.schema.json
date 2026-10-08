@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/inbox.resolve",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "drop_sha256",
+    "name",
+    "routed_to"
+  ],
+  "properties": {
+    "drop_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact drop read: inbox-read's content_sha256 for a file, its drop_sha256 for a folder",
+      "x-los-cli": {
+        "flags": [
+          "--drop-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": null
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "name": {
+      "type": "string",
+      "description": "drop name relative to work/inbox/ (list names with inbox-list); one drop, or one file inside a drop folder",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "routed_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "where the drop went (note id, workspace path, source id, receipt id, \u2026); repeatable, at least one required, recorded on the receipt",
+      "x-los-cli": {
+        "flags": [
+          "--routed-to"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "inbox-resolve",
+    "help": "move one routed inbox drop to archive/inbox/YYYY/ (WORKFLOWS \u00a721)",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.inbox.cmd_inbox_resolve",
+    "parser_factory": false
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/note.evidence.add",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_type",
+    "note_id",
+    "ref"
+  ],
+  "properties": {
+    "evidence_type": {
+      "type": "string",
+      "enum": [
+        "derivation",
+        "explanation",
+        "implementation",
+        "exercise",
+        "exam",
+        "external"
+      ],
+      "description": "evidence_type (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 1,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "derivation",
+          "explanation",
+          "implementation",
+          "exercise",
+          "exam",
+          "external"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "note_id": {
+      "type": "string",
+      "description": "note_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "note",
+      "x-los-lookup": true
+    },
+    "ref": {
+      "type": "string",
+      "description": "typed URI for the trail, e.g. material://\u2026, note://\u2026, https://\u2026",
+      "x-los-cli": {
+        "flags": [],
+        "position": 2,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "note-evidence",
+    "help": "record one evidence trail on a note; the body is never touched",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.note.cmd_note_evidence",
+    "parser_factory": false
+  }
+}

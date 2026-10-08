@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/ability.context",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "ability_id": {
+      "type": "string",
+      "description": "one ability identity to expand",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "ability",
+      "x-los-lookup": "tolerant"
+    },
+    "brief": {
+      "type": "boolean",
+      "description": "with an ability id: state summary with evidence totals and provenance pointers instead of full history and materials",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "limit (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 12,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "offset": {
+      "type": "integer",
+      "description": "page the global horizon or --section evidence; continuations need the previous --expected-snapshot",
+      "x-los-cli": {
+        "flags": [
+          "--offset"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 0,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "section": {
+      "type": "string",
+      "enum": [
+        "evidence"
+      ],
+      "description": "with an ability id: page that section's complete rows instead of the full expansion",
+      "x-los-cli": {
+        "flags": [
+          "--section"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "evidence"
+        ],
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "ability-context",
+    "help": "read the small ability horizon or expand one ability",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.abilities.cmd_ability_context",
+    "parser_factory": false
+  }
+}

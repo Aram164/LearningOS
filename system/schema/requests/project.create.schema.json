@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/project.create",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "file": {
+      "type": "string",
+      "description": "the project record as a YAML file",
+      "x-los-cli": {
+        "flags": [
+          "--file"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact project file bytes approved for this request",
+      "x-los-cli": {
+        "flags": [
+          "--file-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": false
+    },
+    "project": {
+      "type": "object",
+      "description": "the project record as inline JSON",
+      "x-los-cli": {
+        "flags": [
+          "--project"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "project-create",
+    "help": "create one first-class project transactionally",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [
+      {
+        "required": true,
+        "dests": [
+          "file",
+          "project"
+        ]
+      }
+    ],
+    "defaults": {},
+    "handler": "learning_os.commands.project.cmd_project_create",
+    "parser_factory": false
+  }
+}

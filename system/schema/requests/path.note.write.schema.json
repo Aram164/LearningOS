@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/path.note.write",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "path_id",
+    "stage_id"
+  ],
+  "properties": {
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "path_id": {
+      "type": "string",
+      "description": "path_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "path",
+      "x-los-lookup": true
+    },
+    "replace": {
+      "type": "boolean",
+      "description": "replace this stage note",
+      "x-los-cli": {
+        "flags": [
+          "--replace"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "stage_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 1,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "stage",
+      "x-los-lookup": true
+    },
+    "text": {
+      "type": "string",
+      "description": "note text (else stdin)",
+      "x-los-cli": {
+        "flags": [
+          "--text"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "path-note",
+    "help": "save or append working notes for one path stage",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.path.cmd_path_note",
+    "parser_factory": false
+  }
+}

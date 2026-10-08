@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.capabilities",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "compact": {
+      "type": "boolean",
+      "description": "JSON index of capability names; fetch one name for details",
+      "x-los-cli": {
+        "flags": [
+          "--compact"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "machine-readable output",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "name": {
+      "type": "string",
+      "description": "one public capability, including its declared payload schema",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "?",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "capabilities",
+    "help": "discover the stable operator contract",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.query.cmd_capabilities",
+    "parser_factory": false
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/module.materials.compact",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "check (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--check"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "module_id": {
+      "type": "string",
+      "description": "module_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "module",
+      "x-los-lookup": true
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "sha256 of the exact reviewed compaction plan from --check; required to apply",
+      "x-los-cli": {
+        "flags": [
+          "--plan-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": null
+    }
+  },
+  "x-los-cli-command": {
+    "name": "module-materials-compact",
+    "help": "losslessly share repeated stage material fields",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.material.cmd_module_materials_compact",
+    "parser_factory": false
+  }
+}

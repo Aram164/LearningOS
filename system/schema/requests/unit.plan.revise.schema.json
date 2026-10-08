@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/unit.plan.revise",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit_id"
+  ],
+  "properties": {
+    "apply_reviewed_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "apply the exact reviewed revision bytes through GatewayEnvelopeV2 without hand-assembling an envelope",
+      "x-los-cli": {
+        "flags": [
+          "--apply-reviewed-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": "SHA256",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": null
+    },
+    "check": {
+      "type": "boolean",
+      "description": "run contract, routing, and shadow-repository validation without writing",
+      "x-los-cli": {
+        "flags": [
+          "--check"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed compact YAML revision for one existing unit",
+      "x-los-cli": {
+        "flags": [
+          "--file"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact revision-file bytes approved for import",
+      "x-los-cli": {
+        "flags": [
+          "--file-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": false
+    },
+    "record": {
+      "type": "object",
+      "description": "inline revision object; the GatewayEnvelopeV2 content-bound form",
+      "x-los-cli": {
+        "flags": [
+          "--record"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "json_object",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "report_out": {
+      "type": "string",
+      "description": "with --check: save the complete check report as UTF-8 JSON outside the repository and print a compact review summary without the sealed envelope instead",
+      "x-los-cli": {
+        "flags": [
+          "--report-out"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "PATH",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "review_report": {
+      "type": "string",
+      "description": "saved --check JSON; required for reviewed apply and exact retries",
+      "x-los-cli": {
+        "flags": [
+          "--review-report"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "staged_basis": {
+      "type": "string",
+      "description": "with --check, print the post-revision dossier basis without writing",
+      "x-los-cli": {
+        "flags": [
+          "--staged-basis"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": "UNIT_ID",
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit_id (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "unit",
+      "x-los-lookup": true
+    }
+  },
+  "x-los-cli-command": {
+    "name": "unit-plan-revise",
+    "help": "revise one existing lecture from a compact reviewed patch",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [
+      {
+        "required": true,
+        "dests": [
+          "file",
+          "record"
+        ]
+      }
+    ],
+    "defaults": {},
+    "handler": "learning_os.commands.module.cmd_unit_plan_revise",
+    "parser_factory": true
+  }
+}

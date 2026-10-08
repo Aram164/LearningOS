@@ -164,6 +164,16 @@ contracts:
     checker: learning_os.ai_actions.registry
     test: tests/test_ai_actions.py
 
+  - declaration: system/contracts/cli-operations.yaml
+    governs: >-
+      The CLI-only operations: every subcommand that is not a catalog
+      command or query cli_command, with its kind (query, command,
+      porcelain or tool) derived from today's lock and write path.
+      Enforced by the CLI parity test, which pins the inventory.
+    enforced_by: runtime
+    checker: learning_os.contracts.capability_catalog
+    test: tests/test_arch_cli_parity.py
+
 exempt:
 
   - path: system/contracts/normative-corpus.schema.json

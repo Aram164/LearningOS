@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.note-analysis-prepare",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "drafts",
+    "out"
+  ],
+  "properties": {
+    "drafts": {
+      "type": "string",
+      "description": "UTF-8 JSON drafts file (or - for stdin): {\"notes\": [{\"id\", \"title\", \"path\", \"binding\", \"body\"}]} with bodies inline and no derived hashes",
+      "x-los-cli": {
+        "flags": [
+          "--drafts"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "out": {
+      "type": "string",
+      "description": "staging directory outside the repository; bodies/ is rebuilt every run, envelope.json is overwritten",
+      "x-los-cli": {
+        "flags": [
+          "--out"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "note-analysis-prepare",
+    "help": "stage a batch of source analyses: drafts in, body files plus exact envelope out",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.analysis.cmd_note_analysis_prepare",
+    "parser_factory": false
+  }
+}

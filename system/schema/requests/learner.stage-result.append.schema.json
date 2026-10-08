@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/learner.stage-result.append",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activity",
+    "result",
+    "stage",
+    "unit",
+    "workspace"
+  ],
+  "properties": {
+    "activity": {
+      "type": "string",
+      "description": "activity (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--activity"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "assistance": {
+      "type": "string",
+      "description": "assistance (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--assistance"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition label for this attempt; labels only until a target is authored",
+      "x-los-cli": {
+        "flags": [
+          "--condition"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "expected_snapshot (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "note": {
+      "type": "string",
+      "description": "free-text note stored with the result; prose only, never evidence",
+      "x-los-cli": {
+        "flags": [
+          "--note"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "result (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--result"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "correct",
+          "incorrect",
+          "partial",
+          "abandoned"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "stage": {
+      "type": "string",
+      "description": "stage (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--stage"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "explicitly correct one earlier stage result; preserves its bytes",
+      "x-los-cli": {
+        "flags": [
+          "--supersedes"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "unit": {
+      "type": "string",
+      "description": "unit (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--unit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "workspace": {
+      "type": "string",
+      "description": "workspace (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--workspace"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "stage-result",
+    "help": "record an untargeted learner result against a unit/stage (no credit)",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.stage_result.cmd_stage_result",
+    "parser_factory": false
+  }
+}

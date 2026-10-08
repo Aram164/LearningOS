@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/project.inspect",
+  "x-governs": "artifact",
+  "$ref": "cli.inspect.schema.json"
+}

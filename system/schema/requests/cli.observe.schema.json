@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.observe",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activity",
+    "requirement",
+    "result"
+  ],
+  "properties": {
+    "activity": {
+      "type": "string",
+      "description": "activity (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--activity"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "assistance": {
+      "type": "string",
+      "description": "assistance (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--assistance"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition that DID hold for this attempt",
+      "x-los-cli": {
+        "flags": [
+          "--condition"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "condition_not_met": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition that did NOT hold; a different fact from silence, which stays unknown",
+      "x-los-cli": {
+        "flags": [
+          "--condition-not-met"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "note": {
+      "type": "string",
+      "description": "free-text note stored as the observation context",
+      "x-los-cli": {
+        "flags": [
+          "--note"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "requirement": {
+      "type": "string",
+      "description": "requirement id from the current study-map stages",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "result (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--result"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "correct",
+          "incorrect",
+          "partial",
+          "abandoned"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "explicitly correct one earlier observation; preserves its bytes",
+      "x-los-cli": {
+        "flags": [
+          "--supersedes"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "tags": {
+      "type": "string",
+      "description": "tags (no description in the parser yet)",
+      "x-los-cli": {
+        "flags": [
+          "--tags"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "workspace": {
+      "type": "string",
+      "description": "active workspace owning the ledger; resolved when omitted",
+      "x-los-cli": {
+        "flags": [
+          "--workspace"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "observe",
+    "help": "record Aram's own evidence directly; the terminal session is the approval",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.observation.cmd_observe",
+    "parser_factory": false
+  }
+}

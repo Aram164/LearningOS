@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/health.report",
+  "x-governs": "artifact",
+  "$ref": "cli.health-report.schema.json"
+}

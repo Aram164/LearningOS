@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/cli.intelligence-scan",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "brief": {
+      "type": "boolean",
+      "description": "at most 5 ranked groups + totals; with --json, the agent entry path",
+      "x-los-cli": {
+        "flags": [
+          "--brief"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "days": {
+      "type": "integer",
+      "description": "retained for compatibility; staleness compares stored digests, not a window (default: 30)",
+      "x-los-cli": {
+        "flags": [
+          "--days"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 30,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "feed": {
+      "type": "string",
+      "description": "caller-owned JSON session-count file for the count detectors (read-only)",
+      "x-los-cli": {
+        "flags": [
+          "--feed"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "machine-readable output",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "intelligence-scan",
+    "help": "read-only observation loop: propose candidate investigations",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.commands.intelligence.cmd_intelligence_scan",
+    "parser_factory": false
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/plan.template",
+  "x-governs": "artifact",
+  "$ref": "cli.plan-template.schema.json"
+}

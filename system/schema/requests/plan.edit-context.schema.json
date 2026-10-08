@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/plan.edit-context",
+  "x-governs": "artifact",
+  "$ref": "cli.plan-edit-context.schema.json"
+}

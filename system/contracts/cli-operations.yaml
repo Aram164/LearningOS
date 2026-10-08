@@ -1,0 +1,125 @@
+operations:
+  cli.ai-action-append-slices:
+    cli_command: ai-action-append-slices
+    kind: porcelain
+  cli.ai-action-import-delivery:
+    cli_command: ai-action-import-delivery
+    kind: porcelain
+  cli.ai-action-list:
+    cli_command: ai-action-list
+    kind: tool
+  cli.ai-action-prepare:
+    cli_command: ai-action-prepare
+    kind: porcelain
+  cli.ai-action-status:
+    cli_command: ai-action-status
+    kind: tool
+  cli.ai-action-validate-delivery:
+    cli_command: ai-action-validate-delivery
+    kind: tool
+  cli.atlas-context:
+    cli_command: atlas-context
+    kind: porcelain
+  cli.backup-manifest:
+    cli_command: backup-manifest
+    kind: tool
+  cli.backup-verify:
+    cli_command: backup-verify
+    kind: tool
+  cli.bootstrap:
+    cli_command: bootstrap
+    kind: query
+  cli.capabilities:
+    cli_command: capabilities
+    kind: tool
+  cli.capability:
+    cli_command: capability
+    kind: porcelain
+  cli.dossier:
+    cli_command: dossier
+    kind: porcelain
+  cli.generate:
+    cli_command: generate
+    kind: porcelain
+  cli.goal:
+    cli_command: goal
+    kind: porcelain
+  cli.health-report:
+    cli_command: health-report
+    kind: tool
+  cli.inbox-list:
+    cli_command: inbox-list
+    kind: tool
+  cli.inbox-read:
+    cli_command: inbox-read
+    kind: query
+  cli.inspect:
+    cli_command: inspect
+    kind: query
+  cli.intelligence-scan:
+    cli_command: intelligence-scan
+    kind: tool
+  cli.legacy-archive-inspect:
+    cli_command: legacy-archive-inspect
+    kind: tool
+  cli.legacy-archive-status:
+    cli_command: legacy-archive-status
+    kind: tool
+  cli.masters-planning-dashboard:
+    cli_command: masters-planning-dashboard
+    kind: tool
+  cli.module-list:
+    cli_command: module-list
+    kind: query
+  cli.note-analysis-prepare:
+    cli_command: note-analysis-prepare
+    kind: tool
+  cli.note-read:
+    cli_command: note-read
+    kind: query
+  cli.observe:
+    cli_command: observe
+    kind: command
+  cli.operations:
+    cli_command: operations
+    kind: tool
+  cli.plan-edit-context:
+    cli_command: plan-edit-context
+    kind: porcelain
+  cli.plan-template:
+    cli_command: plan-template
+    kind: tool
+  cli.program-list:
+    cli_command: program-list
+    kind: query
+  cli.project-list:
+    cli_command: project-list
+    kind: query
+  cli.related:
+    cli_command: related
+    kind: query
+  cli.resume:
+    cli_command: resume
+    kind: tool
+  cli.runtime-session:
+    cli_command: runtime-session
+    kind: porcelain
+  cli.search:
+    cli_command: search
+    kind: query
+  cli.semantic:
+    cli_command: semantic
+    kind: tool
+  cli.session-end:
+    cli_command: session-end
+    kind: porcelain
+  cli.status:
+    cli_command: status
+    kind: tool
+  cli.unit-list:
+    cli_command: unit-list
+    kind: query
+  cli.validate:
+    cli_command: validate
+    kind: tool
+schema: 1

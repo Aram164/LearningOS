@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/inbox.content",
+  "x-governs": "artifact",
+  "$ref": "cli.inbox-read.schema.json"
+}
