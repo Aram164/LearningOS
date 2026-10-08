@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 53
-schema_fingerprint: sha256:ca0bfb8b2004806aaaa9c54e45db44211e4da20261a9ee9a21b1977fc34fa8a3
+contract_version: 54
+schema_fingerprint: sha256:a21cb0c25c24c70ae4637552600e53b61a0e31a7fc4035cb0e89681b7e31646d
 record_schemas: 36
 history:
 - version: 1
@@ -395,5 +395,10 @@ history:
   note: Receipts optionally identify the snapshot fingerprint definition; byte-bound
     caches and conservative legacy resolver admission preserve existing records, no
     migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 54
+  adopted: '2026-10-08'
+  note: 'PLAN D3: typed optional error details (reason, suggestions, remedy)'
   migration: null
   fixture: tests/fixtures/formats/v46/

@@ -128,7 +128,30 @@
                 },
                 "message": {"type": "string", "minLength": 1},
                 "retryable": {"type": "boolean"},
-                "details": {"type": "object"}
+                "details": {
+                  "type": "object",
+                  "properties": {
+                    "reason": {
+                      "enum": [
+                        "NOT_FOUND",
+                        "MALFORMED_ID"
+                      ]
+                    },
+                    "suggestions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "maxItems": 5
+                    },
+                    "remedy": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                }
               }
             }
           ]
