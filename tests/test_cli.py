@@ -456,3 +456,165 @@ def test_root_error_still_prints_root_usage(mini_repo):
     assert proc.returncode == 2
     assert proc.stderr.startswith("usage: los [-h]"), proc.stderr
     assert "los: error:" in proc.stderr
+
+
+# ------------------------------------------- generated parser (S12 correction 1)
+#
+# Production declares no nonempty command defaults and no
+# store_const/append_const/count/extend action, so these drive the real
+# build_parser/_add_property against synthetic request trees. The
+# production binding count and baseline bytes are pinned below.
+
+_SYNTH_HANDLER = "learning_os.commands.query.cmd_inspect"
+
+
+def _synth_cli(action, flags, default=None, required=False, type=None,
+               nargs=None, const=None, choices=None, metavar=None):
+    return {
+        "flags": list(flags), "position": None, "action": action,
+        "nargs": nargs, "const": const, "default": default, "type": type,
+        "choices": choices, "metavar": metavar, "required": required,
+        "stdin": False, "transport_only": False, "envelope_owned": False,
+    }
+
+
+def _synth_command(name, properties=None, defaults=None, handler=None):
+    cmd = {
+        "name": name, "help": f"{name} help",
+        "description": f"{name} description", "epilog": None,
+        "handler": handler or _SYNTH_HANDLER,
+        "defaults": defaults if defaults is not None else {},
+        "mutually_exclusive": [], "parser_factory": False,
+    }
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": f"learningos/requests/synth.{name}",
+        "type": "object",
+        "properties": properties or {},
+        "required": [],
+        "x-los-cli-command": cmd,
+    }
+
+
+def _synth_tree(tmp_path, operations):
+    root = tmp_path / "synth-root"
+    directory = root / "system/schema/requests"
+    directory.mkdir(parents=True)
+    for operation, doc in operations.items():
+        (directory / f"{operation}.schema.json").write_text(
+            json.dumps(doc), encoding="utf-8")
+    return root
+
+
+def _generated_parser(monkeypatch, root, order):
+    from learning_os.adapters import cli_parser
+
+    monkeypatch.setattr(cli_parser, "_repository_root", lambda: root)
+    monkeypatch.setattr(cli_parser, "_SUBCOMMAND_ORDER", tuple(order))
+    return cli_parser.build_parser()
+
+
+def test_generated_parser_applies_nonempty_command_defaults(tmp_path,
+                                                            monkeypatch):
+    root = _synth_tree(tmp_path, {
+        "synth.cmd": _synth_command(
+            "synth-cmd", defaults={"custom_default": "VALUE"}),
+    })
+    parser = _generated_parser(monkeypatch, root, ["synth-cmd"])
+    namespace = parser.parse_args(["synth-cmd"])
+    assert namespace.custom_default == "VALUE"
+    assert namespace.command == "synth-cmd"
+    assert namespace.func.__name__ == "cmd_inspect"
+
+
+def test_generated_parser_rejects_duplicate_cli_bindings(tmp_path,
+                                                         monkeypatch):
+    root = _synth_tree(tmp_path, {
+        "synth.one": _synth_command("synth-cmd"),
+        "synth.two": _synth_command("synth-cmd"),
+    })
+    with pytest.raises(ValueError, match="duplicate CLI binding"):
+        _generated_parser(monkeypatch, root, ["synth-cmd"])
+
+
+def test_generated_parser_action_semantics_through_metadata(
+        tmp_path, monkeypatch):
+    properties = {
+        "name": {"type": "string", "description": "positional",
+                 "x-los-cli": _synth_cli("store", [], required=True)},
+        "num": {"type": "integer", "description": "a number",
+                "x-los-cli": _synth_cli("store", ["--num"], default=0,
+                                        type="int")},
+        "flag": {"type": "boolean", "description": "a flag",
+                 "x-los-cli": _synth_cli("store_true", ["--flag"],
+                                         default=False, nargs=0,
+                                         const=True)},
+        "nox": {"type": "boolean", "description": "a negated flag",
+                "x-los-cli": _synth_cli("store_false", ["--nox"],
+                                        default=True, nargs=0,
+                                        const=False)},
+        "item": {"type": "array", "description": "repeatable",
+                 "x-los-cli": _synth_cli("append", ["--item"])},
+        "tag": {"type": "array", "description": "extendable",
+                "x-los-cli": _synth_cli("extend", ["--tag"], default=[],
+                                        nargs="+")},
+        "mode": {"type": "string", "description": "a const",
+                 "x-los-cli": _synth_cli("store_const", ["--mode"],
+                                         default="SLOW", const="FAST")},
+        "add": {"type": "array", "description": "const appends",
+                "x-los-cli": _synth_cli("append_const", ["--add"],
+                                        default=[], const="X")},
+        "verbose": {"type": "integer", "description": "counted",
+                    "x-los-cli": _synth_cli("count", ["--verbose", "-v"])},
+        "req": {"type": "string", "description": "required flag",
+                "x-los-cli": _synth_cli("store", ["--req"], required=True)},
+    }
+    root = _synth_tree(tmp_path, {
+        "synth.cmd": _synth_command("synth-cmd", properties=properties),
+    })
+    parser = _generated_parser(monkeypatch, root, ["synth-cmd"])
+    namespace = parser.parse_args([
+        "synth-cmd", "hello", "--req", "R", "--num", "3", "--flag",
+        "--item", "a", "--item", "b", "--tag", "x", "y", "--tag", "z",
+        "-vv", "--mode", "--add", "--add",
+    ])
+    assert namespace.name == "hello"
+    assert namespace.num == 3
+    assert namespace.flag is True
+    assert namespace.nox is True
+    assert namespace.item == ["a", "b"]
+    assert namespace.tag == ["x", "y", "z"]
+    assert namespace.mode == "FAST"
+    assert namespace.add == ["X", "X"]
+    assert namespace.verbose == 2
+    assert namespace.req == "R"
+    # Absent flags keep their metadata defaults.
+    bare = parser.parse_args(["synth-cmd", "hello", "--req", "R"])
+    assert bare.num == 0
+    assert bare.flag is False
+    assert bare.nox is True
+    assert bare.item is None
+    assert bare.tag == []
+    assert bare.mode == "SLOW"
+    assert bare.add == []
+    assert bare.verbose is None
+    # Required metadata still requires.
+    with pytest.raises(SystemExit) as exc:
+        parser.parse_args(["synth-cmd", "hello"])
+    assert exc.value.code == 2
+
+
+def test_production_bindings_and_baseline_stay_frozen(repo_root):
+    import los
+    from learning_os.contracts.payloads import subparsers
+
+    assert len(subparsers(los.build_parser())) == 91
+    baseline = json.loads(
+        (repo_root / "tests/architecture/cli-parity-baseline.json")
+        .read_text(encoding="utf-8"))
+    assert baseline["parser_class"] == "los._LosArgumentParser"
+    assert len(baseline["subparsers"]) == 91
+    corpus = json.loads(
+        (repo_root / "tests/architecture/cli-parity-corpus.json")
+        .read_text(encoding="utf-8"))
+    assert len(corpus["cases"]) == 1786
