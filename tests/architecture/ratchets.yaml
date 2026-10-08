@@ -1,5 +1,5 @@
 schema: 1
-baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A4-plumbing-2, A14-vocabulary, A8-transcripts, A8-doc-commands]
+baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A4-plumbing-2, A14-vocabulary, A8-transcripts, A8-doc-commands, A6-idroundtrip]
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -1625,3 +1625,8 @@ checks:
     since: baseline
     approved_by: null
   A14-vocabulary: []
+  A6-idroundtrip:
+  - signature: '*::request-schemas-missing'
+    count: 1
+    since: baseline
+    approved_by: null

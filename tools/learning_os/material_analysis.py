@@ -11,8 +11,10 @@ when the bytes behind this exact identity were actually observed.
 from __future__ import annotations
 
 import hashlib
-import re
 from pathlib import Path
+
+from learning_os.domain.failures import MalformedId
+from learning_os.domain.ids import Digest
 
 
 def observe_local_material(materials_root: Path, material: str,
@@ -85,13 +87,13 @@ def normalize_binding_spellings(binding: dict) -> str | None:
         value = binding.get(field)
         if value is None or not isinstance(value, str):
             continue
-        bare = value.removeprefix("sha256:")
-        if not re.fullmatch(r"[0-9a-f]{64}", bare):
+        try:
+            binding[field] = Digest.parse(value).bare()
+        except MalformedId:
             return (
                 f"binding.{field} is malformed: expected bare 64-character "
                 f"lowercase hex (or sha256:<hex>), got {value!r}"
             )
-        binding[field] = bare
     return None
 
 
