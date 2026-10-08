@@ -208,3 +208,43 @@ def test_test_enforcement_names_its_actual_module(row):
     assert Path(module.__file__).resolve() == (ROOT / row["test"]).resolve()
     assert any(name.startswith("test_") and callable(value)
                for name, value in vars(module).items())
+
+
+def test_cli_operations_row_uses_test_enforcement():
+    """SPEC (aq): cli-operations.yaml is enforced by its named test module."""
+    rows = [row for row in ROWS
+            if row["declaration"] == "system/contracts/cli-operations.yaml"]
+    assert len(rows) == 1
+    row = rows[0]
+    assert row["enforced_by"] == "test"
+    assert row["checker"] == "test_arch_cli_parity"
+    assert row["test"] == "tests/test_arch_cli_parity.py"
+    test_test_enforcement_names_its_actual_module(row)
+
+
+def test_test_enforcement_rejects_a_mismatched_module():
+    """Negative controls: the check above is not vacuous."""
+    with pytest.raises(AssertionError):
+        test_test_enforcement_names_its_actual_module({
+            "declaration": "system/contracts/cli-operations.yaml",
+            "checker": "test_arch_cli_parity",
+            "test": "tests/test_cli.py",
+        })
+    with pytest.raises(AssertionError):
+        test_test_enforcement_names_its_actual_module({
+            "declaration": "system/contracts/cli-operations.yaml",
+            "checker": "arch_cli_describe",
+            "test": "tests/arch_cli_describe.py",
+        })
+
+
+def test_validator_and_runtime_rows_are_still_wired():
+    """The (aq) kind joins the existing wirings; none of them moved."""
+    kinds = {row["enforced_by"] for row in ROWS}
+    assert kinds == {"validator", "runtime", "test"}
+    for row in ROWS:
+        if row["enforced_by"] == "validator":
+            assert row["validator_method"] in inspect.getsource(Validator.run)
+        elif row["enforced_by"] == "runtime":
+            importlib.import_module(row["checker"])
+            assert (ROOT / row["test"]).is_file()
