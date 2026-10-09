@@ -199,6 +199,29 @@ def test_only_json_added_to_surface_entries():
     _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
 
 
+def _assert_cli_command_only_handler_rebound(key: str, fname: str,
+                                             old_cmd: dict, new_cmd: dict) -> None:
+    """A converted operation rebinds only its handler line (amendment (u)).
+
+    Every other ``x-los-cli-command`` field must still match; the new
+    handler must be exactly the invoke binding for a registered operation,
+    so a smuggled change on an unconverted operation still fails.
+    """
+    if new_cmd == old_cmd:
+        return
+    assert set(new_cmd) == set(old_cmd), (key, set(new_cmd) ^ set(old_cmd))
+    for field in old_cmd:
+        if field != "handler":
+            assert new_cmd[field] == old_cmd[field], (key, field)
+    operation = fname.removesuffix(".schema.json")
+    import learning_os.ops.handlers  # noqa: F401  (registration side effect)
+    from learning_os.ops.registry import REGISTRY
+
+    assert operation in REGISTRY, (key, operation)
+    assert new_cmd["handler"] == f"learning_os.adapters.cli.invoke:{operation}", (
+        key, new_cmd["handler"])
+
+
 def _assert_only_json_added_to_request_schemas(
         base: str, new_schemas: dict[str, str]) -> None:
     """New (b) request schemas gain only the ``json`` property (else vacuous)."""
@@ -209,7 +232,9 @@ def _assert_only_json_added_to_request_schemas(
         new = json.loads((REQUESTS_DIR / fname).read_text(encoding="utf-8"))
         assert set(new) == set(old), (key, set(new) ^ set(old))
         for top in old:
-            if top != "properties":
+            if top == "x-los-cli-command":
+                _assert_cli_command_only_handler_rebound(key, fname, old[top], new[top])
+            elif top != "properties":
                 assert new[top] == old[top], (key, top)
         assert set(new["properties"]) == set(old["properties"]) | {"json"}, key
         for prop in old["properties"]:
