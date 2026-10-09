@@ -6,17 +6,22 @@ Amendment (t) approves each (b) change as a paired ``cli.<subcommand>`` +
 ``request_schemas.<file>`` entry (plan_ref PLAN D16). The (c) commands
 (``generate``, ``validate``) are NEEDS-DECISION and keep no flag.
 
-These tests derive the (b) set from the D16 approvals and prove, against the
-ratchet base (``$LOS_RATCHET_BASE``, default ``main``):
-- the surface entry and request-schema file each gain only the ``json`` item;
-- the flag parses on every (b) command with namespace delta exactly ``json``;
-- no (b) handler reads that attribute, so success output is byte-identical;
-- every other subcommand is (a) or (c): the partition is closed.
+Amendment (bb): approvals are single-use (SPEC 2.3 step 4). Only the D16
+entries that are new relative to the ratchet base (``$LOS_RATCHET_BASE``,
+default ``main``) still authorize their diff; consumed entries assert
+nothing further. Hence, against the base:
+- the surface entry and request-schema file "only the ``json`` item" checks
+  apply to new entries only (vacuous when none are new);
+- the partition classifies a subcommand as (b) when its D16 approval is
+  new, as (a) when it has --json at the base, keeping (c) as before;
+- the flag-parses and no-handler-reads checks apply to every D16-approved
+  subcommand, new or consumed.
 """
 
 from __future__ import annotations
 
 import ast
+import copy
 import json
 import os
 import subprocess
@@ -24,6 +29,7 @@ import sys
 from pathlib import Path
 
 import arch_surface
+import pytest
 import yaml
 from repo_builders import run_los
 
@@ -37,6 +43,11 @@ CORPUS_PATH = ARCH / "cli-parity-corpus.json"
 
 BASE_ENV = "LOS_RATCHET_BASE"
 DEFAULT_BASE = "main"
+
+#: Amendment (bb) proof contexts: accepted S13 Core (pre-D16: every D16
+#: approval is new) and accepted S14 Core (post-D16: none is new).
+S13_BASE = "4f7628e38acb3b35d13b0cb80a07b9f20f382b68"
+S14_BASE = "e437c2783fd37933ab9ddf61cc3514aacb84656e"
 
 D16_PLAN_REF = "PLAN D16"
 D16_APPROVED_BY = "Aram 2026-10-03: accepted PLAN revision 4"
@@ -66,6 +77,15 @@ def _git_show(base: str, relpath: str) -> str:
     return proc.stdout
 
 
+def _git_show_optional(base: str, relpath: str) -> str | None:
+    proc = subprocess.run(
+        ["git", "-C", str(ROOT), "show", f"{base}:{relpath}"],
+        capture_output=True, text=True)
+    if proc.returncode != 0:
+        return None
+    return proc.stdout
+
+
 def _base() -> str:
     return os.environ.get(BASE_ENV, DEFAULT_BASE)
 
@@ -89,6 +109,34 @@ def _d16_approvals() -> tuple[dict[str, str], dict[str, str]]:
             raise AssertionError(f"D16 approval outside cli/request_schemas: {key}")
     assert cli, "no D16 cli.* approvals: (b) set would be vacuous"
     return cli, schemas
+
+
+def _new_d16_approvals(base: str) -> tuple[dict[str, str], dict[str, str]]:
+    """D16 approvals new relative to ``base`` (amendment (bb), single-use).
+
+    A live D16 entry is new when its whole entry is absent from the base's
+    ``surface-approvals.yaml`` (SPEC 2.3 step 4). A base without the file
+    has seen none of them, so all are new.
+    """
+    cli, schemas = _d16_approvals()
+    base_text = _git_show_optional(base, "tests/architecture/surface-approvals.yaml")
+    if base_text is None:
+        return dict(cli), dict(schemas)
+    base_entries = {
+        json.dumps(entry, sort_keys=True)
+        for entry in yaml.safe_load(base_text).get("approvals", [])
+    }
+    live = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))
+    new_keys = set()
+    for entry in live.get("approvals", []):
+        if entry.get("plan_ref") != D16_PLAN_REF:
+            continue
+        if json.dumps(entry, sort_keys=True) not in base_entries:
+            new_keys.add(entry["key"])
+    new_cli = {key: sub for key, sub in cli.items() if key in new_keys}
+    new_schemas = {key: fname for key, fname in schemas.items()
+                   if key in new_keys}
+    return new_cli, new_schemas
 
 
 def _parser():
@@ -127,13 +175,10 @@ def test_d16_approvals_pair_cli_with_governing_schema():
         assert f"cli.{cmd.get('name')}" in cli, key
 
 
-def test_only_json_added_to_surface_entries():
-    cli, _ = _d16_approvals()
-    base = json.loads(_git_show(_base(), "tests/architecture/surface.json"))
-    live = json.loads((ARCH / "surface.json").read_text(encoding="utf-8"))
-    base_flat = arch_surface.flatten_surface(base)
-    live_flat = arch_surface.flatten_surface(live)
-    for key in sorted(cli):
+def _assert_only_json_added_to_surface_entries(
+        base_flat: dict, live_flat: dict, new_cli: dict[str, str]) -> None:
+    """New (b) surface entries gain only the no-op flag (else vacuous)."""
+    for key in sorted(new_cli):
         assert key in base_flat and key in live_flat, key
         old = {json.dumps(a, sort_keys=True) for a in base_flat[key]}
         new = {json.dumps(a, sort_keys=True) for a in live_flat[key]}
@@ -141,12 +186,26 @@ def test_only_json_added_to_surface_entries():
         assert new - old == {json.dumps(JSON_ACTION, sort_keys=True)}, key
 
 
-def test_only_json_added_to_request_schemas():
-    _, schemas = _d16_approvals()
-    for key in sorted(schemas):
-        fname = schemas[key]
+def _surface_flats(base: str) -> tuple[dict, dict]:
+    base_doc = json.loads(_git_show(base, "tests/architecture/surface.json"))
+    live_doc = json.loads((ARCH / "surface.json").read_text(encoding="utf-8"))
+    return arch_surface.flatten_surface(base_doc), arch_surface.flatten_surface(live_doc)
+
+
+def test_only_json_added_to_surface_entries():
+    base = _base()
+    new_cli, _ = _new_d16_approvals(base)
+    base_flat, live_flat = _surface_flats(base)
+    _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
+
+
+def _assert_only_json_added_to_request_schemas(
+        base: str, new_schemas: dict[str, str]) -> None:
+    """New (b) request schemas gain only the ``json`` property (else vacuous)."""
+    for key in sorted(new_schemas):
+        fname = new_schemas[key]
         rel = f"system/schema/requests/{fname}"
-        old = json.loads(_git_show(_base(), rel))
+        old = json.loads(_git_show(base, rel))
         new = json.loads((REQUESTS_DIR / fname).read_text(encoding="utf-8"))
         assert set(new) == set(old), (key, set(new) ^ set(old))
         for top in old:
@@ -167,6 +226,12 @@ def test_only_json_added_to_request_schemas():
         assert x["required"] is False and x["stdin"] is False, key
 
 
+def test_only_json_added_to_request_schemas():
+    base = _base()
+    _, new_schemas = _new_d16_approvals(base)
+    _assert_only_json_added_to_request_schemas(base, new_schemas)
+
+
 def _corpus_success_argv() -> dict[str, list[str]]:
     """First success-case argv per subcommand, from the parity corpus."""
     corpus = json.loads(CORPUS_PATH.read_text(encoding="utf-8"))
@@ -181,8 +246,8 @@ def _corpus_success_argv() -> dict[str, list[str]]:
     return out
 
 
-def test_b_subcommands_accept_json_with_only_that_delta():
-    cli, _ = _d16_approvals()
+def _assert_b_subcommands_accept_json_with_only_that_delta(
+        cli: dict[str, str]) -> None:
     parser = _parser()
     argv_by_sub = _corpus_success_argv()
     for key in sorted(cli):
@@ -195,6 +260,11 @@ def test_b_subcommands_accept_json_with_only_that_delta():
         got = parser.parse_args(flagged)
         assert got.json is True, sub
         assert vars(got) == {**vars(want), "json": True}, sub
+
+
+def test_b_subcommands_accept_json_with_only_that_delta():
+    cli, _ = _d16_approvals()
+    _assert_b_subcommands_accept_json_with_only_that_delta(cli)
 
 
 def _closure_source(module_path: Path, func_name: str) -> list[tuple[str, object]]:
@@ -219,15 +289,14 @@ def _closure_source(module_path: Path, func_name: str) -> list[tuple[str, object
     return out
 
 
-def test_no_b_handler_reads_the_json_flag():
+def _assert_no_b_handler_reads_the_json_flag(cli: dict[str, str]) -> None:
     """The (b) no-op proof: the only namespace delta is an unread attribute.
 
-    A handler is a pure function of (namespace, filesystem). The previous
-    test shows --json changes only the ``json`` attribute; this test shows no
+    A handler is a pure function of (namespace, filesystem). The parse
+    check shows --json changes only the ``json`` attribute; this shows no
     (b) handler closure reads it (directly, via getattr, or via vars()/dict
     introspection), so success output cannot differ with the flag.
     """
-    cli, _ = _d16_approvals()
     parser = _parser()
     choices = _subcommands(parser)
     for key in sorted(cli):
@@ -260,13 +329,16 @@ def test_no_b_handler_reads_the_json_flag():
                         f"({path.name}:{child.lineno})")
 
 
-def test_every_subcommand_is_a_b_or_c():
-    """Closed world: no subcommand silently gains or misses the flag."""
+def test_no_b_handler_reads_the_json_flag():
     cli, _ = _d16_approvals()
-    b = set(cli.values())
+    _assert_no_b_handler_reads_the_json_flag(cli)
+
+
+def _assert_every_subcommand_is_a_b_or_c(base: str, new_cli: dict[str, str]) -> None:
+    """Closed world: (b) is new, (a) has the flag at the base, (c) is kept."""
+    b = set(new_cli.values())
     parser = _parser()
     choices = _subcommands(parser)
-    base = _base()
     for sub in sorted(choices):
         subparser = choices[sub]
         fname, live = _schema_for_subcommand(sub)
@@ -280,6 +352,12 @@ def test_every_subcommand_is_a_b_or_c():
             assert sub in C_SUBCOMMANDS, f"{sub}: jsonless and not (c)"
             assert "json" not in live["properties"], sub
             assert sub not in b, sub
+
+
+def test_every_subcommand_is_a_b_or_c():
+    base = _base()
+    new_cli, _ = _new_d16_approvals(base)
+    _assert_every_subcommand_is_a_b_or_c(base, new_cli)
 
 
 def test_json_flag_keeps_b_success_bytes_identical(mini_repo, tmp_path):
@@ -298,3 +376,46 @@ def test_json_flag_keeps_b_success_bytes_identical(mini_repo, tmp_path):
     assert flagged.returncode == 0, flagged.stderr
     assert flagged.stdout == plain.stdout
     assert flagged.stderr == plain.stderr
+
+
+def test_s13_base_marks_every_d16_approval_new():
+    """Amendment (bb) context 1: at accepted S13 all 53 approvals are new."""
+    new_cli, new_schemas = _new_d16_approvals(S13_BASE)
+    assert len(new_cli) == 53, len(new_cli)
+    assert len(new_schemas) == 53, len(new_schemas)
+    base_flat, live_flat = _surface_flats(S13_BASE)
+    _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
+    _assert_only_json_added_to_request_schemas(S13_BASE, new_schemas)
+    _assert_every_subcommand_is_a_b_or_c(S13_BASE, new_cli)
+    cli, _ = _d16_approvals()
+    _assert_b_subcommands_accept_json_with_only_that_delta(cli)
+    _assert_no_b_handler_reads_the_json_flag(cli)
+
+
+def test_s14_base_marks_no_d16_approval_new():
+    """Amendment (bb) context 2: at accepted S14 none is new; all pass."""
+    new_cli, new_schemas = _new_d16_approvals(S14_BASE)
+    assert new_cli == {}, new_cli
+    assert new_schemas == {}, new_schemas
+    base_flat, live_flat = _surface_flats(S14_BASE)
+    _assert_only_json_added_to_surface_entries(base_flat, live_flat, new_cli)
+    _assert_only_json_added_to_request_schemas(S14_BASE, new_schemas)
+    _assert_every_subcommand_is_a_b_or_c(S14_BASE, new_cli)
+    cli, _ = _d16_approvals()
+    _assert_b_subcommands_accept_json_with_only_that_delta(cli)
+    _assert_no_b_handler_reads_the_json_flag(cli)
+
+
+def test_mutated_surface_entry_for_a_new_approval_still_fails():
+    """Amendment (bb) negative: an extra option on a new approval fails."""
+    new_cli, _ = _new_d16_approvals(S13_BASE)
+    assert new_cli, "S13 context must leave new approvals to mutate"
+    key = sorted(new_cli)[0]
+    base_flat, live_flat = _surface_flats(S13_BASE)
+    mutated = copy.deepcopy(live_flat)
+    extra = dict(JSON_ACTION)
+    extra["option_strings"] = ["--json-extra"]
+    extra["dest"] = "json_extra"
+    mutated[key] = [*mutated[key], extra]
+    with pytest.raises(AssertionError):
+        _assert_only_json_added_to_surface_entries(base_flat, mutated, new_cli)
