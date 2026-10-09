@@ -265,7 +265,7 @@ def test_ai_apply_handler_carries_typed_refusals(
     ctx = OpContext(root=mini_repo, operation="ai-action.delivery.apply",
                     channel="operator", invocation="command", gateway=context)
     with gateway_request_context(context), pytest.raises(WriteRefused) as raised:
-        ai_handler.apply_delivery(ctx, req)
+        ai_handler.ai_action_apply_delivery(ctx, req)
     typed = raised.value
     assert (typed.gateway_code, typed.gateway_retryable) == (
         refusal or ("INVALID_REQUEST", False))
@@ -354,7 +354,7 @@ def test_ai_apply_commit_failure_through_the_pipeline_path(
     with gateway_request_context(context):
         ctx = OpContext(root=mini_repo, operation="ai-action.delivery.apply",
                         channel="operator", invocation="command", gateway=context)
-        result = ai_handler.apply_delivery(ctx, req)
+        result = ai_handler.ai_action_apply_delivery(ctx, req)
         assert result.proposal is not None
         with pytest.raises(WriteRefused) as raised:
             ops_commit.commit_proposal(ctx, result.proposal)

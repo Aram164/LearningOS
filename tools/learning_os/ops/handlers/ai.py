@@ -97,7 +97,7 @@ def _delivery_output(receipt: dict) -> dict:
 
 
 @register("ai-action.delivery.apply", kind="command")
-def apply_delivery(ctx: OpContext, req: dict) -> Result:
+def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     """Apply an approved AI delivery in one receipted transaction."""
     root = ctx.root
     authority = current_gateway_request()
