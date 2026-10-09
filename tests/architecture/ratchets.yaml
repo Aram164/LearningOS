@@ -11,6 +11,7 @@ baselined:
 - A8-doc-commands
 - A8-transcripts
 - A5-suggestions
+- A7-output
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -2551,6 +2552,411 @@ checks:
     since: baseline
     approved_by: null
   A5-suggestions:
+  - signature: ability.candidate.append::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: ability.context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.question.save::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: backup.manifest::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-append-slices::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-import-delivery::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-prepare::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-status::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.ai-action-validate-delivery::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.atlas-context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-manifest::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.backup-verify::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.bootstrap::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.capabilities::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.capability::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.dossier::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.generate::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.goal::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.health-report::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inbox-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.inbox-read::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.intelligence-scan::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.legacy-archive-inspect::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.legacy-archive-status::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.masters-planning-dashboard::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.module-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.note-analysis-prepare::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.note-read::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.observe::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.operations::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-edit-context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.plan-template::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.program-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.project-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.related::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.resume::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.runtime-session::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.search::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.semantic::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.session-end::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.status::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.unit-list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: cli.validate::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: collection.entry.revise::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: concept.relations.change::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: coordination.section.revise::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.create::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: detour.resolve::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: garden.seed.create::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: health.report::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.content::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.resolve::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.ability-observation.append::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.observation.append::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: learner.stage-result.append::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.inspect::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.lock.publish::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.status::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: lineage.restamp::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.catalog.update::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.comparison.publish::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.dashboard::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: material.span::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.attempt.record::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.materials.compact::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.plan.import::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: module.sitting.update::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.analysis.save::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.analysis.save_batch::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.content::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.create::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.evidence.add::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.revise::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.search::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: operator.bootstrap::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.attachment.add::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.note.write::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: path.progress.update::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.edit-context::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.template::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.create::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.list::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.update::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.apply::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: review.prepare::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: runtime.session::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.feedback.record::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.intake.record::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: source.record.revise::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.attachment.add::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: stage.note.write::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.map.import::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.material-synthesis.publish::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.note.append::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.plan.revise::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: unit.source-selection.set::*
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: workspace.next-action.update::*
+    count: 1
+    since: baseline
+    approved_by: null
+  A7-output:
   - signature: ability.candidate.append::*
     count: 1
     since: baseline
