@@ -1207,3 +1207,30 @@ def test_gateway_commit_complaint_wins_over_refused_stdout(pipe, mini_repo):
     assert json.loads(lines[1]) == {
         "conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
     assert lines[2:] == ["los: handler line"]
+
+
+def test_gateway_raised_refusal_keeps_its_explicit_exit_code(pipe, mini_repo):
+    """(ac): an explicit WriteRefused.exit_code is the gateway exit."""
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        raise WriteRefused("three, not stale", exit_code=3)
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-ac-exit-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 3
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert body["error"]["message"] == "three, not stale"
+
+
+def test_gateway_raised_refusal_defaults_to_exit_two(pipe, mini_repo):
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        raise WriteRefused("plain refusal")
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-ac-exit-002")
+    assert outcome.exit_code == 2

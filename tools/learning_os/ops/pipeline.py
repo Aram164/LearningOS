@@ -1139,7 +1139,10 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                             parser_factory=parser_factory,
                         )
         except WriteRefused as exc:
-            code, result = 2, {"error": str(exc)}
+            # The gateway.dispatch row's exit (amendment (ac)): an explicit
+            # exit_code preserves the originating return value.
+            code = exc.exit_code if exc.exit_code is not None else 2
+            result = {"error": str(exc)}
             failure = exc
         except TransactionSnapshotConflict as exc:
             response = _v2_response(
