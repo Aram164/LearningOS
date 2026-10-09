@@ -270,14 +270,16 @@ class NotFound(WriteRefused):
     def __init__(self, kind: str, value: str, candidates: Iterable[str], *,
                  site: str | None = None,
                  gateway_message: str | None = None,
-                 exit_code: int | None = None):
+                 exit_code: int | None = None,
+                 message: str | None = None):
         # Preserve the legacy helper's iterator behavior for the message,
         # while giving its structured suggestions an independent traversal.
         message_candidates, suggestion_candidates = (
             tee(candidates) if isinstance(candidates, Iterator)
             else (candidates, candidates))
         super().__init__(
-            suggest.not_found(kind, value, message_candidates),
+            message if message is not None
+            else suggest.not_found(kind, value, message_candidates),
             site=site, reason="NOT_FOUND",
             gateway_message=gateway_message, exit_code=exit_code)
         self.suggestions = suggest.suggestions(value, suggestion_candidates)

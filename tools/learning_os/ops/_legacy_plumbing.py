@@ -30,7 +30,6 @@ from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derived.model import DerivedError
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
-from learning_os.domain.suggest import with_suggestions
 from learning_os.fingerprint import canonical_fingerprint, seed_source_fingerprint
 from learning_os.genout import (
     build_backlinks,
@@ -874,15 +873,6 @@ def _dump_study_map(study_map, data: dict) -> str:
 # ---------------------------------------------------------------------------
 # Material planning helpers, moved verbatim from commands.material for the
 # route.patch conversion (SPEC (az) item 2, (bd)).
-
-def _route(routes, route_id):
-    matches = [r for r in routes if r["id"] == route_id]
-    if len(matches) != 1:
-        raise WriteRefused(with_suggestions(
-            f"route {route_id} is missing or ambiguous in this unit",
-            route_id, [row["id"] for row in routes]))
-    return matches[0]
-
 
 def _guard_rows(root, artifacts):
     return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}

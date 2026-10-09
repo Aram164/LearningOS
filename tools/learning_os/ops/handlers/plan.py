@@ -8,6 +8,7 @@ import hashlib
 import json
 
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
+from learning_os.domain.suggest import with_suggestions
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
@@ -22,7 +23,6 @@ from learning_os.ops._legacy_plumbing import (
     _changed_write,
     _guard_rows,
     _map_for_unit,
-    _route,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -58,6 +58,25 @@ def _require_unit(repo, unit_id):
     return unit
 
 
+def _require_route(routes, route_id):
+    """The raising twin of the legacy route lookup for route.patch (SPEC (bf) G2).
+
+    Zero matches raise the typed ``NotFound`` with the byte-identical
+    legacy complaint; several matches keep the plain ``WriteRefused``.
+    """
+    matches = [r for r in routes if r["id"] == route_id]
+    if len(matches) == 1:
+        return matches[0]
+    ids = [row["id"] for row in routes]
+    complaint = with_suggestions(
+        f"route {route_id} is missing or ambiguous in this unit",
+        route_id, ids)
+    if not matches:
+        raise NotFound("route", route_id, ids, message=complaint,
+                       site="route.patch.unknown-route")
+    raise WriteRefused(complaint)
+
+
 def route_patch_plan(repo, unit_id, route_id, changes):
     if not isinstance(changes, dict) or not changes or any(
         k not in PATCH_FIELDS or not isinstance(v, str) or not v.strip() or len(v) > 16000
@@ -68,7 +87,7 @@ def route_patch_plan(repo, unit_id, route_id, changes):
     module_id = unit.module_id
     source_map = repo.module_source_maps[module_id]
     routes = unit_routes(source_map, module_id, unit_id)
-    old = _route(routes, route_id)
+    old = _require_route(routes, route_id)
     changes = {k: v for k, v in changes.items() if k not in old or old[k] != v}
     if not changes:
         return {}, set(), {"unit_id": unit_id, "route_id": route_id, "changes": {}}

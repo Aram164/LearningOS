@@ -33,7 +33,6 @@ from learning_os.ops._legacy_plumbing import (
     _guard_rows,
     _map_for_unit,
     _operator_lock,
-    _route,
     _snapshot,
 )
 from learning_os.ops._plan_gate import _module_plan_validation_errors, _plan_apply_gate
@@ -74,6 +73,20 @@ def _unit(repo, unit_id):
 #: Batch reads serve at most this many routes: one snapshot, one load,
 #: and a payload an operator can still review. Mirrors inspect's batch cap.
 MAX_BATCH_ROUTES = 20
+
+
+def _route(routes, route_id):
+    """The unconverted plan-edit-context lookup: a plain refusal either way.
+
+    Verbatim from the deleted ``ops._legacy_plumbing._route`` (SPEC (bf)
+    G2): the converted ``route.patch`` uses ``_require_route`` instead.
+    """
+    matches = [r for r in routes if r["id"] == route_id]
+    if len(matches) != 1:
+        raise WriteRefused(with_suggestions(
+            f"route {route_id} is missing or ambiguous in this unit",
+            route_id, [row["id"] for row in routes]))
+    return matches[0]
 
 
 def _route_entry(routes, study_map, source_map, unit, route_id):

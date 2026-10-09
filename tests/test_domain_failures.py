@@ -92,6 +92,33 @@ def test_not_found_forwards_explicit_metadata():
     assert exc.reason == "NOT_FOUND"
 
 
+def test_not_found_explicit_message_keeps_typed_fields():
+    candidates = ["route-a", "route-b"]
+    message = suggest.with_suggestions(
+        "route route-x is missing or ambiguous in this unit",
+        "route-x", candidates)
+    exc = failures.NotFound(
+        "route", "route-x", candidates, message=message,
+        site="route.patch.unknown-route")
+    assert str(exc) == message
+    assert exc.args == (message,)
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggest.suggestions("route-x", candidates)
+    assert exc.site == "route.patch.unknown-route"
+    assert exc.gateway_message is None
+    assert exc.exit_code is None
+    assert exc.gateway_code == INVALID_REQUEST
+    assert exc.gateway_retryable is False
+
+
+def test_not_found_default_message_is_not_found():
+    candidates = ["route-a", "route-b"]
+    exc = failures.NotFound("route", "route-x", candidates)
+    assert str(exc) == suggest.not_found("route", "route-x", candidates)
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggest.suggestions("route-x", candidates)
+
+
 def test_malformed_id_fields_and_reason():
     exc = failures.MalformedId("unit", "unit-!!")
     assert exc.kind == "unit"

@@ -348,15 +348,28 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
 
 
 def test_route_helper_refuses_unknown_and_ambiguous_ids():
-    from learning_os.domain.failures import WriteRefused
-    from learning_os.ops._legacy_plumbing import _route
+    from learning_os.domain.failures import NotFound, WriteRefused
+    from learning_os.domain.suggest import suggestions, with_suggestions
+    from learning_os.ops.handlers.plan import _require_route
 
     rows = [{"id": "route-a"}, {"id": "route-a"}, {"id": "route-b"}]
-    with pytest.raises(WriteRefused, match="missing or ambiguous"):
-        _route(rows, "route-missing")
-    with pytest.raises(WriteRefused, match="missing or ambiguous"):
-        _route(rows, "route-a")
-    assert _route(rows, "route-b") == {"id": "route-b"}
+    ids = [row["id"] for row in rows]
+    with pytest.raises(NotFound) as unknown:
+        _require_route(rows, "route-missing")
+    assert unknown.value.reason == "NOT_FOUND"
+    assert unknown.value.site == "route.patch.unknown-route"
+    assert unknown.value.suggestions == suggestions("route-missing", ids)
+    assert str(unknown.value) == with_suggestions(
+        "route route-missing is missing or ambiguous in this unit",
+        "route-missing", ids)
+    with pytest.raises(WriteRefused) as ambiguous:
+        _require_route(rows, "route-a")
+    assert type(ambiguous.value) is WriteRefused
+    assert ambiguous.value.reason is None
+    assert str(ambiguous.value) == with_suggestions(
+        "route route-a is missing or ambiguous in this unit",
+        "route-a", ids)
+    assert _require_route(rows, "route-b") == {"id": "route-b"}
 
 
 def test_search_succeeds_despite_malformed_project(mini_repo):

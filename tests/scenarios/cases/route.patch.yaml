@@ -20,7 +20,7 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, route_id: route-nope, changes: {angle: "Scenario angle."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: route.patch.unknown-route}
   - id: blank-changes
     kind: refusal
     transport: gateway
