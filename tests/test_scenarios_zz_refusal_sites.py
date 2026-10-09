@@ -318,21 +318,266 @@ def _cased_sites() -> dict[str, str]:
     return cased
 
 
+#: Untriggered reasons (SPEC (bf) item 9.3, fixed vocabulary).
+_UNTRIGGERED_REASONS = frozenset({
+    "guarded-before-handler", "os-error-only", "race-only",
+})
+
+#: Sites whose untriggered proof passed in this session (item 9.3).
+#: Proof tests run before the matching tests and record here.
+_PROOFS: dict[str, bool] = {}
+
+
+def _untriggered_entries() -> dict[str, dict]:
+    """Site -> entry for site-carrying ``untriggered`` entries (item 9.3).
+
+    Entries without a site are legacy documentation and A9 ignores
+    them. A site entry must name its operation's file, a declared
+    site at its declared raise line, and a fixed-vocabulary reason.
+    """
+    import scenario_harness as harness
+
+    declared_where = {site: where
+                      for (_, site), where in _declared_sites().items()}
+    entries: dict[str, dict] = {}
+    for path in sorted(CASES_DIR.glob("*.yaml")):
+        doc = harness.load_case_file(path)
+        for entry in doc.get("untriggered") or []:
+            site = entry.get("site")
+            if site is None:
+                continue
+            label = f"{path.stem}:{site}"
+            assert site not in entries, (
+                f"A9 {label}: duplicate untriggered entry — {FIX}")
+            assert site in declared_where, (
+                f"A9 {label}: not a declared site — {FIX}")
+            assert isinstance(site, str) and site.startswith(
+                path.stem + "."), (
+                f"A9 {label}: the entry lives in another operation's "
+                f"file — {FIX}")
+            where = entry.get("where")
+            assert where == declared_where[site], (
+                f"A9 {label}: where {where!r} is not the declared raise "
+                f"{declared_where[site]!r} — {FIX}")
+            assert entry.get("reason") in _UNTRIGGERED_REASONS, (
+                f"A9 {label}: reason {entry.get('reason')!r} is outside "
+                f"{sorted(_UNTRIGGERED_REASONS)} — {FIX}")
+            entries[site] = entry
+    return entries
+
+
+def _proof_accepts(site: str, entries: dict[str, dict],
+                   proofs: dict[str, bool]) -> bool:
+    """Whether the site's untriggered proof passed (item 9.3)."""
+    return entries.get(site) is not None and proofs.get(site) is True
+
+
 def _assert_matched(operation: str, site: str, where: str,
                     witnesses: set[tuple[str, str]],
-                    cased: dict[str, str]) -> None:
-    """The declared site has its witness and its case (both required)."""
+                    cased: dict[str, str], *,
+                    entries: dict[str, dict] | None = None,
+                    proofs: dict[str, bool] | None = None) -> None:
+    """The declared site has its witness and its case, or its proof.
+
+    An uncased site is accepted only through an untriggered entry
+    whose proof passed in this session (item 9.3).
+    """
+    if entries is None:
+        entries = _untriggered_entries()
+    if proofs is None:
+        proofs = _PROOFS
     problems = []
     if (operation, site) not in witnesses:
         others = sorted({op for op, st in witnesses if st == site})
         detail = (f" (witnessed only as {others})" if others
                   else " (no witness at all)")
         problems.append(f"unwitnessed{detail}")
-    if site not in cased:
-        problems.append("no case carries this expect.site")
+    if site not in cased and not _proof_accepts(site, entries, proofs):
+        problems.append("no case carries this expect.site "
+                        "(and no untriggered proof passed)")
     assert not problems, (
         f"A9 {operation}::{site} [{where}]: "
         f"{'; '.join(problems)} — {FIX}")
+
+
+# --- untriggered proofs (item 9.3; these run before the match) -----------------------
+
+def _read_witness_lines(witness: Path) -> list[dict]:
+    return [json.loads(line)
+            for line in witness.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+
+
+def _prove_cli_read_failed(mini_repo: Path, tmp_path: Path,
+                           monkeypatch) -> None:
+    """Drive inspect with an injected ``OSError`` (os-error-only proof).
+
+    Asserts the witness line, the class and the exit.
+    """
+    import arch_audit_hook
+
+    import learning_os.ops.handlers.platform as platform
+    import los
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.ops.outcomes import exit_for
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(platform, "_snapshot", boom)
+    try:
+        args = los.build_parser().parse_args(
+            ["inspect", "project-demo", "note-demo"])
+        outcome = pipeline_module.run_cli(mini_repo, "cli.inspect", args)
+    finally:
+        arch_audit_hook.uninstall()
+    assert outcome.exit_code == 2
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1, lines
+    assert lines[0] == {"operation": "cli.inspect", "kind": "failure",
+                        "site": "cli.inspect.read-failed",
+                        "class": "WriteRefused", "exit_code": 2}
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+
+def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
+                              monkeypatch) -> None:
+    """Drive inspect with a snapshot change between reads (race-only proof).
+
+    The first read is the live tree; the re-read raises the real
+    ``StaleSnapshot``. The manifest is canned so both batch ids
+    resolve (fixture setup; the race, refusal and witness are real).
+    Asserts the witness line, the class and the exit.
+    """
+    import arch_audit_hook
+
+    import learning_os.ops._legacy_plumbing as plumbing
+    import learning_os.ops.handlers.platform as platform
+    import los
+    from learning_os.domain.failures import StaleSnapshot
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.ops.outcomes import exit_for
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+
+    def flapping(root, expected=None):
+        if expected is None:
+            return plumbing._snapshot(root)
+        raise StaleSnapshot(
+            "snapshot changed; restart this read before continuing")
+
+    manifest = {"records": [{"id": "project-demo", "type": "project"},
+                            {"id": "note-demo", "type": "note"}]}
+    monkeypatch.setattr(platform, "_snapshot", flapping)
+    monkeypatch.setattr(platform, "_fresh_manifest_and_repo",
+                        lambda root, snapshot_id=None: (manifest, None))
+    try:
+        args = los.build_parser().parse_args(
+            ["inspect", "project-demo", "note-demo"])
+        outcome = pipeline_module.run_cli(mini_repo, "cli.inspect", args)
+    finally:
+        arch_audit_hook.uninstall()
+    assert outcome.exit_code == 3
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1, lines
+    assert lines[0] == {"operation": "cli.inspect", "kind": "failure",
+                        "site": "cli.inspect.stale-snapshot",
+                        "class": "StaleSnapshot", "exit_code": 3}
+    assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
+
+
+def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """The guards refuse a bogus status; the site never fires (item 9.3).
+
+    Shows the real parser and gateway admission both refuse the value
+    (a valid value passes admission, pinning the refusal to it), then
+    refuses through ``run_gateway`` and asserts no witness line names
+    the site.
+    """
+    import arch_audit_hook
+    from gateway_helpers import approved_v2_envelope
+
+    import los
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.diagnostics import tracer as diag_tracer
+    from learning_os.diagnostics.store import bind_store as _bind_diag_store
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.ops.legacy import prepare_dispatch
+
+    site = "stage.progress.update.unknown-status"
+    with pytest.raises(SystemExit) as status:
+        los.build_parser().parse_args(
+            ["stage-progress", "unit-demo-l01", "stage-demo", "bogus"])
+    assert status.value.code == 2
+    definitions = command_definitions(mini_repo)
+    definition = definitions["stage.progress.update"]
+    valid = {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+             "status": "active"}
+    prepare_dispatch(mini_repo, definition,
+                     {"schema_version": 2, "payload": dict(valid)},
+                     dict(valid), parser_factory=los.build_parser)
+    bogus = dict(valid, status="bogus")
+    envelope = approved_v2_envelope(
+        mini_repo, capability="stage.progress.update", payload=bogus,
+        artifact_ids=[], idempotency_key="a9-proof-unknown-status")
+    with pytest.raises(WriteRefused):
+        prepare_dispatch(mini_repo, definition, envelope, dict(bogus),
+                         parser_factory=los.build_parser)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        _bind_diag_store(mini_repo)
+        attempt = diag_tracer.begin_attempt(
+            {"capability": "stage.progress.update"})
+        outcome = pipeline_module.run_gateway(
+            mini_repo, envelope, requested="stage.progress.update",
+            definitions=definitions, attempt=attempt, replay_only=False,
+            parser_factory=los.build_parser)
+    finally:
+        arch_audit_hook.uninstall()
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert "status" in (outcome.error or {}).get("message", "")
+    lines = _read_witness_lines(witness)
+    assert all(line.get("site") != site for line in lines), lines
+
+
+def test_proof_cli_read_failed(mini_repo, tmp_path, monkeypatch):
+    _prove_cli_read_failed(mini_repo, tmp_path, monkeypatch)
+    _PROOFS["cli.inspect.read-failed"] = True
+
+
+def test_proof_cli_stale_snapshot(mini_repo, tmp_path, monkeypatch):
+    _prove_cli_stale_snapshot(mini_repo, tmp_path, monkeypatch)
+    _PROOFS["cli.inspect.stale-snapshot"] = True
+
+
+def test_proof_stage_unknown_status_guarded(mini_repo, tmp_path, monkeypatch):
+    _prove_stage_unknown_status_guarded(mini_repo, tmp_path, monkeypatch)
+    _PROOFS["stage.progress.update.unknown-status"] = True
+
+
+@pytest.mark.parametrize("site", sorted(_untriggered_entries()))
+def test_untriggered_entry_has_a_passing_proof(site):
+    """An untriggered entry without a passing proof fails (item 9.3)."""
+    assert _PROOFS.get(site) is True, (
+        f"A9 {site}: untriggered entry without a passing proof — {FIX}")
 
 
 @pytest.mark.parametrize(
@@ -391,6 +636,26 @@ def test_control_unshared_excluded_name_fails():
     with pytest.raises(AssertionError, match="shares its handler with no"):
         _assert_shares_entry_point_handler("project.inspect",
                                            {"route.patch"})
+
+
+def test_control_untriggered_entry_without_proof_fails():
+    entry = {"site": "a9-control.proof-missing",
+             "where": "a9-control:1", "reason": "os-error-only"}
+    with pytest.raises(AssertionError, match="no untriggered proof passed"):
+        _assert_matched("a9-control", "a9-control.proof-missing",
+                        "a9-control:1", set(), {},
+                        entries={"a9-control.proof-missing": entry},
+                        proofs={})
+
+
+def test_control_untriggered_entry_with_failed_proof_fails():
+    entry = {"site": "a9-control.proof-failed",
+             "where": "a9-control:1", "reason": "race-only"}
+    with pytest.raises(AssertionError, match="no untriggered proof passed"):
+        _assert_matched("a9-control", "a9-control.proof-failed",
+                        "a9-control:1", set(), {},
+                        entries={"a9-control.proof-failed": entry},
+                        proofs={"a9-control.proof-failed": False})
 
 
 def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
