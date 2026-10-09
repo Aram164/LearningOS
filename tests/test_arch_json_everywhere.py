@@ -31,6 +31,10 @@ from pathlib import Path
 import arch_surface
 import pytest
 import yaml
+from arch_schema_deltas import (
+    _strip_approved_owner_metadata,
+    _strip_bf_description_updates,
+)
 from repo_builders import run_los
 
 import los
@@ -224,12 +228,20 @@ def _assert_cli_command_only_handler_rebound(key: str, fname: str,
 
 def _assert_only_json_added_to_request_schemas(
         base: str, new_schemas: dict[str, str]) -> None:
-    """New (b) request schemas gain only the ``json`` property (else vacuous)."""
+    """New (b) request schemas gain only the ``json`` property (else vacuous).
+
+    SPEC (bf) item 7: the request-schema comparison first applies the two
+    existing strips (the (ay) owner metadata and the (bf) item 1
+    descriptions) to ``(old, new)`` before any comparison.
+    """
     for key in sorted(new_schemas):
         fname = new_schemas[key]
         rel = f"system/schema/requests/{fname}"
+        operation = fname.removesuffix(".schema.json")
         old = json.loads(_git_show(base, rel))
         new = json.loads((REQUESTS_DIR / fname).read_text(encoding="utf-8"))
+        old, new = _strip_approved_owner_metadata(operation, old, new)
+        old, new = _strip_bf_description_updates(operation, old, new)
         assert set(new) == set(old), (key, set(new) ^ set(old))
         for top in old:
             if top == "x-los-cli-command":
@@ -444,3 +456,26 @@ def test_mutated_surface_entry_for_a_new_approval_still_fails():
     mutated[key] = [*mutated[key], extra]
     with pytest.raises(AssertionError):
         _assert_only_json_added_to_surface_entries(base_flat, mutated, new_cli)
+
+
+def test_other_property_change_on_a_converted_pilot_still_fails(
+        tmp_path, monkeypatch):
+    """SPEC (bf) item 7 negative: the strips excuse nothing else.
+
+    In the S13 context, any other property change on a converted pilot
+    (here ``route.patch``: an added keyword beside the stripped
+    description) still fails the request-schema comparison.
+    """
+    key = "request_schemas.route.patch.schema.json"
+    _, new_schemas = _new_d16_approvals(S13_BASE)
+    assert key in new_schemas, "route.patch must be a new D16 approval at S13"
+    live = json.loads(
+        (REQUESTS_DIR / "route.patch.schema.json").read_text(encoding="utf-8"))
+    live["properties"]["unit_id"]["minLength"] = 1
+    shadow = tmp_path / "requests"
+    shadow.mkdir()
+    (shadow / "route.patch.schema.json").write_text(
+        json.dumps(live), encoding="utf-8")
+    monkeypatch.setattr("test_arch_json_everywhere.REQUESTS_DIR", shadow)
+    with pytest.raises(AssertionError):
+        _assert_only_json_added_to_request_schemas(S13_BASE, {key: new_schemas[key]})
