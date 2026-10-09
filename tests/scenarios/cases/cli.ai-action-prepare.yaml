@@ -15,7 +15,7 @@ cases:
   - id: prepare-with-snapshot
     kind: success
     transport: cli
-    argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-prepare-snap, --expected-snapshot, "sha256:d6f41dcebfc6a63db8cb45253d1f15307f73024981343c27697d8e705697f6f3"]
+    argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-prepare-snap, --expected-snapshot, "sha256:b56fa4656b704d0f7c43975f640337b70ce3bb3399ed4e83637e560dde543a62"]
     expect: {site: null}
   - id: unknown-action
     kind: refusal

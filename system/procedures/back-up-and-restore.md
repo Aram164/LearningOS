@@ -38,7 +38,7 @@ $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/ma
 True
 ['core', 'materials', 'ui']
 488
-sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
+sha256:8f443a5b5b9570b343ac47e4d246790a8eabecd572c45157cd4cd6379dfe6cb5
 ```
 
 ## The manifest binds data to Core's commit
@@ -46,8 +46,8 @@ sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
 488
-sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
-53
+sha256:8f443a5b5b9570b343ac47e4d246790a8eabecd572c45157cd4cd6379dfe6cb5
+54
 True None
 ```
 
@@ -57,7 +57,7 @@ True None
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
 488
 ['core', 'materials', 'ui']
-sha256:72cfad3373b3b7ef0f4b54a8f3db5cc14a72db72ac3aea4f38a503bcaeda6c05
+sha256:8f443a5b5b9570b343ac47e4d246790a8eabecd572c45157cd4cd6379dfe6cb5
 ```
 
 ## Capture the pre-refusal state
