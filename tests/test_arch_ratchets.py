@@ -14,6 +14,7 @@ step 4).
 
 from __future__ import annotations
 
+import copy
 import json
 import os
 import re
@@ -745,6 +746,92 @@ def _is_d4_conversion_entry(entry: dict) -> bool:
     )
 
 
+#: Exact SPEC (ay) owner metadata per primary request-schema file: node
+#: pointer parts -> (owner, owner_shape). Alias files carry no metadata.
+OWNER_METADATA_POINTERS: dict[str, dict[tuple[str, ...], tuple[str, str]]] = {
+    "cli.inspect": {
+        ("properties", "id"): ("inspect-reference", "scalar"),
+        ("properties", "more_ids", "items"): ("inspect-reference", "scalar"),
+    },
+    "ai-action.delivery.apply": {
+        ("properties", "delivery_id"): ("ai-delivery-exchange", "scalar"),
+        ("properties", "artifact_sha256"):
+            ("ai-delivery-artifact-digests", "mapping-values"),
+    },
+}
+
+
+def _strip_approved_owner_metadata(operation: str, old: dict, new: dict
+                                   ) -> tuple[dict, dict]:
+    """Strip exactly the approved SPEC (ay) metadata; fail on any deviation.
+
+    Returns ``(old, new)`` copies with the approved ``x-los-id-owner`` /
+    ``x-los-lookup`` pairs removed at exactly the approved pointers.
+    Raises on a missing or mistyped pair, metadata the base already pins
+    to a different value, a changed node type, or a missing node; every
+    other difference stays for the exact recursive comparison.
+    """
+    approved = OWNER_METADATA_POINTERS.get(operation, {})
+    old_copy = copy.deepcopy(old)
+    new_copy = copy.deepcopy(new)
+    for parts, (owner, owner_shape) in approved.items():
+        old_node = old_copy
+        new_node = new_copy
+        try:
+            for part in parts:
+                old_node = old_node[part]
+                new_node = new_node[part]
+        except (KeyError, TypeError):
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} is missing") from None
+        if not isinstance(new_node, dict):
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} is not an object")
+        if not isinstance(new_node.get("x-los-id-owner"), str) \
+                or new_node["x-los-id-owner"] != owner:
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} lacks "
+                f"x-los-id-owner {owner!r}")
+        if new_node.get("x-los-lookup") is not True:
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} lacks x-los-lookup true")
+        if not isinstance(old_node, dict):
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} is not an object at base")
+        if "x-los-id-owner" in old_node \
+                and old_node["x-los-id-owner"] != owner:
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} changes its owner")
+        if "x-los-lookup" in old_node and old_node["x-los-lookup"] is not True:
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} changes its lookup")
+        if new_node.get("type") != old_node.get("type"):
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} changes its type")
+        if owner_shape == "scalar" and new_node.get("type") != "string":
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} is not a scalar string")
+        if owner_shape == "mapping-values" \
+                and new_node.get("type") != "object":
+            raise AssertionError(
+                f"owner pointer /{'/'.join(parts)} is not a mapping object")
+        for doc_node in (old_node, new_node):
+            doc_node.pop("x-los-id-owner", None)
+            doc_node.pop("x-los-lookup", None)
+    return old_copy, new_copy
+
+
+def _assert_alias_schema_identical(operation: str, old_text: str,
+                                   new_text: str) -> None:
+    """Alias request schemas never change (SPEC (ay) item 2)."""
+    if old_text != new_text:
+        raise AssertionError(f"{operation} is an alias and must not change")
+    for text in (old_text, new_text):
+        doc = json.loads(text)
+        if "$ref" not in doc or "properties" in doc:
+            raise AssertionError(f"{operation} is not a pure alias")
+
+
 def test_converted_request_schema_changes_only_the_handler(base_ref):
     base_approvals_text = _git_show(
         base_ref, APPROVALS_PATH.relative_to(ROOT).as_posix())
@@ -770,6 +857,11 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
             continue
         old = json.loads(base_text)
         new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+        try:
+            old, new = _strip_approved_owner_metadata(operation, old, new)
+        except AssertionError as exc:
+            failures.append(f"A11 {key}: {exc} — {rel} — {FIX['A11']}")
+            continue
         want = f"learning_os.adapters.cli.invoke:{operation}"
         if set(new) != set(old):
             failures.append(
@@ -807,3 +899,122 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
                 f"A11 {key}: conversion changes no handler — "
                 f"{rel} — {FIX['A11']}")
     assert not failures, "\n".join(failures)
+
+
+def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
+    rel = "system/schema/requests/project.inspect.schema.json"
+    base_text = _git_show(base_ref, rel)
+    assert base_text is not None, (
+        f"A11 project.inspect: no {rel} at the base — {FIX['A11']}")
+    new_text = (ROOT / rel).read_text(encoding="utf-8")
+    try:
+        _assert_alias_schema_identical("project.inspect", base_text, new_text)
+    except AssertionError as exc:
+        pytest.fail(f"A11 project.inspect: {exc} — {rel} — {FIX['A11']}")
+
+
+def _owner_purity_docs():
+    old = {
+        "properties": {
+            "id": {"type": "string",
+                   "x-los-cli": {"default": None, "required": True}},
+            "more_ids": {"type": "array",
+                         "items": {"type": "string"},
+                         "x-los-cli": {"default": None}},
+            "json": {"type": "boolean"},
+        },
+        "required": ["id"],
+    }
+    new = copy.deepcopy(old)
+    new["properties"]["id"]["x-los-id-owner"] = "inspect-reference"
+    new["properties"]["id"]["x-los-lookup"] = True
+    new["properties"]["more_ids"]["items"]["x-los-id-owner"] = (
+        "inspect-reference")
+    new["properties"]["more_ids"]["items"]["x-los-lookup"] = True
+    return old, new
+
+
+def test_owner_metadata_strip_accepts_only_the_approved_pair():
+    old, new = _owner_purity_docs()
+    stripped_old, stripped_new = _strip_approved_owner_metadata(
+        "cli.inspect", old, new)
+    assert stripped_new == stripped_old
+    assert stripped_new["properties"] == old["properties"]
+
+    def rejects(mutator):
+        _, mutant = _owner_purity_docs()
+        mutator(mutant)
+        with pytest.raises(AssertionError):
+            _strip_approved_owner_metadata("cli.inspect", old, mutant)
+
+    def drop_owner(doc):
+        del doc["properties"]["id"]["x-los-id-owner"]
+
+    def wrong_owner(doc):
+        doc["properties"]["id"]["x-los-id-owner"] = "other-owner"
+
+    def lookup_one(doc):
+        doc["properties"]["id"]["x-los-lookup"] = 1
+
+    def lookup_zero(doc):
+        doc["properties"]["more_ids"]["items"]["x-los-lookup"] = 0
+
+    def changed_type(doc):
+        doc["properties"]["id"]["type"] = "integer"
+
+    def missing_node(doc):
+        del doc["properties"]["more_ids"]["items"]
+
+    for mutator in (drop_owner, wrong_owner, lookup_one, lookup_zero,
+                    changed_type, missing_node):
+        rejects(mutator)
+
+    # Base-pinned metadata may not change either.
+    pinned_old, pinned_new = _owner_purity_docs()
+    pinned_old["properties"]["id"]["x-los-id-owner"] = "inspect-reference"
+    pinned_old["properties"]["id"]["x-los-lookup"] = True
+    pinned_new["properties"]["id"]["x-los-id-owner"] = "other-owner"
+    with pytest.raises(AssertionError):
+        _strip_approved_owner_metadata("cli.inspect", pinned_old, pinned_new)
+
+
+def test_owner_metadata_leaves_other_diffs_for_exact_compare():
+    old, new = _owner_purity_docs()
+
+    def differs(mutator):
+        _, mutant = _owner_purity_docs()
+        mutator(mutant)
+        _, stripped = _strip_approved_owner_metadata(
+            "cli.inspect", old, mutant)
+        assert stripped["properties"] != old["properties"]
+
+    def extra_keyword(doc):
+        doc["properties"]["id"]["additionalProperties"] = False
+
+    def changed_default(doc):
+        doc["properties"]["id"]["x-los-cli"]["default"] = "x"
+
+    def changed_required(doc):
+        doc["properties"]["id"]["x-los-cli"]["required"] = False
+
+    def unknown_pointer(doc):
+        doc["properties"]["json"]["x-los-id-owner"] = "inspect-reference"
+        doc["properties"]["json"]["x-los-lookup"] = True
+
+    for mutator in (extra_keyword, changed_default, changed_required,
+                    unknown_pointer):
+        differs(mutator)
+
+
+def test_alias_identity_rejects_a_changed_alias():
+    old_text = json.dumps({"$ref": "cli.inspect.schema.json",
+                           "x-governs": "project.inspect"}, indent=2)
+    _assert_alias_schema_identical("project.inspect", old_text, old_text)
+    new_text = json.dumps({"$ref": "other.schema.json",
+                           "x-governs": "project.inspect"}, indent=2)
+    with pytest.raises(AssertionError):
+        _assert_alias_schema_identical("project.inspect", old_text, new_text)
+    not_alias = json.dumps({"properties": {}}, indent=2)
+    with pytest.raises(AssertionError):
+        _assert_alias_schema_identical(
+            "project.inspect", not_alias, not_alias)

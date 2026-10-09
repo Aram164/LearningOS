@@ -1536,14 +1536,6 @@ checks:
     approved_by: null
   A14-vocabulary: []
   A6-idroundtrip:
-  - signature: ai-action.delivery.apply::/properties/artifact_sha256::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: ai-action.delivery.apply::/properties/delivery_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   - signature: cli.ai-action-append-slices::/properties/request_id::review
     count: 1
     since: approved
@@ -1572,14 +1564,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.inspect::/properties/id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.inspect::/properties/more_ids/items::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   - signature: cli.operations::/properties/request_id::review
     count: 1
     since: approved
@@ -1597,14 +1581,6 @@ checks:
     since: approved
     approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: project.inspect::/properties/id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: project.inspect::/properties/more_ids/items::review
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: i approve you decide the best course of action"

@@ -8,13 +8,17 @@ fields:
 - operation: ai-action.delivery.apply
   pointer: /properties/artifact_sha256
   kind: null
-  lookup: null
-  review: shape
+  lookup: true
+  owner: ai-delivery-artifact-digests
+  owner_shape: mapping-values
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: ai-action.delivery.apply
   pointer: /properties/delivery_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'delivery'
+  lookup: true
+  owner: ai-delivery-exchange
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: ai-action.delivery.apply
   pointer: /properties/delivery_sha256
   kind: digest
@@ -93,13 +97,17 @@ fields:
 - operation: cli.inspect
   pointer: /properties/id
   kind: null
-  lookup: null
-  review: heterogeneous id (any record kind)
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: cli.inspect
   pointer: /properties/more_ids/items
   kind: null
-  lookup: null
-  review: heterogeneous id (any record kind)
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: cli.module-list
   pointer: /properties/program_id
   kind: program
@@ -338,13 +346,17 @@ fields:
 - operation: project.inspect
   pointer: /properties/id
   kind: null
-  lookup: null
-  review: heterogeneous id (any record kind)
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: project.inspect
   pointer: /properties/more_ids/items
   kind: null
-  lookup: null
-  review: heterogeneous id (any record kind)
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: project.update
   pointer: /properties/file_sha256
   kind: digest

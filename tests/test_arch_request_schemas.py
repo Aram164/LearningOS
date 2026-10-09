@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from test_arch_idroundtrip import SUPPORTED_OWNER_ROWS
 
 from learning_os.contracts.requests import request_schema
 
@@ -250,6 +251,52 @@ def _has_success(operation, cli_name):
     return False
 
 
+def _owner_annotation_ok(row: dict, operation: str) -> bool:
+    """Exact metadata/shape/coverage for one supported SPEC (ay) owner row.
+
+    Returns True only when the inventory row carries the exact approved
+    owner metadata and the effective schema node (resolved through the
+    alias loader, so project.inspect rows cover the primary annotation)
+    carries the exact ``x-los-id-owner``/``x-los-lookup`` pair with the
+    approved scalar/container shape. Every other null kind stays skipped.
+    """
+    pointer = row["pointer"]
+    try:
+        owner, owner_shape = SUPPORTED_OWNER_ROWS[(operation, pointer)]
+    except KeyError:
+        return True
+    if (row.get("owner") != owner
+            or row.get("owner_shape") != owner_shape
+            or row.get("lookup") is not True):
+        return False
+    try:
+        effective_schema = request_schema(ROOT, operation)
+    except (FileNotFoundError, ValueError):
+        return False
+    parts = pointer.split("/")
+    node = effective_schema
+    try:
+        for part in parts[1:-1]:
+            node = node[part]
+    except (KeyError, TypeError):
+        return False
+    prop = parts[-1]
+    if not isinstance(node, dict) or prop not in node:
+        return False
+    annotated = node[prop]
+    if not isinstance(annotated, dict):
+        return False
+    if annotated.get("x-los-id-owner") != owner:
+        return False
+    if annotated.get("x-los-lookup") is not True:
+        return False
+    if owner_shape == "scalar":
+        return annotated.get("type") == "string"
+    if owner_shape == "mapping-values":
+        return annotated.get("type") == "object"
+    return False
+
+
 def _current_exceptions() -> Counter[str]:
     current: Counter[str] = Counter()
     rows_by_op: dict[str, list[dict]] = {}
@@ -271,6 +318,11 @@ def _current_exceptions() -> Counter[str]:
             if len(parts) >= 3 and parts[1] == "properties":
                 have_pointers.add(parts[2].replace("~1", "/").replace("~0", "~"))
             if row.get("kind") is None:
+                # Unresolved inventories are claimed by A6, not A13 —
+                # except the six executed SPEC (ay) owners, whose exact
+                # annotation A13 pins (alias included).
+                if not _owner_annotation_ok(row, operation):
+                    current[f"{operation}::{row['pointer']}::id-annotation"] += 1
                 continue
             node = _navigate(data, row["pointer"])
             if not isinstance(node, dict) or node.get("type") != "string" or \
@@ -443,3 +495,102 @@ def test_current_exceptions_are_recorded():
                 f"A13 {signature}: no longer occurs — "
                 "remove the fixed exception from ratchets.yaml")
     assert not failures, "\n".join(failures)
+
+
+def _rewrite_schema_json(path, mutate):
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    mutate(doc)
+    path.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+
+
+def test_owner_rows_emit_no_annotation_on_the_valid_tree():
+    current = _current_exceptions()
+    for (operation, pointer) in SUPPORTED_OWNER_ROWS:
+        assert current.get(f"{operation}::{pointer}::id-annotation", 0) == 0, (
+            f"A13 {operation}::{pointer} fails its own annotation — {FIX}")
+
+
+def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
+    """Each owner-metadata corruption emits its rows' id-annotation."""
+    AI = "ai-action.delivery.apply"
+
+    counter = 0
+
+    def delta(mutator):
+        nonlocal counter
+        counter += 1
+        root = _a13_work_tree(tmp_path / f"mutant-{counter}")
+        mutator(root)
+        _point_a13_at(monkeypatch, root)
+        with pytest.raises(AssertionError) as raised:
+            test_current_exceptions_are_recorded()
+        return str(raised.value)
+
+    def strip_cli_id_owner(root):
+        def edit(doc):
+            del doc["properties"]["id"]["x-los-id-owner"]
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.inspect.schema.json", edit)
+
+    message = delta(strip_cli_id_owner)
+    assert "cli.inspect::/properties/id::id-annotation" in message
+    assert "project.inspect::/properties/id::id-annotation" in message
+
+    def truthy_lookup(root):
+        def edit(doc):
+            doc["properties"]["delivery_id"]["x-los-lookup"] = 1
+        _rewrite_schema_json(
+            root / f"system/schema/requests/{AI}.schema.json", edit)
+
+    message = delta(truthy_lookup)
+    assert f"{AI}::/properties/delivery_id::id-annotation" in message
+
+    def wrong_owner(root):
+        def edit(doc):
+            doc["properties"]["more_ids"]["items"]["x-los-id-owner"] = (
+                "invented-owner")
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.inspect.schema.json", edit)
+
+    message = delta(wrong_owner)
+    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
+
+    def wrong_shape(root):
+        def edit(doc):
+            doc["properties"]["more_ids"]["items"]["type"] = "integer"
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.inspect.schema.json", edit)
+
+    message = delta(wrong_shape)
+    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+
+    def deleted_node(root):
+        def edit(doc):
+            del doc["properties"]["more_ids"]["items"]
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.inspect.schema.json", edit)
+
+    message = delta(deleted_node)
+    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+
+    def inventory_owner(root):
+        path = root / "tests/architecture/id-fields.yaml"
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        for row in doc["fields"]:
+            if (row["operation"] == AI
+                    and row["pointer"] == "/properties/delivery_id"):
+                row["owner"] = "invented-owner"
+        path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
+
+    message = delta(inventory_owner)
+    assert f"{AI}::/properties/delivery_id::id-annotation" in message
+
+    def mapping_shape(root):
+        def edit(doc):
+            doc["properties"]["artifact_sha256"]["type"] = "string"
+        _rewrite_schema_json(
+            root / f"system/schema/requests/{AI}.schema.json", edit)
+
+    message = delta(mapping_shape)
+    assert f"{AI}::/properties/artifact_sha256::id-annotation" in message

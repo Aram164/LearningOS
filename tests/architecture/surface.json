@@ -9063,7 +9063,7 @@
  "request_schemas": {
   "ability.candidate.append.schema.json": "dc0649a39cc67ff804449d9bdbaf501c071fecae9ef520e15d4e7f2e42798f9e",
   "ability.context.schema.json": "d21aa0f27fcf6031dc1c0950f876cdeff55393b9ec4b4e4cd0cc8dc0f4e04155",
-  "ai-action.delivery.apply.schema.json": "58fdf1b422f6fcf74397ab20ee21b5a032bf0e62c4027637cab7a5f7a749a73c",
+  "ai-action.delivery.apply.schema.json": "d8b58f11d1b060281b0a3299d35d35650308b0d3dfa540444b19b94341e3ac71",
   "atlas.context.schema.json": "3e2224edad71e99c749e009b5077d4c9bcafb4cf791793d91b4f0d151e481a63",
   "atlas.question.save.schema.json": "6d05bfb5c9658ae233f5c6f8575774f5765f66b0c7b5dee9a927e5d36ffcbed5",
   "backup.manifest.schema.json": "f9f2772c3c75888faad52835a7fd47cb1245926eac52889cf6efa24415063795",
@@ -9086,7 +9086,7 @@
   "cli.health-report.schema.json": "a480af321bb8778f2af84890d3dc3394a3c22fb5fde9b286ee36bfa180e85f75",
   "cli.inbox-list.schema.json": "66332a0205a448af0672f533fb023391649492d50d6668888417b96973d13db1",
   "cli.inbox-read.schema.json": "6a482517643b03ec8860437a4f136775ae502fbdea15ac34b5c13a23d5847009",
-  "cli.inspect.schema.json": "516e0484a3058e7c7b1e14f80ac6790e45eaa7cf3514969a1646dde62686f810",
+  "cli.inspect.schema.json": "1afd1e0fa14250a2324b694f525e9258615f8d020fab5fb4fd2c608d98e28923",
   "cli.intelligence-scan.schema.json": "3513d66e5ca17b971959f5aa48d7f710b6577c5361fe13c7bf0b873deb09f8e1",
   "cli.legacy-archive-inspect.schema.json": "bc420caff28551098727ab5d2f6051d0caf32775b17ab36e448528cc11522e32",
   "cli.legacy-archive-status.schema.json": "115ea82203227d583922106ee5a535e5b6ccc67510dc60ab95e558ca02ed0505",

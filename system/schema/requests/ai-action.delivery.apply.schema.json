@@ -27,7 +27,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "ai-delivery-exchange",
+      "x-los-lookup": true
     },
     "delivery_sha256": {
       "type": "string",
@@ -71,7 +73,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "ai-delivery-artifact-digests",
+      "x-los-lookup": true
     },
     "expected_snapshot": {
       "type": "string",

@@ -46,12 +46,16 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "inspect-reference",
+      "x-los-lookup": true
     },
     "more_ids": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "x-los-id-owner": "inspect-reference",
+        "x-los-lookup": true
       },
       "description": "inspect up to 20 records from one fresh snapshot",
       "x-los-cli": {
