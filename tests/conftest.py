@@ -73,17 +73,18 @@ def _site_witness_file(tmp_path_factory):
     harness and the procedure runner both start their child env
     from ``dict(os.environ)``.
     """
-    from learning_os.ops.pipeline import SITE_WITNESS_ENV
-
+    # The pipeline append is stopped (SPEC-GAP: A2 refuses the write);
+    # the fixture still owns the variable for the day it lands.
+    witness_env = "LOS_SITE_WITNESS_FILE"
     path = tmp_path_factory.mktemp("site-witness") / "sites.jsonl"
     path.touch()
-    previous = os.environ.get(SITE_WITNESS_ENV)
-    os.environ[SITE_WITNESS_ENV] = str(path)
+    previous = os.environ.get(witness_env)
+    os.environ[witness_env] = str(path)
     yield path
     if previous is None:
-        os.environ.pop(SITE_WITNESS_ENV, None)
+        os.environ.pop(witness_env, None)
     else:
-        os.environ[SITE_WITNESS_ENV] = previous
+        os.environ[witness_env] = previous
 
 
 def pytest_collection_modifyitems(items):
