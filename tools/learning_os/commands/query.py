@@ -14,38 +14,30 @@ from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
+    _fresh_manifest,
     _json_layout,
     _operator_lock,
     _publish,
+    _snapshot,
 )
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.validation_cache import observe_pins, status_issues
 
 from .. import observations
 from .reads import (
-    _inspect_candidates,
     _print_stable,
     _refusal,
-    _snapshot,
     _use_evidence_from_manifest,
     _window,
     brief_bootstrap,
     compact_bootstrap,
     content_search,
-    describe_unresolved_reference,
     empty_search_hint,
     flatten_search_values,
-    inspect_batch,
-    inspect_not_found,
-    record_payload,
     related_records,
-    structural_payload,
-    with_coordination_digests,
 )
 from .support import (
     _delegate,
-    _fresh_manifest,
-    _fresh_manifest_and_repo,
     _print_rows,
     _root,
 )
@@ -458,27 +450,6 @@ def cmd_inbox_list(args) -> int:
             row["age_days"] = None
         out.append(row)
     print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
-    return 0
-
-
-def cmd_inspect(args) -> int:
-    if getattr(args, "more_ids", None):
-        return inspect_batch(args)
-    root = _root(args)
-    with _operator_lock(root, shared=True):
-        manifest, repo = _fresh_manifest_and_repo(root)
-        payload = record_payload(manifest, args.id)
-        if payload is None:
-            payload = structural_payload(manifest, args.id, repo)
-        if payload is None:
-            print(f"los: {inspect_not_found(args.id, _inspect_candidates(manifest, repo))}",
-                  file=sys.stderr)
-            hint = describe_unresolved_reference(manifest, args.id)
-            if hint:
-                print(f"los: hint: {hint}", file=sys.stderr)
-            return 2
-        payload = with_coordination_digests(root, payload)
-    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

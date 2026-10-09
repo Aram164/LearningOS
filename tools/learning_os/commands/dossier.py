@@ -24,6 +24,7 @@ from learning_os.materials_resolution import (
 )
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _snapshot,
 )
 from learning_os.pathing import PathBoundaryError
 from learning_os.semantics.dossiers import (
@@ -36,7 +37,7 @@ from learning_os.semantics.dossiers import (
 )
 from learning_os.semantics.predicates import CONTRACT_VERSION
 
-from .reads import _print_stable, _refusal, _snapshot
+from .reads import _print_stable, _refusal
 from .support import _root
 
 #: Operator-contract version hashed into every dossier key. There is no

@@ -22,15 +22,15 @@ cases:
     kind: refusal
     transport: cli
     argv: [inspect, nope-id]
-    expect: {site: null}
+    expect: {site: cli.inspect.unknown-id}
   - id: batch-too-many
     kind: refusal
     transport: cli
     argv: [inspect, project-demo, note-demo, x03, x04, x05, x06, x07, x08, x09, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, x21]
-    expect: {site: null}
+    expect: {site: cli.inspect.too-many-ids}
   - id: batch-unknown-member
     kind: refusal
     transport: cli
     argv: [inspect, project-demo, nope-id]
-    expect: {site: null}
+    expect: {site: cli.inspect.unknown-id}
 untriggered: []

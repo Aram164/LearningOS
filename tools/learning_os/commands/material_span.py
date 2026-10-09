@@ -6,6 +6,7 @@ from pathlib import Path
 
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _snapshot,
 )
 
 from ..domain.failures import WriteRefused
@@ -19,7 +20,7 @@ from ..materials_resolution import (
     sha256_file,
 )
 from .material import _brief_analysis_refs, _map_for_unit, _route_entry
-from .reads import _print_stable, _refusal, _snapshot
+from .reads import _print_stable, _refusal
 from .support import _root
 
 MAX_EXCERPT = 6000

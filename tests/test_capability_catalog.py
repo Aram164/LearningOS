@@ -18,7 +18,9 @@ from learning_os.contracts.capability_catalog import (
 
 def test_every_public_command_is_bound_to_its_declared_cli_handler(repo_root: Path):
     import los
+    from learning_os.adapters.cli import invoke
     from learning_os.contracts.payloads import subparsers
+    from learning_os.ops.registry import REGISTRY
 
     parsers = subparsers(los.build_parser())
     definitions = command_definitions(repo_root)
@@ -29,7 +31,12 @@ def test_every_public_command_is_bound_to_its_declared_cli_handler(repo_root: Pa
         assert parser is not None, f"{definition.name} has no executable CLI route"
         handler = parser.get_default("func")
         assert handler is not None
-        assert handler.__name__ == f"cmd_{definition.handler}"
+        if definition.name in REGISTRY:
+            assert handler is invoke
+            assert parser.get_default("_operation") == definition.name
+            assert REGISTRY[definition.name].handler.__name__ == definition.handler
+        else:
+            assert handler.__name__ == f"cmd_{definition.handler}"
 
 
 def test_every_v2_external_file_input_is_content_bound_or_inline_only(

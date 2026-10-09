@@ -9086,7 +9086,7 @@
   "cli.health-report.schema.json": "a480af321bb8778f2af84890d3dc3394a3c22fb5fde9b286ee36bfa180e85f75",
   "cli.inbox-list.schema.json": "66332a0205a448af0672f533fb023391649492d50d6668888417b96973d13db1",
   "cli.inbox-read.schema.json": "6a482517643b03ec8860437a4f136775ae502fbdea15ac34b5c13a23d5847009",
-  "cli.inspect.schema.json": "0488aae9f825264efbc501069e92d8bd3ca60d826a5cc2a34cd2a848d5434b0b",
+  "cli.inspect.schema.json": "516e0484a3058e7c7b1e14f80ac6790e45eaa7cf3514969a1646dde62686f810",
   "cli.intelligence-scan.schema.json": "3513d66e5ca17b971959f5aa48d7f710b6577c5361fe13c7bf0b873deb09f8e1",
   "cli.legacy-archive-inspect.schema.json": "bc420caff28551098727ab5d2f6051d0caf32775b17ab36e448528cc11522e32",
   "cli.legacy-archive-status.schema.json": "115ea82203227d583922106ee5a535e5b6ccc67510dc60ab95e558ca02ed0505",

@@ -293,11 +293,11 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
 ):
     import los
     from learning_os.commands import material as material_commands
-    from learning_os.commands import reads as reads_commands
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops import _legacy_plumbing as plumbing
 
     unit_id, (first, second) = _two_route_context(mini_repo)
-    real_fingerprint = reads_commands.canonical_fingerprint
+    real_fingerprint = plumbing.canonical_fingerprint
 
     def flipping(root):
         if flipping.calls:
@@ -307,7 +307,7 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
 
     flipping.calls = []
     monkeypatch.setattr(
-        reads_commands, "canonical_fingerprint", flipping)
+        plumbing, "canonical_fingerprint", flipping)
     args = los.build_parser().parse_args(
         ["--root", str(mini_repo), "plan-edit-context", unit_id,
          "--route-ids", first, second])
@@ -651,7 +651,7 @@ def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_r
     })
     missing = run_los(mini_repo, "inspect", "workspace-demo-ghost")
     assert missing.returncode == 2, missing.stderr
-    assert "los: record not found: workspace-demo-ghost" in missing.stderr
+    assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
     assert "project-demo" in missing.stderr
     assert "workspace_ids" in missing.stderr
     node = run_los(mini_repo, "inspect", "unit-demo-ghost")
@@ -664,9 +664,9 @@ def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_r
 
 
 def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
-    # The hint names the referrer, and a batch refusal's exit code is chosen
-    # from its message text: a referrer id containing "snapshot" once turned
-    # a batch miss into exit 3, the restart-this-read code.
+    # The hint names the referrer, and the miss keeps exit 2: a referrer id
+    # containing "snapshot" once turned a batch miss into exit 3 (chosen
+    # from the message text); the converted refusal classifies by type.
     write_yaml(mini_repo / "projects/registry/project-snapshot-lab.yaml", {
         "schema_version": 1, "id": "project-snapshot-lab", "type": "project",
         "title": "Snapshot lab", "project_type": "software",
@@ -682,7 +682,7 @@ def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
                     "project-snapshot-lab")
     for missing in (single, batch):
         assert missing.returncode == 2, missing.stderr
-        assert "los: record not found: workspace-demo-ghost" in missing.stderr
+        assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
         assert ("los: hint: referenced by project-snapshot-lab (project) "
                 "in workspace_ids") in missing.stderr
 

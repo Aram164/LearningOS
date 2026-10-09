@@ -915,18 +915,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_inspect::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_inspect::print
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_inspect::return
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::cmd_related::print
     count: 2
     since: baseline
@@ -967,10 +955,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/reads.py::_snapshot::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/reads.py::brief_bootstrap::_operator_lock
     count: 1
     since: baseline
@@ -1000,14 +984,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/reads.py::content_search::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::inspect_batch::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::inspect_batch::print
     count: 1
     since: baseline
     approved_by: null
@@ -1207,18 +1183,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::canonical_fingerprint
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_path_or_error::load_repo
     count: 1
     since: baseline
@@ -1232,10 +1196,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/support.py::_print_rows::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_resolve::load_repo
     count: 1
     since: baseline
     approved_by: null

@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _record_gateway_refusal,
+    _snapshot,
 )
 
 from .. import observations
@@ -27,7 +28,7 @@ from ..domain.failures import WriteRefused
 from ..domain.suggest import suggest
 from ..learning_runtime import runtime_path
 from ..loader import load_repo
-from .reads import _print_stable, _snapshot
+from .reads import _print_stable
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,

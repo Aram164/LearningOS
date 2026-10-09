@@ -23,19 +23,20 @@ from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.ops._legacy_plumbing import (
+    _fresh_manifest,
     _operator_lock,
+    _snapshot,
 )
 from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
-from .reads import _print_stable, _refusal, _snapshot, _window
+from .reads import _print_stable, _refusal, _window
 from .support import (
     _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _fresh_manifest,
     _print_rows,
     _read_content_bound_file,
     _root,

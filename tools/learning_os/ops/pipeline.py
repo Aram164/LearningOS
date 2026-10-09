@@ -42,6 +42,7 @@ from learning_os.domain.failures import (
     _ReplayRecoveryError,
 )
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops import handlers  # noqa: F401  (registration side effect)
 from learning_os.ops._legacy_plumbing import (
     _current_session_id,
     _json_layout,
@@ -178,6 +179,8 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
         if entry.human is not None and not getattr(args, "json", False):
             stdout = call_renderer(
                 operation, "human", entry.human, payload) + "\n"
+        elif result.json_dumps is not None:
+            stdout = result.json_dumps(payload) + "\n"
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
     except Exception as exc:

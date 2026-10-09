@@ -30,6 +30,7 @@ from learning_os.material_refs import (
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _snapshot,
 )
 from learning_os.transactions import artifact_revision
 
@@ -39,7 +40,6 @@ from .reads import (
     _approved_assessments,
     _freshness_label,
     _print_stable,
-    _snapshot,
     _unit_note_scope,
 )
 from .resume import MAX_STAGE_RESULTS

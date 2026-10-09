@@ -719,3 +719,91 @@ def test_converter_change_adds_only_type(base_ref):
                 f"A11 {key}: converter approval covers more than the added "
                 f"type field — {rel}:{lineno} — {FIX['A11']}")
     assert not failures, "\n".join(failures)
+
+
+# ---- amendment (u) item 1: a conversion changes only the schema handler -----
+
+#: A conversion's surface entry, by shape (amendment (u) item 1): one per
+#: converted operation, verbatim from the kickoff. While new relative to
+#: the base, the covered request-schema file must differ from the base
+#: only in ``x-los-cli-command.handler``, rebound to the invoke adapter.
+#: Once at the base, it checks nothing.
+_D4_CONVERSION_PLAN_REF_RE = re.compile(r"^PLAN D4 \([^:]+: [^ ]+ converted\)$")
+_D4_CONVERSION_APPROVED_BY = "Aram 2026-10-03: accepted PLAN revision 4"
+
+
+def _is_d4_conversion_entry(entry: dict) -> bool:
+    key = entry.get("key", "")
+    plan_ref = entry.get("plan_ref", "")
+    return (
+        key.startswith("request_schemas.")
+        and key.endswith(".schema.json")
+        and entry.get("change") == "changed"
+        and isinstance(plan_ref, str)
+        and _D4_CONVERSION_PLAN_REF_RE.match(plan_ref) is not None
+        and entry.get("pre_approved_by") == _D4_CONVERSION_APPROVED_BY
+    )
+
+
+def test_converted_request_schema_changes_only_the_handler(base_ref):
+    base_approvals_text = _git_show(
+        base_ref, APPROVALS_PATH.relative_to(ROOT).as_posix())
+    base_approvals = (
+        yaml.safe_load(base_approvals_text)["approvals"]
+        if base_approvals_text is not None else [])
+    current_approvals = yaml.safe_load(
+        APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
+    new_entries = [entry for entry in current_approvals
+                   if _is_d4_conversion_entry(entry)
+                   and entry not in base_approvals]
+    if not new_entries:
+        return
+    failures = []
+    for entry in new_entries:
+        key = entry["key"]
+        fname = key[len("request_schemas."):]
+        operation = fname[:-len(".schema.json")]
+        rel = f"system/schema/requests/{fname}"
+        base_text = _git_show(base_ref, rel)
+        if base_text is None:
+            failures.append(f"A11 {key}: no {rel} at the base — {FIX['A11']}")
+            continue
+        old = json.loads(base_text)
+        new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+        want = f"learning_os.adapters.cli.invoke:{operation}"
+        if set(new) != set(old):
+            failures.append(
+                f"A11 {key}: conversion changes top-level keys "
+                f"{sorted(set(new) ^ set(old))} — {rel} — {FIX['A11']}")
+            continue
+        for top in old:
+            if top != "x-los-cli-command" and new[top] != old[top]:
+                failures.append(
+                    f"A11 {key}: conversion changes {top!r} — "
+                    f"{rel} — {FIX['A11']}")
+        if "x-los-cli-command" not in old or "x-los-cli-command" not in new:
+            failures.append(
+                f"A11 {key}: conversion needs a cli-command binding — "
+                f"{rel} — {FIX['A11']}")
+            continue
+        old_cmd = old["x-los-cli-command"]
+        new_cmd = new["x-los-cli-command"]
+        if set(new_cmd) != set(old_cmd):
+            failures.append(
+                f"A11 {key}: conversion changes cli-command keys "
+                f"{sorted(set(new_cmd) ^ set(old_cmd))} — {rel} — {FIX['A11']}")
+            continue
+        for name in old_cmd:
+            if name != "handler" and new_cmd[name] != old_cmd[name]:
+                failures.append(
+                    f"A11 {key}: conversion changes cli-command {name!r} — "
+                    f"{rel} — {FIX['A11']}")
+        if new_cmd["handler"] != want:
+            failures.append(
+                f"A11 {key}: conversion handler is {new_cmd['handler']!r}, "
+                f"want {want!r} — {rel} — {FIX['A11']}")
+        if old_cmd["handler"] == new_cmd["handler"]:
+            failures.append(
+                f"A11 {key}: conversion changes no handler — "
+                f"{rel} — {FIX['A11']}")
+    assert not failures, "\n".join(failures)

@@ -484,7 +484,7 @@ def test_root_error_still_prints_root_usage(mini_repo):
 # build_parser/_add_property against synthetic request trees. The
 # production binding count and baseline bytes are pinned below.
 
-_SYNTH_HANDLER = "learning_os.commands.query.cmd_inspect"
+_SYNTH_HANDLER = "learning_os.commands.query.cmd_related"
 
 
 def _synth_cli(action, flags, default=None, required=False, type=None,
@@ -543,7 +543,7 @@ def test_generated_parser_applies_nonempty_command_defaults(tmp_path,
     namespace = parser.parse_args(["synth-cmd"])
     assert namespace.custom_default == "VALUE"
     assert namespace.command == "synth-cmd"
-    assert namespace.func.__name__ == "cmd_inspect"
+    assert namespace.func.__name__ == "cmd_related"
 
 
 def test_generated_parser_rejects_duplicate_cli_bindings(tmp_path,

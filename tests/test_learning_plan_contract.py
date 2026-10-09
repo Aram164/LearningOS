@@ -112,11 +112,19 @@ def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root:
     assert (repo_root / definition.schema).is_file()
 
     import los
+    from learning_os.adapters.cli import invoke
     from learning_os.contracts.payloads import subparsers
+    from learning_os.ops.registry import REGISTRY
 
     parser = subparsers(los.build_parser()).get("plan-template")
     assert parser is not None, "the declared query has no executable CLI route"
-    assert parser.get_default("func").__name__ == f"cmd_{definition.handler}"
+    func = parser.get_default("func")
+    if definition.name in REGISTRY:
+        assert func is invoke
+        assert parser.get_default("_operation") == definition.name
+        assert REGISTRY[definition.name].handler.__name__ == definition.handler
+    else:
+        assert func.__name__ == f"cmd_{definition.handler}"
 
 
 def test_the_query_answers_the_shape_it_declares(repo_root):

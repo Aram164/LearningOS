@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import yaml
 from repo_builders import add_curriculum, add_manifest_fixtures, run_los, write_yaml
 
-from learning_os.commands.reads import structural_payload
+from learning_os.ops.handlers.platform import structural_payload
 
 
 def _manifest(stages=(), study_maps=(), records=()):
@@ -207,4 +207,4 @@ def test_cli_inspect_unknown_structural_id_names_the_search(mini_repo):
     assert "record not found: stage-missing" in missing.stderr
     plain = run_los(root, "inspect", "note-missing")
     assert plain.returncode == 2
-    assert plain.stderr.strip() == "los: record not found: note-missing"
+    assert plain.stderr.strip() == "los: INVALID_REQUEST: record not found: note-missing"

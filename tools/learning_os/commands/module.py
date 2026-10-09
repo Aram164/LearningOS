@@ -37,6 +37,7 @@ from learning_os.material_synthesis import (
 )
 from learning_os.materials_resolution import evidential_route_projection, sha256_file
 from learning_os.ops._legacy_plumbing import (
+    _fresh_manifest,
     _operator_lock,
     _record_gateway_refusal,
     _take_gateway_refusal,
@@ -65,7 +66,6 @@ from .support import (
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _fresh_manifest,
     _print_rows,
     _read_content_bound_file,
     _render_frontmatter,

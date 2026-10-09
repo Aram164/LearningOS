@@ -16,7 +16,7 @@ import pytest
 from repo_builders import run_los
 
 from learning_os import fingerprint
-from learning_os.commands import query, reads
+from learning_os.commands import reads
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import _json_layout
 
@@ -205,33 +205,48 @@ def test_batch_matches_single_reads_and_preserves_requested_order(mini_repo):
     assert actual["contract"] == "record-batch"
 
 
-def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch, capsys):
+def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers import platform as platform_handlers
+
     calls = []
 
     def manifest(root, *, snapshot_id=None):
         calls.append(root)
         return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}, None
 
-    monkeypatch.setattr(reads, "_fresh_manifest_and_repo", manifest)
-    args = SimpleNamespace(root=str(mini_repo), id="old", more_ids=["new", "old"])
-    assert query.cmd_inspect(args) == 0
+    monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo", manifest)
+    ctx = OpContext(root=mini_repo, operation="cli.inspect",
+                    channel="operator", invocation="query", gateway=None)
+    result = platform_handlers.inspect(
+        ctx, {"id": "old", "more_ids": ["new", "old"]})
     assert len(calls) == 1
-    assert json.loads(capsys.readouterr().out)["records"] == [
+    assert result.payload["records"] == [
         {"id": "new", "resolved_from": "old"}, {"id": "new"},
         {"id": "new", "resolved_from": "old"},
     ]
 
 
-def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch, capsys):
-    monkeypatch.setattr(reads, "_fresh_manifest_and_repo",
+def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch):
+    from learning_os.domain.failures import StaleSnapshot
+    from learning_os.ops import _legacy_plumbing as plumbing
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers import platform as platform_handlers
+
+    monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo",
                         lambda root, **kwargs: ({"records": [{"id": "a"}]}, None))
     fingerprints = iter(["a" * 64, "b" * 64])
-    monkeypatch.setattr(reads, "canonical_fingerprint", lambda root: next(fingerprints))
-    assert query.cmd_inspect(SimpleNamespace(root=str(mini_repo), id="a", more_ids=["a"])) == 3
-    assert not capsys.readouterr().out
+    monkeypatch.setattr(plumbing, "canonical_fingerprint", lambda root: next(fingerprints))
+    ctx = OpContext(root=mini_repo, operation="cli.inspect",
+                    channel="operator", invocation="query", gateway=None)
+    with pytest.raises(StaleSnapshot, match="snapshot changed"):
+        platform_handlers.inspect(ctx, {"id": "a", "more_ids": ["a"]})
 
 
 def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, monkeypatch):
+    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.ops.pipeline import run_cli
+
     class Terminal(StringIO):
         def isatty(self):
             return True
@@ -239,22 +254,28 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
     terminal, pipe = Terminal(), StringIO()
     assert _json_layout(terminal) == {"indent": 2}
     assert _json_layout(pipe) == {"separators": (",", ":")}
-    monkeypatch.setattr(query, "_fresh_manifest_and_repo", lambda root: ({
+    monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo", lambda root: ({
         "records": [{"id": "record-demo", "title": "Demo"}],
     }, None))
     args = SimpleNamespace(root=str(mini_repo), id="record-demo", more_ids=[])
+    outputs = []
     for stream in (terminal, pipe):
         with redirect_stdout(stream):
-            assert query.cmd_inspect(args) == 0
-    assert json.loads(terminal.getvalue()) == json.loads(pipe.getvalue())
-    assert "\n  " in terminal.getvalue()
-    assert "\n  " not in pipe.getvalue()
+            outcome = run_cli(mini_repo, "cli.inspect", args)
+        assert outcome.exit_code == 0, outcome.stderr
+        outputs.append(outcome.stdout)
+    terminal_out, pipe_out = outputs
+    assert json.loads(terminal_out) == json.loads(pipe_out)
+    assert "\n  " in terminal_out
+    assert "\n  " not in pipe_out
 
 
 @pytest.mark.parametrize("command", ["brief", "compact", "inspect"])
-def test_bounded_read_hashes_twice_with_seeded_manifest(
+def test_bounded_read_hashes_thrice_with_seeded_manifest(
     mini_repo, monkeypatch, capsys, command,
 ):
+    from learning_os.ops import _legacy_plumbing as plumbing
+
     original = fingerprint.canonical_fingerprint
     calls = []
 
@@ -262,22 +283,29 @@ def test_bounded_read_hashes_twice_with_seeded_manifest(
         calls.append(root)
         return original(root)
 
-    monkeypatch.setattr(reads, "canonical_fingerprint", counted)
+    monkeypatch.setattr(plumbing, "canonical_fingerprint", counted)
     monkeypatch.setattr(fingerprint, "canonical_fingerprint", counted)
     if command == "inspect":
+        from learning_os.ops.pipeline import run_cli
+
         repo = load_repo(mini_repo)
         args = SimpleNamespace(root=str(mini_repo), id=next(iter(repo.notes)),
                                more_ids=[next(iter(repo.concepts))])
-        invoke = reads.inspect_batch
+        outcome = run_cli(mini_repo, "cli.inspect", args)
+        assert outcome.exit_code == 0, outcome.stderr
+        payload = json.loads(outcome.stdout)
     else:
         args = SimpleNamespace(root=str(mini_repo), expected_snapshot=None,
                                offset=0, limit=10)
         invoke = reads.brief_bootstrap if command == "brief" else reads.compact_bootstrap
-
-    assert invoke(args) == 0
-    payload = json.loads(capsys.readouterr().out)
+        assert invoke(args) == 0
+        payload = json.loads(capsys.readouterr().out)
     assert payload["snapshot_id"].startswith("sha256:")
-    assert len(calls) == 2
+    # Snapshot, rebuild re-walk, revalidation. The rebuild walk always ran
+    # here (the fixture keeps no stored manifest); it only became visible
+    # to this count when the fresh-manifest closure moved into the patched
+    # module.
+    assert len(calls) == 3
 
 
 def test_batch_refuses_missing_id_and_oversized_requests(mini_repo):

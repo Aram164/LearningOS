@@ -187,13 +187,15 @@ class WriteRefused(Exception):
     def __init__(self, *args, site: str | None = None,
                  reason: str | None = None, remedy: str | None = None,
                  gateway_message: str | None = None,
-                 exit_code: int | None = None):
+                 exit_code: int | None = None,
+                 extra_stderr: tuple[str, ...] = ()):
         super().__init__(*args)
         self.site = site
         self.reason = reason
         self.remedy = remedy
         self.gateway_message = gateway_message
         self.exit_code = exit_code
+        self.extra_stderr = extra_stderr
 
 
 class StaleSnapshot(WriteRefused):
