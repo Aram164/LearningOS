@@ -14,6 +14,7 @@ from pathlib import Path
 from unittest import mock
 
 import arch_cli_describe
+import pytest
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -92,7 +93,11 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
 
 
 def _normalize_bf_help(expected: dict) -> dict:
-    """Baseline help at exactly the (bf) pairs becomes the live text."""
+    """Baseline help at exactly the (bf) pairs becomes the live text.
+
+    The baseline value at each listed pair must be None — the help the
+    placeholder produced — before the live description is substituted.
+    """
     normalized = copy.deepcopy(expected)
     for subcommand, dests in BF_HELP_PAIRS.items():
         operation = _BF_HELP_OPERATIONS[subcommand]
@@ -102,6 +107,8 @@ def _normalize_bf_help(expected: dict) -> dict:
         properties = doc.get("properties", {})
         for action in normalized["subparsers"][subcommand]["actions"]:
             if action["dest"] in dests:
+                assert action["help"] is None, (
+                    subcommand, action["dest"], action["help"])
                 action["help"] = properties[action["dest"]]["description"]
     return normalized
 
@@ -293,6 +300,15 @@ def test_bf_help_normalization_touches_only_the_listed_pairs():
         (sub, dest) for sub, dests in BF_HELP_PAIRS.items()
         for dest in dests), changed
     assert len(changed) == 12, changed
+    # Control: a baseline whose listed help is already a real string —
+    # not the placeholder's None — must fail normalization.
+    poisoned = copy.deepcopy(baseline)
+    poisoned["subparsers"]["inspect"]["actions"] = [
+        dict(action, help="a real help string")
+        if action["dest"] == "id" else action
+        for action in poisoned["subparsers"]["inspect"]["actions"]]
+    with pytest.raises(AssertionError):
+        _normalize_bf_help(poisoned)
 
 
 def _normalize_namespace(namespace: dict) -> dict:
