@@ -380,12 +380,15 @@ def _assert_matched(operation: str, site: str, where: str,
     """The declared site has its witness and its case, or its proof.
 
     An uncased site is accepted only through an untriggered entry
-    whose proof passed in this session (item 9.3).
+    whose proof passed in this session (item 9.3); the proof stands
+    in for both the session witness and the case.
     """
     if entries is None:
         entries = _untriggered_entries()
     if proofs is None:
         proofs = _PROOFS
+    if _proof_accepts(site, entries, proofs):
+        return
     problems = []
     if (operation, site) not in witnesses:
         others = sorted({op for op, st in witnesses if st == site})
@@ -558,19 +561,21 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
     assert all(line.get("site") != site for line in lines), lines
 
 
-def test_proof_cli_read_failed(mini_repo, tmp_path, monkeypatch):
-    _prove_cli_read_failed(mini_repo, tmp_path, monkeypatch)
-    _PROOFS["cli.inspect.read-failed"] = True
+#: Site -> its proof driver (item 9.3). One parametrized test below,
+#: so each site's proof node carries the site id and the same-session
+#: `-k` over operation names selects it.
+_PROOF_FNS = {
+    "cli.inspect.read-failed": _prove_cli_read_failed,
+    "cli.inspect.stale-snapshot": _prove_cli_stale_snapshot,
+    "stage.progress.update.unknown-status":
+        _prove_stage_unknown_status_guarded,
+}
 
 
-def test_proof_cli_stale_snapshot(mini_repo, tmp_path, monkeypatch):
-    _prove_cli_stale_snapshot(mini_repo, tmp_path, monkeypatch)
-    _PROOFS["cli.inspect.stale-snapshot"] = True
-
-
-def test_proof_stage_unknown_status_guarded(mini_repo, tmp_path, monkeypatch):
-    _prove_stage_unknown_status_guarded(mini_repo, tmp_path, monkeypatch)
-    _PROOFS["stage.progress.update.unknown-status"] = True
+@pytest.mark.parametrize("site", sorted(_PROOF_FNS))
+def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
+    _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)
+    _PROOFS[site] = True
 
 
 @pytest.mark.parametrize("site", sorted(_untriggered_entries()))
