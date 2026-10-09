@@ -1625,14 +1625,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: ai-action.delivery.apply::delivery_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: ai-action.delivery.apply::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: atlas.context::concept_id::description
     count: 1
     since: baseline
@@ -1766,10 +1758,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.inbox-read::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.inspect::id::description
     count: 1
     since: baseline
     approved_by: null
@@ -2341,10 +2329,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: project.inspect::id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: project.list::status::description
     count: 1
     since: baseline
@@ -2382,26 +2366,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: review.prepare::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: route.patch::changes::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: route.patch::check::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: route.patch::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: route.patch::route_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: route.patch::unit_id::description
     count: 1
     since: baseline
     approved_by: null
@@ -2498,22 +2462,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: stage.note.write::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.progress.update::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.progress.update::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.progress.update::status::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.progress.update::unit_id::description
     count: 1
     since: baseline
     approved_by: null

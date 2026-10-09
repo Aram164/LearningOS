@@ -20,7 +20,8 @@
       "description": "record where work stopped (stored on the stage row, surfaced by resume)"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the unit's current study map to update"
     },
     "status": {
       "type": "string",
@@ -30,10 +31,12 @@
         "complete",
         "skipped",
         "revisit"
-      ]
+      ],
+      "description": "new status for the stage"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose stage to update"
     }
   },
   "dependentRequired": {

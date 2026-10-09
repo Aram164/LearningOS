@@ -38,13 +38,16 @@
       "description": "A nonempty map of declared descriptive material fields to their new text; keys outside this list refuse, and empty text refuses."
     },
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "return the field diff, affected files, snapshot and exact expected revisions without writing"
     },
     "route_id": {
-      "type": "string"
+      "type": "string",
+      "description": "exact id of the route to patch, as plan-edit-context reports it"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose route to patch"
     }
   }
 }

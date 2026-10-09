@@ -31,7 +31,7 @@
     },
     "id": {
       "type": "string",
-      "description": "id (no description in the parser yet)",
+      "description": "id of the record, curriculum stage, path stage, detour, project node or milestone to inspect",
       "x-los-cli": {
         "flags": [],
         "position": 0,

@@ -821,6 +821,67 @@ def _strip_approved_owner_metadata(operation: str, old: dict, new: dict
     return old_copy, new_copy
 
 
+#: Exact SPEC (bf) item 1 pilot description pointers: operation ->
+#: property-node pointer parts. Only a ``description`` change from the
+#: bootstrap placeholder to a real string is stripped, at exactly these
+#: 12 pairs. Alias files carry no descriptions of their own.
+BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
+    "route.patch": (
+        ("properties", "unit_id"),
+        ("properties", "route_id"),
+        ("properties", "changes"),
+        ("properties", "check"),
+        ("properties", "expected_snapshot"),
+    ),
+    "stage.progress.update": (
+        ("properties", "unit_id"),
+        ("properties", "stage_id"),
+        ("properties", "status"),
+        ("properties", "expected_snapshot"),
+    ),
+    "ai-action.delivery.apply": (
+        ("properties", "delivery_id"),
+        ("properties", "expected_snapshot"),
+    ),
+    "cli.inspect": (
+        ("properties", "id"),
+    ),
+}
+
+_PLACEHOLDER_MARK = "(no description in the parser yet)"
+
+
+def _strip_bf_description_updates(operation: str, old: dict, new: dict
+                                  ) -> tuple[dict, dict]:
+    """Strip exactly the approved SPEC (bf) description replacements.
+
+    Returns ``(old, new)`` copies with the new description reset to the
+    base one at each listed pointer whose base value contains the
+    placeholder mark and whose new value is a non-empty string without
+    it. Every other difference stays for the exact recursive comparison.
+    """
+    old_copy = copy.deepcopy(old)
+    new_copy = copy.deepcopy(new)
+    for parts in BF_DESCRIPTION_POINTERS.get(operation, ()):
+        old_node = old_copy
+        new_node = new_copy
+        try:
+            for part in parts:
+                old_node = old_node[part]
+                new_node = new_node[part]
+        except (KeyError, TypeError):
+            continue
+        if not isinstance(old_node, dict) or not isinstance(new_node, dict):
+            continue
+        base = old_node.get("description")
+        updated = new_node.get("description")
+        if (isinstance(base, str) and _PLACEHOLDER_MARK in base
+                and isinstance(updated, str) and updated
+                and _PLACEHOLDER_MARK not in updated):
+            new_node["description"] = base
+    return old_copy, new_copy
+
+
 def _assert_alias_schema_identical(operation: str, old_text: str,
                                    new_text: str) -> None:
     """Alias request schemas never change (SPEC (ay) item 2)."""
@@ -862,6 +923,7 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
         except AssertionError as exc:
             failures.append(f"A11 {key}: {exc} — {rel} — {FIX['A11']}")
             continue
+        old, new = _strip_bf_description_updates(operation, old, new)
         want = f"learning_os.adapters.cli.invoke:{operation}"
         if set(new) != set(old):
             failures.append(
@@ -1018,3 +1080,56 @@ def test_alias_identity_rejects_a_changed_alias():
     with pytest.raises(AssertionError):
         _assert_alias_schema_identical(
             "project.inspect", not_alias, not_alias)
+
+
+def _bf_description_docs():
+    old = {
+        "properties": {
+            "unit_id": {"type": "string",
+                        "description":
+                            "unit_id (no description in the parser yet)"},
+            "progress_summary": {
+                "type": "string",
+                "description":
+                    "progress_summary (no description in the parser yet)"},
+        },
+    }
+    new = copy.deepcopy(old)
+    new["properties"]["unit_id"]["description"] = (
+        "unit whose stage to update")
+    return old, new
+
+
+def test_bf_description_strip_accepts_only_the_listed_replacement():
+    old, new = _bf_description_docs()
+    _, stripped = _strip_bf_description_updates(
+        "stage.progress.update", old, new)
+    assert stripped == old
+
+    def differs(mutator):
+        base, _ = _bf_description_docs()
+        mutant = copy.deepcopy(base)
+        mutator(mutant)
+        _, stripped_mutant = _strip_bf_description_updates(
+            "stage.progress.update", base, mutant)
+        assert stripped_mutant != base
+
+    def unlisted_pointer(doc):
+        doc["properties"]["progress_summary"]["description"] = (
+            "record where work stopped")
+
+    def keeps_mark(doc):
+        doc["properties"]["unit_id"]["description"] = (
+            "unit_id (no description in the parser yet) v2")
+
+    def non_string(doc):
+        doc["properties"]["unit_id"]["description"] = 5
+
+    def other_keyword(doc):
+        doc["properties"]["unit_id"]["description"] = (
+            "unit whose stage to update")
+        doc["properties"]["unit_id"]["type"] = "integer"
+
+    for mutator in (unlisted_pointer, keeps_mark, non_string,
+                    other_keyword):
+        differs(mutator)

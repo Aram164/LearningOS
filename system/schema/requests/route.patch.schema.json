@@ -12,7 +12,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose route to patch",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -33,7 +33,7 @@
     },
     "route_id": {
       "type": "string",
-      "description": "route_id (no description in the parser yet)",
+      "description": "exact id of the route to patch, as plan-edit-context reports it",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -54,7 +54,7 @@
     },
     "changes": {
       "type": "object",
-      "description": "changes (no description in the parser yet)",
+      "description": "A nonempty map of declared descriptive material fields to their new text; keys outside this list refuse, and empty text refuses.",
       "x-los-cli": {
         "flags": [
           "--changes"
@@ -75,7 +75,7 @@
     },
     "check": {
       "type": "boolean",
-      "description": "check (no description in the parser yet)",
+      "description": "return the field diff, affected files, snapshot and exact expected revisions without writing",
       "x-los-cli": {
         "flags": [
           "--check"
@@ -96,7 +96,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

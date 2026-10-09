@@ -16,7 +16,8 @@
       "description": "Free-form map of every artifact_ref to its exact SHA-256 digest."
     },
     "delivery_id": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the imported, validated delivery to apply"
     },
     "delivery_sha256": {
       "type": "string",

@@ -70,6 +70,42 @@ def _normalize_registered_defaults(baseline_defaults: dict, handler: str) -> dic
     return normalized
 
 
+#: SPEC (bf) item 1: pilot (subcommand, dest) pairs whose baseline help
+#: (None: the placeholder suppresses help) normalizes to the live
+#: request-schema description, as (u) item 2 does for handler bindings.
+BF_HELP_PAIRS: dict[str, set[str]] = {
+    "route-patch": {"unit_id", "route_id", "changes", "check",
+                    "expected_snapshot"},
+    "stage-progress": {"unit_id", "stage_id", "status",
+                       "expected_snapshot"},
+    "ai-action-apply-delivery": {"delivery_id", "expected_snapshot"},
+    "inspect": {"id"},
+}
+
+#: The request-schema operation behind each normalized subcommand.
+_BF_HELP_OPERATIONS: dict[str, str] = {
+    "route-patch": "route.patch",
+    "stage-progress": "stage.progress.update",
+    "ai-action-apply-delivery": "ai-action.delivery.apply",
+    "inspect": "cli.inspect",
+}
+
+
+def _normalize_bf_help(expected: dict) -> dict:
+    """Baseline help at exactly the (bf) pairs becomes the live text."""
+    normalized = copy.deepcopy(expected)
+    for subcommand, dests in BF_HELP_PAIRS.items():
+        operation = _BF_HELP_OPERATIONS[subcommand]
+        doc = json.loads((REQUESTS_DIR / f"{operation}.schema.json")
+                         .read_text(encoding="utf-8"))
+        assert doc["x-los-cli-command"]["name"] == subcommand, subcommand
+        properties = doc.get("properties", {})
+        for action in normalized["subparsers"][subcommand]["actions"]:
+            if action["dest"] in dests:
+                action["help"] = properties[action["dest"]]["description"]
+    return normalized
+
+
 def test_registered_normalization_with_synthetic_handler():
     # No production registration exists in S12; prove the future rule.
     handler = "learning_os.adapters.cli.invoke:cli.inspect"
@@ -205,6 +241,8 @@ def test_generated_parser_matches_baseline_structure():
                 "learning_os.adapters.cli.invoke:"):
             sub["defaults"] = _normalize_registered_defaults(
                 sub.get("defaults", {}), handler)
+    # SPEC (bf) item 1: pilot descriptions became argparse help.
+    expected = _normalize_bf_help(expected)
     assert live["order"] == expected["order"], f"{FIX} order"
     assert live["parser_class"] == expected["parser_class"]
     assert live["prog"] == expected["prog"], f"{FIX} prog"
@@ -215,6 +253,46 @@ def test_generated_parser_matches_baseline_structure():
     for name in expected["order"]:
         assert live["subparsers"][name] == expected["subparsers"][name], \
             f"{FIX} subcommand {name}"
+
+
+def test_bf_help_normalization_touches_only_the_listed_pairs():
+    """A help change anywhere else still fails the gate (SPEC (bf) 1)."""
+    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+    normalized = _normalize_bf_help(baseline)
+    changed = []
+    for subcommand, sub in baseline["subparsers"].items():
+        live_doc = None
+        if subcommand in BF_HELP_PAIRS:
+            operation = _BF_HELP_OPERATIONS[subcommand]
+            live_doc = json.loads(
+                (REQUESTS_DIR / f"{operation}.schema.json")
+                .read_text(encoding="utf-8"))
+        norm_actions = normalized["subparsers"][subcommand]["actions"]
+        for base_action, norm_action in zip(sub["actions"], norm_actions,
+                                                 strict=True):
+            listed = (subcommand in BF_HELP_PAIRS
+                      and base_action["dest"] in BF_HELP_PAIRS[subcommand])
+            if listed:
+                want = live_doc["properties"][base_action["dest"]][
+                    "description"]
+                assert norm_action["help"] == want, (
+                    subcommand, base_action["dest"])
+                assert norm_action["help"] != base_action["help"], (
+                    subcommand, base_action["dest"])
+                rest_base = {k: v for k, v in base_action.items()
+                             if k != "help"}
+                rest_norm = {k: v for k, v in norm_action.items()
+                             if k != "help"}
+                assert rest_norm == rest_base, (
+                    subcommand, base_action["dest"])
+                changed.append((subcommand, base_action["dest"]))
+            else:
+                assert norm_action == base_action, (
+                    subcommand, base_action["dest"])
+    assert sorted(changed) == sorted(
+        (sub, dest) for sub, dests in BF_HELP_PAIRS.items()
+        for dest in dests), changed
+    assert len(changed) == 12, changed
 
 
 def _normalize_namespace(namespace: dict) -> dict:
