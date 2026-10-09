@@ -11,6 +11,7 @@ import contextlib
 import hashlib
 import io
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -100,6 +101,32 @@ _KIND_TO_INVOCATION = {
     "tool": "query",
 }
 
+#: The A9 witness file (SPEC §3.3 A9): when set, every handled failure
+#: with a non-empty site appends one {"operation", "site"} JSON line.
+SITE_WITNESS_ENV = "LOS_SITE_WITNESS_FILE"
+
+
+def _note_site_witness(operation: str | None, exc: BaseException) -> None:
+    """Witness a handled sited failure for the A9 check.
+
+    A no-op unless ``LOS_SITE_WITNESS_FILE`` is set, so behaviour
+    without the variable is byte-identical. A write failure never
+    perturbs the operation: the missing witness fails the A9 match
+    instead.
+    """
+    path = os.environ.get(SITE_WITNESS_ENV)
+    if not path:
+        return
+    site = getattr(exc, "site", None)
+    if not operation or not site:
+        return
+    try:
+        with open(path, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps({"operation": operation, "site": site})
+                         + "\n")
+    except OSError:
+        pass
+
 
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
@@ -188,6 +215,7 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
     except Exception as exc:
+        _note_site_witness(operation, exc)
         return _cli_refusal(exc, entry=entry, args=args, commit=commit,
                             receipt=receipt, replayed=replayed)
     return Outcome(
@@ -884,6 +912,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
     try:
         _validate_capability_envelope(root, envelope, kind="request")
     except WriteRefused as exc:
+        _note_site_witness(envelope.get("capability"), exc)
         if not is_v2:
             _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
             raise
@@ -950,6 +979,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         try:
             context = _context_from_v2(envelope)
         except WriteRefused as exc:
+            _note_site_witness(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1141,6 +1171,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         except WriteRefused as exc:
             # The gateway.dispatch row's exit (amendment (ac)): an explicit
             # exit_code preserves the originating return value.
+            _note_site_witness(envelope.get("capability"), exc)
             code = exc.exit_code if exc.exit_code is not None else 2
             result = {"error": str(exc)}
             failure = exc

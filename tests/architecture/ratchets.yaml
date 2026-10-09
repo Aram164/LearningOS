@@ -12,6 +12,7 @@ baselined:
 - A8-transcripts
 - A5-suggestions
 - A7-output
+- A9-refusal-sites
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -3361,3 +3362,4 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  A9-refusal-sites: []

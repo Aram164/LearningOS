@@ -64,6 +64,28 @@ def repo_root() -> Path:
     return REPO_ROOT
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _site_witness_file(tmp_path_factory):
+    """The A9 witness file for the session (SPEC §3.3 A9).
+
+    Under pytest's tmp base, never inside ``repository/``. Child
+    processes inherit it through ``os.environ``: the scenario
+    harness and the procedure runner both start their child env
+    from ``dict(os.environ)``.
+    """
+    from learning_os.ops.pipeline import SITE_WITNESS_ENV
+
+    path = tmp_path_factory.mktemp("site-witness") / "sites.jsonl"
+    path.touch()
+    previous = os.environ.get(SITE_WITNESS_ENV)
+    os.environ[SITE_WITNESS_ENV] = str(path)
+    yield path
+    if previous is None:
+        os.environ.pop(SITE_WITNESS_ENV, None)
+    else:
+        os.environ[SITE_WITNESS_ENV] = previous
+
+
 def pytest_collection_modifyitems(items):
     """Apply the area-group marker from tests/group_map.py; fail on drift."""
     errors = group_map.check_map(Path(__file__).resolve().parent)
