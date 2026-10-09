@@ -20,6 +20,7 @@ import jsonschema
 
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _read_content_bound_file,
 )
 
 from .. import observations
@@ -53,7 +54,6 @@ from .support import (
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _read_content_bound_file,
     _read_structured_file,
     _root,
     _write_transaction,

@@ -12,6 +12,7 @@ from learning_os.domain.suggest import not_found
 from learning_os.learning_runtime import requirement_id_for
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _read_content_bound_file,
 )
 
 from .support import (
@@ -20,7 +21,6 @@ from .support import (
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _read_content_bound_file,
     _resume_pointer_write,
     _root,
     _stage,

@@ -427,18 +427,6 @@ checks:
     count: 4
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/capture.py::cmd_capture::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capture.py::cmd_capture::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capture.py::cmd_capture::return
-    count: 4
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/collection_entry.py::_plan_revise::load_repo
     count: 1
     since: baseline

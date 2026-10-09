@@ -9,6 +9,7 @@ import yaml
 
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _read_content_bound_file,
 )
 
 from .. import observations
@@ -19,7 +20,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _path_or_error,
-    _read_content_bound_file,
     _root,
     _stage_ids,
     _write_transaction,

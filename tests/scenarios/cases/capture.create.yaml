@@ -18,19 +18,19 @@ cases:
     transport: gateway
     request: {text: "   "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: capture.create.empty-input}
   - id: bad-file
     kind: refusal
     transport: gateway
     request: {file: "work/inbox/nope.md", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: capture.create.bad-file}
   - id: sha-required
     kind: refusal
     transport: gateway
     request: {file: "work/inbox/note-drop.md"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: capture.create.bad-file}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

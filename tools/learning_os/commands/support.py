@@ -31,6 +31,7 @@ from learning_os.ops._legacy_plumbing import (
     _is_anchored,
     _json_layout,
     _process_state_dir,
+    _read_content_bound_file,
     _record_gateway_refusal,
     _row_recorded_at,
     _session_ledger,
@@ -146,50 +147,6 @@ def _path_or_error(root: Path, path_id: str):
 def _print_rows(rows: list[dict]) -> int:
     print(json.dumps(rows, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
-
-
-def _read_content_bound_file(
-    path_value: str,
-    expected_sha256: str | None = None,
-    *,
-    label: str = "file input",
-) -> tuple[Path, bytes]:
-    """Read an external file once and verify the bytes a V2 request approved.
-
-    The returned bytes are the bytes the caller must parse or write. Hashing
-    and then reopening the pathname would merely move the TOCTOU window.
-    Direct human CLI preflights may omit the digest; an active V2 gateway
-    context may not.
-    """
-    if path_value == "-" and current_gateway_request() is not None:
-        raise WriteRefused(
-            f"GatewayEnvelopeV2 {label} must be a real path with an approved SHA-256; "
-            "unbound stdin is not allowed"
-        )
-    source = Path(path_value).expanduser().resolve()
-    if not source.is_file():
-        raise WriteRefused(f"no such {label}: {source}")
-    try:
-        content = source.read_bytes()
-    except OSError as exc:
-        raise WriteRefused(f"cannot read {label} {source}: {exc}") from exc
-    if expected_sha256 is None:
-        if current_gateway_request() is not None:
-            raise WriteRefused(
-                f"GatewayEnvelopeV2 {label} requires a SHA-256 bound to the exact bytes"
-            )
-        return source, content
-    if not re.fullmatch(r"sha256:[a-f0-9]{64}", expected_sha256):
-        raise WriteRefused(
-            f"{label} SHA-256 must use sha256:<64 lowercase hexadecimal digits>"
-        )
-    actual_sha256 = "sha256:" + hashlib.sha256(content).hexdigest()
-    if actual_sha256 != expected_sha256:
-        raise WriteRefused(
-            f"approved {label} changed before use; expected {expected_sha256}, "
-            f"found {actual_sha256}. Review the new bytes and create a new approval."
-        )
-    return source, content
 
 
 def _read_structured_file(

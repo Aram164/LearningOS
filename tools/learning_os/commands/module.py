@@ -39,6 +39,7 @@ from learning_os.materials_resolution import evidential_route_projection, sha256
 from learning_os.ops._legacy_plumbing import (
     _fresh_manifest,
     _operator_lock,
+    _read_content_bound_file,
     _record_gateway_refusal,
     _take_gateway_refusal,
 )
@@ -67,7 +68,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _print_rows,
-    _read_content_bound_file,
     _render_frontmatter,
     _replace_registry_list_record,
     _root,

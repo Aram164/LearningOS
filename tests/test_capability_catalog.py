@@ -89,11 +89,17 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
     from learning_os.commands import project as project_commands
     from learning_os.commands.capability import _FILE_INPUTS_V2
     from learning_os.contracts.payloads import subparsers
+    from learning_os.ops.registry import REGISTRY
 
     parsers = subparsers(los.build_parser())
     definitions = command_definitions(repo_root)
     for name in _FILE_INPUTS_V2:
-        handler = parsers[definitions[name].cli_command].get_default("func")
+        if name in REGISTRY:
+            # Converted operations bind the invoke adapter; the guard
+            # applies to the real handler behind it (amendment (u) item 3).
+            handler = REGISTRY[name].handler
+        else:
+            handler = parsers[definitions[name].cli_command].get_default("func")
         source = inspect.getsource(handler)
         if name in {"project.create", "project.update"}:
             source += inspect.getsource(project_commands._project_record)

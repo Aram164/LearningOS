@@ -9067,7 +9067,7 @@
   "atlas.context.schema.json": "3e2224edad71e99c749e009b5077d4c9bcafb4cf791793d91b4f0d151e481a63",
   "atlas.question.save.schema.json": "6d05bfb5c9658ae233f5c6f8575774f5765f66b0c7b5dee9a927e5d36ffcbed5",
   "backup.manifest.schema.json": "f9f2772c3c75888faad52835a7fd47cb1245926eac52889cf6efa24415063795",
-  "capture.create.schema.json": "6f445836e3d754b3cb3681f2cac283334791b761b874d92d37a158c6154a4590",
+  "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
   "cli.ai-action-append-slices.schema.json": "77e02038807a08459a99eacc69430c9055dbb8339bf36476493ec5dcbcac769e",
   "cli.ai-action-import-delivery.schema.json": "023e18a0013f449b45bdfd9e7aab4ad34973ded2908e6012f9100b1e0b8e8016",
   "cli.ai-action-list.schema.json": "b56c7991fdf57f8bca23fbaefa61af2b4d21e3966a3a412f43e9136b8295a78f",

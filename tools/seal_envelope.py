@@ -28,6 +28,7 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops import handlers  # noqa: F401  (registration side effect)
 from learning_os.ops.registry import REGISTRY
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
@@ -97,7 +98,6 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     envelope passes through every gateway guard unchanged.
     """
     import los  # noqa: E402  (imports the parser, not a command)
-    from learning_os.commands import support as _support
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -105,6 +105,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         verified_gateway_snapshot,
     )
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops._legacy_plumbing import _operator_lock
     from learning_os.ops.legacy import _dispatch
     from learning_os.revisions import load_revisions
     from learning_os.transactions import transaction_artifacts
@@ -162,7 +163,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     }
     _transactions.TransactionService.commit = _dry_run_commit  # type: ignore[method-assign]
     try:
-        with _support._operator_lock(root):
+        with _operator_lock(root):
             # The snapshot is a content digest, not a loaded-domain
             # property: the path-based walk answers it without parsing the
             # repository, and the dry-run handler below loads once for its
@@ -225,7 +226,6 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     fails, so the reviewer reads the refusal. No transaction interception:
     a registered handler returns its proposal rather than committing.
     """
-    from learning_os.commands import support as _support
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -234,6 +234,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     )
     from learning_os.contracts.requests import request_schema
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops._legacy_plumbing import _operator_lock
     from learning_os.ops.check import check_proposal
     from learning_os.ops.context import OpContext
     from learning_os.ops.legacy import prepare_dispatch
@@ -273,7 +274,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         approval_subject_sha256="sha256:" + "0" * 64,
         expected_snapshot=None,  # set once the snapshot below is read
     )
-    with _support._operator_lock(root):
+    with _operator_lock(root):
         live_snapshot = snapshot or f"sha256:{canonical_fingerprint(root)}"
         envelope_stub["expected_snapshot"] = live_snapshot
         context = GatewayRequestContext(

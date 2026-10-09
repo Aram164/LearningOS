@@ -22,7 +22,10 @@ from learning_os.ops.proposal import Result
 from learning_os.ops.registry import REGISTRY
 
 SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
-CAPABILITY = "capture.create"
+# The unregistered probe operation for the seal-path tests: text in, JSON
+# out, legacy dispatch. (capture.create held this role until S15 converted
+# it; a session converting garden.seed.create repoints this again.)
+CAPABILITY = "garden.seed.create"
 
 
 def _seal(root: Path, out: Path, *, payload: dict, key: str,
@@ -47,10 +50,10 @@ def _live_snapshot(mini_repo: Path) -> str:
     return f"sha256:{canonical_fingerprint(mini_repo)}"
 
 
-def test_no_handlers_package_and_no_test_registrations():
-    # S13 registers zero operations: the J16 STOPPED seal path is unreachable.
-    package = Path(__file__).resolve().parent.parent / "tools" / "learning_os" / "ops" / "handlers"
-    assert not package.exists()
+def test_no_leaked_test_registrations():
+    # S13 registered zero operations; S15 registers converted ones, so the
+    # handlers package exists by design. What must never leak is the
+    # test-only operation outside its fixture.
     assert "test-only.pipe" not in REGISTRY
 
 
@@ -147,14 +150,14 @@ def test_guards_from_failed_check_refuses(mini_repo: Path, tmp_path: Path):
 
 
 def test_guards_from_capability_mismatch_refuses(mini_repo: Path, tmp_path: Path):
-    record = _record(tmp_path / "record.json", capability="garden.seed.create",
+    record = _record(tmp_path / "record.json", capability="capture.create",
                      payload={"text": "x"}, snapshot="sha256:0", revisions={})
     sealed = _seal(mini_repo, tmp_path / "sealed.json",
                    payload={"text": "x"}, key="guards-from-008",
                    extra=["--guards-from", str(record)])
     assert sealed.returncode == 2
     assert sealed.stderr == ("seal_envelope: --guards-from record is for capability "
-                             "'garden.seed.create', not 'capture.create'\n")
+                             "'capture.create', not 'garden.seed.create'\n")
 
 
 def test_guards_from_payload_mismatch_refuses(mini_repo: Path, tmp_path: Path):

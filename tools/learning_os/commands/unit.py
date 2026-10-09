@@ -25,6 +25,7 @@ from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.ops._legacy_plumbing import (
     _fresh_manifest,
     _operator_lock,
+    _read_content_bound_file,
     _snapshot,
 )
 from learning_os.revisions import artifact_revision
@@ -38,7 +39,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _print_rows,
-    _read_content_bound_file,
     _root,
     _unit_map_or_error,
     _write_transaction,
