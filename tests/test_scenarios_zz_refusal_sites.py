@@ -16,6 +16,7 @@ from __future__ import annotations
 import ast
 import json
 import os
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
@@ -94,6 +95,40 @@ def _operation_templates(value: ast.AST) -> list[str]:
     return slugs
 
 
+@lru_cache(maxsize=1)
+def _entry_point_ops() -> frozenset[str]:
+    """Registered operations with a runtime entry point (item 9.1).
+
+    An operation that is the ``_operation`` default of a generated
+    CLI subcommand, or a catalog command the gateway dispatches.
+    """
+    import los
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payloads import subparsers
+
+    defaults = {sub.get_default("_operation")
+                for sub in subparsers(los.build_parser()).values()}
+    defaults.discard(None)
+    return frozenset(
+        (defaults | set(command_definitions(ROOT))) & set(REGISTRY))
+
+
+def _excluded_ops() -> set[str]:
+    """Registered names with no runtime entry point (item 9.1)."""
+    return set(REGISTRY) - set(_entry_point_ops())
+
+
+def _assert_shares_entry_point_handler(operation: str,
+                                       entry_points) -> None:
+    """The excluded operation shares its handler with an entry point."""
+    handler = REGISTRY[operation].handler
+    shared = sorted(op for op in entry_points
+                    if REGISTRY[op].handler is handler)
+    assert shared, (
+        f"A9 {operation}: excluded but shares its handler with no "
+        f"entry-point operation — {FIX}")
+
+
 def _declared_sites() -> dict[tuple[str, str], str]:
     """``(operation, site)`` -> ``"rel:line"`` for every declared site.
 
@@ -101,7 +136,8 @@ def _declared_sites() -> dict[tuple[str, str], str]:
     raise, the capture ``exc.site`` assignment beside its bare
     re-raise, or an operation template assigned to a ``site``
     variable passed as ``site=``. Templates resolve over the raising
-    module's serving operations.
+    module's serving operations that have a runtime entry point
+    (item 9.1); literals name their operation as written.
     """
     from learning_os.domain import failures
 
@@ -111,6 +147,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                 and issubclass(cls, failures.WriteRefused))
 
     serving = _serving_ops()
+    entry_points = set(_entry_point_ops())
     declared: dict[tuple[str, str], str] = {}
 
     def record(operation: str, site: str, rel: str, lineno: int) -> None:
@@ -122,6 +159,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
         rel = path.relative_to(ROOT).as_posix()
         assert serving.get(path.name), f"A9 {rel} serves nothing — {FIX}"
         tree = ast.parse(path.read_text(encoding="utf-8"))
+        entered = sorted(set(serving[path.name]) & entry_points)
         for node in ast.walk(tree):
             if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
                 call = node.exc
@@ -147,7 +185,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                 slugs = _operation_templates(site_kw.value)
                 assert slugs, (
                     f"A9 {rel}:{node.lineno}: unresolvable site form — {FIX}")
-                for operation in sorted(serving[path.name]):
+                for operation in entered:
                     for slug in slugs:
                         record(operation, f"{operation}.{slug}", rel,
                                node.lineno)
@@ -171,7 +209,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                                    for sub in ast.walk(node)), (
                             f"A9 {rel}:{stmt.lineno}: the assigned site"
                             f" needs its bare re-raise — {FIX}")
-                        for operation in sorted(serving[path.name]):
+                        for operation in entered:
                             for slug in slugs:
                                 record(operation, f"{operation}.{slug}", rel,
                                        stmt.lineno)
@@ -195,7 +233,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                 continue
             for stmt in assigns:
                 for slug in _operation_templates(stmt.value):
-                    for operation in sorted(serving[path.name]):
+                    for operation in entered:
                         record(operation, f"{operation}.{slug}", rel,
                                stmt.lineno)
     return declared
@@ -306,6 +344,16 @@ def test_declared_site_is_witnessed_from_its_case(operation, site):
                     _session_witnesses(), _cased_sites())
 
 
+@pytest.mark.parametrize("operation", sorted(_excluded_ops()))
+def test_excluded_name_shares_an_entry_point_handler(operation):
+    """Every excluded name shares its handler with an entry point (9.1).
+
+    The entry-point operation's own sites are covered by the
+    per-site tests above, in the same session.
+    """
+    _assert_shares_entry_point_handler(operation, _entry_point_ops())
+
+
 # --- controls ------------------------------------------------------------------------
 
 def test_control_declared_but_unwitnessed_fails():
@@ -337,6 +385,12 @@ def test_control_clean_match_passes():
                     "a9-control:1",
                     {("capture.create", "capture.create.empty-input")},
                     {"capture.create.empty-input": "capture.create:x"})
+
+
+def test_control_unshared_excluded_name_fails():
+    with pytest.raises(AssertionError, match="shares its handler with no"):
+        _assert_shares_entry_point_handler("project.inspect",
+                                           {"route.patch"})
 
 
 def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
