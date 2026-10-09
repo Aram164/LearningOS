@@ -27,6 +27,12 @@ cases:
     request: {unit_id: unit-nope, stage_id: stage-demo, status: active}
     artifact_ids: []
     expect: {site: stage.progress.update.unknown-unit}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, stage_id: stage-demo, status: active}
+    artifact_ids: []
+    expect: {site: stage.progress.update.no-study-map}
   - id: complete-pending-stage
     kind: refusal
     transport: gateway
@@ -56,6 +62,11 @@ cases:
     transport: cli
     argv: [stage-progress, unit-demo-l01, stage-demo, complete]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv: [stage-progress, unit-demo-l01, stage-demo-pending, active, --expected-revision, "bogus"]
+    expect: {site: stage.progress.update.bad-expected-revision}
   - id: exact-replay
     kind: sequence
     steps:

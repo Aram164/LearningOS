@@ -36,6 +36,11 @@ cases:
     transport: cli
     argv: [capture, --text, "hello"]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv: [capture, --text, "hello", --expected-revision, "bogus"]
+    expect: {site: capture.create.bad-expected-revision}
   - id: exact-replay
     kind: sequence
     steps:
