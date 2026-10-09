@@ -1106,3 +1106,104 @@ def test_render_check_on_pure_renderer_passes(pipe, mini_repo, monkeypatch):
     assert json.loads(outcome.stdout) == {
         "echo": "x", "flag": False, "count": 0}
     assert current_render() is None
+
+
+# ---------------------------------------------------------------------------
+# SPEC (bd): a refused commit keeps the legacy streams.
+# ---------------------------------------------------------------------------
+
+def test_cli_commit_refusal_keeps_engine_complaint_before_handler_lines(
+        pipe, mini_repo):
+    """The engine's conflict lines come first, then on_commit_refused."""
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"},
+            proposal=_pipe_proposal(mini_repo, "late", revision=5),
+            on_commit_refused=lambda errors: ["los: handler line"])
+
+    pipe("command", handler=handler)
+    with _gateway_context(TEST_OP, "cli-bd-conflict-001"):
+        outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 3
+    assert outcome.stdout == ""
+    lines = outcome.stderr.splitlines()
+    assert lines[0] == (
+        "los: artifact revision conflict — reload the affected record "
+        "before writing")
+    assert json.loads(lines[1]) == {
+        "conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
+    assert lines[2:] == ["los: handler line"]
+
+
+def test_cli_refused_stdout_prints_the_legacy_json_on_stdout(
+        pipe, mini_repo):
+    """refused_stdout puts the legacy refusal print on stdout, stderr empty."""
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "outjson"),
+            refused_stdout=lambda errors: json.dumps(
+                {"ok": False, "errors": errors}, separators=(",", ":")))
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 2
+    assert outcome.stderr == ""
+    body = json.loads(outcome.stdout)
+    assert outcome.stdout == json.dumps(body, separators=(",", ":")) + "\n"
+    assert body["ok"] is False
+    assert body["errors"][0].startswith("canonical writes must use ")
+    assert not (mini_repo / "work/inbox/outjson.md").exists()
+
+
+def test_gateway_refused_stdout_is_the_error_without_a_complaint(
+        pipe, mini_repo):
+    """With nothing on stderr, the gateway error is the printed text."""
+
+    _write_gateway_wiring(mini_repo)
+    (mini_repo / "work/inbox/blocked.md").mkdir(parents=True)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "blocked"),
+            refused_stdout=lambda errors: json.dumps(
+                {"ok": False, "errors": errors}, separators=(",", ":")))
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-bd-stdout-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 2
+    assert body["ok"] is False
+    message = json.loads(body["error"]["message"])
+    assert message["ok"] is False
+    assert message["errors"] == [
+        f"cannot change {mini_repo / 'work/inbox/blocked.md'}: "
+        "target is not a regular file"]
+
+
+def test_gateway_commit_complaint_wins_over_refused_stdout(pipe, mini_repo):
+    """The engine complaint plus handler lines is the error, as legacy."""
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"},
+            proposal=_pipe_proposal(mini_repo, "late", revision=5),
+            on_commit_refused=lambda errors: ["los: handler line"],
+            refused_stdout=lambda errors: "{\"ok\":false}")
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-bd-complaint-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 3
+    lines = body["error"]["message"].splitlines()
+    assert lines[0] == (
+        "los: artifact revision conflict — reload the affected record "
+        "before writing")
+    assert json.loads(lines[1]) == {
+        "conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
+    assert lines[2:] == ["los: handler line"]

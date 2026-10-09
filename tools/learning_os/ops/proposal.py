@@ -46,3 +46,4 @@ class Result:
     diagnostic_failed: bool = False                # exit 1, a result rather than a refusal
     after_commit: Callable[[int, list, dict], None] | None = None   # recipe R4: may raise a typed refusal
     json_dumps: Callable[[dict], str] | None = None  # SPEC (az) item 1: internal CLI JSON-format metadata; None = today's S13 encoder
+    refused_stdout: Callable[[list[str]], str] | None = None  # SPEC (bd): the legacy refusal print to stdout, without its newline

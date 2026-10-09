@@ -155,11 +155,15 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
                 if result.after_commit is not None:
                     result.after_commit(code, commit_errors, confirmation)
             if code != 0:
-                if result.on_commit_refused is not None:
-                    lines = call_renderer(
-                        operation, "on_commit_refused",
-                        result.on_commit_refused, commit_errors)
-                elif errors.getvalue().strip():
+                if (result.on_commit_refused is not None
+                        or result.refused_stdout is not None):
+                    stdout, stderr = _legacy_refusal_streams(
+                        operation, result, commit_errors, errors.getvalue())
+                    return Outcome(
+                        commit=commit, ok=False, payload=None, error=None,
+                        exit_code=code, receipt=receipt, replayed=replayed,
+                        stdout=stdout, stderr=stderr)
+                if errors.getvalue().strip():
                     lines = errors.getvalue().strip().splitlines()
                 else:
                     lines = [f"los: {error}" for error in commit_errors]
@@ -191,6 +195,25 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
         exit_code=exit_code, receipt=receipt, replayed=replayed,
         stdout=stdout, stderr="",
     )
+
+
+def _legacy_refusal_streams(operation: str, result, commit_errors: list,
+                            commit_stderr: str) -> tuple[str, str]:
+    """A refused commit's legacy ``(stdout, stderr)`` (SPEC (bd)).
+
+    A legacy handler let ``commit_proposal``'s own complaint (the revision
+    conflict lines) reach stderr first, then printed its refusal lines to
+    stderr, its refusal JSON to stdout, or both.
+    """
+    lines = (call_renderer(
+        operation, "on_commit_refused",
+        result.on_commit_refused, commit_errors)
+        if result.on_commit_refused is not None else [])
+    stdout = (call_renderer(
+        operation, "refused_stdout",
+        result.refused_stdout, commit_errors) + "\n"
+        if result.refused_stdout is not None else "")
+    return stdout, commit_stderr + "".join(f"{line}\n" for line in lines)
 
 
 def _cli_error_code(exc: Exception) -> tuple[str, bool]:
@@ -820,15 +843,18 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             res.after_commit(code, commit_errors, confirmation)
     if code != 0:
         refusal = _take_gateway_refusal()
-        if res.on_commit_refused is not None:
-            lines = call_renderer(
-                operation, "on_commit_refused",
-                res.on_commit_refused, commit_errors)
-        elif errors.getvalue().strip():
-            lines = errors.getvalue().strip().splitlines()
+        if res.on_commit_refused is not None or res.refused_stdout is not None:
+            # Legacy _dispatch's rule: the complaint, else the printed text.
+            text, complaint = _legacy_refusal_streams(
+                operation, res, commit_errors, errors.getvalue())
+            result = {"error": complaint.strip() or text.strip()
+                      or f"{operation} failed"}
         else:
-            lines = [f"los: {error}" for error in commit_errors]
-        result = {"error": "\n".join(lines)}
+            if errors.getvalue().strip():
+                lines = errors.getvalue().strip().splitlines()
+            else:
+                lines = [f"los: {error}" for error in commit_errors]
+            result = {"error": "\n".join(lines)}
         if refusal is not None:
             result["error_code"], result["error_retryable"] = refusal
         return code, result
