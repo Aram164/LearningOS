@@ -570,19 +570,6 @@ def test_error_object_conflicting_key_raises():
                      details={"remedy": "a"}, remedy="b")
 
 
-def test_gateway_error_delegates_with_identical_bytes():
-    """SPEC 9.2: the delegation preserves every pre-existing shape."""
-
-    from learning_os.ops.pipeline import _gateway_error
-
-    assert _gateway_error("C", "m") == {
-        "code": "C", "message": "m", "retryable": False, "details": {}}
-    assert _gateway_error("C", "m", retryable=True,
-                          details={"stage": "s"}) == {
-        "code": "C", "message": "m", "retryable": True,
-        "details": {"stage": "s"}}
-
-
 def test_classify_failure_passes_refusal_details():
     """SPEC 9.2: a reason-carrying WriteRefused enriches the error."""
 

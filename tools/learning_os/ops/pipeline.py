@@ -304,14 +304,6 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
                    replayed=replayed, stdout=stdout, stderr=stderr)
 
 
-def _gateway_error(code: str, message: str, *, retryable: bool = False,
-                   details: dict | None = None, reason: str | None = None,
-                   suggestions: list | None = None,
-                   remedy: str | None = None) -> dict:
-    return error_object(code, message, retryable=retryable, details=details,
-                        reason=reason, suggestions=suggestions, remedy=remedy)
-
-
 def _classify_failure(code: int, message: str, *,
                       failure: BaseException | None = None,
                       refusal: tuple[str, bool] | None = None) -> dict:
@@ -328,7 +320,7 @@ def _classify_failure(code: int, message: str, *,
     """
     if refusal is not None:
         refused_code, retryable = refusal
-        return _gateway_error(refused_code, message, retryable=retryable)
+        return error_object(refused_code, message, retryable=retryable)
     if failure is not None:
         row = classify(failure, "gateway.refusal")
         if row is not None:
@@ -343,11 +335,11 @@ def _classify_failure(code: int, message: str, *,
                     reason = failure.reason
                     suggestions = getattr(failure, "suggestions", None)
                     remedy = failure.remedy
-                return _gateway_error(resolved["code"], message,
+                return error_object(resolved["code"], message,
                                       retryable=resolved["retryable"],
                                       reason=reason, suggestions=suggestions,
                                       remedy=remedy)
-    return _gateway_error(INVALID_REQUEST, message)
+    return error_object(INVALID_REQUEST, message, retryable=False)
 
 
 def _v2_exit_code(handler_code: int, error: dict | None) -> int:
@@ -370,7 +362,7 @@ def _projection_error(exc: ProjectionFailure) -> dict:
     """
     row = classify(exc, "gateway.dispatch")
     resolved = resolve(row, exc)
-    return _gateway_error(resolved["code"], str(exc),
+    return error_object(resolved["code"], str(exc),
                           retryable=resolved["retryable"],
                           details=resolved["details"])
 
@@ -379,7 +371,7 @@ def _post_commit_error(exc: PostCommitFailure) -> dict:
     """Committed yet failed: never a definitive refusal."""
     row = classify(exc, "gateway.dispatch")
     resolved = resolve(row, exc)
-    return _gateway_error(resolved["code"], str(exc),
+    return error_object(resolved["code"], str(exc),
                           retryable=resolved["retryable"],
                           details=resolved["details"])
 
@@ -917,7 +909,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         response = _v2_response(
             envelope,
             ok=False,
-            error=_gateway_error(INVALID_REQUEST, str(exc)),
+            error=error_object(INVALID_REQUEST, str(exc), retryable=False),
         )
         _validate_capability_envelope(root, response, kind="result")
         stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
@@ -931,9 +923,10 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     INVALID_REQUEST,
                     "envelope capability does not match requested capability",
+                    retryable=False,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
@@ -951,9 +944,10 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     UNKNOWN_CAPABILITY,
                     f"unknown or non-public capability: {requested}",
+                    retryable=False,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
@@ -981,7 +975,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(UNCONFIRMED, str(exc)),
+                error=error_object(UNCONFIRMED, str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
@@ -999,9 +993,10 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     UNCONFIRMED,
                     gesture_refusal(context.capability, context.channel),
+                    retryable=False,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
@@ -1032,7 +1027,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(IDEMPOTENCY_CONFLICT, str(exc)),
+                error=error_object(IDEMPOTENCY_CONFLICT, str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
@@ -1050,7 +1045,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(INTERNAL_FAILURE, str(exc), retryable=False),
+                error=error_object(INTERNAL_FAILURE, str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
@@ -1068,7 +1063,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     INTERNAL_FAILURE, str(exc), retryable=False,
                     details={
                         "transaction_id": exc.transaction_id,
@@ -1093,7 +1088,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(INTERNAL_FAILURE, str(exc), retryable=True),
+                error=error_object(INTERNAL_FAILURE, str(exc), retryable=True),
             )
             _validate_capability_envelope(root, response, kind="result")
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
@@ -1118,9 +1113,10 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     UNCONFIRMED,
                     "no committed receipt exists for this exact request",
+                    retryable=False,
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
@@ -1138,7 +1134,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                     response = _v2_response(
                         envelope,
                         ok=False,
-                        error=_gateway_error(
+                        error=error_object(
                             STALE_SNAPSHOT,
                             "canonical state changed since this request was approved",
                             retryable=True,
@@ -1182,7 +1178,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     STALE_SNAPSHOT,
                     "canonical state changed before the transaction write window",
                     retryable=True,
@@ -1231,7 +1227,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     INTERNAL_FAILURE, str(exc), retryable=False,
                     details={
                         "transaction_id": exc.transaction_id,
@@ -1262,7 +1258,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             response = _v2_response(
                 envelope,
                 ok=False,
-                error=_gateway_error(
+                error=error_object(
                     INTERNAL_FAILURE, str(exc) or type(exc).__name__, retryable=True,
                 ),
             )
