@@ -4,10 +4,10 @@ For every registered operation, on its scenario cases: the real
 generated parser accepts ``--json`` for its subcommand; every gateway
 refusal recording's whole stdout validates against the resultV2
 envelope and its error member against that schema's error definition;
-every CLI refusal recording's stdout object validates against the
-CLI-error schema; and the recorded exit equals
-``ops.outcomes.exit_for`` for the failure class derived from the
-case's typed ``expect.site`` and the handler's raise at that site.
+every CLI refusal recording's stdout is empty, an error object, or
+the (bd) legacy stream of a commit-refused unit whose handler module
+passes ``refused_stdout``; and every refusal unit re-run live yields
+exactly one witness line deciding the exit (SPEC (bf) item 8).
 Unregistered operations are baselined ``operation::*`` exceptions,
 the same derivation as A5, asserted equal in both directions.
 """
@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -90,181 +91,92 @@ def _unit_id(unit) -> str:
             else f"{operation}::{case_id}::step{step}")
 
 
-# --- the static site -> raise map ----------------------------------------------
+# --- live re-runs ------------------------------------------------------------------
 
-class _Unresolvable(Exception):
-    """No static raise carries this site (a pinned exit gap)."""
+def _merged_case(operation: str, case_id: str) -> dict:
+    """The case with its file-level fixture/observations (as effects)."""
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    bare = next(item for item in doc["cases"] if item["id"] == case_id)
+    return {"fixture": doc.get("fixture", "rich_world"),
+            "observations": doc["observations"],
+            "fixture_mtime": doc.get(
+                "fixture_mtime", harness.FIXTURE_MTIME_DEFAULT),
+            **bare}
 
 
-def _serving_ops() -> dict[str, set[str]]:
-    """Handler file -> registered operations it serves.
+#: ``unit id -> (live exit, witness lines)`` for the target step,
+#: shared by the exit and CLI clauses over the same live evidence.
+_LIVE: dict[str, tuple[int, list[dict]]] = {}
 
-    From REGISTRY's handler modules, plus ``_shared.py``, which serves
-    its importers' operations.
+
+@pytest.fixture(scope="module")
+def _witness_dir(tmp_path_factory):
+    """One directory for the session's per-unit witness files."""
+    return tmp_path_factory.mktemp("a7-witness")
+
+
+def _live_target(unit, tmp_path: Path, witness_dir: Path):
+    """``(live exit, lines)`` for the unit's target step (item 8.2).
+
+    A fresh fixture with its prerequisites through the unchanged
+    harness; prerequisites run unwitnessed and their live exits must
+    match recorded, then the target step runs with the per-unit
+    witness file in the harness environment.
     """
-    serving: dict[str, set[str]] = {}
-    for operation, entry in REGISTRY.items():
-        module = entry.handler.__module__
-        assert module.startswith("learning_os.ops.handlers."), module
-        serving.setdefault(module.rsplit(".", 1)[1] + ".py",
-                           set()).add(operation)
-    importers: set[str] = set()
-    for path in HANDLERS_DIR.glob("*.py"):
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        for node in ast.walk(tree):
-            if (isinstance(node, ast.ImportFrom)
-                    and node.module == "learning_os.ops.handlers._shared"):
-                importers.add(path.name)
-    shared_ops: set[str] = set()
-    for name in importers:
-        shared_ops |= serving.get(name, set())
-    assert shared_ops, "A7 _shared.py serves no registered operation"
-    serving["_shared.py"] = shared_ops
-    return serving
+    import scenario_harness as harness
+    from arch_audit_hook import SITE_WITNESS_ENV
 
-
-def _template_slug(value: ast.AST) -> str | None:
-    """The slug of ``f"{ctx.operation}.<slug>"``, else None (fail closed)."""
-    if not isinstance(value, ast.JoinedStr) or len(value.values) != 2:
-        return None
-    formatted, rest = value.values
-    if (not isinstance(formatted, ast.FormattedValue)
-            or formatted.conversion != -1
-            or formatted.format_spec is not None):
-        return None
-    target = formatted.value
-    if not (isinstance(target, ast.Attribute)
-            and target.attr == "operation"
-            and isinstance(target.value, ast.Name)
-            and target.value.id == "ctx"):
-        return None
-    if not (isinstance(rest, ast.Constant) and isinstance(rest.value, str)
-            and rest.value.startswith(".") and "." not in rest.value[1:]
-            and rest.value[1:]):
-        return None
-    return rest.value[1:]
-
-
-def _site_raises() -> dict[str, tuple[str, int | None, str, int]]:
-    """Declared site -> ``(class, exit_code, file, line)``.
-
-    A literal ``site="..."`` on a failure raise, an
-    ``f"{ctx.operation}.<slug>"`` resolved over the raising module's
-    serving operations, or the capture ``bad-file`` form: a site
-    assigned to the in-flight ``WriteRefused`` beside its literal
-    ``exit_code`` and bare re-raise. Duplicate raises of one site must
-    agree on class and exit; anything else is unresolvable.
-    """
-    from learning_os.domain import failures
-
-    serving = _serving_ops()
-    resolved: dict[str, tuple[str, int | None, str, int]] = {}
-
-    def record(site: str, class_name: str, exit_code: int | None,
-               rel: str, lineno: int) -> None:
-        if site in resolved:
-            assert resolved[site][:2] == (class_name, exit_code), (
-                f"A7 {site}: conflicting raises "
-                f"({resolved[site][2]}:{resolved[site][3]} vs "
-                f"{rel}:{lineno}) — {FIX}")
-            return
-        resolved[site] = (class_name, exit_code, rel, lineno)
-
-    for path in sorted(HANDLERS_DIR.glob("*.py")):
-        if path.name == "__init__.py":
-            continue
-        rel = path.relative_to(ROOT).as_posix()
-        assert serving.get(path.name), f"A7 {rel} serves nothing — {FIX}"
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
-                call = node.exc
-                if not isinstance(call.func, ast.Name):
-                    continue
-                cls = getattr(failures, call.func.id, None)
-                if not (isinstance(cls, type)
-                        and issubclass(cls, failures.WriteRefused)):
-                    continue
-                site_kw = next((kw for kw in call.keywords
-                                if kw.arg == "site"), None)
-                if site_kw is None:
-                    continue
-                exit_kw = next((kw for kw in call.keywords
-                                if kw.arg == "exit_code"), None)
-                exit_code = None
-                if exit_kw is not None:
-                    assert isinstance(exit_kw.value, ast.Constant), (
-                        f"A7 {rel}:{node.lineno}: non-literal exit_code"
-                        f" — {FIX}")
-                    exit_code = exit_kw.value.value
-                    assert exit_code is None or isinstance(exit_code, int), (
-                        f"A7 {rel}:{node.lineno}: exit_code {exit_code!r}"
-                        f" — {FIX}")
-                if isinstance(site_kw.value, ast.Constant):
-                    site = site_kw.value.value
-                    assert isinstance(site, str) and any(
-                        site == op or site.startswith(op + ".")
-                        for op in serving[path.name]), (
-                        f"A7 {rel}:{node.lineno}: site {site!r} names no"
-                        f" served operation — {FIX}")
-                    record(site, call.func.id, exit_code, rel, node.lineno)
-                    continue
-                slug = _template_slug(site_kw.value)
-                assert slug is not None, (
-                    f"A7 {rel}:{node.lineno}: unresolvable site form — {FIX}")
-                for operation in sorted(serving[path.name]):
-                    record(f"{operation}.{slug}", call.func.id, exit_code,
-                           rel, node.lineno)
-            if isinstance(node, ast.ExceptHandler) and isinstance(
-                    node.type, ast.Name):
-                cls = getattr(failures, node.type.id, None)
-                if not (isinstance(cls, type)
-                        and issubclass(cls, failures.WriteRefused)):
-                    continue
-                name = node.name
-                site_assign = exit_assign = None
-                for stmt in ast.walk(node):
-                    if not isinstance(stmt, ast.Assign):
-                        continue
-                    for target in stmt.targets:
-                        if (isinstance(target, ast.Attribute)
-                                and isinstance(target.value, ast.Name)
-                                and target.value.id == name):
-                            if target.attr == "site":
-                                site_assign = stmt
-                            elif target.attr == "exit_code":
-                                exit_assign = stmt
-                if site_assign is None:
-                    continue
-                slug = _template_slug(site_assign.value)
-                assert slug is not None, (
-                    f"A7 {rel}:{site_assign.lineno}: unresolvable site"
-                    f" form — {FIX}")
-                assert exit_assign is not None and isinstance(
-                    exit_assign.value, ast.Constant) and isinstance(
-                    exit_assign.value.value, int), (
-                    f"A7 {rel}:{site_assign.lineno}: the assigned site"
-                    f" needs a literal exit_code beside it — {FIX}")
-                assert any(isinstance(stmt, ast.Raise) and stmt.exc is None
-                           for stmt in ast.walk(node)), (
-                    f"A7 {rel}:{site_assign.lineno}: the assigned site"
-                    f" needs its bare re-raise — {FIX}")
-                exit_code = exit_assign.value.value
-                for operation in sorted(serving[path.name]):
-                    record(f"{operation}.{slug}", node.type.id, exit_code,
-                           rel, site_assign.lineno)
-    return resolved
-
-
-def _resolve_site(site: str) -> tuple[str, int | None, str, int]:
+    key = _unit_id(unit)
+    if key in _LIVE:
+        return _LIVE[key]
+    operation, case_id, step, _transport, _site, _exit, _stdout = unit
+    case = _merged_case(operation, case_id)
+    target_index = step if step is not None else 0
+    steps = (case.get("steps", []) if case.get("kind") == "sequence"
+             else [case])
+    recorded = _recorded(operation, case_id)
+    recorded_steps = recorded["steps"] if step is not None else [recorded]
+    workdir = tmp_path / "world"
+    workdir.mkdir(parents=True, exist_ok=True)
+    ctx = harness._prepare_world(case, operation, workdir)
+    previous = os.environ.pop(SITE_WITNESS_ENV, None)
     try:
-        return _site_raises()[site]
-    except KeyError:
-        raise _Unresolvable(site) from None
+        for prereq in range(target_index):
+            full = {"operation": operation, **steps[prereq]}
+            result = harness._run_step(ctx, operation, full, prereq)
+            want = recorded_steps[prereq]["exit"]
+            assert result["exit"] == want, (
+                f"A7 {key}: prerequisite step {prereq} exits "
+                f"{result['exit']}, recorded {want}: "
+                f"{result['stderr'][:300]!r} — {FIX}")
+    finally:
+        if previous is not None:
+            os.environ[SITE_WITNESS_ENV] = previous
+    witness_file = witness_dir / (key.replace(":", "_")
+                                  .replace("/", "_") + ".jsonl")
+    witness_file.touch()
+    full = {"operation": operation, **steps[target_index]}
+    os.environ[SITE_WITNESS_ENV] = str(witness_file)
+    try:
+        result = harness._run_step(ctx, operation, full, target_index)
+    finally:
+        if previous is None:
+            os.environ.pop(SITE_WITNESS_ENV, None)
+        else:
+            os.environ[SITE_WITNESS_ENV] = previous
+    harness.check_witnesses(ctx)
+    lines = [json.loads(line)
+             for line in witness_file.read_text(
+                 encoding="utf-8").splitlines()
+             if line.strip()]
+    _LIVE[key] = (result["exit"], lines)
+    return _LIVE[key]
 
 
 def _reconstruct(class_name: str, exit_code: int | None) -> BaseException:
-    """The raise's failure with its static ``exit_code`` (probed values)."""
+    """The witnessed failure with its witnessed ``exit_code`` (probed values)."""
     from learning_os.domain import failures
 
     cls = getattr(failures, class_name)
@@ -320,77 +232,101 @@ def _check_gateway_stdout(label: str, rel: str, stdout: str) -> None:
         f"({errors[0].message}, {rel}) — {FIX}")
 
 
-def _check_cli_stdout(label: str, rel: str, stdout: str) -> None:
-    """A CLI stdout object matches the CLI-error schema (empty: no object)."""
-    if not stdout:
-        return
-    try:
-        whole = json.loads(stdout)
-    except ValueError as exc:
-        raise AssertionError(
-            f"A7 {label}: CLI stdout is not JSON ({rel}) — {FIX}"
-        ) from exc
-    errors = list(_cli_error_validator().iter_errors(whole))
-    assert not errors, (
-        f"A7 {label}: CLI stdout fails cli-error "
-        f"({errors[0].message}, {rel}) — {FIX}")
-
-
-#: Exit units whose class the site+raise method cannot derive (SPEC-GAP,
-#: pinned fail-closed: drift in either direction fails).
-_EXIT_GAPS: frozenset[tuple[str, str, int | None]] = frozenset({
-    ("route.patch", "blank-changes", None),
-    ("ai-action.delivery.apply", "wrong-approval", None),
-    ("ai-action.delivery.apply", "unknown-delivery", None),
-    ("capture.create", "replay-only-miss", None),
-    ("stage.progress.update", "replay-only-miss", None),
-    ("route.patch", "replay-only-miss", None),
-    ("ai-action.delivery.apply", "replay-only-miss", None),
-    ("capture.create", "direct-cli-refused", None),
-    ("stage.progress.update", "direct-cli-refused", None),
-    ("route.patch", "direct-cli-refused", None),
-    ("ai-action.delivery.apply", "direct-cli-refused", None),
-    ("route.patch", "valid-plan-hits-warning-gate", 1),
-    ("ai-action.delivery.apply", "sha-mismatch", 2),
-})
-
-#: CLI-shape units with no A7 stdout object (SPEC-GAP, pinned fail-closed).
-_CLI_GAPS: frozenset[tuple[str, str, int | None]] = frozenset({
-    ("route.patch", "direct-cli-refused", None),
-})
-
 _CONTEXT = {"cli": "cli", "gateway": "gateway.dispatch"}
 
 
-def _check_exit(label: str, key: tuple[str, str, int | None],
-                transport: str, site: str | None, recorded_exit: int) -> None:
-    """The recorded exit equals ``exit_for`` for the derived class.
+def _check_live_exit(label: str, transport: str, recorded_exit: int,
+                     live_exit: int, lines: list[dict]) -> None:
+    """Item 8.2: the target step's single witness line decides the exit.
 
-    Gap units pass only while pinned; a resolvable site on a pinned
-    gap fails (the gap healed).
+    A ``failure`` line gives ``exit_for`` for the reconstructed class
+    with its witnessed ``exit_code``; a ``commit-refused`` line gives
+    the witnessed code. No line, or more than one, fails.
     """
     from learning_os.ops.outcomes import exit_for
 
     assert transport in _CONTEXT, (
         f"A7 {label}: transport {transport!r} has no outcomes context — {FIX}")
-    try:
-        if site is None:
-            raise _Unresolvable(label)
-        class_name, exit_code, rel, lineno = _resolve_site(site)
-    except _Unresolvable:
-        assert key in _EXIT_GAPS, (
-            f"A7 {label}: unrecorded exit gap — {FIX}")
+    assert live_exit == recorded_exit, (
+        f"A7 {label}: live exit {live_exit}, recorded {recorded_exit} — {FIX}")
+    if not lines:
+        raise AssertionError(
+            f"A7 {label}: no witness line for the refusal unit — {FIX}")
+    assert len(lines) == 1, (
+        f"A7 {label}: {len(lines)} witness lines for one refusal unit — {FIX}")
+    line = lines[0]
+    if line.get("kind") == "failure":
+        exc = _reconstruct(line["class"], line["exit_code"])
+        want = exit_for(exc, _CONTEXT[transport])
+        assert want is not None, (
+            f"A7 {label}: no outcomes row for {line['class']} in "
+            f"{_CONTEXT[transport]} — {FIX}")
+        assert want == recorded_exit, (
+            f"A7 {label}: exit_for gives {want} for {line['class']}, "
+            f"recorded {recorded_exit} — {FIX}")
         return
-    assert key not in _EXIT_GAPS, (
-        f"A7 {label}: the exit gap healed; remove the pin — {FIX}")
-    exc = _reconstruct(class_name, exit_code)
-    want = exit_for(exc, _CONTEXT[transport])
-    assert want is not None, (
-        f"A7 {label}: no outcomes row for {class_name} in "
-        f"{_CONTEXT[transport]} ({rel}:{lineno}) — {FIX}")
-    assert want == recorded_exit, (
-        f"A7 {label}: exit_for gives {want} for {class_name}, "
-        f"recorded {recorded_exit} ({rel}:{lineno}) — {FIX}")
+    if line.get("kind") == "commit-refused":
+        assert recorded_exit == line["code"], (
+            f"A7 {label}: witnessed commit code {line['code']}, "
+            f"recorded {recorded_exit} — {FIX}")
+        return
+    raise AssertionError(
+        f"A7 {label}: witness kind {line.get('kind')!r} — {FIX}")
+
+
+def _is_cli_error_object(stdout: str) -> bool:
+    """Whether the stdout parses as a CLI error object."""
+    try:
+        whole = json.loads(stdout)
+    except ValueError:
+        return False
+    return not list(_cli_error_validator().iter_errors(whole))
+
+
+def _handler_module_has_refused_stdout(operation: str) -> bool:
+    """AST: the handler's module passes ``Result(..., refused_stdout=...)``.
+
+    A ``None`` value passes nothing, as in the A18 population rule.
+    """
+    module = REGISTRY[operation].handler.__module__
+    assert module.startswith("learning_os.ops.handlers."), module
+    path = HANDLERS_DIR / (module.rsplit(".", 1)[1] + ".py")
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        last = func.id if isinstance(func, ast.Name) else (
+            func.attr if isinstance(func, ast.Attribute) else None)
+        if last != "Result":
+            continue
+        for keyword in node.keywords:
+            if keyword.arg != "refused_stdout":
+                continue
+            if isinstance(keyword.value, ast.Constant) \
+                    and keyword.value.value is None:
+                continue
+            return True
+    return False
+
+
+def _check_cli_refusal_stdout(label: str, operation: str,
+                              recorded_stdout: str,
+                              line: dict | None) -> None:
+    """Item 8.3: a non-error-object stdout needs the (bd) legacy stream.
+
+    Allowed only for a ``commit-refused`` unit of an operation whose
+    registered handler module passes ``refused_stdout``. Every other
+    CLI refusal stdout is empty or an error object.
+    """
+    if not recorded_stdout or _is_cli_error_object(recorded_stdout):
+        return
+    assert line is not None and line.get("kind") == "commit-refused", (
+        f"A7 {label}: CLI stdout is not an error object and the unit "
+        f"is not commit-refused — {FIX}")
+    assert _handler_module_has_refused_stdout(operation), (
+        f"A7 {label}: CLI stdout is not an error object and "
+        f"{operation} passes no refused_stdout — {FIX}")
 
 
 # --- the sweep ---------------------------------------------------------------------
@@ -411,32 +347,18 @@ def test_gateway_refusal_stdout_validates(unit):
 
 
 @pytest.mark.parametrize("unit", _cli_units(), ids=_unit_id)
-def test_cli_refusal_stdout_validates(unit):
+def test_cli_refusal_stdout_shape(unit, tmp_path, _witness_dir):
     operation, case_id, step, _, _site, _exit, stdout = unit
-    key = (operation, case_id, step)
-    if key in _CLI_GAPS:
-        return
-    rel = f"tests/scenarios/recorded/{operation}/{case_id}.json"
-    _check_cli_stdout(_unit_id(unit), rel, stdout)
+    _live_exit, lines = _live_target(unit, tmp_path, _witness_dir)
+    line = lines[0] if len(lines) == 1 else None
+    _check_cli_refusal_stdout(_unit_id(unit), operation, stdout, line)
 
 
 @pytest.mark.parametrize("unit", _all_refusal_units(), ids=_unit_id)
-def test_refusal_exit_matches_outcomes(unit):
-    operation, case_id, step, transport, site, exit, _stdout = unit
-    _check_exit(_unit_id(unit), (operation, case_id, step),
-                transport, site, exit)
-
-
-def test_exit_gaps_all_occur():
-    keys = {(op, case, step) for op, case, step, *_ in _all_refusal_units()}
-    assert _EXIT_GAPS <= keys, (
-        f"A7 stale exit pin: {sorted(_EXIT_GAPS - keys)} — {FIX}")
-
-
-def test_cli_gap_occurs():
-    keys = {(op, case, step) for op, case, step, *_ in _cli_units()}
-    assert _CLI_GAPS <= keys, (
-        f"A7 stale CLI pin: {sorted(_CLI_GAPS - keys)} — {FIX}")
+def test_refusal_exit_matches_outcomes_live(unit, tmp_path, _witness_dir):
+    operation, case_id, step, transport, _site, exit, _stdout = unit
+    live_exit, lines = _live_target(unit, tmp_path, _witness_dir)
+    _check_live_exit(_unit_id(unit), transport, exit, live_exit, lines)
 
 
 # --- --json acceptance ---------------------------------------------------------------
@@ -587,33 +509,73 @@ def test_control_wrong_error_shape_fails():
         "A7 the error member check rejects a clean error — " + FIX)
 
 
-def test_control_wrong_exit_fails():
+def _a_failure_line() -> dict:
+    return {"operation": "capture.create", "kind": "failure",
+            "site": "capture.create.empty-input",
+            "class": "WriteRefused", "exit_code": 2}
+
+
+def _a_commit_line() -> dict:
+    return {"operation": "capture.create", "kind": "commit-refused",
+            "site": None, "code": 2}
+
+
+def test_control_unit_without_witness_line_fails():
+    with pytest.raises(AssertionError, match="no witness line"):
+        _check_live_exit("a7-control::no-line", "gateway", 2, 2, [])
+
+
+def test_control_unit_with_two_witness_lines_fails():
+    with pytest.raises(AssertionError, match="2 witness lines"):
+        _check_live_exit("a7-control::two-lines", "gateway", 2, 2,
+                         [_a_failure_line(), _a_failure_line()])
+
+
+def test_control_wrong_recorded_exit_for_failure_fails():
     with pytest.raises(AssertionError, match="exit_for gives"):
-        _check_exit("capture.create::empty-capture",
-                    ("capture.create", "empty-capture", None),
-                    "gateway", "capture.create.empty-input", 3)
+        _check_live_exit("a7-control::failure-exit", "gateway", 3, 3,
+                         [_a_failure_line()])
 
 
-def test_control_non_2_exit_flows_without_assumption():
-    """The stale-snapshot raise computes exit 3 in both contexts."""
-    from learning_os.ops.outcomes import exit_for
+def test_control_wrong_recorded_exit_for_commit_refused_fails():
+    with pytest.raises(AssertionError, match="witnessed commit code"):
+        _check_live_exit("a7-control::commit-exit", "cli", 3, 3,
+                         [_a_commit_line()])
 
-    class_name, exit_code, _rel, _lineno = _resolve_site(
-        "cli.inspect.stale-snapshot")
-    assert (class_name, exit_code) == ("StaleSnapshot", 3)
-    exc = _reconstruct(class_name, exit_code)
-    assert exit_for(exc, "cli") == 3
-    assert exit_for(exc, "gateway.dispatch") == 3
+
+def _a_refused_stdout() -> str:
+    return json.loads((RECORDED_DIR / "route.patch"
+                       / "direct-cli-refused.json").read_text(
+                           encoding="utf-8"))["stdout"]
+
+
+def test_control_non_error_stdout_without_refused_stdout_fails():
+    with pytest.raises(AssertionError, match="passes no refused_stdout"):
+        _check_cli_refusal_stdout("a7-control::no-stream",
+                                  "capture.create", _a_refused_stdout(),
+                                  _a_commit_line())
+
+
+def test_control_non_error_stdout_on_non_commit_refused_fails():
+    with pytest.raises(AssertionError, match="not commit-refused"):
+        _check_cli_refusal_stdout("a7-control::no-commit",
+                                  "route.patch", _a_refused_stdout(),
+                                  _a_failure_line())
+
+
+def test_control_refused_stdout_allowance_passes():
+    """The (bd) legacy stream passes for a commit-refused unit of its op."""
+    assert _handler_module_has_refused_stdout("route.patch")
+    assert not _handler_module_has_refused_stdout("capture.create")
+    _check_cli_refusal_stdout("a7-control::stream-ok",
+                              "route.patch", _a_refused_stdout(),
+                              _a_commit_line())
 
 
 def test_control_cli_error_shape_is_checked():
-    rel, _ = _a_gateway_stdout()
-    refused = json.loads((RECORDED_DIR / "route.patch"
-                          / "direct-cli-refused.json").read_text(
-                              encoding="utf-8"))["stdout"]
-    with pytest.raises(AssertionError, match="cli-error"):
-        _check_cli_stdout("a7-control::refused-stdout", rel, refused)
     clean = {"error": {"code": "INVALID_REQUEST", "message": "nope",
                        "retryable": False, "details": {}}}
-    _check_cli_stdout("a7-control::clean", rel, json.dumps(clean))
-    assert _check_cli_stdout("a7-control::empty", rel, "") is None
+    _check_cli_refusal_stdout("a7-control::clean", "capture.create",
+                              json.dumps(clean), _a_failure_line())
+    _check_cli_refusal_stdout("a7-control::empty", "capture.create",
+                              "", _a_failure_line())
