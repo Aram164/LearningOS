@@ -1029,3 +1029,80 @@ def test_render_violations_and_purity_scan():
             "Traceback (most recent call last):\n"
             "RenderPurityError: op.x::finish::not-deterministic\n")
     assert str(caught.value).startswith("A18 op.x::finish::RenderPurityError")
+
+
+# ---------------------------------------------------------------------------
+# SPEC (az), S15 item 4: type-sensitive render purity.
+# ---------------------------------------------------------------------------
+
+
+def test_render_type_control_argument_bool_to_int(monkeypatch):
+    """Retained control: mutating False to 0 fails as argument mutated."""
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+
+    def render(payload):
+        payload["flag"] = 0
+        return dict(payload)
+
+    with pytest.raises(RenderPurityError) as caught:
+        call_renderer("op.sample", "finish", render, {"flag": False})
+    assert str(caught.value) == "op.sample::finish::argument-mutated"
+    assert current_render() is None
+
+
+def test_render_type_control_result_bool_to_int(monkeypatch):
+    """Retained control: a result changing False to 0 is nondeterministic."""
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+    calls = iter([False, 0])
+
+    def render(payload):
+        return next(calls)
+
+    with pytest.raises(RenderPurityError) as caught:
+        call_renderer("op.sample", "finish", render, {})
+    assert str(caught.value) == "op.sample::finish::not-deterministic"
+    assert current_render() is None
+
+
+def test_render_type_control_positive(monkeypatch):
+    """Exact-typed pure renderers still pass with the check on."""
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+
+    def render(payload):
+        return {
+            "flag": False,
+            "count": 0,
+            "ratio": 0.0,
+            "name": "",
+            "missing": None,
+            "nested": [{"flag": False, "tags": []}],
+        }
+
+    argument = {
+        "flag": False,
+        "count": 7,
+        "items": [{"flag": True}, [1, "two", None]],
+    }
+    assert call_renderer(
+        "op.sample", "finish", render, argument) == render({})
+    assert argument == {
+        "flag": False,
+        "count": 7,
+        "items": [{"flag": True}, [1, "two", None]],
+    }
+    assert current_render() is None
+
+
+def test_render_check_on_pure_renderer_passes(pipe, mini_repo, monkeypatch):
+    """With the check on, a pure finish renderer runs the CLI path cleanly."""
+    def handler(ctx, req):
+        return Result({"echo": "x"}, finish=lambda confirmation: {
+            "echo": "x", "flag": False, "count": 0})
+
+    pipe("query", handler=handler)
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert json.loads(outcome.stdout) == {
+        "echo": "x", "flag": False, "count": 0}
+    assert current_render() is None
