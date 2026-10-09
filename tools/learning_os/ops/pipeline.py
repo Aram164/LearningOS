@@ -121,6 +121,12 @@ def _audit_commit_refused(operation: str | None, code: int) -> None:
               None, None, code)
 
 
+def _audit_direct_refused(operation: str | None, code: int) -> None:
+    """Witness a direct gateway refusal's actual exit (SPEC (bg) item 1)."""
+    sys.audit("learningos.refusal", operation, "direct-refused",
+              None, None, code)
+
+
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
@@ -920,6 +926,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                          "idempotency_key": envelope.get("idempotency_key")})
     if envelope.get("capability") != requested:
         if is_v2:
+            _audit_direct_refused(envelope.get("capability"), 2)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -933,6 +940,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.admission"},
                            stdout=stdout, stderr=stderr, response=response)
+        _audit_direct_refused(envelope.get("capability"), 2)
         stderr.append(
             "los: envelope capability does not match requested capability" + "\n")
         return _finish(attempt, 2, "error", {"stage": "core.admission"},
@@ -941,6 +949,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
     # response, including when the requested name has no declaration.
     if requested not in definitions:
         if is_v2:
+            _audit_direct_refused(envelope.get("capability"), 2)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -954,6 +963,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
             return _finish(attempt, 2, "error", {"stage": "core.admission"},
                            stdout=stdout, stderr=stderr, response=response)
+        _audit_direct_refused(envelope.get("capability"), 2)
         stderr.append(
             f"los: unknown or non-public capability: {requested}" + "\n")
         return _finish(attempt, 2, "error", {"stage": "core.admission"},
@@ -990,6 +1000,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             # trusted one, and fails closed here before the snapshot check.
             # The message names the route back to a permitted write, because
             # the learner reading it in the UI did nothing wrong.
+            _audit_direct_refused(envelope.get("capability"), 2)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1106,6 +1117,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             return _finish(attempt, 0, "ok", {"replayed": True},
                            stdout=stdout, stderr=stderr, response=response)
         if replay_only:
+            _audit_direct_refused(envelope.get("capability"), 2)
             # A persisted UI confirmation is only untrusted settings JSON until
             # Core proves that this exact approved intent is present in the
             # idempotency ledger with a valid Receipt V2.  This probe must never
@@ -1131,6 +1143,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             with _operator_lock(root):
                 actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
                 if envelope["expected_snapshot"] != actual_snapshot:
+                    _audit_direct_refused(envelope.get("capability"), 3)
                     response = _v2_response(
                         envelope,
                         ok=False,

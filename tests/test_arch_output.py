@@ -236,12 +236,15 @@ _CONTEXT = {"cli": "cli", "gateway": "gateway.dispatch"}
 
 
 def _check_live_exit(label: str, transport: str, recorded_exit: int,
-                     live_exit: int, lines: list[dict]) -> None:
-    """Item 8.2: the target step's single witness line decides the exit.
+                     live_exit: int, lines: list[dict],
+                     operation: str) -> None:
+    """Item 8.2 plus (bg) 1: the target step's single witness line.
 
     A ``failure`` line gives ``exit_for`` for the reconstructed class
     with its witnessed ``exit_code``; a ``commit-refused`` line gives
-    the witnessed code. No line, or more than one, fails.
+    the witnessed code; a ``direct-refused`` line gives the witnessed
+    direct code with its exact shape, null site, target operation and
+    nonzero integer code. No line, or more than one, fails.
     """
     from learning_os.ops.outcomes import exit_for
 
@@ -268,6 +271,22 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
     if line.get("kind") == "commit-refused":
         assert recorded_exit == line["code"], (
             f"A7 {label}: witnessed commit code {line['code']}, "
+            f"recorded {recorded_exit} — {FIX}")
+        return
+    if line.get("kind") == "direct-refused":
+        assert set(line) == {"operation", "kind", "site", "code"}, (
+            f"A7 {label}: direct line has shape {sorted(line)} — {FIX}")
+        assert line["site"] is None, (
+            f"A7 {label}: direct line names site "
+            f"{line['site']!r} — {FIX}")
+        assert line["operation"] == operation, (
+            f"A7 {label}: direct line names {line['operation']!r}, "
+            f"unit {operation!r} — {FIX}")
+        assert type(line["code"]) is int and line["code"] != 0, (
+            f"A7 {label}: direct code {line['code']!r} is not a "
+            f"nonzero integer — {FIX}")
+        assert recorded_exit == line["code"], (
+            f"A7 {label}: witnessed direct code {line['code']}, "
             f"recorded {recorded_exit} — {FIX}")
         return
     raise AssertionError(
@@ -358,7 +377,8 @@ def test_cli_refusal_stdout_shape(unit, tmp_path, _witness_dir):
 def test_refusal_exit_matches_outcomes_live(unit, tmp_path, _witness_dir):
     operation, case_id, step, transport, _site, exit, _stdout = unit
     live_exit, lines = _live_target(unit, tmp_path, _witness_dir)
-    _check_live_exit(_unit_id(unit), transport, exit, live_exit, lines)
+    _check_live_exit(_unit_id(unit), transport, exit, live_exit, lines,
+                     operation)
 
 
 # --- --json acceptance ---------------------------------------------------------------
@@ -522,25 +542,83 @@ def _a_commit_line() -> dict:
 
 def test_control_unit_without_witness_line_fails():
     with pytest.raises(AssertionError, match="no witness line"):
-        _check_live_exit("a7-control::no-line", "gateway", 2, 2, [])
+        _check_live_exit("a7-control::no-line", "gateway", 2, 2, [],
+                         "capture.create")
 
 
 def test_control_unit_with_two_witness_lines_fails():
     with pytest.raises(AssertionError, match="2 witness lines"):
         _check_live_exit("a7-control::two-lines", "gateway", 2, 2,
-                         [_a_failure_line(), _a_failure_line()])
+                         [_a_failure_line(), _a_failure_line()],
+                         "capture.create")
 
 
 def test_control_wrong_recorded_exit_for_failure_fails():
     with pytest.raises(AssertionError, match="exit_for gives"):
         _check_live_exit("a7-control::failure-exit", "gateway", 3, 3,
-                         [_a_failure_line()])
+                         [_a_failure_line()], "capture.create")
 
 
 def test_control_wrong_recorded_exit_for_commit_refused_fails():
     with pytest.raises(AssertionError, match="witnessed commit code"):
         _check_live_exit("a7-control::commit-exit", "cli", 3, 3,
-                         [_a_commit_line()])
+                         [_a_commit_line()], "capture.create")
+
+
+def _a_direct_line() -> dict:
+    return {"operation": "capture.create", "kind": "direct-refused",
+            "site": None, "code": 2}
+
+
+def test_control_wrong_operation_for_direct_refused_fails():
+    line = _a_direct_line()
+    line["operation"] = "route.patch"
+    with pytest.raises(AssertionError, match="unit 'capture.create'"):
+        _check_live_exit("a7-control::direct-op", "gateway", 2, 2,
+                         [line], "capture.create")
+
+
+def test_control_zero_code_for_direct_refused_fails():
+    line = _a_direct_line()
+    line["code"] = 0
+    with pytest.raises(AssertionError, match="not a nonzero integer"):
+        _check_live_exit("a7-control::direct-zero", "gateway", 2, 2,
+                         [line], "capture.create")
+
+
+def test_control_bool_code_for_direct_refused_fails():
+    line = _a_direct_line()
+    line["code"] = True
+    with pytest.raises(AssertionError, match="not a nonzero integer"):
+        _check_live_exit("a7-control::direct-bool", "gateway", 2, 2,
+                         [line], "capture.create")
+
+
+def test_control_wrong_code_for_direct_refused_fails():
+    with pytest.raises(AssertionError, match="witnessed direct code"):
+        _check_live_exit("a7-control::direct-code", "gateway", 3, 3,
+                         [_a_direct_line()], "capture.create")
+
+
+def test_control_unsupported_witness_kind_fails():
+    line = _a_direct_line()
+    line["kind"] = "bogus-kind"
+    with pytest.raises(AssertionError, match="witness kind"):
+        _check_live_exit("a7-control::direct-kind", "gateway", 2, 2,
+                         [line], "capture.create")
+
+
+def test_control_malformed_direct_shape_fails():
+    extra = _a_direct_line()
+    extra["class"] = "WriteRefused"
+    with pytest.raises(AssertionError, match="direct line has shape"):
+        _check_live_exit("a7-control::direct-shape", "gateway", 2, 2,
+                         [extra], "capture.create")
+    sited = _a_direct_line()
+    sited["site"] = "capture.create.bad-file"
+    with pytest.raises(AssertionError, match="direct line names site"):
+        _check_live_exit("a7-control::direct-site", "gateway", 2, 2,
+                         [sited], "capture.create")
 
 
 def _a_refused_stdout() -> str:

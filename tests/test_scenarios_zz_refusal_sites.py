@@ -261,7 +261,7 @@ def _is_refusal_line(record) -> bool:
                 and bool(record["class"])
                 and (record["exit_code"] is None
                      or isinstance(record["exit_code"], int)))
-    if kind == "commit-refused":
+    if kind in ("commit-refused", "direct-refused"):
         return (set(record) == {"operation", "kind", "site", "code"}
                 and record["site"] is None
                 and isinstance(record["code"], int))
@@ -272,8 +272,9 @@ def _session_witnesses() -> set[tuple[str, str]]:
     """The session's ``(operation, site)`` witnesses.
 
     Reads only lines with a non-null ``site`` (SPEC (bf) item 8.1);
-    null-site lines (commit refusals, siteless raises, admission
-    refusals) are not sites. An empty file means no scenario ran in
+    null-site lines (commit refusals, direct refusals, siteless
+    raises, admission refusals) are not sites. An empty file means
+    no scenario ran in
     this session: skip locally, fail when CI is set.
     """
     path = os.environ.get(SITE_WITNESS_ENV)
@@ -695,6 +696,199 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
     assert bare == with_witness
 
 
+_DIRECT_PILOTS = [
+    "ai-action.delivery.apply",
+    "capture.create",
+    "route.patch",
+    "stage.progress.update",
+]
+
+
+@pytest.mark.parametrize("operation", _DIRECT_PILOTS)
+def test_direct_replay_only_miss_propagates_from_a_real_child(
+        operation, tmp_path, monkeypatch):
+    """A real harness child replay-only miss writes one direct line (bg 1)."""
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    bare_case = next(item for item in doc["cases"]
+                     if item["id"] == "replay-only-miss")
+    case = {"fixture": doc.get("fixture", "rich_world"),
+            "observations": doc["observations"],
+            "fixture_mtime": doc.get(
+                "fixture_mtime", harness.FIXTURE_MTIME_DEFAULT),
+            **bare_case}
+    witness = tmp_path / "sites.jsonl"
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    result = harness.run_case(case, operation, tmp_path / "world")
+    assert result["exit"] == 2
+    lines = witness.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1, lines
+    assert json.loads(lines[0]) == {
+        "operation": operation, "kind": "direct-refused",
+        "site": None, "code": 2}
+
+
+def _run_capability_child(root: Path, name: str, envelope: dict):
+    """``los capability`` in a real child (bg 1 direct-branch proof)."""
+    import subprocess
+    import sys
+
+    from gateway_helpers import LOS
+
+    return subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root), "capability",
+         name, "--payload-file", "-"],
+        input=json.dumps(envelope), capture_output=True, text=True,
+        timeout=120)
+
+
+def _hooked_child_env(monkeypatch, tmp_path: Path) -> Path:
+    """A fresh audit log plus witness for a real hooked child (bg 1)."""
+    import scenario_harness as harness
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    monkeypatch.setenv("LOS_ARCH_AUDIT_LOG", str(log))
+    monkeypatch.setenv("LOS_ARCH_LAUNCH_TOKEN", "bg1-direct")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    pythonpath = os.environ.get("PYTHONPATH", "")
+    arch_site = str(harness.ARCH_SITE)
+    if arch_site not in pythonpath.split(os.pathsep):
+        monkeypatch.setenv(
+            "PYTHONPATH", arch_site + os.pathsep + pythonpath)
+    return witness
+
+
+def _assert_single_direct_line(witness: Path, operation, code: int) -> None:
+    lines = witness.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1, lines
+    assert json.loads(lines[0]) == {
+        "operation": operation, "kind": "direct-refused",
+        "site": None, "code": code}
+
+
+def test_direct_capability_mismatch_emits_in_a_real_child(
+        mini_repo, tmp_path, monkeypatch):
+    """A real child V2 capability mismatch writes one direct line (bg 1)."""
+    from gateway_helpers import approved_v2_envelope
+
+    witness = _hooked_child_env(monkeypatch, tmp_path)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "status": "active"},
+        artifact_ids=[], idempotency_key="bg1-direct-mismatch")
+    proc = _run_capability_child(mini_repo, "route.patch", envelope)
+    assert proc.returncode == 2, proc.stderr[-500:]
+    _assert_single_direct_line(
+        witness, "stage.progress.update", 2)
+
+
+def test_direct_unknown_capability_emits_in_a_real_child(
+        mini_repo, tmp_path, monkeypatch):
+    """A real child V2 unknown capability writes one direct line (bg 1)."""
+    from gateway_helpers import approved_v2_envelope
+
+    witness = _hooked_child_env(monkeypatch, tmp_path)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="nope.unknown-capability",
+        payload={}, artifact_ids=[],
+        idempotency_key="bg1-direct-unknown")
+    proc = _run_capability_child(
+        mini_repo, "nope.unknown-capability", envelope)
+    assert proc.returncode == 2, proc.stderr[-500:]
+    _assert_single_direct_line(
+        witness, "nope.unknown-capability", 2)
+
+
+def test_direct_forbidden_gesture_emits_in_a_real_child(
+        mini_repo, tmp_path, monkeypatch):
+    """A real child forbidden gesture writes one direct line (bg 1)."""
+    from gateway_helpers import approved_v2_envelope
+
+    from learning_os.contracts.gateway import intent_sha256
+
+    witness = _hooked_child_env(monkeypatch, tmp_path)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="route.patch",
+        payload={"unit_id": "unit-demo-l01"}, artifact_ids=[],
+        idempotency_key="bg1-direct-gesture")
+    envelope["approval"]["kind"] = "direct-user-gesture"
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    proc = _run_capability_child(mini_repo, "route.patch", envelope)
+    assert proc.returncode == 2, proc.stderr[-500:]
+    _assert_single_direct_line(witness, "route.patch", 2)
+
+
+def test_direct_snapshot_mismatch_emits_in_a_real_child(
+        mini_repo, tmp_path, monkeypatch):
+    """A real child snapshot mismatch writes one direct line (bg 1)."""
+    from gateway_helpers import approved_v2_envelope
+
+    witness = _hooked_child_env(monkeypatch, tmp_path)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "status": "active"},
+        artifact_ids=[], idempotency_key="bg1-direct-snapshot",
+        expected_snapshot="sha256:" + "0" * 64)
+    proc = _run_capability_child(
+        mini_repo, "stage.progress.update", envelope)
+    assert proc.returncode == 3, proc.stderr[-500:]
+    _assert_single_direct_line(
+        witness, "stage.progress.update", 3)
+
+
+def test_control_v1_envelope_refuses_at_admission_without_a_line(
+        mini_repo, tmp_path, monkeypatch):
+    """A schema-less envelope never reaches the V1 direct arms (bg 1).
+
+    Admission requires ``schema_version: 2`` and re-raises for older
+    shapes, so the V1 audit sites are unreachable defense in depth:
+    instrumented per SPEC, with no triggerable line.
+    """
+    from gateway_helpers import approved_v2_envelope
+
+    witness = _hooked_child_env(monkeypatch, tmp_path)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "status": "active"},
+        artifact_ids=[], idempotency_key="bg1-direct-v1")
+    del envelope["schema_version"]
+    proc = _run_capability_child(
+        mini_repo, "stage.progress.update", envelope)
+    assert proc.returncode == 2, proc.stderr[-500:]
+    assert "schema_version 2 required" in proc.stderr
+    assert not witness.exists()
+
+
+def test_control_direct_audit_helper_emits_the_exact_line(
+        tmp_path, monkeypatch):
+    """The helper plus hook write exactly the (bg) 1 line shape."""
+    import arch_audit_hook
+
+    from learning_os.ops.pipeline import _audit_direct_refused
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        _audit_direct_refused("route.patch", 2)
+        _audit_direct_refused("route.patch", 3)
+    finally:
+        arch_audit_hook.uninstall()
+    assert _read_witness_lines(witness) == [
+        {"operation": "route.patch", "kind": "direct-refused",
+         "site": None, "code": 2},
+        {"operation": "route.patch", "kind": "direct-refused",
+         "site": None, "code": 3}]
+    assert "learningos.refusal" not in log.read_text(encoding="utf-8")
+
+
 def test_control_process_without_hook_writes_no_file(mini_repo, tmp_path,
                                                      monkeypatch):
     """A process with no hook writes no file (item 10.4)."""
@@ -764,6 +958,9 @@ def test_control_null_site_lines_are_not_read(tmp_path, monkeypatch):
         + json.dumps({"operation": "route.patch", "kind": "failure",
                       "site": None, "class": "WriteRefused",
                       "exit_code": None})
+        + "\n"
+        + json.dumps({"operation": "route.patch", "kind": "direct-refused",
+                      "site": None, "code": 2})
         + "\n",
         encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
