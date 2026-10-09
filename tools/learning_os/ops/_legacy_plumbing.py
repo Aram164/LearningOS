@@ -30,6 +30,7 @@ from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derived.model import DerivedError
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.suggest import with_suggestions
 from learning_os.fingerprint import canonical_fingerprint, seed_source_fingerprint
 from learning_os.genout import (
     build_backlinks,
@@ -42,7 +43,7 @@ from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
 from learning_os.ops.outcomes import classify, resolve
-from learning_os.transactions import reconcile_inflight_transactions
+from learning_os.transactions import artifact_revision, reconcile_inflight_transactions
 
 #: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
 #: mode ``"shared"``, ``"exclusive"``, or ``"released"`` after a failed
@@ -868,3 +869,62 @@ def _dump_study_map(study_map, data: dict) -> str:
     from learning_os.material_refs import preserve_map_refs
 
     return _dump_yaml(preserve_map_refs(study_map, data))
+
+
+# ---------------------------------------------------------------------------
+# Material planning helpers, moved verbatim from commands.material for the
+# route.patch conversion (SPEC (az) item 2, (bd)).
+
+def _route(routes, route_id):
+    matches = [r for r in routes if r["id"] == route_id]
+    if len(matches) != 1:
+        raise WriteRefused(with_suggestions(
+            f"route {route_id} is missing or ambiguous in this unit",
+            route_id, [row["id"] for row in routes]))
+    return matches[0]
+
+
+def _guard_rows(root, artifacts):
+    return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
+
+
+def _apply_hint(args, capability, snapshot_id, revisions):
+    """Ready-to-submit apply values for a successful --check.
+
+    Direct CLI application is disabled, so the hint echoes everything the
+    GatewayEnvelopeV2 needs except the per-request fields (request_id,
+    idempotency_key, channel, approval): capability, exact payload,
+    expected snapshot, and expected revisions. Output layer only —
+    validation, guards, and receipts are unchanged.
+    """
+    if capability != "route.patch":
+        return None
+    return {
+        "apply_via": "GatewayEnvelopeV2",
+        "capability": capability,
+        "payload": {
+            "unit_id": args.unit_id,
+            "route_id": args.route_id,
+            "changes": args.changes,
+        },
+        "expected_snapshot": snapshot_id,
+        "expected_revisions": dict(revisions),
+        "apply_how": ("direct CLI application is disabled; submit a "
+                      "GatewayEnvelopeV2 with this capability, payload, "
+                      "expected_snapshot and expected_revisions"),
+    }
+
+
+def _map_for_unit(repo, unit_id):
+    maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
+    if len(maps) > 1:
+        raise WriteRefused(f"unit {unit_id} has ambiguous study maps")
+    return maps[0] if maps else None
+
+
+def _changed_write(writes, path, data):
+    content = _dump_yaml(data)
+    # Callers compare record values first; this second check also avoids a
+    # write intent when the exact serialized bytes are already current.
+    if path.read_bytes() != content.encode("utf-8"):
+        writes[path] = content

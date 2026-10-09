@@ -168,7 +168,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.material.cmd_route_patch",
+    "handler": "learning_os.adapters.cli.invoke:route.patch",
     "parser_factory": false
   }
 }

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import hashlib
 import json
 
@@ -29,13 +28,16 @@ from learning_os.material_refs import (
 )
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.ops._legacy_plumbing import (
-    _dump_yaml,
+    _apply_hint,
+    _changed_write,
+    _guard_rows,
+    _map_for_unit,
     _operator_lock,
+    _route,
     _snapshot,
 )
-from learning_os.transactions import artifact_revision
+from learning_os.ops._plan_gate import _module_plan_validation_errors, _plan_apply_gate
 
-from .module import _module_plan_validation_errors, _plan_apply_gate
 from .reads import (
     _analysis_notes,
     _approved_assessments,
@@ -67,53 +69,6 @@ def _unit(repo, unit_id):
     if unit.module_id not in repo.module_source_maps:
         raise WriteRefused(f"unit {unit_id} has no module source map")
     return unit
-
-
-def _route(routes, route_id):
-    matches = [r for r in routes if r["id"] == route_id]
-    if len(matches) != 1:
-        raise WriteRefused(with_suggestions(
-            f"route {route_id} is missing or ambiguous in this unit",
-            route_id, [row["id"] for row in routes]))
-    return matches[0]
-
-
-def _guard_rows(root, artifacts):
-    return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
-
-
-def _apply_hint(args, capability, snapshot_id, revisions):
-    """Ready-to-submit apply values for a successful --check.
-
-    Direct CLI application is disabled, so the hint echoes everything the
-    GatewayEnvelopeV2 needs except the per-request fields (request_id,
-    idempotency_key, channel, approval): capability, exact payload,
-    expected snapshot, and expected revisions. Output layer only —
-    validation, guards, and receipts are unchanged.
-    """
-    if capability != "route.patch":
-        return None
-    return {
-        "apply_via": "GatewayEnvelopeV2",
-        "capability": capability,
-        "payload": {
-            "unit_id": args.unit_id,
-            "route_id": args.route_id,
-            "changes": args.changes,
-        },
-        "expected_snapshot": snapshot_id,
-        "expected_revisions": dict(revisions),
-        "apply_how": ("direct CLI application is disabled; submit a "
-                      "GatewayEnvelopeV2 with this capability, payload, "
-                      "expected_snapshot and expected_revisions"),
-    }
-
-
-def _map_for_unit(repo, unit_id):
-    maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
-    if len(maps) > 1:
-        raise WriteRefused(f"unit {unit_id} has ambiguous study maps")
-    return maps[0] if maps else None
 
 
 #: Batch reads serve at most this many routes: one snapshot, one load,
@@ -203,8 +158,7 @@ def _unit_audit(root, repo, unit) -> dict:
         synthesis_destination,
         validate_unit_material_synthesis,
     )
-
-    from .module import _match_key
+    from learning_os.ops._plan_gate import _match_key
 
     source_map = repo.module_source_maps[unit.module_id]
     routes = unit_routes(source_map, unit.module_id, unit.id)
@@ -589,14 +543,6 @@ def cmd_plan_edit_context(args) -> int:
         return _print_stable(root, snapshot, payload)
 
 
-def _changed_write(writes, path, data):
-    content = _dump_yaml(data)
-    # Callers compare record values first; this second check also avoids a
-    # write intent when the exact serialized bytes are already current.
-    if path.read_bytes() != content.encode("utf-8"):
-        writes[path] = content
-
-
 def compaction_plan(repo, module_id):
     if module_id not in repo.module_source_maps:
         raise WriteRefused(f"module source map not found: {module_id}")
@@ -621,79 +567,6 @@ def compaction_plan(repo, module_id):
         _changed_write(writes, repo.module_source_map_origins[module_id], pinned)
     return writes, artifacts, {"module_id": module_id, "map_bytes_saved": saved,
                                "referenced_routes": len(used)}
-
-
-def route_patch_plan(repo, unit_id, route_id, changes):
-    if not isinstance(changes, dict) or not changes or any(
-        k not in PATCH_FIELDS or not isinstance(v, str) or not v.strip() or len(v) > 16000
-        for k, v in changes.items()
-    ):
-        raise WriteRefused("changes must contain nonempty text for declared material fields only")
-    unit = _unit(repo, unit_id)
-    module_id = unit.module_id
-    source_map = repo.module_source_maps[module_id]
-    routes = unit_routes(source_map, module_id, unit_id)
-    old = _route(routes, route_id)
-    changes = {k: v for k, v in changes.items() if k not in old or old[k] != v}
-    if not changes:
-        return {}, set(), {"unit_id": unit_id, "route_id": route_id, "changes": {}}
-    updated = persist_route_ids(source_map, module_id, {route_id})
-    found = []
-    for entry in updated["sources"]:
-        for row in entry.get("unit_routes", []) or []:
-            if isinstance(row, dict) and row.get("id") == route_id:
-                found.append(row)
-    if len(found) != 1:
-        raise WriteRefused(f"route {route_id} is ambiguous in its module")
-    found[0].update(changes)
-    writes = {}
-    _changed_write(writes, repo.module_source_map_origins[module_id], updated)
-    artifacts = {module_id, unit_id}
-    unit_data = copy.deepcopy(unit.data)
-    for selection in unit_data.get("source_selections", []) or []:
-        if not isinstance(selection, dict):
-            continue
-        same = selection.get("route_id") == route_id if selection.get("route_id") else (
-            selection.get("source_id") == old["source_id"] and selection.get("locator") == old.get("locator")
-        )
-        if same and "locator" in changes:
-            # A legacy selection must identify exactly one route, not just a
-            # file reused for several pedagogical routes.
-            if not selection.get("route_id") and len([r for r in routes if
-                r.get("source_id") == selection.get("source_id") and r.get("locator") == selection.get("locator")
-            ]) != 1:
-                raise WriteRefused("legacy source selection is ambiguous; link its exact route first")
-            selection["locator"] = changes["locator"]
-    if unit_data != unit.data:
-        _changed_write(writes, unit.path, unit_data)
-    sm = _map_for_unit(repo, unit_id)
-    if sm:
-        raw = copy.deepcopy(sm.authored_data or sm.data)
-        for stage, effective in zip(raw["stages"], sm.data["stages"], strict=True):
-            for resource, expanded in zip(stage.get("resources", []), effective.get("resources", []), strict=True):
-                if not isinstance(resource, dict):
-                    continue
-                ref = resource.get("material_ref")
-                matches = matching_routes(expanded, routes)
-                linked = ref is not None and ref["route_id"] == route_id
-                if not linked and not (len(matches) == 1 and matches[0]["id"] == route_id):
-                    continue
-                if ref is not None:
-                    # Once sharing is explicit, all remaining local values are
-                    # deliberate overrides, even if they equal today's owner.
-                    continue
-                for field, owner in MATERIAL_FIELDS.items():
-                    # Explicit stage overrides survive. Only identical legacy
-                    # mirrors are synchronized; inherited fields expand later.
-                    if owner in changes and field in resource and resource[field] == old.get(owner):
-                        resource[field] = changes[owner]
-        if raw != (sm.authored_data or sm.data):
-            _changed_write(writes, sm.path, raw)
-        # A map's effective material changes even when only its owner is written.
-        if expand_map(raw, updated, module_id, unit_id) != sm.data:
-            artifacts.add(sm.id)
-    return writes, artifacts, {"unit_id": unit_id, "route_id": route_id,
-                               "changes": {k: {"before": old.get(k), "after": v} for k, v in changes.items()}}
 
 
 def _execute(args, capability, planner):
@@ -749,12 +622,6 @@ def _execute(args, capability, planner):
                           **({"errors": list(map(str, errors))} if errors else {})},
                          ensure_ascii=False, separators=(",", ":")))
         return code
-
-
-def cmd_route_patch(args) -> int:
-    return _execute(args, "route.patch", lambda repo: route_patch_plan(
-        repo, args.unit_id, args.route_id, args.changes,
-    ))
 
 
 def cmd_module_materials_compact(args) -> int:

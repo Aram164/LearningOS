@@ -538,7 +538,7 @@ def test_dynamic_advisory_warnings_do_not_block_master_promotion_preflight(
 
     # INBOX-STALE demonstrably reaches the shadow; WS-NEGLECT currently does
     # not, because the shadow copy never contains .git.
-    from learning_os.commands.module import _module_plan_validation_errors
+    from learning_os.ops._plan_gate import _module_plan_validation_errors
 
     shadow_codes = {i.code for i in _module_plan_validation_errors(mini_repo, {})}
     assert "INBOX-STALE" not in shadow_codes

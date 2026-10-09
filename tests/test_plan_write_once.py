@@ -23,15 +23,13 @@ from test_compact_module_plan_revision import _revision, _two_units
 
 import los
 from learning_os.commands.capability import cmd_capability
-from learning_os.commands.material import (
-    cmd_module_materials_compact,
-    cmd_route_patch,
-    route_patch_plan,
-)
+from learning_os.commands.material import cmd_module_materials_compact
 from learning_os.commands.module import cmd_module_plan_import
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import unit_routes
+from learning_os.ops import pipeline as ops_pipeline
+from learning_os.ops.handlers.plan import route_patch_plan
 from learning_os.rules.core import Validator
 
 FUSED_LOCATOR = ("Lecture 2 — this tail is a very long sentence with many "
@@ -86,18 +84,22 @@ def _compact_check_args(root: Path, draft: Path):
 
 def _route_patch_check_text(root: Path, unit_id: str, rid: str,
                             changes: dict) -> str:
-    """The --check refusal text, or "" when the check passes."""
-    from learning_os.domain.failures import ValidationFailed
+    """The --check refusal text, or "" when the check passes.
 
+    route.patch runs through the registered pipeline, which renders a check
+    refusal as the D16 stderr line ``los: VALIDATION_FAILED: <message>``.
+    """
     args = argparse.Namespace(
         root=str(root), unit_id=unit_id, route_id=rid, changes=changes,
         check=True, plan_sha256=None, expected_snapshot=None,
         expected_revision=[])
-    try:
-        assert cmd_route_patch(args) == 0
-    except ValidationFailed as exc:
-        return str(exc)
-    return ""
+    outcome = ops_pipeline.run_cli(Path(root), "route.patch", args)
+    if outcome.exit_code == 0:
+        return ""
+    first = outcome.stderr.splitlines()[0]
+    prefix = "los: VALIDATION_FAILED: "
+    assert first.startswith(prefix), outcome.stderr
+    return first[len(prefix):]
 
 
 def test_route_patch_apply_validates_once(mini_repo: Path, tmp_path: Path,
@@ -315,3 +317,62 @@ def test_direct_apply_keeps_the_shadow_refusal_text(mini_repo: Path):
     assert probed.returncode == 2
     assert "canonical validation failed: E LOCATOR-ANGLE-FUSED" in probed.stderr
     assert "GatewayEnvelopeV2" not in probed.stderr
+
+
+def test_route_patch_reviewed_journey_validates_exactly_twice(
+        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+    """S15 pilot acceptance: check record -> seal --guards-from -> apply.
+
+    route.patch is registered since S15: its check record comes from the
+    pipeline check (one validation), sealing from the record validates
+    nothing, and the gateway apply validates once inside its commit. The
+    legacy dry-run guard derivation never runs for it.
+    """
+    import seal_envelope
+
+    repo, rid, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    payload = {"unit_id": unit_id, "route_id": rid,
+               "changes": {"angle": "A reviewed journey"}}
+
+    def legacy(*args, **kwargs):
+        raise AssertionError("legacy guard derivation must not run")
+
+    monkeypatch.setattr(seal_envelope, "_derive_guards_auto", legacy)
+    runs = _count_validations(monkeypatch)
+    record = tmp_path / "record.json"
+
+    def seal(out: Path, sealing: dict, key: str, *extra: str) -> int:
+        return seal_envelope.main([
+            "--root", str(mini_repo), "--capability", "route.patch",
+            "--payload", json.dumps(sealing), "--key", key,
+            "--out", str(out), *extra])
+
+    assert seal(tmp_path / "checked.json", {**payload, "check": True},
+                "journey-route-check", "--guards", "auto",
+                "--check-out", str(record)) == 0, capsys.readouterr().err
+    assert len(runs) == 1, "exactly one validate per check"
+    checked = json.loads(record.read_text(encoding="utf-8"))
+    assert checked["ok"] is True
+    assert checked["capability"] == "route.patch"
+    assert checked["payload"] == payload
+
+    applied = tmp_path / "applied.json"
+    assert seal(applied, payload, "journey-route-apply",
+                "--guards-from", str(record)) == 0, capsys.readouterr().err
+    assert len(runs) == 1, "sealing from a record validates nothing"
+    envelope = json.loads(applied.read_text(encoding="utf-8"))
+    assert envelope["expected_snapshot"] == checked["expected_snapshot"]
+    assert envelope["expected_revisions"] == checked["expected_revisions"]
+
+    capsys.readouterr()
+    assert cmd_capability(_capability_args(
+        mini_repo, applied, "route.patch")) == 0, capsys.readouterr().err
+    assert len(runs) == 2, "exactly one validate per apply"
+    body = json.loads(capsys.readouterr().out)
+    assert body["ok"] is True
+    assert body["transaction_id"] is not None
+    assert body["result"]["route_id"] == rid
+    routes = unit_routes(load_repo(mini_repo).module_source_maps["module-demo"],
+                         "module-demo", unit_id)
+    assert next(r for r in routes if r["id"] == rid)["angle"] == "A reviewed journey"

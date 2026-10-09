@@ -223,7 +223,7 @@ def test_unit_diff_covers_a_unit_without_a_study_map():
     the review summary and the acknowledgment checks built on it (synthetic
     authoring campaign D13: the preflight showed `unit_id: ""` and 0 -> 0 routes
     for a unit the package added a route to)."""
-    from learning_os.commands.module import _unit_semantic_diff
+    from learning_os.ops._plan_gate import _unit_semantic_diff
 
     kept = {"id": "route-x-kept", "unit_id": "unit-demo-x", "scope": "current",
             "covers": ["knowledge-x"], "locator": "Section 1"}

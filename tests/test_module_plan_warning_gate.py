@@ -19,7 +19,7 @@ from __future__ import annotations
 import yaml
 from repo_builders import _add_material_overview, add_curriculum
 
-from learning_os.commands.module import _module_plan_validation_errors
+from learning_os.ops._plan_gate import _module_plan_validation_errors
 from learning_os.warning_baseline import collect, write_baseline
 
 SOURCE_MAP = "curriculum/modules/module-demo/source-map.yaml"

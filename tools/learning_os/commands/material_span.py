@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from learning_os.ops._legacy_plumbing import (
+    _map_for_unit,
     _operator_lock,
     _snapshot,
 )
@@ -19,7 +20,7 @@ from ..materials_resolution import (
     resolve_route_material_files,
     sha256_file,
 )
-from .material import _brief_analysis_refs, _map_for_unit, _route_entry
+from .material import _brief_analysis_refs, _route_entry
 from .reads import _print_stable, _refusal
 from .support import _root
 

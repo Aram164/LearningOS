@@ -14,7 +14,7 @@ cases:
     transport: gateway
     request: {unit_id: unit-nope, route_id: route-b2f1f80014860a929a3af0bc, changes: {angle: "Scenario angle."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: route.patch.unknown-unit}
   - id: unknown-route
     kind: refusal
     transport: gateway
@@ -32,7 +32,7 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, route_id: route-b2f1f80014860a929a3af0bc, changes: {angle: "Derives the weighted sum and works a discrete example."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: route.patch.no-changes}
   - id: valid-plan-hits-warning-gate
     kind: sequence
     steps:
@@ -79,10 +79,11 @@ cases:
     artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/material.py:57", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
-  - {where: "tools/learning_os/commands/material.py:67", reason: "unit without a module source map: every fixture unit's module carries one"}
-  - {where: "tools/learning_os/commands/material.py:114", reason: "ambiguous study maps: the fixture carries one map per unit"}
-  - {where: "tools/learning_os/commands/material.py:646", reason: "ambiguous route in module: the fixture carries each route id once per module"}
-  - {where: "tools/learning_os/commands/material.py:664", reason: "ambiguous legacy selection: every fixture selection sharing a locator links its exact route or matches one route"}
-  - {where: "tools/learning_os/commands/material.py:707", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}
-  - {where: "tools/learning_os/commands/material.py:715", reason: "plan hash mismatch: neither the route.patch schema nor the route-patch parser admits plan_sha256; the site serves compact only"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:194", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:57", reason: "unit without a module source map: every fixture unit's module carries one"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:921", reason: "ambiguous study maps: the fixture carries one map per unit"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:82", reason: "ambiguous route in module: the fixture carries each route id once per module"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:100", reason: "ambiguous legacy selection: every fixture selection sharing a locator links its exact route or matches one route"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:198", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:207", reason: "plan hash mismatch: neither the route.patch schema nor the route-patch parser admits plan_sha256; the site serves compact only"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:236", reason: "malformed expected revision: the gateway passes the envelope's schema-validated expected_revisions, and no direct-CLI case supplies one"}

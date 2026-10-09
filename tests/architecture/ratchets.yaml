@@ -627,10 +627,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/module.py::_module_plan_validation_errors::load_repo
-    count: 3
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::load_repo
     count: 1
     since: baseline

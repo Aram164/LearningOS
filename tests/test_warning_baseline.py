@@ -152,7 +152,7 @@ def test_malformed_document_is_named(tmp_path, content):
 def test_cli_and_plan_preflight_report_same_refusal(mini_repo, monkeypatch, capsys, mode, rows):
     import sys
 
-    from learning_os.commands.module import _module_plan_validation_errors
+    from learning_os.ops._plan_gate import _module_plan_validation_errors
 
     path = mini_repo / wb.BASELINE_RELATIVE
     path.parent.mkdir(parents=True, exist_ok=True)

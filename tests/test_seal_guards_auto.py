@@ -283,8 +283,7 @@ def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
     import learning_os.loader as loader_module
     from learning_os.rules.core import Validator
 
-    repo, rid, smid = material_fixture(mini_repo)
-    unit_id = repo.study_maps[smid].unit_id
+    material_fixture(mini_repo)
     before = canonical_fingerprint(mini_repo)
     counts = {"load_repo": 0, "walks": 0, "validate": 0}
 
@@ -308,15 +307,17 @@ def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
         if getattr(module, "load_repo", None) is original_load:
             monkeypatch.setattr(module, "load_repo", load_counter)
 
+    # route.patch is registered since S15 and derives its guards through
+    # the pipeline check; stage.note.write still takes this dry-run path.
     snapshot, derived = seal_envelope._derive_guards_auto(
-        mini_repo, capability="route.patch",
-        payload={"unit_id": unit_id, "route_id": rid,
-                 "changes": {"angle": "A counted explanation"}},
+        mini_repo, capability="stage.note.write",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "text": "A counted note"},
         key="guards-auto-once-001", request_id="request-guards-auto-once-001",
         channel="operator", approval_kind="operator-approval", snapshot=None)
 
     assert snapshot == f"sha256:{before}"
-    assert set(derived) == {"module-demo", unit_id, smid}
+    assert set(derived) == {"unit-demo-l01"}
     assert counts["load_repo"] == 1, counts
     assert counts["walks"] == 1, counts
     assert counts["validate"] == 0, counts

@@ -348,8 +348,8 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
 
 
 def test_route_helper_refuses_unknown_and_ambiguous_ids():
-    from learning_os.commands.material import _route
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops._legacy_plumbing import _route
 
     rows = [{"id": "route-a"}, {"id": "route-a"}, {"id": "route-b"}]
     with pytest.raises(WriteRefused, match="missing or ambiguous"):

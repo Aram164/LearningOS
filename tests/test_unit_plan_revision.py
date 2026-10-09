@@ -98,7 +98,7 @@ def test_gateway_refuses_smuggled_approval(mini_repo: Path):
 
 def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
     """An undeclared wrapper sibling must fail `--check`, not just live apply."""
-    from learning_os.commands.module import _module_plan_validation_errors
+    from learning_os.ops._plan_gate import _module_plan_validation_errors
 
     wrapper = mini_repo.parent
     for anchor in ("obsidian-ui", "workbench", "archive"):
@@ -896,7 +896,7 @@ def test_removed_stage_is_refused_even_with_acknowledgment(mini_repo, tmp_path):
 def test_resource_evidence_preservation_is_per_stage_and_occurrence(change):
     import copy
 
-    from learning_os.commands.module import _unit_semantic_diff
+    from learning_os.ops._plan_gate import _unit_semantic_diff
 
     before = _live_study_map()
     resource = before["stages"][0]["resources"][0]
@@ -919,7 +919,7 @@ def test_resource_evidence_preservation_is_per_stage_and_occurrence(change):
 def test_advanced_promotion_uses_staged_routes_and_every_placement(change):
     import copy
 
-    from learning_os.commands.module import _unit_semantic_diff
+    from learning_os.ops._plan_gate import _unit_semantic_diff
 
     route = _sliced_route("route-demo-book", "lecture-01.pdf")
     route["depth"] = "advanced-reference"

@@ -333,6 +333,15 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         errors = record.get("errors") or ["the check failed"]
         raise ValueError(
             f"{'; '.join(errors)}; fix the payload and seal again")
+    if check_out is None and req.get("check") is True:
+        # A check never commits: the legacy dry run of a passing check
+        # stopped before any transaction and advised explicit guards
+        # (SPEC (bd) item 5). A check record (--check-out) is the reviewed
+        # journey and keeps its guards.
+        raise ValueError(
+            "guard derivation stopped before any transaction"
+            f" (exit 0: {capability} failed); "
+            "seal this payload with explicit --revision guards instead")
     return snapshot or record["expected_snapshot"], dict(
         record["expected_revisions"])
 
