@@ -39,9 +39,13 @@ FIX = ("Express the step as a declared gate or a pure renderer; callbacks "
 
 # --- (a) the population scan -----------------------------------------------------
 
-#: Callee last-names the scan counts hooks for (SPEC §3.5a).
+#: Callee last-names the scan counts hooks for (SPEC §3.5a, (bf) 11).
+#: ``replace`` is the dataclasses copy the AI composition uses, with
+#: the same keyword list, the same None/"STANDARD" exclusion and the
+#: same signature rule (no capability=, so the path form).
 _SCAN_CALLEES = frozenset({
     "_write_transaction", "commit_proposal", "TransactionProposal", "commit",
+    "replace",
 })
 
 #: Hook keywords counted on those calls (SPEC §3.5a).
@@ -186,6 +190,16 @@ def test_neg_central_wiring_fixture_is_not_counted():
     unexcluded, _ = _scan_source(rel, text, excluded_funcs=frozenset())
     assert dict(unexcluded) == {"fixture.wiring::validate_extra": 1}, (
         "A18 the wiring call would not count unexcluded — " + FIX)
+
+
+def test_replace_fixture_is_counted_but_str_replace_is_not():
+    """Item 11.3: the replace form counts; ``str.replace`` does not."""
+    path = CALLBACKS_DIR / "pos_replace_validate_extra.py"
+    rel = path.relative_to(ROOT).as_posix()
+    counts, _ = _scan_source(
+        rel, path.read_text(encoding="utf-8"))
+    assert dict(counts) == {f"{rel}::finish::validate_extra": 1}, (
+        f"A18 the replace fixture counts {dict(counts)} — {FIX}")
 
 
 # --- (b) discovery: the callbacks each registered operation passes -----------------

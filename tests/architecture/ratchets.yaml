@@ -3405,6 +3405,10 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: tools/learning_os/ops/handlers/ai.py::ai_action_apply_delivery::translate
+    count: 1
+    since: baseline
+    approved_by: null
   - signature: tools/learning_os/ops/handlers/plan.py::_execute_material_plan::after_commit
     count: 1
     since: baseline
