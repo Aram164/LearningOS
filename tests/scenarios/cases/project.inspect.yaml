@@ -6,11 +6,13 @@ cases:
     kind: success
     transport: cli
     argv: [inspect, project-demo]
+    a5_base: true
     expect: {site: null}
   - id: inspect-batch
     kind: success
     transport: cli
     argv: [inspect, project-demo, note-demo]
+    a5_base: true
     expect: {site: null}
   - id: inspect-structural
     kind: success
