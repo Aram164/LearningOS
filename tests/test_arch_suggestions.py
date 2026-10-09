@@ -477,6 +477,24 @@ def _validates_for_row(operation: str, row: dict, request: dict,
 _DELIVERIES_REL = Path("operations/ai-actions/deliveries")
 
 
+def _inspect_membership(manifest: dict, ordered: list) -> set:
+    """Absence membership: ordered ids plus resolving aliases (bg 2).
+
+    The ordered complaint candidates are unchanged; only the set
+    used to prove a proposed miss absent gains every alias that
+    actually resolves to an existing inspect record, through the
+    existing resolution owner.
+    """
+    from learning_os.ops.handlers import platform as platform_handlers
+
+    membership = set(ordered)
+    for alias in (manifest.get("project_aliases") or {}):
+        if isinstance(alias, str) and platform_handlers.record_payload(
+                manifest, alias) is not None:
+            membership.add(alias)
+    return membership
+
+
 def _lookup_domain(ctx, operation: str, row: dict,
                    request: dict) -> tuple[list, set]:
     """The enumerated lookup domain: ordered ids plus a membership set.
@@ -520,7 +538,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
 
         manifest, repo = _fresh_manifest_and_repo(ctx.root)
         ordered = platform_handlers._inspect_candidates(manifest, repo)
-        return ordered, set(ordered)
+        return ordered, _inspect_membership(manifest, ordered)
     if owner == "ai-delivery-exchange":
         deliveries = ctx.root / _DELIVERIES_REL
         ordered = sorted(path.name for path in deliveries.iterdir()
@@ -1087,3 +1105,49 @@ def test_tolerant_oracle_negative_fails_for_the_intended_reason():
     result["stdout_json"]["suggestions"] = []
     with pytest.raises(AssertionError, match="omit the real value"):
         _check_tolerant_success(result, real_value="ability-demo-derive")
+
+
+def _aliased_manifest():
+    return {
+        "records": [{"id": "aa", "type": "note"}],
+        "project_aliases": {"ab": "aa"},
+    }
+
+
+def test_resolving_alias_expands_absence_membership():
+    """A resolving alias joins the set, never the candidates (bg 2)."""
+    from learning_os.ops.handlers import platform as platform_handlers
+
+    manifest = _aliased_manifest()
+    ordered = platform_handlers._inspect_candidates(manifest, None)
+    assert ordered == ["aa"]
+    membership = _inspect_membership(manifest, ordered)
+    assert membership == {"aa", "ab"}
+
+
+def test_resolving_alias_cannot_be_selected_as_a_miss():
+    """The membership blocks a resolving alias from miss selection (bg 2)."""
+    from learning_os.ops.handlers import platform as platform_handlers
+
+    manifest = _aliased_manifest()
+    membership = _inspect_membership(manifest, ["aa"])
+    filters = {"parses": lambda candidate: True,
+               "validates": lambda candidate: True,
+               "forbidden_texts": []}
+    assert _near_miss_candidate("aa", domain=set(), **filters) == "ab"
+    assert _near_miss_candidate("aa", domain=membership, **filters) == "ac"
+    direct = platform_handlers.record_payload(manifest, "aa")
+    aliased = platform_handlers.record_payload(manifest, "ab")
+    assert aliased is not None
+    assert aliased["resolved_from"] == "ab"
+    assert {key: aliased[key] for key in direct} == direct
+
+
+def test_nonresolving_alias_does_not_expand_the_domain():
+    """An alias to a missing record stays out of the set (bg 2)."""
+    from learning_os.ops.handlers import platform as platform_handlers
+
+    manifest = {"records": [{"id": "aa", "type": "note"}],
+                "project_aliases": {"ab": "missing-id"}}
+    assert platform_handlers.record_payload(manifest, "ab") is None
+    assert _inspect_membership(manifest, ["aa"]) == {"aa"}
