@@ -184,6 +184,7 @@ GROUPS: dict[str, list[str]] = {
         "test_arch_layers.py",
         "test_arch_outcomes.py",
         "test_arch_plumbing.py",
+        "test_arch_callbacks.py",
         "test_arch_cli_parity.py",
         "test_arch_json_everywhere.py",
         "test_arch_output.py",
