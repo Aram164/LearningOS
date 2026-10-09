@@ -11,13 +11,23 @@ installs it — see BAKEOFF.md).
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
+import sys
+import uuid
 from collections import Counter
 from pathlib import Path
 
+import arch_audit_hook
 import yaml
+from arch_writes_fixtures import witness_failures
+from scenario_harness import (
+    ARCH_SITE,
+    check_render_purity_error,
+    render_violations,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 PROCEDURES = ROOT / "system" / "procedures"
@@ -26,6 +36,7 @@ RATCHETS_PATH = ROOT / "tests" / "architecture" / "ratchets.yaml"
 
 CHECK_ID = "A8-transcripts"
 FIX = "Update the transcript, or fix the doc command (PLAN D11)."
+PROBE_OP = "test-only.probe"
 
 #: The indexed docs and, for CLAUDE.md, the indexed section numbers.
 INDEXED_DOCS = ("system/OPERATOR.md", "system/WORKFLOWS.md", "system/CLAUDE.md")
@@ -144,7 +155,48 @@ def _scrut_bin() -> Path:
     return ROOT / ".venv" / "bin" / "scrut"
 
 
-def test_every_transcript_passes():
+def _procedure_child_env(*, log_path: Path, token: str) -> dict:
+    """The env procedure children inherit: audit hook plus render check.
+
+    The scenario harness's own mechanism (SPEC §3.2c): ``arch_site`` on
+    ``PYTHONPATH`` installs ``arch_audit_hook`` at interpreter startup in
+    every Python child, writing to ``LOS_ARCH_AUDIT_LOG`` under
+    ``LOS_ARCH_LAUNCH_TOKEN`` as the root token. Transcripts manage their
+    own ``LOS_OBSERVATIONS`` through ``los-fixture``, so this sets none.
+    ``.venv/bin`` leads ``PATH`` so the helpers' ``env python3`` shebang
+    lands on the venv interpreter they re-exec onto today: every Python
+    child then installs the same hook, with no install gap.
+    """
+    env = dict(os.environ)
+    env["LOS_REPO"] = str(ROOT)
+    env["LOS_ARCH_RENDER_CHECK"] = "1"
+    env["LOS_ARCH_AUDIT_LOG"] = str(log_path)
+    env["LOS_ARCH_LAUNCH_TOKEN"] = token
+    env["PYTHONPATH"] = (
+        str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", ""))
+    env["PATH"] = str(ROOT / ".venv" / "bin") + os.pathsep + env.get(
+        "PATH", "")
+    return env
+
+
+def _check_procedure_audit(transcript: str, log_path: Path) -> None:
+    """Fail on missing or incomplete audit evidence, or render-marked I/O.
+
+    A missing log raises through ``read_log``; a log with no install
+    witness, an install without its completion, or any render-marked
+    record fails here (SPEC (az), S15 item 5).
+    """
+    records = arch_audit_hook.read_log(log_path)
+    problems = []
+    if not any(rec.get("event") == "installed" for rec in records):
+        problems.append(f"{transcript}: audit log has no installed witness")
+    problems.extend(witness_failures(records, allow_isolated=True))
+    problems.extend(render_violations(records))
+    assert not problems, (
+        f"{transcript}: audit witness failure:\n" + "\n".join(problems))
+
+
+def test_every_transcript_passes(tmp_path):
     transcripts = sorted(
         path for path in PROCEDURES.glob("*.md") if path.is_file())
     assert transcripts, f"no transcripts in {PROCEDURES}"
@@ -153,9 +205,148 @@ def test_every_transcript_passes():
         f"scrut binary not found: {scrut} — set LOS_SCRUT_BIN to the v0.5.0"
         " binary, or run the `make setup` addition BAKEOFF.md records")
     for transcript in transcripts:
-        env = dict(os.environ, LOS_REPO=str(ROOT), LOS_ARCH_RENDER_CHECK="1")
+        log_path = tmp_path / f"{transcript.stem}.audit.jsonl"
+        token = f"procedure-{uuid.uuid4().hex}"
+        env = _procedure_child_env(log_path=log_path, token=token)
         proc = subprocess.run(
             [str(scrut), "test", str(transcript)],
             capture_output=True, text=True, timeout=600, env=env, cwd=ROOT)
+        check_render_purity_error(proc.stdout + proc.stderr)
         assert proc.returncode == 0, (
             f"{transcript.name} failed:\n{proc.stdout}\n{proc.stderr}")
+        _check_procedure_audit(transcript.name, log_path)
+
+
+#: A child driver that runs one renderer through the real run_cli path.
+#: ``argv`` is ``<root> <probe> <read|pure>``: the read mode renders the
+#: probe file's content (audited I/O under the marker), the pure mode
+#: renders a constant.
+_PROBE_DRIVER = '''"""Procedure-child render probe (SPEC (az), S15 item 5)."""
+
+import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, %r)
+
+from learning_os.ops.pipeline import run_cli
+from learning_os.ops.proposal import Result
+from learning_os.ops.registry import REGISTRY, register
+
+OPERATION = %r
+
+
+def _reading(probe: Path, payload: dict) -> dict:
+    with open(probe, encoding="utf-8") as handle:
+        return {"saw": handle.read()}
+
+
+def _pure(probe: Path, payload: dict) -> dict:
+    return {"saw": "nothing"}
+
+
+def main() -> int:
+    root = Path(sys.argv[1])
+    probe = Path(sys.argv[2])
+    render = _reading if sys.argv[3] == "read" else _pure
+
+    def handler(ctx, req):
+        return Result({"echo": "x"},
+                      finish=lambda payload: render(probe, payload))
+
+    register(OPERATION, kind="query")(handler)
+    try:
+        outcome = run_cli(
+            root, OPERATION, argparse.Namespace(root=str(root), json=True))
+    finally:
+        REGISTRY.pop(OPERATION, None)
+    sys.stdout.write(outcome.stdout)
+    sys.stderr.write(outcome.stderr)
+    return outcome.exit_code
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+'''
+
+
+def _write_probe_schema(root: Path) -> None:
+    schema = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": f"test-only/{PROBE_OP}",
+        "type": "object",
+        "properties": {},
+    }
+    path = root / "system" / "schema" / "requests" / f"{PROBE_OP}.schema.json"
+    path.write_text(json.dumps(schema, indent=2) + "\n", encoding="utf-8")
+
+
+def _run_probe_child(mini_repo: Path, tmp_path: Path,
+                     mode: str) -> tuple:
+    """Run the probe driver as a procedure child; return (proc, records)."""
+    log_path = tmp_path / f"probe-{mode}.audit.jsonl"
+    token = f"procedure-{uuid.uuid4().hex}"
+    probe = tmp_path / "probe.txt"
+    probe.write_text("sight\n", encoding="utf-8")
+    _write_probe_schema(mini_repo)
+    driver = tmp_path / f"probe-driver-{mode}.py"
+    driver.write_text(
+        _PROBE_DRIVER % (str(ROOT / "tools"), PROBE_OP), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(driver), str(mini_repo), str(probe), mode],
+        capture_output=True, text=True, timeout=120,
+        env=_procedure_child_env(log_path=log_path, token=token),
+        cwd=mini_repo)
+    assert proc.returncode == 0, f"probe child failed: {proc.stderr[-2000:]}"
+    return proc, arch_audit_hook.read_log(log_path), token
+
+
+def _assert_probe_witnesses(records: list, token: str) -> None:
+    assert witness_failures(records) == [], witness_failures(records)
+    installed = [rec for rec in records if rec.get("event") == "installed"]
+    assert len(installed) == 1, installed
+    assert installed[0]["token"] == token
+    completed = [rec for rec in records if rec.get("event") == "completed"]
+    assert len(completed) == 1, completed
+    assert completed[0]["pid"] == installed[0]["pid"]
+    assert completed[0]["token"] == token
+
+
+def test_procedure_child_audit_marks_render_io(mini_repo, tmp_path):
+    """A file-reading renderer in a procedure child fails as op::cb::open."""
+    _proc, records, token = _run_probe_child(mini_repo, tmp_path, "read")
+    _assert_probe_witnesses(records, token)
+    assert render_violations(records) == [
+        f"A18 {PROBE_OP}::finish::open: renderer performed audited I/O",
+        f"A18 {PROBE_OP}::finish::open: renderer performed audited I/O",
+    ]
+
+
+def test_procedure_child_audit_passes_pure_renderer(mini_repo, tmp_path):
+    """The same procedure child with a pure renderer is clean."""
+    _proc, records, token = _run_probe_child(mini_repo, tmp_path, "pure")
+    _assert_probe_witnesses(records, token)
+    assert render_violations(records) == []
+
+
+def _popen_record(argv: list, token: str) -> dict:
+    return {"event": "subprocess.Popen", "argv": argv, "token": token,
+            "expect_crash": False}
+
+
+def test_isolated_launch_needs_no_installed_witness():
+    """An isolated (-I) launch is excused only with allow_isolated."""
+    records = [_popen_record(
+        ["/repo/.venv/bin/python", "-I", "-B", "install.py"], "t1")]
+    assert witness_failures(records, allow_isolated=True) == []
+    assert witness_failures(records) != []
+
+
+def test_program_position_dash_i_still_needs_a_witness():
+    """A -I past the script name (or in -c) belongs to the program."""
+    script_arg = [_popen_record(
+        ["/repo/.venv/bin/python", "tool.py", "-I"], "t2")]
+    assert witness_failures(script_arg, allow_isolated=True) != []
+    inline = [_popen_record(
+        ["/repo/.venv/bin/python", "-c", "print('-I')"], "t3")]
+    assert witness_failures(inline, allow_isolated=True) != []

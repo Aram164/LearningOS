@@ -340,16 +340,40 @@ def _is_python_argv(argv: list) -> bool:
                            ".venv/bin/python"))
 
 
-def witness_failures(records: list[dict]) -> list[str]:
+def _is_isolated_python(argv: list) -> bool:
+    """True when the argv runs Python isolated (``-I``), which ignores
+    ``PYTHONPATH``: the ``arch_site`` hook entry provably cannot load, so
+    no ``installed`` witness can exist. Only a ``-I`` in the interpreter's
+    own leading flags counts; a ``-I`` past the script name (or inside a
+    ``-c`` command) belongs to the program, which still installs the hook.
+    """
+    for arg in list(argv)[1:]:
+        if not isinstance(arg, str) or not arg.startswith("-") or arg == "-":
+            return False
+        if arg == "-I":
+            return True
+        if (len(arg) > 2 and not arg.startswith("--")
+                and arg[1:].isalpha() and "I" in arg):
+            return True
+    return False
+
+
+def witness_failures(records: list[dict],
+                     *, allow_isolated: bool = False) -> list[str]:
     """Launch-coverage failures over audit records (SPEC §3.2c, K28-K30).
 
     Python launches and ``installed`` witnesses are counted per launch
     token; an install is excused from its missing ``completed`` record
-    only when its token's launch was logged with ``expect_crash``.
+    only when its token's launch was logged with ``expect_crash``. With
+    ``allow_isolated``, isolated (``-I``) launches are excused from the
+    ``installed`` count: the hook cannot load there. Callers that never
+    launch isolated children keep the default.
     """
     popens = [rec for rec in records
               if rec.get("event") == "subprocess.Popen"
-              and _is_python_argv(rec.get("argv") or [])]
+              and _is_python_argv(rec.get("argv") or [])
+              and not (allow_isolated
+                       and _is_isolated_python(rec.get("argv") or []))]
     launches: Counter = Counter()
     crash_expected: dict = {}
     for popen in popens:
