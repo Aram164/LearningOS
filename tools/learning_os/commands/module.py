@@ -37,6 +37,8 @@ from learning_os.material_synthesis import (
 )
 from learning_os.materials_resolution import evidential_route_projection, sha256_file
 from learning_os.ops._legacy_plumbing import (
+    _dump_study_map,
+    _dump_yaml,
     _fresh_manifest,
     _operator_lock,
     _read_content_bound_file,
@@ -63,8 +65,6 @@ from learning_os.semantics.lineage import (
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
 from .support import (
-    _dump_study_map,
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _print_rows,

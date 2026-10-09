@@ -9161,7 +9161,7 @@
   "source.record.revise.schema.json": "bde5d8386141df410a245852ec66faad1c03ddfedc03073d6794b0518ebaa604",
   "stage.attachment.add.schema.json": "3813cb384524fa10502166ca2b331bd69e63606d9256275bab43f717a40d413d",
   "stage.note.write.schema.json": "8641379ca2f3a07d435a3b3d1215034bdb8511c5ca558c49ab82147b36c9f51d",
-  "stage.progress.update.schema.json": "c6532b438c4d8986eaae4a8d253a09dc64d0246ac1baf1a266785ae49d407986",
+  "stage.progress.update.schema.json": "aca644589cef2926088cf9da49cd979438a264fe4a93d72e81b8537a80a7b374",
   "unit.map.import.schema.json": "d8743e8a2957bd72a0016a484b15dea54afdb769d486629a5d7cf0ccbfe7ab60",
   "unit.material-synthesis.publish.schema.json": "9c6fc9358e6b0853772170bd0e814ed1f651e1393898f8479b483fabc6fe61cf",
   "unit.note.append.schema.json": "22283493af6f2f95f2395012b0e83117d503f5d24644218daf582104e4351c9d",

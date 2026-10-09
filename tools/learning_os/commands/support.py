@@ -28,6 +28,7 @@ from learning_os.ops._legacy_plumbing import (
     DEFAULT_SESSION_CHANNEL,
     SESSION_LEDGER_SCHEMA_VERSION,
     _current_session_id,
+    _dump_yaml,
     _is_anchored,
     _json_layout,
     _process_state_dir,
@@ -391,61 +392,6 @@ def _unit_map_or_error(root: Path, unit_id: str):
         print(f"los: unit has no current study map: {unit_id}", file=sys.stderr)
         return repo, unit, None
     return repo, unit, study_map
-
-
-class _NoAliasSafeDumper(yaml.SafeDumper):
-    """Keep authored YAML deterministic even when an input package uses anchors."""
-
-    def ignore_aliases(self, data):  # noqa: ANN001 - PyYAML callback signature
-        return True
-
-
-def _dump_yaml(data: dict) -> str:
-    return yaml.dump(data, Dumper=_NoAliasSafeDumper, sort_keys=False,
-                     allow_unicode=True, width=100)
-
-
-def _dump_study_map(study_map, data: dict) -> str:
-    from learning_os.material_refs import preserve_map_refs
-
-    return _dump_yaml(preserve_map_refs(study_map, data))
-
-
-#: The one return-to-work record. `los resume` and the app's Home both start
-#: here, so they cannot disagree about where the learner left off.
-RESUME_POINTER_PATH = "curriculum/resume.yaml"
-
-
-def _resume_pointer_write(root: Path, *, module_id: str, unit_id: str,
-                          study_map_id: str, stage_id: str) -> dict[Path, str]:
-    """The resume-pointer file for one explicit study action.
-
-    Returned as a ``{path: text}`` fragment to merge into the *same*
-    ``_write_transaction`` as the records that moved. That is the whole point:
-    the pointer is written under the operator lock the caller already holds,
-    inside the capability's declared write scope, covered by the same receipt,
-    the same post-action scope check, the same validation and the same
-    republished projection. A separate write after the transaction would be an
-    untracked side effect that could survive a rolled-back change, or be lost
-    while the change committed — and the destination would then be lying about
-    where the work actually is.
-
-    Until 2026-09-13 nothing wrote this file at all. `curriculum/resume.yaml`
-    did not exist; `los resume` silently recovered through "last recorded
-    result", and the app's Home, which reads only this pointer, said "Nothing
-    to resume yet". Activating a stage in another subject therefore left both
-    interfaces pointing at the old one (audit
-    `workbench/audits/synthetic-learner-2026-09-12`, F05).
-    """
-    pointer = {
-        "type": "resume-pointer",
-        "module_id": str(module_id),
-        "unit_id": str(unit_id),
-        "study_map_id": str(study_map_id),
-        "stage_id": str(stage_id),
-        "updated": observations.today().isoformat(),
-    }
-    return {root / RESUME_POINTER_PATH: _dump_yaml(pointer)}
 
 
 def _render_frontmatter(meta: dict, body: str) -> str:

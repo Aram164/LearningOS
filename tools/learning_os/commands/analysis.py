@@ -19,6 +19,7 @@ from pathlib import Path, PurePosixPath
 import jsonschema
 
 from learning_os.ops._legacy_plumbing import (
+    _dump_yaml,
     _operator_lock,
     _read_content_bound_file,
 )
@@ -51,7 +52,6 @@ from ..materials_resolution import (
 from ..pathing import PathBoundaryError
 from ..revisions import artifact_revision
 from .support import (
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _read_structured_file,

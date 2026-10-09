@@ -24,6 +24,8 @@ import tempfile
 import time
 from pathlib import Path
 
+import yaml
+
 from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derived.model import DerivedError
@@ -843,3 +845,26 @@ def _read_content_bound_file(
             f"found {actual_sha256}. Review the new bytes and create a new approval."
         )
     return source, content
+
+
+# ---------------------------------------------------------------------------
+# Canonical YAML serialization, moved verbatim from commands.support
+# (SPEC (az) item 2).
+
+
+class _NoAliasSafeDumper(yaml.SafeDumper):
+    """Keep authored YAML deterministic even when an input package uses anchors."""
+
+    def ignore_aliases(self, data):  # noqa: ANN001 - PyYAML callback signature
+        return True
+
+
+def _dump_yaml(data: dict) -> str:
+    return yaml.dump(data, Dumper=_NoAliasSafeDumper, sort_keys=False,
+                     allow_unicode=True, width=100)
+
+
+def _dump_study_map(study_map, data: dict) -> str:
+    from learning_os.material_refs import preserve_map_refs
+
+    return _dump_yaml(preserve_map_refs(study_map, data))

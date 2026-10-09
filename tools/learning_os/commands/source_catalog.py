@@ -52,6 +52,7 @@ from learning_os.materials_resolution import (
     sha256_file,
 )
 from learning_os.ops._legacy_plumbing import (
+    _dump_yaml,
     _operator_lock,
 )
 from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
@@ -60,7 +61,6 @@ from learning_os.rules.common import CANONICAL_TREES
 from learning_os.semantics.lineage import LEDGER_RELATIVE, dump_ledger, load_ledger
 
 from .support import (
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _read_structured_file,

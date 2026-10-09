@@ -13,12 +13,12 @@ from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 from learning_os.ops._legacy_plumbing import (
+    _dump_yaml,
     _operator_lock,
     _read_content_bound_file,
 )
 
 from .support import (
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _render_frontmatter,

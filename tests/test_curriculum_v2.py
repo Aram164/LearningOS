@@ -679,7 +679,7 @@ def test_stage_progress_offers_the_observation_verb(mini_repo):
     """Completing a stage with an authored requirement names the exact
     ``los observe`` invocation — a suggestion in the receipt, never a
     second write."""
-    from learning_os.commands.stage import _observe_offer
+    from learning_os.ops.handlers.learner import _observe_offer
 
     add_curriculum(mini_repo)
     assert _observe_offer("unit-demo-l01", {"id": "stage-demo"}) == {}

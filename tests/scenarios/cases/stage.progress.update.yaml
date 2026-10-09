@@ -20,37 +20,37 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-nope, status: active}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.unknown-stage}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, stage_id: stage-demo, status: active}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.unknown-unit}
   - id: complete-pending-stage
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: complete}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.not-active}
   - id: progress-next-without-summary
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: active, progress_next: "then the appendix"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.needs-summary}
   - id: blank-progress-summary
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: active, progress_summary: " ", progress_next: "then the appendix"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.needs-summary}
   - id: blank-progress-next
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: active, progress_summary: "worked the example", progress_next: " "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.progress.update.blank-next}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

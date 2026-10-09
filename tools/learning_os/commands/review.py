@@ -15,6 +15,7 @@ from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
 from learning_os.ops._legacy_plumbing import (
     _current_session_id,
+    _dump_study_map,
     _load_session_paths,
     _operator_lock,
     _publish,
@@ -29,7 +30,6 @@ from learning_os.unit_notes import unit_note_sections
 from .support import (
     CLIENT_ENV,
     SESSION_LEDGER_STALE_HOURS,
-    _dump_study_map,
     _expected_ok,
     _expected_revisions_from_args,
     _load_other_session_ledgers,

@@ -300,19 +300,22 @@ def _namespace(root: Path, **fields) -> argparse.Namespace:
     return namespace
 
 
-def test_stage_handler_refuses_an_unknown_status(mini_repo: Path,
-                                                 capsys: pytest.CaptureFixture):
+def test_stage_handler_refuses_an_unknown_status(mini_repo: Path):
     """The handler backstop: no open `else` maps unknown input to a write."""
     from repo_builders import add_curriculum
 
-    from learning_os.commands.stage import cmd_stage_progress
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers.learner import stage_progress
 
     add_curriculum(mini_repo)
-    code = cmd_stage_progress(_namespace(
-        mini_repo, unit_id="unit-demo-l01", stage_id="stage-demo",
-        status="done"))
-    assert code == 2
-    assert "unknown stage status" in capsys.readouterr().err
+    ctx = OpContext(root=mini_repo, operation="stage.progress.update",
+                    channel="operator", invocation="command", gateway=None)
+    with pytest.raises(WriteRefused, match="unknown stage status") as caught:
+        stage_progress(ctx, {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                             "status": "done"})
+    assert caught.value.site == "stage.progress.update.unknown-status"
+    assert caught.value.exit_code == 2
 
 
 def test_path_handler_refuses_an_unknown_status(mini_repo: Path,

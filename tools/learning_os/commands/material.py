@@ -29,6 +29,7 @@ from learning_os.material_refs import (
 )
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.ops._legacy_plumbing import (
+    _dump_yaml,
     _operator_lock,
     _snapshot,
 )
@@ -44,7 +45,6 @@ from .reads import (
 )
 from .resume import MAX_STAGE_RESULTS
 from .support import (
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _root,

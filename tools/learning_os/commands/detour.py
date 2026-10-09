@@ -8,13 +8,13 @@ import re
 import sys
 
 from learning_os.ops._legacy_plumbing import (
+    _dump_study_map,
+    _dump_yaml,
     _operator_lock,
 )
 
 from ..domain.suggest import not_found
 from .support import (
-    _dump_study_map,
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _root,
