@@ -28,6 +28,7 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops.registry import REGISTRY
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
 REQUEST_ID_MAX = 128
@@ -97,7 +98,6 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     """
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.commands import support as _support
-    from learning_os.commands.capability import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -105,6 +105,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         verified_gateway_snapshot,
     )
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.legacy import _dispatch
     from learning_os.revisions import load_revisions
     from learning_os.transactions import transaction_artifacts
 
@@ -208,6 +209,133 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         _transactions.TransactionService.commit = real_commit  # type: ignore[method-assign]
 
 
+def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
+                              key: str, request_id: str, channel: str,
+                              approval_kind: str, snapshot: str | None,
+                              check_out: str | None,
+                              parser_factory=None) -> tuple[str, dict[str, int]]:
+    """Derive the guard set for a registered operation through the pipeline.
+
+    The same admission (``prepare_dispatch``), namespace-to-request
+    filtering, gateway request context and lock/snapshot discipline as the
+    gateway's registered compute step, but the handler's proposal is
+    checked once with ``check_proposal`` instead of committed. The record
+    supplies the snapshot and revision guards; with ``check_out`` the
+    record (plus the sealing payload) is written even when the check
+    fails, so the reviewer reads the refusal. No transaction interception:
+    a registered handler returns its proposal rather than committing.
+    """
+    from learning_os.commands import support as _support
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.gateway import (
+        GatewayRequestContext,
+        gateway_request_context,
+        verified_gateway_snapshot,
+    )
+    from learning_os.contracts.requests import request_schema
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.check import check_proposal
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.legacy import prepare_dispatch
+
+    if parser_factory is None:
+        import los  # noqa: E402  (imports the parser, not a command)
+
+        parser_factory = los.build_parser
+    definitions = command_definitions(root)
+    if capability not in definitions:
+        raise ValueError(f"unknown capability: {capability}")
+    from learning_os.contracts.payloads import subparsers as _subparsers
+
+    command_parser = _subparsers(parser_factory()).get(
+        definitions[capability].cli_command or "")
+    if command_parser is None:
+        raise ValueError(
+            f"capability {capability} declares no CLI command to derive guards from")
+    if command_parser.get_default("func") is None:
+        raise ValueError(
+            f"capability {capability} has no bound handler to derive guards from")
+
+    operation = REGISTRY[capability]
+    envelope_stub = {
+        "schema_version": GATEWAY_SCHEMA_VERSION,
+        "capability": capability,
+        "expected_snapshot": snapshot,
+        "expected_revisions": {},
+    }
+    context = GatewayRequestContext(
+        request_id=request_id,
+        idempotency_key=key,
+        capability=capability,
+        channel=channel,
+        intent_sha256="sha256:" + "0" * 64,
+        approval_kind=approval_kind,
+        approval_subject_sha256="sha256:" + "0" * 64,
+        expected_snapshot=None,  # set once the snapshot below is read
+    )
+    with _support._operator_lock(root):
+        live_snapshot = snapshot or f"sha256:{canonical_fingerprint(root)}"
+        envelope_stub["expected_snapshot"] = live_snapshot
+        context = GatewayRequestContext(
+            request_id=context.request_id,
+            idempotency_key=context.idempotency_key,
+            capability=context.capability,
+            channel=context.channel,
+            intent_sha256=context.intent_sha256,
+            approval_kind=context.approval_kind,
+            approval_subject_sha256=context.approval_subject_sha256,
+            expected_snapshot=live_snapshot,
+        )
+        ctx = OpContext(
+            root=root,
+            operation=capability,
+            channel=channel,
+            invocation="check",
+            gateway=context,
+        )
+        with gateway_request_context(context), verified_gateway_snapshot(
+                root, live_snapshot):
+            try:
+                _, namespace = prepare_dispatch(
+                    root, definitions[capability], envelope_stub, payload,
+                    parser_factory=parser_factory)
+            except WriteRefused as exc:
+                raise ValueError(
+                    f"{exc}; fix the payload and seal again") from exc
+            properties = request_schema(root, capability).get(
+                "properties", {})
+            req = {name: value for name, value in vars(namespace).items()
+                   if name in properties}
+            try:
+                res = operation.handler(ctx, req)
+            except WriteRefused as exc:
+                raise ValueError(
+                    f"{exc}; fix the payload and seal again") from exc
+            if res.proposal is None:
+                if check_out:
+                    raise ValueError(
+                        "--check-out requires a registered operation "
+                        "returning a proposal")
+                raise ValueError(
+                    "guard derivation stopped before any transaction "
+                    f"({capability} returned no proposal); seal this payload "
+                    "with explicit --revision guards instead")
+            record = check_proposal(ctx, res.proposal)
+    if check_out is not None:
+        sealing = {name: value for name, value in payload.items()
+                   if name != "check"}
+        Path(check_out).write_text(
+            json.dumps({**record, "payload": sealing}, indent=2,
+                       sort_keys=True, ensure_ascii=False) + "\n",
+            encoding="utf-8")
+    if record["ok"] is not True:
+        errors = record.get("errors") or ["the check failed"]
+        raise ValueError(
+            f"{'; '.join(errors)}; fix the payload and seal again")
+    return snapshot or record["expected_snapshot"], dict(
+        record["expected_revisions"])
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The seal's CLI surface.
 
@@ -238,12 +366,20 @@ def build_parser() -> argparse.ArgumentParser:
                         help="expected snapshot (default: read live)")
     parser.add_argument("--revision", action="append", default=[],
                         help="guard ART=REV; repeatable")
-    parser.add_argument("--guards", default=None, choices=("auto",),
+    guards = parser.add_mutually_exclusive_group()
+    guards.add_argument("--guards", default=None, choices=("auto",),
                         help="guard derivation: 'auto' runs the capability's "
                              "handler as a gateway dry run that stops before "
                              "any write, and reads revisions under the same "
                              "lock as the snapshot. Explicit --revision "
                              "entries override derived ones.")
+    guards.add_argument("--guards-from", default=None, metavar="PATH",
+                        help="seal from a check record at PATH instead of "
+                             "deriving guards (mutually exclusive with "
+                             "--guards and explicit guards)")
+    parser.add_argument("--check-out", default=None, metavar="PATH",
+                        help="with --guards auto on a registered operation, "
+                             "also write the check record to PATH")
     parser.add_argument("--out", default=None,
                         help="write the envelope here (default: stdout)")
     return parser
@@ -252,6 +388,23 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    # S13 candidate J13-J14c: flag-combination usage errors, first.
+    if args.check_out and args.guards_from:
+        print("seal_envelope: --check-out cannot be combined with --guards-from",
+              file=sys.stderr)
+        return 2
+    if args.guards_from and args.revision:
+        print("seal_envelope: --guards-from cannot be combined with explicit "
+              "--revision guards", file=sys.stderr)
+        return 2
+    if args.guards_from and args.snapshot:
+        print("seal_envelope: --guards-from cannot be combined with explicit "
+              "--snapshot", file=sys.stderr)
+        return 2
+    if args.check_out and args.guards != "auto":
+        print("seal_envelope: --check-out requires --guards auto", file=sys.stderr)
+        return 2
 
     if args.channel not in GATEWAY_CHANNELS:
         print(f"seal_envelope: unknown channel {args.channel!r}", file=sys.stderr)
@@ -289,15 +442,63 @@ def main(argv: list[str] | None = None) -> int:
             return 2
 
     request_id = args.request_id or _fresh_request_id(args.key)
-    if args.guards == "auto":
+    if args.guards_from:
         try:
-            snapshot, derived = _derive_guards_auto(
-                root, capability=args.capability, payload=payload,
-                key=args.key, request_id=request_id, channel=args.channel,
-                approval_kind=args.approval_kind, snapshot=args.snapshot)
+            record = json.loads(
+                Path(args.guards_from).read_text(encoding="utf-8"))
         except (ValueError, OSError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2
+        # S13 candidate J9-J12: record validation, in SPEC order.
+        if not isinstance(record, dict) or record.get("schema") != 1:
+            print("seal_envelope: --guards-from record schema must be 1",
+                  file=sys.stderr)
+            return 2
+        if record.get("ok") is not True:
+            print("seal_envelope: --guards-from record reports a failed check",
+                  file=sys.stderr)
+            return 2
+        if record.get("capability") != args.capability:
+            print(f"seal_envelope: --guards-from record is for capability "
+                  f"{record.get('capability')!r}, not {args.capability!r}",
+                  file=sys.stderr)
+            return 2
+        if isinstance(payload, dict):
+            sealing = {key: value for key, value in payload.items()
+                       if key != "check"}
+        else:
+            sealing = payload
+        if (json.dumps(sealing, sort_keys=True)
+                != json.dumps(record.get("payload"), sort_keys=True)):
+            print("seal_envelope: --guards-from record payload differs from "
+                  "the sealing payload", file=sys.stderr)
+            return 2
+        snapshot = record["expected_snapshot"]
+        revisions = dict(record["expected_revisions"])
+    elif args.guards == "auto":
+        if args.check_out and args.capability not in REGISTRY:
+            print("seal_envelope: --check-out requires a registered operation",
+                  file=sys.stderr)
+            return 2
+        if args.capability in REGISTRY:
+            try:
+                snapshot, derived = _derive_registered_guards(
+                    root, capability=args.capability, payload=payload,
+                    key=args.key, request_id=request_id, channel=args.channel,
+                    approval_kind=args.approval_kind, snapshot=args.snapshot,
+                    check_out=args.check_out)
+            except (ValueError, OSError) as exc:
+                print(f"seal_envelope: {exc}", file=sys.stderr)
+                return 2
+        else:
+            try:
+                snapshot, derived = _derive_guards_auto(
+                    root, capability=args.capability, payload=payload,
+                    key=args.key, request_id=request_id, channel=args.channel,
+                    approval_kind=args.approval_kind, snapshot=args.snapshot)
+            except (ValueError, OSError) as exc:
+                print(f"seal_envelope: {exc}", file=sys.stderr)
+                return 2
         revisions = {**derived, **revisions}
         print("seal_envelope: guards auto: "
               + ", ".join(f"{artifact}={revisions[artifact]}"

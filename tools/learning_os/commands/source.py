@@ -6,13 +6,16 @@ import copy
 import json
 import sys
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
+
 from .. import observations
 from ..domain.suggest import not_found, with_suggestions
 from .support import (
     _dump_study_map,
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _root,
     _stage,
     _stage_ids,

@@ -13,6 +13,11 @@ from learning_os.domain.failures import WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import (
+    _json_layout,
+    _operator_lock,
+    _publish,
+)
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.validation_cache import observe_pins, status_issues
 
@@ -41,10 +46,7 @@ from .support import (
     _delegate,
     _fresh_manifest,
     _fresh_manifest_and_repo,
-    _json_layout,
-    _operator_lock,
     _print_rows,
-    _publish,
     _root,
 )
 

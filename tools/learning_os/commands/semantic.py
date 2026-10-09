@@ -11,10 +11,11 @@ from __future__ import annotations
 import json
 import sys
 
+from learning_os.ops._legacy_plumbing import (
+    _json_layout,
+)
 from learning_os.semantics.predicates import PREDICATES, evaluate
 from learning_os.semantics.recipes import RecipeError, recipes_for
-
-from .support import _json_layout
 
 
 def _coerce(raw: str) -> object:

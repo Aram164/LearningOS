@@ -18,6 +18,9 @@ from learning_os.learning_runtime import (
     read_observations,
 )
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import (
+    _json_layout,
+)
 from learning_os.semantics.goals import (
     CandidateGoal,
     RankedCluster,
@@ -27,7 +30,7 @@ from learning_os.semantics.goals import (
 from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
 from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
 
-from .support import _json_layout, _root
+from .support import _root
 
 #: Brief cap: at most this many ranked groups, whatever the tiers hold. The
 #: top two tiers alone held 61 groups on 2026-09-23, so a tier cutoff cannot

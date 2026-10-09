@@ -24,13 +24,15 @@ from learning_os.domain.codes import (
     UNCONFIRMED,
 )
 from learning_os.domain.failures import Unconfirmed, WriteRefused
-
-from .support import (
-    _expected_revisions_from_args,
+from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _publish,
     _record_gateway_refusal,
     _record_touched,
+)
+
+from .support import (
+    _expected_revisions_from_args,
     _root,
 )
 

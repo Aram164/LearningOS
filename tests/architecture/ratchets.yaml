@@ -76,18 +76,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/support.py::_atomic_text::os.replace
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_atomic_text::unlink
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_atomic_text::write_text
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/contracts/data_contract.py::write_contract::write_text
     count: 1
     since: baseline
@@ -104,6 +92,18 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::os.replace
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::unlink
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::write_text
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
   - signature: tools/learning_os/semantics/dossiers.py::store_dossier::write_text
     count: 1
     since: baseline
@@ -412,18 +412,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::_v2_exit_code::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::cmd_capability::_operator_lock
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::cmd_capability::canonical_fingerprint
     count: 1
     since: baseline
     approved_by: null
@@ -1211,10 +1199,6 @@ checks:
     count: 5
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/support.py::_acquire_flock::print
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
     count: 1
     since: baseline
@@ -1251,10 +1235,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/support.py::_publish::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_resolve::load_repo
     count: 1
     since: baseline
@@ -1265,18 +1245,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/support.py::_unit_map_or_error::print
     count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_write_transaction::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::publish_validated_state::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::validation_errors::load_repo
-    count: 1
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/unit.py::_unit_list_compact::_operator_lock

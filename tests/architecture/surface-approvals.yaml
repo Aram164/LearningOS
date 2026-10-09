@@ -12,3 +12,12 @@ approvals:
   - {key: "cli.*", change: changed, plan_ref: "PLAN A11 (shape completion: converter)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "tools.*", change: changed, plan_ref: "PLAN A11 (shape completion: converter)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.*", change: added, plan_ref: "PLAN D2 (S12: request schemas created)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "opcontext.root", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.operation", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.channel", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.invocation", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.gateway", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.repo", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.snapshot_id", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "opcontext.require_snapshot", change: added, plan_ref: "PLAN A17", pre_approved_by: "Aram 2026-10-04: accepted PLAN revision 5"}
+  - {key: "tools.seal_envelope.py", change: changed, plan_ref: "PLAN D5 (S13: --check-out and --guards-from)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

@@ -8,7 +8,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from learning_os.commands import support as command_support
 from learning_os.genout import common as genout_common
 from learning_os.genout.materials import _material_location, _safe_material_locator
 from learning_os.genout.outputs import write_outputs
@@ -17,6 +16,7 @@ from learning_os.genout.projection.stages import project_stages
 from learning_os.loader import load_repo
 from learning_os.loading.model import Repo, Unit
 from learning_os.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
+from learning_os.ops import _legacy_plumbing as plumbing_support
 from learning_os.rules import validate
 from learning_os.transactions import TransactionFailure, load_revisions
 
@@ -262,14 +262,14 @@ def test_revision_ledger_damage_fails_closed_and_is_reported(mini_repo: Path):
 def test_session_ownership_state_detects_post_transaction_edits(mini_repo: Path):
     target = mini_repo / "work/inbox/session-note.md"
     target.write_text("recorded\n", encoding="utf-8")
-    command_support._record_touched(mini_repo, [target])
-    recorded = command_support._load_session_paths(mini_repo)
-    assert command_support._session_path_state(
+    plumbing_support._record_touched(mini_repo, [target])
+    recorded = plumbing_support._load_session_paths(mini_repo)
+    assert plumbing_support._session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) == command_support._row_proven_state(
+    ) == plumbing_support._row_proven_state(
         recorded["work/inbox/session-note.md"])
     target.write_text("edited elsewhere\n", encoding="utf-8")
-    assert command_support._session_path_state(
+    assert plumbing_support._session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) != command_support._row_proven_state(
+    ) != plumbing_support._row_proven_state(
         recorded["work/inbox/session-note.md"])

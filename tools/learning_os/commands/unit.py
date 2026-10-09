@@ -22,6 +22,9 @@ from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import MaterialReferenceError, expand_map
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
@@ -33,7 +36,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _fresh_manifest,
-    _operator_lock,
     _print_rows,
     _read_content_bound_file,
     _root,

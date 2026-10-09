@@ -162,9 +162,9 @@ def _capture_journal(root: Path, normalizer: _Normalizer) -> dict:
 
 
 def _capture_ledger(root: Path, normalizer: _Normalizer):
-    import learning_os.commands.support as support
+    import learning_os.ops._legacy_plumbing as plumbing
 
-    path = support._session_ledger(root)
+    path = plumbing._session_ledger(root)
     if not path.is_file() or path.is_symlink():
         return None
     try:
@@ -375,7 +375,7 @@ TransactionService(root, clock=lambda: clock_dt).commit(
 
 
 def case_crash_recovery(tmp_path: Path) -> dict:
-    import learning_os.commands.support as support
+    import learning_os.ops._legacy_plumbing as plumbing
 
     name = "crash-recovery"
     with _pinned_tz():
@@ -397,7 +397,7 @@ def case_crash_recovery(tmp_path: Path) -> dict:
         result = None
         exc: BaseException | None = None
         try:
-            with support._operator_lock(root):
+            with plumbing._operator_lock(root):
                 pass
         except BaseException as error:  # noqa: BLE001 - recorded
             exc = error

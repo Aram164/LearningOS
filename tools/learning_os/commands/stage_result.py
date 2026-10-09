@@ -25,11 +25,13 @@ from learning_os.learning_runtime import (
     validate_runtime_record,
 )
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _root,
     _write_transaction,
 )

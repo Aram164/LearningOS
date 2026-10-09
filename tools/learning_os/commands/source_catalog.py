@@ -51,6 +51,9 @@ from learning_os.materials_resolution import (
     material_uri_authority,
     sha256_file,
 )
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
 from learning_os.revisions import artifact_revision
 from learning_os.rules.common import CANONICAL_TREES
@@ -60,7 +63,6 @@ from .support import (
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _read_structured_file,
     _root,
     _write_transaction,

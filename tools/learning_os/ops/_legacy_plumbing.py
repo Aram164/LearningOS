@@ -1,0 +1,649 @@
+"""Downward-owned command plumbing with a single owner (S13 candidate).
+
+The operator lock, gateway refusal cellar, publish helpers,
+session-ledger readers and small leaves, moved verbatim from
+commands.support so the ops pipeline can import them downward.
+Candidate sequencing ahead of S28/S29; the bodies are unchanged and
+this module is their only owner.
+"""
+
+from __future__ import annotations
+
+import contextlib
+import contextvars
+import datetime as _dt
+import fcntl
+import hashlib
+import json
+import math
+import os
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+from learning_os import observations
+from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.failures import WriteRefused
+from learning_os.genout import generate_all, write_outputs
+from learning_os.loader import load_repo
+from learning_os.ops.outcomes import classify, resolve
+from learning_os.transactions import reconcile_inflight_transactions
+
+#: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
+#: mode ``"shared"``, ``"exclusive"``, or ``"released"`` after a failed
+#: escalation. Immutable tuples, never mutated in
+#: place: escalation replaces the whole value, and the owning scope's reset
+#: still restores the pre-scope value afterwards.
+_HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
+    contextvars.ContextVar("learningos_held_operator_locks", default=())
+)
+
+
+#: Positive-only cache of repository roots to their git directories. A root
+#: that gains a `.git` mid-process (tests do) must be re-probed, so misses
+#: are never cached; hits are revalidated with `is_dir`.
+_GIT_DIR_CACHE: dict[str, tuple[tuple[int, ...], Path]] = {}
+
+
+#: Environment override for the operator-lock wait. `los --lock-timeout`
+#: sets this for the process; in-process callers set it directly. Unset or
+#: malformed means wait as long as the holder needs, announced on stderr.
+LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
+
+
+#: Poll interval while a lock timeout is armed. The default (unbounded)
+#: wait keeps kernel blocking with no polling.
+_LOCK_POLL_INTERVAL_S = 0.05
+
+
+def _lock_timeout_seconds() -> float | None:
+    """The configured lock wait bound, or None for an unbounded announced wait."""
+    raw = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
+    if raw is None or not raw.strip():
+        return None
+    try:
+        value = float(raw)
+    except ValueError:
+        return None
+    if not math.isfinite(value):
+        return None
+    return max(0.0, value)
+
+
+def _read_holder(lock_path: Path) -> str | None:
+    """The advisory `(held by pid N: <command>, since HH:MM:SS)` fragment.
+
+    Display only, never trusted for correctness: anything unreadable or
+    misshapen answers None and the waiter prints the bare waiting line.
+    """
+    try:
+        record = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(record, dict):
+        return None
+    pid = record.get("pid")
+    command = record.get("command")
+    since = record.get("since")
+    if (not isinstance(pid, int) or isinstance(pid, bool)
+            or not isinstance(command, str) or not isinstance(since, str)):
+        return None
+    return f"(held by pid {pid}: {command[:200]}, since {since[:32]})"
+
+
+def _write_holder(handle) -> None:
+    """Record this process as the lock holder. Best effort: advisory only."""
+    prog = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else "los"
+    command = " ".join([prog, *sys.argv[1:3]])[:160] or "los"
+    record = {"pid": os.getpid(), "command": command,
+              "since": observations.now().replace(tzinfo=None).strftime("%H:%M:%S")}
+    try:
+        handle.seek(0)
+        handle.truncate()
+        handle.write(json.dumps(record))
+        handle.flush()
+    except OSError:
+        pass  # a waiter then prints the bare waiting line instead
+
+
+def _git_dir(root: Path) -> Path | None:
+    """This checkout's git directory, or None when the root has none.
+
+    `git rev-parse --git-dir` answers per checkout (a worktree names its own
+    `.git/worktrees/<name>`), so separate checkouts of one repository keep
+    separate locks. A relative answer (`.git`) resolves against the root.
+    A root without its own `.git` entry answers None (including synthetic
+    roots inside another checkout). An existing but broken anchor refuses:
+    using a temp lock would let a contender bypass the checkout's real lock.
+    Ambient Git routing variables never determine process-state ownership.
+    """
+    root_key = str(root.resolve())
+    try:
+        anchor = (Path(root_key) / ".git").lstat()
+    except FileNotFoundError:
+        _GIT_DIR_CACHE.pop(root_key, None)
+        return None
+    except OSError as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
+    anchor_key = (anchor.st_dev, anchor.st_ino, anchor.st_mtime_ns, anchor.st_ctime_ns)
+    hit = _GIT_DIR_CACHE.get(root_key)
+    if hit is not None and hit[0] == anchor_key and hit[1].is_dir():
+        return hit[1]
+    env = {key: value for key, value in os.environ.items()
+           if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}}
+    try:
+        proc = subprocess.run(
+            ["git", "-C", root_key, "rev-parse", "--git-dir"],
+            capture_output=True, text=True, timeout=30,
+            env={**env, "GIT_OPTIONAL_LOCKS": "0"},
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
+    if proc.returncode != 0:
+        raise WriteRefused(
+            f"cannot resolve the checkout's git directory: {proc.stderr.strip()}")
+    lines = proc.stdout.strip().splitlines()
+    if not lines or not lines[0].strip():
+        raise WriteRefused("cannot resolve the checkout's git directory: empty git response")
+    candidate = Path(lines[0].strip())
+    resolved = candidate if candidate.is_absolute() else root / candidate
+    try:
+        if not resolved.is_dir():
+            raise WriteRefused(f"checkout git directory is unavailable: {resolved}")
+        resolved = resolved.resolve()
+    except OSError as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
+    _GIT_DIR_CACHE[root_key] = (anchor_key, resolved)
+    return resolved
+
+
+def _process_state_dir(root: Path) -> Path:
+    """Where this checkout's operator lock and session ledgers live.
+
+    `<git-dir>/learningos/` — per checkout, never committed, surviving `git
+    clean` — so processes whose environments differ (and whose `$TMPDIR`
+    therefore disagrees) still exclude each other and still find each
+    other's ledgers. Roots without a git dir (the synthetic test
+    repositories) keep today's temp-dir location. When the anchor exists
+    but is not writable the command is refused; falling back to a temp
+    directory then would silently split the lock again.
+    """
+    git_dir = _git_dir(root)
+    if git_dir is None:
+        return Path(tempfile.gettempdir())
+    state = git_dir / "learningos"
+    try:
+        state.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise WriteRefused(
+            f"operator state directory is not writable: {state}: "
+            f"{exc.strerror or exc}") from exc
+    return state
+
+
+def _is_anchored(root: Path) -> bool:
+    return _git_dir(root) is not None
+
+
+def _operator_lock_path(root: Path) -> Path:
+    if _is_anchored(root):
+        return _process_state_dir(root) / "operator.lock"
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
+    return Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
+
+
+def _held_entry(root_key: str) -> tuple[str, object] | None:
+    for key, mode, handle in _HELD_OPERATOR_LOCKS.get():
+        if key == root_key:
+            return mode, handle
+    return None
+
+
+def _acquire_flock(handle, *, exclusive: bool, lock_path: Path,
+                   timeout: float | None) -> None:
+    """Take the flock both modes contend for, announcing the wait (#101).
+
+    A contender probes first and announces the wait on stderr — with the
+    holder's pid, command, and start time when the lock file names them —
+    instead of hanging silently. `LOS_LOCK_TIMEOUT` (or `los
+    --lock-timeout`) bounds the wait identically for both modes; on expiry
+    a WriteRefused naming the holder propagates, which every entry point
+    maps to exit 2 with nothing changed.
+    """
+    flag = fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH
+    try:
+        fcntl.flock(handle.fileno(), flag | fcntl.LOCK_NB)
+        return
+    except BlockingIOError:
+        pass
+    holder = _read_holder(lock_path)
+    detail = f" {holder}" if holder else ""
+    print(f"los: waiting for the operator lock{detail}", file=sys.stderr)
+    if timeout is None:
+        fcntl.flock(handle.fileno(), flag)
+        return
+    deadline = time.monotonic() + timeout
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise WriteRefused(
+                f"timed out after {timeout:g}s waiting for the "
+                f"operator lock{detail}") from None
+        time.sleep(min(_LOCK_POLL_INTERVAL_S, remaining))
+        try:
+            fcntl.flock(handle.fileno(), flag | fcntl.LOCK_NB)
+            return
+        except BlockingIOError:
+            continue
+
+
+def _has_armed_inflight(root: Path) -> bool:
+    """Whether a published crash journal awaits recovery (read-only probe).
+
+    Staging debris (`.preparing-*`) died before the first canonical
+    mutation, so it proves nothing and waits for the next exclusive
+    acquisition to drop it. A published journal means canonical state may
+    be torn, and a shared lock must not serve it without recovery.
+    """
+    inflight = root / "operations" / "transactions" / ".inflight"
+    try:
+        return any(not entry.name.startswith(".preparing-")
+                   for entry in inflight.iterdir())
+    except FileNotFoundError:
+        return False
+
+
+def _escalate_operator_lock(root: Path) -> bool:
+    """Drop a held shared lock and take the exclusive one; True when it dropped.
+
+    Never upgrades in place: the shared lock is released first, then the
+    exclusive lock is contended for like any fresh acquisition (announced,
+    bounded by the same timeout), and only then do the holder record and
+    crash recovery run. Already-exclusive answers False having changed
+    nothing. The mode update replaces the context value; the owning
+    scope's reset still restores the pre-scope value on exit.
+    """
+    root_key = str(root.resolve())
+    entry = _held_entry(root_key)
+    if entry is None:
+        raise RuntimeError(
+            f"cannot escalate the operator lock for {root_key}: not held")
+    mode, handle = entry
+    if mode == "exclusive":
+        return False
+    if mode == "released":
+        raise WriteRefused("operator lock is no longer held after a failed escalation")
+    # Invalidate re-entrancy before dropping SH. If acquisition, holder
+    # publication, or recovery fails, an outer caller that catches the
+    # exception must never mistake this scope for a still-held read lock.
+    _HELD_OPERATOR_LOCKS.set(tuple(
+        (key, "released" if key == root_key else held_mode, held_handle)
+        for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
+    ))
+    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    _acquire_flock(handle, exclusive=True,
+                   lock_path=_operator_lock_path(root),
+                   timeout=_lock_timeout_seconds())
+    _write_holder(handle)
+    reconcile_inflight_transactions(root)
+    _HELD_OPERATOR_LOCKS.set(tuple(
+        (key, "exclusive" if key == root_key else held_mode, held_handle)
+        for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
+    ))
+    return True
+
+
+@contextlib.contextmanager
+def _operator_lock(root: Path, *, shared: bool = False):
+    """Cross-process lock for every read and write/generation transaction.
+
+    Writes take it exclusive, as before. Reads that only serve a provably
+    current manifest take it shared (`LOCK_SH`) so they no longer
+    serialize against each other; a read that must rebuild drops the
+    shared lock, takes the exclusive one, re-checks the identity, then
+    builds (see `_fresh_manifest_and_repo`). A write nested inside a
+    shared section escalates it — exclusive subsumes the read guarantee,
+    it never violates it — and a shared request inside an exclusive
+    section passes straight through.
+
+    Shared holders neither write the holder record (concurrent writers
+    would garble it) nor run crash recovery (it writes); when a published
+    crash journal is present the acquisition escalates to exclusive
+    immediately, so every read still observes post-recovery state. The
+    wait announcement and `--lock-timeout` semantics are identical for
+    both modes, and re-entrancy is unchanged.
+    """
+    root_key = str(root.resolve())
+    entry = _held_entry(root_key)
+    if entry is not None:
+        held_mode, _ = entry
+        if held_mode == "released":
+            raise WriteRefused("operator lock is no longer held after a failed escalation")
+        if not shared and held_mode == "shared":
+            _escalate_operator_lock(root)
+        yield
+        return
+    lock_path = _operator_lock_path(root)
+    timeout = _lock_timeout_seconds()
+    try:
+        handle = lock_path.open("a+", encoding="utf-8")
+    except OSError as exc:
+        raise WriteRefused(
+            f"operator lock is not writable: {lock_path}: "
+            f"{exc.strerror or exc}") from exc
+    with handle:
+        _acquire_flock(handle, exclusive=not shared, lock_path=lock_path,
+                       timeout=timeout)
+        mode = "shared" if shared else "exclusive"
+        if not shared:
+            _write_holder(handle)
+            reconcile_inflight_transactions(root)
+        context_token = _HELD_OPERATOR_LOCKS.set(
+            _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
+        try:
+            if shared and _has_armed_inflight(root):
+                _escalate_operator_lock(root)
+            yield
+        finally:
+            _HELD_OPERATOR_LOCKS.reset(context_token)
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+#: The typed refusal a failed handler step recorded for the gateway.
+#:
+#: Handlers answer with an int exit code plus printed prose, so a typed
+#: refusal caught inside a handler (a revision conflict in
+#: ``_write_transaction``, a stale delivery in the AI-action handler)
+#: would lose its type at that boundary. The catching step records the
+#: ``(code, retryable)`` pair here instead, and the gateway dispatch
+#: takes it after a non-zero return. Never reconstructed from prose or
+#: from the exit code: exit 3 alone is ambiguous (a snapshot guard, a
+#: revision conflict, and a stale reviewed digest all use it).
+_GATEWAY_REFUSAL: contextvars.ContextVar[tuple[str, bool] | None] = (
+    contextvars.ContextVar("learningos_gateway_refusal", default=None)
+)
+
+
+def _record_gateway_refusal(code: str, retryable: bool) -> None:
+    """Carry one typed refusal code across the handler's int-exit boundary."""
+    _GATEWAY_REFUSAL.set((code, retryable))
+
+
+def _take_gateway_refusal() -> tuple[str, bool] | None:
+    """Read and clear the recorded refusal, if any."""
+    refusal = _GATEWAY_REFUSAL.get()
+    _GATEWAY_REFUSAL.set(None)
+    return refusal
+
+
+def _refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
+    """Map a refusal to its V2 ``(code, retryable)`` by type, never by prose.
+
+    Returns ``None`` for an untyped refusal, which the gateway reports as
+    ``INVALID_REQUEST``. ``TransactionConflict`` and
+    ``TransactionSnapshotConflict`` normally never reach this helper —
+    ``_write_transaction`` records the first and re-raises the second —
+    but mapping them here keeps the table total over every failure the
+    gateway boundary can observe.
+    """
+    row = classify(failure, "gateway.refusal")
+    if row is None:
+        return None
+    resolved = resolve(row, failure)
+    if resolved["code"] is None:
+        return None
+    return (resolved["code"], resolved["retryable"])
+
+
+def _publish(root: Path) -> None:
+    _publish_repo(load_repo(root))
+
+
+def _publish_repo(repo) -> None:
+    write_outputs(repo, generate_all(repo))
+
+
+def _json_layout(stream=None) -> dict:
+    """Indented JSON for a person at a terminal, compact JSON on a pipe.
+
+    Agents and the UI read through pipes, where indentation was 15-22% of
+    the bytes of inspect, resume, search and semantic output and carried no
+    information (measured 2026-09-22). Any JSON parser reads both forms.
+    """
+    if stream is None:
+        stream = sys.stdout
+    try:
+        interactive = stream.isatty()
+    except (AttributeError, ValueError):
+        interactive = False
+    return {"indent": 2} if interactive else {"separators": (",", ":")}
+
+
+#: Environment variable naming the calling session. Every gateway write and
+#: every `session-end` in one agent session must see the same value, so the
+#: harness exports it once per session (WORKFLOWS §25c step 4), or the agent
+#: seals `session_id` in each write envelope when the shell does not persist
+#: (WORKFLOWS §22). The Obsidian UI exports `ui` for every child it spawns.
+SESSION_ID_ENV = "LOS_SESSION_ID"
+
+
+#: Channel assumed when no session is named and no gateway request is active
+#: (a bare `session-end`, a direct `_record_touched` call). This is the
+#: operator path WORKFLOWS §25c documents, so the default claims exactly the
+#: writes the documented ceremony produces.
+DEFAULT_SESSION_CHANNEL = "operator"
+
+
+#: Ephemeral ledger contract. Version 1 was the single shared file with bare
+#: `{state, sha256}` rows; version 2 keys the file per session and stamps
+#: every row with its channel and recording time.
+SESSION_LEDGER_SCHEMA_VERSION = 2
+
+
+def _resolve_session_identity(*, channel: str | None = None,
+                              explicit: str | None = None
+                              ) -> tuple[str, str]:
+    """The session identity every ledger operation resolves, and its source.
+
+    Resolution order: an explicit id (the `--session-id` flag), then the
+    sealed gateway envelope's `session_id`, then the `LOS_SESSION_ID`
+    environment, then the gateway channel — so two actors that name
+    nothing still land in separate ledgers by channel (`channel:ui` vs
+    `channel:operator`), while one named session shares a single ledger
+    whatever channel its writes used. The source is one of `explicit`,
+    `envelope`, `environment`, or `channel`.
+    """
+    if explicit is not None and explicit.strip():
+        return explicit.strip(), "explicit"
+    request = current_gateway_request()
+    if request is not None:
+        sealed = (request.session_id or "").strip()
+        if sealed:
+            return sealed, "envelope"
+    env = os.environ.get(SESSION_ID_ENV, "").strip()
+    if env:
+        return env, "environment"
+    resolved = channel
+    if resolved is None:
+        resolved = request.channel if request is not None else DEFAULT_SESSION_CHANNEL
+    return f"channel:{resolved}", "channel"
+
+
+def _current_session_id(*, channel: str | None = None,
+                        explicit: str | None = None) -> str:
+    """The session identity every ledger operation resolves the same way."""
+    identity, _ = _resolve_session_identity(channel=channel, explicit=explicit)
+    return identity
+
+
+def _session_ledger(root: Path, session_id: str | None = None) -> Path:
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
+    identity = _current_session_id(explicit=session_id)
+    slug = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
+    return _process_state_dir(root) / f"learningos-{token}-{slug}-touched.json"
+
+
+def _session_path_state(root: Path, relative: str) -> dict[str, str]:
+    """Return the exact post-transaction state used to prove session ownership."""
+    lexical = root / relative
+    try:
+        resolved = lexical.resolve()
+        resolved.relative_to(root.resolve())
+    except (OSError, ValueError):
+        return {"state": "unsafe"}
+    if lexical.is_symlink():
+        return {"state": "unsafe"}
+    if not resolved.exists():
+        return {"state": "absent"}
+    if not resolved.is_file():
+        return {"state": "not-file"}
+    try:
+        digest = hashlib.sha256(resolved.read_bytes()).hexdigest()
+    except OSError:
+        return {"state": "unreadable"}
+    return {"state": "file", "sha256": digest}
+
+
+def _row_proven_state(row: dict) -> dict[str, str]:
+    """The bytes-proving subset of a ledger row, for live-file comparison.
+
+    Provenance (`channel`, `recorded_at`) describes the claim, not the file;
+    comparing the whole row against `_session_path_state` would refuse every
+    v2 row unconditionally.
+    """
+    proven = {"state": str(row.get("state", ""))}
+    if "sha256" in row:
+        proven["sha256"] = str(row["sha256"])
+    return proven
+
+
+def _row_recorded_at(row: dict) -> _dt.datetime | None:
+    raw = row.get("recorded_at")
+    if not isinstance(raw, str) or not raw:
+        return None
+    try:
+        moment = _dt.datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=_dt.UTC)
+    return moment
+
+
+def _validate_session_row(relative: str, state: object) -> dict[str, str]:
+    if not isinstance(relative, str) or not relative \
+            or Path(relative).is_absolute() or ".." in Path(relative).parts \
+            or not isinstance(state, dict):
+        raise WriteRefused("session ownership ledger contains an invalid path row")
+    row = {str(key): str(value) for key, value in state.items()}
+    if not row.get("state") or not row.get("channel") or not row.get("recorded_at"):
+        raise WriteRefused("session ownership ledger contains an unstamped path row")
+    if _row_recorded_at(row) is None:
+        raise WriteRefused("session ownership ledger contains an undated path row")
+    return row
+
+
+def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
+    identity = _current_session_id(explicit=session_id)
+    ledger = _session_ledger(root, identity)
+    if not ledger.is_file():
+        return {}
+    try:
+        data = json.loads(ledger.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise WriteRefused(f"session ownership ledger is unreadable: {exc}") from exc
+    if not isinstance(data, dict) \
+            or data.get("schema_version") != SESSION_LEDGER_SCHEMA_VERSION \
+            or not isinstance(data.get("paths"), dict):
+        raise WriteRefused("session ownership ledger has an unsupported contract")
+    if data.get("session_id") != identity:
+        raise WriteRefused("session ownership ledger names a different session")
+    return {
+        relative: _validate_session_row(relative, state)
+        for relative, state in data["paths"].items()
+    }
+
+
+def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
+    row = _session_path_state(root, relative)
+    row["channel"] = channel
+    row["recorded_at"] = observations.now().astimezone(_dt.UTC).replace(
+        microsecond=0).isoformat()
+    return row
+
+
+def _atomic_text(path: Path, content: str) -> None:
+    """Temp file + os.replace, cleaning up after any failure.
+
+    Every mutating command funnels through here, so an ordinary filesystem
+    problem — target replaced by a directory, permission denied, full disk —
+    must surface as an actionable refusal instead of a traceback that leaves a
+    stray `.tmp` sibling behind.
+    """
+    tmp = path.with_name(f".{path.name}.tmp")
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, path)
+    except OSError as exc:
+        with contextlib.suppress(OSError):
+            tmp.unlink(missing_ok=True)
+        raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
+
+
+def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
+                          session_id: str | None = None) -> None:
+    identity = _current_session_id(explicit=session_id)
+    _atomic_text(_session_ledger(root, identity), json.dumps({
+        "schema_version": SESSION_LEDGER_SCHEMA_VERSION,
+        "session_id": identity,
+        "paths": dict(sorted(paths.items())),
+    }, indent=2, sort_keys=True) + "\n")
+
+
+def _record_touched(root: Path, paths, channel: str | None = None, *,
+                    session_id: str | None = None) -> None:
+    """Stamp post-write rows into the caller's session ledger.
+
+    The explicit id (`--session-id`) wins over the envelope, the
+    environment, and the channel, exactly as `session-end` resolves it,
+    so a direct command (like `los goal`, which seals no envelope) can
+    still claim its write for the caller's session.
+    """
+    identity = _current_session_id(channel=channel, explicit=session_id)
+    ledger = _session_ledger(root, identity)
+    current = _load_session_paths(root, identity) if ledger.is_file() else {}
+    request = current_gateway_request()
+    actor = channel or (request.channel if request is not None else DEFAULT_SESSION_CHANNEL)
+    for path in paths:
+        p = Path(path)
+        try:
+            rel = p.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            continue
+        # Canvas files are Obsidian UI state, not part of a learning-session
+        # action ledger. The protection is about the file type, not the first
+        # three default names Obsidian happened to generate.
+        if p.suffix.lower() != ".canvas":
+            current[rel] = _stamp_session_row(root, rel, actor)
+    _write_session_ledger(root, current, identity)
+
+
+def _confirmation_from(result) -> dict:
+    """Receipt facts a command reports after its own successful transaction."""
+    if result is None:
+        return {}
+    parts = result.receipt_path.parts
+    try:
+        relative = Path(*parts[parts.index("operations"):]).as_posix()
+    except ValueError:
+        relative = result.receipt_path.name
+    return {
+        "transaction_id": result.transaction_id,
+        "receipt_path": relative,
+        "artifact_revisions": dict(result.revisions),
+        "snapshot_after": result.snapshot_after,
+        "replayed": bool(result.replayed),
+    }

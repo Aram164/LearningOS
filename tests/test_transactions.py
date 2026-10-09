@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import fcntl
 import hashlib
 import json
 import subprocess
@@ -15,6 +16,8 @@ from repo_builders import add_curriculum
 import learning_os.ai_actions.projection as ai_projection
 import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
+import learning_os.ops._legacy_plumbing as plumbing_support
+import learning_os.ops.commit as ops_commit
 import learning_os.transactions as transaction_module
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
@@ -211,13 +214,13 @@ def test_a_transaction_refuses_an_already_invalid_repository(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
     target = mini_repo / "work/inbox/strict-validation.md"
     monkeypatch.setattr(
-        command_support,
+        ops_commit,
         "validate",
         lambda _repo, online=False: [
             Issue("E", "PREEXISTING", "the repository is already invalid", "somewhere.yaml")
         ],
     )
-    monkeypatch.setattr(command_support, "_publish", lambda _root: None)
+    monkeypatch.setattr(ops_commit, "_publish", lambda _root: None)
 
     artifact = "capture-test:strict-validation"
     with gateway_request_context(
@@ -248,7 +251,7 @@ def test_validation_and_publication_share_one_loaded_repository(
         loads += 1
         return original(root)
 
-    monkeypatch.setattr(command_support, "load_repo", counted)
+    monkeypatch.setattr(ops_commit, "load_repo", counted)
 
     def unexpected_projection_load(_root: Path):
         raise AssertionError(
@@ -339,32 +342,32 @@ def test_operator_lock_is_reentrant_in_one_dispatch(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     calls: list[int] = []
     monkeypatch.setattr(
-        command_support.fcntl,
+        fcntl,
         "flock",
         lambda _fd, operation: calls.append(operation),
     )
 
     # The outer acquire probes non-blocking first; the inner re-entrant
     # acquire performs no lock operation at all.
-    probe = command_support.fcntl.LOCK_EX | command_support.fcntl.LOCK_NB
+    probe = fcntl.LOCK_EX | fcntl.LOCK_NB
     with command_support._operator_lock(tmp_path):
         with command_support._operator_lock(tmp_path):
             assert calls == [probe]
 
-    assert calls == [probe, command_support.fcntl.LOCK_UN]
+    assert calls == [probe, fcntl.LOCK_UN]
 
 
 def test_projection_publication_refuses_a_changed_canonical_snapshot(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
     target = mini_repo / "work/inbox/projection-race.md"
     external = mini_repo / "knowledge/notes/mathematics/external-race.md"
-    original_publish = command_support._publish_repo
+    original_publish = ops_commit._publish_repo
 
     def publish_then_mutate(repo):
         original_publish(repo)
         external.write_text("changed outside the transaction\n", encoding="utf-8")
 
-    monkeypatch.setattr(command_support, "_publish_repo", publish_then_mutate)
+    monkeypatch.setattr(ops_commit, "_publish_repo", publish_then_mutate)
     artifact = "capture-test:projection-race"
     with gateway_request_context(
         _gateway_context("capture.create", "projection-race")
@@ -464,7 +467,7 @@ def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Pa
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     canvas = mini_repo / "Untitled 37.canvas"
     regular = mini_repo / "work/inbox/kept.md"
-    command_support._record_touched(mini_repo, [canvas, regular])
+    plumbing_support._record_touched(mini_repo, [canvas, regular])
     recorded = json.loads(
         command_support._session_ledger(mini_repo).read_text(encoding="utf-8")
     )

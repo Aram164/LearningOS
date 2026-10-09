@@ -28,17 +28,19 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os import observations
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.semantics.scan import intelligence_scan
-
-from .support import (
-    TOOLS,
+from learning_os.ops._legacy_plumbing import (
     _atomic_text,
     _current_session_id,
     _load_session_paths,
     _operator_lock,
     _record_touched,
-    _root,
     _session_ledger,
+)
+from learning_os.semantics.scan import intelligence_scan
+
+from .support import (
+    TOOLS,
+    _root,
 )
 
 LEDGER_RELATIVE = "operations/goal-ledger.yaml"

@@ -30,12 +30,8 @@ from learning_os.ai_actions import (
 )
 from learning_os.commands import ai as ai_command
 from learning_os.commands.ai import _ai_refusal
-from learning_os.commands.capability import _classify_failure, _v2_exit_code
 from learning_os.commands.resume import _render as _render_resume
 from learning_os.commands.support import (
-    _operator_lock,
-    _refusal_from_failure,
-    _take_gateway_refusal,
     _write_transaction,
 )
 from learning_os.contracts.gateway import (
@@ -51,6 +47,12 @@ from learning_os.domain.failures import (
     ValidationFailed,
     WriteRefused,
 )
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+    _refusal_from_failure,
+    _take_gateway_refusal,
+)
+from learning_os.ops.pipeline import _classify_failure, _v2_exit_code
 from learning_os.pathing import PathBoundaryError
 from learning_os.rules.common import Issue
 from learning_os.transactions import (
@@ -304,7 +306,7 @@ def test_write_transaction_records_a_validation_refusal(
     mini_repo: Path, monkeypatch
 ):
     """A validation failure crosses the (code, errors) channel typed."""
-    from learning_os.commands import support as support_module
+    from learning_os.ops import commit as commit_module
 
     key = "typed-validation-write-001"
     request_artifact = f"capture-request:{key}"
@@ -318,7 +320,7 @@ def test_write_transaction_records_a_validation_refusal(
         approval_subject_sha256="sha256:" + "2" * 64,
     )
     monkeypatch.setattr(
-        support_module,
+        commit_module,
         "validate",
         lambda repo, online=False: [
             Issue(severity="E", code="UNIT-TEST", message="induced failure",

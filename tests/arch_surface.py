@@ -1,6 +1,6 @@
-"""Build the frozen CLI/catalog surface snapshot (PLAN A11).
+"""Build the frozen CLI/catalog surface snapshot (PLAN A11, A17).
 
-The snapshot shape is fixed by SPEC §3.3 A11; the flattening of the snapshot
+The snapshot shape is fixed by SPEC §3.3 A11 and §3.4 A17; the flattening of the snapshot
 into approval keys is fixed by the S01 kickoff. This module holds the builder
 plus the shared flatten/diff/approval helpers used by ``test_arch_surface.py``
 (current snapshot matches the live code) and ``test_arch_ratchets.py`` (every
@@ -10,7 +10,9 @@ diff against the base carries an approval).
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -120,6 +122,11 @@ def build_surface(root: Path | str) -> dict:
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.contracts.payloads import subparsers
 
+    try:
+        from learning_os.ops.context import OpContext
+    except ImportError:
+        OpContext = None
+
     root_parser = los.build_parser()
     cli = {"__root__": _parser_options(root_parser)}
     for name, sub in sorted(subparsers(root_parser).items()):
@@ -135,7 +142,7 @@ def build_surface(root: Path | str) -> dict:
         for path in sorted(requests_dir.glob("*.schema.json")):
             request_schemas[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
 
-    return {
+    surface = {
         "catalog": {
             "commands": commands,
             "queries": queries,
@@ -146,6 +153,19 @@ def build_surface(root: Path | str) -> dict:
         "tools": tools,
         "request_schemas": request_schemas,
     }
+    if OpContext is not None:
+        opcontext: dict[str, str] = {}
+        for field in dataclasses.fields(OpContext):
+            ftype = field.type
+            opcontext[field.name] = (
+                f"field: {ftype if isinstance(ftype, str) else repr(ftype)}"
+            )
+        for name, member in vars(OpContext).items():
+            if name.startswith("_") or not callable(member):
+                continue
+            opcontext[name] = f"method: {inspect.signature(member)}"
+        surface["opcontext"] = opcontext
+    return surface
 
 
 def flatten_surface(surface: dict) -> dict[str, object]:
@@ -163,6 +183,8 @@ def flatten_surface(surface: dict) -> dict[str, object]:
     for area in ("cli", "tools", "request_schemas"):
         for name, value in surface.get(area, {}).items():
             flat[f"{area}.{name}"] = value
+    for name, value in surface.get("opcontext", {}).items():
+        flat[f"opcontext.{name}"] = value
     return flat
 
 

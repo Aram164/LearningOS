@@ -15,12 +15,6 @@ import pytest
 
 from learning_os.ai_actions.errors import AIActionError, StaleDeliveryError
 from learning_os.backup_manifest import BackupManifestError
-from learning_os.commands.capability import (
-    _classify_failure,
-    _post_commit_error,
-    _projection_error,
-)
-from learning_os.commands.support import _refusal_from_failure
 from learning_os.contracts.manifest_contract import ManifestContractError
 from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.domain.failures import (
@@ -42,7 +36,15 @@ from learning_os.health import HealthReportError
 from learning_os.legacy_archive import LegacyArchiveError
 from learning_os.masters_planning import MastersPlanningError
 from learning_os.material_synthesis import MaterialSynthesisError
+from learning_os.ops._legacy_plumbing import (
+    _refusal_from_failure,
+)
 from learning_os.ops.outcomes import TABLE, classify, exit_for, resolve
+from learning_os.ops.pipeline import (
+    _classify_failure,
+    _post_commit_error,
+    _projection_error,
+)
 from learning_os.pathing import PathBoundaryError
 from learning_os.transactions import (
     TransactionConflict,

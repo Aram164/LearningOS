@@ -592,6 +592,11 @@ def _unapproved_surface_diffs(base_flat: dict[str, object],
     }
 
 
+def _surface_rule(key: str) -> str:
+    """The check id owning a surface key: A17 freezes opcontext members."""
+    return "A17" if key.startswith("opcontext.") else "A11"
+
+
 def test_surface_diffs_have_approvals(base_ref):
     base_text = _git_show(
         base_ref,
@@ -617,8 +622,16 @@ def test_surface_diffs_have_approvals(base_ref):
         text = base_text if uncovered[key] == "removed" else live_text
         lineno = arch_surface.locate_line(text, key)
         rel = (ARCH / arch_surface.SURFACE_FILENAME).relative_to(ROOT).as_posix()
-        failures.append(f"A11 {key}: {uncovered[key]} — {rel}:{lineno} — {FIX['A11']}")
+        rule = _surface_rule(key)
+        failures.append(f"{rule} {key}: {uncovered[key]} — {rel}:{lineno} — {FIX[rule]}")
     assert not failures, "unapproved surface diffs:\n" + "\n".join(failures)
+
+
+def test_opcontext_surface_keys_use_the_a17_sentence():
+    assert _surface_rule("opcontext.root") == "A17"
+    assert _surface_rule("opcontext.require_snapshot") == "A17"
+    assert _surface_rule("cli.inspect") == "A11"
+    assert _surface_rule("tools.seal_envelope.py") == "A11"
 
 
 # ---- step 4 single-use against fixture surfaces (no git) ----------------------

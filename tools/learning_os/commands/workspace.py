@@ -9,6 +9,9 @@ import sys
 
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
 from learning_os.render import parse_sections
 from learning_os.render import replace_h2_section as _replace_h2_section
@@ -17,7 +20,6 @@ from learning_os.revisions import artifact_revision
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _render_frontmatter,
     _root,
     _write_transaction,

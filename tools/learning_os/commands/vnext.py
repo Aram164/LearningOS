@@ -35,14 +35,16 @@ from learning_os.material_synthesis import (
     synthesis_destination,
     validate_unit_material_synthesis,
 )
+from learning_os.ops._legacy_plumbing import (
+    _atomic_text,
+    _operator_lock,
+)
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
-    _atomic_text,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _read_structured_file,
     _root,
     _write_transaction,

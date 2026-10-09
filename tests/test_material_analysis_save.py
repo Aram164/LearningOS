@@ -454,9 +454,9 @@ def test_batch_fully_replayed_makes_no_write(mini_repo):
 def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
     import los
     from learning_os.commands import analysis as analysis_commands
-    from learning_os.commands.capability import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.legacy import _dispatch
 
     entries = [_batch_entry("txa", "transaction analysis a"),
                _batch_entry("txb", "transaction analysis b")]

@@ -63,8 +63,10 @@ def main() -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     if args.derived_state:
-        from learning_os.commands.support import _operator_lock  # noqa: E402
         from learning_os.derived.store import sweep_unreferenced_blobs  # noqa: E402
+        from learning_os.ops._legacy_plumbing import (  # noqa: E402
+            _operator_lock,
+        )
 
         with _operator_lock(root):
             result = sweep_unreferenced_blobs(root, dry_run=args.dry_run)

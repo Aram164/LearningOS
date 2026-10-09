@@ -28,6 +28,9 @@ from learning_os.material_refs import (
     unit_routes,
 )
 from learning_os.material_synthesis import material_synthesis_freshness
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 from learning_os.transactions import artifact_revision
 
 from .module import _module_plan_validation_errors, _plan_apply_gate
@@ -44,7 +47,6 @@ from .support import (
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _root,
     _write_transaction,
 )

@@ -21,17 +21,17 @@ import yaml
 from gateway_helpers import run_v2_capability
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.commands.capability import (
-    GESTURE_ALLOWLIST,
-    UI_REVIEWED_ALLOWLIST,
-    gesture_allowed,
-)
 from learning_os.contracts.capability_catalog import (
     gesture_admitted_capabilities,
     ui_reviewed_capabilities,
 )
 from learning_os.contracts.gateway import intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops.legacy import (
+    GESTURE_ALLOWLIST,
+    UI_REVIEWED_ALLOWLIST,
+    gesture_allowed,
+)
 from learning_os.transactions import artifact_revision
 
 MAP = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"

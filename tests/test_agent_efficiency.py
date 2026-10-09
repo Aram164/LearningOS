@@ -16,8 +16,9 @@ import pytest
 from repo_builders import run_los
 
 from learning_os import fingerprint
-from learning_os.commands import query, reads, support
+from learning_os.commands import query, reads
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import _json_layout
 
 
 def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_path):
@@ -236,8 +237,8 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
             return True
 
     terminal, pipe = Terminal(), StringIO()
-    assert support._json_layout(terminal) == {"indent": 2}
-    assert support._json_layout(pipe) == {"separators": (",", ":")}
+    assert _json_layout(terminal) == {"indent": 2}
+    assert _json_layout(pipe) == {"separators": (",", ":")}
     monkeypatch.setattr(query, "_fresh_manifest_and_repo", lambda root: ({
         "records": [{"id": "record-demo", "title": "Demo"}],
     }, None))

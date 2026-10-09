@@ -11,8 +11,11 @@ from learning_os.genout.learner_interpreter import _collect_and_interpret
 from learning_os.genout.session_compiler import compile_session, replan_session
 from learning_os.learning_runtime import RuntimeInputError, collect_requirements
 from learning_os.loader import load_repo
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 
-from .support import _operator_lock, _root
+from .support import _root
 
 
 def cmd_runtime_session(args) -> int:

@@ -6,7 +6,6 @@ fields the exceptions behave exactly as before the move.
 
 from __future__ import annotations
 
-from learning_os.commands import capability
 from learning_os.domain import failures, suggest
 from learning_os.domain.codes import (
     AMBIGUOUS_MIGRATION,
@@ -15,6 +14,7 @@ from learning_os.domain.codes import (
     UNCONFIRMED,
     VALIDATION_FAILED,
 )
+from learning_os.ops import pipeline as ops_pipeline
 
 
 def test_write_refused_defaults_are_unset():
@@ -112,7 +112,7 @@ def test_suggestions_returns_exactly_the_shown_ids():
 
 
 def test_replay_recovery_error_is_one_class_object():
-    assert capability._ReplayRecoveryError is failures._ReplayRecoveryError
+    assert ops_pipeline._ReplayRecoveryError is failures._ReplayRecoveryError
 
 
 def test_not_found_one_shot_candidates_preserve_message_and_suggestions():

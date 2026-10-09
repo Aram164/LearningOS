@@ -119,7 +119,7 @@ def _write_journal_v2(root: Path, tx_id: str, entries: list) -> Path:
 
 
 def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
-    import learning_os.commands.support as support
+    import learning_os.ops._legacy_plumbing as plumbing
 
     tmp_path = Path(tmp_path)
     root = _build_root(tmp_path, "a2-f1")
@@ -140,7 +140,7 @@ def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
     log_path = tmp_path / "a2-f1.log"
     arch_audit_hook.install(str(log_path))
     try:
-        with support._operator_lock(root, shared=True):
+        with plumbing._operator_lock(root, shared=True):
             pass
     finally:
         arch_audit_hook.uninstall()

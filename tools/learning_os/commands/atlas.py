@@ -9,6 +9,10 @@ from pathlib import Path
 import jsonschema
 import yaml
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
+
 from .. import observations
 from ..contracts.atlas_question import (
     QUESTION_FIELDS,
@@ -24,7 +28,6 @@ from ..revisions import artifact_revision
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _render_frontmatter,
     _root,
     _write_transaction,

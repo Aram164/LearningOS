@@ -23,6 +23,9 @@ from pathlib import Path
 from learning_os import githistory, observations
 from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
     LineageError,
@@ -39,7 +42,6 @@ from learning_os.semantics.restamp import (
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _root,
     _write_transaction,
 )

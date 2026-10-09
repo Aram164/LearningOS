@@ -37,8 +37,9 @@ def test_every_v2_external_file_input_is_content_bound_or_inline_only(
 ):
     """A newly exposed file path cannot silently approve only its pathname."""
     import los
-    from learning_os.commands.capability import _CONTENT_BOUND_V2, _FILE_INPUTS_V2
+    from learning_os.commands.capability import _FILE_INPUTS_V2
     from learning_os.contracts.payloads import payload_fields, subparsers
+    from learning_os.ops.legacy import _CONTENT_BOUND_V2
 
     external_fields = {"file", "items_file", "attachment"}
     parsers = subparsers(los.build_parser())

@@ -8361,6 +8361,16 @@
    }
   ]
  },
+ "opcontext": {
+  "channel": "field: str",
+  "gateway": "field: GatewayRequestContext | None",
+  "invocation": "field: str",
+  "operation": "field: str",
+  "repo": "method: (self) -> 'Repo'",
+  "require_snapshot": "method: (self, expected: 'str | None') -> 'None'",
+  "root": "field: Path",
+  "snapshot_id": "method: (self) -> 'str'"
+ },
  "request_schemas": {
   "ability.candidate.append.schema.json": "372c77079597c573bf3e1fc52c8d46c7507957352282189e76791b294267a4f1",
   "ability.context.schema.json": "d21aa0f27fcf6031dc1c0950f876cdeff55393b9ec4b4e4cd0cc8dc0f4e04155",
@@ -8513,6 +8523,19 @@
    },
    {
     "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "check_out",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--check-out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
     "choices": [
      "auto"
     ],
@@ -8522,6 +8545,19 @@
     "nargs": null,
     "option_strings": [
      "--guards"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "guards_from",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--guards-from"
     ],
     "required": false,
     "type": null

@@ -19,11 +19,13 @@ from pathlib import Path
 
 from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _root,
     _write_transaction,
 )

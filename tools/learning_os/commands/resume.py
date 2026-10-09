@@ -32,10 +32,13 @@ from learning_os.learning_runtime import (
 )
 from learning_os.loader import load_repo
 from learning_os.observations import today as observed_today
+from learning_os.ops._legacy_plumbing import (
+    _json_layout,
+)
 from learning_os.pathing import PathBoundaryError, resolved_inside
 from learning_os.semantics.goals import stale_observations
 
-from .support import _json_layout, _root
+from .support import _root
 
 
 def _live_observations(observations: list[dict]) -> list[dict]:

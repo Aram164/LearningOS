@@ -13,26 +13,28 @@ from pathlib import Path
 from learning_os import observations
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
+from learning_os.ops._legacy_plumbing import (
+    _current_session_id,
+    _load_session_paths,
+    _operator_lock,
+    _publish,
+    _row_proven_state,
+    _row_recorded_at,
+    _session_ledger,
+    _session_path_state,
+)
 from learning_os.unit_notes import unit_note_sections
 
 from .support import (
     CLIENT_ENV,
     SESSION_LEDGER_STALE_HOURS,
-    _current_session_id,
     _dump_study_map,
     _expected_ok,
     _expected_revisions_from_args,
     _load_other_session_ledgers,
-    _load_session_paths,
-    _operator_lock,
-    _publish,
     _read_content_bound_file,
     _root,
     _row_is_stale,
-    _row_proven_state,
-    _row_recorded_at,
-    _session_ledger,
-    _session_path_state,
     _unit_map_or_error,
     _write_transaction,
 )

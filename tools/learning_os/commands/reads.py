@@ -33,17 +33,19 @@ from learning_os.materials_resolution import (
     material_uri_authority,
     safe_material_locator,
 )
+from learning_os.ops._legacy_plumbing import (
+    SESSION_ID_ENV,
+    _operator_lock,
+    _resolve_session_identity,
+)
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
 
 from .support import (
-    SESSION_ID_ENV,
     _fresh_manifest,
     _fresh_manifest_and_repo,
-    _operator_lock,
-    _resolve_session_identity,
     _root,
 )
 

@@ -22,6 +22,7 @@ from repo_builders import run_los, seed_live_goal_ids
 from learning_os.commands import support as command_support
 from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops import _legacy_plumbing as plumbing_support
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
@@ -200,11 +201,11 @@ def test_close_deletes_only_own_ledger(mini_repo, monkeypatch):
     _git_init(mini_repo)
     monkeypatch.setenv("LOS_SESSION_ID", "session-a")
     actor_a = _capture(mini_repo, key="wipe-a-001", text="A's note")
-    ledger_a = command_support._session_ledger(mini_repo, "session-a")
+    ledger_a = plumbing_support._session_ledger(mini_repo, "session-a")
     assert ledger_a.is_file()
     monkeypatch.setenv("LOS_SESSION_ID", "session-b")
     actor_b = _capture(mini_repo, key="wipe-b-001", text="B's note")
-    ledger_b = command_support._session_ledger(mini_repo, "session-b")
+    ledger_b = plumbing_support._session_ledger(mini_repo, "session-b")
 
     review = _session_end(mini_repo)
     assert review.returncode == 0, review.stderr
@@ -230,7 +231,7 @@ def test_close_and_commit_message_is_a_usage_error(mini_repo, monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="close-usage-001", text="usage note")
-    ledger = command_support._session_ledger(mini_repo, "channel:operator")
+    ledger = plumbing_support._session_ledger(mini_repo, "channel:operator")
     assert ledger.is_file()
 
     refused = _session_end(mini_repo, "--close", "--commit-message", "both")
@@ -276,17 +277,17 @@ def test_goal_session_id_flag_overrides_the_environment(mini_repo, monkeypatch):
     decided = run_los(mini_repo, "goal", goal_id, "--reject",
                       "--session-id", "explicit-session")
     assert decided.returncode == 0, decided.stderr
-    explicit = command_support._load_session_paths(mini_repo, "explicit-session")
+    explicit = plumbing_support._load_session_paths(mini_repo, "explicit-session")
     assert "operations/goal-ledger.yaml" in explicit
     row = explicit["operations/goal-ledger.yaml"]
     assert set(row) == {"state", "sha256", "channel", "recorded_at"}
     assert row["state"] == "file" and row["channel"] == "operator"
-    assert not command_support._session_ledger(
+    assert not plumbing_support._session_ledger(
         mini_repo, "env-session").exists()
 
 
 def _age_own_ledger(mini_repo: Path, session: str, hours: int = 25) -> None:
-    ledger = command_support._session_ledger(mini_repo, session)
+    ledger = plumbing_support._session_ledger(mini_repo, session)
     data = json.loads(ledger.read_text(encoding="utf-8"))
     aged = (dt.datetime.now(dt.UTC) - dt.timedelta(hours=hours)).isoformat()
     for row in data["paths"].values():
@@ -384,7 +385,7 @@ def test_replay_recovers_the_writing_channel_without_a_named_session(
     assert second.returncode == 0, second.stdout
     assert json.loads(second.stdout)["replayed"] is True
 
-    recorded = command_support._load_session_paths(mini_repo, "channel:ui")
+    recorded = plumbing_support._load_session_paths(mini_repo, "channel:ui")
     assert captured in recorded
     assert recorded[captured]["channel"] == "ui"
 
@@ -398,14 +399,14 @@ def test_unknown_channel_is_refused(mini_repo):
 
 def test_session_identity_resolution_precedence(monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
-    assert command_support._current_session_id() == "channel:operator"
-    assert command_support._current_session_id(channel="ui") == "channel:ui"
+    assert plumbing_support._current_session_id() == "channel:operator"
+    assert plumbing_support._current_session_id(channel="ui") == "channel:ui"
     monkeypatch.setenv("LOS_SESSION_ID", "env-session")
-    assert command_support._current_session_id() == "env-session"
-    assert command_support._current_session_id(channel="ui") == "env-session"
-    assert command_support._current_session_id(explicit="flag") == "flag"
+    assert plumbing_support._current_session_id() == "env-session"
+    assert plumbing_support._current_session_id(channel="ui") == "env-session"
+    assert plumbing_support._current_session_id(explicit="flag") == "flag"
     monkeypatch.setenv("LOS_SESSION_ID", "   ")
-    assert command_support._current_session_id() == "channel:operator"
+    assert plumbing_support._current_session_id() == "channel:operator"
 
 
 def test_sealed_session_identity_resolution_precedence(monkeypatch):
@@ -424,15 +425,15 @@ def test_sealed_session_identity_resolution_precedence(monkeypatch):
         session_id="sealed-session",
     )
     with gateway_request_context(context):
-        assert command_support._current_session_id() == "sealed-session"
-        assert command_support._resolve_session_identity()[1] == "envelope"
+        assert plumbing_support._current_session_id() == "sealed-session"
+        assert plumbing_support._resolve_session_identity()[1] == "envelope"
         monkeypatch.setenv("LOS_SESSION_ID", "env-session")
-        assert command_support._current_session_id() == "sealed-session"
-        assert command_support._current_session_id(explicit="flag") == "flag"
-        assert command_support._resolve_session_identity(explicit="flag")[1] \
+        assert plumbing_support._current_session_id() == "sealed-session"
+        assert plumbing_support._current_session_id(explicit="flag") == "flag"
+        assert plumbing_support._resolve_session_identity(explicit="flag")[1] \
             == "explicit"
-    assert command_support._current_session_id() == "env-session"
-    assert command_support._resolve_session_identity()[1] == "environment"
+    assert plumbing_support._current_session_id() == "env-session"
+    assert plumbing_support._resolve_session_identity()[1] == "environment"
 
 
 def _sealed_capture(root: Path, *, key: str, text: str, session_id: str) -> str:
@@ -578,10 +579,10 @@ def test_replay_recovers_the_sealed_session_without_a_named_session(
     assert second.returncode == 0, second.stdout
     assert json.loads(second.stdout)["replayed"] is True
 
-    recorded = command_support._load_session_paths(mini_repo, "sealed-replay-session")
+    recorded = plumbing_support._load_session_paths(mini_repo, "sealed-replay-session")
     assert captured in recorded
     assert recorded[captured]["channel"] == "operator"
-    assert command_support._load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
+    assert plumbing_support._load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
 
 
 def test_session_ledgers_survive_differing_tmpdirs(mini_repo, tmp_path, monkeypatch):
@@ -624,7 +625,7 @@ def test_previous_location_ledger_surfaces_as_foreign(mini_repo, monkeypatch):
     previous = Path(_tempfile.gettempdir()) / f"learningos-{token}-{slug}-touched.json"
     recorded_at = _dt.datetime.now(_dt.UTC).replace(microsecond=0).isoformat()
     previous.write_text(json.dumps({
-        "schema_version": command_support.SESSION_LEDGER_SCHEMA_VERSION,
+        "schema_version": plumbing_support.SESSION_LEDGER_SCHEMA_VERSION,
         "session_id": "channel:operator",
         "paths": {"work/inbox/previous.md": {
             "state": "absent", "channel": "operator", "recorded_at": recorded_at,

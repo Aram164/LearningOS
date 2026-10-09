@@ -232,8 +232,8 @@ def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_pat
     """#110: `--session-id` seals the session and still commits first try."""
     from repo_builders import add_curriculum
 
-    from learning_os.commands import support as command_support
     from learning_os.contracts.gateway import intent_sha256
+    from learning_os.ops import _legacy_plumbing as plumbing_support
 
     add_curriculum(mini_repo)
     out = tmp_path / "sealed.json"
@@ -248,7 +248,7 @@ def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_pat
     submitted = _submit(mini_repo, out)
     assert submitted.returncode == 0, submitted.stderr or submitted.stdout
     captured = json.loads(submitted.stdout)["result"]["captured"]
-    recorded = command_support._load_session_paths(mini_repo, "sealed-agent")
+    recorded = plumbing_support._load_session_paths(mini_repo, "sealed-agent")
     assert captured in recorded
 
 

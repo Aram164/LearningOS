@@ -46,13 +46,7 @@ TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 
-from learning_os.commands.capability import (  # noqa: E402
-    _context_from_v2,
-    _validate_capability_envelope,
-    _validate_payload,
-)
 from learning_os.commands.support import (  # noqa: E402
-    _operator_lock,
     _read_structured_file,
 )
 from learning_os.domain.failures import WriteRefused  # noqa: E402
@@ -62,6 +56,14 @@ from learning_os.material_synthesis import (  # noqa: E402
     MaterialSynthesisError,
     synthesis_destination,
     validate_unit_material_synthesis,
+)
+from learning_os.ops._legacy_plumbing import (  # noqa: E402
+    _operator_lock,
+)
+from learning_os.ops.legacy import (  # noqa: E402
+    _context_from_v2,
+    _validate_capability_envelope,
+    _validate_payload,
 )
 from learning_os.transactions import (  # noqa: E402
     TransactionFailure,

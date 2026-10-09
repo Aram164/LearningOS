@@ -10,12 +10,15 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
+
 from ..domain.failures import WriteRefused
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _fresh_manifest,
-    _operator_lock,
     _print_rows,
     _read_structured_file,
     _root,

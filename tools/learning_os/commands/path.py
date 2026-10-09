@@ -7,6 +7,10 @@ import sys
 
 import yaml
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
+
 from .. import observations
 from ..domain.failures import WriteRefused
 from ..domain.suggest import not_found
@@ -14,7 +18,6 @@ from .support import (
     _allocate_attachment_path,
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
     _path_or_error,
     _read_content_bound_file,
     _root,

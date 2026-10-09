@@ -12,10 +12,12 @@ from learning_os.contracts.gateway import (
     request_artifact_id,
 )
 from learning_os.domain.failures import WriteRefused
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
 
 from .support import (
     _expected_revisions_from_args,
-    _operator_lock,
     _read_content_bound_file,
     _root,
     _write_transaction,

@@ -8,6 +8,11 @@ from datetime import UTC
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+    _record_gateway_refusal,
+)
+
 from .. import observations
 from ..abilities import (
     ability_context,
@@ -26,8 +31,6 @@ from .reads import _print_stable, _snapshot
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _operator_lock,
-    _record_gateway_refusal,
     _root,
     _write_transaction,
 )

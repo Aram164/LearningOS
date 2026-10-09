@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+)
+
 from ..domain.failures import WriteRefused
 from ..domain.suggest import MAX_SUGGESTIONS, expansion, suggest, with_suggestions
 from ..loader import load_repo
@@ -16,7 +20,7 @@ from ..materials_resolution import (
 )
 from .material import _brief_analysis_refs, _map_for_unit, _route_entry
 from .reads import _print_stable, _refusal, _snapshot
-from .support import _operator_lock, _root
+from .support import _root
 
 MAX_EXCERPT = 6000
 

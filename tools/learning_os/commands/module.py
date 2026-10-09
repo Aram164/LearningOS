@@ -9,7 +9,6 @@ import datetime as _dt
 import hashlib
 import json
 import os
-import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -37,6 +36,12 @@ from learning_os.material_synthesis import (
     validate_unit_material_synthesis,
 )
 from learning_os.materials_resolution import evidential_route_projection, sha256_file
+from learning_os.ops._legacy_plumbing import (
+    _operator_lock,
+    _record_gateway_refusal,
+    _take_gateway_refusal,
+)
+from learning_os.ops.check import _staged_shadow
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.revisions import load_revisions
 from learning_os.rules import validate
@@ -56,20 +61,16 @@ from learning_os.semantics.lineage import (
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
 from .support import (
-    _atomic_text,
     _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _fresh_manifest,
-    _operator_lock,
     _print_rows,
     _read_content_bound_file,
-    _record_gateway_refusal,
     _render_frontmatter,
     _replace_registry_list_record,
     _root,
-    _take_gateway_refusal,
     _write_transaction,
 )
 
@@ -1659,54 +1660,6 @@ def _real_perimeter_errors(root: Path) -> list[str]:
         loc = f" [{issue.path}]" if issue.path else ""
         out.append(f"E PERIMETER-{issue.code}: {issue.message}{loc}")
     return out
-
-
-@contextlib.contextmanager
-def _staged_shadow(root: Path, writes: dict[Path, str]):
-    """A shadow copy of ``repository/`` carrying planned writes, no canonical I/O.
-
-    Content validation runs here; the real-tree perimeter layer runs against
-    ``root`` because the shadow has no wrapper by design.
-    """
-    ignored_at_root = {
-        ".git", ".obsidian", ".pytest_cache", ".venv", "generated",
-        "migration", "tests", "tools",
-    }
-
-    def ignore_names(directory, names):
-        directory = Path(directory).resolve()
-        ignored = {"__pycache__"}
-        if directory == root.resolve():
-            ignored.update(ignored_at_root)
-        if directory == (root / "knowledge").resolve():
-            ignored.add("attachments")
-        if directory == (root / "curriculum").resolve():
-            # Prospective planning is a deliberately opened quarantine. A
-            # normal module-plan preflight must not copy or inspect it; a
-            # promotion supplies only the exact sanitized catalog write it
-            # wants the shadow repository to validate.
-            ignored.add("quarantine")
-        return [name for name in names if name in ignored]
-
-    with tempfile.TemporaryDirectory(prefix="learningos-plan-check-") as tmp:
-        shadow = Path(tmp) / "repository"
-        shutil.copytree(root, shadow, symlinks=True, ignore=ignore_names)
-        attachments = root / "knowledge" / "attachments"
-        if attachments.exists():
-            link = shadow / "knowledge" / "attachments"
-            link.parent.mkdir(parents=True, exist_ok=True)
-            link.symlink_to(attachments, target_is_directory=True)
-        for external_name in ("materials", "projects"):
-            external = root.parent / external_name
-            if external.exists():
-                (shadow.parent / external_name).symlink_to(external, target_is_directory=True)
-        for path, content in writes.items():
-            try:
-                rel = path.resolve().relative_to(root.resolve())
-            except ValueError:
-                raise ValueError(f"planned write escapes repository: {path}") from None
-            _atomic_text(shadow / rel, content)
-        yield shadow
 
 
 #: Validator codes emitted by the perimeter checker share this namespace

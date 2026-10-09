@@ -69,8 +69,8 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
-    from learning_os.commands.capability import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.ops.legacy import _dispatch
 
     definitions = command_definitions(mini_repo)
     definition = definitions["capture.create"]
@@ -1031,12 +1031,12 @@ def test_check_python_accepts_the_running_interpreter(repo_root):
 
 def test_reviewed_apply_rolls_back_all_writes_on_publish_failure(mini_repo, tmp_path, monkeypatch):
     import los
-    from learning_os.commands import support
     from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.ops import commit as commit_module
 
     _, _, _, args = _reviewed_fixture(mini_repo, tmp_path)
     before = canonical_fingerprint(mini_repo)
-    publish = support._publish_repo
+    publish = commit_module._publish_repo
     calls = []
 
     def fail_once(repo):
@@ -1045,7 +1045,7 @@ def test_reviewed_apply_rolls_back_all_writes_on_publish_failure(mini_repo, tmp_
             raise OSError("injected projection failure")
         return publish(repo)
 
-    monkeypatch.setattr(support, "_publish_repo", fail_once)
+    monkeypatch.setattr(commit_module, "_publish_repo", fail_once)
     namespace = los.build_parser().parse_args(["--root", str(mini_repo), *args])
     assert namespace.func(namespace) != 0
     assert canonical_fingerprint(mini_repo) == before
@@ -1060,8 +1060,8 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.commands.module import _staged_shadow
     from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.ops.check import _staged_shadow
     from learning_os.revisions import load_revisions
     from learning_os.semantics.lineage import load_ledger
 
@@ -1325,9 +1325,9 @@ def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path
 def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     """The CLI-only output flag is not part of the unit.plan.revise contract."""
     import los
-    from learning_os.commands.capability import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payloads import payload_schema
+    from learning_os.ops.legacy import _dispatch
 
     repo_root = Path(__file__).resolve().parent.parent
     assert "report_out" not in payload_schema(
