@@ -11,6 +11,7 @@ from pathlib import Path
 import group_map
 import pytest
 import yaml
+from arch_audit_hook import SITE_WITNESS_ENV
 from repo_builders import copy_real_contracts
 
 from learning_os.diagnostics.conventions import TRACE_STORE_DENY_ENV
@@ -73,18 +74,15 @@ def _site_witness_file(tmp_path_factory):
     harness and the procedure runner both start their child env
     from ``dict(os.environ)``.
     """
-    # The pipeline append is stopped (SPEC-GAP: A2 refuses the write);
-    # the fixture still owns the variable for the day it lands.
-    witness_env = "LOS_SITE_WITNESS_FILE"
     path = tmp_path_factory.mktemp("site-witness") / "sites.jsonl"
     path.touch()
-    previous = os.environ.get(witness_env)
-    os.environ[witness_env] = str(path)
+    previous = os.environ.get(SITE_WITNESS_ENV)
+    os.environ[SITE_WITNESS_ENV] = str(path)
     yield path
     if previous is None:
-        os.environ.pop(witness_env, None)
+        os.environ.pop(SITE_WITNESS_ENV, None)
     else:
-        os.environ[witness_env] = previous
+        os.environ[SITE_WITNESS_ENV] = previous
 
 
 def pytest_collection_modifyitems(items):

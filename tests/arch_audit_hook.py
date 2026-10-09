@@ -27,6 +27,12 @@ _RENDER_ONLY_EVENTS = frozenset({
     "learningos.observation",
 })
 
+#: The refusal-witness file (SPEC (bf) item 10): when set, every
+#: ``learningos.refusal`` audit event appends one item 8.1 JSON line.
+#: The single home of the variable name; the session fixture and the
+#: A9 module import it from here.
+SITE_WITNESS_ENV = "LOS_SITE_WITNESS_FILE"
+
 _CAPTURE_LOCK = threading.Lock()
 _CAPTURE_ERROR: str | None = None
 
@@ -242,8 +248,56 @@ def _launch_token_and_crash(args) -> tuple:
     return token, expect_crash
 
 
+def _refusal_line(args) -> dict | None:
+    """The item 8.1 JSON line for a ``learningos.refusal`` event.
+
+    ``(operation, kind, site, class_name, code)`` from
+    ``ops/pipeline.py``; anything else is not a refusal line. The
+    commit-refused line carries a null site, exactly as item 8.1
+    fixes it.
+    """
+    operation, kind, site, class_name, code = args
+    if kind == "failure":
+        return {"operation": operation, "kind": kind, "site": site,
+                "class": class_name, "exit_code": code}
+    if kind == "commit-refused":
+        return {"operation": operation, "kind": kind, "site": None,
+                "code": code}
+    return None
+
+
+def _append_refusal_line(args) -> None:
+    """Append one witness line when the witness file is set (item 10.2).
+
+    Runs under the re-entrancy guard, so the append is never itself
+    audited. The event never reaches the audit log. A write failure
+    is swallowed; the missing line then fails the A7/A9 match.
+    """
+    _STATE.active = True
+    try:
+        path = os.environ.get(SITE_WITNESS_ENV)
+        if not path:
+            return
+        line = _refusal_line(args)
+        if line is None:
+            return
+        try:
+            with open(path, "a", encoding="utf-8") as handle:
+                handle.write(json.dumps(line) + "\n")
+        except OSError:
+            pass
+    finally:
+        _STATE.active = False
+
+
 def _hook(event: str, args) -> None:
     if getattr(_STATE, "active", False) or _ACTIVE_LOG is None or _EVENTS is None:
+        return
+    if event == "learningos.refusal":
+        try:
+            _append_refusal_line(args)
+        except Exception as exc:
+            _record_capture_error(exc)
         return
     if event not in _EVENTS:
         return

@@ -12,6 +12,7 @@ import hashlib
 import io
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -101,6 +102,25 @@ _KIND_TO_INVOCATION = {
 }
 
 
+def _audit_failure(operation: str | None, exc: BaseException) -> None:
+    """Witness an exception turned into a refusal (SPEC (bf) item 10).
+
+    With no hook registered ``sys.audit`` does nothing, so production
+    behavior is byte-identical. Only ``WriteRefused`` carries an
+    explicit ``exit_code`` (amendment (ac)); anything else has no
+    override and no site.
+    """
+    code = exc.exit_code if isinstance(exc, WriteRefused) else None
+    sys.audit("learningos.refusal", operation, "failure",
+              getattr(exc, "site", None), type(exc).__name__, code)
+
+
+def _audit_commit_refused(operation: str | None, code: int) -> None:
+    """Witness a ``commit_proposal`` non-zero code (SPEC (bf) item 10)."""
+    sys.audit("learningos.refusal", operation, "commit-refused",
+              None, None, code)
+
+
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
@@ -155,6 +175,7 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
                 if result.after_commit is not None:
                     result.after_commit(code, commit_errors, confirmation)
             if code != 0:
+                _audit_commit_refused(operation, code)
                 if (result.on_commit_refused is not None
                         or result.refused_stdout is not None):
                     stdout, stderr = _legacy_refusal_streams(
@@ -188,6 +209,10 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
     except Exception as exc:
+        # The row check mirrors _cli_refusal's: an unlisted exception is
+        # re-raised, not a refusal, and witnesses nothing.
+        if classify(exc, "cli") is not None:
+            _audit_failure(operation, exc)
         return _cli_refusal(exc, entry=entry, args=args, commit=commit,
                             receipt=receipt, replayed=replayed)
     return Outcome(
@@ -842,6 +867,7 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
         if res.after_commit is not None:
             res.after_commit(code, commit_errors, confirmation)
     if code != 0:
+        _audit_commit_refused(operation, code)
         refusal = _take_gateway_refusal()
         if res.on_commit_refused is not None or res.refused_stdout is not None:
             # Legacy _dispatch's rule: the complaint, else the printed text.
@@ -887,6 +913,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         if not is_v2:
             _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
             raise
+        _audit_failure(envelope.get("capability"), exc)
         response = _v2_response(
             envelope,
             ok=False,
@@ -950,6 +977,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         try:
             context = _context_from_v2(envelope)
         except WriteRefused as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1000,6 +1028,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                         root, replay,
                         session_id=envelope.get("session_id"))
         except TransactionIdempotencyConflict as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1012,6 +1041,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             return _finish(attempt, 2, "error", {"stage": "core.replay"},
                            stdout=stdout, stderr=stderr, response=response)
         except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
+            _audit_failure(envelope.get("capability"), exc)
             # Fail closed. Evidence is contradictory or the original write
             # already happened; rerunning the handler here would risk
             # duplicating it, and answering with a guessed path would be a lie
@@ -1029,6 +1059,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             return _finish(attempt, 2, "error", {"stage": "core.replay"},
                            stdout=stdout, stderr=stderr, response=response)
         except TransactionRecoveryConflict as exc:
+            _audit_failure(envelope.get("capability"), exc)
             # A stale crash journal names paths the lookup cannot prove
             # transaction-owned. Nothing was modified and the journal was
             # preserved; the operator reconciles by hand. Never retryable
@@ -1058,6 +1089,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             return _finish(attempt, 2, "error", {"stage": "core.replay"},
                            stdout=stdout, stderr=stderr, response=response)
         except TransactionFailure as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1139,12 +1171,14 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                             parser_factory=parser_factory,
                         )
         except WriteRefused as exc:
+            _audit_failure(envelope.get("capability"), exc)
             # The gateway.dispatch row's exit (amendment (ac)): an explicit
             # exit_code preserves the originating return value.
             code = exc.exit_code if exc.exit_code is not None else 2
             result = {"error": str(exc)}
             failure = exc
         except TransactionSnapshotConflict as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1161,6 +1195,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 attempt, 3, "error", {"stage": "core.snapshot_guard"},
                 stdout=stdout, stderr=stderr, response=response)
         except ProjectionFailure as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1172,6 +1207,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 attempt, 2, "error", {"stage": "core.projection"},
                 stdout=stdout, stderr=stderr, response=response)
         except PostCommitFailure as exc:
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,
@@ -1186,6 +1222,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
                 attempt, 2, "error", {"stage": "core.commit"},
                 stdout=stdout, stderr=stderr, response=response)
         except TransactionRecoveryConflict as exc:
+            _audit_failure(envelope.get("capability"), exc)
             # Defense in depth: the replay section's lock acquisition above
             # normally reconciles (and catches this) first, since the lock
             # is re-entrant. If that flow ever changes, a conflict reaching
@@ -1213,12 +1250,15 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             return _finish(attempt, 2, "error", {"code": INTERNAL_FAILURE},
                            stdout=stdout, stderr=stderr, response=response)
         except TransactionFailure as exc:
+            _audit_failure(envelope.get("capability"), exc)
             code, result = 2, {"error": str(exc)}
             failure = exc
         except ValueError as exc:
+            _audit_failure(envelope.get("capability"), exc)
             code, result = 2, {"error": str(exc)}
             failure = exc
         except Exception as exc:  # fail closed behind a typed V2 boundary
+            _audit_failure(envelope.get("capability"), exc)
             response = _v2_response(
                 envelope,
                 ok=False,

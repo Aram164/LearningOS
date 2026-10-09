@@ -1,13 +1,14 @@
 """Every declared refusal site is witnessed from its case (SPEC §3.3 A9).
 
-The pipeline append is stopped (SPEC-GAP: the A2 guard refuses the
-write and no allowance is defined), so the session file stays empty:
-the matching test skips locally and the controls below carry the
-proof until the append lands. When it does, this module runs after
+``ops/pipeline.py`` emits one ``learningos.refusal`` audit event per
+refusal it produces, and the audit hook appends one item 8.1 JSON
+line per event while ``LOS_SITE_WITNESS_FILE`` is set (SPEC (bf)
+item 10; a session fixture owns that file). This module runs after
 every other ``test_scenarios*`` file, so in a full or ``-k
 scenarios`` run it matches each statically declared site to both a
-runtime witness and a case whose ``expect.site`` equals it. An empty
-witness file skips locally and fails under CI.
+runtime witness line with a non-null site and a case whose
+``expect.site`` equals it. An empty witness file skips locally and
+fails under CI.
 """
 
 from __future__ import annotations
@@ -18,14 +19,10 @@ import os
 from pathlib import Path
 
 import pytest
+from arch_audit_hook import SITE_WITNESS_ENV
 
 import learning_os.ops.handlers  # noqa: F401  (registration side effect)
 from learning_os.ops.registry import REGISTRY
-
-#: The witness variable (SPEC §3.3 A9). The pipeline append is stopped
-#: (SPEC-GAP: A2 refuses the write), so the session file stays empty
-#: and the matching test skips locally until the append lands.
-SITE_WITNESS_ENV = "LOS_SITE_WITNESS_FILE"
 
 ROOT = Path(__file__).resolve().parent.parent
 CASES_DIR = ROOT / "tests/scenarios/cases"
@@ -206,11 +203,40 @@ def _declared_sites() -> dict[tuple[str, str], str]:
 
 # --- the match ---------------------------------------------------------------------
 
+def _is_refusal_line(record) -> bool:
+    """An item 8.1 line: exact keys per kind, null-or-named site.
+
+    The operation value is unrestricted: admission refusals carry
+    the envelope's own capability, which a refused envelope may
+    omit. Such lines always have a null site and are never read.
+    """
+    if not isinstance(record, dict):
+        return False
+    kind = record.get("kind")
+    if kind == "failure":
+        return (set(record) == {"operation", "kind", "site", "class",
+                                "exit_code"}
+                and (record["site"] is None
+                     or (isinstance(record["site"], str)
+                         and record["site"]))
+                and isinstance(record["class"], str)
+                and bool(record["class"])
+                and (record["exit_code"] is None
+                     or isinstance(record["exit_code"], int)))
+    if kind == "commit-refused":
+        return (set(record) == {"operation", "kind", "site", "code"}
+                and record["site"] is None
+                and isinstance(record["code"], int))
+    return False
+
+
 def _session_witnesses() -> set[tuple[str, str]]:
     """The session's ``(operation, site)`` witnesses.
 
-    An empty file means no scenario ran in this session: skip
-    locally, fail when CI is set.
+    Reads only lines with a non-null ``site`` (SPEC (bf) item 8.1);
+    null-site lines (commit refusals, siteless raises, admission
+    refusals) are not sites. An empty file means no scenario ran in
+    this session: skip locally, fail when CI is set.
     """
     path = os.environ.get(SITE_WITNESS_ENV)
     assert path, f"A9 {SITE_WITNESS_ENV} is unset — {FIX}"
@@ -232,14 +258,11 @@ def _session_witnesses() -> set[tuple[str, str]]:
         except ValueError as exc:
             raise AssertionError(
                 f"A9 witness line {lineno} is not JSON — {FIX}") from exc
-        assert (isinstance(record, dict)
-                and set(record) == {"operation", "site"}
-                and isinstance(record["operation"], str)
-                and record["operation"]
-                and isinstance(record["site"], str)
-                and record["site"]), (
-            f"A9 witness line {lineno} is not an operation/site line — {FIX}")
-        witnesses.add((record["operation"], record["site"]))
+        assert _is_refusal_line(record), (
+            f"A9 witness line {lineno} is not an item 8.1 refusal line "
+            f"({line[:120]!r}) — {FIX}")
+        if record["site"] is not None:
+            witnesses.add((record["operation"], record["site"]))
     return witnesses
 
 
@@ -314,6 +337,126 @@ def test_control_clean_match_passes():
                     "a9-control:1",
                     {("capture.create", "capture.create.empty-input")},
                     {"capture.create.empty-input": "capture.create:x"})
+
+
+def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
+    """A real harness child refusal writes exactly one line (item 10.4).
+
+    The same run with the variable unset is byte-identical in exit,
+    stdout, stderr and effects.
+    """
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / "cli.inspect.yaml")
+    bare_case = next(item for item in doc["cases"]
+                     if item["id"] == "unknown-id")
+    case = {"fixture": doc.get("fixture", "rich_world"),
+            "observations": doc["observations"],
+            "fixture_mtime": doc.get(
+                "fixture_mtime", harness.FIXTURE_MTIME_DEFAULT),
+            **bare_case}
+    witness = tmp_path / "sites.jsonl"
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    with_witness = harness.run_case(case, "cli.inspect",
+                                   tmp_path / "with-witness")
+    assert with_witness["exit"] == 2
+    lines = witness.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1, lines
+    assert json.loads(lines[0]) == {
+        "operation": "cli.inspect", "kind": "failure",
+        "site": "cli.inspect.unknown-id", "class": "WriteRefused",
+        "exit_code": 2}
+    monkeypatch.delenv(SITE_WITNESS_ENV)
+    bare = harness.run_case(case, "cli.inspect", tmp_path / "bare")
+    assert bare == with_witness
+
+
+def test_control_process_without_hook_writes_no_file(mini_repo, tmp_path,
+                                                     monkeypatch):
+    """A process with no hook writes no file (item 10.4)."""
+    from repo_builders import run_los
+
+    witness = tmp_path / "sites.jsonl"
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    monkeypatch.delenv("LOS_ARCH_AUDIT_LOG", raising=False)
+    monkeypatch.setenv(
+        "PYTHONPATH",
+        os.pathsep.join(part for part in
+                        os.environ.get("PYTHONPATH", "").split(os.pathsep)
+                        if part and "arch_site" not in part))
+    refused = run_los(mini_repo, "inspect", "nope-id")
+    assert refused.returncode == 2
+    assert "record not found: nope-id" in refused.stderr
+    assert not witness.exists()
+
+
+def test_control_failed_witness_write_is_swallowed(tmp_path, monkeypatch):
+    """An unwritable witness file perturbs nothing (item 10.2)."""
+    import sys
+
+    import arch_audit_hook
+
+    log = tmp_path / "audit.jsonl"
+    arch_audit_hook.install(str(log))
+    try:
+        monkeypatch.setenv(
+            SITE_WITNESS_ENV,
+            str(tmp_path / "no-such-dir" / "sites.jsonl"))
+        sys.audit("learningos.refusal", "cli.inspect", "failure",
+                  "cli.inspect.unknown-id", "WriteRefused", 2)
+    finally:
+        arch_audit_hook.uninstall()
+    assert not (tmp_path / "no-such-dir").exists()
+
+
+def test_control_pipeline_witness_adds_no_a2_entry():
+    """The witness transport adds no A2 census entry (item 10.4)."""
+    import test_arch_writes
+    import yaml
+
+    current, _ = test_arch_writes._collect_static()
+    recorded_entries = yaml.safe_load(
+        test_arch_writes.RATCHETS_PATH.read_text(encoding="utf-8"))[
+            "checks"].get(test_arch_writes.RULE, [])
+    recorded = {entry["signature"]: entry["count"]
+                for entry in recorded_entries}
+    rel = "tools/learning_os/ops/pipeline.py"
+    for signature, count in sorted(current.items()):
+        if not signature.startswith(rel + "::"):
+            continue
+        assert count <= recorded.get(signature, 0), (
+            f"A9 {signature}: the witness transport adds an A2 entry "
+            f"(current {count}, recorded "
+            f"{recorded.get(signature, 0)}) — {FIX}")
+
+
+def test_control_null_site_lines_are_not_read(tmp_path, monkeypatch):
+    """A9 reads only lines with a non-null site (item 8.1)."""
+    witness = tmp_path / "sites.jsonl"
+    witness.write_text(
+        json.dumps({"operation": "route.patch", "kind": "commit-refused",
+                    "site": None, "code": 2})
+        + "\n"
+        + json.dumps({"operation": "route.patch", "kind": "failure",
+                      "site": None, "class": "WriteRefused",
+                      "exit_code": None})
+        + "\n",
+        encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    assert _session_witnesses() == set()
+
+
+def test_control_malformed_witness_line_fails(tmp_path, monkeypatch):
+    """A line outside the item 8.1 shapes fails the read."""
+    witness = tmp_path / "sites.jsonl"
+    witness.write_text(
+        json.dumps({"operation": "cli.inspect",
+                    "site": "cli.inspect.unknown-id"})
+        + "\n",
+        encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):
+        _session_witnesses()
 
 
 def test_control_failed_append_is_reported_unwitnessed(mini_repo, tmp_path,
