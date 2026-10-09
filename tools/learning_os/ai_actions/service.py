@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import shutil
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, cast
 
 import yaml
@@ -43,12 +44,12 @@ from learning_os.material_synthesis import (
     validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
+from learning_os.ops.proposal import TransactionProposal
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 from learning_os.transactions import (
     TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
-    TransactionService,
     TransactionSnapshotConflict,
     artifact_revision,
     replay_for_request,
@@ -57,6 +58,7 @@ from learning_os.transactions import (
 from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
+    AIActionError,
     ContinuationRefusedError,
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
@@ -735,7 +737,7 @@ class AIActionService:
                 raise DeliveryValidationError("original artifact changed after request preparation")
         return target
 
-    def apply_delivery(
+    def apply_delivery_proposal(
         self,
         delivery_id: str,
         *,
@@ -743,7 +745,15 @@ class AIActionService:
         artifact_sha256: dict[str, Any],
         expected_snapshot: str,
         expected_revisions: dict[str, int],
-    ) -> ApplyDeliveryResult:
+    ) -> tuple[TransactionProposal | None, ApplyDeliveryResult | None, list[Path]]:
+        """The approved-delivery application up to its commit (SPEC §12 R5, (be)).
+
+        Returns ``(proposal, None, touched_base)``: the proposal carries every
+        argument the commit call took, with this service's except chain as
+        ``translate``, and ``touched_base`` the staged and request paths the
+        command records after a successful commit. A request that already
+        committed returns ``(None, replay_result, [])`` without a proposal.
+        """
         authority = current_gateway_request()
         if authority is None or authority.capability != "ai-action.delivery.apply" \
                 or authority.approval_kind != "approved-delivery":
@@ -768,7 +778,7 @@ class AIActionService:
         except TransactionFailure as exc:
             raise DeliveryValidationError(f"delivery replay failed: {exc}") from exc
         if replay is not None:
-            return self._apply_result(replay, touched_paths=[])
+            return None, self._apply_result(replay, touched_paths=[]), []
 
         expected_snapshot = validated_sha256(
             expected_snapshot, label="expected_snapshot"
@@ -1028,39 +1038,63 @@ class AIActionService:
                 "projection": "passed",
             },
         }
-        try:
-            result = TransactionService(self.root, clock=self.clock).commit(
-                capability="ai-action.delivery.apply",
-                writes={path: content for path, (content, _capability) in staged.items()},
-                artifact_ids={*created_ids, *updated_ids, *superseded_ids},
-                expected_revisions=expected_revisions,
-                validate_state=validation_errors,
-                publish=publish,
-                rollback_publish=rollback_publish,
-                metadata=metadata,
-                expected_snapshot=expected_snapshot,
-                transaction_writes=request_write,
-                write_authorities={
-                    **{
-                        path: domain_capability
-                        for path, (_content, domain_capability) in staged.items()
-                    },
-                    request_path: "ai-action.delivery.apply",
+        proposal = TransactionProposal(
+            capability="ai-action.delivery.apply",
+            writes={path: content for path, (content, _capability) in staged.items()},
+            artifact_ids={*created_ids, *updated_ids, *superseded_ids},
+            deletes=None,
+            expected_revisions=expected_revisions,
+            validate_state=validation_errors,
+            publish=publish,
+            rollback_publish=rollback_publish,
+            touched=None,
+            metadata=metadata,
+            expected_snapshot=expected_snapshot,
+            transaction_writes=request_write,
+            write_authorities={
+                **{
+                    path: domain_capability
+                    for path, (_content, domain_capability) in staged.items()
                 },
-            )
-        except TransactionConflict as exc:
-            raise DeliveryRevisionConflict(str(exc)) from exc
-        except TransactionSnapshotConflict as exc:
-            raise StaleDeliveryError(str(exc)) from exc
-        except TransactionIdempotencyConflict as exc:
-            raise DeliveryValidationError(f"delivery idempotency conflict: {exc}") from exc
-        except TransactionFailure as exc:
-            raise DeliveryValidationError(f"delivery transaction failed: {exc}") from exc
+                request_path: "ai-action.delivery.apply",
+            },
+            clock=self.clock,
+            translate=self._translate_commit_failure,
+        )
+        return proposal, None, [*staged, request_path]
+
+    @staticmethod
+    def _translate_commit_failure(exc: BaseException) -> AIActionError | None:
+        """The except chain that wrapped the delivery commit (SPEC §12 R5)."""
+        if isinstance(exc, TransactionConflict):
+            return DeliveryRevisionConflict(str(exc))
+        if isinstance(exc, TransactionSnapshotConflict):
+            return StaleDeliveryError(str(exc))
+        if isinstance(exc, TransactionIdempotencyConflict):
+            return DeliveryValidationError(f"delivery idempotency conflict: {exc}")
+        if isinstance(exc, TransactionFailure):
+            return DeliveryValidationError(f"delivery transaction failed: {exc}")
+        return None
+
+    def apply_delivery_receipt(
+        self, confirmation: dict[str, Any], touched_base: list[Path],
+    ) -> ApplyDeliveryResult:
+        """The committed receipt as the old ``apply_delivery`` returned it (SPEC (be)).
+
+        Reads the receipt the commit wrote, exactly as before; a replayed
+        commit reports no touched paths.
+        """
+        result = SimpleNamespace(
+            receipt_path=self.root / confirmation["receipt_path"],
+            transaction_id=confirmation["transaction_id"],
+            revisions=confirmation["artifact_revisions"],
+            replayed=confirmation["replayed"],
+        )
         return self._apply_result(
             result,
             touched_paths=(
                 [] if result.replayed
-                else [*staged, request_path, result.receipt_path]
+                else [*touched_base, result.receipt_path]
             ),
         )
 

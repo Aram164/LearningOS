@@ -3,36 +3,17 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 from learning_os.ai_actions import (
-    AIActionError,
     AIActionService,
-    DeliveryBindingError,
-    DeliveryIdempotencyConflict,
-    DeliveryRevisionConflict,
-    DeliveryScopeError,
-    StaleDeliveryError,
 )
-from learning_os.contracts.gateway import current_gateway_request
-from learning_os.domain.codes import (
-    IDEMPOTENCY_CONFLICT,
-    OUT_OF_SCOPE,
-    REVISION_CONFLICT,
-    STALE_SNAPSHOT,
-    UNCONFIRMED,
-)
-from learning_os.domain.failures import Unconfirmed, WriteRefused
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _publish,
-    _record_gateway_refusal,
-    _record_touched,
 )
 
 from .support import (
-    _expected_revisions_from_args,
     _root,
 )
 
@@ -89,71 +70,6 @@ def cmd_ai_action_import_delivery(args) -> int:
 def cmd_ai_action_validate_delivery(args) -> int:
     result = AIActionService(_root(args)).validate_delivery(args.delivery_id)
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0
-
-
-def _ai_refusal(exc: AIActionError) -> tuple[str, bool] | None:
-    """Map a delivery failure to its V2 ``(code, retryable)`` by type.
-
-    Stale deliveries never reach this helper — the handler records them
-    beside its exit-3 return. ``None`` is an untyped validation failure,
-    which the gateway reports as ``INVALID_REQUEST``.
-    """
-    if isinstance(exc, DeliveryScopeError):
-        return (OUT_OF_SCOPE, False)
-    if isinstance(exc, DeliveryIdempotencyConflict):
-        return (IDEMPOTENCY_CONFLICT, False)
-    if isinstance(exc, DeliveryBindingError):
-        return (UNCONFIRMED, False)
-    return None
-
-
-def cmd_ai_action_apply_delivery(args) -> int:
-    root = _root(args)
-    authority = current_gateway_request()
-    if authority is None:
-        raise WriteRefused(
-            "approved delivery application must use GatewayEnvelopeV2"
-        )
-    if authority.capability != "ai-action.delivery.apply" \
-            or authority.approval_kind != "approved-delivery":
-        raise Unconfirmed(
-            "ai-action.delivery.apply requires approved-delivery approval"
-        )
-    try:
-        with _operator_lock(root):
-            receipt = AIActionService(root).apply_delivery(
-                args.delivery_id,
-                delivery_sha256=args.delivery_sha256,
-                artifact_sha256=args.artifact_sha256,
-                expected_snapshot=args.expected_snapshot,
-                expected_revisions=_expected_revisions_from_args(args),
-            )
-            touched = [root / rel for rel in receipt.pop("touched_paths", [])]
-            if touched:
-                _record_touched(root, touched)
-    except StaleDeliveryError as exc:
-        if isinstance(exc, DeliveryRevisionConflict):
-            _record_gateway_refusal(REVISION_CONFLICT, True)
-        else:
-            _record_gateway_refusal(STALE_SNAPSHOT, True)
-        print(str(exc), file=sys.stderr)
-        return 3
-    except AIActionError as exc:
-        refusal = _ai_refusal(exc)
-        if refusal is not None:
-            _record_gateway_refusal(*refusal)
-        print(str(exc), file=sys.stderr)
-        return 2
-    print(json.dumps({
-        "ok": True,
-        "transaction_id": receipt["transaction_id"],
-        "receipt_path": receipt["receipt_path"],
-        "snapshot_after": receipt["snapshot_after"],
-        "artifact_revisions": receipt["revision_updates"],
-        "replayed": receipt.get("replayed", False),
-        "receipt": receipt,
-    }, indent=2, ensure_ascii=False))
     return 0
 
 

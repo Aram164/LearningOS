@@ -15,7 +15,10 @@ from pathlib import Path
 from learning_os.domain import suggest
 from learning_os.domain.codes import (
     AMBIGUOUS_MIGRATION,
+    IDEMPOTENCY_CONFLICT,
     INVALID_REQUEST,
+    OUT_OF_SCOPE,
+    REVISION_CONFLICT,
     STALE_SNAPSHOT,
     UNCONFIRMED,
     VALIDATION_FAILED,
@@ -234,6 +237,27 @@ class Unconfirmed(WriteRefused):
     """The envelope's approval does not cover this write; nothing was changed."""
 
     gateway_code = UNCONFIRMED
+    gateway_retryable = False
+
+
+class RevisionConflict(WriteRefused):
+    """An artifact revision guard no longer matches; nothing was changed."""
+
+    gateway_code = REVISION_CONFLICT
+    gateway_retryable = True
+
+
+class OutOfScope(WriteRefused):
+    """A planned write falls outside its capability's declared scope."""
+
+    gateway_code = OUT_OF_SCOPE
+    gateway_retryable = False
+
+
+class IdempotencyConflict(WriteRefused):
+    """The idempotency key already names a different request."""
+
+    gateway_code = IDEMPOTENCY_CONFLICT
     gateway_retryable = False
 
 

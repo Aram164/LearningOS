@@ -9,7 +9,6 @@ from a code a catching handler step recorded explicitly.
 
 from __future__ import annotations
 
-import argparse
 import json
 import re
 from pathlib import Path
@@ -28,8 +27,6 @@ from learning_os.ai_actions import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
-from learning_os.commands import ai as ai_command
-from learning_os.commands.ai import _ai_refusal
 from learning_os.commands.resume import _render as _render_resume
 from learning_os.commands.support import (
     _write_transaction,
@@ -47,12 +44,17 @@ from learning_os.domain.failures import (
     ValidationFailed,
     WriteRefused,
 )
+from learning_os.ops import commit as ops_commit
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _refusal_from_failure,
     _take_gateway_refusal,
 )
-from learning_os.ops.pipeline import _classify_failure, _v2_exit_code
+from learning_os.ops.context import OpContext
+from learning_os.ops.handlers import ai as ai_handler
+from learning_os.ops.handlers.ai import _ai_refusal
+from learning_os.ops.pipeline import _classify_failure, _v2_exit_code, run_cli
+from learning_os.ops.proposal import TransactionProposal
 from learning_os.pathing import PathBoundaryError
 from learning_os.rules.common import Issue
 from learning_os.transactions import (
@@ -245,25 +247,139 @@ def _ai_request_context() -> GatewayRequestContext:
 def test_ai_apply_handler_carries_typed_refusals(
     mini_repo: Path, monkeypatch, failure, exit_code, refusal
 ):
-    """The ai handler's catches record the type beside the unchanged exit code."""
+    """The handler raises the old catch's type, message and exit (SPEC (be))."""
 
     class _RefusingService(AIActionService):
-        def apply_delivery(self, *args, **kwargs):
+        def apply_delivery_proposal(self, *args, **kwargs):
             raise failure
 
-    monkeypatch.setattr(ai_command, "AIActionService", _RefusingService)
-    args = argparse.Namespace(
-        root=str(mini_repo),
-        delivery_id="ai-delivery-typed",
-        delivery_sha256="sha256:" + "0" * 64,
-        artifact_sha256={},
-        expected_snapshot="sha256:" + "0" * 64,
-        expected_revision=None,
-    )
-    with gateway_request_context(_ai_request_context()):
-        code = ai_command.cmd_ai_action_apply_delivery(args)
-    assert code == exit_code
-    assert _take_gateway_refusal() == refusal
+    monkeypatch.setattr(ai_handler, "AIActionService", _RefusingService)
+    req = {
+        "delivery_id": "ai-delivery-typed",
+        "delivery_sha256": "sha256:" + "0" * 64,
+        "artifact_sha256": {},
+        "expected_snapshot": "sha256:" + "0" * 64,
+        "expected_revision": None,
+    }
+    context = _ai_request_context()
+    ctx = OpContext(root=mini_repo, operation="ai-action.delivery.apply",
+                    channel="operator", invocation="command", gateway=context)
+    with gateway_request_context(context), pytest.raises(WriteRefused) as raised:
+        ai_handler.apply_delivery(ctx, req)
+    typed = raised.value
+    assert (typed.gateway_code, typed.gateway_retryable) == (
+        refusal or ("INVALID_REQUEST", False))
+    assert typed.exit_code == exit_code
+    assert str(typed) == str(failure)
+    assert typed.gateway_message == str(failure)
+    assert typed.__cause__ is failure
+
+
+@pytest.mark.parametrize(
+    ("engine", "exit_code", "refusal", "message"),
+    [
+        (TransactionConflict({"a": (1, 2)}), 3, ("REVISION_CONFLICT", True), None),
+        (TransactionSnapshotConflict("sha256:e", "sha256:a"), 3,
+         ("STALE_SNAPSHOT", True), None),
+        (TransactionIdempotencyConflict("reused"), 2, ("INVALID_REQUEST", False),
+         "delivery idempotency conflict: reused"),
+        (TransactionFailure("engine refused"), 2, ("INVALID_REQUEST", False),
+         "delivery transaction failed: engine refused"),
+    ],
+)
+def test_ai_apply_commit_failures_translate_like_the_old_chain(
+    engine, exit_code, refusal, message
+):
+    """Commit-time: the service chain, then the old command catch (SPEC (be))."""
+    translated = AIActionService._translate_commit_failure(engine)
+    typed = ai_handler._refusal(translated, "ai-action.delivery.apply")
+    assert (typed.gateway_code, typed.gateway_retryable) == refusal
+    assert typed.exit_code == exit_code
+    assert str(typed) == (message or str(engine))
+    assert AIActionService._translate_commit_failure(ValueError("x")) is None
+
+
+@pytest.mark.parametrize(
+    ("engine", "exit_code", "refusal", "message"),
+    [
+        (TransactionConflict({"a": (1, 2)}), 3, ("REVISION_CONFLICT", True), None),
+        (TransactionSnapshotConflict("sha256:e", "sha256:a"), 3,
+         ("STALE_SNAPSHOT", True), None),
+        (TransactionIdempotencyConflict("reused"), 2, ("INVALID_REQUEST", False),
+         "delivery idempotency conflict: reused"),
+        (TransactionFailure("engine refused"), 2, ("INVALID_REQUEST", False),
+         "delivery transaction failed: engine refused"),
+    ],
+)
+def test_ai_apply_commit_failure_through_the_pipeline_path(
+    mini_repo: Path, monkeypatch, engine, exit_code, refusal, message
+):
+    """Commit-time: the handler's translate over real commit wiring (SPEC (be)).
+
+    The converted handler returns its Result carrying the composed translate;
+    the real commit_proposal runs the engine, which raises; the translated
+    typed refusal propagates with the old code, retryability and return, and
+    the CLI dispatch renders both streams from it.
+    """
+    expected = message or str(engine)
+
+    class _ProposalService(AIActionService):
+        def apply_delivery_proposal(self, *args, **kwargs):
+            return (
+                TransactionProposal(
+                    capability="ai-action.delivery.apply",
+                    writes={}, artifact_ids=(), deletes=None, touched=None,
+                ),
+                None, [],
+            )
+
+    class _RaisingTransactionService:
+        def __init__(self, root, clock=None):
+            self.root = root
+
+        def commit(self, **kwargs):
+            raise engine
+
+    monkeypatch.setattr(ai_handler, "AIActionService", _ProposalService)
+    monkeypatch.setattr(
+        ops_commit, "TransactionService", _RaisingTransactionService)
+    context = _ai_request_context()
+    req = {
+        "delivery_id": "ai-delivery-typed",
+        "delivery_sha256": "sha256:" + "0" * 64,
+        "artifact_sha256": {},
+        "expected_snapshot": "sha256:" + "0" * 64,
+        "expected_revision": None,
+    }
+    with gateway_request_context(context):
+        ctx = OpContext(root=mini_repo, operation="ai-action.delivery.apply",
+                        channel="operator", invocation="command", gateway=context)
+        result = ai_handler.apply_delivery(ctx, req)
+        assert result.proposal is not None
+        with pytest.raises(WriteRefused) as raised:
+            ops_commit.commit_proposal(ctx, result.proposal)
+        typed = raised.value
+        assert (typed.gateway_code, typed.gateway_retryable) == refusal
+        assert typed.exit_code == exit_code
+        assert str(typed) == expected
+        assert typed.gateway_message == expected.strip()
+        assert typed.__cause__ is engine
+        args = SimpleNamespace(
+            delivery_id=req["delivery_id"],
+            delivery_sha256=req["delivery_sha256"],
+            artifact_sha256=req["artifact_sha256"],
+            expected_snapshot=req["expected_snapshot"],
+            expected_revision=req["expected_revision"], json=True,
+        )
+        outcome = run_cli(mini_repo, "ai-action.delivery.apply", args)
+    assert outcome.exit_code == exit_code
+    assert outcome.ok is False
+    assert outcome.commit == "none"
+    assert outcome.stderr == f"los: {refusal[0]}: {expected}\n"
+    error = json.loads(outcome.stdout)["error"]
+    assert error["code"] == refusal[0]
+    assert error["retryable"] is refusal[1]
+    assert error["message"] == expected
 
 
 def test_ai_apply_with_the_wrong_approval_kind_is_unconfirmed(mini_repo: Path):

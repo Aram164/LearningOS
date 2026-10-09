@@ -285,8 +285,12 @@ def test_ai_shape_kwargs_constructor_and_omissions(mini_repo: Path, monkeypatch)
 
 
 def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monkeypatch):
-    """The AI proposal shape mirrors the real service call, key for key."""
-    import learning_os.ai_actions.service as ai_service_module
+    """The AI proposal shape mirrors the real service call, key for key.
+
+    Since S15 the service returns its proposal and the commit step makes the
+    engine call, so the live call is captured there; AI_KEYS and the clock-only
+    constructor are the pre-conversion call's shape.
+    """
     import learning_os.transactions as transaction_module
 
     for rel in ("operations/ai-actions/requests",
@@ -317,7 +321,7 @@ def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monk
         live_kwargs.update(kwargs)
         return real_commit(self, *args, **kwargs)
 
-    monkeypatch.setattr(ai_service_module, "TransactionService", LiveRecordingService)
+    monkeypatch.setattr(ops_commit, "TransactionService", LiveRecordingService)
     monkeypatch.setattr(
         transaction_module.TransactionService, "commit", live_recording_commit)
     receipt = apply_approved_delivery(app, delivery["id"])

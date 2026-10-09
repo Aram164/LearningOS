@@ -9063,7 +9063,7 @@
  "request_schemas": {
   "ability.candidate.append.schema.json": "dc0649a39cc67ff804449d9bdbaf501c071fecae9ef520e15d4e7f2e42798f9e",
   "ability.context.schema.json": "d21aa0f27fcf6031dc1c0950f876cdeff55393b9ec4b4e4cd0cc8dc0f4e04155",
-  "ai-action.delivery.apply.schema.json": "297cc65a13d390aab6092965bdb4775535672cd0516f600434b3760d25a09893",
+  "ai-action.delivery.apply.schema.json": "58fdf1b422f6fcf74397ab20ee21b5a032bf0e62c4027637cab7a5f7a749a73c",
   "atlas.context.schema.json": "3e2224edad71e99c749e009b5077d4c9bcafb4cf791793d91b4f0d151e481a63",
   "atlas.question.save.schema.json": "6d05bfb5c9658ae233f5c6f8575774f5765f66b0c7b5dee9a927e5d36ffcbed5",
   "backup.manifest.schema.json": "f9f2772c3c75888faad52835a7fd47cb1245926eac52889cf6efa24415063795",

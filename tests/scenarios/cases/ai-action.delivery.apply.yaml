@@ -30,7 +30,7 @@ cases:
     request: {delivery_id: ai-delivery-nope, delivery_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_sha256: {}}
     artifact_ids: []
     approval_kind: approved-delivery
-    expect: {site: null}
+    expect: {site: ai-action.delivery.apply.binding}
   - id: wrong-approval
     kind: refusal
     transport: gateway
@@ -64,5 +64,5 @@ cases:
     approval_kind: approved-delivery
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/ai.py:129", reason: "revision-conflict record: needs a revision change between seal and commit; the harness seals live guards under one lock"}
-  - {where: "tools/learning_os/commands/ai.py:131", reason: "stale-snapshot record: same seal/commit interleave, unexpressible in a step"}
+  - {where: "tools/learning_os/ops/handlers/ai.py:68", reason: "revision-conflict record: needs a revision change between seal and commit; the harness seals live guards under one lock"}
+  - {where: "tools/learning_os/ops/handlers/ai.py:68", reason: "stale-snapshot record: same seal/commit interleave, unexpressible in a step"}

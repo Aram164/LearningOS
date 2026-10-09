@@ -147,7 +147,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.ai.cmd_ai_action_apply_delivery",
+    "handler": "learning_os.adapters.cli.invoke:ai-action.delivery.apply",
     "parser_factory": false
   }
 }

@@ -25,6 +25,8 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops.commit import commit_proposal
+from learning_os.ops.context import OpContext
 from learning_os.transactions import TransactionFailure, TransactionService, artifact_revision
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -182,13 +184,23 @@ def apply_approved_delivery(
         approval_subject_sha256=envelope["approval"]["subject_sha256"],
     )
     with gateway_request_context(context):
-        return app.apply_delivery(
+        # The service's own steps around the pipeline's commit step (SPEC
+        # §12 R5, (be)): service-level failures stay AIActionErrors here.
+        proposal, replayed, touched_base = app.apply_delivery_proposal(
             delivery_id,
             delivery_sha256=delivery_hash,
             artifact_sha256=artifact_hashes,
             expected_snapshot=envelope["expected_snapshot"],
             expected_revisions=expected_revisions,
         )
+        if proposal is None:
+            return replayed
+        ctx = OpContext(root=app.root, operation="ai-action.delivery.apply",
+                        channel="operator", invocation="command",
+                        gateway=context)
+        code, errors, confirmation = commit_proposal(ctx, proposal)
+        assert code == 0, errors
+        return app.apply_delivery_receipt(confirmation, touched_base)
 
 
 def test_registry_and_manifest_projection_are_additive(ai_repo: Path):
