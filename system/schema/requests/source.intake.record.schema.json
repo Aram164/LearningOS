@@ -196,7 +196,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.source_catalog.cmd_source_intake_record",
+    "handler": "learning_os.adapters.cli.invoke:source.intake.record",
     "parser_factory": false
   }
 }

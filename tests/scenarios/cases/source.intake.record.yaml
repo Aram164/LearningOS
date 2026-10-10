@@ -53,13 +53,13 @@ cases:
     transport: gateway
     request: {record: {records: [{action: delete, id: source-demo-book}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: bad-id
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: nope}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: create-existing
     kind: refusal
     transport: gateway
@@ -73,7 +73,7 @@ cases:
             type: book
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: bad-type
     kind: refusal
     transport: gateway
@@ -87,7 +87,7 @@ cases:
             type: tablet
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: missing-discovery
     kind: refusal
     transport: gateway
@@ -96,7 +96,7 @@ cases:
         records:
           - {action: create, id: source-scenario-t, partition: sources.yaml, title: Scenario No Discovery, type: book}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: bad-partition
     kind: refusal
     transport: gateway
@@ -110,7 +110,7 @@ cases:
             type: book
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: bad-groups
     kind: refusal
     transport: gateway
@@ -125,7 +125,7 @@ cases:
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
             thematic_group_ids: [5]
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: unregistered-group
     kind: refusal
     transport: gateway
@@ -140,19 +140,19 @@ cases:
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
             thematic_group_ids: [thematic-group-nope]
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: correct-unknown
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-nope, title: "Scenario Title"}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: correct-create-only-field
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, type: book}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: create-outside-allowlist
     kind: refusal
     transport: gateway
@@ -167,7 +167,7 @@ cases:
             remove_url: true
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: empty-title
     kind: refusal
     transport: gateway
@@ -181,43 +181,43 @@ cases:
             type: book
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: url-both
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, url: "https://x.example/", remove_url: true}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: remove-no-url
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, remove_url: true}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: bad-remove-labels
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, remove_identifiers: [7]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: label-not-held
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, remove_identifiers: [doi]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: correct-bad-groups
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, thematic_group_ids: [5]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: correct-unregistered-group
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, thematic_group_ids: [thematic-group-nope]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: contract-violation
     kind: refusal
     transport: gateway
@@ -231,7 +231,7 @@ cases:
             type: book
             discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.needs-expected-diff}
   - id: child-titles-nolabel
     kind: refusal
     transport: gateway
@@ -245,7 +245,7 @@ cases:
             type: book
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf.", child_titles: {doi: "Chapter 1"}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: batch-address-dup
     kind: refusal
     transport: gateway
@@ -267,19 +267,19 @@ cases:
             url: "https://dup.example/"
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: no-change
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, title: "Demo Book"}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: named-twice
     kind: refusal
     transport: gateway
     request: {record: {records: [{action: correct, id: source-demo-book, title: "Scenario A"}, {action: correct, id: source-demo-book, title: "Scenario B"}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: missing-diff
     kind: refusal
     transport: gateway
@@ -293,7 +293,7 @@ cases:
             type: course
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.needs-expected-diff}
   - id: diff-changed
     kind: refusal
     transport: gateway
@@ -308,17 +308,17 @@ cases:
             discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
       expected_diff_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.intake.record.diff-changed}
   - id: missing-file
     kind: refusal
     transport: cli
     argv: [source-intake, --file, work/inbox/nope.yaml]
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "title": "Scenario Title"}]}']
-    expect: {site: null}
+    expect: {site: source.intake.record.needs-approval}
   - id: direct-cli-approved
     kind: refusal
     transport: cli
@@ -328,22 +328,22 @@ cases:
     kind: refusal
     transport: cli
     argv: [source-intake, --record, '{"records": []}']
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: batch-too-many
     kind: refusal
     transport: cli
     argv: [source-intake, --file, "<CASEDATA>/records.yaml"]
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: remove-url-string
     kind: refusal
     transport: cli
     argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "remove_url": "yes"}]}']
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: identifiers-string
     kind: refusal
     transport: cli
     argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "identifiers": "nope"}]}']
-    expect: {site: null}
+    expect: {site: source.intake.record.bad-records}
   - id: address-held-by-other
     kind: sequence
     steps:

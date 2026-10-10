@@ -583,10 +583,6 @@ checks:
     count: 7
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/source_catalog.py::_plan_intake::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/source_catalog.py::_plan_revise::load_repo
     count: 1
     since: baseline
@@ -597,18 +593,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/source_catalog.py::_refuse_without_approval::return
     count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::return
-    count: 6
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/source_catalog.py::cmd_source_record_revise::_operator_lock
@@ -1690,10 +1674,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: source.intake.record::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: source.record.revise::*
     count: 1
     since: baseline
@@ -1824,10 +1804,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: runtime.session::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.intake.record::*
     count: 1
     since: baseline
     approved_by: null
