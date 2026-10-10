@@ -9088,7 +9088,7 @@
   "cli.inbox-read.schema.json": "bac2f46af70c11d053b908ff46fe29fcedf64e321b9d19ad0888ce07db1f098b",
   "cli.inspect.schema.json": "62d0ff3dc198441be871e749a530e0ba6a2dfdd6bfc79115c0c5bb03ad965c4f",
   "cli.intelligence-scan.schema.json": "3513d66e5ca17b971959f5aa48d7f710b6577c5361fe13c7bf0b873deb09f8e1",
-  "cli.legacy-archive-inspect.schema.json": "bc420caff28551098727ab5d2f6051d0caf32775b17ab36e448528cc11522e32",
+  "cli.legacy-archive-inspect.schema.json": "8b6b513aa6f2214b313b267f4f1af9da7ce59c74602ebfb55fc526bea670835a",
   "cli.legacy-archive-status.schema.json": "115ea82203227d583922106ee5a535e5b6ccc67510dc60ab95e558ca02ed0505",
   "cli.masters-planning-dashboard.schema.json": "44419c692920fc48bd88b8c841f915965bf0d6372f055ab56e7192091efc890b",
   "cli.module-list.schema.json": "42d9872b6508b1e66c7b73e992f915cbdec0c8f8beea838384e2e38cd64a7a13",

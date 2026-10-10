@@ -25,6 +25,10 @@ from learning_os.backup_manifest import (
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.health import build_health_report
+from learning_os.legacy_archive import (
+    inspect_legacy_archive,
+    load_legacy_allowlist,
+)
 from learning_os.ops._legacy_plumbing import (
     _atomic_text,
     _fresh_manifest,
@@ -571,3 +575,15 @@ def health_report(ctx: OpContext, req: dict) -> Result:
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
     return Result(build_health_report(ctx.root), json_dumps=_dumps_indented)
+
+
+@register("cli.legacy-archive-inspect", kind="tool")
+@register("legacy.archive.inspect", kind="query")
+def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
+    """Inspect a legacy archive against its allowlist."""
+    root = ctx.root
+    allowlist = load_legacy_allowlist(root, Path(req["allowlist"]).expanduser().resolve())
+    lock = inspect_legacy_archive(
+        root, Path(req["archive_root"]).expanduser().resolve(), allowlist,
+    )
+    return Result(lock, json_dumps=_dumps_indented)

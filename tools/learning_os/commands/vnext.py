@@ -3,14 +3,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
 from learning_os.legacy_archive import (
-    inspect_legacy_archive,
     legacy_archive_lock_destination,
-    load_legacy_allowlist,
     load_legacy_archive_lock,
 )
 from learning_os.masters_planning import (
@@ -104,16 +101,6 @@ def cmd_unit_material_synthesis_publish(args) -> int:
         **({"errors": [str(error) for error in errors]} if errors else {}),
     }, indent=2, ensure_ascii=False))
     return code
-
-
-def cmd_legacy_archive_inspect(args) -> int:
-    root = _root(args)
-    allowlist = load_legacy_allowlist(root, Path(args.allowlist).expanduser().resolve())
-    lock = inspect_legacy_archive(
-        root, Path(args.archive_root).expanduser().resolve(), allowlist,
-    )
-    print(json.dumps(lock, indent=2, ensure_ascii=False))
-    return 0
 
 
 def cmd_legacy_archive_status(args) -> int:

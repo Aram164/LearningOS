@@ -80,7 +80,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_legacy_archive_inspect",
+    "handler": "learning_os.adapters.cli.invoke:cli.legacy-archive-inspect",
     "parser_factory": false
   }
 }
