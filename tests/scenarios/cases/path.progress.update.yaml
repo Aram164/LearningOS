@@ -23,13 +23,13 @@ cases:
     transport: gateway
     request: {path_id: path-demo, stage_id: stage-nope, status: active}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: path.progress.update.unknown-stage}
   - id: unknown-path
     kind: refusal
     transport: gateway
     request: {path_id: path-nope, stage_id: stage-demo-path, status: active}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: path.progress.update.unknown-path}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

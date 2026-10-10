@@ -318,9 +318,10 @@ def test_stage_handler_refuses_an_unknown_status(mini_repo: Path):
     assert caught.value.exit_code == 2
 
 
-def test_path_handler_refuses_an_unknown_status(mini_repo: Path,
-                                                capsys: pytest.CaptureFixture):
-    from learning_os.commands.path import cmd_path_progress
+def test_path_handler_refuses_an_unknown_status(mini_repo: Path):
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers.learner import path_progress
 
     path_file = (mini_repo / "work" / "active" / "workspace-demo"
                  / "paths" / "path-demo-probability.yaml")
@@ -340,11 +341,13 @@ def test_path_handler_refuses_an_unknown_status(mini_repo: Path,
                            "path-demo-probability/stage-one.md"},
         ],
     }, sort_keys=False), encoding="utf-8")
-    code = cmd_path_progress(_namespace(
-        mini_repo, path_id="path-demo-probability", stage_id="stage-one",
-        status="done"))
-    assert code == 2
-    assert "unknown path status" in capsys.readouterr().err
+    ctx = OpContext(root=mini_repo, operation="path.progress.update",
+                    channel="operator", invocation="command", gateway=None)
+    with pytest.raises(WriteRefused, match="unknown path status") as caught:
+        path_progress(ctx, {"path_id": "path-demo-probability",
+                            "stage_id": "stage-one", "status": "done"})
+    assert caught.value.site == "path.progress.update.unknown-status"
+    assert caught.value.exit_code == 2
 
 
 def test_source_selection_handler_refuses_an_unknown_action(

@@ -7,6 +7,8 @@ import json
 import sys
 from pathlib import Path
 
+import yaml
+
 from learning_os import observations
 from learning_os.domain.failures import WriteRefused
 from learning_os.learning_runtime import requirement_id_for
@@ -406,5 +408,81 @@ def path_note(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+def _on_path_progress_refused(errors: list) -> list[str]:
+    """The exact path-progress commit-refusal lines: the prefix plus the first twelve engine issues, verbatim."""
+    return ["los: path update rejected by validation", *errors[:12]]
+
+
+@register("path.progress.update", kind="command")
+def path_progress(ctx: OpContext, req: dict) -> Result:
+    """Move one learning-path stage's status."""
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, learning_path = require_path_or_error(ctx, req["path_id"])
+    data = learning_path.data
+    stages = data.get("stages", []) or []
+    stage = require_stage(ctx, data, req["stage_id"])
+    if req["status"] in {"complete", "skipped"} and stage.get("status") != "active":
+        raise WriteRefused(
+            "only the active stage can be completed or skipped; activate it first",
+            site="path.progress.update.not-active",
+            gateway_message=("los: only the active stage can be completed or skipped; "
+                             "activate it first"),
+            exit_code=2,
+        )
+    if req["status"] == "active":
+        for other in stages:
+            if other.get("status") == "active":
+                other["status"] = "pending"
+        stage["status"] = "active"
+        stage.pop("completed", None)
+        data["current_stage"] = stage["id"]
+        data["status"] = "active"
+    elif req["status"] in {"complete", "skipped"}:
+        stage["status"] = req["status"]
+        if req["status"] == "complete":
+            stage["completed"] = observations.today().isoformat()
+        following = next((s for s in stages[stages.index(stage) + 1:]
+                          if s.get("status") == "pending"), None)
+        if following:
+            following["status"] = "active"
+            data["current_stage"] = following["id"]
+            data["status"] = "active"
+        else:
+            data["status"] = "ready-to-shelve"
+            shelving = data.setdefault("shelving", {})
+            shelving["state"] = "draft"
+    else:
+        raise WriteRefused(
+            f"unknown path status: {req['status']} "
+            "(choose from active, complete, skipped)",
+            site="path.progress.update.unknown-status",
+            gateway_message=(f"los: unknown path status: {req['status']} "
+                             "(choose from active, complete, skipped)"),
+            exit_code=2,
+        )
+    data["updated"] = observations.today().isoformat()
+    rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="path.progress.update.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "path_id": req["path_id"],
+         "stage_id": req["stage_id"], "status": req["status"],
+         "path_status": data["status"],
+         "current_stage": data["current_stage"]},
+        proposal=TransactionProposal(
+            capability="path.progress.update",
+            writes={learning_path.path: rendered},
+            artifact_ids=[req["path_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_path_progress_refused,
         json_dumps=_dumps_stage,
     )
