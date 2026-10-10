@@ -17,13 +17,13 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, detour_id: detour-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: detour.resolve.unknown-detour}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, detour_id: detour-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: detour.resolve.unknown-unit}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

@@ -11,7 +11,8 @@ from pathlib import Path
 import yaml
 
 from learning_os import observations
-from learning_os.domain.failures import WriteRefused
+from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.suggest import not_found
 from learning_os.learning_runtime import requirement_id_for
 from learning_os.ops._legacy_plumbing import (
     _dump_study_map,
@@ -592,6 +593,62 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
         {"ok": True, "detour": detour},
         proposal=TransactionProposal(
             capability="detour.create",
+            writes={study_map.path: _dump_study_map(study_map, data),
+                    unit.path: _dump_yaml(unit_data)},
+            artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+def _stage(data: dict, stage_id: str):
+    return next((row for row in data.get("stages", []) or []
+                 if isinstance(row, dict) and row.get("id") == stage_id), None)
+
+
+@register("detour.resolve", kind="command")
+def detour_resolve(ctx: OpContext, req: dict) -> Result:
+    """Resolve a detour and reactivate its return stage."""
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    data = copy.deepcopy(study_map.data)
+    detour = next((row for row in data.get("detours", []) or []
+                   if row.get("id") == req["detour_id"]), None)
+    if detour is None:
+        known = [row.get("id") for row in data.get("detours", []) or []
+                 if isinstance(row, dict) and row.get("id")]
+        message = not_found("detour", req["detour_id"], known)
+        raise NotFound(
+            "detour", req["detour_id"], known,
+            site="detour.resolve.unknown-detour",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    detour["status"] = "resolved"
+    if req.get("resolution"):
+        detour["resolution"] = req["resolution"]
+    target_stage = _stage(data, detour["return_to_stage"])
+    for other in data.get("stages", []) or []:
+        if other.get("status") in {"active", "paused"}:
+            other["status"] = "pending"
+    target_stage["status"] = "active"
+    data["current_stage"] = target_stage["id"]
+    data["status"] = "active"
+    unit_data = copy.deepcopy(unit.data)
+    unit_data["status"] = "active"
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="detour.resolve.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "detour_id": req["detour_id"],
+         "return_to_stage": target_stage["id"]},
+        proposal=TransactionProposal(
+            capability="detour.resolve",
             writes={study_map.path: _dump_study_map(study_map, data),
                     unit.path: _dump_yaml(unit_data)},
             artifact_ids=[req["unit_id"], study_map.id],

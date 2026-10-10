@@ -138,3 +138,4 @@ approvals:
   - {key: "request_schemas.path.progress.update.schema.json", change: changed, plan_ref: "PLAN D4 (SC-learner: path.progress.update converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.path.attachment.add.schema.json", change: changed, plan_ref: "PLAN D4 (SC-learner: path.attachment.add converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.detour.create.schema.json", change: changed, plan_ref: "PLAN D4 (SC-learner: detour.create converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.detour.resolve.schema.json", change: changed, plan_ref: "PLAN D4 (SC-learner: detour.resolve converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
