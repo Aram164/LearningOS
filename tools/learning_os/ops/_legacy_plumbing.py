@@ -24,6 +24,7 @@ import tempfile
 import time
 from pathlib import Path
 
+import jsonschema
 import yaml
 
 from learning_os import observations
@@ -1117,3 +1118,26 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     if not files:
         raise ValueError(f"inbox item has no files to archive: {target.name}")
     return files
+
+
+# Atlas authoring guards, moved verbatim from commands.atlas for the
+# atlas.question.save conversion (SPEC (bo) 2).
+
+
+def _safe(root: Path, path: Path) -> Path:
+    """Reject links before reading even when a link would resolve in-tree."""
+    relative = path.relative_to(root)
+    current = root
+    for part in relative.parts:
+        current /= part
+        if current.is_symlink():
+            raise WriteRefused(f"Atlas cannot use a symlink: {relative}")
+    return path
+
+
+def _schema(root: Path, name: str, data: object) -> None:
+    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    try:
+        jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
+    except jsonschema.ValidationError as exc:
+        raise WriteRefused(f"{name}: {exc.message}") from exc

@@ -287,18 +287,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::_operator_lock
     count: 1
     since: baseline
@@ -1822,10 +1810,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: atlas.question.save::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: backup.manifest::*
     count: 1
     since: baseline
@@ -2112,10 +2096,6 @@ checks:
     approved_by: null
   A7-output:
   - signature: atlas.context::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: atlas.question.save::*
     count: 1
     since: baseline
     approved_by: null

@@ -164,3 +164,4 @@ approvals:
   - {key: "request_schemas.workspace.next-action.update.schema.json", change: changed, plan_ref: "PLAN D4 (SC-admin: workspace.next-action.update converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.ability.context.schema.json", change: changed, plan_ref: "PLAN D4 (SC-atlas: ability.context converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.ability.candidate.append.schema.json", change: changed, plan_ref: "PLAN D4 (SC-atlas: ability.candidate.append converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.atlas.question.save.schema.json", change: changed, plan_ref: "PLAN D4 (SC-atlas: atlas.question.save converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

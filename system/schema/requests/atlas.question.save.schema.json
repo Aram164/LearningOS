@@ -103,7 +103,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.atlas.cmd_atlas_question_save",
+    "handler": "learning_os.adapters.cli.invoke:atlas.question.save",
     "parser_factory": false
   }
 }

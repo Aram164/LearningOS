@@ -6,25 +6,19 @@ import copy
 import json
 from pathlib import Path
 
-import jsonschema
 import yaml
 
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _safe,
+    _schema,
 )
 
-from .. import observations
-from ..contracts.atlas_question import (
-    QUESTION_FIELDS,
-    QUESTION_FIELDS_ORDERED,
-    QUESTION_HANDLER_OWNED,
-)
 from ..domain.failures import WriteRefused
 from ..domain.suggest import with_suggestions
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
-from ..ops._legacy_plumbing import _render_frontmatter
 from ..revisions import artifact_revision
 from .support import (
     _expected_ok,
@@ -34,17 +28,6 @@ from .support import (
 )
 
 RELATION_ARTIFACT = "registry-concept-relations"
-
-
-def _safe(root: Path, path: Path) -> Path:
-    """Reject links before reading even when a link would resolve in-tree."""
-    relative = path.relative_to(root)
-    current = root
-    for part in relative.parts:
-        current /= part
-        if current.is_symlink():
-            raise WriteRefused(f"Atlas cannot use a symlink: {relative}")
-    return path
 
 
 def _registries(root: Path) -> dict[Path, dict]:
@@ -60,14 +43,6 @@ def _registries(root: Path) -> dict[Path, dict]:
         _schema(root, "concept-relations", data)
         records[path] = data
     return records
-
-
-def _schema(root: Path, name: str, data: object) -> None:
-    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
-    try:
-        jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
-    except jsonschema.ValidationError as exc:
-        raise WriteRefused(f"{name}: {exc.message}") from exc
 
 
 def _commit(root: Path, args, capability: str, writes: dict, ids: list[str], result: dict) -> int:
@@ -161,67 +136,3 @@ def cmd_concept_relations_change(args) -> int:
         # Existing validator rejects duplicates, unknown endpoints/sources and prerequisite cycles.
         return _commit(root, args, "concept.relations.change", writes,
                        [RELATION_ARTIFACT], {"operation_count": len(operations)})
-
-
-def cmd_atlas_question_save(args) -> int:
-    root = _root(args)
-    question = args.question
-    if not isinstance(question, dict):
-        raise WriteRefused("question must be an object")
-    unknown = set(question) - QUESTION_FIELDS
-    if unknown:
-        raise WriteRefused(
-            "question has unknown fields: " + ", ".join(sorted(unknown))
-            + f" (accepted: {', '.join(QUESTION_FIELDS_ORDERED)}; "
-            + f"{'/'.join(QUESTION_HANDLER_OWNED)} are set by the handler)")
-    if not isinstance(question.get("id"), str):
-        raise WriteRefused("question needs a string id")
-    if "target" in question and not isinstance(question["target"], dict):
-        raise WriteRefused("question target must be an object")
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo = load_repo(root)
-        note_id = question["id"]
-        existing = repo.notes.get(note_id)
-        if existing:
-            if existing.meta.get("role") != "question" or "atlas_question" not in existing.meta:
-                raise WriteRefused("this note is not an Atlas question")
-            if "target" in question and question["target"] != existing.meta["atlas_question"]["target"]:
-                raise WriteRefused("the original question target is preserved")
-            meta, body, path = copy.deepcopy(existing.meta), existing.body, existing.path
-        else:
-            if not all(key in question for key in ("title", "text", "target")):
-                raise WriteRefused("new questions require title, text and target")
-            meta = {"id": note_id, "type": "note", "role": "question",
-                    "title": question["title"], "created": observations.today().isoformat(),
-                    "authorship": "user", "atlas_question": {
-                        "state": "open", "target": copy.deepcopy(question["target"])}}
-            body = question["text"]
-            # Validate id before it can be used as a filename.
-            _schema(root, "note", meta)
-            path = root / "knowledge/notes/questions" / f"{note_id}.md"
-            if path.exists():
-                raise WriteRefused("question destination already exists")
-            target = question["target"]
-            concept_ids = target.get("concepts", []) or [target.get("from"), target.get("to")]
-            if any(cid not in repo.concepts for cid in concept_ids):
-                raise WriteRefused("question target contains an unknown concept")
-            if "from" in target and not any(all(row.get(k) == target[k] for k in ("from", "type", "to")) for row in repo.relations):
-                raise WriteRefused("question connection target does not exist")
-        _safe(root, path)
-        if "title" in question:
-            meta["title"] = question["title"]
-        if "text" in question:
-            if not isinstance(question["text"], str) or not question["text"].strip():
-                raise WriteRefused("question text cannot be empty")
-            body = question["text"]
-        for field in ("state", "answer_notes"):
-            if field in question:
-                meta["atlas_question"][field] = copy.deepcopy(question[field])
-        _schema(root, "note", meta)
-        for answer in meta["atlas_question"].get("answer_notes", []):
-            if answer not in repo.notes or answer == note_id:
-                raise WriteRefused("answer note must resolve to another durable note")
-        return _commit(root, args, "atlas.question.save", {path: _render_frontmatter(meta, body)},
-                       [note_id], {"note_id": note_id, "note_path": path.relative_to(root).as_posix()})

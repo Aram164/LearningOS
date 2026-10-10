@@ -2,18 +2,29 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from datetime import UTC
 
 from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os import abilities, observations
+from learning_os.contracts.atlas_question import (
+    QUESTION_FIELDS,
+    QUESTION_FIELDS_ORDERED,
+    QUESTION_HANDLER_OWNED,
+)
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import suggest
 from learning_os.learning_runtime import runtime_path
-from learning_os.ops._legacy_plumbing import _snapshot
+from learning_os.ops._legacy_plumbing import (
+    _render_frontmatter,
+    _safe,
+    _schema,
+    _snapshot,
+)
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -28,6 +39,11 @@ def _dumps_ability_context(payload: dict) -> str:
 def _dumps_candidate(payload: dict) -> str:
     """The exact candidate encoder: default separators, escaped."""
     return json.dumps(payload)
+
+
+def _dumps_atlas(payload: dict) -> str:
+    """The exact atlas encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
 
 
 def _on_commit_refused(errors: list) -> list[str]:
@@ -266,3 +282,120 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc
+
+
+@register("atlas.question.save", kind="command")
+def atlas_question_save(ctx: OpContext, req: dict) -> Result:
+    """Save or resolve an explicitly authored personal question."""
+    root = ctx.root
+    question = req["question"]
+    if not isinstance(question, dict):
+        raise WriteRefused("question must be an object")
+    unknown = set(question) - QUESTION_FIELDS
+    if unknown:
+        raise WriteRefused(
+            "question has unknown fields: " + ", ".join(sorted(unknown))
+            + f" (accepted: {', '.join(QUESTION_FIELDS_ORDERED)}; "
+            + f"{'/'.join(QUESTION_HANDLER_OWNED)} are set by the handler)",
+            site=f"{ctx.operation}.unknown-fields",
+        )
+    if not isinstance(question.get("id"), str):
+        raise WriteRefused(
+            "question needs a string id",
+            site=f"{ctx.operation}.id-not-string",
+        )
+    if "target" in question and not isinstance(question["target"], dict):
+        raise WriteRefused(
+            "question target must be an object",
+            site=f"{ctx.operation}.target-not-object",
+        )
+    ctx.require_snapshot(req["expected_snapshot"])
+    repo = ctx.repo()
+    note_id = question["id"]
+    existing = repo.notes.get(note_id)
+    if existing:
+        if existing.meta.get("role") != "question" or "atlas_question" not in existing.meta:
+            raise WriteRefused(
+                "this note is not an Atlas question",
+                site=f"{ctx.operation}.not-a-question",
+            )
+        if "target" in question and question["target"] != existing.meta["atlas_question"]["target"]:
+            raise WriteRefused(
+                "the original question target is preserved",
+                site=f"{ctx.operation}.retarget-refused",
+            )
+        meta, body, path = copy.deepcopy(existing.meta), existing.body, existing.path
+    else:
+        if not all(key in question for key in ("title", "text", "target")):
+            raise WriteRefused(
+                "new questions require title, text and target",
+                site=f"{ctx.operation}.new-needs-fields",
+            )
+        meta = {"id": note_id, "type": "note", "role": "question",
+                "title": question["title"], "created": observations.today().isoformat(),
+                "authorship": "user", "atlas_question": {
+                    "state": "open", "target": copy.deepcopy(question["target"])}}
+        body = question["text"]
+        # Validate id before it can be used as a filename.
+        try:
+            _schema(root, "note", meta)
+        except WriteRefused as exc:
+            exc.site = f"{ctx.operation}.bad-new-note"
+            raise
+        path = root / "knowledge/notes/questions" / f"{note_id}.md"
+        if path.exists():
+            raise WriteRefused("question destination already exists")
+        target = question["target"]
+        concept_ids = target.get("concepts", []) or [target.get("from"), target.get("to")]
+        if any(cid not in repo.concepts for cid in concept_ids):
+            raise WriteRefused(
+                "question target contains an unknown concept",
+                site=f"{ctx.operation}.unknown-concept",
+            )
+        if "from" in target and not any(all(row.get(k) == target[k] for k in ("from", "type", "to")) for row in repo.relations):
+            raise WriteRefused(
+                "question connection target does not exist",
+                site=f"{ctx.operation}.missing-connection",
+            )
+    _safe(root, path)
+    if "title" in question:
+        meta["title"] = question["title"]
+    if "text" in question:
+        if not isinstance(question["text"], str) or not question["text"].strip():
+            raise WriteRefused(
+                "question text cannot be empty",
+                site=f"{ctx.operation}.blank-text",
+            )
+        body = question["text"]
+    for field in ("state", "answer_notes"):
+        if field in question:
+            meta["atlas_question"][field] = copy.deepcopy(question[field])
+    try:
+        _schema(root, "note", meta)
+    except WriteRefused as exc:
+        exc.site = f"{ctx.operation}.bad-question-fields"
+        raise
+    for answer in meta["atlas_question"].get("answer_notes", []):
+        if answer not in repo.notes or answer == note_id:
+            raise WriteRefused(
+                "answer note must resolve to another durable note",
+                site=f"{ctx.operation}.bad-answer-note",
+            )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "note_id": note_id,
+         "note_path": path.relative_to(root).as_posix()},
+        proposal=TransactionProposal(
+            capability="atlas.question.save",
+            writes={path: _render_frontmatter(meta, body)},
+            artifact_ids=[note_id],
+            expected_revisions=expected_revisions,
+        ),
+        after_commit="STANDARD",
+        json_dumps=_dumps_atlas,
+    )
