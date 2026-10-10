@@ -915,14 +915,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/support.py::_path_or_error::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_path_or_error::print
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_print_rows::print
     count: 1
     since: baseline
