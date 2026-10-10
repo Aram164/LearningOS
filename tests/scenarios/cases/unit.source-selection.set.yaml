@@ -67,3 +67,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/unit.py:587", reason: "unknown action: argparse choices and payload_to_namespace enforce the value set first"}
+  - {site: unit.source-selection.set.unknown-action, where: "tools/learning_os/ops/handlers/learner.py:1029", reason: guarded-before-handler}

@@ -23,6 +23,7 @@ cases:
     expect: {site: note.evidence.add.unknown-note}
   - id: add-twice
     kind: sequence
+    expect: {site: note.evidence.add.already-recorded}
     steps:
       - transport: gateway
         request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}

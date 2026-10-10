@@ -52,3 +52,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/path.py:114", reason: "unknown status: argparse choices and payload_to_namespace enforce the value set first"}
+  - {site: path.progress.update.unknown-status, where: "tools/learning_os/ops/handlers/learner.py:487", reason: guarded-before-handler}

@@ -62,3 +62,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/source.py:62", reason: "resource/source mismatch: rich_world has a single source, so a valid second source_id cannot be named"}
+  - {site: source.feedback.record.wrong-source, where: "tools/learning_os/ops/handlers/learner.py:729", reason: fixture-inexpressible}

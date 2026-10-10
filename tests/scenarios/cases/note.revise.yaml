@@ -29,6 +29,7 @@ cases:
     expect: {site: note.revise.bad-file}
   - id: invalid-note
     kind: sequence
+    expect: {site: note.revise.invalid-note}
     steps:
       - transport: gateway
         operation: garden.seed.create
