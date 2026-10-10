@@ -1,4 +1,4 @@
-"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status``, ``cli.ai-action-prepare`` (SPEC §12)."""
+"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status``, ``cli.ai-action-prepare``, ``cli.ai-action-append-slices`` (SPEC §12)."""
 
 from __future__ import annotations
 
@@ -192,3 +192,20 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
         "bundle_path": service.repository.request_dir(
             request["id"]).relative_to(root).as_posix(),
     }, json_dumps=_dumps_delivery)
+
+
+@register("cli.ai-action-append-slices", kind="porcelain")
+def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
+    """Attach one targeted follow-up slice pass to a prepared request."""
+    root = ctx.root
+    service = AIActionService(root)
+    result = service.append_slices(
+        request_id=req["request_id"], route_id=req["route_id"],
+        start=req["start"], end=req["end"], kind=req["kind"],
+        concept_ids=req.get("concept_id") or [], reason=req["reason"],
+        material_uri=req.get("material_uri"),
+        expected_snapshot=req.get("expected_snapshot"),
+    )
+    _publish(root)
+    return Result({"ok": True, "continuation": result},
+                  json_dumps=_dumps_delivery)
