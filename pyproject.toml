@@ -135,7 +135,6 @@ ignore_imports = [
   "learning_os.health -> learning_os.masters_planning",
   "learning_os.health -> learning_os.material_synthesis",
   "learning_os.masters_planning -> learning_os.transactions",
-  "learning_os.material_synthesis -> learning_os.transactions",
   "learning_os.rules.generated -> learning_os.genout",
   "learning_os.semantics.scan -> learning_os.material_synthesis",
 ]
@@ -151,5 +150,4 @@ ignore_imports = [
   "learning_os.commands.lineage_restamp -> learning_os.transactions",
   "learning_os.commands.support -> learning_os.transactions",
   "learning_os.masters_planning -> learning_os.transactions",
-  "learning_os.material_synthesis -> learning_os.transactions",
 ]

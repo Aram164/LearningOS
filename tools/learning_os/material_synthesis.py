@@ -15,13 +15,11 @@ from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
-from learning_os.material_analysis import observe_local_material
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
     MATERIAL_SUFFIX_TOKEN,
     evidential_route_projection,
     evidential_source_map_projection,
-    route_material_checksum,
     stable_checksum,
 )
 from learning_os.semantics.lineage import (
@@ -30,7 +28,10 @@ from learning_os.semantics.lineage import (
     load_ledger,
     to_dict,
 )
-from learning_os.transactions import artifact_revision
+from learning_os.store.material_observations import (
+    LiveMaterialObservations,
+    MaterialObservations,
+)
 
 #: Widest cited page span the provenance check expands before refusing.
 #: Real evidence cites dozens of pages at most; anything wider cannot be
@@ -133,6 +134,7 @@ def current_unit_material_basis(
     *,
     repo=None,
     cache: dict[Path, str] | None = None,
+    obs: MaterialObservations | None = None,
 ) -> dict[str, Any]:
     """Derive one unit's current material basis.
 
@@ -143,11 +145,13 @@ def current_unit_material_basis(
     repo = load_repo(root) if repo is None else repo
     if cache is None:
         cache = {}
+    if obs is None:
+        obs = LiveMaterialObservations(root, cache)
     unit = repo.units.get(unit_id)
     if unit is None:
         raise MaterialSynthesisError(f"unit not found: {unit_id}")
     source_map_path = repo.module_source_map_origins.get(unit.module_id)
-    if source_map_path is None or not source_map_path.is_file():
+    if source_map_path is None or not obs.is_file(source_map_path):
         raise MaterialSynthesisError(f"unit has no module source map: {unit_id}")
     routes = _rich_routes(repo, unit_id)
     if not routes:
@@ -162,7 +166,7 @@ def current_unit_material_basis(
         raise MaterialSynthesisError(f"unit has duplicate route IDs: {unit_id}")
     route_rows = sorted(routes, key=lambda row: str(row["id"]))
     return {
-        "unit_revision": artifact_revision(root, unit_id),
+        "unit_revision": obs.revision(unit_id),
         # Module-plan transactions guard the module source map with the owning
         # module artifact revision.  Keep that revision as provenance only:
         # the evidential checksums below are what stale a dossier, so a
@@ -171,7 +175,7 @@ def current_unit_material_basis(
         # projection for THIS unit, not the file's bytes — hashing the bytes
         # made every dossier in a module depend on every word in it, so a prose
         # fix on an unrelated unit's route staled this one too.
-        "source_map_revision": artifact_revision(root, unit.module_id),
+        "source_map_revision": obs.revision(unit.module_id),
         "source_map_checksum": stable_checksum(
             evidential_source_map_projection(
                 repo.module_source_maps.get(unit.module_id) or {}, unit_id
@@ -185,7 +189,7 @@ def current_unit_material_basis(
             [evidential_route_projection(route) for route in route_rows]
         ),
         "material_checksums": {
-            str(route["id"]): route_material_checksum(repo, route, cache)
+            str(route["id"]): obs.route_checksum(repo, route, cache)
             for route in route_rows
         },
         "policy": "tiered-v2",
@@ -197,7 +201,8 @@ ANALYSIS_REFS_STALE = "analysis-refs-stale"
 
 
 def _analysis_ref_problem(root: Path, repo, ref: dict, *,
-                          cache: dict[Path, str] | None = None) -> str | None:
+                          cache: dict[Path, str] | None = None,
+                          obs: MaterialObservations | None = None) -> str | None:
     """Why an analysis ref no longer names its approved evidence, else None.
 
     The ref pins the note revision the approver saw plus the exact anchor
@@ -207,6 +212,8 @@ def _analysis_ref_problem(root: Path, repo, ref: dict, *,
     this evidence again. Shape is the schema's job; this checks the live
     binding against the recorded one.
     """
+    if obs is None:
+        obs = LiveMaterialObservations(root, cache)
     if not isinstance(ref, dict):
         return "ref is not an object"
     note = (repo.notes or {}).get(ref.get("note_id"))
@@ -215,10 +222,10 @@ def _analysis_ref_problem(root: Path, repo, ref: dict, *,
     binding = note.meta.get("material_analysis")
     if not isinstance(binding, dict):
         return "note carries no material analysis"
-    if artifact_revision(root, note.id) != ref.get("note_revision"):
+    if obs.revision(note.id) != ref.get("note_revision"):
         return "note was revised after approval"
     try:
-        live_digest = f"sha256:{hashlib.sha256(note.path.read_bytes()).hexdigest()}"
+        live_digest = f"sha256:{hashlib.sha256(obs.read_bytes(note.path)).hexdigest()}"
     except OSError:
         return "note bytes are unreadable"
     if live_digest != ref.get("note_digest"):
@@ -235,9 +242,9 @@ def _analysis_ref_problem(root: Path, repo, ref: dict, *,
         return "material identity differs from the note's binding"
     if binding.get("inspected_range") != ref.get("inspected_range"):
         return "inspected range differs from the note's binding"
-    observation = observe_local_material(
-        root.parent / "materials", str(binding.get("material") or ""),
-        str(binding.get("recorded_source_digest") or ""), cache=cache)
+    observation = obs.observe_material(
+        str(binding.get("material") or ""),
+        str(binding.get("recorded_source_digest") or ""))
     if observation["status"] != "current":
         return f"analysis source is not current ({observation['status']})"
     return None

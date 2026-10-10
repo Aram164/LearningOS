@@ -271,7 +271,6 @@ def test_production_edges_are_clean_with_no_allowlist_growth():
     assert report.ok
     assert set(UNREACHABLE_ALLOWLIST) == {
         "learning_os.contracts.migration_lifecycle",
-        "learning_os.store",
         "migrations.curriculum_v2",
         "migrations.job_quarantine_collapse",
         "migrations.library_taxonomy_v1",
