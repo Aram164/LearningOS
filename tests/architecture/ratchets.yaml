@@ -227,14 +227,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/abilities.py::cmd_ability_context::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/abilities.py::cmd_ability_context::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::canonical_fingerprint
     count: 1
     since: baseline
@@ -1846,10 +1838,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: ability.context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: atlas.context::*
     count: 1
     since: baseline
@@ -2144,10 +2132,6 @@ checks:
     approved_by: null
   A7-output:
   - signature: ability.candidate.append::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: ability.context::*
     count: 1
     since: baseline
     approved_by: null
