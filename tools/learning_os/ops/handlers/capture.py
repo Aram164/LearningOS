@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import re
 import sys
@@ -15,13 +16,10 @@ from learning_os.contracts.gateway import (
 )
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.ops._legacy_plumbing import (
-    _admit,
     _bytes_inside_owner,
-    _collect,
     _content_envelope,
     _discovery_row,
     _dump_study_map,
-    _folder_digest,
     _inbox_search_rows,
     _json_layout,
     _read_content_bound_file,
@@ -605,4 +603,199 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
         ),
         on_commit_refused=_on_commit_refused_apply,
         json_dumps=_dumps_review_apply,
+    )
+
+
+def _file_digest(data: bytes) -> str:
+    return "sha256:" + hashlib.sha256(data).hexdigest()
+
+
+def _prune_empty_dirs(inbox: Path, target: Path) -> None:
+    """Remove directories the move just emptied, up to (not incl.) the inbox.
+
+    Best-effort structural cleanup after a committed move: empty
+    directories carry no canonical content (Git does not track them, the
+    fingerprint walks files), so a redir that fills again concurrently
+    simply stops the prune. Never touches the inbox itself.
+    """
+    cursor = target if target.is_dir() else target.parent
+    while cursor != inbox and inbox in cursor.parents:
+        try:
+            if any(cursor.iterdir()):
+                return
+            cursor.rmdir()
+        except OSError:
+            return
+        cursor = cursor.parent
+
+
+def _folder_digest(files: dict[str, bytes]) -> str:
+    """One digest for a folder drop: SHA-256 over the sorted name->sha map.
+
+    Canonical JSON over parsed digests, never raw bytes, so the value is
+    stable regardless of read order and re-derivable by any caller holding
+    the same files.
+    """
+    manifest = {name: hashlib.sha256(files[name]).hexdigest()
+                for name in sorted(files)}
+    canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":"),
+                           ensure_ascii=False)
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _admit(inbox: Path, name: str) -> Path:
+    """The inbox path ``name`` addresses, or raise with a refusal message."""
+    if not name or name in {".", "./"} or Path(name).is_absolute() \
+            or ".." in Path(name).parts:
+        raise ValueError(f"inbox name must be relative to work/inbox: {name}")
+    target = inbox / name
+    try:
+        target.resolve(strict=True).relative_to(inbox.resolve(strict=True))
+    except OSError as exc:
+        raise ValueError(f"inbox item not found: {name}") from exc
+    cursor: Path | None = target
+    while cursor is not None and cursor != inbox and inbox in cursor.parents:
+        if cursor.is_symlink():
+            raise ValueError("inbox resolve refuses symlinks")
+        cursor = cursor.parent if cursor != cursor.parent else None
+    return target
+
+
+def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
+    """Every regular file under ``target`` as inbox-relative name -> bytes."""
+    if target.is_file() and not target.is_symlink():
+        return {target.relative_to(inbox).as_posix(): target.read_bytes()}
+    if not target.is_dir() or target.is_symlink():
+        raise ValueError(f"inbox item is not a regular file or folder: {target.name}")
+    files: dict[str, bytes] = {}
+    for path in sorted(target.rglob("*")):
+        if path.is_symlink():
+            raise ValueError("inbox resolve refuses symlinks")
+        if not path.is_file():
+            continue
+        files[path.relative_to(inbox).as_posix()] = path.read_bytes()
+    if not files:
+        raise ValueError(f"inbox item has no files to archive: {target.name}")
+    return files
+
+
+def _dumps_inbox_resolve(payload: dict) -> str:
+    """The exact resolve encoder: default separators, escaped."""
+    return json.dumps(payload)
+
+
+@register("inbox.resolve", kind="command")
+def inbox_resolve(ctx: OpContext, req: dict) -> Result:
+    """Resolve one routed inbox drop to the archive.
+
+    The drop's SHA-256 must match the bytes read (a changed drop
+    refuses), ``routed_to`` names every destination that received it (a
+    missing destination refuses), and the receipt names both endpoints
+    plus ``routed_to``. The archive never overwrites: a collision
+    refuses rather than merging histories. Directories the move empties
+    are pruned after the commit lands.
+    """
+    root = ctx.root
+    if current_gateway_request() is None:
+        message = ("inbox resolve requires GatewayEnvelopeV2; "
+                   "direct CLI application is disabled")
+        raise WriteRefused(
+            message,
+            site="inbox.resolve.direct-cli",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        inbox = root / "work" / "inbox"
+        try:
+            target = _admit(inbox, req["name"])
+            files = _collect(inbox, target)
+        except ValueError as exc:
+            raise WriteRefused(
+                str(exc),
+                site="inbox.resolve.bad-name",
+                gateway_message=f"los: {exc}",
+                exit_code=2,
+            ) from exc
+        if target.is_file():
+            actual = _file_digest(next(iter(files.values())))
+        else:
+            actual = _folder_digest(files)
+        if actual != req["drop_sha256"]:
+            message = (
+                f"inbox drop changed since read: {req['name']} "
+                f"(re-read it with `inbox-read {req['name']}` and re-seal)")
+            raise WriteRefused(
+                message,
+                site="inbox.resolve.drop-changed",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        routed_to = [str(entry).strip() for entry in (req["routed_to"] or [])]
+        if not routed_to or any(not entry for entry in routed_to):
+            message = ("inbox resolve needs a non-empty routed_to list "
+                       "naming where the drop went")
+            raise WriteRefused(
+                message,
+                site="inbox.resolve.missing-routed-to",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        year = str(observations.today().year)
+        writes: dict[Path, bytes] = {}
+        deletes: list[Path] = []
+        for rel, data in files.items():
+            destination = root / "archive" / "inbox" / year / rel
+            if destination.exists() or destination.is_symlink():
+                message = (
+                    f"archive already holds "
+                    f"{destination.relative_to(root).as_posix()}; "
+                    "the archive never overwrites")
+                raise WriteRefused(
+                    message,
+                    site="inbox.resolve.archive-collision",
+                    gateway_message=f"los: {message}",
+                    exit_code=2,
+                )
+            writes[destination] = data
+            deletes.append(inbox / rel)
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="inbox.resolve.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="inbox.resolve.bad-expected-revision",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+    def after_commit(code, errors, confirmation):
+        if code != 0:
+            return
+        _prune_empty_dirs(inbox, target)
+
+    return Result(
+        {"ok": True, "resolved": req["name"],
+         "archived": sorted(path.relative_to(root).as_posix()
+                            for path in writes),
+         "routed_to": routed_to},
+        proposal=TransactionProposal(
+            capability="inbox.resolve",
+            writes=writes,
+            artifact_ids=(),
+            deletes=deletes,
+            metadata={"routed_to": routed_to},
+            expected_revisions=expected_revisions,
+        ),
+        after_commit=after_commit,
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_inbox_resolve,
     )

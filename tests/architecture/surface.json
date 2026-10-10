@@ -9118,7 +9118,7 @@
   "health.report.schema.json": "7fa39cb762c56f310bf42830f75854132ac5cec28756a5b43d842a4aead2ce7c",
   "inbox.content.schema.json": "f196c246be47d78ced7a3d33d350e755ae0f95b42584304b42ac62c0caa36341",
   "inbox.list.schema.json": "f1191ad2ea79e2e2238dfc38018bde90d4cbafa278ea99b001ab4d9be26e4f6e",
-  "inbox.resolve.schema.json": "2985779e307bd8a32aec50fd1f428363b40708a1a2d6e39c5f57ad16d200b53f",
+  "inbox.resolve.schema.json": "0458a2eb79a0001f66ecd9d9c6e42b67e45a441bcd898ba79c337f939fd7e208",
   "learner.ability-observation.append.schema.json": "f716a721bbc6e780ea21e535b19748b45b9ba165c8cadfb64115480bcf02eba1",
   "learner.observation.append.schema.json": "99eeaee15866beeb246139c36549e614239b43934cc2050d9033294740c63ca8",
   "learner.stage-result.append.schema.json": "defd35bb458142b093c68e2685f3cff748b890270380cc108094ea289f4c8693",

@@ -315,18 +315,6 @@ checks:
     count: 16
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::print
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::return
-    count: 4
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/intelligence.py::_print_brief_json::print
     count: 1
     since: baseline
@@ -1906,10 +1894,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: inbox.resolve::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: legacy.archive.inspect::*
     count: 1
     since: baseline
@@ -2147,10 +2131,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: inbox.resolve::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: legacy.archive.inspect::*
     count: 1
     since: baseline
@@ -2301,6 +2281,10 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: tools/learning_os/ops/handlers/capture.py::inbox_resolve::after_commit
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   - signature: tools/learning_os/ops/handlers/plan.py::_execute_material_plan::after_commit
     count: 1
     since: baseline

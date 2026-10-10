@@ -20,7 +20,7 @@ from gateway_helpers import approved_v2_call, file_sha256
 from repo_builders import run_los
 
 from learning_os.loader import load_repo
-from learning_os.ops._legacy_plumbing import _folder_digest
+from learning_os.ops.handlers.capture import _folder_digest
 from learning_os.rules import validate
 
 

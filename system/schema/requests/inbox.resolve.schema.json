@@ -151,7 +151,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.inbox.cmd_inbox_resolve",
+    "handler": "learning_os.adapters.cli.invoke:inbox.resolve",
     "parser_factory": false
   }
 }
