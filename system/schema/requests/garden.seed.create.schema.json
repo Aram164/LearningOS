@@ -124,7 +124,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.garden.cmd_garden_seed_create",
+    "handler": "learning_os.adapters.cli.invoke:garden.seed.create",
     "parser_factory": false
   }
 }

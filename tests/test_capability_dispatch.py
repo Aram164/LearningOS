@@ -215,7 +215,7 @@ def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
 @pytest.mark.parametrize("printed", ["plain success", "[]", ""])
 def test_non_object_handler_output_is_a_hard_gateway_failure(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch, printed: str):
-    import learning_os.commands.garden as garden_module
+    import learning_os.commands.unit as unit_module
     import los
 
     def malformed_success(_args):
@@ -225,16 +225,17 @@ def test_non_object_handler_output_is_a_hard_gateway_failure(
 
     # The generated parser resolves funcs from their source modules
     # (SPEC 10.5), not via the los namespace, so patch the source.
-    # garden.seed.create is the unconverted text-in/JSON-out command with
-    # the same legacy-dispatch shape capture.create had before S15.
-    monkeypatch.setattr(garden_module, "cmd_garden_seed_create", malformed_success)
-    definition = command_definitions(mini_repo)["garden.seed.create"]
+    # unit.note.append is an unconverted text-in/JSON-out command with
+    # the same legacy-dispatch shape garden.seed.create had before
+    # SC-capture.
+    monkeypatch.setattr(unit_module, "cmd_unit_note", malformed_success)
+    definition = command_definitions(mini_repo)["unit.note.append"]
     with pytest.raises(WriteRefused, match="reported success"):
         _dispatch(
             mini_repo,
             definition,
             {"request_id": "req-malformed-success", "capability": definition.name},
-            {"text": "seed me"},
+            {"unit_id": "unit-demo-l01", "text": "note me"},
             parser_factory=los.build_parser,
         )
 

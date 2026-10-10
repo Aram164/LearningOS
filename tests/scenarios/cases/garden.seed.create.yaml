@@ -25,7 +25,7 @@ cases:
     transport: gateway
     request: {text: "   "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: garden.seed.create.empty-text}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

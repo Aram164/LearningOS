@@ -38,6 +38,52 @@ def _on_commit_refused(errors: list) -> list[str]:
     return list(errors[:12])
 
 
+def _dumps_garden_seed(payload: dict) -> str:
+    """The exact garden-seed JSON encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _human_garden_seed(payload: dict) -> str:
+    """The exact default-branch prose: the created line plus the no-AI note."""
+    return (
+        f"Garden seed created -> {payload['seed_path']}\n"
+        "No classification, routing, harvesting, or AI action was performed."
+    )
+
+
+def _seed_slug(text: str, title: str | None) -> str:
+    """Mechanical filename slug; never a semantic classification."""
+    source = str(title or "").strip()
+
+    if not source:
+        source = next(
+            (
+                line.strip().lstrip("#").strip()
+                for line in text.splitlines()
+                if line.strip()
+            ),
+            "",
+        )
+
+    return (
+        re.sub(r"[^a-z0-9]+", "-", source.lower())
+        .strip("-")[:64]
+        or "garden-seed"
+    )
+
+
+def _seed_content(text: str, title: str | None) -> str:
+    """Preserve caller text, optionally placing the explicit title above it."""
+    body = str(text)
+
+    if title:
+        content = f"# {title}\n\n{body}"
+    else:
+        content = body
+
+    return content if content.endswith("\n") else content + "\n"
+
+
 @register("capture.create", kind="command", human=_human_capture)
 def capture(ctx: OpContext, req: dict) -> Result:
     """Judgment-free capture into work/inbox/ with a transaction receipt."""
@@ -106,4 +152,62 @@ def capture(ctx: OpContext, req: dict) -> Result:
         ),
         on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_capture,
+    )
+
+
+@register("garden.seed.create", kind="command", human=_human_garden_seed)
+def garden_seed_create(ctx: OpContext, req: dict) -> Result:
+    """Create one free-form Markdown seed under knowledge/garden/."""
+    root = ctx.root
+    text = str(req["text"] or "")
+
+    if not text.strip():
+        raise WriteRefused(
+            "Garden seed text is empty; nothing was written",
+            site=f"{ctx.operation}.empty-text",
+            gateway_message="los: Garden seed text is empty; nothing was written",
+            exit_code=2,
+        )
+
+    title = str(req.get("title") or "").strip() or None
+
+    ctx.require_snapshot(req.get("expected_snapshot"))
+
+    garden = root / "knowledge" / "garden"
+    slug = _seed_slug(text, title)
+
+    target = garden / f"{slug}.md"
+    serial = 2
+
+    while target.exists():
+        target = garden / f"{slug}-{serial}.md"
+        serial += 1
+
+    relative = target.relative_to(root).as_posix()
+    content = _seed_content(text, title)
+    gateway_request = current_gateway_request()
+    artifact_id = (
+        request_artifact_id(
+            "garden.seed.create", gateway_request.idempotency_key
+        )
+        if gateway_request is not None
+        else f"garden:{relative}"
+    )
+
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "seed_path": relative},
+        proposal=TransactionProposal(
+            capability="garden.seed.create",
+            writes={target: content},
+            artifact_ids=[artifact_id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_garden_seed,
     )

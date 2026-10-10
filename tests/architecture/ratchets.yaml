@@ -375,18 +375,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::return
-    count: 4
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/goal.py::cmd_goal::_operator_lock
     count: 1
     since: baseline
