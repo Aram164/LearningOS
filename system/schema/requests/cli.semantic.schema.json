@@ -120,7 +120,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.semantic.cmd_semantic",
+    "handler": "learning_os.adapters.cli.invoke:cli.semantic",
     "parser_factory": false
   }
 }

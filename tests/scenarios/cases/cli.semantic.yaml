@@ -22,20 +22,20 @@ cases:
     kind: refusal
     transport: cli
     argv: [semantic, --recipe, nope]
-    expect: {site: null}
+    expect: {site: cli.semantic.bad-recipe}
   - id: unknown-predicate
     kind: refusal
     transport: cli
     argv: [semantic, Nope]
-    expect: {site: null}
+    expect: {site: cli.semantic.unknown-predicate}
   - id: bad-input
     kind: refusal
     transport: cli
     argv: [semantic, RepoClean, --input, novalue]
-    expect: {site: null}
+    expect: {site: cli.semantic.bad-input}
   - id: missing-inputs
     kind: refusal
     transport: cli
     argv: [semantic, RepoClean]
-    expect: {site: null}
+    expect: {site: cli.semantic.malformed-inputs}
 untriggered: []

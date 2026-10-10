@@ -44,7 +44,8 @@ from learning_os.semantics.dossiers import (
     load_dossier,
     store_dossier,
 )
-from learning_os.semantics.predicates import CONTRACT_VERSION
+from learning_os.semantics.predicates import CONTRACT_VERSION, PREDICATES, evaluate
+from learning_os.semantics.recipes import RecipeError, recipes_for
 from learning_os.validation_cache import observe_pins, status_issues
 
 #: Operator-contract version hashed into every dossier key. There is no
@@ -721,3 +722,79 @@ def status(ctx: OpContext, req: dict) -> Result:
     }
     return Result(payload, json_dumps=_dumps_status,
                   diagnostic_failed=bool(errors))
+
+
+def _coerce(raw: str) -> object:
+    """One ``--input k=v`` value. JSON first (numbers, booleans, arrays,
+    objects, quoted strings), falling back to the bare string — so
+    ``--input scope=current`` and ``--input
+    entries='[{"type":"derivation","ref":"note://x"}]'`` both work."""
+    try:
+        return json.loads(raw)
+    except (json.JSONDecodeError, ValueError):
+        return raw
+
+
+def _dumps_semantic(payload) -> str:
+    """The exact semantic encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+@register("cli.semantic", kind="tool")
+def semantic(ctx: OpContext, req: dict) -> Result:
+    """Evaluate one predicate, list the registry, or serve a recipe."""
+    if req.get("recipe"):
+        try:
+            rows = recipes_for(req["recipe"])
+        except RecipeError as exc:
+            raise WriteRefused(
+                str(exc),
+                site=f"{ctx.operation}.bad-recipe",
+                gateway_message=f"los: {exc}",
+                exit_code=2,
+            ) from exc
+        return Result({"class": req["recipe"], "recipes": rows},
+                      json_dumps=_dumps_semantic)
+    if req.get("list"):
+        return Result(
+            [{"name": name,
+              "inputs": list(PREDICATES[name].authoritative_inputs),
+              "authority": PREDICATES[name].authority,
+              "description": PREDICATES[name].description}
+             for name in sorted(PREDICATES)],
+            json_dumps=_dumps_semantic)
+    name = req.get("predicate")
+    if name not in PREDICATES:
+        message = f"unknown semantic predicate: {name}"
+        see = (f"los: see `los semantic --list` for the {len(PREDICATES)} "
+               "registered names")
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.unknown-predicate",
+            extra_stderr=(see,),
+            gateway_message=f"los: {message}\n{see}",
+            exit_code=2,
+        )
+    inputs: dict[str, object] = {}
+    for item in req.get("input") or []:
+        key, separator, value = item.partition("=")
+        if not separator or not key.strip():
+            raise WriteRefused(
+                f"--input takes k=v, got {item!r}",
+                site=f"{ctx.operation}.bad-input",
+                gateway_message=f"los: --input takes k=v, got {item!r}",
+                exit_code=2,
+            )
+        inputs[key.strip()] = _coerce(value)
+    try:
+        verdict = evaluate(name, **inputs)
+    except TypeError as exc:
+        raise WriteRefused(
+            f"malformed inputs for {name}: {exc}",
+            site=f"{ctx.operation}.malformed-inputs",
+            gateway_message=f"los: malformed inputs for {name}: {exc}",
+            exit_code=2,
+        ) from exc
+    return Result({"predicate": name, "verdict": verdict,
+                   "inputs": inputs},
+                  json_dumps=_dumps_semantic)
