@@ -991,3 +991,43 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
         refused_stdout=_publish_refused_stdout,
         json_dumps=_dumps_indented,
     )
+
+
+@register("masters-planning.catalog.update", kind="command")
+def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
+    """Update the reviewed academic-only Master Planning catalog."""
+    root = ctx.root
+    value = masters_planning.validate_master_catalog(
+        root,
+        _input_record_values(
+            req.get("record"), req.get("file"), "Master Planning catalog"),
+    )
+    masters_planning.validate_catalog_revision(root, value)
+    if not req.get("approve"):
+        message = "Master Planning catalog update requires explicit approval"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.approval-required",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    _require_gateway_v2()
+    value = masters_planning.validate_master_catalog(root, value)
+    masters_planning.validate_catalog_revision(root, value)
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return Result(
+        {"ok": True},
+        proposal=TransactionProposal(
+            capability="masters-planning.catalog.update",
+            writes={masters_planning.master_catalog_destination(root):
+                    _dump_yaml(value)},
+            artifact_ids=["master-planning-catalog"],
+            expected_revisions=expected_revisions,
+        ),
+        refused_stdout=_publish_refused_stdout,
+        json_dumps=_dumps_indented,
+    )

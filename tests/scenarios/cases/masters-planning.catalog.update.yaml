@@ -130,7 +130,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [masters-planning-catalog-update, --record, '{"schema_version": 1, "id": "master-planning-catalog", "type": "master-planning-catalog", "revision": 0, "updated_at": "2026-10-01T09:00:00+02:00", "candidate_modules": [], "candidate_sources": [], "comparison_ids": []}']
-    expect: {site: null}
+    expect: {site: masters-planning.catalog.update.approval-required}
   - id: direct-cli-no-gateway
     kind: refusal
     transport: cli
@@ -185,5 +185,5 @@ cases:
     artifact_ids: [master-planning-catalog]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/vnext.py:56", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/vnext.py:60", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:907", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:910", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}

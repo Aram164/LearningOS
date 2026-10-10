@@ -8,10 +8,7 @@ from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
 from learning_os.masters_planning import (
     candidate_comparison_destination,
-    master_catalog_destination,
     validate_candidate_comparison,
-    validate_catalog_revision,
-    validate_master_catalog,
 )
 from learning_os.material_synthesis import (
     current_unit_material_basis,
@@ -77,32 +74,6 @@ def cmd_unit_material_synthesis_publish(args) -> int:
             capability="unit.material-synthesis.publish",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(args.unit_id, value["id"]),
-        )
-    print(json.dumps({
-        "ok": code == 0, **confirmation,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    }, indent=2, ensure_ascii=False))
-    return code
-
-
-def cmd_masters_planning_catalog_update(args) -> int:
-    root = _root(args)
-    value = validate_master_catalog(root, _input_record(args, "Master Planning catalog"))
-    validate_catalog_revision(root, value)
-    denied = _refuse_without_approval(args, "Master Planning catalog update")
-    if denied is not None:
-        return denied
-    _require_gateway_v2()
-    with _operator_lock(root):
-        value = validate_master_catalog(root, value)
-        validate_catalog_revision(root, value)
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        code, errors, confirmation = _write_transaction(
-            root, {master_catalog_destination(root): _dump_yaml(value)},
-            capability="masters-planning.catalog.update",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=("master-planning-catalog",),
         )
     print(json.dumps({
         "ok": code == 0, **confirmation,
