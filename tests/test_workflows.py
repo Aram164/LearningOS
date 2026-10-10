@@ -192,3 +192,75 @@ def test_setup_installs_the_same_pinned_scrut():
     makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
     assert '$(MAKE) scrut' in makefile
     assert SCRUT_SHA256 in makefile
+
+
+# ---- landing environment repair (SPEC (bm)) -------------------------------
+
+#: The interpreter patch the accepted campaign verified (SPEC (bm)).
+PINNED_PYTHON = "3.14.4"
+
+
+def test_ci_pins_the_verified_interpreter_patch():
+    """Both workflows install exactly the interpreter the campaign verified.
+
+    Argparse renders invalid-choice diagnostics differently across patches
+    (landing CI on 3.14.8 quoted the choice the 3.14.4 recordings leave
+    bare); the recordings pin one rendering, so CI must not silently select
+    a new patch.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        setups = [step for job in _load(workflow)["jobs"].values()
+                  for step in job["steps"]
+                  if str(step.get("uses", "")).startswith("actions/setup-python@")]
+        assert len(setups) == 1, workflow.name
+        assert setups[0]["with"]["python-version"] == PINNED_PYTHON, workflow.name
+        text = workflow.read_text(encoding="utf-8")
+        assert len(re.findall(r'python-version:\s*"3\.14\.4"', text)) == 1, (
+            workflow.name)
+        assert not re.search(r'python-version:\s*"3\.14"', text), workflow.name
+
+
+def test_ci_installs_core_dependencies_into_the_project_venv():
+    """The dependency install reproduces the documented project environment.
+
+    Parser diagnostics are characterized bytes pinned to the 3.14.4
+    interpreter, and the procedure transcripts invoke
+    ``$LOS_REPO/.venv/bin/python`` — so CI builds that venv with the pinned
+    interpreter and installs into it, never into the runner's interpreter.
+    Every other Core Python invocation in CI then uses the venv that owns
+    the install; the gate itself resolves it through the Makefile.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        doc = _load(workflow)
+        installs = [step for job in doc["jobs"].values()
+                    for step in job["steps"]
+                    if step.get("name") == "Install Core development dependencies"]
+        assert len(installs) == 1, workflow.name
+        script = installs[0]["run"]
+        venv_at = script.find("python -m venv .venv")
+        assert venv_at >= 0, workflow.name
+        pip_at = script.find('.venv/bin/python -m pip install -e ".[dev]"')
+        assert pip_at > venv_at, workflow.name
+        for script in _all_run_steps(doc):
+            for line in script.splitlines():
+                if "pip install" in line:
+                    assert ".venv/bin/python -m pip install" in line, (
+                        workflow.name, line)
+                if re.search(r"(^|\s)python[\d.]*\s+tools/", line):
+                    assert ".venv/bin/python" in line, (workflow.name, line)
+
+
+def test_paired_gate_jobs_carry_the_90_minute_bound():
+    """Every job running the paired gate allows it exactly 90 minutes.
+
+    The observed landing gate took 42:51; an unbounded job hides a hang and
+    a shorter cap cancels the suite mid-run.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        found = False
+        for name, job in _load(workflow)["jobs"].items():
+            if any("make system-check" in step.get("run", "")
+                   for step in job.get("steps", [])):
+                found = True
+                assert job.get("timeout-minutes") == 90, (workflow.name, name)
+        assert found, workflow.name
