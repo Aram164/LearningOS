@@ -443,18 +443,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::print
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/detour.py::cmd_detour_resolve::_operator_lock
     count: 1
     since: baseline

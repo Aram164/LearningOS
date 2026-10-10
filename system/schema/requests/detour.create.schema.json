@@ -180,7 +180,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.detour.cmd_detour_create",
+    "handler": "learning_os.adapters.cli.invoke:detour.create",
     "parser_factory": false
   }
 }

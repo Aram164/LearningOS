@@ -9112,7 +9112,7 @@
   "collection.entry.revise.schema.json": "9ccf1a2ad0791d0ef51802074e1046990d0289033307720afeebcd1a5463a132",
   "concept.relations.change.schema.json": "9deba6225f07b0affc42ee7f47c4a7915c3278cb66bec29f60bdeed0a194cd99",
   "coordination.section.revise.schema.json": "4141c074522c1aaadc77666f608938ddb68ee32d073af66994124d6465dd0654",
-  "detour.create.schema.json": "5caf71ea411aca949e06537ef96aceddadacd7eec75421a969f03b6a9bb7edf3",
+  "detour.create.schema.json": "08149345fe515a6c01e29b328d9081c94424bae16595f4d4c4456c1dd1730dd2",
   "detour.resolve.schema.json": "59d8550ddd0dd7cda388e3506cce112517a8c351fb8c8155532e7d76456eaacc",
   "garden.seed.create.schema.json": "80cdff8212024229029b2bd657cb0fe44445add49e158eed1953026c11b97be6",
   "health.report.schema.json": "7fa39cb762c56f310bf42830f75854132ac5cec28756a5b43d842a4aead2ce7c",

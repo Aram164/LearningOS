@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -539,5 +540,63 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_path_attach_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+@register("detour.create", kind="command")
+def detour_create(ctx: OpContext, req: dict) -> Result:
+    """Open a scoped detour off one stage."""
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    data = copy.deepcopy(study_map.data)
+    stage = require_stage(ctx, data, req["stage_id"])
+    base = re.sub(r"[^a-z0-9]+", "-", req["title"].lower()).strip("-") or "gap"
+    did = f"detour-{base}"
+    existing = {row.get("id") for row in data.get("detours", []) or []}
+    if did in existing:
+        suffix = 2
+        while f"{did}-{suffix}" in existing:
+            suffix += 1
+        did = f"{did}-{suffix}"
+    detour = {"id": did, "title": req["title"], "spawned_by_stage": req["stage_id"],
+              "classification": req["classification"], "status": "open",
+              "return_to_stage": req["stage_id"]}
+    data.setdefault("detours", []).append(detour)
+    stage["detour_id"] = did
+    if req["classification"] == "required-now":
+        stage["status"] = "paused"
+        data["status"] = "paused"
+        unit_data = copy.deepcopy(unit.data)
+        unit_data["status"] = "paused"
+    elif req["classification"] in {"helpful-now", "deferred", "reference-only"}:
+        unit_data = unit.data
+    else:
+        raise WriteRefused(
+            f"unknown detour classification: {req['classification']} "
+            "(choose from required-now, helpful-now, deferred, "
+            "reference-only)",
+            site="detour.create.unknown-classification",
+            gateway_message=(f"los: unknown detour classification: {req['classification']} "
+                             "(choose from required-now, helpful-now, deferred, "
+                             "reference-only)"),
+            exit_code=2,
+        )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="detour.create.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "detour": detour},
+        proposal=TransactionProposal(
+            capability="detour.create",
+            writes={study_map.path: _dump_study_map(study_map, data),
+                    unit.path: _dump_yaml(unit_data)},
+            artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_stage,
     )

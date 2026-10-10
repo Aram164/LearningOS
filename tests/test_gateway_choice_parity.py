@@ -365,14 +365,19 @@ def test_source_selection_handler_refuses_an_unknown_action(
 
 
 def test_detour_handler_refuses_an_unknown_classification(
-        mini_repo: Path, capsys: pytest.CaptureFixture):
+        mini_repo: Path):
     from repo_builders import add_curriculum
 
-    from learning_os.commands.detour import cmd_detour_create
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers.learner import detour_create
 
     add_curriculum(mini_repo)
-    code = cmd_detour_create(_namespace(
-        mini_repo, unit_id="unit-demo-l01", stage_id="stage-demo",
-        title="A gap", classification="urgent"))
-    assert code == 2
-    assert "unknown detour classification" in capsys.readouterr().err
+    ctx = OpContext(root=mini_repo, operation="detour.create",
+                    channel="operator", invocation="command", gateway=None)
+    with pytest.raises(WriteRefused,
+                       match="unknown detour classification") as caught:
+        detour_create(ctx, {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                            "title": "A gap", "classification": "urgent"})
+    assert caught.value.site == "detour.create.unknown-classification"
+    assert caught.value.exit_code == 2

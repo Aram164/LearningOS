@@ -20,13 +20,13 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-nope, title: "Nowhere", classification: deferred}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: detour.create.unknown-stage}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, stage_id: stage-demo, title: "Nowhere", classification: deferred}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: detour.create.unknown-unit}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
