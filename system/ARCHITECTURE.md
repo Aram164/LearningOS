@@ -72,7 +72,7 @@ Operationally canonical means: authoritative while active, but not part of the p
 
 ### 2.4 Preserved historical context
 
-Completed workspaces are archived whole. Archived workspaces preserve context and provenance but are excluded from normal concept retrieval once durable notes exist. The frozen legacy tree is historical context.
+Completed path-owning workspaces remain in place; path-free workspaces may be archived whole through a separately reviewed migration (WORKFLOWS §11). Archived workspaces preserve context and provenance but are excluded from normal concept retrieval once durable notes exist. The frozen legacy tree is historical context.
 
 ### 2.5 Deterministically generated artifacts
 

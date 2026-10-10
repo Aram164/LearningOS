@@ -26,7 +26,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 8. Record evidence", class: procedure, transcript: system/procedures/record-evidence.md}
   - {doc: system/WORKFLOWS.md, heading: "## 9. Update coordination", class: procedure, transcript: system/procedures/update-coordination.md}
   - {doc: system/WORKFLOWS.md, heading: "## 10. Record a module event", class: procedure, transcript: system/procedures/record-module-event.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 11. Complete and archive a workspace", class: procedure, untranscribable: "no approved capability links final notes, flips workspace status, or moves a workspace to archive/; affected steps: 4. workspace links, 6. set status: complete, 8. move to archive/ unchanged"}
+  - {doc: system/WORKFLOWS.md, heading: "## 11. Complete and archive a workspace", class: procedure, untranscribable: "no approved capability links final notes, flips workspace status, or moves a workspace to archive/; affected steps: 4. workspace links, 6. set status: complete, 8. complete in place or separately migrate a path-free workspace"}
   - {doc: system/WORKFLOWS.md, heading: "## 12. Generate indexes and reports", class: procedure, transcript: system/procedures/generate-indexes-reports.md}
   - {doc: system/WORKFLOWS.md, heading: "## 13. Review a note", class: procedure, transcript: system/procedures/review-a-note.md}
   - {doc: system/WORKFLOWS.md, heading: "## 14. Move or rename a note", class: procedure, untranscribable: "no approved capability moves or renames a note path (note.revise holds paths stable); affected step: move/rename the note file"}
@@ -35,7 +35,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure, untranscribable: "needs the user's dropped photos/scans and faithful transcription of the user's own reasoning (human prerequisite); affected steps: move originals, transcribe"}
   - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure, untranscribable: "step 3 opens workspaces via workflow 1, which has no approved create capability; affected step: 3. Open the first workspace(s)"}
   - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure, untranscribable: "no approved capability completes a workspace or archives a path-free workspace; path-owning workspaces complete in place (M-05 decision 2026-10-10)"}
-  - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure, untranscribable: "archive-and-successor and split branches need workflows 11 and 1, which have no approved archive/create capability; affected steps: Archive the old workspace; create the new one"}
+  - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure, untranscribable: "complete-and-successor and split branches need workflows 11 and 1, which have no approved completion/create capability; affected steps: Complete the old workspace; create the new one"}
   - {doc: system/WORKFLOWS.md, heading: "## 21. Process the inbox", class: procedure, transcript: system/procedures/process-inbox.md}
   - {doc: system/WORKFLOWS.md, heading: "## 22. End a session", class: procedure, transcript: system/procedures/end-a-session.md}
   - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure, untranscribable: "needs real as-taught decks/recordings as scope authority plus the full plan-creation package; fixture has only the demo book; affected steps: materials-in, scope pass, package and preflight"}
