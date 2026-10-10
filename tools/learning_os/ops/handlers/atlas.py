@@ -63,7 +63,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if not 1 <= req["limit"] <= 50:
             raise WriteRefused(
                 "ability-context limit must be 1..50",
-                site=f"{ctx.operation}.bad-limit",
+                site="ability.context.bad-limit",
                 gateway_message="los: ability-context limit must be 1..50",
                 exit_code=2,
             )
@@ -72,7 +72,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if brief and not req["ability_id"]:
             raise WriteRefused(
                 "ability-context --brief needs a named ability",
-                site=f"{ctx.operation}.brief-needs-id",
+                site="ability.context.brief-needs-id",
                 gateway_message=(
                     "los: ability-context --brief needs a named ability"
                 ),
@@ -81,7 +81,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if section and not req["ability_id"]:
             raise WriteRefused(
                 "ability-context --section needs a named ability",
-                site=f"{ctx.operation}.section-needs-id",
+                site="ability.context.section-needs-id",
                 gateway_message=(
                     "los: ability-context --section needs a named ability"
                 ),
@@ -90,7 +90,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if brief and section:
             raise WriteRefused(
                 "ability-context takes --brief or --section evidence, not both",
-                site=f"{ctx.operation}.brief-and-section",
+                site="ability.context.brief-and-section",
                 gateway_message=(
                     "los: ability-context takes --brief or --section "
                     "evidence, not both"
@@ -101,7 +101,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if offset < 0:
             raise WriteRefused(
                 "ability-context offset must be nonnegative",
-                site=f"{ctx.operation}.negative-offset",
+                site="ability.context.negative-offset",
                 gateway_message=(
                     "los: ability-context offset must be nonnegative"
                 ),
@@ -111,7 +111,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context --offset pages the global horizon or "
                 "--section evidence, not a focused ability",
-                site=f"{ctx.operation}.offset-needs-section",
+                site="ability.context.offset-needs-section",
                 gateway_message=(
                     "los: ability-context --offset pages the global horizon "
                     "or --section evidence, not a focused ability"
@@ -124,7 +124,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context --brief is one summary; page evidence with "
                 "--section evidence",
-                site=f"{ctx.operation}.brief-with-limit",
+                site="ability.context.brief-with-limit",
                 gateway_message=(
                     "los: ability-context --brief is one summary; page "
                     "evidence with --section evidence"
@@ -135,7 +135,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "continuation requires --expected-snapshot from the previous "
                 "response",
-                site=f"{ctx.operation}.offset-needs-snapshot",
+                site="ability.context.offset-needs-snapshot",
                 gateway_message=(
                     "los: continuation requires --expected-snapshot from the "
                     "previous response"
@@ -147,7 +147,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         if repo.parse_failures:
             raise WriteRefused(
                 "ability-context refuses unreadable canonical records",
-                site=f"{ctx.operation}.unreadable-records",
+                site="ability.context.unreadable-records",
                 gateway_message=(
                     "los: ability-context refuses unreadable canonical records"
                 ),
@@ -177,7 +177,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
                     or len(reasons) != len(codes):
                 raise WriteRefused(
                     "ability-context reason_codes must be parallel to reasons",
-                    site=f"{ctx.operation}.reasons-not-parallel",
+                    site="ability.context.reasons-not-parallel",
                     gateway_message=(
                         "los: ability-context reason_codes must be parallel "
                         "to reasons"
@@ -204,7 +204,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
     if current_gateway_request() is None:
         raise WriteRefused(
             "ability candidates require GatewayEnvelopeV2",
-            site=f"{ctx.operation}.gateway-required",
+            site="ability.candidate.append.gateway-required",
             gateway_message="los: ability candidates require GatewayEnvelopeV2",
             exit_code=2,
         )
@@ -217,7 +217,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             or repo.abilities[req["to_ability"]].get("lifecycle") == "retired"):
         raise WriteRefused(
             "candidate endpoints must be two active abilities",
-            site=f"{ctx.operation}.bad-endpoints",
+            site="ability.candidate.append.bad-endpoints",
             gateway_message=(
                 "los: candidate endpoints must be two active abilities"
             ),
@@ -227,7 +227,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             ("conversation://", "note://", "project://")):
         raise WriteRefused(
             "candidate source-ref must identify the discovery",
-            site=f"{ctx.operation}.bad-source-ref",
+            site="ability.candidate.append.bad-source-ref",
             gateway_message=(
                 "los: candidate source-ref must identify the discovery"
             ),
@@ -252,7 +252,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         if errors:
             raise WriteRefused(
                 f"ability candidate: {errors[0].message}",
-                site=f"{ctx.operation}.candidate-schema-refused",
+                site="ability.candidate.append.candidate-schema-refused",
                 gateway_message=f"los: ability candidate: {errors[0].message}",
                 exit_code=2,
             )
@@ -265,7 +265,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         except ValueError as exc:
             raise WriteRefused(
                 str(exc),
-                site=f"{ctx.operation}.bad-expected-revision",
+                site="ability.candidate.append.bad-expected-revision",
                 gateway_message=f"los: {exc}",
                 exit_code=2,
             ) from exc
@@ -301,17 +301,17 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
             "question has unknown fields: " + ", ".join(sorted(unknown))
             + f" (accepted: {', '.join(QUESTION_FIELDS_ORDERED)}; "
             + f"{'/'.join(QUESTION_HANDLER_OWNED)} are set by the handler)",
-            site=f"{ctx.operation}.unknown-fields",
+            site="atlas.question.save.unknown-fields",
         )
     if not isinstance(question.get("id"), str):
         raise WriteRefused(
             "question needs a string id",
-            site=f"{ctx.operation}.id-not-string",
+            site="atlas.question.save.id-not-string",
         )
     if "target" in question and not isinstance(question["target"], dict):
         raise WriteRefused(
             "question target must be an object",
-            site=f"{ctx.operation}.target-not-object",
+            site="atlas.question.save.target-not-object",
         )
     ctx.require_snapshot(req["expected_snapshot"])
     repo = ctx.repo()
@@ -321,19 +321,19 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
         if existing.meta.get("role") != "question" or "atlas_question" not in existing.meta:
             raise WriteRefused(
                 "this note is not an Atlas question",
-                site=f"{ctx.operation}.not-a-question",
+                site="atlas.question.save.not-a-question",
             )
         if "target" in question and question["target"] != existing.meta["atlas_question"]["target"]:
             raise WriteRefused(
                 "the original question target is preserved",
-                site=f"{ctx.operation}.retarget-refused",
+                site="atlas.question.save.retarget-refused",
             )
         meta, body, path = copy.deepcopy(existing.meta), existing.body, existing.path
     else:
         if not all(key in question for key in ("title", "text", "target")):
             raise WriteRefused(
                 "new questions require title, text and target",
-                site=f"{ctx.operation}.new-needs-fields",
+                site="atlas.question.save.new-needs-fields",
             )
         meta = {"id": note_id, "type": "note", "role": "question",
                 "title": question["title"], "created": observations.today().isoformat(),
@@ -344,8 +344,9 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
         try:
             _schema(root, "note", meta)
         except WriteRefused as exc:
-            exc.site = f"{ctx.operation}.bad-new-note"
-            raise
+            raise WriteRefused(
+                str(exc), site="atlas.question.save.bad-new-note",
+            ) from exc
         path = root / "knowledge/notes/questions" / f"{note_id}.md"
         if path.exists():
             raise WriteRefused("question destination already exists")
@@ -354,12 +355,12 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
         if any(cid not in repo.concepts for cid in concept_ids):
             raise WriteRefused(
                 "question target contains an unknown concept",
-                site=f"{ctx.operation}.unknown-concept",
+                site="atlas.question.save.unknown-concept",
             )
         if "from" in target and not any(all(row.get(k) == target[k] for k in ("from", "type", "to")) for row in repo.relations):
             raise WriteRefused(
                 "question connection target does not exist",
-                site=f"{ctx.operation}.missing-connection",
+                site="atlas.question.save.missing-connection",
             )
     _safe(root, path)
     if "title" in question:
@@ -368,7 +369,7 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
         if not isinstance(question["text"], str) or not question["text"].strip():
             raise WriteRefused(
                 "question text cannot be empty",
-                site=f"{ctx.operation}.blank-text",
+                site="atlas.question.save.blank-text",
             )
         body = question["text"]
     for field in ("state", "answer_notes"):
@@ -377,19 +378,20 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     try:
         _schema(root, "note", meta)
     except WriteRefused as exc:
-        exc.site = f"{ctx.operation}.bad-question-fields"
-        raise
+        raise WriteRefused(
+            str(exc), site="atlas.question.save.bad-question-fields",
+        ) from exc
     for answer in meta["atlas_question"].get("answer_notes", []):
         if answer not in repo.notes or answer == note_id:
             raise WriteRefused(
                 "answer note must resolve to another durable note",
-                site=f"{ctx.operation}.bad-answer-note",
+                site="atlas.question.save.bad-answer-note",
             )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
         raise WriteRefused(
-            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+            str(exc), site="atlas.question.save.bad-expected-revision",
         ) from exc
     return Result(
         {"ok": True, "note_id": note_id,
@@ -413,13 +415,13 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
     if not isinstance(changes, dict) or set(changes) != {"operations"}:
         raise WriteRefused(
             "change must contain only operations",
-            site=f"{ctx.operation}.change-not-operations",
+            site="concept.relations.change.change-not-operations",
         )
     operations = changes["operations"]
     if not isinstance(operations, list) or not 1 <= len(operations) <= 50:
         raise WriteRefused(
             "supply between 1 and 50 explicit operations",
-            site=f"{ctx.operation}.empty-operations",
+            site="concept.relations.change.empty-operations",
         )
     ctx.require_snapshot(req["expected_snapshot"])
     registries = _registries(root)
@@ -428,7 +430,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
         if not isinstance(operation, dict):
             raise WriteRefused(
                 "operation must be an object",
-                site=f"{ctx.operation}.operation-not-object",
+                site="concept.relations.change.operation-not-object",
             )
         kind = operation.get("action")
         required = {"add": {"action", "new"}, "replace": {"action", "old", "new"},
@@ -436,22 +438,24 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
         if required is None or set(operation) != required:
             raise WriteRefused(
                 "expected exact add, replace, or remove operation",
-                site=f"{ctx.operation}.inexact-operation",
+                site="concept.relations.change.inexact-operation",
             )
         for key in ("old", "new"):
             if key in operation:
                 try:
                     _schema(root, "concept-relations", {"relations": [operation[key]]})
                 except WriteRefused as exc:
-                    exc.site = f"{ctx.operation}.bad-relation-row"
-                    raise
+                    raise WriteRefused(
+                        str(exc),
+                        site="concept.relations.change.bad-relation-row",
+                    ) from exc
         if "old" in operation:
             matches = [(path, i) for path, data in registries.items()
                        for i, row in enumerate(data["relations"]) if row == operation["old"]]
             if len(matches) != 1:
                 raise WriteRefused(
                     "the exact previous relation no longer exists uniquely; reload and review",
-                    site=f"{ctx.operation}.old-not-found",
+                    site="concept.relations.change.old-not-found",
                 )
             path, index = matches[0]
             if kind == "remove":
@@ -471,7 +475,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
         raise WriteRefused(
-            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+            str(exc), site="concept.relations.change.bad-expected-revision",
         ) from exc
     return Result(
         {"ok": True, "operation_count": len(operations)},
@@ -501,7 +505,7 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
         raise NotFound(
             "concept", req["concept_id"], repo.concepts,
             message=complaint,
-            site=f"{ctx.operation}.unknown-concept",
+            site="cli.atlas-context.unknown-concept",
         )
     # This is a scoped editor read, not another full-manifest endpoint.
     rows = [copy.deepcopy(row) for data in _registries(root).values()
@@ -522,7 +526,7 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
     if _snapshot(root) != snapshot:
         raise WriteRefused(
             "snapshot changed while reading Atlas",
-            site=f"{ctx.operation}.snapshot-changed",
+            site="cli.atlas-context.snapshot-changed",
         )
     return Result(
         {"schema_version": 1, "snapshot_id": snapshot,
