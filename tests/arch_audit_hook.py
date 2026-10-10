@@ -33,6 +33,17 @@ _RENDER_ONLY_EVENTS = frozenset({
 #: A9 module import it from here.
 SITE_WITNESS_ENV = "LOS_SITE_WITNESS_FILE"
 
+#: Render-only events a reads-mode install also logs without the marker.
+_READS_EVENTS = frozenset({
+    "os.listdir",
+    "os.scandir",
+    "glob.glob",
+})
+
+#: Reads mode for the active window: log every `open` in any mode, plus
+#: the directory-traversal events above. Set by `install(reads=True)`.
+_READS = False
+
 _CAPTURE_LOCK = threading.Lock()
 _CAPTURE_ERROR: str | None = None
 
@@ -64,14 +75,16 @@ def _events_for_version() -> dict:
     return data[key]
 
 
-def install(log_path: str) -> None:
+def install(log_path: str, *, reads: bool = False) -> None:
     """Validate ``log_path``, register the hook once, and activate the path.
 
     Validation runs first: a directory path, a missing parent, or a failed
     append-open raises ``AuditCaptureError`` and activates nothing. A
     successful install clears the sticky capture error (amendment (k)).
+    With ``reads`` true the window logs every ``open`` in any mode, plus
+    ``os.listdir``, ``os.scandir`` and ``glob.glob``.
     """
-    global _INSTALLED, _ACTIVE_LOG, _EVENTS
+    global _INSTALLED, _ACTIVE_LOG, _EVENTS, _READS
     candidate = str(log_path)
     if os.path.isdir(candidate):
         raise AuditCaptureError(
@@ -94,6 +107,7 @@ def install(log_path: str) -> None:
         global _CAPTURE_ERROR
         _CAPTURE_ERROR = None
     _ACTIVE_LOG = candidate
+    _READS = bool(reads)
 
 
 def uninstall() -> None:
@@ -101,8 +115,9 @@ def uninstall() -> None:
 
     Never clears the sticky capture error (amendment (k)).
     """
-    global _ACTIVE_LOG
+    global _ACTIVE_LOG, _READS
     _ACTIVE_LOG = None
+    _READS = False
 
 
 def capture_ok() -> bool:
@@ -308,7 +323,8 @@ def _hook(event: str, args) -> None:
     try:
         layout = _EVENTS[event]
         render = _current_render()
-        if event in _RENDER_ONLY_EVENTS and render is None:
+        if event in _RENDER_ONLY_EVENTS and render is None \
+                and not (_READS and event in _READS_EVENTS):
             return
         record: dict | None = None
         if event == "open":
@@ -318,7 +334,8 @@ def _hook(event: str, args) -> None:
             raw_path = args[path_index] if path_index < len(args) else None
             mode = args[mode_index] if mode_index < len(args) else None
             flags = args[flags_index] if flags_index < len(args) else None
-            if not _is_write_open(mode, flags) and render is None:
+            if not _is_write_open(mode, flags) and render is None \
+                    and not _READS:
                 return
             path = _coerce_path(raw_path)
             mode_text = mode if isinstance(mode, str) else None
