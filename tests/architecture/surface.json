@@ -9070,7 +9070,7 @@
   "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
   "cli.ai-action-append-slices.schema.json": "77e02038807a08459a99eacc69430c9055dbb8339bf36476493ec5dcbcac769e",
   "cli.ai-action-import-delivery.schema.json": "023e18a0013f449b45bdfd9e7aab4ad34973ded2908e6012f9100b1e0b8e8016",
-  "cli.ai-action-list.schema.json": "b56c7991fdf57f8bca23fbaefa61af2b4d21e3966a3a412f43e9136b8295a78f",
+  "cli.ai-action-list.schema.json": "e03060bb980d3538daf1e1c93685b5e0abd61655e8a2e28fe3be71164bfda4fc",
   "cli.ai-action-prepare.schema.json": "f09cd3f0efadd51b175d763df8b89161071b94c43ca40fc13505e52ddc6b9429",
   "cli.ai-action-status.schema.json": "85faf4104b9e239ca312a6a6577fc49cd14b0ca7ec5b1b3edadba36b80abaa92",
   "cli.ai-action-validate-delivery.schema.json": "c80a94a2150f428ae50339996312c23f38c25294a5935f9c7d4d841e1a9d41c0",

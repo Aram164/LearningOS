@@ -19,12 +19,6 @@ from .support import (
 
 
 # ------------------------------------------------------------- AI actions
-def cmd_ai_action_list(args) -> int:
-    actions = AIActionService(_root(args)).list_actions()
-    print(json.dumps({"ok": True, "actions": actions}, indent=2, ensure_ascii=False))
-    return 0
-
-
 def cmd_ai_action_prepare(args) -> int:
     root = _root(args)
     with _operator_lock(root):

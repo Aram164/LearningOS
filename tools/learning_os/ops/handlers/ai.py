@@ -1,4 +1,4 @@
-"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be))."""
+"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list`` (SPEC §12)."""
 
 from __future__ import annotations
 
@@ -157,3 +157,11 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
         finish=finish,
         json_dumps=_dumps_delivery,
     )
+
+
+@register("cli.ai-action-list", kind="tool")
+def ai_action_list(ctx: OpContext, req: dict) -> Result:
+    """List the provider-independent AI actions."""
+    actions = AIActionService(ctx.root).list_actions()
+    return Result({"ok": True, "actions": actions},
+                  json_dumps=_dumps_delivery)
