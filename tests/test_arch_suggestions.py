@@ -516,7 +516,10 @@ def _lookup_domain(ctx, operation: str, row: dict,
     Each domain comes from the existing read-only loaders: units from
     ``repo.units``; stages from the unit's current study map as
     ``require_stage`` computes them; routes from ``unit_routes`` for the
-    unit; inspect references from ``_inspect_candidates``; deliveries
+    unit, except the append-slices route domain, which is the raw
+    source-map traversal ``append_slices`` matches against; concepts
+    from ``repo.concepts`` as ``plan_continuation`` checks them;
+    inspect references from ``_inspect_candidates``; deliveries
     from the delivery directory entries; digests from the real bound
     digest. The ordered list feeds the complaint template in handler
     traversal order.
@@ -537,6 +540,29 @@ def _lookup_domain(ctx, operation: str, row: dict,
                    for entry in study_map.data.get("stages", []) or []
                    if isinstance(entry, dict) and entry.get("id")]
         return ordered, set(ordered)
+    if kind == "route" and operation == "cli.ai-action-append-slices":
+        # The append request carries no unit_id; the unit resolves
+        # through the prepared request, exactly as ``append_slices``
+        # resolves it. The domain is the raw traversal the match uses
+        # (T32 A5 proposal §3) — never ``unit_routes()``, whose
+        # ``route_with_identity`` substitutes ids production cannot match.
+        from learning_os.ai_actions.service import AIActionService
+
+        repository = AIActionService(ctx.root).repository
+        prepared = repository.get_request(request["request_id"])
+        target_id = str((prepared.get("target") or {}).get("id"))
+        repo = load_repo(ctx.root)
+        unit = repo.units[target_id]
+        source_map = repo.module_source_maps.get(unit.module_id) or {}
+        ordered = []
+        for source_row in source_map.get("sources", []) or []:
+            if not isinstance(source_row, dict):
+                continue
+            for route_row in source_row.get("unit_routes", []) or []:
+                if isinstance(route_row, dict) \
+                        and route_row.get("unit_id") == target_id:
+                    ordered.append(str(route_row.get("id")))
+        return ordered, set(ordered)
     if kind == "route":
         from learning_os.material_refs import unit_routes
 
@@ -545,6 +571,10 @@ def _lookup_domain(ctx, operation: str, row: dict,
         source_map = repo.module_source_maps[unit.module_id]
         routes = unit_routes(source_map, unit.module_id, request["unit_id"])
         ordered = [entry["id"] for entry in routes]
+        return ordered, set(ordered)
+    if kind == "concept":
+        repo = load_repo(ctx.root)
+        ordered = sorted(repo.concepts)
         return ordered, set(ordered)
     if kind == "note":
         repo = load_repo(ctx.root)
@@ -701,7 +731,11 @@ def _check_tolerant_success(result: dict, *, real_value: str) -> None:
 
 #: The reviewed refusal site per canonical probe pointer: the refusal case
 #: carrying that site supplies the expected exit and code. Cross-checked
-#: against the case file's own ``expect.site`` at every run.
+#: against the case file's own ``expect.site`` at every run. SPEC (bk)
+#: item 1: one entry per probed canonical pointer of a converted
+#: operation with such a case; an A9-uncased pointer (the two
+#: append-slices misses, whose (bi) item 8 cases are not yet recorded)
+#: has no entry.
 POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     ("route.patch", "/properties/unit_id"):
         ("route.patch.unknown-unit", "unknown-unit"),
@@ -715,6 +749,88 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("note.evidence.add.unknown-note", "unknown-note"),
     ("note.revise", "/properties/note_id"):
         ("note.revise.unknown-note", "unknown-note"),
+    ("detour.create", "/properties/unit_id"):
+        ("detour.create.unknown-unit", "unknown-unit"),
+    ("detour.create", "/properties/stage_id"):
+        ("detour.create.unknown-stage", "unknown-stage"),
+    ("detour.resolve", "/properties/detour_id"):
+        ("detour.resolve.unknown-detour", "unknown-detour"),
+    ("detour.resolve", "/properties/unit_id"):
+        ("detour.resolve.unknown-unit", "unknown-unit"),
+    ("path.attachment.add", "/properties/path_id"):
+        ("path.attachment.add.unknown-path", "unknown-path"),
+    ("path.attachment.add", "/properties/stage_id"):
+        ("path.attachment.add.unknown-stage", "unknown-stage"),
+    ("path.note.write", "/properties/path_id"):
+        ("path.note.write.unknown-path", "unknown-path"),
+    ("path.note.write", "/properties/stage_id"):
+        ("path.note.write.unknown-stage", "unknown-stage"),
+    ("path.progress.update", "/properties/path_id"):
+        ("path.progress.update.unknown-path", "unknown-path"),
+    ("path.progress.update", "/properties/stage_id"):
+        ("path.progress.update.unknown-stage", "unknown-stage"),
+    ("source.feedback.record", "/properties/source_id"):
+        ("source.feedback.record.unknown-source", "unknown-source"),
+    ("source.feedback.record", "/properties/stage_id"):
+        ("source.feedback.record.unknown-stage", "unknown-stage"),
+    ("source.feedback.record", "/properties/resource_id"):
+        ("source.feedback.record.unknown-resource", "unknown-resource"),
+    ("source.feedback.record", "/properties/unit_id"):
+        ("source.feedback.record.unknown-unit", "unknown-unit"),
+    ("stage.attachment.add", "/properties/stage_id"):
+        ("stage.attachment.add.unknown-stage", "unknown-stage"),
+    ("stage.attachment.add", "/properties/unit_id"):
+        ("stage.attachment.add.unknown-unit", "unknown-unit"),
+    ("stage.note.write", "/properties/stage_id"):
+        ("stage.note.write.unknown-stage", "unknown-stage"),
+    ("stage.note.write", "/properties/unit_id"):
+        ("stage.note.write.unknown-unit", "unknown-unit"),
+    ("unit.note.append", "/properties/stage_id/items"):
+        ("unit.note.append.unknown-stage", "unknown-stage-id"),
+    ("unit.note.append", "/properties/unit_id"):
+        ("unit.note.append.unknown-unit", "unknown-unit"),
+    ("unit.source-selection.set", "/properties/source_id"):
+        ("unit.source-selection.set.unknown-source", "unknown-source"),
+    ("unit.source-selection.set", "/properties/unit_id"):
+        ("unit.source-selection.set.unknown-unit", "unknown-unit"),
+}
+
+#: The expected complaint form per anchored pointer (SPEC (bk) item 1,
+#: (bl) item 6). One entry per anchor whose complaint the recorded
+#: refusal verifies (see ``test_message_forms_rebuild_recorded_complaints``):
+#: - ``("template", noun)``: ``not_found(noun, miss, domain)``;
+#: - ``("prefixed", noun)``: the same, with the gateway's ``los: `` prefix;
+#: - ``("legacy", text)``: R6, the legacy complaint with ``{miss}``,
+#:   passed through ``with_suggestions``;
+#: - ``("legacy-verbatim", text)``: the legacy complaint with ``{miss}``,
+#:   without ``with_suggestions``.
+#: No branch on an operation name remains in ``_canonical_message``.
+MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
+    ("route.patch", "/properties/unit_id"): ("template", "unit"),
+    ("route.patch", "/properties/route_id"):
+        ("legacy", "route {miss} is missing or ambiguous in this unit"),
+    ("stage.progress.update", "/properties/unit_id"):
+        ("prefixed", "unit"),
+    ("stage.progress.update", "/properties/stage_id"):
+        ("prefixed", "stage"),
+    ("note.evidence.add", "/properties/note_id"): ("prefixed", "note"),
+    ("note.revise", "/properties/note_id"): ("prefixed", "note"),
+    ("detour.create", "/properties/unit_id"): ("prefixed", "unit"),
+    ("detour.create", "/properties/stage_id"): ("prefixed", "stage"),
+    ("detour.resolve", "/properties/unit_id"): ("prefixed", "unit"),
+    ("source.feedback.record", "/properties/stage_id"):
+        ("prefixed", "stage"),
+    ("source.feedback.record", "/properties/unit_id"):
+        ("prefixed", "unit"),
+    ("stage.attachment.add", "/properties/stage_id"):
+        ("prefixed", "stage"),
+    ("stage.attachment.add", "/properties/unit_id"):
+        ("prefixed", "unit"),
+    ("stage.note.write", "/properties/stage_id"): ("prefixed", "stage"),
+    ("stage.note.write", "/properties/unit_id"): ("prefixed", "unit"),
+    ("unit.note.append", "/properties/unit_id"): ("prefixed", "unit"),
+    ("unit.source-selection.set", "/properties/unit_id"):
+        ("prefixed", "unit"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -753,29 +869,174 @@ def _canonical_expectations(operation: str, pointer: str) -> tuple[int, str]:
     return exit_code, error["code"]
 
 
-def _canonical_message(operation: str, row: dict, miss: str,
-                       domain: list) -> str:
-    """The expected complaint, built from the domain's template.
-
-    ``route.patch`` raises the template as its message; the stage
-    lookups transcribe it with the ``los: `` gateway prefix
-    (``ops/handlers/_shared.py``), as the recordings show.
-    """
+def _render_message_form(form: tuple[str, str], miss: str,
+                         domain: list) -> str:
+    """One ``MESSAGE_FORM`` entry applied to a miss over its domain."""
     from learning_os.domain.suggest import not_found, with_suggestions
 
-    kind = row["kind"]
-    if operation == "route.patch" and row["pointer"].endswith("route_id"):
-        return with_suggestions(
-            f"route {miss} is missing or ambiguous in this unit",
-            miss, domain)
-    message = not_found(kind, miss, domain)
-    if operation == "stage.progress.update":
-        return f"los: {message}"
-    if operation == "note.evidence.add":
-        return f"los: {message}"
-    if operation == "note.revise":
-        return f"los: {message}"
-    return message
+    kind, text = form
+    if kind == "template":
+        return not_found(text, miss, domain)
+    if kind == "prefixed":
+        return f"los: {not_found(text, miss, domain)}"
+    if kind == "legacy":
+        return with_suggestions(text.format(miss=miss), miss, domain)
+    if kind == "legacy-verbatim":
+        return text.format(miss=miss)
+    raise AssertionError(f"A5 message form {kind!r} is unknown — {FIX}")
+
+
+def _canonical_message(operation: str, row: dict, miss: str,
+                       domain: list) -> str:
+    """The expected complaint, from the pointer's tabled form (bk 1)."""
+    try:
+        form = MESSAGE_FORM[(operation, row["pointer"])]
+    except KeyError:
+        raise AssertionError(
+            f"A5 {operation}::{row['pointer']}: no message form — {FIX}"
+        ) from None
+    return _render_message_form(form, miss, domain)
+
+
+def _anchor_request(operation: str, case_id: str) -> dict:
+    """The anchor refusal case's own request (gateway, single case)."""
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    anchored = [case for case in doc["cases"]
+                if case.get("id") == case_id]
+    assert len(anchored) == 1, (operation, case_id)
+    case = anchored[0]
+    assert case.get("kind") != "sequence", (operation, case_id)
+    assert case.get("transport") == "gateway", (operation, case_id)
+    return dict(case.get("request", {}))
+
+
+def _anchor_miss(operation: str, case_id: str, pointer: str) -> str:
+    """The anchor case's recorded miss value at its pointer."""
+    prop, is_items = _pointer_prop(pointer)
+    value = _anchor_request(operation, case_id).get(prop)
+    if is_items:
+        assert isinstance(value, list) and len(value) == 1, (
+            operation, case_id, pointer)
+        value = value[0]
+    assert isinstance(value, str) and value, (operation, case_id, pointer)
+    return value
+
+
+def _form_check_domain(ctx, operation: str, pointer: str,
+                       request: dict) -> list:
+    """The enumerated domain behind one form entry's rebuild."""
+    rows = {row["pointer"]: row for row in _probe_rows()
+            if row["operation"] == operation}
+    domain_list, _ = _lookup_domain(ctx, operation, rows[pointer],
+                                    request)
+    return domain_list
+
+
+@pytest.mark.parametrize(("operation", "pointer"), sorted(MESSAGE_FORM))
+def test_message_forms_rebuild_recorded_complaints(
+        tmp_path, operation, pointer):
+    """Each form rebuilds its anchor's recorded complaint byte for byte.
+
+    SPEC (bk) item 1: the anchor case's recorded miss value and the
+    enumerated domain, through the tabled form, must equal the
+    anchor's recorded message exactly. A wrong table cannot pass
+    silently (see the mutant controls below).
+    """
+    import scenario_harness as harness
+
+    _, case_id = POINTER_SITE_CASE[(operation, pointer)]
+    case = _merged_case(operation, _anchor_case(operation, case_id))
+    ctx = harness._prepare_world(
+        case, operation, tmp_path / "world" / operation)
+    request = _anchor_request(operation, case_id)
+    domain = _form_check_domain(ctx, operation, pointer, request)
+    miss = _anchor_miss(operation, case_id, pointer)
+    rebuilt = _render_message_form(MESSAGE_FORM[(operation, pointer)],
+                                   miss, domain)
+    _, error = _recorded_exit_and_error(operation, case_id)
+    assert rebuilt == error["message"], (
+        f"A5 {operation}::{pointer}: the tabled form rebuilds "
+        f"{rebuilt!r}, recorded {error['message']!r} — {FIX}")
+
+
+def _anchor_case(operation: str, case_id: str) -> dict:
+    """The anchor case body, for fixture preparation."""
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    return next(item for item in doc["cases"]
+                if item.get("id") == case_id)
+
+
+def _mutant_rebuild(tmp_path, operation: str, pointer: str,
+                    form: tuple[str, str]) -> tuple[str, str]:
+    """``(mutant rebuild, recorded message)`` for one form mutant."""
+    import scenario_harness as harness
+
+    _, case_id = POINTER_SITE_CASE[(operation, pointer)]
+    case = _merged_case(operation, _anchor_case(operation, case_id))
+    ctx = harness._prepare_world(
+        case, operation, tmp_path / "world" / operation)
+    request = _anchor_request(operation, case_id)
+    domain = _form_check_domain(ctx, operation, pointer, request)
+    miss = _anchor_miss(operation, case_id, pointer)
+    _, error = _recorded_exit_and_error(operation, case_id)
+    return _render_message_form(form, miss, domain), error["message"]
+
+
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind in ("template", "prefixed")))
+def test_message_form_wrong_noun_fails(tmp_path, operation, pointer):
+    """A wrong noun cannot rebuild the recorded complaint (bk 1)."""
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer, (MESSAGE_FORM[(operation, pointer)][0],
+                                       "wrong-noun"))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a wrong noun still rebuilds "
+        f"{recorded!r} — {FIX}")
+
+
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind == "prefixed"))
+def test_message_form_dropped_prefix_fails(tmp_path, operation, pointer):
+    """A dropped ``los: `` prefix cannot rebuild the complaint (bk 1)."""
+    _, noun = MESSAGE_FORM[(operation, pointer)]
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer, ("template", noun))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a dropped prefix still rebuilds "
+        f"{recorded!r} — {FIX}")
+
+
+def test_message_form_wrong_form_fails(tmp_path):
+    """A wrong form kind cannot rebuild the complaint.
+
+    The legacy route complaint rendered as a plain template, and a
+    prefixed complaint with suggestions rendered verbatim, both miss
+    the recorded bytes.
+    """
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, "route.patch", "/properties/route_id",
+        ("template", "route"))
+    assert rebuilt != recorded, (
+        f"A5 route.patch route as template still rebuilds "
+        f"{recorded!r} — {FIX}")
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, "stage.note.write", "/properties/stage_id",
+        ("legacy-verbatim", "stage not found: {miss}"))
+    assert rebuilt != recorded, (
+        f"A5 stage.note.write stage as legacy-verbatim still rebuilds "
+        f"{recorded!r} — {FIX}")
 
 
 def _inspect_exit(operation: str, pointer: str) -> int:
