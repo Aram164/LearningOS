@@ -22,10 +22,6 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_yaml
 
-from learning_os.commands.reads import (
-    _use_evidence_from_manifest,
-    related_records,
-)
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
@@ -38,6 +34,10 @@ from learning_os.manifest_identity import (
 )
 from learning_os.ops import _legacy_plumbing as plumbing
 from learning_os.ops._legacy_plumbing import _use_evidence
+from learning_os.ops.handlers.reads import (
+    _use_evidence_from_manifest,
+    related_records,
+)
 
 
 def _generate(root) -> dict:

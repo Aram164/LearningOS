@@ -13,16 +13,13 @@ from learning_os.domain.failures import (
     WriteRefused,
     unreadable_refusal,
 )
-from learning_os.genout.projection.atlas import STAGE_CONCEPT
 from learning_os.loading import FRONTMATTER_RE
 from learning_os.ops._legacy_plumbing import (
-    _evidence_label,
     _note_bytes,
     _note_collection,
     _operator_lock,
     _route_material_files,
     _snapshot,
-    _use_evidence,
     _window_values,
 )
 from learning_os.search.index import NoteBlob, build_registry
@@ -288,173 +285,6 @@ def content_search(args) -> int:
 
 
 # ------------------------------------------------------- material context
-# The declared source-feedback vocabulary, grouped for ranking. Positive
-# values say the source served; mismatch values say it did not fit this
-# use. "skipped" is recorded evidence about the stage, not about the
-# source, so it is reported and never ranks.
-def _use_evidence_from_manifest(manifest: dict) -> dict[str, dict[str, int]]:
-    """Recorded stage-use evidence per source id, read from the manifest.
-
-    The same tally `_use_evidence` computes from the loaded repo: every
-    study map is projected and projected stages keep `source_feedback`
-    verbatim, so the two agree exactly. Lets `related` skip the repo load
-    on the manifest-reuse fast path (#83).
-    """
-    tallies: dict[str, dict[str, int]] = {}
-    for study_map in manifest.get("study_maps", []) or []:
-        if not isinstance(study_map, dict):
-            continue
-        for stage in study_map.get("stages", []) or []:
-            if not isinstance(stage, dict):
-                continue
-            for entry in stage.get("source_feedback", []) or []:
-                if not isinstance(entry, dict):
-                    continue
-                source_id = entry.get("source_id")
-                if not source_id:
-                    continue
-                tally = tallies.setdefault(source_id, {})
-                value = entry.get("feedback")
-                if not value:
-                    continue
-                tally[value] = tally.get(value, 0) + 1
-    return tallies
-
-
-#: Declared-edge fields walked from the record itself, in stable order.
-RELATED_LIST_FIELDS = ("concepts", "sources", "contexts", "notes",
-                       "program_ids", "module_ids", "unit_ids", "unit_order",
-                       "related_module_ids")
-RELATED_SCALAR_FIELDS = ("workspace_id", "area_id", "module_id", "unit_id",
-                         "current_study_map")
-
-#: Backlink tables walked in both directions. Every table maps an owner to
-#: its members; the walk answers the direct lookup and the inverse scan, so
-#: membership in one direction always implies the reverse edge (JF-15). The
-#: differently-shaped concept_relations table stays out: concept relations
-#: are already walked both ways from the manifest relations list.
-RELATED_BACKLINK_TABLES = ("concept_to_notes", "source_to_notes",
-                           "workspace_to_notes", "module_to_workspaces",
-                           "unit_to_workspaces", "module_to_units",
-                           "source_to_units", "note_incoming")
-
-#: The read-time label for a note→source analysis edge (#81). The edge says
-#: "this note analyses pages of that source", not "this note cites it".
-ANALYSES_VIA = "analyses"
-
-
-def _analysis_source_of(record) -> str | None:
-    """The registered source a record's resolved analysis binds, or None."""
-    binding = record.get("material_analysis") if isinstance(record, dict) else None
-    if not isinstance(binding, dict) or binding.get("resolution") != "resolved":
-        return None
-    source_id = binding.get("source_id")
-    return source_id if isinstance(source_id, str) else None
-
-
-def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> list[dict]:
-    """Ranked one-hop connections for one record id.
-
-    Pure over the manifest (plus recorded use-evidence tallied from the
-    repo when given, or the precomputed `tallies` when the caller read
-    them from the manifest instead): the record's own declared edges,
-    every backlink table in both directions, concept relations both ways,
-    project relationships both ways, and the published module-concept
-    edges between a concept and the units whose stages tag it (each edge
-    reasoned by its stage, `stage-concept:<stage-id>`). Unknown ids
-    answer [] — the caller owns the not-found error. Aliases resolve
-    through project_aliases.
-
-    Ranking is deterministic: more distinct edges first, then recorded
-    stage use-evidence per source exactly as material-context ranks it
-    (positive counts first, mismatch counts last), then stable id order.
-    Each result names the edges that produced it in `via`. A source↔note
-    edge through `source_to_notes` gains the additional `analyses` token
-    when the note's resolved material analysis binds that source (#81).
-    """
-    by_id = {r.get("id"): r for r in manifest.get("records", [])}
-    resolved = (manifest.get("project_aliases") or {}).get(raw_id, raw_id)
-    rec = by_id.get(resolved)
-    if rec is None:
-        return []
-    reasons: dict[str, set[str]] = {}
-
-    def link(rid, why):
-        if isinstance(rid, str) and rid in by_id:
-            reasons.setdefault(rid, set()).add(why)
-
-    for key in RELATED_LIST_FIELDS:
-        for rid in rec.get(key, []) or []:
-            link(rid, key)
-    for key in RELATED_SCALAR_FIELDS:
-        if rec.get(key):
-            link(rec[key], key)
-    backlinks = manifest.get("backlinks", {}) or {}
-    for table in RELATED_BACKLINK_TABLES:
-        members = (backlinks.get(table) or {}).get(resolved, []) or []
-        for rid in members:
-            link(rid, f"backlink:{table}")
-            if table == "source_to_notes" \
-                    and _analysis_source_of(by_id.get(rid)) == resolved:
-                link(rid, ANALYSES_VIA)
-        for owner, owned in ((backlinks.get(table) or {}).items()):
-            if isinstance(owned, list) and resolved in owned:
-                link(owner, f"inverse:{table}")
-                if table == "source_to_notes" \
-                        and _analysis_source_of(by_id.get(resolved)) == owner:
-                    link(owner, ANALYSES_VIA)
-    for relation in manifest.get("relations", []) or []:
-        if not isinstance(relation, dict):
-            continue
-        if relation.get("from") == resolved:
-            link(relation.get("to"), "relation")
-        if relation.get("to") == resolved:
-            link(relation.get("from"), "relation")
-    # Stage concept tags ride the published module-concept edges (#97): a
-    # concept links to the units whose stages tag it, and a unit links to
-    # its stages' concepts, each edge reasoned by its exact stage. Stages
-    # are structural sub-ids, not records, so they reason the edge rather
-    # than row in it. Knowledge-node evidence stays out: the edge kind and
-    # the issue scope are stage tags only.
-    for edge in manifest.get("module_concept_edges", []) or []:
-        if not isinstance(edge, dict):
-            continue
-        concept_id = edge.get("concept_id")
-        for evidence in edge.get("evidence") or []:
-            if not isinstance(evidence, dict):
-                continue
-            if evidence.get("kind") != STAGE_CONCEPT:
-                continue
-            unit_id = evidence.get("unit_id")
-            stage_id = evidence.get("stage_id")
-            if not unit_id or not stage_id:
-                continue
-            reason = f"{STAGE_CONCEPT}:{stage_id}"
-            if resolved == concept_id:
-                link(unit_id, reason)
-            if resolved == unit_id:
-                link(concept_id, reason)
-    for relation in manifest.get("project_relationships", []) or []:
-        if not isinstance(relation, dict):
-            continue
-        if relation.get("from_project_id") == resolved:
-            link(relation.get("to_id"), "project_relationship")
-        if relation.get("to_id") == resolved:
-            link(relation.get("from_project_id"), "project_relationship")
-    if repo is not None:
-        tallies = _use_evidence(repo)
-    elif tallies is None:
-        tallies = {}
-    ranked = []
-    for rid, whys in reasons.items():
-        tally = tallies.get(rid, {}) if by_id[rid].get("type") == "source" else {}
-        label = _evidence_label(tally)
-        ranked.append((-len(whys), -label["positive"], label["mismatch"], rid))
-    ranked.sort()
-    return [{"id": rid, "type": by_id[rid].get("type"),
-             "title": by_id[rid].get("title"), "path": by_id[rid].get("path"),
-             "via": sorted(reasons[rid])}
-            for _, _, _, rid in ranked]
 
 
 def _route_material_file(repo, source_id, route) -> str | None:

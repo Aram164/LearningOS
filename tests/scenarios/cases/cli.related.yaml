@@ -17,5 +17,5 @@ cases:
     kind: refusal
     transport: cli
     argv: [related, nope-id]
-    expect: {site: null}
+    expect: {site: cli.related.unknown-id}
 untriggered: []

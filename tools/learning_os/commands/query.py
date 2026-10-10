@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 from learning_os.domain.failures import WriteRefused
-from learning_os.domain.suggest import expansion, not_found, suggest
+from learning_os.domain.suggest import expansion, suggest
 from learning_os.ops._legacy_plumbing import (
     _discovery_row,
     _fresh_manifest,
@@ -22,12 +22,10 @@ from learning_os.ops._legacy_plumbing import (
 from .reads import (
     _print_stable,
     _refusal,
-    _use_evidence_from_manifest,
     _window,
     content_search,
     empty_search_hint,
     flatten_search_values,
-    related_records,
 )
 from .support import (
     _delegate,
@@ -163,22 +161,6 @@ def cmd_search(args) -> int:
               f"continue with --offset {offset + limit}, or use --page for "
               "totals and a snapshot-bound continuation", file=sys.stderr)
     print(json.dumps(shown, **_json_layout(), sort_keys=True, ensure_ascii=False))
-    return 0
-
-
-def cmd_related(args) -> int:
-    root = _root(args)
-    manifest = _fresh_manifest(root)
-    by_id = {r.get("id"): r for r in manifest["records"]}
-    resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
-    if resolved_id not in by_id:
-        print(f"los: {not_found('record', args.id, by_id)}", file=sys.stderr)
-        return 2
-    # Tallies come from the manifest itself (identical to the repo tally),
-    # so related skips the repo load on the reuse fast path (#83).
-    out = related_records(manifest, resolved_id, None,
-                          tallies=_use_evidence_from_manifest(manifest))
-    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

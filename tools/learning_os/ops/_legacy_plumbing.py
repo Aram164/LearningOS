@@ -1557,3 +1557,56 @@ def ranked_scan(root, *, days: int = 30,
         clusters, today=observations.today(), deadlines=deadlines,
         module_status=module_status, cluster_modules=mapping)
     return goals, ranked, len(_read_goal_ledger(root))
+
+
+# ---------------------------------------------------------------------------
+# Stage-use evidence tallies, moved verbatim from commands/reads.py
+# (SPEC (bo) item 2): cli.related's related_records and plan's
+# material-context both need them, so they rest here.
+
+
+# The declared source-feedback vocabulary, grouped for ranking. Positive
+# values say the source served; mismatch values say it did not fit this
+# use. "skipped" is recorded evidence about the stage, not about the
+# source, so it is reported and never ranks.
+POSITIVE_FEEDBACK = frozenset({"helpful", "useful-for-derivation",
+                               "useful-for-review"})
+MISMATCH_FEEDBACK = frozenset({"too-advanced", "wrong-perspective"})
+
+
+def _use_evidence(repo):
+    """Recorded stage-use evidence per source id: raw feedback counts.
+
+    Canonical study-map data, so the read's snapshot guard already binds
+    it — no observation entry is owed. Counts only; grouping into
+    positive/mismatch happens at rank time from the sets above, so a new
+    vocabulary value degrades to reported-but-unranked, never to a crash
+    or a silent demotion.
+    """
+    tallies: dict[str, dict[str, int]] = {}
+    for study_map in repo.study_maps.values():
+        stages = study_map.data.get("stages", []) or []
+        for stage in stages:
+            if not isinstance(stage, dict):
+                continue
+            for entry in stage.get("source_feedback", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                source_id = entry.get("source_id")
+                if not source_id:
+                    continue
+                tally = tallies.setdefault(source_id, {})
+                value = entry.get("feedback")
+                if not value:
+                    continue
+                tally[value] = tally.get(value, 0) + 1
+    return tallies
+
+
+def _evidence_label(tally):
+    positive = sum(count for value, count in tally.items()
+                   if value in POSITIVE_FEEDBACK)
+    mismatch = sum(count for value, count in tally.items()
+                   if value in MISMATCH_FEEDBACK)
+    return {"counts": dict(sorted(tally.items())),
+            "positive": positive, "mismatch": mismatch}
