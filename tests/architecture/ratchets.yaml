@@ -235,66 +235,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_list::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_list::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_status::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_status::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_validate_delivery::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_validate_delivery::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::canonical_fingerprint
     count: 1
     since: baseline
@@ -2374,30 +2314,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.ai-action-append-slices::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-import-delivery::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-status::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-validate-delivery::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.atlas-context::*
     count: 1
     since: baseline
@@ -2768,30 +2684,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: backup.manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-append-slices::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-import-delivery::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-status::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-validate-delivery::*
     count: 1
     since: baseline
     approved_by: null
