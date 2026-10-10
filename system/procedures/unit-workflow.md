@@ -11,7 +11,8 @@ command never writes, so a `unit.source-selection.set` envelope removes
 and re-selects a choice on `unit-demo-l02`. A choice naming a route the
 unit does not expose is refused, and so is removing a choice the study
 path uses. Usage comes from the current map's resource references, rather
-than optional selection metadata (M-03 resolved 2026-10-10). `tests/test_procedures.py` runs it
+than optional selection metadata (M-03 resolved 2026-10-10).
+`tests/test_procedures.py` runs it
 with Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
 test sets.
 
