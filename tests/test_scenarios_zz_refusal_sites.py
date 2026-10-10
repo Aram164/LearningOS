@@ -695,6 +695,30 @@ def test_control_witness_from_another_run_fails():
                         attributed=set())
 
 
+def test_control_wrong_case_registry_witness_fails(tmp_path, monkeypatch):
+    """Use the ordinary selector: another case's registry entry cannot count."""
+    import scenario_harness as harness
+
+    site = "capture.create.empty-input"
+    pair = ("capture.create", site)
+    destination = str(tmp_path / "case-registry.jsonl")
+    monkeypatch.setenv(SITE_WITNESS_ENV, destination)
+    monkeypatch.setattr(harness, "CASE_SITE_WITNESSES", {
+        (destination, "capture.create:declaring"): set(),
+        (destination, "capture.create:other"): {pair},
+        (destination + ".other-session", "capture.create:declaring"): {pair},
+    })
+    monkeypatch.setattr(__import__(__name__), "_declaring_cases", lambda: {
+        site: ["capture.create:declaring"],
+    })
+    with pytest.raises(AssertionError, match="not by the run of a case"):
+        _assert_matched("capture.create", site, "a9-control:1", {pair},
+                        {site: "capture.create:declaring"}, entries={}, proofs={})
+    harness.CASE_SITE_WITNESSES[(destination, "capture.create:declaring")] = {pair}
+    _assert_matched("capture.create", site, "a9-control:1", {pair},
+                    {site: "capture.create:declaring"}, entries={}, proofs={})
+
+
 def test_control_attribution_counts_only_the_case_run(tmp_path,
                                                       monkeypatch):
     """Only lines written inside a case run are attributed to it (bh).

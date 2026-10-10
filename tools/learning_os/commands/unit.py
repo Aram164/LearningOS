@@ -506,6 +506,35 @@ def cmd_unit_map_import(args) -> int:
     return 0
 
 
+def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
+                                   locator: str) -> bool:
+    """Derive usage from the current map before editing a material choice.
+
+    A stable route ID is authoritative when the resource has one. Older
+    resources identify a choice by its exact source and locator; a shared
+    source alone never means that this particular route is used.
+    """
+    study_map = repo.study_maps.get(unit.data.get("current_study_map"))
+    if study_map is None:
+        return False
+    # Compact references retain identity even with a stage-specific locator;
+    # expansion drops material_ref, so inspect the authored reference for this
+    # mutation precondition, falling back for programmatically built maps.
+    map_data = study_map.authored_data if study_map.authored_data is not None else study_map.data
+    for stage in map_data.get("stages", []) or []:
+        for resource in stage.get("resources", []) or []:
+            material_ref = resource.get("material_ref")
+            route_id = resource.get("route_id") or (
+                material_ref.get("route_id") if isinstance(material_ref, dict) else None)
+            if route_id:
+                if route_id == route["id"]:
+                    return True
+            elif (resource.get("source_id"), resource.get("locator")) == (
+                    source_id, locator):
+                return True
+    return False
+
+
 def cmd_unit_source_selection(args) -> int:
     """Persist one learner choice without changing the complete material menu."""
     root = _root(args)
@@ -576,7 +605,8 @@ def cmd_unit_source_selection(args) -> int:
                 selections[index] = replacement
             selected = True
         elif args.action == "remove":
-            if index is not None and selections[index].get("stage_ids"):
+            if index is not None and _selection_used_by_current_map(
+                    repo, unit, matching_route, args.source_id, args.locator):
                 print(
                     "los: this choice is used by the current study path; remove it "
                     "from those stages before removing the choice",

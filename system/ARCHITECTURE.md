@@ -245,7 +245,7 @@ definitions once; ordinary state saves preserve that storage form.
 | Agent friction notes | `work/complaints/` | dated Markdown, one file per issue; never in the inbox |
 | Resolved inbox drops | `archive/inbox/<year>/` | moved byte-identical via `inbox.resolve`, never overwritten |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
-| Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | moved whole, unchanged |
+| Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | whole path-free workspace; path-owning workspaces complete in place (WORKFLOWS §11) |
 | External material with a registered source | `LearningOS/materials/<area>/…/<slug>/` (topic tree) | `material://<source-id>/…` resolves via `materials/.flat/source-<id>` symlinks |
 | External material not yet registered | `LearningOS/materials/_unsorted/` | temporary; registered then moved |
 | Code repositories | `LearningOS/projects/<name>/` | untouched internally |
@@ -450,7 +450,10 @@ work/active/<workspace-id>/
 2. warranted source evaluations and concept relations are added;
 3. dependencies referencing the workspace are cleared from `COORDINATION.md`;
 4. generated outputs are rebuilt;
-5. the workspace moves unchanged to `archive/workspaces/<year>/`.
+5. a path-owning workspace completes at its existing location, preserving
+   its notes and references. A path-free workspace may move whole to
+   `archive/workspaces/<year>/` through the separately reviewed migration in
+   WORKFLOWS §11; no archive gateway capability exists.
 
 Do not rewrite an archived workspace to make it tidy.
 

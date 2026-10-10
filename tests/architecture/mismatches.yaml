@@ -11,7 +11,7 @@
   documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
   observed: "exit 2, stderr `los: stage results require GatewayEnvelopeV2; direct CLI application is disabled`"
   proposed_fix: code
-  decision: null
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc clarification; retain action-specific refusal wording, exit 2 and the envelope requirement."
 - id: M-02
   doc: system/WORKFLOWS.md
   heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)"
@@ -19,7 +19,7 @@
   documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
   observed: "exit 2, stderr `los: inbox resolve requires GatewayEnvelopeV2; direct CLI application is disabled`"
   proposed_fix: code
-  decision: null
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: same doc clarification as M-01; retain action-specific refusal wording and exit 2."
 - id: M-03
   doc: system/OPERATOR.md
   heading: "## Unit workflow"
@@ -27,7 +27,7 @@
   documented: "Removing a choice already wired into a study path is refused."
   observed: "exit 0, ok:true selected:false; the guard fires only on recorded stage_ids, which no capability populates"
   proposed_fix: code
-  decision: null
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: code repair; derive use from the current study map, matching stable route ID or exact legacy source and locator. Refuse without canonical writes; keep unused-choice removal."
 - id: M-04
   doc: system/WORKFLOWS.md
   heading: "## 12. Generate indexes and reports"
@@ -35,7 +35,7 @@
   documented: "validation report."
   observed: "exit 0, manifest only; validation-report.md absent until a validation run writes it"
   proposed_fix: code
-  decision: null
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc clarification; validation owns the validation report. Preserve the generation and validation command split."
 - id: M-05
   doc: system/WORKFLOWS.md
   heading: "## 11. Complete and archive a workspace"
@@ -43,4 +43,4 @@
   documented: "move to archive/workspaces/<year>/<workspace-id>/ unchanged."
   observed: "exit 1, E PATH-NOTE-OWNER on the unchanged move; repaired pointer fails schema ^work/active/.+\\.md$"
   proposed_fix: code
-  decision: null
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc correction; complete path-owning workspaces in place. Path-free archival needs a separately reviewed migration. Defer an archive capability and data-format expansion rather than weakening ownership guards."

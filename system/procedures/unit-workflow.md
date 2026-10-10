@@ -10,9 +10,8 @@ Executable transcript of the learner's choice list: run bare, a named
 command never writes, so a `unit.source-selection.set` envelope removes
 and re-selects a choice on `unit-demo-l02`. A choice naming a route the
 unit does not expose is refused, and so is removing a choice the study
-path uses — except that the study-path guard keys on recorded `stage_ids`
-and the wired choice carries none (M-03 in
-`tests/architecture/mismatches.yaml`). `tests/test_procedures.py` runs it
+path uses. Usage comes from the current map's resource references, rather
+than optional selection metadata (M-03 resolved 2026-10-10). `tests/test_procedures.py` runs it
 with Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
 test sets.
 
@@ -140,54 +139,25 @@ seal_envelope: los: selection must match one rich material route on this unit (s
 [2]
 ```
 
-## Seal the wired removal
+## The wired removal is refused while deriving guards
 
-`unit-demo-l01` has a study map whose stage uses the selected material,
-so this removal is the one the contract says is refused.
+`unit-demo-l01` has a study map whose stage uses the selected material.
+The same guard refuses both automatic sealing and submission of an envelope
+constructed explicitly (the latter is checked by `tests/test_mismatches.py`).
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l01", "source_id": "source-demo-book", "locator": "lecture-01.pdf", "action": "remove"}' --key sel-remove-l01 --request-id request-sel-remove-l01 --guards auto --out "$TMPDIR/sel-wired.json"
-seal_envelope: guards auto: unit-demo-l01=3
+seal_envelope: los: this choice is used by the current study path; remove it from those stages before removing the choice; fix the payload and seal again
+[2]
 ```
 
-## The wired removal commits (M-03)
-
-Observed: the removal commits instead of refusing, because the guard
-fires only on recorded `stage_ids` and the choice carries none. Recorded
-as M-03 in `tests/architecture/mismatches.yaml`; this case pins the
-observed commit until the conductor's decision lands.
+## No refused envelope was produced
 
 ```scrut
-$ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-wired.json"
-{
-  "schema_version": 2,
-  "request_id": "request-sel-remove-l01",
-  "idempotency_key": "sel-remove-l01",
-  "capability": "unit.source-selection.set",
-  "ok": true,
-  "replayed": false,
-  "transaction_id": "transaction-20261001-090000-003",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:62da1b4f38dcdd7b69610e810513877a41a0d5213d152b975e3e2bc6f3152f9b",
-  "result": {
-    "ok": true,
-    "unit_id": "unit-demo-l01",
-    "source_id": "source-demo-book",
-    "locator": "lecture-01.pdf",
-    "selected": false,
-    "transaction_id": "transaction-20261001-090000-003",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-    "artifact_revisions": {
-      "unit-demo-l01": 4
-    },
-    "snapshot_after": "sha256:62da1b4f38dcdd7b69610e810513877a41a0d5213d152b975e3e2bc6f3152f9b",
-    "replayed": false
-  },
-  "error": null
-}
+$ test ! -f "$TMPDIR/sel-wired.json"
 ```
 
-## The newest receipt names the capability
+## The previous successful receipt remains the newest
 
 ```scrut
 $ $H/los-assert-receipt --last --capability unit.source-selection.set

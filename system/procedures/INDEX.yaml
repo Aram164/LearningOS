@@ -34,7 +34,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 16. Maintain a crosswalk", class: procedure, transcript: system/procedures/maintain-crosswalk.md}
   - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure, untranscribable: "needs the user's dropped photos/scans and faithful transcription of the user's own reasoning (human prerequisite); affected steps: move originals, transcribe"}
   - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure, untranscribable: "step 3 opens workspaces via workflow 1, which has no approved create capability; affected step: 3. Open the first workspace(s)"}
-  - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure, untranscribable: "NEEDS-DECISION: no notes_path satisfies both the learning-path schema and PATH-NOTE-OWNER; affected step: archive the module's path-owning workspaces"}
+  - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure, untranscribable: "no approved capability completes a workspace or archives a path-free workspace; path-owning workspaces complete in place (M-05 decision 2026-10-10)"}
   - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure, untranscribable: "archive-and-successor and split branches need workflows 11 and 1, which have no approved archive/create capability; affected steps: Archive the old workspace; create the new one"}
   - {doc: system/WORKFLOWS.md, heading: "## 21. Process the inbox", class: procedure, transcript: system/procedures/process-inbox.md}
   - {doc: system/WORKFLOWS.md, heading: "## 22. End a session", class: procedure, transcript: system/procedures/end-a-session.md}

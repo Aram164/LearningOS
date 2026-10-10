@@ -9,9 +9,8 @@ defaults:
 Executable transcript of the documented generation: one command
 produces the indexes, views, reports, backlinks, canvas, and health
 report, each stating it is generated with its generator version and
-canonical inputs, all gitignored. The validation report is the one
-listed product the command does not write — it appears only after a
-validation run (see M-04). `tests/test_procedures.py` runs it with
+canonical inputs, all gitignored. Validation separately produces its report
+after a successful validation run (M-04 resolved by documentation). `tests/test_procedures.py` runs it with
 Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
 test sets.
 

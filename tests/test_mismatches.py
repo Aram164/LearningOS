@@ -1,262 +1,174 @@
-"""Executable documented-claim checks for doc/code mismatches (SPEC §7.5).
+"""Regression checks for the five delegated mismatch decisions (2026-10-10).
 
-Scrut v0.5.0 defines no expected-failure mechanism, so a transcript case
-that evidences a mismatch pins the OBSERVED behaviour (green) while the
-check here holds the DOCUMENTED claim (SPEC amendment (ak)).
-
-Each check builds a fresh disposable fixture and executes the documented
-command path as ordinary code; only the documented-claim assertion sits
-in ``try``, calling ``pytest.xfail`` on ``AssertionError`` (the mismatch
-stands). If the claim passes, the check calls ``pytest.fail``: an
-unexpectedly satisfied claim fails the gate until its mismatch is
-formally resolved (Aram decision + fix session). Bare ``@xfail`` is
-forbidden here because it would swallow in-test setup errors.
-
-``MISMATCH_CHECKS`` maps each M-id to its transcript file, case title,
-and the documented claim verbatim from
-``tests/architecture/mismatches.yaml``.
+Historical observations stay in architecture/mismatches.yaml. These checks
+now exercise the decided behavior ordinarily; setup and command failures
+are never hidden by expected-failure handling.
 """
-
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 
 import pytest
+import yaml
 from conftest import build_mini_repo
-from gateway_helpers import approved_v2_call
-from repo_builders import run_los
+from gateway_helpers import approved_v2_call, approved_v2_envelope, run_v2_capability
+from repo_builders import run_los, write_yaml
 from scenario_fixtures import rich_world
 
-#: M-id -> transcript file, case title, documented claim (verbatim, ≤25 words).
-MISMATCH_CHECKS: dict[str, dict[str, str]] = {
-    "M-01": {
-        "transcript": "record-evidence.md",
-        "case": "The untargeted ledger needs an envelope",
-        "claim": "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)",
-    },
-    "M-02": {
-        "transcript": "build-write-envelope.md",
-        "case": "A second bare command refuses with its own first clause",
-        "claim": "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)",
-    },
-    "M-03": {
-        "transcript": "unit-workflow.md",
-        "case": "The wired removal commits (M-03)",
-        "claim": "Removing a choice already wired into a study path is refused.",
-    },
-    "M-04": {
-        "transcript": "generate-indexes-reports.md",
-        "case": "The validation report is not among the products (M-04)",
-        "claim": "validation report.",
-    },
-    "M-05": {
-        "transcript": "mismatch-archive-probe.md",
-        "case": "The unchanged move fails validation (M-05)",
-        "claim": "move to archive/workspaces/<year>/<workspace-id>/ unchanged.",
-    },
-}
-
-#: The §25c-quoted refusal text for the bare-mutating-command class.
-SECTION_25C_REFUSAL = (
-    "canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled"
-)
+from learning_os.fingerprint import canonical_fingerprint
+from learning_os.loader import load_repo
 
 
-def _transcript_world(tmp_path: Path) -> Path:
-    """A fresh disposable rich_world fixture, the world transcripts run in."""
+def _world(tmp_path: Path) -> Path:
     root = build_mini_repo(tmp_path)
     rich_world(root)
     return root
 
 
-def test_m01_bare_stage_result_refusal_matches_section_25c_quote(tmp_path: Path):
-    """M-01 — record-evidence.md — The untargeted ledger needs an envelope.
+def _state(root):
+    return (canonical_fingerprint(root),
+            {p.relative_to(root).as_posix(): p.read_bytes()
+             for p in (root / "operations").rglob("*")
+             if p.is_file() and not p.is_relative_to(root / "operations/diagnostics")})
 
-    Documented claim: the bare mutating commands (capture --text,
-    note-revise, …) refuse with exit 2 (canonical writes must use
-    GatewayEnvelopeV2; direct CLI application is disabled).
-    """
-    root = _transcript_world(tmp_path)
-    proc = run_los(
-        root,
-        "stage-result",
-        "--workspace", "workspace-demo",
-        "--unit", "unit-demo-l01",
-        "--stage", "stage-demo-pending",
-        "--activity", "exercise",
-        "--result", "correct",
-    )
+
+@pytest.mark.parametrize("argv,first_clause", [
+    (["stage-result", "--workspace", "workspace-demo", "--unit", "unit-demo-l01",
+      "--stage", "stage-demo-pending", "--activity", "exercise", "--result", "correct"],
+     "stage results require GatewayEnvelopeV2"),
+    (["inbox-resolve", "note-drop.md", "--drop-sha256", "sha256:" + "cf" * 32,
+      "--routed-to", "note-demo"], "inbox resolve requires GatewayEnvelopeV2"),
+])
+def test_m01_m02_action_specific_bare_refusal(tmp_path, argv, first_clause):
+    root = _world(tmp_path)
+    before = _state(root)
+    proc = run_los(root, *argv)
     assert proc.returncode == 2, proc.stderr
-    assert not proc.stderr.startswith("usage: "), proc.stderr
-    assert ": error: " not in proc.stderr, proc.stderr
-    assert "direct CLI application is disabled" in proc.stderr, proc.stderr
-    try:
-        assert SECTION_25C_REFUSAL in proc.stderr
-    except AssertionError:
-        pytest.xfail("M-01: bare stage-result refuses with its own first clause")
-    pytest.fail(
-        "M-01 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
+    assert first_clause in proc.stderr
+    assert "direct CLI application is disabled" in proc.stderr
+    assert not proc.stdout
+    assert _state(root) == before
 
 
-def test_m02_bare_inbox_resolve_refusal_matches_section_25c_quote(tmp_path: Path):
-    """M-02 — build-write-envelope.md — A second bare command refuses with its own first clause.
-
-    Documented claim: the bare mutating commands (capture --text,
-    note-revise, …) refuse with exit 2 (canonical writes must use
-    GatewayEnvelopeV2; direct CLI application is disabled).
-    """
-    root = _transcript_world(tmp_path)
-    proc = run_los(
-        root,
-        "inbox-resolve",
-        "note-drop.md",
-        "--drop-sha256",
-        "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
-        "--routed-to", "note-demo",
-    )
-    assert proc.returncode == 2, proc.stderr
-    assert not proc.stderr.startswith("usage: "), proc.stderr
-    assert ": error: " not in proc.stderr, proc.stderr
-    assert "direct CLI application is disabled" in proc.stderr, proc.stderr
-    try:
-        assert SECTION_25C_REFUSAL in proc.stderr
-    except AssertionError:
-        pytest.xfail("M-02: bare inbox-resolve refuses with its own first clause")
-    pytest.fail(
-        "M-02 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
+def _remove(root, unit="unit-demo-l01", locator="lecture-01.pdf", key="wired-remove"):
+    return approved_v2_call(root, capability="unit.source-selection.set",
+        payload={"unit_id": unit, "source_id": "source-demo-book",
+                 "locator": locator, "action": "remove"},
+        artifact_ids=[unit], idempotency_key=key)
 
 
-def test_m03_wired_choice_removal_is_refused(tmp_path: Path):
-    """M-03 — unit-workflow.md — The wired removal commits (M-03).
-
-    Documented claim: Removing a choice already wired into a study path
-    is refused.
-    """
-    root = _transcript_world(tmp_path)
-    # Control (J22): the unwired l02 choice removes cleanly through the
-    # same envelope path, proving the world and the submitter are healthy.
-    control = approved_v2_call(
-        root,
-        capability="unit.source-selection.set",
-        payload={
-            "unit_id": "unit-demo-l02",
-            "source_id": "source-demo-book",
-            "locator": "lecture-02.pdf",
-            "action": "remove",
-        },
-        artifact_ids=["unit-demo-l02"],
-        idempotency_key="mismatch-m03-control-l02-remove",
-    )
-    assert control.returncode == 0, control.stderr
-    assert json.loads(control.stdout)["ok"] is True
-    proc = approved_v2_call(
-        root,
-        capability="unit.source-selection.set",
-        payload={
-            "unit_id": "unit-demo-l01",
-            "source_id": "source-demo-book",
-            "locator": "lecture-01.pdf",
-            "action": "remove",
-        },
-        artifact_ids=["unit-demo-l01"],
-        idempotency_key="mismatch-m03-wired-l01-remove",
-    )
+@pytest.mark.parametrize("representation", ["legacy", "route-id", "material-ref"])
+def test_m03_wired_removal_refuses_without_a_transaction(tmp_path, representation):
+    root = _world(tmp_path)
+    repo = load_repo(root)
+    unit = repo.units["unit-demo-l01"]
+    rid = unit.data["source_selections"][0]["route_id"]
+    assert not unit.data["source_selections"][0].get("stage_ids")
+    study_map = repo.study_maps[unit.data["current_study_map"]]
+    data = yaml.safe_load(study_map.path.read_text())
+    resource = data["stages"][0]["resources"][0]
+    # Isolate this representation so a second fixture resource cannot mask it.
+    data["stages"][0]["resources"] = [resource]
+    resource.update(source_id="source-demo-book", locator="lecture-01.pdf")
+    if representation == "legacy":
+        resource.pop("route_id", None)
+    elif representation == "route-id":
+        resource["route_id"] = rid
+        resource.pop("locator", None)
+    elif representation == "material-ref":
+        resource["material_ref"] = {"route_id": rid, "inherit": ["label", "source_id"]}
+        resource.pop("route_id", None)
+        resource.pop("label", None)
+        resource.pop("source_id", None)
+        resource["locator"] = "lecture-01.pdf p.1"
+    write_yaml(study_map.path, data)
+    before = _state(root)
+    proc = _remove(root)
+    assert proc.returncode == 2, (proc.stdout, proc.stderr)
     doc = json.loads(proc.stdout)
-    assert proc.returncode in (0, 2), proc.stderr
-    assert (proc.returncode, doc["ok"]) in ((0, True), (2, False)), proc.stdout
-    try:
-        assert proc.returncode == 2 and doc["ok"] is False
-    except AssertionError:
-        pytest.xfail("M-03: wired removal commits; the guard keys on unpopulated stage_ids")
-    pytest.fail(
-        "M-03 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
+    assert doc["ok"] is False
+    assert doc["error"]["code"] == "INVALID_REQUEST"
+    assert "used by the current study path" in doc["error"]["message"]
+    assert doc["transaction_id"] is None and doc["receipt_path"] is None
+    assert _state(root) == before
 
 
-def test_m04_generate_writes_the_listed_validation_report(tmp_path: Path):
-    """M-04 — generate-indexes-reports.md — The validation report is not among the products (M-04).
-
-    Documented claim: validation report. (The item within WORKFLOWS §12's
-    generate product list; the transcript case carries that context.)
-    """
-    root = _transcript_world(tmp_path)
-    report = root / "generated" / "reports" / "validation-report.md"
-    assert not report.is_file()
-    proc = run_los(root, "generate")
-    assert proc.returncode == 0, (proc.returncode, proc.stdout, proc.stderr)
-    assert proc.stderr == "", proc.stderr
-    assert (root / "generated" / "manifest.json").is_file()
-    try:
-        assert report.is_file()
-    except AssertionError:
-        pytest.xfail(
-            "M-04: generate publishes the manifest but not the listed "
-            "validation report"
-        )
-    pytest.fail(
-        "M-04 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
+def test_m03_unused_removal_and_exact_replay(tmp_path):
+    root = _world(tmp_path)
+    envelope = approved_v2_envelope(root, capability="unit.source-selection.set",
+        payload={"unit_id": "unit-demo-l02", "source_id": "source-demo-book",
+                 "locator": "lecture-02.pdf", "action": "remove"},
+        artifact_ids=["unit-demo-l02"], idempotency_key="unused-remove")
+    proc = run_v2_capability(root, envelope)
+    assert proc.returncode == 0, (proc.stdout, proc.stderr)
+    response = json.loads(proc.stdout)
+    assert response["ok"] is True and response["result"]["selected"] is False
+    assert load_repo(root).units["unit-demo-l02"].data["source_selections"] == []
+    # Submit the identical approved envelope again, including its original guards.
+    before_replay = _state(root)
+    replay = run_v2_capability(root, envelope)
+    assert replay.returncode == 0, replay.stderr
+    replayed = json.loads(replay.stdout)
+    assert replayed["replayed"] is True
+    assert replayed["transaction_id"] == response["transaction_id"]
+    assert _state(root) == before_replay
 
 
-def test_m05_path_owning_workspace_moves_unchanged(tmp_path: Path):
-    """M-05 (provisional M-06) — mismatch-archive-probe.md — The unchanged move fails validation (M-05).
+def test_m03_other_locator_in_current_map_does_not_pin_choice(tmp_path):
+    root = _world(tmp_path)
+    repo = load_repo(root)
+    study_map = repo.study_maps["study-map-demo-l01"]
+    data = yaml.safe_load(study_map.path.read_text())
+    for stage in data["stages"]:
+        for resource in stage.get("resources", []):
+            if resource.get("locator") == "lecture-01.pdf":
+                resource.pop("route_id", None)
+                resource["locator"] = "Appendix A"
+    write_yaml(study_map.path, data)
+    proc = _remove(root)
+    assert proc.returncode == 0, (proc.stdout, proc.stderr)
+    assert json.loads(proc.stdout)["result"]["selected"] is False
 
-    Documented claim: move to archive/workspaces/<year>/<workspace-id>/
-    unchanged.
-    """
-    import re
-    import shutil
 
-    root = _transcript_world(tmp_path)
-    src = root / "work" / "active" / "workspace-demo"
-    dst = root / "archive" / "workspaces" / "2026" / "workspace-demo"
-    dst.parent.mkdir(parents=True)
-    shutil.move(str(src), str(dst))
-    assert (dst / "CONTEXT.md").is_file()
-    assert not src.exists()
+def test_m04_validation_owns_its_report(tmp_path):
+    root = _world(tmp_path)
+    report = root / "generated/reports/validation-report.md"
+    assert not report.exists()
+    generation = run_los(root, "generate")
+    assert generation.returncode == 0, generation.stderr
+    assert (root / "generated/manifest.json").is_file()
+    assert not report.exists()
+    validation = run_los(root, "validate")
+    assert validation.returncode == 0, validation.stdout
+    assert report.is_file()
+
+
+def test_m05_complete_path_workspace_in_place(tmp_path):
+    root = _world(tmp_path)
+    context = root / "work/active/workspace-demo/CONTEXT.md"
+    # Disposable-fixture setup, not an assertion that a completion capability exists.
+    text = context.read_text()
+    assert "status: active" in text
+    context.write_text(text.replace("status: active", "status: complete", 1))
+    repo = load_repo(root)
+    assert repo.workspaces["workspace-demo"].meta["status"] == "complete"
+    assert not repo.learning_paths["path-demo"].archived
     proc = run_los(root, "validate")
-    # Ordinary validity of the validator completion: only the documented
-    # rc==0 claim below may xfail. Usage (rc2), crashes, malformed output,
-    # an inconsistent summary, and any error set other than exactly the
-    # expected PATH-NOTE-OWNER for the moved path fail ordinarily here.
-    assert proc.returncode in (0, 1), (
-        proc.returncode, proc.stdout, proc.stderr)
-    assert proc.stderr == "", proc.stderr
-    lines = proc.stdout.splitlines()
-    errors = [line for line in lines if line.startswith("E ")]
-    summary = next(
-        (line for line in reversed(lines) if line.strip()), "")
-    match = re.fullmatch(
-        r"(\d+) error\(s\)(?:, (\d+) warning\(s\))? — (OK|FAIL)", summary)
-    assert match is not None, proc.stdout
-    assert int(match.group(1)) == len(errors), proc.stdout
-    assert (match.group(3) == "OK") == (proc.returncode == 0), proc.stdout
-    if proc.returncode == 1:
-        codes = set()
-        for line in errors:
-            parts = line.split(None, 2)
-            codes.add(parts[1].rstrip(":") if len(parts) > 1 else "")
-        assert codes == {"PATH-NOTE-OWNER"}, proc.stdout
-        assert len(errors) == 1, proc.stdout
-        assert "archive/workspaces/2026/workspace-demo/paths/path-demo.yaml" in errors[0], proc.stdout
-        assert "work/active/workspace-demo/paths/stage-demo-path-notes.md" in errors[0], proc.stdout
-    else:
-        assert not errors, proc.stdout
-    try:
-        assert proc.returncode == 0, proc.stdout
-    except AssertionError:
-        pytest.xfail(
-            "M-05: unchanged archive of a path-owning workspace fails "
-            "validation (PATH-NOTE-OWNER)"
-        )
-    pytest.fail(
-        "M-05 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
+    assert proc.returncode == 0, proc.stdout
+    assert context.is_file()
+
+
+def test_m05_unchanged_path_workspace_move_remains_rejected(tmp_path):
+    root = _world(tmp_path)
+    source = root / "work/active/workspace-demo"
+    target = root / "archive/workspaces/2026/workspace-demo"
+    target.parent.mkdir(parents=True)
+    shutil.move(str(source), str(target))
+    before = _state(root)
+    proc = run_los(root, "validate")
+    assert proc.returncode == 1, proc.stdout
+    errors = [line for line in proc.stdout.splitlines() if line.startswith("E ")]
+    assert len(errors) == 1 and errors[0].startswith("E PATH-NOTE-OWNER:"), proc.stdout
+    assert _state(root) == before

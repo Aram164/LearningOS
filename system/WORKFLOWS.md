@@ -418,7 +418,15 @@ Never record these facts anywhere else.
 5. clear dependencies referencing this workspace from `COORDINATION.md`;
 6. set `status: complete`;
 7. rebuild and validate generated files;
-8. move to `archive/workspaces/<year>/<workspace-id>/` unchanged.
+8. a workspace without learning paths may move whole to
+   `archive/workspaces/<year>/<workspace-id>/`, after checking explicit path
+   links. A workspace that owns learning paths stays at its existing location
+   with `status: complete`: the path schema and ownership validator do not
+   support relocating its notes, attachments and shelving references to the
+   archive. Never attempt an unchanged move or hand-repair those pointers.
+
+No gateway capability currently archives a workspace. Archival requires a
+separately reviewed migration; completion in place preserves its evidence.
 
 Standing workspaces (`standing: true`) are exempt from this workflow.
 
@@ -437,8 +445,10 @@ One documented command produces, from canonical inputs only:
 - `nebula.md` — the Garden lens (ADR-002) — and `domain-atlas.md` — the cross-domain map (ADR-005);
 - `reading-room.md` — the human home page (ADR-006): exam spine, workspace next actions, recently changed notes, queues, and review-adoption counts, each a link into the deeper view. Interface layers open this file first;
 - `concept-canvas.canvas` — JSON Canvas rendering of the relation registry (ADR-006): concept cards with note links, labelled colored edges, prerequisite-depth layout. Obsidian renders it natively; any JSON Canvas tool can read it;
-- health report (`reports/health.md`, incl. review & evidence adoption);
-- validation report.
+- health report (`reports/health.md`, incl. review & evidence adoption).
+
+Run `los validate` separately to produce `reports/validation-report.md` after
+successful validation. Generation does not produce that report.
 
 Generated files state that they are generated, name the generator version and canonical inputs, and are gitignored.
 
@@ -547,7 +557,7 @@ When a module is finished — its final attempt sat, or abandoned:
    `status: completed` (or `dropped` if abandoned); while a grade is pending,
    preserve that administrative state explicitly.
 2. **Confirm durable knowledge landed — before archiving.** For each of the module's workspaces, verify the understanding worth keeping is already a note under `knowledge/`; extend or create as needed (workflow 3; workflow 17 for handwritten pages). An archived workspace is frozen, so promotion happens first, never after.
-3. **Archive each workspace whole** (workflow 11 for every workspace the module owns): durable links confirmed, `status: complete`, moved to `archive/workspaces/<year>/`. Archival waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
+3. **Complete each workspace** (workflow 11 for every workspace the module owns): durable links confirmed and `status: complete`. Path-owning workspaces stay in place; only path-free workspaces may enter the separately reviewed archive migration. Completion waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
 4. **Clear operational state.** Remove the module's now-dead entries from `COORDINATION.md` — resolved dependencies, satisfied deferrals, stale priorities and commitments (workflow 9). Coordination should not mention a closed module.
 5. **Carry-over check.** If anything outlives the module — a second attempt not yet sat, thesis groundwork, an unfinished thread — route it through workflow 20 instead of archiving it away.
 6. **Rebuild and validate.**
@@ -931,8 +941,10 @@ gateway envelope; review both, then submit the envelope unchanged.
 
 Every canonical write is submitted as an explicit envelope; the bare
 mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
-(*"canonical writes must use GatewayEnvelopeV2; direct CLI application is
-disabled"*) by design, never by accident. This section is the complete
+and explain that GatewayEnvelopeV2 is required and direct CLI application is
+disabled. The first clause may name the action (for example, stage results or
+inbox resolve); the common transaction refusal starts with "canonical writes
+must use GatewayEnvelopeV2". This is by design, never by accident. This section is the complete
 construction recipe — nothing else is needed.
 
 1. **Payload schema.** `.venv/bin/python tools/los.py capabilities <name> --json`
