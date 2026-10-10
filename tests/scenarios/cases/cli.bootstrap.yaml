@@ -21,7 +21,7 @@ cases:
   - id: compact-continued
     kind: success
     transport: cli
-    argv: [bootstrap, --compact, --offset, 1, --limit, 1, --expected-snapshot, "sha256:b56fa4656b704d0f7c43975f640337b70ce3bb3399ed4e83637e560dde543a62"]
+    argv: [bootstrap, --compact, --offset, 1, --limit, 1, --expected-snapshot, "sha256:dc19fd6c8e4838f7ec4b4bfce7b9fb82cbb45072ddb2226171cafe6c0875d9b8"]
     expect: {site: null}
   - id: brief-and-compact
     kind: refusal

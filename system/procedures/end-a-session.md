@@ -39,7 +39,7 @@ seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3
 ## The sealed envelope's sha256, before submission
 
 ```scrut
-$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 5823a3ec377085d3645e0a4cf021e185ff427160b34b88f66664be7f41f98420
+$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 16b5559a0fc29c2c18e9058f3f3b77ab184b164ecdc23db5ed416e942d2189f3
 ```
 
 ## Step 1: submit the stage-progress envelope
@@ -55,7 +55,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:316aa82f7474b1ca781cdd2adb1cc8bdc169116445c90ad69d8de85a1b4019d5",
+  "snapshot_after": "sha256:f410d0be137d93d4719adff11e05c96e019a17e6447626f2cca9e1e532fc9279",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -75,7 +75,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:316aa82f7474b1ca781cdd2adb1cc8bdc169116445c90ad69d8de85a1b4019d5",
+    "snapshot_after": "sha256:f410d0be137d93d4719adff11e05c96e019a17e6447626f2cca9e1e532fc9279",
     "replayed": false
   },
   "error": null
@@ -114,8 +114,8 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:b56fa4656b704d0f7c43975f640337b70ce3bb3399ed4e83637e560dde543a62",
-      "actual": "sha256:316aa82f7474b1ca781cdd2adb1cc8bdc169116445c90ad69d8de85a1b4019d5"
+      "expected": "sha256:dc19fd6c8e4838f7ec4b4bfce7b9fb82cbb45072ddb2226171cafe6c0875d9b8",
+      "actual": "sha256:f410d0be137d93d4719adff11e05c96e019a17e6447626f2cca9e1e532fc9279"
     }
   }
 }

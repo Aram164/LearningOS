@@ -39,7 +39,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:bde503f6efd2611197509a776b387c6a312e2369212f2f08de683426ad8b67cc",
+  "snapshot_after": "sha256:7e00c03346222872fa117c2f148c500c6ecf29690b3baaae68b2070f18e84e17",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -50,7 +50,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:bde503f6efd2611197509a776b387c6a312e2369212f2f08de683426ad8b67cc",
+    "snapshot_after": "sha256:7e00c03346222872fa117c2f148c500c6ecf29690b3baaae68b2070f18e84e17",
     "replayed": false
   },
   "error": null
@@ -89,7 +89,7 @@ $ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:09105e98fddcafd9a4ddda49c810cba931c34571c8a4acb5d1e476d5ff09fbe7",
+  "snapshot_after": "sha256:c8a2f5eff067c55645e6fce5f538b746fc4e8d0127332402e345877bb8b6ec86",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-log-a-stray-thought-with-no-stage-yet.md",
@@ -98,7 +98,7 @@ $ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
     "artifact_revisions": {
       "capture-request:log-capture-001": 1
     },
-    "snapshot_after": "sha256:09105e98fddcafd9a4ddda49c810cba931c34571c8a4acb5d1e476d5ff09fbe7",
+    "snapshot_after": "sha256:c8a2f5eff067c55645e6fce5f538b746fc4e8d0127332402e345877bb8b6ec86",
     "replayed": false
   },
   "error": null
