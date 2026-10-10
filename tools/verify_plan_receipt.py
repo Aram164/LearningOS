@@ -46,9 +46,6 @@ TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 
-from learning_os.commands.support import (  # noqa: E402
-    _read_structured_file,
-)
 from learning_os.domain.failures import WriteRefused  # noqa: E402
 from learning_os.fingerprint import canonical_fingerprint  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
@@ -59,6 +56,7 @@ from learning_os.material_synthesis import (  # noqa: E402
 )
 from learning_os.ops._legacy_plumbing import (  # noqa: E402
     _operator_lock,
+    _read_structured_file,
 )
 from learning_os.ops.legacy import (  # noqa: E402
     _context_from_v2,

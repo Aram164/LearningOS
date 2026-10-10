@@ -22,6 +22,7 @@ from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
     _operator_lock,
     _read_content_bound_file,
+    _read_structured_file,
 )
 
 from .. import observations
@@ -54,7 +55,6 @@ from ..revisions import artifact_revision
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _read_structured_file,
     _root,
     _write_transaction,
 )
@@ -590,7 +590,7 @@ def cmd_note_analysis_prepare(args) -> int:
     ``note.analysis.save_batch``; the content hashes and intent binding
     refuse anything altered after review.
     """
-    from .capability import prepare_review_envelope
+    from learning_os.ops._legacy_plumbing import prepare_review_envelope
 
     root = _root(args)
     prepared = _read_draft_items(_read_drafts_file(args.drafts))

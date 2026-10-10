@@ -34,10 +34,14 @@ from learning_os.materials_resolution import (
 )
 from learning_os.ops._legacy_plumbing import (
     SESSION_ID_ENV,
+    _bytes_inside_owner,
+    _content_envelope,
     _fresh_manifest,
+    _note_bytes,
     _operator_lock,
     _resolve_session_identity,
     _snapshot,
+    _window_values,
 )
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
@@ -47,12 +51,13 @@ from .support import _root
 
 
 def _window(args, maximum: int) -> tuple[int, int]:
-    offset, limit = args.offset, args.limit
-    if offset < 0 or not 1 <= limit <= maximum:
-        raise WriteRefused(f"offset must be nonnegative and limit between 1 and {maximum}")
-    if offset and not args.expected_snapshot:
-        raise WriteRefused("continuation requires --expected-snapshot from the previous response")
-    return offset, limit
+    """Temporary namespace extraction for unconverted callers (SPEC (bl)).
+
+    Converted handlers pass their request values directly to
+    ``_window_values``; this wrapper stays until the last caller converts.
+    """
+    return _window_values(
+        args.offset, args.limit, args.expected_snapshot, maximum)
 
 
 def _print_stable(root, snapshot, payload) -> int:
@@ -302,23 +307,6 @@ def brief_bootstrap(args) -> int:
         return _refusal(exc)
 
 
-def _bytes_inside_owner(root, path, owner, *, escape, symlink):
-    """Read bytes admitted by one owner directory; symlinks always refuse.
-
-    The one admission rule for note, garden, and inbox reads: the resolved
-    target must sit below the owner, and no path component may be a link —
-    even one that would resolve in-tree. Only the refusal wording differs
-    per surface.
-    """
-    try:
-        path.resolve(strict=True).relative_to(owner.resolve(strict=True))
-    except (ValueError, OSError) as exc:
-        raise WriteRefused(escape) from exc
-    if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
-        raise WriteRefused(symlink)
-    return path.read_bytes()
-
-
 def empty_search_hint(row_word: str, terms: list[str], hits: list[int]) -> str:
     """One-line stderr disclosure for an empty literal-AND result.
 
@@ -417,13 +405,6 @@ def _content_term_hits(root, ordered, terms):
         return None
 
 
-def _note_bytes(root, note):
-    return _bytes_inside_owner(
-        root, note.path, root / "knowledge" / "notes",
-        escape="note path escapes its knowledge owner",
-        symlink="note read refuses symlinks")
-
-
 def _note_collection(root):
     """Load only the note registry for note reads/search, not a complete Repo.
 
@@ -456,18 +437,6 @@ def _garden_note(root, note_id):
         if stable_id == note_id:
             return note
     return None
-
-
-def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
-    return {
-        "contract": contract, ref_key: ref, "path": relpath,
-        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
-        "offset": offset, "offset_unit": "unicode_characters",
-        "total_characters": len(content),
-        "start_line": content.count("\n", 0, offset) + 1,
-        "content": content[offset:offset + limit],
-        "next_offset": offset + limit if offset + limit < len(content) else None,
-    }
 
 
 def cmd_note_read(args) -> int:

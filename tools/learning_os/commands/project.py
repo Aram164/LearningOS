@@ -13,6 +13,7 @@ import yaml
 from learning_os.ops._legacy_plumbing import (
     _fresh_manifest,
     _operator_lock,
+    _read_structured_file,
 )
 
 from ..domain.failures import WriteRefused
@@ -20,7 +21,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _print_rows,
-    _read_structured_file,
     _root,
     _write_transaction,
 )

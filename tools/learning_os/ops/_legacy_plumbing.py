@@ -27,7 +27,10 @@ from pathlib import Path
 import yaml
 
 from learning_os import observations
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    current_gateway_request,
+    intent_sha256,
+)
 from learning_os.derived.model import DerivedError
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.fingerprint import canonical_fingerprint, seed_source_fingerprint
@@ -918,3 +921,145 @@ def _changed_write(writes, path, data):
     # write intent when the exact serialized bytes are already current.
     if path.read_bytes() != content.encode("utf-8"):
         writes[path] = content
+
+
+# ---------------------------------------------------------------------------
+# Notes shared helpers, moved verbatim from commands.support, commands.capability,
+# commands.query and commands.reads for the wave-1 notes conversions (SPEC (bl),
+# CODEX-WAVE1-DISPOSITIONS-20261010 items 2-3). Bodies and signatures unchanged;
+# _window_values is the extracted value-based core of commands.reads._window.
+
+
+def _read_structured_file(
+    path_value: str,
+    *,
+    expected_sha256: str | None = None,
+    label: str = "structured input",
+) -> dict:
+    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
+
+    Stdin matters for callers that build an envelope in memory: writing it to
+    a temp file first means a real file holding canonical intent has to be
+    created, found, and cleaned up on every write path, including the ones
+    that fail. ``-`` removes that lifecycle entirely.
+    """
+    if path_value == "-" and expected_sha256 is None \
+            and current_gateway_request() is None:
+        raw = sys.stdin.read()
+        try:
+            data = json.loads(raw)
+        except ValueError as exc:
+            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
+        if not isinstance(data, dict):
+            raise WriteRefused("structured input must be an object")
+        return data
+    path, raw_bytes = _read_content_bound_file(
+        path_value,
+        expected_sha256,
+        label=label,
+    )
+    try:
+        raw = raw_bytes.decode("utf-8")
+        if path.suffix.lower() == ".json":
+            data = json.loads(raw)
+        else:
+            data = yaml.safe_load(raw)
+    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
+        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise WriteRefused(f"structured input must be an object: {path}")
+    return data
+
+
+def prepare_review_envelope(capability_name: str, payload: dict,
+                            snapshot: str, revisions: dict) -> dict:
+    """Prepare a recoverable request during preflight, while its lock is held."""
+    envelope = {
+        "schema_version": 2,
+        "request_id": f"request-reviewed-{observations.new_hex()}",
+        "idempotency_key": f"reviewed-{observations.new_hex()}",
+        "capability": capability_name,
+        "channel": "codex",
+        "expected_snapshot": snapshot,
+        "expected_revisions": revisions,
+        "payload": payload,
+        "approval": {"kind": "operator-approval", "subject_sha256": ""},
+    }
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    return envelope
+
+
+def _inbox_search_rows(root: Path) -> list[dict]:
+    """One discovery row per inbox file, matched on names only, never bytes.
+
+    Inbox drops are arbitrary files (binary captures included), so the
+    metadata search reads no content here: the haystack is the file name
+    and path. Content stays behind ``inbox-read``, which refuses non-text.
+    Raises OSError when the listing itself fails; a missing inbox is empty.
+    """
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return []
+    rows = []
+    for path in sorted(inbox.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(inbox).as_posix()
+        if any(part.startswith(".") for part in rel.split("/")):
+            continue
+        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
+                     "path": f"work/inbox/{rel}"})
+    return rows
+
+
+def _discovery_row(rec):
+    """One stable discovery row, shared by search and inbox-list."""
+    return {k: rec.get(k) for k in
+            ("id", "type", "title", "path", "status",
+             "state", "deprecated")}
+
+
+def _bytes_inside_owner(root, path, owner, *, escape, symlink):
+    """Read bytes admitted by one owner directory; symlinks always refuse.
+
+    The one admission rule for note, garden, and inbox reads: the resolved
+    target must sit below the owner, and no path component may be a link —
+    even one that would resolve in-tree. Only the refusal wording differs
+    per surface.
+    """
+    try:
+        path.resolve(strict=True).relative_to(owner.resolve(strict=True))
+    except (ValueError, OSError) as exc:
+        raise WriteRefused(escape) from exc
+    if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
+        raise WriteRefused(symlink)
+    return path.read_bytes()
+
+
+def _note_bytes(root, note):
+    return _bytes_inside_owner(
+        root, note.path, root / "knowledge" / "notes",
+        escape="note path escapes its knowledge owner",
+        symlink="note read refuses symlinks")
+
+
+def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
+    return {
+        "contract": contract, ref_key: ref, "path": relpath,
+        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+        "offset": offset, "offset_unit": "unicode_characters",
+        "total_characters": len(content),
+        "start_line": content.count("\n", 0, offset) + 1,
+        "content": content[offset:offset + limit],
+        "next_offset": offset + limit if offset + limit < len(content) else None,
+    }
+
+
+def _window_values(offset: int, limit: int, expected_snapshot: str | None,
+                   maximum: int) -> tuple[int, int]:
+    """Offset/limit validation with the exact commands.reads._window rules."""
+    if offset < 0 or not 1 <= limit <= maximum:
+        raise WriteRefused(f"offset must be nonnegative and limit between 1 and {maximum}")
+    if offset and not expected_snapshot:
+        raise WriteRefused("continuation requires --expected-snapshot from the previous response")
+    return offset, limit

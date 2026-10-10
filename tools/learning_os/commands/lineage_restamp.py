@@ -169,7 +169,7 @@ def cmd_lineage_restamp(args) -> int:
         plan = {cid: dict(planned[cid]["new_reads"]) for cid in ordered}
         plan_sha = _plan_sha256(plan)
         if getattr(args, "check", False):
-            from learning_os.commands.capability import prepare_review_envelope
+            from learning_os.ops._legacy_plumbing import prepare_review_envelope
 
             _artifacts, revisions = _ledger_guards(root)
             payload = {"claim_ids": ordered, "claims_sha256": claims_sha256}

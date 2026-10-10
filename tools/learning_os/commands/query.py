@@ -14,7 +14,9 @@ from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
+    _discovery_row,
     _fresh_manifest,
+    _inbox_search_rows,
     _json_layout,
     _operator_lock,
     _publish,
@@ -294,29 +296,6 @@ def _unknown_record_type(value: str) -> str:
     return f"{message} (valid types: {', '.join(sorted(VALID_RECORD_TYPES))})"
 
 
-def _inbox_search_rows(root: Path) -> list[dict]:
-    """One discovery row per inbox file, matched on names only, never bytes.
-
-    Inbox drops are arbitrary files (binary captures included), so the
-    metadata search reads no content here: the haystack is the file name
-    and path. Content stays behind ``inbox-read``, which refuses non-text.
-    Raises OSError when the listing itself fails; a missing inbox is empty.
-    """
-    inbox = root / "work" / "inbox"
-    if not inbox.is_dir():
-        return []
-    rows = []
-    for path in sorted(inbox.rglob("*")):
-        if not path.is_file():
-            continue
-        rel = path.relative_to(inbox).as_posix()
-        if any(part.startswith(".") for part in rel.split("/")):
-            continue
-        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
-                     "path": f"work/inbox/{rel}"})
-    return rows
-
-
 def _array_window(args) -> tuple[int, int]:
     """Offset/limit check for the legacy array response: unbounded, valid only."""
     offset, limit = args.offset, args.limit
@@ -423,13 +402,6 @@ def cmd_search(args) -> int:
               "totals and a snapshot-bound continuation", file=sys.stderr)
     print(json.dumps(shown, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
-
-
-def _discovery_row(rec):
-    """One stable discovery row, shared by search and inbox-list."""
-    return {k: rec.get(k) for k in
-            ("id", "type", "title", "path", "status",
-             "state", "deprecated")}
 
 
 def cmd_inbox_list(args) -> int:

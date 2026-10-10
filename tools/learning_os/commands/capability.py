@@ -8,13 +8,12 @@ import json
 import sys
 from pathlib import Path
 
-from learning_os import observations
 from learning_os.contracts.capability_catalog import command_definitions
-from learning_os.contracts.gateway import intent_sha256
 from learning_os.diagnostics import tracer as diag_tracer
 from learning_os.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.diagnostics.store import bind_store as _bind_diag_store
 from learning_os.domain.failures import WriteRefused
+from learning_os.ops._legacy_plumbing import _read_structured_file
 from learning_os.ops.legacy import (
     _context_from_v2,
     _dispatch,
@@ -22,10 +21,7 @@ from learning_os.ops.legacy import (
 )
 from learning_os.ops.pipeline import _close_attempt, run_gateway
 
-from .support import (
-    _read_structured_file,
-    _root,
-)
+from .support import _root
 
 # Older human-facing commands intentionally keep path forms for shell use and
 # no-write preflights. A V2 approval must additionally name the digest of every
@@ -44,24 +40,6 @@ _FILE_INPUTS_V2: dict[str, tuple[tuple[str, str, bool], ...]] = {
     "unit.map.import": (("file", "file_sha256", False),),
     "unit.note.append": (("attachment", "attachment_sha256", True),),
 }
-
-
-def prepare_review_envelope(capability_name: str, payload: dict,
-                            snapshot: str, revisions: dict) -> dict:
-    """Prepare a recoverable request during preflight, while its lock is held."""
-    envelope = {
-        "schema_version": 2,
-        "request_id": f"request-reviewed-{observations.new_hex()}",
-        "idempotency_key": f"reviewed-{observations.new_hex()}",
-        "capability": capability_name,
-        "channel": "codex",
-        "expected_snapshot": snapshot,
-        "expected_revisions": revisions,
-        "payload": payload,
-        "approval": {"kind": "operator-approval", "subject_sha256": ""},
-    }
-    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
-    return envelope
 
 
 def reviewed_envelope_apply(*, root: Path, capability_name: str, payload: dict,

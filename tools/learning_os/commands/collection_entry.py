@@ -25,13 +25,13 @@ from learning_os.domain.suggest import with_suggestions
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
     _operator_lock,
+    _read_structured_file,
 )
 from learning_os.revisions import artifact_revision
 
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _read_structured_file,
     _root,
     _write_transaction,
 )

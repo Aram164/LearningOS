@@ -2060,7 +2060,7 @@ def cmd_module_plan_import(args) -> int:
                 synthesis_entries, package_sha, seen_units)
             result["units_checked"] = sorted(seen_units)
             result["files_checked"] = len(writes)
-            from learning_os.commands.capability import prepare_review_envelope
+            from learning_os.ops._legacy_plumbing import prepare_review_envelope
 
             capability = getattr(args, "_capability_override", None) or "module.plan.import"
             review_input = getattr(args, "_review_input", None)
