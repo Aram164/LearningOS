@@ -6,10 +6,7 @@ import json
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
-from learning_os.legacy_archive import (
-    legacy_archive_lock_destination,
-    load_legacy_archive_lock,
-)
+from learning_os.legacy_archive import legacy_archive_lock_destination
 from learning_os.masters_planning import (
     candidate_comparison_destination,
     master_catalog_destination,
@@ -101,21 +98,6 @@ def cmd_unit_material_synthesis_publish(args) -> int:
         **({"errors": [str(error) for error in errors]} if errors else {}),
     }, indent=2, ensure_ascii=False))
     return code
-
-
-def cmd_legacy_archive_status(args) -> int:
-    root = _root(args)
-    lock = load_legacy_archive_lock(root)
-    value = {
-        "schema_version": 1,
-        "type": "legacy-archive-status",
-        "available": lock is not None,
-        "lock": lock,
-    }
-    from learning_os.contracts.json_schema import validate_contract
-    validate_contract(root, "legacy-archive-status.schema.json", value)
-    print(json.dumps(value, indent=2, ensure_ascii=False))
-    return 0
 
 
 def cmd_legacy_archive_lock_publish(args) -> int:

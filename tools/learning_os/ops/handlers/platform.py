@@ -22,12 +22,14 @@ from learning_os.backup_manifest import (
     verify_backup_manifest,
     verify_restored_system,
 )
+from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.health import build_health_report
 from learning_os.legacy_archive import (
     inspect_legacy_archive,
     load_legacy_allowlist,
+    load_legacy_archive_lock,
 )
 from learning_os.ops._legacy_plumbing import (
     _atomic_text,
@@ -587,3 +589,19 @@ def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
         root, Path(req["archive_root"]).expanduser().resolve(), allowlist,
     )
     return Result(lock, json_dumps=_dumps_indented)
+
+
+@register("cli.legacy-archive-status", kind="tool")
+@register("legacy.archive.status", kind="query")
+def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
+    """Report the published legacy-archive lock, if any."""
+    root = ctx.root
+    lock = load_legacy_archive_lock(root)
+    value = {
+        "schema_version": 1,
+        "type": "legacy-archive-status",
+        "available": lock is not None,
+        "lock": lock,
+    }
+    validate_contract(root, "legacy-archive-status.schema.json", value)
+    return Result(value, json_dumps=_dumps_indented)
