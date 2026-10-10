@@ -522,33 +522,26 @@ def test_star_census_rejects_extra_and_missing():
         _check_star_census(missing)
 
 
-#: Registered operations with no refusal evidence at all: no refusal
-#: unit and no A9-declared site. ``cli.ai-action-list`` only projects
-#: the action registry (``list_actions`` raises nothing), so no
-#: refusal path exists to sweep; the census derives the exclusion
-#: from that evidence and pins the set against drift.
-_NO_REFUSAL_OPS = frozenset({"cli.ai-action-list"})
+#: Registered operations with no refusal unit (SPEC (bu) 6): every
+#: registered operation owns a refusal unit or exactly one table row,
+#: never both.
+NO_REFUSAL_UNIT = {
+    "cli.ai-action-list": ("no refusal raise in the handler closure: list_actions "
+                           "only projects the action registry"),
+    "cli.program-list": "no refusal raise in the handler closure",
+    "cli.status": ("only refusal is cli.status.unreadable-records, unreachable "
+                   "from inputs: parse failures need corrupt canonical records "
+                   "and no status input writes records"),
+}
 
 
-def _check_sweep_census(swept: set[str]) -> None:
-    """Every registered operation with refusal evidence is swept.
-
-    An operation the sweep misses must be a pinned no-refusal
-    operation, and the pin must still hold: no refusal unit and no
-    A9-declared site.
-    """
-    import test_scenarios_zz_refusal_sites as zz
-
-    uncovered = set(REGISTRY) - swept
-    assert uncovered == _NO_REFUSAL_OPS, (
+def _check_sweep_census(swept: set[str], table: dict | None = None) -> None:
+    owned = set(NO_REFUSAL_UNIT if table is None else table)
+    missing = set(REGISTRY) - swept - owned
+    both = swept & owned
+    assert not missing and not both, (
         "A7 sweep census drift: "
-        f"new={sorted(swept - set(REGISTRY))} "
-        f"missing={sorted(set(REGISTRY) - swept)} — {FIX}")
-    declared_ops = {operation for operation, _ in zz._declared_sites()}
-    for operation in sorted(uncovered):
-        assert operation not in declared_ops, (
-            f"A7 {operation} declares refusal sites but sweeps no "
-            f"refusal unit — {FIX}")
+        f"missing={sorted(missing)} both={sorted(both)} — {FIX}")
 
 
 def test_sweep_covers_every_registered_operation():
@@ -578,6 +571,15 @@ def test_control_reconstruct_rejects_non_failure():
         _reconstruct("cli.ai-action-list", "AIActionService", None)
     with pytest.raises(AssertionError, match="not a failure"):
         _reconstruct("cli.ai-action-list", "NoSuchFailure", None)
+
+
+def test_sweep_control_table_row_for_refusing_op_fails():
+    """SPEC (bu) 6 control: a table row for an operation that owns a
+    refusal unit fails the census."""
+    units = {operation for operation, *_ in _all_refusal_units()}
+    assert "cli.dossier" in units
+    with pytest.raises(AssertionError, match="sweep census"):
+        _check_sweep_census(units, {**NO_REFUSAL_UNIT, "cli.dossier": "control"})
 
 
 # --- required controls ----------------------------------------------------------
