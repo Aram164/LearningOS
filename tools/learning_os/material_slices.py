@@ -407,6 +407,20 @@ class ContinuationError(Exception):
         super().__init__(f"route {route_id} continuation refused: {reason}")
 
 
+class UnknownConceptIds(ContinuationError):
+    """A follow-up names concept ids the repo does not know.
+
+    Keeps the original complaint and the unknown ids in request order,
+    plus the known concept domain the check ran against, so the service
+    can type the miss without re-reading the repo."""
+
+    def __init__(self, route_id: str, unknown: list[str],
+                 known: set[str]):
+        super().__init__(route_id, f"unknown concept ids: {unknown}")
+        self.unknown_ids = list(unknown)
+        self.known_ids = set(known)
+
+
 @dataclass(frozen=True)
 class ContinuationRecord:
     """One targeted follow-up pass: the gap, the exact new pages, the result.
@@ -509,7 +523,7 @@ def plan_continuation(
     known = set(getattr(repo, "concepts", {}) or {})
     unknown = [cid for cid in concept_ids if cid not in known]
     if unknown:
-        raise ContinuationError(route_id, f"unknown concept ids: {unknown}")
+        raise UnknownConceptIds(route_id, unknown, known)
     if not reason.strip():
         raise ContinuationError(route_id, "a continuation needs a stated evidence gap")
     if passes_used >= MAX_SLICE_PASSES:

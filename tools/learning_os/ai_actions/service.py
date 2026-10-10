@@ -29,6 +29,7 @@ from learning_os.material_slices import (
     SLICE_BUNDLE_PREFIX,
     ContinuationError,
     SliceResolutionError,
+    UnknownConceptIds,
     build_unit_slices,
     continuation_record_dict,
     plan_continuation,
@@ -59,12 +60,14 @@ from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
     AIActionError,
+    ConceptNotFound,
     ContinuationRefusedError,
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
     DeliveryRevisionConflict,
     DeliveryScopeError,
     DeliveryValidationError,
+    RouteNotFound,
     StaleDeliveryError,
     TargetNotFoundError,
     UnresolvedMaterialError,
@@ -561,16 +564,21 @@ class AIActionService:
             raise TargetNotFoundError(f"Unit target not found: {target_id}")
         source_map = repo.module_source_maps.get(unit.module_id) or {}
         route: dict[str, Any] | None = None
+        route_ids: list[str] = []
         for source_row in source_map.get("sources", []) or []:
             if not isinstance(source_row, dict):
                 continue
             for row in source_row.get("unit_routes", []) or []:
-                if isinstance(row, dict) and row.get("unit_id") == target_id \
-                        and str(row.get("id")) == route_id:
-                    route = {**row, "source_id": source_row.get("source_id")}
+                if isinstance(row, dict) and row.get("unit_id") == target_id:
+                    route_ids.append(str(row.get("id")))
+                    if str(row.get("id")) == route_id:
+                        route = {**row,
+                                 "source_id": source_row.get("source_id")}
         if route is None:
-            raise ActionPolicyError(
-                f"route {route_id} is not part of this request's unit")
+            raise RouteNotFound(
+                "route", route_id, route_ids,
+                message=(f"route {route_id} is not part of this "
+                         "request's unit"))
         bundle_dir = self.repository.request_dir(str(request["id"]))
         index_records = read_bundle_slice_index(bundle_dir)
         prior = [entry for entry in index_records
@@ -591,6 +599,10 @@ class AIActionService:
                 passes_used=len(prior), start=start, end=end, kind=kind,
                 concept_ids=concept_ids, reason=reason, material_uri=material_uri,
             )
+        except UnknownConceptIds as exc:
+            raise ConceptNotFound(
+                "concept", exc.unknown_ids[0], exc.known_ids,
+                message=str(exc)) from exc
         except ContinuationError as exc:
             raise ContinuationRefusedError(str(exc)) from exc
         spent = len(body)

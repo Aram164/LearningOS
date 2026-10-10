@@ -9,10 +9,12 @@ from pathlib import Path
 from learning_os.ai_actions import (
     AIActionError,
     AIActionService,
+    ConceptNotFound,
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
     DeliveryRevisionConflict,
     DeliveryScopeError,
+    RouteNotFound,
     StaleDeliveryError,
 )
 from learning_os.contracts.gateway import current_gateway_request
@@ -200,13 +202,20 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     """Attach one targeted follow-up slice pass to a prepared request."""
     root = ctx.root
     service = AIActionService(root)
-    result = service.append_slices(
-        request_id=req["request_id"], route_id=req["route_id"],
-        start=req["start"], end=req["end"], kind=req["kind"],
-        concept_ids=req.get("concept_id") or [], reason=req["reason"],
-        material_uri=req.get("material_uri"),
-        expected_snapshot=req.get("expected_snapshot"),
-    )
+    try:
+        result = service.append_slices(
+            request_id=req["request_id"], route_id=req["route_id"],
+            start=req["start"], end=req["end"], kind=req["kind"],
+            concept_ids=req.get("concept_id") or [], reason=req["reason"],
+            material_uri=req.get("material_uri"),
+            expected_snapshot=req.get("expected_snapshot"),
+        )
+    except RouteNotFound as exc:
+        exc.site = "cli.ai-action-append-slices.unknown-route"
+        raise
+    except ConceptNotFound as exc:
+        exc.site = "cli.ai-action-append-slices.unknown-concept"
+        raise
     _publish(root)
     return Result({"ok": True, "continuation": result},
                   json_dumps=_dumps_delivery)

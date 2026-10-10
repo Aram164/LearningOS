@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from learning_os.domain.failures import NotFound
+
 
 class AIActionError(Exception):
     """Base class for a refused AI-action operation."""
@@ -59,3 +61,19 @@ class UnresolvedMaterialError(AIActionError):
 
 class ContinuationRefusedError(AIActionError):
     """A follow-up slice was refused; the request keeps its earlier passes."""
+
+
+class RouteNotFound(NotFound, ActionPolicyError):
+    """An append-slices route miss, typed for its A9 site.
+
+    The ``NotFound`` leg carries the unit's route domain as structured
+    suggestions; the ``ActionPolicyError`` leg keeps the legacy
+    ``(INVALID_REQUEST, retryable=False, exit=1)`` outcome."""
+
+
+class ConceptNotFound(NotFound, ContinuationRefusedError):
+    """An append-slices concept miss, typed for its A9 site.
+
+    The ``NotFound`` leg carries the concept domain as structured
+    suggestions; the ``ContinuationRefusedError`` leg keeps the legacy
+    ``(INVALID_REQUEST, retryable=False, exit=1)`` outcome."""
