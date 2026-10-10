@@ -167,7 +167,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.stage.cmd_stage_note",
+    "handler": "learning_os.adapters.cli.invoke:stage.note.write",
     "parser_factory": false
   }
 }

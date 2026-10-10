@@ -9160,7 +9160,7 @@
   "source.intake.record.schema.json": "2f11cae5f3c17683166ce0aff83217f9f03afc2ab64ee512ae5b49b0f4f35a91",
   "source.record.revise.schema.json": "bde5d8386141df410a245852ec66faad1c03ddfedc03073d6794b0518ebaa604",
   "stage.attachment.add.schema.json": "3813cb384524fa10502166ca2b331bd69e63606d9256275bab43f717a40d413d",
-  "stage.note.write.schema.json": "8641379ca2f3a07d435a3b3d1215034bdb8511c5ca558c49ab82147b36c9f51d",
+  "stage.note.write.schema.json": "8e8bbf179b95151dc64fd5ed45b3f4c897b909d2c82cce0e91223fe7e5bf38d0",
   "stage.progress.update.schema.json": "50f7d840666f6c5db501fe23c239bf7ce20d7883e0b9d2888bbb44b954c61c2f",
   "unit.map.import.schema.json": "d8743e8a2957bd72a0016a484b15dea54afdb769d486629a5d7cf0ccbfe7ab60",
   "unit.material-synthesis.publish.schema.json": "9c6fc9358e6b0853772170bd0e814ed1f651e1393898f8479b483fabc6fe61cf",

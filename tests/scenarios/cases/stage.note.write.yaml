@@ -20,19 +20,19 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-nope, text: "nowhere to land"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.note.write.unknown-stage}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, stage_id: stage-demo, text: "nowhere to land"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.note.write.unknown-unit}
   - id: empty-note
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "   "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.note.write.empty-note}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

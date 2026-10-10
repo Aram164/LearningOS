@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 from pathlib import Path
 
 from learning_os import observations
@@ -215,6 +216,58 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
                         ctx.root, module_id=unit.module_id, unit_id=req["unit_id"],
                         study_map_id=study_map.id, stage_id=resume_stage)},
             artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+@register("stage.note.write", kind="command")
+def stage_note(ctx: OpContext, req: dict) -> Result:
+    """Append to (or replace) a stage's working note."""
+    root = ctx.root
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    stage = require_stage(ctx, study_map.data, req["stage_id"])
+    target = root / str(stage.get("working_note", ""))
+    if not stage.get("working_note"):
+        raise WriteRefused(
+            "stage has no working_note",
+            site="stage.note.write.no-working-note",
+            gateway_message="los: stage has no working_note",
+            exit_code=2,
+        )
+    value = req.get("text") if req.get("text") is not None else sys.stdin.read()
+    if not value.strip():
+        # `--replace --text ""` used to truncate an existing note to zero
+        # bytes and report success. Emptying a note is a deliberate edit,
+        # not something a save button should ever do.
+        raise WriteRefused(
+            "refusing to write an empty note — pass real text",
+            site="stage.note.write.empty-note",
+            gateway_message="los: refusing to write an empty note — pass real text",
+            exit_code=2,
+        )
+    old = target.read_text(encoding="utf-8") if target.is_file() else ""
+    if req.get("replace"):
+        updated = value.rstrip() + ("\n" if value.strip() else "")
+    else:
+        divider = "\n" if old and not old.endswith("\n\n") else ""
+        updated = old + divider + value.rstrip() + "\n"
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="stage.note.write.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "stage_id": req["stage_id"], "working_note": stage["working_note"]},
+        proposal=TransactionProposal(
+            capability="stage.note.write",
+            writes={target: updated},
+            artifact_ids=[req["unit_id"]],
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,

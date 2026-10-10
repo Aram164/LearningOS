@@ -26,53 +26,6 @@ from .support import (
 )
 
 
-def cmd_stage_note(args) -> int:
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        _, _, study_map = _unit_map_or_error(root, args.unit_id)
-        if study_map is None:
-            return 2
-        stage = _stage(study_map.data, args.stage_id)
-        if stage is None:
-            print(f"los: {not_found('stage', args.stage_id, _stage_ids(study_map.data))}",
-                  file=sys.stderr)
-            return 2
-        target = root / str(stage.get("working_note", ""))
-        if not stage.get("working_note"):
-            print("los: stage has no working_note", file=sys.stderr)
-            return 2
-        value = args.text if args.text is not None else sys.stdin.read()
-        if not value.strip():
-            # `--replace --text ""` used to truncate an existing note to zero
-            # bytes and report success. Emptying a note is a deliberate edit,
-            # not something a save button should ever do.
-            print("los: refusing to write an empty note — pass real text",
-                  file=sys.stderr)
-            return 2
-        old = target.read_text(encoding="utf-8") if target.is_file() else ""
-        if args.replace:
-            updated = value.rstrip() + ("\n" if value.strip() else "")
-        else:
-            divider = "\n" if old and not old.endswith("\n\n") else ""
-            updated = old + divider + value.rstrip() + "\n"
-        code, errors, confirmation = _write_transaction(
-            root, {target: updated}, capability="stage.note.write",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.unit_id],
-        )
-        if code:
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "stage_id": args.stage_id, "working_note": stage["working_note"],
-                      **confirmation},
-                     ensure_ascii=False))
-    return 0
-
-
 def cmd_stage_attach(args) -> int:
     root = _root(args)
     try:
