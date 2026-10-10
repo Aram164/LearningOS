@@ -233,7 +233,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.module.cmd_module_attempt",
+    "handler": "learning_os.adapters.cli.invoke:module.attempt.record",
     "parser_factory": false
   }
 }

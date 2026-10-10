@@ -14,19 +14,19 @@ cases:
     transport: gateway
     request: {module_id: module-demo, termin: 2, date: "not-a-date", result: sat}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.attempt.record.bad-date}
   - id: grade-out-of-range
     kind: refusal
     transport: gateway
     request: {module_id: module-demo, termin: 2, date: "2026-10-09", result: sat, grade: 9.9}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.attempt.record.grade-out-of-range}
   - id: unknown-module
     kind: refusal
     transport: gateway
     request: {module_id: module-nope, termin: 2, date: "2026-10-09", result: sat}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.attempt.record.unknown-module}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
