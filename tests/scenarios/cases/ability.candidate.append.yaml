@@ -14,30 +14,30 @@ cases:
     transport: gateway
     request: {from_ability: ability-demo-derive, to_ability: ability-demo-derive, kind: connection, carries: "the derivation habit", changes: "the example domain", source_ref: "conversation://fixture/s1"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: ability.candidate.append.bad-endpoints}
   - id: unknown-endpoint
     kind: refusal
     transport: gateway
     request: {from_ability: ability-demo-derive, to_ability: ability-nope, kind: connection, carries: "the derivation habit", changes: "the example domain", source_ref: "conversation://fixture/s1"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: ability.candidate.append.bad-endpoints}
   - id: bad-source-ref
     kind: refusal
     transport: gateway
     request: {from_ability: ability-demo-derive, to_ability: ability-demo-variance, kind: connection, carries: "the derivation habit", changes: "the example domain", source_ref: "bogus-ref"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: ability.candidate.append.bad-source-ref}
   - id: candidate-schema-refused
     kind: refusal
     transport: gateway
     request: {from_ability: ability-demo-derive, to_ability: ability-demo-variance, kind: connection, carries: "", changes: "the example domain", source_ref: "conversation://fixture/s1"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: ability.candidate.append.candidate-schema-refused}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [ability-candidate-append, --from-ability, ability-demo-derive, --to-ability, ability-demo-derive, --kind, connection, --carries, x, --changes, y, --source-ref, conversation://fixture/s1]
-    expect: {site: null}
+    expect: {site: ability.candidate.append.gateway-required}
   - id: exact-replay
     kind: sequence
     steps:

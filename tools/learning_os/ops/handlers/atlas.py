@@ -3,20 +3,36 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC
 
-from learning_os import abilities
+from jsonschema import Draft202012Validator, FormatChecker
+
+from learning_os import abilities, observations
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import suggest
+from learning_os.learning_runtime import runtime_path
 from learning_os.ops._legacy_plumbing import _snapshot
 from learning_os.ops.context import OpContext
-from learning_os.ops.proposal import Result
+from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.transactions import parse_expected_revisions
 
 
 def _dumps_ability_context(payload: dict) -> str:
     """The exact ability-context encoder: compact, unsorted, unescaped."""
     return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+def _dumps_candidate(payload: dict) -> str:
+    """The exact candidate encoder: default separators, escaped."""
+    return json.dumps(payload)
+
+
+def _on_commit_refused(errors: list) -> list[str]:
+    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
+    return list(errors[:12])
 
 
 @register("ability.context", kind="porcelain")
@@ -152,6 +168,97 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **result},
             json_dumps=_dumps_ability_context,
+        )
+    except (OSError, ValueError) as exc:
+        raise WriteRefused(
+            str(exc),
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+@register("ability.candidate.append", kind="command")
+def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
+    """Capture a tentative cross-ability connection; it never grants credit."""
+    root = ctx.root
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "ability candidates require GatewayEnvelopeV2",
+            site=f"{ctx.operation}.gateway-required",
+            gateway_message="los: ability candidates require GatewayEnvelopeV2",
+            exit_code=2,
+        )
+    ctx.require_snapshot(req["expected_snapshot"])
+    repo = ctx.repo()
+    if (req["from_ability"] not in repo.abilities
+            or req["to_ability"] not in repo.abilities
+            or req["from_ability"] == req["to_ability"]
+            or repo.abilities[req["from_ability"]].get("lifecycle") == "retired"
+            or repo.abilities[req["to_ability"]].get("lifecycle") == "retired"):
+        raise WriteRefused(
+            "candidate endpoints must be two active abilities",
+            site=f"{ctx.operation}.bad-endpoints",
+            gateway_message=(
+                "los: candidate endpoints must be two active abilities"
+            ),
+            exit_code=2,
+        )
+    if not req["source_ref"].startswith(
+            ("conversation://", "note://", "project://")):
+        raise WriteRefused(
+            "candidate source-ref must identify the discovery",
+            site=f"{ctx.operation}.bad-source-ref",
+            gateway_message=(
+                "los: candidate source-ref must identify the discovery"
+            ),
+            exit_code=2,
+        )
+    try:
+        abilities.read_ability_candidates(repo)
+        path = runtime_path(root, root / "knowledge/ability-candidates.jsonl")
+        row = {
+            "id": "ability-candidate-" + observations.new_hex(),
+            "from": req["from_ability"], "to": req["to_ability"],
+            "kind": req["kind"], "carries": req["carries"],
+            "changes": req["changes"], "conditions": list(req["condition"]),
+            "source_ref": req["source_ref"],
+            "created_at": observations.now().astimezone(UTC).isoformat(),
+            "state": "candidate",
+        }
+        schema = json.loads(
+            (root / "system/schema/ability-candidate.schema.json").read_text())
+        errors = sorted(Draft202012Validator(
+            schema, format_checker=FormatChecker()).iter_errors(row), key=str)
+        if errors:
+            raise WriteRefused(
+                f"ability candidate: {errors[0].message}",
+                site=f"{ctx.operation}.candidate-schema-refused",
+                gateway_message=f"los: ability candidate: {errors[0].message}",
+                exit_code=2,
+            )
+        old = path.read_text(encoding="utf-8") if path.exists() else ""
+        new = old + ("\n" if old and not old.endswith("\n") else "")
+        new += json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n"
+        try:
+            expected_revisions = parse_expected_revisions(
+                req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(
+                str(exc),
+                site=f"{ctx.operation}.bad-expected-revision",
+                gateway_message=f"los: {exc}",
+                exit_code=2,
+            ) from exc
+        return Result(
+            {"ok": True, "candidate_id": row["id"]},
+            proposal=TransactionProposal(
+                capability="ability.candidate.append",
+                writes={path: new},
+                artifact_ids=["ability-candidates"],
+                expected_revisions=expected_revisions,
+            ),
+            on_commit_refused=_on_commit_refused,
+            json_dumps=_dumps_candidate,
         )
     except (OSError, ValueError) as exc:
         raise WriteRefused(
