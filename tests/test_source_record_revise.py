@@ -73,11 +73,14 @@ def _check(root: Path, package: Path):
 
 
 def _refuses(root: Path, package: Path, fragment: str):
+    # source.record.revise runs through the registered pipeline, which renders
+    # a CLI refusal as the D16 stderr line (route.patch precedent, commit
+    # 8e39e723): the message fragment survives, the stdout JSON shape does not.
     proc = run_los(root, "source-revise", "--file", str(package), "--check")
     assert proc.returncode == 2, proc.stdout
-    body = json.loads(proc.stdout)
-    assert body["ok"] is False
-    assert fragment in body["error"], body["error"]
+    assert proc.stdout == "", proc.stdout
+    assert proc.stderr.startswith("los: INVALID_REQUEST: "), proc.stderr
+    assert fragment in proc.stderr, proc.stderr
 
 
 def _with_material_tree(mini_repo: Path, data: bytes = PDF):
@@ -597,7 +600,7 @@ def test_rebase_refuses_recycled_provenance(mini_repo, tmp_path):
 
 
 def test_rebase_guard_rejects_a_second_moved_basis_field():
-    from learning_os.commands.source_catalog import _rebase_routes_or_refuse
+    from learning_os.ops.handlers.plan import _rebase_routes_or_refuse
 
     live = {"source_map_checksum": "sha256:" + "a" * 64,
             "route_set_checksum": "sha256:" + "b" * 64,
@@ -660,9 +663,9 @@ def test_malformed_evaluations_refuse_cleanly(mini_repo, tmp_path):
     proc = run_los(mini_repo, "source-revise", "--file",
                    str(_package(tmp_path, _revise(evaluations=42))), "--check")
     assert proc.returncode == 2, proc.stdout + proc.stderr
-    body = json.loads(proc.stdout)
-    assert body["ok"] is False
-    assert "evaluations" in body["error"]
+    assert proc.stdout == "", proc.stdout
+    assert proc.stderr.startswith("los: INVALID_REQUEST: "), proc.stderr
+    assert "evaluations" in proc.stderr
     bad_sections = _revise()
     bad_sections["evaluations"] = [{"useful_sections": 42}]
     _refuses(mini_repo, _package(tmp_path, bad_sections), "useful_sections")
@@ -703,10 +706,10 @@ def test_revise_refuses_non_canonical_material_spellings(mini_repo, tmp_path):
                        str(_package(tmp_path, _revise(
                            material=odd, material_sha256=_sha()))), "--check")
         assert proc.returncode == 2, proc.stdout + proc.stderr
-        body = json.loads(proc.stdout)
-        assert body["ok"] is False
-        assert "canonical" in body["error"], body["error"]
-        assert URI in body["error"], body["error"]
+        assert proc.stdout == "", proc.stdout
+        assert proc.stderr.startswith("los: INVALID_REQUEST: "), proc.stderr
+        assert "canonical" in proc.stderr, proc.stderr
+        assert URI in proc.stderr, proc.stderr
 
 
 def test_revise_with_no_changes_is_refused(mini_repo, tmp_path):

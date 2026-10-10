@@ -196,7 +196,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.source_catalog.cmd_source_record_revise",
+    "handler": "learning_os.adapters.cli.invoke:source.record.revise",
     "parser_factory": false
   }
 }

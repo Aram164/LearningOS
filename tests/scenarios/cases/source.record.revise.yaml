@@ -30,61 +30,61 @@ cases:
     transport: gateway
     request: {record: {id: nope}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: unknown-source
     kind: refusal
     transport: gateway
     request: {record: {id: source-nope, evaluations: []}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: material-empty
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, material: " "}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: already-holds
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, material: "material://source-demo-book/other.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: sha-without-material
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: evaluations-nonlist
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, evaluations: "x"}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: useful-sections-nonlist
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, evaluations: [{useful_sections: "x"}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: useful-sections-pseudo
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, evaluations: [{useful_sections: [{locator: "§1", use: "read"}]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: evaluations-contract
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, evaluations: [{}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: no-changes
     kind: refusal
     transport: gateway
     request: {record: {id: source-demo-book, evaluations: [{level: introductory, roles: [first-learning], strengths: ["clear intuition"], concepts: [concept-expected-value]}]}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: syntheses-without-change
     kind: refusal
     transport: gateway
@@ -95,7 +95,7 @@ cases:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
         material_syntheses: []
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: rebases-without-change
     kind: refusal
     transport: gateway
@@ -106,7 +106,7 @@ cases:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
         dossier_rebases: []
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: missing-diff
     kind: refusal
     transport: gateway
@@ -116,7 +116,7 @@ cases:
         evaluations:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.needs-expected-diff}
   - id: diff-changed
     kind: refusal
     transport: gateway
@@ -127,17 +127,17 @@ cases:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
       expected_diff_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.record.revise.diff-changed}
   - id: missing-file
     kind: refusal
     transport: cli
     argv: [source-revise, --file, work/inbox/nope.yaml]
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [source-revise, --record, '{"id": "source-demo-book", "evaluations": [{"level": "introductory", "roles": ["first-learning"], "strengths": ["clear intuition", "scenario coverage"], "concepts": ["concept-expected-value"]}]}']
-    expect: {site: null}
+    expect: {site: source.record.revise.needs-approval}
   - id: direct-cli-approved
     kind: refusal
     transport: cli
@@ -147,12 +147,12 @@ cases:
     kind: refusal
     transport: cli
     argv: [source-revise, --record, '{"id": "source-demo-book", "title": "x"}']
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: outside-allowlist
     kind: refusal
     transport: cli
     argv: [source-revise, --record, '{"id": "source-demo-book", "zzz": 1}']
-    expect: {site: null}
+    expect: {site: source.record.revise.bad-record}
   - id: attach-bad-sha
     kind: sequence
     steps:
