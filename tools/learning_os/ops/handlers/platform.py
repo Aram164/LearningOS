@@ -18,6 +18,7 @@ import yaml
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.ops._legacy_plumbing import (
+    _fresh_manifest,
     _fresh_manifest_and_repo,
     _json_layout,
     _read_structured_file,
@@ -342,6 +343,12 @@ def _dumps_compact(payload: dict) -> str:
     return json.dumps(payload, ensure_ascii=False)
 
 
+def _dumps_rows(payload) -> str:
+    """The exact row-list encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True,
+                      ensure_ascii=False)
+
+
 def _project_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal line: the engine issues as one JSON object."""
     return [json.dumps({"errors": [str(issue) for issue in errors]},
@@ -423,3 +430,14 @@ def project_create(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_project_commit_refused,
         json_dumps=_dumps_compact,
     )
+
+
+@register("cli.project-list", kind="query")
+@register("project.list", kind="query")
+def project_list(ctx: OpContext, req: dict) -> Result:
+    """List first-class projects, optionally filtered by status."""
+    manifest = _fresh_manifest(ctx.root)
+    rows = manifest.get("projects", [])
+    if req.get("status"):
+        rows = [row for row in rows if row.get("status") == req.get("status")]
+    return Result(rows, json_dumps=_dumps_rows)

@@ -11,7 +11,6 @@ from pathlib import Path
 import yaml
 
 from learning_os.ops._legacy_plumbing import (
-    _fresh_manifest,
     _operator_lock,
     _read_structured_file,
 )
@@ -20,7 +19,6 @@ from ..domain.failures import WriteRefused
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _print_rows,
     _root,
     _write_transaction,
 )
@@ -77,14 +75,6 @@ def _project_record(args) -> dict:
         expected_sha256=getattr(args, "file_sha256", None),
         label="project file",
     )
-
-
-def cmd_project_list(args) -> int:
-    manifest = _fresh_manifest(_root(args))
-    rows = manifest.get("projects", [])
-    if getattr(args, "status", None):
-        rows = [row for row in rows if row.get("status") == args.status]
-    return _print_rows(rows)
 
 
 def cmd_project_update(args) -> int:

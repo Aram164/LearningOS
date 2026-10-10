@@ -9099,7 +9099,7 @@
   "cli.plan-edit-context.schema.json": "56fe1776ba9611adf8ce77e7857e1ef25e566b902e225b5b21c96572336f23d6",
   "cli.plan-template.schema.json": "e1b1bc3c45b85a5eeab5d2c11c74291c8113c99358ecf41db2253acdadde1854",
   "cli.program-list.schema.json": "dc5c2fce9a0b29c86a2348b52528e028e51bdef57ae1a240b7832f93d5ac156f",
-  "cli.project-list.schema.json": "03968c29d553a7b8147da938625866c5af7c93fd23212e0e09cfd6428e4d4de9",
+  "cli.project-list.schema.json": "8711bd5ec1ee5dd2029bc566c60b4bedf984384363ac034bbb1d5736d3a56a74",
   "cli.related.schema.json": "8423bdad35969e3d2602d4bfe7865e49b88dd8c70ab2424156dc87ac250b462b",
   "cli.resume.schema.json": "56f1469dab28d5d57e866ecdb232cb98d2333b98b37653d664dbcc4d80a089ff",
   "cli.runtime-session.schema.json": "190b689b04106247d4179741eabb0ef28b4c155d54a64887bd0bf35ab07d81a0",

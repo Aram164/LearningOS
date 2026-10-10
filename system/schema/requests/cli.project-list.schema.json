@@ -56,7 +56,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.project.cmd_project_list",
+    "handler": "learning_os.adapters.cli.invoke:cli.project-list",
     "parser_factory": false
   }
 }
