@@ -18,6 +18,7 @@ from __future__ import annotations
 import ast
 import json
 import os
+import sys
 from functools import lru_cache
 from pathlib import Path
 
@@ -131,23 +132,98 @@ def _assert_shares_entry_point_handler(operation: str,
         f"entry-point operation — {FIX}")
 
 
+def _resolve_failure(stem: str, name: object):
+    """A failure class named in one handler file, else None (disposition 5).
+
+    ``domain.failures`` first, then the already imported handler
+    module's globals (registration imported it). The resolved object
+    must be a class subclassing ``WriteRefused``: an imported
+    non-failure, a non-class global, or an unknown name resolves to
+    None and declares no site.
+    """
+    from learning_os.domain import failures
+
+    if not isinstance(name, str):
+        return None
+    cls = getattr(failures, name, None)
+    if isinstance(cls, type) and issubclass(cls, failures.WriteRefused):
+        return cls
+    module = sys.modules.get(f"learning_os.ops.handlers.{stem}")
+    cls = getattr(module, name, None) if module is not None else None
+    if isinstance(cls, type) and issubclass(cls, failures.WriteRefused):
+        return cls
+    return None
+
+
+def _except_handler_sites(node: ast.ExceptHandler, *, stem: str,
+                          serving: set[str], entered: list[str],
+                          rel: str) -> list[tuple[str, str, int]]:
+    """``[(operation, site, lineno)]`` from one ``except`` site assignment.
+
+    The caught name must resolve to a failure (domain or the
+    handler's own globals); anything else assigns no site. A literal
+    site names its served operation as written, exactly like a
+    literal ``site=`` on a raise; a template resolves over the
+    entered operations. Both need the bare re-raise (disposition 5).
+    """
+    if not (isinstance(node.type, ast.Name)
+            and _resolve_failure(stem, node.type.id) is not None):
+        return []
+    found: list[tuple[str, str, int]] = []
+    for stmt in ast.walk(node):
+        if not isinstance(stmt, ast.Assign):
+            continue
+        for target in stmt.targets:
+            if not (isinstance(target, ast.Attribute)
+                    and target.attr == "site"
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == node.name):
+                continue
+            if isinstance(stmt.value, ast.Constant):
+                site = stmt.value.value
+                assert isinstance(site, str) and any(
+                    site == op or site.startswith(op + ".")
+                    for op in serving), (
+                    f"A9 {rel}:{stmt.lineno}: site {site!r} names no"
+                    f" served operation — {FIX}")
+                assert any(isinstance(sub, ast.Raise)
+                           and sub.exc is None
+                           for sub in ast.walk(node)), (
+                    f"A9 {rel}:{stmt.lineno}: the assigned site"
+                    f" needs its bare re-raise — {FIX}")
+                operation = next(
+                    op for op in serving
+                    if site == op or site.startswith(op + "."))
+                found.append((operation, site, stmt.lineno))
+                continue
+            slugs = _operation_templates(stmt.value)
+            assert slugs, (
+                f"A9 {rel}:{stmt.lineno}: unresolvable site"
+                f" form — {FIX}")
+            assert any(isinstance(sub, ast.Raise)
+                       and sub.exc is None
+                       for sub in ast.walk(node)), (
+                f"A9 {rel}:{stmt.lineno}: the assigned site"
+                f" needs its bare re-raise — {FIX}")
+            for operation in entered:
+                for slug in slugs:
+                    found.append((operation, f"{operation}.{slug}",
+                                  stmt.lineno))
+    return found
+
+
 def _declared_sites() -> dict[tuple[str, str], str]:
     """``(operation, site)`` -> ``"rel:line"`` for every declared site.
 
     A literal ``site="..."`` or an operation template on a failure
     raise, the capture ``exc.site`` assignment beside its bare
-    re-raise, or an operation template assigned to a ``site``
-    variable passed as ``site=``. Templates resolve over the raising
-    module's serving operations that have a runtime entry point
-    (item 9.1); literals name their operation as written.
+    re-raise (literal or template), or an operation template assigned
+    to a ``site`` variable passed as ``site=``. Failure names resolve
+    in ``domain.failures`` or the handler module's own globals
+    (disposition 5). Templates resolve over the raising module's
+    serving operations that have a runtime entry point (item 9.1);
+    literals name their operation as written.
     """
-    from learning_os.domain import failures
-
-    def is_failure(name: object) -> bool:
-        cls = getattr(failures, name, None) if isinstance(name, str) else None
-        return (isinstance(cls, type)
-                and issubclass(cls, failures.WriteRefused))
-
     serving = _serving_ops()
     entry_points = set(_entry_point_ops())
     declared: dict[tuple[str, str], str] = {}
@@ -166,7 +242,8 @@ def _declared_sites() -> dict[tuple[str, str], str]:
             if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
                 call = node.exc
                 if not (isinstance(call.func, ast.Name)
-                        and is_failure(call.func.id)):
+                        and _resolve_failure(path.stem, call.func.id)
+                        is not None):
                     continue
                 site_kw = next((kw for kw in call.keywords
                                 if kw.arg == "site"), None)
@@ -191,30 +268,12 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                     for slug in slugs:
                         record(operation, f"{operation}.{slug}", rel,
                                node.lineno)
-            if isinstance(node, ast.ExceptHandler) and isinstance(
-                    node.type, ast.Name) and is_failure(node.type.id):
-                for stmt in ast.walk(node):
-                    if not isinstance(stmt, ast.Assign):
-                        continue
-                    for target in stmt.targets:
-                        if not (isinstance(target, ast.Attribute)
-                                and target.attr == "site"
-                                and isinstance(target.value, ast.Name)
-                                and target.value.id == node.name):
-                            continue
-                        slugs = _operation_templates(stmt.value)
-                        assert slugs, (
-                            f"A9 {rel}:{stmt.lineno}: unresolvable site"
-                            f" form — {FIX}")
-                        assert any(isinstance(sub, ast.Raise)
-                                   and sub.exc is None
-                                   for sub in ast.walk(node)), (
-                            f"A9 {rel}:{stmt.lineno}: the assigned site"
-                            f" needs its bare re-raise — {FIX}")
-                        for operation in entered:
-                            for slug in slugs:
-                                record(operation, f"{operation}.{slug}", rel,
-                                       stmt.lineno)
+            if isinstance(node, ast.ExceptHandler):
+                for operation, site, lineno in _except_handler_sites(
+                        node, stem=path.stem,
+                        serving=serving[path.name], entered=entered,
+                        rel=rel):
+                    record(operation, site, rel, lineno)
         for node in ast.walk(tree):
             if not isinstance(node, ast.FunctionDef):
                 continue
@@ -797,6 +856,104 @@ def test_control_untriggered_entry_with_failed_proof_fails():
                         "a9-control:1", set(), {},
                         entries={"a9-control.proof-failed": entry},
                         proofs={"a9-control.proof-failed": False})
+
+
+def test_control_imported_subtype_sites_are_declared():
+    """The two typed append-slices misses resolve via handler globals (D5)."""
+    from learning_os.domain import failures
+
+    assert getattr(failures, "RouteNotFound", None) is None
+    assert getattr(failures, "ConceptNotFound", None) is None
+    declared = _declared_sites()
+    assert ("cli.ai-action-append-slices",
+            "cli.ai-action-append-slices.unknown-route") in declared
+    assert ("cli.ai-action-append-slices",
+            "cli.ai-action-append-slices.unknown-concept") in declared
+
+
+def test_control_resolve_failure_accepts_only_write_refused():
+    """Domain or imported failure classes resolve; nothing else does (D5)."""
+    from learning_os.ai_actions.errors import (
+        ConceptNotFound,
+        RouteNotFound,
+    )
+    from learning_os.domain.failures import WriteRefused
+
+    assert _resolve_failure("ai", "RouteNotFound") is RouteNotFound
+    assert _resolve_failure("ai", "ConceptNotFound") is ConceptNotFound
+    assert _resolve_failure("ai", "WriteRefused") is WriteRefused
+    assert _resolve_failure("ai", "AIActionError") is None
+    assert _resolve_failure("ai", "_TYPED") is None
+    assert _resolve_failure("ai", "NoSuchName") is None
+    assert _resolve_failure("ai", None) is None
+
+
+def _a9_control_handler(source: str) -> ast.ExceptHandler:
+    """The one ``except`` arm of a control snippet."""
+    tree = ast.parse(source)
+    handlers = tree.body[0].handlers
+    assert len(handlers) == 1
+    return handlers[0]
+
+
+_A9_CONTROL_SERVING = {"cli.ai-action-append-slices"}
+_A9_CONTROL_ENTERED = ["cli.ai-action-append-slices"]
+
+
+def test_control_literal_assigned_site_is_recorded():
+    """A literal ``exc.site`` in a typed catch names its operation (D5)."""
+    node = _a9_control_handler(
+        "try:\n"
+        "    pass\n"
+        "except RouteNotFound as exc:\n"
+        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n'
+        "    raise\n")
+    assert _except_handler_sites(
+        node, stem="ai", serving=_A9_CONTROL_SERVING,
+        entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
+        ("cli.ai-action-append-slices",
+         "cli.ai-action-append-slices.unknown-route", 4)]
+
+
+def test_control_literal_assigned_site_needs_its_reraise():
+    """A literal assignment without the bare re-raise fails (D5)."""
+    node = _a9_control_handler(
+        "try:\n"
+        "    pass\n"
+        "except RouteNotFound as exc:\n"
+        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n')
+    with pytest.raises(AssertionError, match="bare re-raise"):
+        _except_handler_sites(
+            node, stem="ai", serving=_A9_CONTROL_SERVING,
+            entered=_A9_CONTROL_ENTERED, rel="a9-control")
+
+
+def test_control_non_failure_catch_assigns_no_site():
+    """A site assignment under a non-failure catch is not a site (D5)."""
+    node = _a9_control_handler(
+        "try:\n"
+        "    pass\n"
+        "except ValueError as exc:\n"
+        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n'
+        "    raise\n")
+    assert _except_handler_sites(
+        node, stem="ai", serving=_A9_CONTROL_SERVING,
+        entered=_A9_CONTROL_ENTERED, rel="a9-control") == []
+
+
+def test_control_template_assigned_site_still_resolves():
+    """The template path survives the literal support unchanged (D5)."""
+    node = _a9_control_handler(
+        "try:\n"
+        "    pass\n"
+        "except RouteNotFound as exc:\n"
+        '    exc.site = f"{operation}.unknown-route"\n'
+        "    raise\n")
+    assert _except_handler_sites(
+        node, stem="ai", serving=_A9_CONTROL_SERVING,
+        entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
+        ("cli.ai-action-append-slices",
+         "cli.ai-action-append-slices.unknown-route", 4)]
 
 
 def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
