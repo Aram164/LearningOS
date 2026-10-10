@@ -9069,7 +9069,7 @@
   "backup.manifest.schema.json": "f9f2772c3c75888faad52835a7fd47cb1245926eac52889cf6efa24415063795",
   "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
   "cli.ai-action-append-slices.schema.json": "40ae58b0b9d4f66dc0805a67cac93617a88202d272b6f041a3712c162e84d494",
-  "cli.ai-action-import-delivery.schema.json": "023e18a0013f449b45bdfd9e7aab4ad34973ded2908e6012f9100b1e0b8e8016",
+  "cli.ai-action-import-delivery.schema.json": "3037295a94841fd0c323e56d4eb6510c4b92940209db0369b061bcd83d67ed6a",
   "cli.ai-action-list.schema.json": "e03060bb980d3538daf1e1c93685b5e0abd61655e8a2e28fe3be71164bfda4fc",
   "cli.ai-action-prepare.schema.json": "62ad71d5d20a600e74f20e1b31f5ad01149233012ad2209e9bbc60710056c810",
   "cli.ai-action-status.schema.json": "d12081c73f820eb45bfd4b56319a43c04056acbf9ab718f74581c0bb53e1b3ac",
