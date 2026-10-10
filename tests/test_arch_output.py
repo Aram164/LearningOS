@@ -175,17 +175,60 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
     return _LIVE[key]
 
 
-def _reconstruct(class_name: str, exit_code: int | None) -> BaseException:
+def _resolve_reconstruct_class(operation: str, class_name: str):
+    """The witnessed class, resolved from where it is defined.
+
+    The (bl) 5 way, extended: ``domain.failures`` first, then the
+    already imported handler module's globals (registration imported
+    it), then the one ``learning_os`` module that defines the name
+    (verified through ``__module__``). Every candidate must be an
+    exception class; a non-failure, an unknown name, or an ambiguous
+    one resolves to None.
+    """
+    import sys
+
+    from learning_os.domain import failures
+
+    def failure(obj):
+        if isinstance(obj, type) and issubclass(obj, Exception):
+            return obj
+        return None
+
+    cls = failure(getattr(failures, class_name, None))
+    if cls is not None:
+        return cls
+    handler = REGISTRY[operation].handler
+    module = sys.modules[handler.__module__]
+    cls = failure(module.__dict__.get(class_name))
+    if cls is not None:
+        return cls
+    defining = []
+    for module_name in sorted(sys.modules):
+        if module_name != "learning_os" \
+                and not module_name.startswith("learning_os."):
+            continue
+        obj = failure(getattr(sys.modules[module_name], class_name,
+                              None))
+        if obj is not None and obj.__module__ == module_name:
+            defining.append(obj)
+    if len(defining) == 1:
+        return defining[0]
+    return None
+
+
+def _reconstruct(operation: str, class_name: str,
+                 exit_code: int | None) -> BaseException:
     """The witnessed failure with its witnessed ``exit_code`` (probed values)."""
     from learning_os.domain import failures
 
-    cls = getattr(failures, class_name)
-    assert isinstance(cls, type) and issubclass(cls, failures.WriteRefused), (
-        f"A7 {class_name}: not a failure — {FIX}")
+    cls = _resolve_reconstruct_class(operation, class_name)
+    assert cls is not None, f"A7 {class_name}: not a failure — {FIX}"
     try:
-        if cls is failures.NotFound:
+        if issubclass(cls, failures.NotFound):
             return cls("a7-kind", "a7-value", [], exit_code=exit_code)
-        return cls("a7-probe", exit_code=exit_code)
+        if issubclass(cls, failures.WriteRefused):
+            return cls("a7-probe", exit_code=exit_code)
+        return cls("a7-probe")
     except TypeError as exc:
         raise AssertionError(
             f"A7 {class_name}: cannot reconstruct the raise — {FIX}"
@@ -259,7 +302,7 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
         f"A7 {label}: {len(lines)} witness lines for one refusal unit — {FIX}")
     line = lines[0]
     if line.get("kind") == "failure":
-        exc = _reconstruct(line["class"], line["exit_code"])
+        exc = _reconstruct(operation, line["class"], line["exit_code"])
         want = exit_for(exc, _CONTEXT[transport])
         assert want is not None, (
             f"A7 {label}: no outcomes row for {line['class']} in "
@@ -479,11 +522,33 @@ def test_star_census_rejects_extra_and_missing():
         _check_star_census(missing)
 
 
+#: Registered operations with no refusal evidence at all: no refusal
+#: unit and no A9-declared site. ``cli.ai-action-list`` only projects
+#: the action registry (``list_actions`` raises nothing), so no
+#: refusal path exists to sweep; the census derives the exclusion
+#: from that evidence and pins the set against drift.
+_NO_REFUSAL_OPS = frozenset({"cli.ai-action-list"})
+
+
 def _check_sweep_census(swept: set[str]) -> None:
-    assert swept == set(REGISTRY), (
+    """Every registered operation with refusal evidence is swept.
+
+    An operation the sweep misses must be a pinned no-refusal
+    operation, and the pin must still hold: no refusal unit and no
+    A9-declared site.
+    """
+    import test_scenarios_zz_refusal_sites as zz
+
+    uncovered = set(REGISTRY) - swept
+    assert uncovered == _NO_REFUSAL_OPS, (
         "A7 sweep census drift: "
         f"new={sorted(swept - set(REGISTRY))} "
         f"missing={sorted(set(REGISTRY) - swept)} — {FIX}")
+    declared_ops = {operation for operation, _ in zz._declared_sites()}
+    for operation in sorted(uncovered):
+        assert operation not in declared_ops, (
+            f"A7 {operation} declares refusal sites but sweeps no "
+            f"refusal unit — {FIX}")
 
 
 def test_sweep_covers_every_registered_operation():
@@ -494,6 +559,25 @@ def test_sweep_covers_every_registered_operation():
 def test_sweep_control_missing_registered_op_fails():
     with pytest.raises(AssertionError, match="sweep census"):
         _check_sweep_census(set(REGISTRY) - {"route.patch"})
+
+
+def test_control_reconstruct_resolves_from_where_defined():
+    """An ai_actions error reconstructs to its defining module's class."""
+    from learning_os.ai_actions.errors import TargetNotFoundError
+    from learning_os.ops.outcomes import exit_for
+
+    exc = _reconstruct("cli.ai-action-status", "TargetNotFoundError",
+                       None)
+    assert type(exc) is TargetNotFoundError
+    assert exit_for(exc, "cli") == 1
+
+
+def test_control_reconstruct_rejects_non_failure():
+    """A non-failure global and an unknown name reconstruct to nothing."""
+    with pytest.raises(AssertionError, match="not a failure"):
+        _reconstruct("cli.ai-action-list", "AIActionService", None)
+    with pytest.raises(AssertionError, match="not a failure"):
+        _reconstruct("cli.ai-action-list", "NoSuchFailure", None)
 
 
 # --- required controls ----------------------------------------------------------
