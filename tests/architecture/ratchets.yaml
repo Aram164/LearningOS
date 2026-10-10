@@ -411,14 +411,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_capabilities::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_capabilities::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::cmd_generate::_operator_lock
     count: 1
     since: baseline
@@ -1450,10 +1442,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.capabilities::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.capability::*
     count: 1
     since: baseline
@@ -1543,10 +1531,6 @@ checks:
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
-  - signature: cli.capabilities::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.capability::*
     count: 1
     since: baseline

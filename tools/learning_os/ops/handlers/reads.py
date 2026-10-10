@@ -7,6 +7,7 @@ import json
 from pathlib import Path, PurePosixPath
 
 from learning_os import __version__
+from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.domain.failures import (
     NotFound,
     StaleSnapshot,
@@ -25,7 +26,6 @@ from learning_os.materials_resolution import (
 )
 from learning_os.ops._legacy_plumbing import (
     SESSION_ID_ENV,
-    _capabilities,
     _fresh_manifest,
     _inbox_search_rows,
     _json_layout,
@@ -37,7 +37,7 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
-from learning_os.pathing import PathBoundaryError
+from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.semantics.dossiers import (
     DossierError,
     build_dossier,
@@ -47,7 +47,13 @@ from learning_os.semantics.dossiers import (
     store_dossier,
 )
 from learning_os.semantics.goals import RankedCluster, goal_to_dict
-from learning_os.semantics.predicates import CONTRACT_VERSION, PREDICATES, evaluate
+from learning_os.semantics.predicates import (
+    CONTRACT_VERSION as SEMANTIC_CONTRACT_VERSION,
+)
+from learning_os.semantics.predicates import (
+    PREDICATES,
+    evaluate,
+)
 from learning_os.semantics.recipes import RecipeError, recipes_for
 from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
 from learning_os.validation_cache import observe_pins, status_issues
@@ -192,7 +198,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
                 routes=routes,
                 evidence=_evidence(repo, source_ids),
                 contract_versions={
-                    "semantic-contract": str(CONTRACT_VERSION),
+                    "semantic-contract": str(SEMANTIC_CONTRACT_VERSION),
                     "operator-contract": OPERATOR_CONTRACT_VERSION,
                 },
             )
@@ -1012,3 +1018,121 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
         "hidden_count": hidden,
     }
     return Result(payload, json_dumps=_dumps_intelligence_scan, human_view=view)
+
+
+# The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
+# announces about the gateway itself. This is a third, independent version:
+#   operator/gateway contract  here (CONTRACT_VERSION below)
+#   canonical record format    system/contracts/data-contract.yaml
+#   published manifest shape   system/contracts/manifest-contract.yaml
+# Three contracts sharing the name "contract_version" is how the manifest came
+# to be published under an old version after its shape had already changed
+# (2026-08-08). Stored and projected versions must always be read from their
+# producer-owned declarations, never copied into this comment.
+CONTRACT_VERSION = 2
+
+
+def _capabilities(root: Path) -> dict:
+    """Return the executable capability catalogue, not a duplicated list."""
+    catalogue = load_capability_catalog(root)
+    return {
+        "contract_version": CONTRACT_VERSION,
+        "capability_contract_version": catalogue["contract_version"],
+        "cli_protocol": catalogue.get("cli_protocol", 3),
+        "gateway": "tools/los.py",
+        "projection": "generated/manifest.json",
+        "operator_contract": "system/OPERATOR.md",
+        "queries": catalogue.get("queries", {}),
+        "commands": catalogue.get("commands", {}),
+        "rules": {
+            "canonical_writes_are_transactional": True,
+            "successful_writes_have_receipts": True,
+            "artifact_revision_conflicts_fail_closed": True,
+            "shelving_requires_explicit_approval": True,
+            "ordinary_interfaces_read_projection_only": True,
+            "module_plan_preflight_required": True,
+            "ai_actions_are_provider_independent": True,
+            "bounded_ai_actions_use_exact_context": True,
+        },
+        "root": str(root),
+    }
+
+
+def _dumps_capabilities_compact(payload) -> str:
+    """The exact name/compact encoder: compact, unsorted, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+def _dumps_capabilities(payload) -> str:
+    """The exact capabilities encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+def _human_capabilities(payload, view) -> str:
+    """The exact capabilities screen (SPEC (bu) 1).
+
+    The name/compact branches print JSON even without ``--json``; the
+    human renderer replays those exact bytes, selected by the view's
+    branch. The default branch renders the five-line screen.
+    """
+    if view["branch"] in ("name", "compact"):
+        return _dumps_capabilities_compact(payload)
+    return "\n".join(
+        [f"LearningOS operator contract v{payload['contract_version']}",
+         f"  gateway: {payload['gateway']}",
+         f"  projection: {payload['projection']}",
+         "  transactional commands: " + ", ".join(sorted(payload["commands"])),
+         "  every successful canonical write has one receipt"])
+
+
+@register("cli.capabilities", kind="tool", human=_human_capabilities)
+def capabilities(ctx: OpContext, req: dict) -> Result:
+    """Serve the machine discovery/read catalogue, in full or in part."""
+    root = ctx.root
+    payload = _capabilities(root)
+    name = req.get("name")
+    compact = req.get("compact")
+    if name and compact:
+        raise WriteRefused(
+            "choose --compact or one capability name",
+            site=f"{ctx.operation}.compact-and-name",
+            gateway_message="los: choose --compact or one capability name",
+            exit_code=2,
+        )
+    if name:
+        section = next((key for key in ("queries", "commands") if name in payload[key]), None)
+        if section is None:
+            raise WriteRefused(
+                f"unknown or non-public capability: {name}",
+                site=f"{ctx.operation}.unknown-capability",
+                gateway_message=f"los: unknown or non-public capability: {name}",
+                exit_code=2,
+            )
+        definition = payload[section][name]
+        for key in ("queries", "commands"):
+            payload[key] = {name: definition} if key == section else {}
+        if section == "commands":
+            relative = f"system/schema/capabilities/{name}.schema.json"
+            try:
+                schema = json.loads(read_text_inside(root, root / relative))
+                if not isinstance(schema, dict):
+                    raise ValueError("payload schema must be an object")
+            except (OSError, PathBoundaryError, ValueError) as exc:
+                raise WriteRefused(
+                    f"cannot read declared payload schema: {exc}",
+                    site=f"{ctx.operation}.unreadable-payload-schema",
+                    gateway_message=f"los: cannot read declared payload schema: {exc}",
+                    exit_code=2,
+                ) from exc
+            payload["payload_schema_path"] = relative
+            payload["payload_schema"] = schema
+        return Result(payload, json_dumps=_dumps_capabilities_compact,
+                      human_view={"branch": "name"})
+    if compact:
+        for key in ("queries", "commands"):
+            payload[key] = sorted(payload[key])
+        payload["detail"] = "capabilities NAME --json"
+        return Result(payload, json_dumps=_dumps_capabilities_compact,
+                      human_view={"branch": "compact"})
+    return Result(payload, json_dumps=_dumps_capabilities,
+                  human_view={"branch": "screen"})

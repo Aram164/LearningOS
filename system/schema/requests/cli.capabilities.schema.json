@@ -75,7 +75,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.query.cmd_capabilities",
+    "handler": "learning_os.adapters.cli.invoke:cli.capabilities",
     "parser_factory": false
   }
 }

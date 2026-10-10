@@ -10,7 +10,6 @@ from pathlib import Path
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.ops._legacy_plumbing import (
-    _capabilities,
     _discovery_row,
     _fresh_manifest,
     _inbox_search_rows,
@@ -19,7 +18,6 @@ from learning_os.ops._legacy_plumbing import (
     _publish,
     _snapshot,
 )
-from learning_os.pathing import PathBoundaryError, read_text_inside
 
 from .reads import (
     _print_stable,
@@ -35,52 +33,6 @@ from .support import (
     _delegate,
     _root,
 )
-
-
-# ---------------------------------------------------- machine discovery/read
-def cmd_capabilities(args) -> int:
-    root = _root(args)
-    payload = _capabilities(root)
-    name = getattr(args, "name", None)
-    compact = getattr(args, "compact", False)
-    if name and compact:
-        print("los: choose --compact or one capability name", file=sys.stderr)
-        return 2
-    if name:
-        section = next((key for key in ("queries", "commands") if name in payload[key]), None)
-        if section is None:
-            print(f"los: unknown or non-public capability: {name}", file=sys.stderr)
-            return 2
-        definition = payload[section][name]
-        for key in ("queries", "commands"):
-            payload[key] = {name: definition} if key == section else {}
-        if section == "commands":
-            relative = f"system/schema/capabilities/{name}.schema.json"
-            try:
-                schema = json.loads(read_text_inside(root, root / relative))
-                if not isinstance(schema, dict):
-                    raise ValueError("payload schema must be an object")
-            except (OSError, PathBoundaryError, ValueError) as exc:
-                print(f"los: cannot read declared payload schema: {exc}", file=sys.stderr)
-                return 2
-            payload["payload_schema_path"] = relative
-            payload["payload_schema"] = schema
-    elif compact:
-        for key in ("queries", "commands"):
-            payload[key] = sorted(payload[key])
-        payload["detail"] = "capabilities NAME --json"
-    if compact or name:
-        print(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
-        return 0
-    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-          if args.json else "\n".join(
-              [f"LearningOS operator contract v{payload['contract_version']}",
-               f"  gateway: {payload['gateway']}",
-               f"  projection: {payload['projection']}",
-               "  transactional commands: " + ", ".join(sorted(payload["commands"])),
-               "  every successful canonical write has one receipt"]))
-    return 0
-
 
 #: Every record family ``search --type`` accepts: the manifest's
 #: record types plus the two virtual discovery rows (garden seeds and

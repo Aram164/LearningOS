@@ -32,11 +32,11 @@ cases:
     kind: refusal
     transport: cli
     argv: [capabilities, --compact, stage.progress.update]
-    expect: {site: null}
+    expect: {site: cli.capabilities.compact-and-name}
   - id: unknown-name
     kind: refusal
     transport: cli
     argv: [capabilities, nope-capability]
-    expect: {site: null}
+    expect: {site: cli.capabilities.unknown-capability}
 untriggered:
   - {where: "tools/learning_os/commands/query.py:236", reason: "unreadable declared payload schema: all 47 catalog commands carry one, and no step can remove it"}

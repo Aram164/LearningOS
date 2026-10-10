@@ -29,7 +29,6 @@ import jsonschema
 import yaml
 
 from learning_os import observations
-from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.contracts.gateway import (
     current_gateway_request,
     intent_sha256,
@@ -1426,50 +1425,6 @@ def _evidence_label(tally):
 # Value-based window core (SPEC (bl) item 3): the exact validations and
 # messages of commands/reads.py:_window, taking request values directly so
 # converted handlers pass no namespace.
-
-
-# ---------------------------------------------------------------------------
-# Machine discovery/read, moved verbatim from commands/query.py (SPEC (bo)
-# item 2): the bootstrap conversion needs _capabilities while
-# cmd_capabilities is still legacy, so it rests here until that unit
-# converts and carries it into ops/handlers/reads.py.
-
-# The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
-# announces about the gateway itself. This is a third, independent version:
-#   operator/gateway contract  here (CONTRACT_VERSION below)
-#   canonical record format    system/contracts/data-contract.yaml
-#   published manifest shape   system/contracts/manifest-contract.yaml
-# Three contracts sharing the name "contract_version" is how the manifest came
-# to be published under an old version after its shape had already changed
-# (2026-08-08). Stored and projected versions must always be read from their
-# producer-owned declarations, never copied into this comment.
-CONTRACT_VERSION = 2
-
-
-def _capabilities(root: Path) -> dict:
-    """Return the executable capability catalogue, not a duplicated list."""
-    catalogue = load_capability_catalog(root)
-    return {
-        "contract_version": CONTRACT_VERSION,
-        "capability_contract_version": catalogue["contract_version"],
-        "cli_protocol": catalogue.get("cli_protocol", 3),
-        "gateway": "tools/los.py",
-        "projection": "generated/manifest.json",
-        "operator_contract": "system/OPERATOR.md",
-        "queries": catalogue.get("queries", {}),
-        "commands": catalogue.get("commands", {}),
-        "rules": {
-            "canonical_writes_are_transactional": True,
-            "successful_writes_have_receipts": True,
-            "artifact_revision_conflicts_fail_closed": True,
-            "shelving_requires_explicit_approval": True,
-            "ordinary_interfaces_read_projection_only": True,
-            "module_plan_preflight_required": True,
-            "ai_actions_are_provider_independent": True,
-            "bounded_ai_actions_use_exact_context": True,
-        },
-        "root": str(root),
-    }
 
 
 # ---------------------------------------------------------------------------

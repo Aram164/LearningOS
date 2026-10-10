@@ -9078,7 +9078,7 @@
   "cli.backup-manifest.schema.json": "e0e4271f0d0085e5cb7a9f8e3dc802bbc4a0fe19ba26fc28e6b17d7bb8168d18",
   "cli.backup-verify.schema.json": "42ae63599bd86f9a90a8acc92596d34e6c39c9452d4c7e5da588424b79444ed3",
   "cli.bootstrap.schema.json": "30ebf459e0ac2b18199b94184c0a926a22fa12eb387993234fe75fe4ee902e55",
-  "cli.capabilities.schema.json": "3d8d103df64ff4c01fea8ab89c12ee22602da9cb25d5e15ea305964367acd1bd",
+  "cli.capabilities.schema.json": "e2c44cb43329bb123b94aeb62cac85bf04274f09e90fab91ab1b0fe9659748a6",
   "cli.capability.schema.json": "10d2504875ad3ba3a96e1b5fd4b25def15fab6c480dc4e250cfbad846b7b43c6",
   "cli.dossier.schema.json": "ce0294297592216392916d07f954c48dadb7b657200d0a82d462da8e741029c5",
   "cli.generate.schema.json": "0c240bbdf20a214ccd13af70fc9b242d6035cb989ab82ff6846d0ad2e419f5cc",
