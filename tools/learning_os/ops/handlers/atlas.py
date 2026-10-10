@@ -6,6 +6,7 @@ import copy
 import json
 from datetime import UTC
 
+import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os import abilities, observations
@@ -20,6 +21,8 @@ from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import suggest
 from learning_os.learning_runtime import runtime_path
 from learning_os.ops._legacy_plumbing import (
+    RELATION_ARTIFACT,
+    _registries,
     _render_frontmatter,
     _safe,
     _schema,
@@ -394,6 +397,87 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
             capability="atlas.question.save",
             writes={path: _render_frontmatter(meta, body)},
             artifact_ids=[note_id],
+            expected_revisions=expected_revisions,
+        ),
+        after_commit="STANDARD",
+        json_dumps=_dumps_atlas,
+    )
+
+
+@register("concept.relations.change", kind="command")
+def concept_relations_change(ctx: OpContext, req: dict) -> Result:
+    """Apply only explicitly authored relation operations."""
+    root = ctx.root
+    changes = req["change"]
+    if not isinstance(changes, dict) or set(changes) != {"operations"}:
+        raise WriteRefused(
+            "change must contain only operations",
+            site=f"{ctx.operation}.change-not-operations",
+        )
+    operations = changes["operations"]
+    if not isinstance(operations, list) or not 1 <= len(operations) <= 50:
+        raise WriteRefused(
+            "supply between 1 and 50 explicit operations",
+            site=f"{ctx.operation}.empty-operations",
+        )
+    ctx.require_snapshot(req["expected_snapshot"])
+    registries = _registries(root)
+    changed = set()
+    for operation in operations:
+        if not isinstance(operation, dict):
+            raise WriteRefused(
+                "operation must be an object",
+                site=f"{ctx.operation}.operation-not-object",
+            )
+        kind = operation.get("action")
+        required = {"add": {"action", "new"}, "replace": {"action", "old", "new"},
+                    "remove": {"action", "old"}}.get(kind)
+        if required is None or set(operation) != required:
+            raise WriteRefused(
+                "expected exact add, replace, or remove operation",
+                site=f"{ctx.operation}.inexact-operation",
+            )
+        for key in ("old", "new"):
+            if key in operation:
+                try:
+                    _schema(root, "concept-relations", {"relations": [operation[key]]})
+                except WriteRefused as exc:
+                    exc.site = f"{ctx.operation}.bad-relation-row"
+                    raise
+        if "old" in operation:
+            matches = [(path, i) for path, data in registries.items()
+                       for i, row in enumerate(data["relations"]) if row == operation["old"]]
+            if len(matches) != 1:
+                raise WriteRefused(
+                    "the exact previous relation no longer exists uniquely; reload and review",
+                    site=f"{ctx.operation}.old-not-found",
+                )
+            path, index = matches[0]
+            if kind == "remove":
+                registries[path]["relations"].pop(index)
+            else:
+                registries[path]["relations"][index] = copy.deepcopy(operation["new"])
+        else:
+            single = root / "knowledge/concept-relations.yaml"
+            path = single if single in registries else root / "knowledge/concept-relations/atlas.yaml"
+            _safe(root, path)
+            registries.setdefault(path, {"relations": []})["relations"].append(copy.deepcopy(operation["new"]))
+        changed.add(path)
+    writes = {path: yaml.safe_dump(registries[path], sort_keys=False, allow_unicode=True)
+              for path in changed}
+    # Existing validator rejects duplicates, unknown endpoints/sources and prerequisite cycles.
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "operation_count": len(operations)},
+        proposal=TransactionProposal(
+            capability="concept.relations.change",
+            writes=writes,
+            artifact_ids=[RELATION_ARTIFACT],
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",

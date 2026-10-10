@@ -44,6 +44,7 @@ from learning_os.genout import (
 )
 from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
+from learning_os.loading.yamlio import UniqueKeySafeLoader
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
 from learning_os.ops.outcomes import classify, resolve
 from learning_os.transactions import artifact_revision, reconcile_inflight_transactions
@@ -1141,3 +1142,25 @@ def _schema(root: Path, name: str, data: object) -> None:
         jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
     except jsonschema.ValidationError as exc:
         raise WriteRefused(f"{name}: {exc.message}") from exc
+
+
+# ---------------------------------------------------------------------------
+# Atlas relation registries, moved verbatim from commands.atlas for the
+# concept.relations.change conversion (SPEC (bo) 2).
+
+RELATION_ARTIFACT = "registry-concept-relations"
+
+
+def _registries(root: Path) -> dict[Path, dict]:
+    single = _safe(root, root / "knowledge/concept-relations.yaml")
+    folder = _safe(root, root / "knowledge/concept-relations")
+    paths = ([single] if single.exists() else []) + (
+        sorted(folder.glob("*.yaml")) if folder.exists() else [])
+    if single.exists() and len(paths) > 1:
+        raise WriteRefused("both consolidated and partitioned relations exist")
+    records = {}
+    for path in paths:
+        data = yaml.load(_safe(root, path).read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader)
+        _schema(root, "concept-relations", data)
+        records[path] = data
+    return records

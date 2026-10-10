@@ -259,14 +259,6 @@ checks:
     count: 3
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::_commit::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::_commit::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::_operator_lock
     count: 1
     since: baseline
@@ -285,14 +277,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::return
     count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::return
-    count: 1
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/capability.py::cmd_capability::print
@@ -1970,10 +1954,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: concept.relations.change::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: health.report::*
     count: 1
     since: baseline
@@ -2232,10 +2212,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: collection.entry.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: concept.relations.change::*
     count: 1
     since: baseline
     approved_by: null
