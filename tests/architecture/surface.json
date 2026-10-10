@@ -9162,7 +9162,7 @@
   "stage.attachment.add.schema.json": "28246abedd3841ddc70899cc1742e698f95a5318a9cbbf39245f4b218eec3419",
   "stage.note.write.schema.json": "83f18cb5fb35af4a4674021a33f343d013b0252f00deaad8874415ae9beeb0fc",
   "stage.progress.update.schema.json": "50f7d840666f6c5db501fe23c239bf7ce20d7883e0b9d2888bbb44b954c61c2f",
-  "unit.map.import.schema.json": "d8743e8a2957bd72a0016a484b15dea54afdb769d486629a5d7cf0ccbfe7ab60",
+  "unit.map.import.schema.json": "2371667057befbcc4ff6fcbafab9e285265278c611bb2892dcc4458e6be3de0d",
   "unit.material-synthesis.publish.schema.json": "9c6fc9358e6b0853772170bd0e814ed1f651e1393898f8479b483fabc6fe61cf",
   "unit.note.append.schema.json": "2af772166fcb0b33744c84b4e24cbb5890115dcfa89a7f0c10f868d54034fc52",
   "unit.plan.revise.schema.json": "f9e2c22bb7b9e0e3cedb3bc7e552c8cec14b773178138dff2a5b22071f2fb08a",

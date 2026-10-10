@@ -278,7 +278,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.unit.cmd_unit_map_import",
+    "handler": "learning_os.adapters.cli.invoke:unit.map.import",
     "parser_factory": false
   }
 }
