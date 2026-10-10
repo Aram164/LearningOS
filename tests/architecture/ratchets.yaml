@@ -483,14 +483,6 @@ checks:
     count: 5
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/operations.py::cmd_operations::print
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/operations.py::cmd_operations::return
-    count: 3
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/plan.py::cmd_plan_template::print
     count: 5
     since: baseline
@@ -760,42 +752,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::return
     count: 1
     since: baseline
     approved_by: null
@@ -1734,10 +1690,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.operations::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.plan-edit-context::*
     count: 1
     since: baseline
@@ -1790,19 +1742,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: legacy.archive.lock.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: lineage.restamp::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.catalog.update::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.comparison.publish::*
     count: 1
     since: baseline
     approved_by: null
@@ -1870,6 +1810,14 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: cli.operations::/properties/request_id::review
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
   - signature: cli.bootstrap::*
     count: 1
@@ -1908,10 +1856,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.observe::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.operations::*
     count: 1
     since: baseline
     approved_by: null
@@ -1967,19 +1911,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: legacy.archive.lock.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: lineage.restamp::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.catalog.update::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.comparison.publish::*
     count: 1
     since: baseline
     approved_by: null
