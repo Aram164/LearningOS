@@ -56,7 +56,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.ai.cmd_ai_action_status",
+    "handler": "learning_os.adapters.cli.invoke:cli.ai-action-status",
     "parser_factory": false
   }
 }

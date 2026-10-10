@@ -65,9 +65,3 @@ def cmd_ai_action_validate_delivery(args) -> int:
     result = AIActionService(_root(args)).validate_delivery(args.delivery_id)
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0
-
-
-def cmd_ai_action_status(args) -> int:
-    request = AIActionService(_root(args)).request_status(args.request_id)
-    print(json.dumps({"ok": True, "request": request}, indent=2, ensure_ascii=False))
-    return 0
