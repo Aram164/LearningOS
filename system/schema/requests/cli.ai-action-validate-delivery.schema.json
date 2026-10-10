@@ -56,7 +56,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.ai.cmd_ai_action_validate_delivery",
+    "handler": "learning_os.adapters.cli.invoke:cli.ai-action-validate-delivery",
     "parser_factory": false
   }
 }

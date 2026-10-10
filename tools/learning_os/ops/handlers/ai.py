@@ -1,4 +1,4 @@
-"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status``, ``cli.ai-action-prepare``, ``cli.ai-action-append-slices`` (SPEC §12)."""
+"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status``, ``cli.ai-action-prepare``, ``cli.ai-action-append-slices``, ``cli.ai-action-validate-delivery`` (SPEC §12)."""
 
 from __future__ import annotations
 
@@ -209,3 +209,10 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     _publish(root)
     return Result({"ok": True, "continuation": result},
                   json_dumps=_dumps_delivery)
+
+
+@register("cli.ai-action-validate-delivery", kind="tool")
+def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
+    """Validate one imported delivery without applying it."""
+    result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
+    return Result(result, json_dumps=_dumps_delivery)

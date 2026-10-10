@@ -9073,7 +9073,7 @@
   "cli.ai-action-list.schema.json": "e03060bb980d3538daf1e1c93685b5e0abd61655e8a2e28fe3be71164bfda4fc",
   "cli.ai-action-prepare.schema.json": "62ad71d5d20a600e74f20e1b31f5ad01149233012ad2209e9bbc60710056c810",
   "cli.ai-action-status.schema.json": "d12081c73f820eb45bfd4b56319a43c04056acbf9ab718f74581c0bb53e1b3ac",
-  "cli.ai-action-validate-delivery.schema.json": "c80a94a2150f428ae50339996312c23f38c25294a5935f9c7d4d841e1a9d41c0",
+  "cli.ai-action-validate-delivery.schema.json": "f192c7364ccb0411d580a8c5468102bb1b5c249beba1b64ece091d6fcedbf70e",
   "cli.atlas-context.schema.json": "b898a5dac8911987af2f50ccde0a72e4ab8bc06d12b50bfb2f85cae65eaf9015",
   "cli.backup-manifest.schema.json": "7ba7fd42744ee3894e4ea029cad8218d5e9ff540805bf97f0642bcea75f5c033",
   "cli.backup-verify.schema.json": "59f35cfb0f4ad3db3ff9ca842c7e45bbad26de26ced6f9b85554b62a57ce5d83",

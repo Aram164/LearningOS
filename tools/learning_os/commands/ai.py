@@ -27,9 +27,3 @@ def cmd_ai_action_import_delivery(args) -> int:
         _publish(root)
     print(json.dumps({"ok": True, "delivery": delivery}, indent=2, ensure_ascii=False))
     return 0
-
-
-def cmd_ai_action_validate_delivery(args) -> int:
-    result = AIActionService(_root(args)).validate_delivery(args.delivery_id)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0
