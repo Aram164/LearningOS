@@ -627,18 +627,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::return
-    count: 2
-    since: baseline
-    approved_by: null
   A4-plumbing-2: []
   A8-transcripts:
   - signature: system/WORKFLOWS.md::## 1. Start a workspace
@@ -1630,10 +1618,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: unit.material-synthesis.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: unit.plan.revise::*
     count: 1
     since: baseline
@@ -1752,10 +1736,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: runtime.session::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.material-synthesis.publish::*
     count: 1
     since: baseline
     approved_by: null

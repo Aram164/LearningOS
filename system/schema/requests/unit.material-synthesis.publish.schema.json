@@ -195,7 +195,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_unit_material_synthesis_publish",
+    "handler": "learning_os.adapters.cli.invoke:unit.material-synthesis.publish",
     "parser_factory": false
   }
 }

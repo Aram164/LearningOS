@@ -59,7 +59,9 @@ from learning_os.material_synthesis import (
     MaterialSynthesisError,
     current_unit_material_basis,
     material_synthesis_freshness,
+    publication_lineage,
     publication_lineage_record,
+    synthesis_destination,
     validate_unit_material_synthesis,
 )
 from learning_os.materials_resolution import (
@@ -3734,4 +3736,67 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         finish=finish_unit_map_import,
         on_commit_refused=_on_commit_refused_unit_map_import,
         json_dumps=_dumps_default,
+    )
+
+
+@register("unit.material-synthesis.publish", kind="command")
+def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
+    """Publish one reviewed unit dossier, with lineage, atomically."""
+    root = ctx.root
+    # Unwrapped, exactly as legacy: admission and dossier validation
+    # propagate with both refusal fields None ((ac) pre-existing raise).
+    value = _input_record(req, "unit material synthesis")
+    validate_unit_material_synthesis(root, req["unit_id"], value)
+    basis = current_unit_material_basis(root, req["unit_id"])
+    if req.get("check") is True:
+        return Result(
+            {"ok": True, "check": True, "unit_id": req["unit_id"],
+             "basis": basis},
+            json_dumps=_dumps_indented,
+        )
+    if not req.get("approve"):
+        message = "unit material synthesis publication requires explicit approval"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.needs-approval",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    _require_gateway_v2()
+    # Re-read every canonical basis guard inside the serialized write
+    # window. The earlier validation gives fast feedback; this one is the
+    # authority for the commit.
+    validate_unit_material_synthesis(root, req["unit_id"], value)
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    destination = synthesis_destination(root, req["unit_id"])
+    content = _dump_yaml(value)
+    request = current_gateway_request()
+    lineage = publication_lineage(root, req["unit_id"], value, content, request)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+
+    def finish_unit_material_synthesis_publish(confirmation):
+        return {"ok": True, **confirmation}
+
+    def refused_stdout_unit_material_synthesis_publish(errors):
+        return _dumps_indented({
+            "ok": False,
+            **({"errors": [str(error) for error in errors]} if errors else {}),
+        })
+
+    return Result(
+        {"ok": True},
+        proposal=TransactionProposal(
+            capability="unit.material-synthesis.publish",
+            writes={destination: content, root / LEDGER_RELATIVE: lineage},
+            artifact_ids=(req["unit_id"], value["id"]),
+            expected_revisions=expected_revisions,
+        ),
+        finish=finish_unit_material_synthesis_publish,
+        refused_stdout=refused_stdout_unit_material_synthesis_publish,
+        json_dumps=_dumps_indented,
     )

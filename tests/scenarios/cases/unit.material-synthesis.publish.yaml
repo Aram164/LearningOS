@@ -208,7 +208,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [unit-material-synthesis-publish, unit-demo-l01, --file, "<CASEDATA>/dossier.yaml"]
-    expect: {site: null}
+    expect: {site: unit.material-synthesis.publish.needs-approval}
   - id: direct-cli-approved
     kind: refusal
     transport: cli
