@@ -12,15 +12,22 @@ from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 from learning_os import material_slices
 from learning_os.ai_actions import (
     ActionPolicyError,
+    AIActionError,
     AIActionService,
+    ConceptNotFound,
     ContinuationRefusedError,
+    RouteNotFound,
     UnresolvedMaterialError,
 )
+from learning_os.domain.codes import INVALID_REQUEST
+from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.loader import load_repo
 from learning_os.material_slices import (
     MAX_SLICE_PAGES,
     MAX_SLICE_PASSES,
+    ContinuationError,
     SliceResolutionError,
+    UnknownConceptIds,
     build_unit_slices,
     continuation_record_dict,
     parse_locator_page_ranges,
@@ -972,3 +979,232 @@ def test_compare_bundle_holds_each_route_body_once(mini_repo):
     instructions = (bundle / "instructions.md").read_text(encoding="utf-8")
     assert "context.md" in instructions
     assert "unit_route_ids" in instructions
+
+
+# --- typed append-slices lookup misses (Task-32 D4) ------------------------------
+
+def test_unknown_route_miss_is_a_typed_policy_refusal(mini_repo):
+    """RouteNotFound keeps the exact complaint in the policy family."""
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(RouteNotFound) as caught:
+        _append(app, route_id="route-demo-ghost")
+    exc = caught.value
+    assert isinstance(exc, ActionPolicyError)
+    assert isinstance(exc, AIActionError)
+    assert isinstance(exc, NotFound)
+    assert isinstance(exc, WriteRefused)
+    assert type(exc) is RouteNotFound
+    assert str(exc) == "route route-demo-ghost is not part of this request's unit"
+    assert "(did you mean" not in str(exc)
+    assert exc.reason == "NOT_FOUND"
+    assert exc.site is None
+
+
+def test_unknown_route_suggests_the_units_own_routes(mini_repo):
+    """The route domain is exactly the request unit's source-map routes."""
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(RouteNotFound) as caught:
+        _append(app, route_id="route-demo-lon")
+    assert caught.value.suggestions == ["route-demo-long"]
+
+
+def test_unknown_concept_miss_is_a_typed_continuation_refusal(mini_repo):
+    """ConceptNotFound keeps the exact complaint in the continuation family."""
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(ConceptNotFound) as caught:
+        _append(app, concept_ids=["concept-nope"])
+    exc = caught.value
+    assert isinstance(exc, ContinuationRefusedError)
+    assert isinstance(exc, AIActionError)
+    assert isinstance(exc, NotFound)
+    assert isinstance(exc, WriteRefused)
+    assert type(exc) is ConceptNotFound
+    assert str(exc) == ("route route-demo-long continuation refused: "
+                        "unknown concept ids: ['concept-nope']")
+    assert "(did you mean" not in str(exc)
+    assert exc.reason == "NOT_FOUND"
+    assert exc.site is None
+    assert exc.suggestions == ["concept-variance"]
+
+
+def test_unknown_concept_keeps_order_and_first_value_domain(mini_repo):
+    """Unknown ids stay ordered; suggestions use the first miss."""
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(ConceptNotFound) as caught:
+        _append(app, concept_ids=["concept-expected-valu", "concept-nope"])
+    exc = caught.value
+    assert str(exc) == ("route route-demo-long continuation refused: "
+                        "unknown concept ids: "
+                        "['concept-expected-valu', 'concept-nope']")
+    assert exc.suggestions == ["concept-expected-value"]
+    with pytest.raises(ConceptNotFound) as second:
+        _append(app, concept_ids=["concept-varianc"])
+    assert second.value.suggestions == ["concept-variance"]
+
+
+def test_unknown_concept_ids_keeps_complaint_order_and_domain():
+    """The lower miss keeps the complaint, the order and the domain."""
+    exc = UnknownConceptIds("route-x", ["b", "a"], {"a", "c"})
+    assert isinstance(exc, ContinuationError)
+    assert type(exc) is UnknownConceptIds
+    assert str(exc) == ("route route-x continuation refused: "
+                        "unknown concept ids: ['b', 'a']")
+    assert exc.unknown_ids == ["b", "a"]
+    assert exc.known_ids == {"a", "c"}
+
+
+def test_typed_misses_keep_invalid_request_and_exit_one(mini_repo):
+    """Both typed misses classify exactly like their legacy legs."""
+    from learning_os.ops.outcomes import classify, resolve
+    from learning_os.ops.pipeline import _cli_error_code
+
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(RouteNotFound) as route_caught:
+        _append(app, route_id="route-demo-ghost")
+    with pytest.raises(ConceptNotFound) as concept_caught:
+        _append(app, concept_ids=["concept-nope"])
+    for exc in (route_caught.value, concept_caught.value):
+        row = classify(exc, "cli")
+        assert row is not None
+        assert resolve(row, exc)["exit"] == 1
+        gateway = classify(exc, "gateway.refusal")
+        assert gateway is not None
+        resolved = resolve(gateway, exc)
+        assert resolved["code"] == INVALID_REQUEST
+        assert resolved["retryable"] is False
+    assert _cli_error_code(route_caught.value) == (INVALID_REQUEST, False)
+    assert _cli_error_code(concept_caught.value) == (INVALID_REQUEST, False)
+    assert _cli_error_code(route_caught.value) == _cli_error_code(
+        ActionPolicyError("legacy"))
+    assert _cli_error_code(concept_caught.value) == _cli_error_code(
+        ContinuationRefusedError("legacy"))
+
+
+def test_typed_miss_cli_carries_only_d16_adjuncts(mini_repo):
+    """Refusal streams keep the complaint; only D16 lines are added."""
+    _prepared_long_route(mini_repo, request_id="ai-request-typed")
+    bundle = _bundle(mini_repo, "ai-request-typed")
+    index_path = bundle / "attachments/slices/index.json"
+    index_before = index_path.read_text(encoding="utf-8")
+    base = ["--request-id", "ai-request-typed", "--start", "21", "--end",
+            "30", "--kind", "example", "--reason",
+            "worked examples follow the definition section"]
+    route_proc = run_los(
+        mini_repo, "ai-action-append-slices", *base,
+        "--route-id", "route-demo-ghost",
+        "--concept-id", "concept-expected-value")
+    assert route_proc.returncode == 1
+    assert route_proc.stdout == ""
+    assert route_proc.stderr.splitlines() == [
+        "los: INVALID_REQUEST: "
+        "route route-demo-ghost is not part of this request's unit",
+        "  did you mean: route-demo-long",
+    ]
+    concept_proc = run_los(
+        mini_repo, "ai-action-append-slices", *base,
+        "--route-id", "route-demo-long", "--concept-id", "concept-nope")
+    assert concept_proc.returncode == 1
+    assert concept_proc.stdout == ""
+    assert concept_proc.stderr.splitlines() == [
+        "los: INVALID_REQUEST: route route-demo-long continuation refused: "
+        "unknown concept ids: ['concept-nope']",
+        "  did you mean: concept-variance",
+    ]
+    assert index_path.read_text(encoding="utf-8") == index_before
+    assert not (bundle / "attachments/slices/continuations").exists()
+    request = AIActionService(mini_repo).repository.get_request(
+        "ai-request-typed")
+    assert request["status"] == "prepared"
+
+
+def test_non_lookup_refusals_stay_untyped_and_siteless(mini_repo):
+    """Policy/continuation negatives keep their exact legacy type."""
+    app, _ = _prepared_long_route(mini_repo)
+    request = app.repository.get_request(LONG_REQUEST)
+    request["status"] = "delivery-ready"
+    app.repository.update_request(request)
+    with pytest.raises(ActionPolicyError) as policy_caught:
+        _append(app)
+    assert type(policy_caught.value) is ActionPolicyError
+    assert not hasattr(policy_caught.value, "site")
+    assert not hasattr(policy_caught.value, "suggestions")
+    app, _ = _prepared_long_route(mini_repo, request_id="ai-request-neg2")
+    with pytest.raises(ContinuationRefusedError) as gap_caught:
+        app.append_slices(
+            request_id="ai-request-neg2", route_id="route-demo-long",
+            start=21, end=30, kind="example",
+            concept_ids=["concept-expected-value"], reason="   ")
+    assert type(gap_caught.value) is ContinuationRefusedError
+    assert not hasattr(gap_caught.value, "site")
+    assert not hasattr(gap_caught.value, "suggestions")
+
+
+def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
+                                                  monkeypatch):
+    """The handler assigns its literal sites to typed misses alone."""
+    import arch_audit_hook
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    import learning_os.ops.handlers  # noqa: F401  (registration side effect)
+    import los
+    from learning_os.ops import pipeline as pipeline_module
+
+    _prepared_long_route(mini_repo, request_id="ai-request-sites")
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        def attempt(*argv):
+            args = los.build_parser().parse_args(
+                ["ai-action-append-slices", *argv])
+            return pipeline_module.run_cli(
+                mini_repo, "cli.ai-action-append-slices", args)
+
+        base = ["--request-id", "ai-request-sites", "--start", "21",
+                "--end", "30", "--kind", "example"]
+        route_out = attempt(
+            *base, "--route-id", "route-demo-ghost",
+            "--concept-id", "concept-expected-value",
+            "--reason", "worked examples follow the definition section")
+        assert route_out.exit_code == 1
+        concept_out = attempt(
+            *base, "--route-id", "route-demo-long",
+            "--concept-id", "concept-nope",
+            "--reason", "worked examples follow the definition section")
+        assert concept_out.exit_code == 1
+        gap_out = attempt(
+            *base, "--route-id", "route-demo-long",
+            "--concept-id", "concept-expected-value", "--reason", "   ")
+        assert gap_out.exit_code == 1
+        request = AIActionService(mini_repo).repository.get_request(
+            "ai-request-sites")
+        request["status"] = "delivery-ready"
+        AIActionService(mini_repo).repository.update_request(request)
+        policy_out = attempt(
+            *base, "--route-id", "route-demo-long",
+            "--concept-id", "concept-expected-value",
+            "--reason", "worked examples follow the definition section")
+        assert policy_out.exit_code == 1
+    finally:
+        arch_audit_hook.uninstall()
+    assert route_out.stderr.splitlines()[0] == (
+        "los: INVALID_REQUEST: "
+        "route route-demo-ghost is not part of this request's unit")
+    lines = [json.loads(line)
+             for line in witness.read_text(encoding="utf-8").splitlines()
+             if line.strip()]
+    assert lines == [
+        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+         "site": "cli.ai-action-append-slices.unknown-route",
+         "class": "RouteNotFound", "exit_code": None},
+        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+         "site": "cli.ai-action-append-slices.unknown-concept",
+         "class": "ConceptNotFound", "exit_code": None},
+        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+         "site": None, "class": "ContinuationRefusedError",
+         "exit_code": None},
+        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+         "site": None, "class": "ActionPolicyError", "exit_code": None},
+    ]
