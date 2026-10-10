@@ -42,6 +42,7 @@ from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _read_content_bound_file,
     _record_gateway_refusal,
+    _render_frontmatter,
     _take_gateway_refusal,
 )
 from learning_os.ops._plan_gate import (
@@ -74,7 +75,6 @@ from .support import (
     _expected_ok,
     _expected_revisions_from_args,
     _print_rows,
-    _render_frontmatter,
     _replace_registry_list_record,
     _root,
     _write_transaction,

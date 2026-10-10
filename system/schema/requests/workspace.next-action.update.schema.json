@@ -125,7 +125,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.workspace.cmd_workspace_next_action",
+    "handler": "learning_os.adapters.cli.invoke:workspace.next-action.update",
     "parser_factory": false
   }
 }

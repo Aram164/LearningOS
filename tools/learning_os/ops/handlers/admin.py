@@ -10,7 +10,7 @@ import re
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.ops._legacy_plumbing import _dump_yaml
+from learning_os.ops._legacy_plumbing import _dump_yaml, _render_frontmatter
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -42,6 +42,11 @@ def _refused_first_twelve(errors: list) -> list[str]:
 def _refused_all(errors: list) -> list[str]:
     """The exact commit-refusal lines: every engine issue, verbatim."""
     return list(errors)
+
+
+def _refused_next_action(errors: list) -> list[str]:
+    """The exact commit-refusal lines: the rejection header plus the first twelve engine issues, verbatim."""
+    return ["los: next-action update rejected by validation", *errors[:12]]
 
 
 @register("module.attempt.record", kind="command")
@@ -339,5 +344,68 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_all,
+        json_dumps=_dumps_admin,
+    )
+
+
+@register("workspace.next-action.update", kind="command")
+def workspace_next_action(ctx: OpContext, req: dict) -> Result:
+    """Replace one active workspace's Next Action section."""
+    root = ctx.root
+    text = req["next_action"]
+    if not isinstance(text, str) or not text.strip():
+        raise WriteRefused(
+            "--next-action must not be blank",
+            site="workspace.next-action.update.blank-action",
+            gateway_message="los: --next-action must not be blank",
+            exit_code=2,
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    workspace = repo.workspaces.get(req["workspace_id"])
+    if workspace is None:
+        message = f"workspace not found: {req['workspace_id']}"
+        raise NotFound(
+            "workspace", req["workspace_id"], repo.workspaces,
+            message=message,
+            site="workspace.next-action.update.unknown-workspace",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    if workspace.archived or workspace.status != "active":
+        message = f"workspace is not active: {req['workspace_id']}"
+        raise WriteRefused(
+            message,
+            site="workspace.next-action.update.workspace-not-active",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    try:
+        body = _replace_h2_section(workspace.body, "Next Action", text)
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="workspace.next-action.update.no-next-action",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    try:
+        expected_revisions = parse_expected_revisions(
+            req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="workspace.next-action.update.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "workspace_id": req["workspace_id"],
+         "path": workspace.path.relative_to(root).as_posix()},
+        proposal=TransactionProposal(
+            capability="workspace.next-action.update",
+            writes={workspace.path: _render_frontmatter(workspace.meta, body)},
+            artifact_ids=[req["workspace_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_refused_next_action,
         json_dumps=_dumps_admin,
     )

@@ -9167,7 +9167,7 @@
   "unit.note.append.schema.json": "2af772166fcb0b33744c84b4e24cbb5890115dcfa89a7f0c10f868d54034fc52",
   "unit.plan.revise.schema.json": "f9e2c22bb7b9e0e3cedb3bc7e552c8cec14b773178138dff2a5b22071f2fb08a",
   "unit.source-selection.set.schema.json": "8f7b570768812eccb25f689ae94affeb15bfbd3eda738da19fba4a14841fefff",
-  "workspace.next-action.update.schema.json": "4115ba96af8e7adc75568b45674beb19af0618d833b700795a8d13c62e869d80"
+  "workspace.next-action.update.schema.json": "fbfb488874ce62c09cbc605dc975c88f20cdbead2f67cd790676f01e9d3d26ef"
  },
  "tools": {
   "seal_envelope.py": [

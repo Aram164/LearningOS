@@ -14,13 +14,13 @@ cases:
     transport: gateway
     request: {workspace_id: workspace-demo, next_action: " "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: workspace.next-action.update.blank-action}
   - id: unknown-workspace
     kind: refusal
     transport: gateway
     request: {workspace_id: workspace-nope, next_action: "Work the appendix example."}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: workspace.next-action.update.unknown-workspace}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

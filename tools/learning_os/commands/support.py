@@ -338,10 +338,6 @@ def _unit_map_or_error(root: Path, unit_id: str):
     return repo, unit, study_map
 
 
-def _render_frontmatter(meta: dict, body: str) -> str:
-    return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
-
-
 def _replace_registry_list_record(content: str, record_id: str, record: dict) -> str:
     """Render one record in a top-level YAML list without reformatting siblings."""
     lines = content.splitlines(keepends=True)

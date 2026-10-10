@@ -24,11 +24,11 @@ from ..domain.suggest import with_suggestions
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
+from ..ops._legacy_plumbing import _render_frontmatter
 from ..revisions import artifact_revision
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _render_frontmatter,
     _root,
     _write_transaction,
 )
