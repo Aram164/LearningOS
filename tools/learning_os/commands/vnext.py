@@ -7,7 +7,6 @@ from pathlib import Path
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
-from learning_os.health import build_health_report
 from learning_os.legacy_archive import (
     inspect_legacy_archive,
     legacy_archive_lock_destination,
@@ -221,11 +220,3 @@ def cmd_masters_planning_comparison_publish(args) -> int:
         **({"errors": [str(error) for error in errors]} if errors else {}),
     }, indent=2, ensure_ascii=False))
     return code
-
-
-def cmd_health_report(args) -> int:
-    report = build_health_report(_root(args))
-    print(json.dumps(report, indent=2, ensure_ascii=False))
-    # Attention is report data, not a transport failure: the UI must be able to
-    # render the remedies even when one check is red.
-    return 0

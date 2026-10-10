@@ -9083,7 +9083,7 @@
   "cli.dossier.schema.json": "a61cab55a496d8935a89f0bbc739ef8a2ff844a0ffab2040a1c1bfdd63f41036",
   "cli.generate.schema.json": "0c240bbdf20a214ccd13af70fc9b242d6035cb989ab82ff6846d0ad2e419f5cc",
   "cli.goal.schema.json": "ec303abb0a84fdc82c8a8ee69f184bd4164e3c77c88fd00799992e974f78f279",
-  "cli.health-report.schema.json": "a480af321bb8778f2af84890d3dc3394a3c22fb5fde9b286ee36bfa180e85f75",
+  "cli.health-report.schema.json": "ed1e004eb9c3bddb0a7e6b17efb3578864c5d28b6c73f110fa58ca1c0005aaac",
   "cli.inbox-list.schema.json": "aaf9fa1fc08957a3af9468744bda896ce8e17fd6cebdac59a39595fd50160c99",
   "cli.inbox-read.schema.json": "bac2f46af70c11d053b908ff46fe29fcedf64e321b9d19ad0888ce07db1f098b",
   "cli.inspect.schema.json": "62d0ff3dc198441be871e749a530e0ba6a2dfdd6bfc79115c0c5bb03ad965c4f",

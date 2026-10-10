@@ -24,6 +24,7 @@ from learning_os.backup_manifest import (
 )
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
+from learning_os.health import build_health_report
 from learning_os.ops._legacy_plumbing import (
     _atomic_text,
     _fresh_manifest,
@@ -561,3 +562,12 @@ def backup_verify(ctx: OpContext, req: dict) -> Result:
     )
     return Result(result, diagnostic_failed=not result["ok"],
                   json_dumps=_dumps_indented)
+
+
+@register("cli.health-report", kind="tool")
+@register("health.report", kind="query")
+def health_report(ctx: OpContext, req: dict) -> Result:
+    """Build the repository health report."""
+    # Attention is report data, not a transport failure: the UI must be able to
+    # render the remedies even when one check is red.
+    return Result(build_health_report(ctx.root), json_dumps=_dumps_indented)

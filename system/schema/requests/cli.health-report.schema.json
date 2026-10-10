@@ -35,7 +35,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_health_report",
+    "handler": "learning_os.adapters.cli.invoke:cli.health-report",
     "parser_factory": false
   }
 }
