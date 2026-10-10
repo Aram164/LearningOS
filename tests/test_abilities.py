@@ -229,9 +229,9 @@ def test_reason_codes_cover_transfer_and_nearby(ability_root: Path):
 def test_ability_context_refuses_malformed_producer_codes(
         ability_root: Path, monkeypatch, capsys, malformation: str, focus: str | None):
     import los
-    from learning_os.commands import abilities as command
+    from learning_os import abilities as producer
 
-    produce = command.ability_context
+    produce = producer.ability_context
 
     def malformed(*args, **kwargs):
         payload = produce(*args, **kwargs)
@@ -246,10 +246,10 @@ def test_ability_context_refuses_malformed_producer_codes(
             row["reason_codes"] = []
         return payload
 
-    monkeypatch.setattr(command, "ability_context", malformed)
+    monkeypatch.setattr(producer, "ability_context", malformed)
     args = los.build_parser().parse_args(
         ["--root", str(ability_root), "ability-context", *([focus] if focus else [])])
-    assert command.cmd_ability_context(args) == 2
+    assert args.func(args) == 2
     output = capsys.readouterr()
     assert output.out == ""
     assert "reason_codes" in output.err
