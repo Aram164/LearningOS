@@ -9111,7 +9111,7 @@
   "cli.validate.schema.json": "40a61d1158907fa8ca5a07365c286fae46614bd6fbabb00621ae35f885b168d0",
   "collection.entry.revise.schema.json": "9ccf1a2ad0791d0ef51802074e1046990d0289033307720afeebcd1a5463a132",
   "concept.relations.change.schema.json": "9deba6225f07b0affc42ee7f47c4a7915c3278cb66bec29f60bdeed0a194cd99",
-  "coordination.section.revise.schema.json": "4141c074522c1aaadc77666f608938ddb68ee32d073af66994124d6465dd0654",
+  "coordination.section.revise.schema.json": "63f75a19c184c5e61cb4554f2252612bc438247bff45752d694734407e0d46c4",
   "detour.create.schema.json": "ec048f6b22268fe62202f33bfe2cfdedd40f87b6941a9da23c595a630ecc8138",
   "detour.resolve.schema.json": "b542ecf3965f7231ee01e8c2d1810a8aaaa5265c70fc99291d9865b192210fd5",
   "garden.seed.create.schema.json": "d894a934b36ec7e9548734dc22a31f5a352d690a4c80ba4feebdefc857d82053",

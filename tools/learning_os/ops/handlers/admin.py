@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import copy
 import datetime as _dt
+import hashlib
 import json
+import re
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
@@ -12,9 +14,19 @@ from learning_os.ops._legacy_plumbing import _dump_yaml
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.pathing import PathBoundaryError, read_bytes_inside
+from learning_os.render import parse_sections
+from learning_os.render import replace_h2_section as _replace_h2_section
+from learning_os.revisions import artifact_revision
 from learning_os.transactions import parse_expected_revisions
 
 ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
+
+
+#: A digest-shaped value that was never a real file hash: all zeros.
+_PLACEHOLDER_DIGEST = "sha256:" + "0" * 64
+
+_DIGEST_RE = re.compile(r"sha256:[a-f0-9]{64}")
 
 
 def _dumps_admin(payload: dict) -> str:
@@ -25,6 +37,11 @@ def _dumps_admin(payload: dict) -> str:
 def _refused_first_twelve(errors: list) -> list[str]:
     """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
     return list(errors[:12])
+
+
+def _refused_all(errors: list) -> list[str]:
+    """The exact commit-refusal lines: every engine issue, verbatim."""
+    return list(errors)
 
 
 @register("module.attempt.record", kind="command")
@@ -195,5 +212,132 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_first_twelve,
+        json_dumps=_dumps_admin,
+    )
+
+
+@register("coordination.section.revise", kind="command")
+def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
+    """Revise one reviewed coordination section, never a curriculum record."""
+    root = ctx.root
+    path = root / "work/COORDINATION.md"
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    if req["section"] not in {"Commitments", "Priorities", "Dependencies",
+                              "Deferrals"}:
+        raise WriteRefused(
+            "unknown coordination section",
+            site="coordination.section.revise.unknown-section",
+            gateway_message="los: unknown coordination section",
+            exit_code=2,
+        )
+    if path.is_symlink() or not path.is_file():
+        raise WriteRefused(
+            "coordination must be an existing regular file",
+            site="coordination.section.revise.no-coordination-file",
+            gateway_message="los: coordination must be an existing regular file",
+            exit_code=2,
+        )
+    try:
+        original = read_bytes_inside(root, path)
+    except (OSError, PathBoundaryError) as exc:
+        message = f"cannot read coordination safely: {exc}"
+        raise WriteRefused(
+            message,
+            site="coordination.section.revise.read-failed",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        ) from exc
+    digest = "sha256:" + hashlib.sha256(original).hexdigest()
+    supplied = req.get("expected_content_sha256")
+    if supplied is None and not req.get("check"):
+        message = ("coordination.section.revise apply requires "
+                   "--expected-content-sha256: the current content digest is "
+                   f"{digest} (read it with `inspect coordination`)")
+        raise WriteRefused(
+            message,
+            site="coordination.section.revise.missing-digest",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    if supplied is not None:
+        if not _DIGEST_RE.fullmatch(supplied):
+            message = (f"malformed content digest {supplied!r}; the current "
+                       f"content digest is {digest} "
+                       "(read it with `inspect coordination`)")
+            raise WriteRefused(
+                message,
+                site="coordination.section.revise.malformed-digest",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        if supplied != digest:
+            if supplied == _PLACEHOLDER_DIGEST:
+                message = (f"placeholder content digest {supplied}; the current "
+                           f"content digest is {digest} "
+                           "(read it with `inspect coordination`)")
+                raise WriteRefused(
+                    message,
+                    site="coordination.section.revise.placeholder-digest",
+                    gateway_message=f"los: {message}",
+                    exit_code=2,
+                )
+            message = ("reviewed coordination content changed before use: "
+                       f"supplied {supplied}, current is {digest}; re-read with "
+                       "`inspect coordination`")
+            raise WriteRefused(
+                message,
+                site="coordination.section.revise.content-changed",
+                gateway_message=f"los: {message}",
+                exit_code=3,
+            )
+    if not req["text"].strip():
+        raise WriteRefused(
+            "coordination section text must not be blank",
+            site="coordination.section.revise.blank-text",
+            gateway_message="los: coordination section text must not be blank",
+            exit_code=2,
+        )
+    _, injected = parse_sections(req["text"])
+    _, sections = parse_sections(original.decode("utf-8"))
+    targets = [section for section in sections
+               if section.heading == req["section"]]
+    if injected or len(targets) != 1:
+        raise WriteRefused(
+            "replace exactly one existing section; new section headings refuse",
+            site="coordination.section.revise.new-heading",
+            gateway_message=("los: replace exactly one existing section; "
+                             "new section headings refuse"),
+            exit_code=2,
+        )
+    revised = _replace_h2_section(original.decode("utf-8"), req["section"],
+                                  req["text"])
+    if req.get("check"):
+        return Result({
+            "ok": True, "section": req["section"],
+            "before": "\n".join(targets[0].lines).strip(),
+            "after": req["text"].strip(),
+            "expected_content_sha256": digest,
+            "expected_snapshot": ctx.snapshot_id(),
+            "expected_revisions": {"coordination": artifact_revision(
+                root, "coordination")},
+            "write_paths": ["work/COORDINATION.md"],
+        }, json_dumps=_dumps_admin)
+    try:
+        expected_revisions = parse_expected_revisions(
+            req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="coordination.section.revise.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "section": req["section"]},
+        proposal=TransactionProposal(
+            capability="coordination.section.revise",
+            writes={path: revised},
+            artifact_ids=["coordination"],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_refused_all,
         json_dumps=_dumps_admin,
     )
