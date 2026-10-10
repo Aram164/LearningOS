@@ -196,7 +196,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.collection_entry.cmd_collection_entry_revise",
+    "handler": "learning_os.adapters.cli.invoke:collection.entry.revise",
     "parser_factory": false
   }
 }

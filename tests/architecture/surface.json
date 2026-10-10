@@ -9109,7 +9109,7 @@
   "cli.status.schema.json": "2c6f3485f49c15724ba12d8f58aae455d83ad6e066796cc9c78f77e70a025329",
   "cli.unit-list.schema.json": "c952f43394484d2c25f492186ab48c960464e3ba0484f8f4c68fc4808f1e6700",
   "cli.validate.schema.json": "40a61d1158907fa8ca5a07365c286fae46614bd6fbabb00621ae35f885b168d0",
-  "collection.entry.revise.schema.json": "9ccf1a2ad0791d0ef51802074e1046990d0289033307720afeebcd1a5463a132",
+  "collection.entry.revise.schema.json": "4f1feafdb751828061e0953fd5245a5b9b4c470e43ace5f3a0c931892ad2c124",
   "concept.relations.change.schema.json": "996e4bbf085d42dc9714accf9723cf2143747c66da94c350c81239122d4d130b",
   "coordination.section.revise.schema.json": "63f75a19c184c5e61cb4554f2252612bc438247bff45752d694734407e0d46c4",
   "detour.create.schema.json": "ec048f6b22268fe62202f33bfe2cfdedd40f87b6941a9da23c595a630ecc8138",

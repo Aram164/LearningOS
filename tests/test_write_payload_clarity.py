@@ -171,12 +171,12 @@ def test_note_and_analysis_shapes_mirror_their_handlers(repo_root):
 
 
 def test_intake_revise_and_collection_shapes_mirror_their_handlers(repo_root):
-    from learning_os.commands.collection_entry import REVISE_FIELDS as COLLECTION_FIELDS
     from learning_os.commands.source_catalog import (
         CORRECT_FIELDS,
         CREATE_FIELDS,
         REVISE_FIELDS,
     )
+    from learning_os.ops.handlers.plan import COLLECTION_REVISE_FIELDS as COLLECTION_FIELDS
 
     intake = _capability_schema(
         repo_root, "source.intake.record")["properties"]["record"]

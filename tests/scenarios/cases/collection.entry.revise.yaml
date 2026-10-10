@@ -16,57 +16,57 @@ cases:
     transport: gateway
     request: {record: {collection: nope, source: source-demo-book, why: "Scenario line."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: bad-stem
     kind: refusal
     transport: gateway
     request: {record: {collection: "Shelf!", source: source-demo-book, why: "Scenario line."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: bad-source
     kind: refusal
     transport: gateway
     request: {record: {collection: shelf, source: nope, why: "Scenario line."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: blank-why
     kind: refusal
     transport: gateway
     request: {record: {collection: shelf, source: source-demo-book, why: " "}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: no-entry-source
     kind: refusal
     transport: gateway
     request: {record: {collection: shelf, source: source-scenario-x, why: "Scenario line."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: noop-same-why
     kind: refusal
     transport: gateway
     request: {record: {collection: shelf, source: source-demo-book, why: "The main demo reading."}}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: missing-file
     kind: refusal
     transport: cli
     argv: [collection-entry-revise, --file, work/inbox/nope.yaml]
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: foreign-field
     kind: refusal
     transport: cli
     argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x", "group": "g"}']
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: missing-keys
     kind: refusal
     transport: cli
     argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book"}']
-    expect: {site: null}
+    expect: {site: collection.entry.revise.bad-record}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}']
-    expect: {site: null}
+    expect: {site: collection.entry.revise.needs-approval}
   - id: direct-cli-approved
     kind: refusal
     transport: cli

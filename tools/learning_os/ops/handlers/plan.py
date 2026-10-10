@@ -1,4 +1,4 @@
-"""Plan-area handlers: ``route.patch`` and ``module.materials.compact`` (PLAN D4, SPEC §12 R4, (bd))."""
+"""Plan-area handlers (PLAN D4): material plans, collection and source revisions."""
 
 from __future__ import annotations
 
@@ -6,7 +6,13 @@ import argparse
 import copy
 import hashlib
 import json
+import re
+from pathlib import Path
+from typing import Any
 
+import yaml
+
+from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import with_suggestions
 from learning_os.material_refs import (
@@ -24,6 +30,7 @@ from learning_os.ops._legacy_plumbing import (
     _changed_write,
     _guard_rows,
     _map_for_unit,
+    _read_structured_file,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -34,6 +41,7 @@ from learning_os.ops._plan_gate import (
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.revisions import artifact_revision
 from learning_os.transactions import parse_expected_revisions
 from learning_os.warning_baseline import signatures_from_issues
 
@@ -331,3 +339,316 @@ def module_materials_compact(ctx: OpContext, req: dict) -> Result:
     return _execute_material_plan(
         ctx, req, "module.materials.compact",
         lambda repo: compaction_plan(repo, req["module_id"]))
+
+
+def _dumps_indented(payload: dict) -> str:
+    """The exact revision encoder: indented, unescaped."""
+    return json.dumps(payload, indent=2, ensure_ascii=False)
+
+
+def _input_record(req: dict, label: str) -> dict:
+    """The inline record or structured file, from the request (SPEC §12).
+
+    Moved from ``commands.collection_entry`` with ``args.<dest>`` retargeted
+    to the request dict; the source and publish units share this copy.
+    """
+    value = req.get("record")
+    if value is not None:
+        if not isinstance(value, dict):
+            raise WriteRefused(f"{label} must be an object")
+        return value
+    file_name = req.get("file")
+    if not file_name:
+        raise WriteRefused(f"{label} is required")
+    return _read_structured_file(file_name)
+
+
+def _require_gateway_v2() -> None:
+    """Refuse a direct CLI apply of an approved write (SPEC §12).
+
+    Moved verbatim from ``commands.collection_entry``; the source units
+    share this copy, and ``commands.vnext`` keeps its own for platform.
+    """
+    from learning_os.contracts.gateway import current_gateway_request
+
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "this approved write must use GatewayEnvelopeV2; direct CLI publication is disabled"
+        )
+
+
+SOURCE_ID = re.compile(r"^source-[a-z0-9]+(?:-[a-z0-9]+)*$")
+COLLECTION_STEM = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+COLLECTION_REVISE_FIELDS = frozenset({"collection", "source", "why"})
+
+
+def _splice_why(raw: str, stem: str, position: int, sid: str,
+                old: str, why: str) -> str:
+    """Replace only the targeted entry's `why` scalar in the original text.
+
+    A full YAML round-trip rewrites layout everywhere (81 to 91 lines on the
+    math bookshelf); the revision owns one scalar, so only its source span is
+    replaced. Indentation, the `why:` key, quoting elsewhere, sibling entries,
+    header comments and blank lines survive byte-identical. Anything the
+    splice cannot prove safe — flow style, anchors, duplicate keys, a raw
+    text that no longer carries the loaded line — is refused, never guessed.
+    """
+    try:
+        root = yaml.compose(raw)
+    except yaml.YAMLError as exc:
+        raise WriteRefused(f"collection '{stem}' does not parse: {exc}") from exc
+    if not isinstance(root, yaml.MappingNode):
+        raise WriteRefused(f"collection '{stem}' is not a mapping")
+    entries_node = None
+    for key, value in root.value:
+        if isinstance(key, yaml.ScalarNode) and key.value == "entries":
+            entries_node = value
+    if not isinstance(entries_node, yaml.SequenceNode):
+        raise WriteRefused(f"collection '{stem}' has no entries list")
+    if position >= len(entries_node.value):
+        raise WriteRefused(
+            f"collection '{stem}' changed under the revision — re-run --check")
+    entry_node = entries_node.value[position]
+    if not isinstance(entry_node, yaml.MappingNode):
+        raise WriteRefused(
+            f"collection '{stem}' entry {position} is not a mapping")
+    fields = [(k.value, v) for k, v in entry_node.value
+              if isinstance(k, yaml.ScalarNode)]
+    if sum(1 for name, _ in fields if name == "why") != 1:
+        raise WriteRefused(
+            f"collection '{stem}' entry {position} has no single 'why' scalar")
+    sources = [v.value for name, v in fields
+               if name == "source" and isinstance(v, yaml.ScalarNode)]
+    if sources != [sid]:
+        raise WriteRefused(
+            f"collection '{stem}' changed under the revision — re-run --check")
+    value = next(v for name, v in fields if name == "why")
+    if not isinstance(value, yaml.ScalarNode) or value.value != old:
+        raise WriteRefused(
+            f"collection '{stem}' no longer carries the checked line — "
+            "re-run --check")
+    lines = raw.splitlines(keepends=True)
+    start, end = value.start_mark, value.end_mark
+    span_start = start.line
+    span_end = end.line if end.column > 0 else end.line - 1
+    # The prefix (indent, dash, `why:` key, spacing) is preserved verbatim;
+    # flow style cannot reach here with a clean suffix (a closing `}`/`]`
+    # always trails the scalar) and is refused below.
+    prefix = lines[span_start][:start.column]
+    comment = ""
+    if value.style in (">", "|"):
+        rest = lines[span_start][start.column:]
+        match = re.match(r"^[|>][+-]?[0-9]?[ \t]*(#[^\n]*)?\n?$", rest)
+        if match is None:
+            raise WriteRefused(
+                f"collection '{stem}' entry {position} carries an exotic "
+                "block header — refusing the splice")
+        comment = match.group(1) or ""
+    else:
+        rest = lines[span_end][end.column:]
+        match = re.match(r"^[ \t]*(#[^\n]*)?\n?$", rest)
+        if match is None:
+            raise WriteRefused(
+                f"collection '{stem}' entry {position} carries trailing "
+                "content after its 'why' — refusing the splice")
+        comment = match.group(1) or ""
+    dumped = yaml.safe_dump({"why": why}, width=4096, allow_unicode=True,
+                            sort_keys=False)
+    if not dumped.startswith("why: "):
+        raise WriteRefused("could not serialize the replacement line")
+    scalar_lines = dumped[len("why: "):].rstrip("\n").split("\n")
+    replacement = [prefix + scalar_lines[0] + "\n"]
+    replacement.extend(line + "\n" for line in scalar_lines[1:])
+    if comment:
+        replacement[-1] = replacement[-1][:-1] + "  " + comment + "\n"
+    if span_end == len(lines) - 1 and not lines[span_end].endswith("\n"):
+        replacement[-1] = replacement[-1][:-1]
+    return "".join(lines[:span_start] + replacement + lines[span_end + 1:])
+
+
+def _plan_collection_entry_revise(root: Path, repo, item: Any) -> dict:
+    """Validate one collection-entry revision; return diff, writes, guards.
+
+    Moved from ``commands.collection_entry._plan_revise`` for its
+    conversion (SPEC §12): the repository now arrives as a parameter
+    (``ctx.repo()`` at the call sites) instead of a fresh ``load_repo``.
+    """
+    if not isinstance(item, dict):
+        raise WriteRefused("collection revise payload must be an object")
+    for field in sorted(set(item) - COLLECTION_REVISE_FIELDS):
+        raise WriteRefused(
+            f"field '{field}' is outside the revise allowlist "
+            "(only one entry's 'why' is revised here; source, group, order "
+            "and every other entry are never written through revision)"
+        )
+    if "collection" not in item or "source" not in item or "why" not in item:
+        raise WriteRefused("a revision needs 'collection', 'source' and 'why'")
+    stem, sid, why = item.get("collection"), item.get("source"), item.get("why")
+    if not isinstance(stem, str) or not COLLECTION_STEM.match(stem):
+        raise WriteRefused("'collection' must be a kebab-case filename stem")
+    if not isinstance(sid, str) or not SOURCE_ID.match(sid):
+        raise WriteRefused("'source' must match source-<slug>")
+    if not isinstance(why, str) or not why.strip() or "\n" in why or "\r" in why:
+        raise WriteRefused("'why' must be a nonempty one-line string")
+    doc = (repo.collections or {}).get(stem)
+    if doc is None:
+        raise WriteRefused(with_suggestions(
+            f"unknown collection: {stem}", stem, repo.collections or {}))
+    origin = (repo.collection_origins or {}).get(stem)
+    if origin is None:
+        raise WriteRefused(f"collection '{stem}' has no file origin")
+    entries = doc.get("entries") or []
+    hits = [position for position, entry in enumerate(entries)
+            if isinstance(entry, dict) and entry.get("source") == sid]
+    if not hits:
+        known_sources = [str(entry.get("source")) for entry in entries
+                         if isinstance(entry, dict) and entry.get("source")]
+        raise WriteRefused(with_suggestions(
+            f"collection '{stem}' has no entry for source {sid}",
+            sid, known_sources))
+    if len(hits) > 1:
+        raise WriteRefused(
+            f"collection '{stem}' matches {len(hits)} entries for {sid} — "
+            "deduplicate the collection before revising one line"
+        )
+    (position,) = hits
+    old = entries[position].get("why")
+    if old == why:
+        raise WriteRefused(
+            f"collection '{stem}' entry for {sid} already carries that line: no change"
+        )
+    if not isinstance(old, str):
+        raise WriteRefused(
+            f"collection '{stem}' entry for {sid} carries a non-string 'why' — "
+            "repair the collection before revising one line"
+        )
+    try:
+        # Universal newlines: a CRLF shelf normalizes to LF here, like
+        # every governed write in the system — content and layout survive,
+        # endings follow the writer.
+        raw = origin.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise WriteRefused(f"cannot re-read {origin}: {exc}") from exc
+    spliced = _splice_why(raw, stem, position, sid, old, why)
+    try:
+        before_text = yaml.safe_load(raw)
+        parsed = yaml.safe_load(spliced)
+    except yaml.YAMLError as exc:
+        raise WriteRefused(f"collection '{stem}' splice failed to parse: {exc}") from exc
+    # Differential proof, same parser both sides: the splice replaced exactly
+    # the targeted scalar and nothing else. (Comparing against the loaded doc
+    # instead would false-refuse on loader normalization such as dates.)
+    expected = copy.deepcopy(before_text)
+    expected["entries"][position]["why"] = why
+    if parsed != expected:
+        raise WriteRefused(
+            f"collection '{stem}' splice verification failed — refusing the write")
+    try:
+        validate_contract(root, "collections.schema.json", parsed)
+    except ValueError as exc:
+        raise WriteRefused(f"{stem}: {exc}") from exc
+    artifact = f"collection:{stem}"
+    diff = [{"collection": stem, "source": sid,
+             "group": entries[position].get("group"),
+             "before": old, "after": why}]
+    canonical = json.dumps(diff, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return {
+        "diff": diff,
+        "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
+        "writes": {origin: spliced},
+        "artifact_ids": [artifact],
+        "expected_revisions": {artifact: artifact_revision(root, artifact)},
+    }
+
+
+@register("collection.entry.revise", kind="command")
+def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
+    """Revise one collection entry's `why`, atomically."""
+    root = ctx.root
+    repo = ctx.repo()
+    try:
+        data = _input_record(req, "collection revise record")
+        plan = _plan_collection_entry_revise(root, repo, data)
+    except WriteRefused as exc:
+        message = str(exc)
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.bad-record",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        ) from exc
+    if req.get("check") is True:
+        return Result(
+            {
+                "ok": True, "check": True, "records": len(plan["diff"]),
+                "diff": plan["diff"], "diff_sha256": plan["diff_sha256"],
+                "expected_revisions": plan["expected_revisions"],
+                "artifact_ids": plan["artifact_ids"],
+            },
+            json_dumps=_dumps_indented,
+        )
+    if not req.get("approve"):
+        message = "collection entry revision requires explicit approval"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.needs-approval",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    _require_gateway_v2()
+    try:
+        plan = _plan_collection_entry_revise(root, repo, data)
+    except WriteRefused as exc:
+        message = str(exc)
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.bad-record",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        ) from exc
+    expected_diff = req.get("expected_diff_sha256")
+    if not expected_diff:
+        message = "apply needs --expected-diff-sha256 from a check run"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.needs-expected-diff",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    if expected_diff != plan["diff_sha256"]:
+        message = "revision diff changed since check; re-run --check"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.diff-changed",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+
+    def finish_collection_entry_revise(confirmation):
+        return {"ok": True, **confirmation}
+
+    def refused_stdout_collection_entry_revise(errors):
+        return _dumps_indented({
+            "ok": False,
+            **({"errors": [str(error) for error in errors]} if errors else {}),
+        })
+
+    return Result(
+        {"ok": True},
+        proposal=TransactionProposal(
+            capability="collection.entry.revise",
+            writes=plan["writes"],
+            artifact_ids=tuple(plan["artifact_ids"]),
+            expected_revisions=expected_revisions,
+        ),
+        finish=finish_collection_entry_revise,
+        refused_stdout=refused_stdout_collection_entry_revise,
+        json_dumps=_dumps_indented,
+    )

@@ -271,30 +271,6 @@ checks:
     count: 4
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::_plan_revise::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::_refuse_without_approval::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::_refuse_without_approval::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::return
-    count: 6
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/dossier.py::cmd_dossier::_operator_lock
     count: 1
     since: baseline
@@ -1726,10 +1702,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: collection.entry.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: lineage.restamp::*
     count: 1
     since: baseline
@@ -1888,10 +1860,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.validate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: collection.entry.revise::*
     count: 1
     since: baseline
     approved_by: null

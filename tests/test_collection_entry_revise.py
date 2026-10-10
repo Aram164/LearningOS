@@ -75,12 +75,16 @@ def _check(root: Path, package: Path):
 
 
 def _refuses(root: Path, package: Path, fragment: str):
+    # collection.entry.revise runs through the registered pipeline, which
+    # renders a CLI refusal as the D16 stderr line (route.patch precedent,
+    # commit 8e39e723): the message fragment survives, the stdout JSON shape
+    # does not.
     proc = run_los(root, "collection-entry-revise", "--file", str(package),
                    "--check")
     assert proc.returncode == 2, proc.stdout
-    body = json.loads(proc.stdout)
-    assert body["ok"] is False
-    assert fragment in body["error"], body["error"]
+    assert proc.stdout == "", proc.stdout
+    assert proc.stderr.startswith("los: INVALID_REQUEST: "), proc.stderr
+    assert fragment in proc.stderr, proc.stderr
 
 
 # --------------------------------------------------------------------- check
