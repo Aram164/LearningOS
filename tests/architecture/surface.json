@@ -9098,7 +9098,7 @@
   "cli.operations.schema.json": "117ae33dac2e374536f636bde00f1e78bfa8265a3c13b5b791607528a60c5c12",
   "cli.plan-edit-context.schema.json": "4c79e1b0f8819870a7298ddc55f7f19653c61cd9f0a5a373bc10791da7a40e87",
   "cli.plan-template.schema.json": "adf0cbc86990451bcfb2e577128fc095358ecc36781f7772bdc8fcb29d14dff9",
-  "cli.program-list.schema.json": "dc5c2fce9a0b29c86a2348b52528e028e51bdef57ae1a240b7832f93d5ac156f",
+  "cli.program-list.schema.json": "5c30ca509373d06dfcc481310f83bf758aa97b45ea6765b43d4f33735427cefc",
   "cli.project-list.schema.json": "8711bd5ec1ee5dd2029bc566c60b4bedf984384363ac034bbb1d5736d3a56a74",
   "cli.related.schema.json": "8423bdad35969e3d2602d4bfe7865e49b88dd8c70ab2424156dc87ac250b462b",
   "cli.resume.schema.json": "56f1469dab28d5d57e866ecdb232cb98d2333b98b37653d664dbcc4d80a089ff",

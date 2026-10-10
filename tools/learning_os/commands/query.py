@@ -37,7 +37,6 @@ from .reads import (
 )
 from .support import (
     _delegate,
-    _print_rows,
     _root,
 )
 
@@ -356,11 +355,6 @@ def cmd_related(args) -> int:
                           tallies=_use_evidence_from_manifest(manifest))
     print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
-
-
-def cmd_program_list(args) -> int:
-    manifest = _fresh_manifest(_root(args))
-    return _print_rows(manifest.get("programs", []))
 
 
 def cmd_validate(args) -> int:

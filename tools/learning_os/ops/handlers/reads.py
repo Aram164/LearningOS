@@ -558,3 +558,15 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "next": "Resume the pointer or choose any visible module and unit.",
     }
     return Result(payload, json_dumps=_dumps_bootstrap_full)
+
+
+def _dumps_program_list(payload) -> str:
+    """The exact program-list encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+@register("cli.program-list", kind="query")
+def program_list(ctx: OpContext, req: dict) -> Result:
+    """List programs as discovery rows."""
+    manifest = _fresh_manifest(ctx.root)
+    return Result(manifest.get("programs", []), json_dumps=_dumps_program_list)
