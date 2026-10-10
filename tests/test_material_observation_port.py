@@ -6,11 +6,15 @@ dict-backed fake they perform no filesystem reads under the fixture root
 or the materials root; (c) a fake revision change reports the stale-note
 message. A cheating fake proves the read detector is not vacuous, and two
 delegation controls prove the source-map existence check and the route
-checksum both travel through the port.
+checksum both travel through the port. Complete comparisons use exact
+type-and-value equality, so ``False`` differs from ``0``; further
+regressions prove reads mode resets (including renderer capture) and
+that a failed install activates no log or reads mode.
 """
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import os
 from pathlib import Path
@@ -27,6 +31,7 @@ from learning_os.material_synthesis import (
     _analysis_ref_problem,
     current_unit_material_basis,
 )
+from learning_os.ops.render import call_renderer
 from learning_os.revisions import artifact_revision
 from learning_os.store.material_observations import (
     LiveMaterialObservations,
@@ -160,6 +165,36 @@ def port_world(mini_repo: Path) -> dict:
             "expected_basis": expected_basis, "values": values}
 
 
+def _assert_typed_equal(actual, expected, path="$"):
+    """Recursive exact-type-and-value equality (contract 6.3).
+
+    Every pair must share its exact ``type`` first, so ``False``
+    differs from ``0``; dicts must then share exact key sets and
+    lists exact lengths before recursing into values and items.
+    A failure names the nested ``path`` of the first mismatch.
+    """
+    assert type(actual) is type(expected), (
+        f"{path}: type {type(actual).__name__} is not "
+        f"{type(expected).__name__}: {actual!r} vs {expected!r}")
+    if isinstance(actual, dict):
+        actual_keys = set(actual.keys())
+        expected_keys = set(expected.keys())
+        assert actual_keys == expected_keys, (
+            f"{path}: key sets differ: "
+            f"actual-only={sorted(map(repr, actual_keys - expected_keys))} "
+            f"expected-only={sorted(map(repr, expected_keys - actual_keys))}")
+        for key in actual:
+            _assert_typed_equal(actual[key], expected[key], f"{path}[{key!r}]")
+    elif isinstance(actual, list):
+        assert len(actual) == len(expected), (
+            f"{path}: lengths differ: {len(actual)} != {len(expected)}")
+        for index, (item, want) in enumerate(zip(actual, expected, strict=True)):
+            _assert_typed_equal(item, want, f"{path}[{index}]")
+    else:
+        assert actual == expected, (
+            f"{path}: values differ: {actual!r} != {expected!r}")
+
+
 def _reads_under(records: list[dict], roots: set[Path]) -> list[dict]:
     """Audit records touching any root, in raw or resolved form."""
     hits = []
@@ -187,6 +222,47 @@ def _world_roots(world: dict) -> set[Path]:
     return roots
 
 
+def test_typed_parity_assertion_rejects_coercible_values():
+    """The parity assertion itself: nested False/0 fails in both
+    directions, changed key sets and lengths fail, and a matching
+    nested value passes. Each failure names its type/value issue."""
+    good = {"flag": False, "count": 0, "name": "",
+            "items": [1, False, {"k": [0, None]}], "nothing": None}
+    _assert_typed_equal(copy.deepcopy(good), good)
+
+    nested_zero = copy.deepcopy(good)
+    nested_zero["items"][1] = 0
+    with pytest.raises(AssertionError,
+                       match=r"\$\['items'\]\[1\].*type int is not bool"):
+        _assert_typed_equal(nested_zero, good)
+    with pytest.raises(AssertionError, match="type bool is not int"):
+        _assert_typed_equal(good, nested_zero)
+
+    deep_false = copy.deepcopy(good)
+    deep_false["items"][2]["k"][0] = False
+    with pytest.raises(AssertionError, match="type bool is not int"):
+        _assert_typed_equal(deep_false, good)
+
+    missing = copy.deepcopy(good)
+    del missing["name"]
+    with pytest.raises(AssertionError, match="key sets differ"):
+        _assert_typed_equal(missing, good)
+    extra = copy.deepcopy(good)
+    extra["added"] = 1
+    with pytest.raises(AssertionError, match="key sets differ"):
+        _assert_typed_equal(extra, good)
+
+    longer = copy.deepcopy(good)
+    longer["items"].append(9)
+    with pytest.raises(AssertionError, match="lengths differ"):
+        _assert_typed_equal(longer, good)
+
+    changed = copy.deepcopy(good)
+    changed["name"] = "x"
+    with pytest.raises(AssertionError, match="values differ"):
+        _assert_typed_equal(changed, good)
+
+
 def test_explicit_live_matches_default(port_world: dict):
     """(a) `obs=None` and an explicit live port agree on both functions."""
     root = port_world["root"]
@@ -199,7 +275,8 @@ def test_explicit_live_matches_default(port_world: dict):
     live_basis = current_unit_material_basis(
         root, UNIT_ID, repo=repo, cache={},
         obs=LiveMaterialObservations(root, {}))
-    assert live_basis == default_basis == port_world["expected_basis"]
+    _assert_typed_equal(default_basis, port_world["expected_basis"])
+    _assert_typed_equal(live_basis, port_world["expected_basis"])
 
     assert _analysis_ref_problem(root, repo, ref, cache={}) is None
     assert _analysis_ref_problem(
@@ -227,7 +304,7 @@ def test_fake_performs_no_filesystem_reads(port_world: dict, tmp_path: Path):
             root, repo, port_world["ref"], cache={}, obs=fake)
     finally:
         arch_audit_hook.uninstall()
-    assert basis == port_world["expected_basis"]
+    _assert_typed_equal(basis, port_world["expected_basis"])
     assert problem is None
     arch_audit_hook.assert_capture_ok()
     records = arch_audit_hook.read_log(log_path)
@@ -284,7 +361,7 @@ def test_port_owns_source_map_existence(port_world: dict):
     basis = current_unit_material_basis(
         root, UNIT_ID, repo=repo, cache={},
         obs=_DictObservations(port_world["values"]))
-    assert basis == port_world["expected_basis"]
+    _assert_typed_equal(basis, port_world["expected_basis"])
     with pytest.raises(MaterialSynthesisError,
                        match="unit has no module source map"):
         current_unit_material_basis(root, UNIT_ID, repo=repo, cache={})
@@ -304,17 +381,18 @@ def test_port_owns_route_checksum(port_world: dict):
     basis = current_unit_material_basis(
         root, UNIT_ID, repo=repo, cache={},
         obs=_DictObservations(values))
-    assert basis["material_checksums"] == {route_id: invented}
+    _assert_typed_equal(basis["material_checksums"], {route_id: invented})
     rest = {key: basis[key] for key in basis if key != "material_checksums"}
     expected_rest = {key: port_world["expected_basis"][key]
                      for key in port_world["expected_basis"]
                      if key != "material_checksums"}
-    assert rest == expected_rest
+    _assert_typed_equal(rest, expected_rest)
 
 
 def test_reads_mode_resets_to_ordinary_capture(tmp_path: Path):
     """reads=True sees a plain read; a default install afterwards does not,
-    while write capture keeps working."""
+    while write capture keeps working and a renderer read is captured
+    with its renderer marker."""
     probe = tmp_path / "probe.txt"
     probe.write_text("probe", encoding="utf-8")
     reads_log = tmp_path / "audit-reads-mode.log"
@@ -339,4 +417,68 @@ def test_reads_mode_resets_to_ordinary_capture(tmp_path: Path):
     records = arch_audit_hook.read_log(plain_log)
     assert all(str(probe) not in record.get("paths", []) for record in records)
     assert any("wrote.txt" in str(path)
+               for record in records for path in record.get("paths", []))
+
+    render_log = tmp_path / "audit-render.log"
+    arch_audit_hook.install(str(render_log))
+    try:
+        probe.read_bytes()
+        call_renderer("op.probe", "human", probe.read_bytes)
+        (tmp_path / "wrote-render.txt").write_text("x", encoding="utf-8")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    records = arch_audit_hook.read_log(render_log)
+    probe_hits = [record for record in records
+                  if str(probe) in record.get("paths", [])]
+    assert probe_hits, "a renderer read was not captured"
+    assert all(record.get("render") == ["op.probe", "human"]
+               for record in probe_hits), \
+        "an unmarked probe read was captured"
+    assert any("wrote-render.txt" in str(path)
+               for record in records for path in record.get("paths", []))
+
+
+def test_failed_reads_install_activates_nothing(tmp_path: Path):
+    """A failed install(..., reads=True) activates no log or reads mode.
+
+    Idle, it raises and leaves no active log; while an ordinary window
+    is active, it preserves that log and mode, so a plain read stays
+    unrecorded while writes keep working."""
+    probe = tmp_path / "probe-failed-install.txt"
+    probe.write_text("probe", encoding="utf-8")
+    arch_audit_hook.uninstall()
+    with pytest.raises(arch_audit_hook.AuditCaptureError,
+                       match="audit log path is a directory"):
+        arch_audit_hook.install(str(tmp_path), reads=True)
+    assert arch_audit_hook._ACTIVE_LOG is None
+    assert arch_audit_hook._READS is False
+
+    idle_log = tmp_path / "audit-after-idle-failure.log"
+    arch_audit_hook.install(str(idle_log))
+    try:
+        probe.read_bytes()
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert all(str(probe) not in record.get("paths", [])
+               for record in arch_audit_hook.read_log(idle_log))
+
+    active_log = tmp_path / "audit-active.log"
+    arch_audit_hook.install(str(active_log))
+    try:
+        with pytest.raises(arch_audit_hook.AuditCaptureError,
+                           match="audit log path is a directory"):
+            arch_audit_hook.install(str(tmp_path), reads=True)
+        assert arch_audit_hook._ACTIVE_LOG == str(active_log)
+        assert arch_audit_hook._READS is False
+        probe.read_bytes()
+        (tmp_path / "wrote-after-failed-install.txt").write_text(
+            "x", encoding="utf-8")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    records = arch_audit_hook.read_log(active_log)
+    assert all(str(probe) not in record.get("paths", []) for record in records)
+    assert any("wrote-after-failed-install.txt" in str(path)
                for record in records for path in record.get("paths", []))
