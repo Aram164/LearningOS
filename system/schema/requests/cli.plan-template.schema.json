@@ -129,7 +129,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.plan.cmd_plan_template",
+    "handler": "learning_os.adapters.cli.invoke:cli.plan-template",
     "parser_factory": false
   }
 }

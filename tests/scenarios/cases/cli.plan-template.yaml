@@ -17,16 +17,16 @@ cases:
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, " ", --unit-id, unit-demo-l01, --module-id, module-demo]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
   - id: missing-ids
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, "Scenario Template"]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
   - id: missing-ids-json
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, "Scenario Template", --json]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
 untriggered:
   - {where: "tools/learning_os/commands/plan.py:72", reason: "response violates its own schema: the producer-owned shape validates for every fixture input"}

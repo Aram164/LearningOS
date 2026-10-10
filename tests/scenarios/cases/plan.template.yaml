@@ -16,15 +16,15 @@ cases:
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, Variance]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
   - id: empty-title
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, " ", --unit-id, unit-demo-l01, --module-id, module-demo]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
   - id: missing-ids-json
     kind: refusal
     transport: cli
     argv: [plan-template, curriculum, --title, Variance, --json]
-    expect: {site: null}
+    expect: {site: cli.plan-template.bad-template}
 untriggered: []

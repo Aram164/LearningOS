@@ -431,14 +431,6 @@ checks:
     count: 5
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/plan.py::cmd_plan_template::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/plan.py::cmd_plan_template::return
-    count: 4
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::_metadata_search_page::_operator_lock
     count: 1
     since: baseline
@@ -1638,10 +1630,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.plan-template::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.program-list::*
     count: 1
     since: baseline
@@ -1707,10 +1695,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: operator.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: plan.template::*
     count: 1
     since: baseline
     approved_by: null
@@ -1787,10 +1771,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.plan-template::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.program-list::*
     count: 1
     since: baseline
@@ -1856,10 +1836,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: operator.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: plan.template::*
     count: 1
     since: baseline
     approved_by: null

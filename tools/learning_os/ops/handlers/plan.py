@@ -12,6 +12,12 @@ from typing import Any
 
 import yaml
 
+from learning_os.contracts import (
+    PLAN_TEMPLATE_VERSION,
+    ContractValidationError,
+    PlanTemplateError,
+    build_plan_template,
+)
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import (
     NotFound,
@@ -1447,3 +1453,67 @@ def material_span(ctx: OpContext, req: dict) -> Result:
             str(exc), site=f"{ctx.operation}.read-failed",
             gateway_message=f"los: {exc}", exit_code=2,
         ) from exc
+
+
+def _dumps_default(payload: dict) -> str:
+    """The exact response encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+PLAN_TEMPLATE_CONTRACT = "plan-template-v1"
+
+_PROFILE_SCHEMAS = {
+    "curriculum": "study-map.schema.json",
+}
+
+
+def _human_plan_template(payload: dict) -> str:
+    """The paste-ready YAML the operator reads (SPEC §12)."""
+    return yaml.safe_dump(
+        payload["plan"], sort_keys=False, allow_unicode=True, width=100
+    ).removesuffix("\n")
+
+
+@register("cli.plan-template", kind="query", human=_human_plan_template)
+@register("plan.template", kind="query", human=_human_plan_template)
+def plan_template(ctx: OpContext, req: dict) -> Result:
+    """Read-only access to the single versioned study-map creation template."""
+    root = ctx.root
+    schema = _PROFILE_SCHEMAS[req["profile"]]
+    try:
+        plan = build_plan_template(
+            req["profile"],
+            title=req.get("title"),
+            unit_id=req.get("unit_id"),
+            module_id=req.get("module_id"),
+        )
+        validate_contract(root, schema, plan, label=f"{req['profile']} plan template v1")
+    except (PlanTemplateError, ContractValidationError) as exc:
+        message = f"cannot build plan template: {exc}"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.bad-template",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        ) from exc
+    response = {
+        "ok": True,
+        "contract": PLAN_TEMPLATE_CONTRACT,
+        "profile": req["profile"],
+        "plan_template_version": PLAN_TEMPLATE_VERSION,
+        "schema": schema,
+        "plan": plan,
+    }
+    try:
+        validate_contract(
+            root, "plan-template.schema.json", response, label=PLAN_TEMPLATE_CONTRACT
+        )
+    except ContractValidationError as exc:
+        message = f"plan template response invalid: {exc}"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.bad-response",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        ) from exc
+    return Result(response, json_dumps=_dumps_default)
