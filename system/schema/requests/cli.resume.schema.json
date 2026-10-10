@@ -77,7 +77,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.resume.cmd_resume",
+    "handler": "learning_os.adapters.cli.invoke:cli.resume",
     "parser_factory": false
   }
 }

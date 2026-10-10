@@ -455,26 +455,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/resume.py::_print_study_options::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/resume.py::_print_study_options::return
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/resume.py::cmd_resume::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/resume.py::cmd_resume::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/resume.py::cmd_resume::return
-    count: 6
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/review.py::cmd_session_end::_operator_lock
     count: 1
     since: baseline
@@ -1458,10 +1438,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.resume::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.runtime-session::*
     count: 1
     since: baseline
@@ -1544,10 +1520,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.observe::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.resume::*
     count: 1
     since: baseline
     approved_by: null
