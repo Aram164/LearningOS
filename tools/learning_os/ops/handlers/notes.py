@@ -8,12 +8,20 @@ from pathlib import Path
 import jsonschema
 
 from learning_os import observations
-from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found
+from learning_os.garden import garden_id
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, parse_frontmatter
+from learning_os.loading import Repo, load_garden
 from learning_os.ops._legacy_plumbing import (
+    _bytes_inside_owner,
+    _content_envelope,
     _dump_yaml,
+    _note_bytes,
+    _note_collection,
     _read_content_bound_file,
+    _snapshot,
+    _window_values,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
@@ -510,3 +518,95 @@ def note_create(ctx: OpContext, req: dict) -> Result:
         after_commit="STANDARD",
         json_dumps=_dumps_create,
     )
+
+
+def _garden_notes(root):
+    """(stable id, note) pairs for every garden seed.
+
+    Loaded lazily on a durable-note miss, so the registered-note path —
+    including its parse-only-notes budget — never pays for the garden.
+    Identity is the same ``garden_id`` the manifest projects, so search
+    rows and this read cannot disagree about what an id names.
+    """
+    repo = Repo(root=root)
+    load_garden(repo, root)
+    garden_root = root / "knowledge" / "garden"
+    return [(garden_id(garden_root, note.path), note)
+            for note in repo.garden_notes]
+
+
+def _dumps_read(payload: dict) -> str:
+    """The exact note-read JSON encoder: compact, unsorted, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+@register("cli.note-read", kind="query")
+@register("note.content", kind="query")
+def note_read(ctx: OpContext, req: dict) -> Result:
+    """Read a bounded segment of a durable note or garden seed by stable ID."""
+    root = ctx.root
+    try:
+        offset, limit = _window_values(
+            req["offset"], req["limit"], req.get("expected_snapshot"), 16000)
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        repo = _note_collection(root)
+        note = repo.notes.get(req["note_id"])
+        if note is None:
+            seeds = _garden_notes(root)
+            garden = next((seed for stable_id, seed in seeds
+                           if stable_id == req["note_id"]), None)
+            if garden is None:
+                candidates = [*repo.notes, *[stable_id for stable_id, _ in seeds]]
+                message = not_found("note", req["note_id"], candidates)
+                raise NotFound(
+                    "note", req["note_id"], candidates,
+                    site="cli.note-read.unknown-note",
+                    gateway_message=f"los: {message}",
+                    exit_code=2,
+                )
+            raw = _bytes_inside_owner(
+                root, garden.path, root / "knowledge" / "garden",
+                escape="garden path escapes its garden owner",
+                symlink="garden read refuses symlinks")
+            content = raw.decode("utf-8")
+            payload = _content_envelope(
+                "note-content", "note_id", req["note_id"],
+                garden.path.relative_to(root).as_posix(),
+                raw, content, offset, limit)
+            _snapshot(root, snapshot)
+            return Result(
+                {"schema_version": 1, "snapshot_id": snapshot, **payload},
+                json_dumps=_dumps_read,
+            )
+        raw = _note_bytes(root, note)
+        content = raw.decode("utf-8")
+        payload = _content_envelope(
+            "note-content", "note_id", note.id,
+            note.path.relative_to(root).as_posix(),
+            raw, content, offset, limit)
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot, **payload},
+            json_dumps=_dumps_read,
+        )
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site="cli.note-read.stale-snapshot",
+            gateway_message=f"los: {exc}",
+            exit_code=3,
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.note-read.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    except UnicodeError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.note-read.bad-encoding",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc

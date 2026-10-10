@@ -20,10 +20,10 @@ import learning_os.search.index as search_index_module
 from learning_os.commands.reads import (
     _exhaustive_content_search,
     _indexed_content_search,
-    _note_collection,
     content_search,
 )
 from learning_os.derived import DerivedError, Evaluation, NodeSpec
+from learning_os.ops._legacy_plumbing import _note_collection
 from learning_os.search.index import (
     NoteBlob,
     build_postings,

@@ -9093,7 +9093,7 @@
   "cli.masters-planning-dashboard.schema.json": "44419c692920fc48bd88b8c841f915965bf0d6372f055ab56e7192091efc890b",
   "cli.module-list.schema.json": "42d9872b6508b1e66c7b73e992f915cbdec0c8f8beea838384e2e38cd64a7a13",
   "cli.note-analysis-prepare.schema.json": "6c81584ed7b20182e62e17df0520d8aef341dcb742bc1d97a655f83cc962a40f",
-  "cli.note-read.schema.json": "f933d3f9abdad0452e1b6a8c362d53bd3b486917662048dc9b106eb203011ce6",
+  "cli.note-read.schema.json": "34632d8b42bd7a420886cc0a3406892a111d053572be743112f145ca9bc17c00",
   "cli.observe.schema.json": "def52ac506f69d3bc1bbea0236261e4cdfb6ec20256725bb355815c18d685135",
   "cli.operations.schema.json": "6d4fdb50cb672aa3feed5daf304f08af42337192962f8eb60c6100d111ec3bf3",
   "cli.plan-edit-context.schema.json": "56fe1776ba9611adf8ce77e7857e1ef25e566b902e225b5b21c96572336f23d6",

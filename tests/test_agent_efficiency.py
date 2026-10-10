@@ -147,9 +147,20 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
         root=str(mini_repo), note_id=note.id, query=note.id, type="note",
         offset=0, limit=100, expected_snapshot=None,
     )
-    invoke = getattr(reads, command)
-    assert invoke(args) == 0
-    payload = json.loads(capsys.readouterr().out)
+    if command == "cmd_note_read":
+        import los
+        from learning_os.ops.pipeline import run_cli
+
+        parser = los.build_parser()
+        cli_args = parser.parse_args(
+            ["note-read", note.id, "--offset", "0", "--limit", "100"])
+        outcome = run_cli(mini_repo, "cli.note-read", cli_args)
+        assert outcome.exit_code == 0
+        payload = json.loads(outcome.stdout)
+    else:
+        invoke = getattr(reads, command)
+        assert invoke(args) == 0
+        payload = json.loads(capsys.readouterr().out)
     assert len(parsed) == len(repo.notes)
     if command == "cmd_note_read":
         assert payload["content"] == note.path.read_text()[:100]
@@ -160,13 +171,22 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
     # A change outside the note owner must still invalidate continuation.
     modules = mini_repo / "records/modules.yaml"
     modules.write_text(modules.read_text() + "\n# changed while reading\n")
-    args.expected_snapshot = payload["snapshot_id"]
-    args.offset = 1
     parsed.clear()
-    assert invoke(args) == 3
-    output = capsys.readouterr()
-    assert not output.out
-    assert "snapshot changed" in output.err
+    if command == "cmd_note_read":
+        cli_args = parser.parse_args(
+            ["note-read", note.id, "--offset", "1", "--limit", "100",
+             "--expected-snapshot", payload["snapshot_id"]])
+        outcome = run_cli(mini_repo, "cli.note-read", cli_args)
+        assert outcome.exit_code == 3
+        assert not outcome.stdout
+        assert "snapshot changed" in outcome.stderr
+    else:
+        args.expected_snapshot = payload["snapshot_id"]
+        args.offset = 1
+        assert invoke(args) == 3
+        output = capsys.readouterr()
+        assert not output.out
+        assert "snapshot changed" in output.err
     assert parsed == []
 
 

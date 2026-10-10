@@ -168,3 +168,4 @@ approvals:
   - {key: "request_schemas.concept.relations.change.schema.json", change: changed, plan_ref: "PLAN D4 (SC-atlas: concept.relations.change converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.atlas-context.schema.json", change: changed, plan_ref: "PLAN D4 (SC-atlas: cli.atlas-context converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.note.create.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavetwo: note.create converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.cli.note-read.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavetwo: cli.note-read converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

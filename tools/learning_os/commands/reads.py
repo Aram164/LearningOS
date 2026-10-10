@@ -14,12 +14,11 @@ from learning_os.domain.failures import (
     WriteRefused,
     unreadable_refusal,
 )
-from learning_os.domain.suggest import expansion, not_found, with_suggestions
-from learning_os.garden import garden_id
+from learning_os.domain.suggest import expansion, with_suggestions
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.genout.projection.atlas import STAGE_CONCEPT
 from learning_os.loader import load_repo
-from learning_os.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
+from learning_os.loading import FRONTMATTER_RE
 from learning_os.material_analysis import observe_local_material
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.material_synthesis import material_synthesis_freshness
@@ -34,10 +33,9 @@ from learning_os.materials_resolution import (
 )
 from learning_os.ops._legacy_plumbing import (
     SESSION_ID_ENV,
-    _bytes_inside_owner,
-    _content_envelope,
     _fresh_manifest,
     _note_bytes,
+    _note_collection,
     _operator_lock,
     _resolve_session_identity,
     _snapshot,
@@ -403,74 +401,6 @@ def _content_term_hits(root, ordered, terms):
         return hits
     except (WriteRefused, OSError, UnicodeError):
         return None
-
-
-def _note_collection(root):
-    """Load only the note registry for note reads/search, not a complete Repo.
-
-    The partial model stays inside these note-only paths. Full canonical
-    fingerprints still guard the read before and after, including continuation.
-    """
-    repo = Repo(root=root)
-    load_notes(repo, root)
-    return repo
-
-
-def _garden_notes(root):
-    """(stable id, note) pairs for every garden seed.
-
-    Loaded lazily on a durable-note miss, so the registered-note path —
-    including its parse-only-notes budget — never pays for the garden.
-    Identity is the same ``garden_id`` the manifest projects, so search
-    rows and this read cannot disagree about what an id names.
-    """
-    repo = Repo(root=root)
-    load_garden(repo, root)
-    garden_root = root / "knowledge" / "garden"
-    return [(garden_id(garden_root, note.path), note)
-            for note in repo.garden_notes]
-
-
-def _garden_note(root, note_id):
-    """The garden seed with one stable id, or None."""
-    for stable_id, note in _garden_notes(root):
-        if stable_id == note_id:
-            return note
-    return None
-
-
-def cmd_note_read(args) -> int:
-    root = _root(args)
-    try:
-        offset, limit = _window(args, 16000)
-        with _operator_lock(root, shared=True):
-            snapshot = _snapshot(root, args.expected_snapshot)
-            repo = _note_collection(root)
-            note = repo.notes.get(args.note_id)
-            if note is None:
-                seeds = _garden_notes(root)
-                garden = next((seed for stable_id, seed in seeds
-                               if stable_id == args.note_id), None)
-                if garden is None:
-                    candidates = [*repo.notes, *[stable_id for stable_id, _ in seeds]]
-                    raise WriteRefused(not_found("note", args.note_id, candidates))
-                raw = _bytes_inside_owner(
-                    root, garden.path, root / "knowledge" / "garden",
-                    escape="garden path escapes its garden owner",
-                    symlink="garden read refuses symlinks")
-                content = raw.decode("utf-8")
-                return _print_stable(root, snapshot, _content_envelope(
-                    "note-content", "note_id", args.note_id,
-                    garden.path.relative_to(root).as_posix(),
-                    raw, content, offset, limit))
-            raw = _note_bytes(root, note)
-            content = raw.decode("utf-8")
-            return _print_stable(root, snapshot, _content_envelope(
-                "note-content", "note_id", note.id,
-                note.path.relative_to(root).as_posix(),
-                raw, content, offset, limit))
-    except (WriteRefused, OSError, UnicodeError) as exc:
-        return _refusal(exc)
 
 
 def _match_verified(items, terms):

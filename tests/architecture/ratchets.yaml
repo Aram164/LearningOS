@@ -623,10 +623,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/reads.py::cmd_note_read::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/reads.py::compact_bootstrap::_operator_lock
     count: 1
     since: baseline
@@ -1842,10 +1838,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.note-read::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.observe::*
     count: 1
     since: baseline
@@ -1967,10 +1959,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.analysis.save_batch::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.content::*
     count: 1
     since: baseline
     approved_by: null
@@ -2091,10 +2079,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.note-read::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.observe::*
     count: 1
     since: baseline
@@ -2216,10 +2200,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.analysis.save_batch::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.content::*
     count: 1
     since: baseline
     approved_by: null
