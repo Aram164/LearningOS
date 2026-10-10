@@ -467,26 +467,6 @@ checks:
     count: 7
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::canonical_fingerprint
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
     count: 1
     since: baseline
@@ -1438,10 +1418,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.runtime-session::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.search::*
     count: 1
     since: baseline
@@ -1475,10 +1451,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.search::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: runtime.session::*
     count: 1
     since: baseline
     approved_by: null
@@ -1523,10 +1495,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.runtime-session::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.search::*
     count: 1
     since: baseline
@@ -1560,10 +1528,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.search::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: runtime.session::*
     count: 1
     since: baseline
     approved_by: null

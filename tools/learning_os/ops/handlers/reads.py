@@ -11,6 +11,7 @@ from types import SimpleNamespace
 
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
+from learning_os.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.domain.failures import (
     NotFound,
     StaleSnapshot,
@@ -21,9 +22,11 @@ from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.genout.common import _first_para
+from learning_os.genout.learner_interpreter import _collect_and_interpret
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.projection.atlas import STAGE_CONCEPT
 from learning_os.genout.resume_dossier import ResumeDossierError, build_resume_dossier
+from learning_os.genout.session_compiler import compile_session, replan_session
 from learning_os.githistory import GitHistoryError, last_commit_date
 from learning_os.learning_runtime import (
     RuntimeInputError,
@@ -2145,3 +2148,59 @@ def resume(ctx: OpContext, req: dict) -> Result:
         "untargeted_section": untargeted_section,
     }
     return Result(output, json_dumps=_dumps_resume, human_view=view)
+
+
+def _dumps_runtime_session(payload) -> str:
+    """The exact runtime-session encoder: sorted, unescaped, no layout."""
+    return json.dumps(payload, sort_keys=True, ensure_ascii=False)
+
+
+@register("cli.runtime-session", kind="porcelain")
+@register("runtime.session", kind="porcelain")
+def runtime_session(ctx: OpContext, req: dict) -> Result:
+    """Propose (or repair) one runtime study session. Read-only."""
+    root = ctx.root
+    try:
+        before = ctx.snapshot_id()
+        if req["expected_snapshot"] is not None and req["expected_snapshot"] != before:
+            raise StaleSnapshot(
+                "snapshot changed; reload before proposing a session",
+                site=f"{ctx.operation}.stale-snapshot",
+            )
+        context = json.loads(req["context_json"])
+        repo = ctx.repo()
+        requirement = next((r for r in collect_requirements(repo) if r["id"] == req["requirement"]), None)
+        if requirement is None:
+            raise RuntimeInputError(f"unknown requirement: {req['requirement']}")
+        interpretation = _collect_and_interpret(repo)[requirement["id"]]
+        if bool(req["previous_json"]) != bool(req["event"]):
+            raise RuntimeInputError("bounded repair requires both --previous-json and --event")
+        if req["previous_json"]:
+            previous_packet = json.loads(req["previous_json"])
+            validate_contract(root, "runtime-session.schema.json", previous_packet)
+            if previous_packet.get("snapshot_id") != before:
+                raise StaleSnapshot(
+                    "previous proposal belongs to a different snapshot; propose a fresh session",
+                    site=f"{ctx.operation}.previous-stale",
+                )
+            session = replan_session(repo, previous_packet, requirement,
+                                     interpretation, context, req["event"], before)
+        else:
+            session = compile_session(repo, requirement, interpretation, context)
+        result = {"contract": "runtime-session-v1", "schema_version": 1,
+                  "snapshot_id": before, "session": session}
+        validate_contract(root, "runtime-session.schema.json", result)
+        if before != _snapshot(ctx.root):
+            raise StaleSnapshot(
+                "snapshot changed during runtime read; retry",
+                site=f"{ctx.operation}.mid-read-stale",
+            )
+        return Result(result, json_dumps=_dumps_runtime_session)
+    except (RuntimeInputError, ContractValidationError,
+            json.JSONDecodeError, OSError) as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.bad-input",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc

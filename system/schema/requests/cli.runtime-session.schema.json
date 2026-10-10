@@ -142,7 +142,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.runtime.cmd_runtime_session",
+    "handler": "learning_os.adapters.cli.invoke:cli.runtime-session",
     "parser_factory": false
   }
 }
