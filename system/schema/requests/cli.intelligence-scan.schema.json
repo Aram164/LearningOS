@@ -98,7 +98,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.intelligence.cmd_intelligence_scan",
+    "handler": "learning_os.adapters.cli.invoke:cli.intelligence-scan",
     "parser_factory": false
   }
 }

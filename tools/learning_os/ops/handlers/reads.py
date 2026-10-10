@@ -16,6 +16,7 @@ from learning_os.domain.failures import (
 from learning_os.domain.suggest import expansion, not_found
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.genout.atlas import ATLAS_DOMAINS
+from learning_os.githistory import GitHistoryError
 from learning_os.material_refs import unit_routes
 from learning_os.materials_resolution import (
     material_uri_authority,
@@ -31,6 +32,7 @@ from learning_os.ops._legacy_plumbing import (
     _resolve_session_identity,
     _snapshot,
     _window_values,
+    ranked_scan,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result
@@ -44,8 +46,10 @@ from learning_os.semantics.dossiers import (
     load_dossier,
     store_dossier,
 )
+from learning_os.semantics.goals import RankedCluster, goal_to_dict
 from learning_os.semantics.predicates import CONTRACT_VERSION, PREDICATES, evaluate
 from learning_os.semantics.recipes import RecipeError, recipes_for
+from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
 from learning_os.validation_cache import observe_pins, status_issues
 
 #: Operator-contract version hashed into every dossier key. There is no
@@ -798,3 +802,213 @@ def semantic(ctx: OpContext, req: dict) -> Result:
     return Result({"predicate": name, "verdict": verdict,
                    "inputs": inputs},
                   json_dumps=_dumps_semantic)
+
+
+#: Brief cap: at most this many ranked groups, whatever the tiers hold. The
+#: top two tiers alone held 61 groups on 2026-09-23, so a tier cutoff cannot
+#: bound the page -- only a rank cutoff can.
+BRIEF_GROUP_LIMIT = 5
+
+#: Member goal ids sampled per brief group summary. The rest count toward
+#: ``omitted_members`` and never print: a summary stays a summary even for
+#: the largest cluster.
+BRIEF_MEMBER_SAMPLE = 6
+
+
+def _tier_label(row: RankedCluster) -> str:
+    if row.tier == 1:
+        return f"before {row.nearest_sitting} ({row.days_until}d)"
+    if row.tier == 2:
+        return f"ahead of {row.nearest_sitting} ({row.days_until}d)"
+    if row.tier == 3:
+        return "active study, no dated pressure"
+    if row.tier == 5:
+        return "retired module"
+    return "no dated pressure"
+
+
+def _full_result_route(req) -> str:
+    """The runnable command for the un-truncated scan behind a brief page."""
+    parts = ["intelligence-scan"]
+    if req.get("days", 30) != 30:
+        parts += ["--days", str(req["days"])]
+    if req.get("feed"):
+        parts += ["--feed", str(req["feed"])]
+    return " ".join([*parts, "--json"])
+
+
+def _brief_group_summary(number: int, row: RankedCluster) -> dict:
+    """One bounded ranked-group summary for the brief page."""
+    cluster = row.cluster
+    members = list(cluster.member_ids)
+    sample = members[:BRIEF_MEMBER_SAMPLE]
+    return {
+        "rank": number,
+        "cluster_id": cluster.cluster_id,
+        "detector": cluster.detector,
+        "title": cluster.title,
+        "tier": row.tier,
+        "tier_label": _tier_label(row),
+        "nearest_sitting": row.nearest_sitting,
+        "days_until": row.days_until,
+        "member_count": len(members),
+        "sample_goal_ids": sample,
+        "omitted_members": len(members) - len(sample),
+    }
+
+
+def _brief_scan_page(req, goals, ranked) -> dict:
+    """At most five ranked groups plus totals; the agent entry path.
+
+    Bounded by rank, never by tier: even when every shown group bears on
+    an exam, the page stays five summaries. The omitted counts and
+    ``full_result`` route to the complete scan; the full ``--json`` shape
+    is untouched for consumers that need every goal.
+    """
+    shown = list(ranked[:BRIEF_GROUP_LIMIT])
+    summaries = [_brief_group_summary(number, row)
+                 for number, row in enumerate(shown, start=1)]
+    shown_goals = sum(item["member_count"] for item in summaries)
+    return {
+        "contract": "intelligence-scan-brief",
+        "groups": summaries,
+        "total_groups": len(ranked),
+        "total_goals": len(goals),
+        "omitted_groups": len(ranked) - len(shown),
+        "omitted_goals": len(goals) - shown_goals,
+        "full_result": _full_result_route(req),
+    }
+
+
+def _unique_feed_object(pairs: list[tuple[str, object]]) -> dict:
+    """Refuse ambiguous JSON before a duplicate key can discard evidence."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise FeedError(f"malformed feed: duplicate JSON key {key!r}")
+        result[key] = value
+    return result
+
+
+def _dumps_intelligence_scan(payload) -> str:
+    """The exact scan encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+def _human_intelligence_scan(payload, view) -> str:
+    """The exact scan screen, rendered from the handler's view (SPEC (bu) 1)."""
+    if view["goal_count"] == 0:
+        return ("intelligence scan: no candidates — "
+                "nothing moved that the detectors cover")
+    lines = [f"intelligence scan: {view['goal_count']} candidate(s) in "
+             f"{len(view['ranked'])} group(s) — review before Aram decides:"]
+    attention = [row for row in view["ranked"] if row["tier"] <= 2]
+    upcoming = [row["days_until"] for row in attention
+                if row["days_until"] is not None]
+    if upcoming:
+        urgent_goals = sum(len(row["members"]) for row in attention)
+        lines.append(f"{len(attention)} group(s), {urgent_goals} goal(s), bear on a "
+                     f"sitting in the next {min(upcoming)}d.")
+    visible = view["ranked"][:BRIEF_GROUP_LIMIT] if view["brief"] else view["ranked"]
+    for number, row in enumerate(visible, start=1):
+        lines.append(f"{number}. [{row['tier_label']}] {row['title']}")
+        members = row["members"]
+        if len(members) == 1 and members[0] in view["evidence"]:
+            lines.append(f"   evidence: {', '.join(view['evidence'][members[0]])}")
+        else:
+            shown = ", ".join(members[:6])
+            if len(members) > 6:
+                shown += f" … +{len(members) - 6} more"
+            lines.append(f"   goals ({len(members)}): {shown}")
+    if view["brief"] and len(view["ranked"]) > len(visible):
+        omitted = view["goal_count"] - sum(len(row["members"]) for row in visible)
+        lines.append(f"({len(view['ranked']) - len(visible)} more group(s), {omitted} goal(s) "
+                     "omitted -- rerun without --brief for the full queue)")
+    lines.append("Record Aram's explicit decision per goal id: "
+                 "los goal <id> --reject|--defer|--close")
+    if view["hidden_count"]:
+        lines.append(f"({view['hidden_count']} decided goal(s) stay hidden — see `los goal`)")
+    return "\n".join(lines)
+
+
+@register("cli.intelligence-scan", kind="tool", human=_human_intelligence_scan)
+def intelligence_scan(ctx: OpContext, req: dict) -> Result:
+    """Run one observation loop: observe, interpret, propose.
+
+    ``--brief`` caps the page at five ranked groups plus totals; with
+    ``--json`` that is the agent entry path. ``--feed`` reads a
+    caller-owned JSON session-count file (see session_counts) so the
+    three count detectors can fire; the scan never writes it.
+    """
+    if req["days"] < 0:
+        raise WriteRefused(
+            "intelligence scan: --days is never negative",
+            site=f"{ctx.operation}.negative-days",
+            exit_code=2,
+        )
+    feed = None
+    if req.get("feed"):
+        try:
+            raw = Path(req["feed"]).read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            raise WriteRefused(
+                f"intelligence scan: cannot read --feed: {exc}",
+                site=f"{ctx.operation}.unreadable-feed",
+                exit_code=2,
+            ) from exc
+        try:
+            feed = json.loads(raw, object_pairs_hook=_unique_feed_object)
+        except FeedError as exc:
+            raise WriteRefused(
+                f"intelligence scan: {exc}",
+                site=f"{ctx.operation}.malformed-feed",
+                exit_code=2,
+            ) from exc
+        except (ValueError, RecursionError) as exc:
+            raise WriteRefused(
+                f"intelligence scan: --feed is not JSON: {exc}",
+                site=f"{ctx.operation}.feed-not-json",
+                exit_code=2,
+            ) from exc
+        try:
+            feed_scan_kwargs(feed)
+        except FeedError as exc:
+            raise WriteRefused(
+                f"intelligence scan: {exc}",
+                site=f"{ctx.operation}.invalid-feed",
+                exit_code=2,
+            ) from exc
+    root = ctx.root
+    try:
+        goals, ranked, hidden = ranked_scan(root, days=req["days"], feed=feed)
+    except GitHistoryError as exc:
+        raise WriteRefused(
+            f"intelligence scan: cannot read Git history: {exc}",
+            site=f"{ctx.operation}.git-history",
+            exit_code=2,
+        ) from exc
+    except (OSError, ValueError) as exc:
+        raise WriteRefused(
+            f"intelligence scan: cannot rank the queue: {exc}",
+            site=f"{ctx.operation}.unrankable-queue",
+            exit_code=2,
+        ) from exc
+    if req.get("brief"):
+        payload = _brief_scan_page(req, goals, ranked)
+    else:
+        payload = {"goals": [goal_to_dict(goal) for goal in goals]}
+    view = {
+        "brief": bool(req.get("brief")),
+        "goal_count": len(goals),
+        "ranked": [{
+            "tier": row.tier,
+            "nearest_sitting": row.nearest_sitting,
+            "days_until": row.days_until,
+            "title": row.cluster.title,
+            "members": list(row.cluster.member_ids),
+            "tier_label": _tier_label(row),
+        } for row in ranked],
+        "evidence": {goal.goal_id: list(goal.evidence) for goal in goals},
+        "hidden_count": hidden,
+    }
+    return Result(payload, json_dumps=_dumps_intelligence_scan, human_view=view)

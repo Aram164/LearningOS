@@ -27,27 +27,27 @@ cases:
     kind: refusal
     transport: cli
     argv: [intelligence-scan, --days, -1]
-    expect: {site: null}
+    expect: {site: cli.intelligence-scan.negative-days}
   - id: unreadable-feed
     kind: refusal
     transport: cli
     argv: [intelligence-scan, --feed, work/inbox/nope.json]
-    expect: {site: null}
+    expect: {site: cli.intelligence-scan.unreadable-feed}
   - id: feed-dup-keys
     kind: refusal
     transport: cli
     argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
-    expect: {site: null}
+    expect: {site: cli.intelligence-scan.malformed-feed}
   - id: feed-not-json
     kind: refusal
     transport: cli
     argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
-    expect: {site: null}
+    expect: {site: cli.intelligence-scan.feed-not-json}
   - id: feed-bad-shape
     kind: refusal
     transport: cli
     argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
-    expect: {site: null}
+    expect: {site: cli.intelligence-scan.invalid-feed}
 untriggered:
   - {where: "tools/learning_os/commands/intelligence.py:274", reason: "unreadable Git history: the seam supplies an empty history; needs corrupt git"}
   - {where: "tools/learning_os/commands/intelligence.py:276", reason: "rank failure: the fixture scans and ranks cleanly; needs malformed repo data"}

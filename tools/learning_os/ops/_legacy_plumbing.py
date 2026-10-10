@@ -22,6 +22,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
 import jsonschema
@@ -44,6 +45,12 @@ from learning_os.genout import (
     write_outputs,
 )
 from learning_os.genout.common import _git_state
+from learning_os.genout.modules_view import _academic_deadlines
+from learning_os.learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    read_observations,
+)
 from learning_os.loader import load_repo
 from learning_os.loading import Repo, load_notes
 from learning_os.loading.yamlio import UniqueKeySafeLoader
@@ -60,6 +67,13 @@ from learning_os.materials_resolution import (
     safe_material_locator,
 )
 from learning_os.ops.outcomes import classify, resolve
+from learning_os.semantics.goals import (
+    CandidateGoal,
+    RankedCluster,
+    cluster_goals,
+    rank_clusters,
+)
+from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
 from learning_os.transactions import artifact_revision, reconcile_inflight_transactions
 
 #: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
@@ -1464,24 +1478,127 @@ def _capabilities(root: Path) -> dict:
 # still call them from commands.
 
 
-def _inbox_search_rows(root: Path) -> list[dict]:
-    """One discovery row per inbox file, matched on names only, never bytes.
+# ---------------------------------------------------------------------------
+# Ranked intelligence scan, moved verbatim from commands/intelligence.py
+# (SPEC (bo) item 2): the intelligence-scan conversion needs ranked_scan
+# while cmd_resume still calls it from commands. It rests here: the body
+# keeps its load_repo, which A4 forbids inside ops/handlers.
 
-    Inbox drops are arbitrary files (binary captures included), so the
-    metadata search reads no content here: the haystack is the file name
-    and path. Content stays behind ``inbox-read``, which refuses non-text.
-    Raises OSError when the listing itself fails; a missing inbox is empty.
+
+def _route_modules(repo) -> dict[str, str]:
+    """Route id to owning module id, from the loaded source maps."""
+    owners: dict[str, str] = {}
+    for module_id, smap in (getattr(repo, "module_source_maps", {}) or {}).items():
+        if not isinstance(smap, dict):
+            continue
+        sources = smap.get("sources")
+        if not isinstance(sources, list):
+            continue
+        for src in sources:
+            if not isinstance(src, dict):
+                continue
+            routes = src.get("unit_routes")
+            if not isinstance(routes, list):
+                continue
+            for route in routes:
+                if not isinstance(route, dict):
+                    continue
+                rid = route.get("id")
+                if isinstance(rid, str) and rid and rid not in owners:
+                    owners[rid] = module_id
+    return owners
+
+
+def _requirement_modules(repo) -> tuple[dict[str, set[str]], dict[str, str]]:
+    """Requirement id to owning modules, plus observation id to requirement.
+
+    Best-effort: an unreadable runtime resolves nothing rather than
+    refusing the whole scan.
     """
-    inbox = root / "work" / "inbox"
-    if not inbox.is_dir():
-        return []
-    rows = []
-    for path in sorted(inbox.rglob("*")):
-        if not path.is_file():
+    try:
+        requirements = collect_requirements(repo)
+    except RuntimeInputError:
+        return {}, {}
+    units = getattr(repo, "units", {}) or {}
+    req_modules: dict[str, set[str]] = {}
+    for req in requirements:
+        if not isinstance(req, dict):
             continue
-        rel = path.relative_to(inbox).as_posix()
-        if any(part.startswith(".") for part in rel.split("/")):
+        source = req.get("source_stage", {})
+        unit = units.get(source.get("unit_id", "")) if isinstance(source, dict) else None
+        module_id = getattr(unit, "module_id", None)
+        if isinstance(req.get("id"), str) and isinstance(module_id, str) and module_id:
+            req_modules[req["id"]] = {module_id}
+    try:
+        observations = read_observations(repo, requirements)
+    except RuntimeInputError:
+        return req_modules, {}
+    obs_requirements = {
+        obs["id"]: obs.get("requirement") for obs in observations
+        if isinstance(obs, dict) and isinstance(obs.get("id"), str)}
+    return req_modules, obs_requirements
+
+
+def _cluster_modules(repo, route_modules: dict[str, str],
+                     req_modules: dict[str, set[str]],
+                     obs_requirements: dict[str, str],
+                     cluster) -> set[str]:
+    """Modules behind one cluster, resolved from member goal ids.
+
+    Study-map obligations name their unit; covering-routes goals name
+    their route; lineage and changed-source goals name claims, and a
+    ``covers:`` claim resolves through its route; superseded-evidence
+    goals name observations, resolved through their requirement.
+    Anything unresolvable stays unknown — the ranker treats that as
+    tier 4, never urgent.
+    """
+    modules: set[str] = set()
+    units = getattr(repo, "units", {}) or {}
+    for goal_id in cluster.member_ids:
+        kind, _, rest = goal_id.partition(":")
+        if kind == "study-map-obligation":
+            unit = units.get(rest)
+            module_id = getattr(unit, "module_id", None)
+            if isinstance(module_id, str) and module_id:
+                modules.add(module_id)
             continue
-        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
-                     "path": f"work/inbox/{rel}"})
-    return rows
+        if kind == "evidence-superseded":
+            req_id = obs_requirements.get(rest)
+            modules.update(req_modules.get(req_id, ()))
+            continue
+        route = rest if kind == "covering-routes-stale" else None
+        if route is None and rest.startswith("covers:"):
+            route = rest[len("covers:"):]
+        if route and route in route_modules:
+            modules.add(route_modules[route])
+    return modules
+
+
+def ranked_scan(root, *, days: int = 30,
+                feed: Mapping | None = None,
+                ) -> tuple[tuple[CandidateGoal, ...], tuple[RankedCluster, ...], int]:
+    """Goals clustered by shared cause, ordered by exam proximity.
+
+    Returns ``(goals, ranked, decided_hidden)``. Orchestration over the
+    existing detectors plus the goal ledger; still read-only. ``feed``
+    is a caller-supplied session-count mapping; None behaves as before.
+    """
+    goals = intelligence_scan(root, days=days, feed=feed)
+    clusters = cluster_goals(goals)
+    repo = load_repo(root)
+    deadlines = _academic_deadlines(repo)
+    module_status = {
+        module_id: (module.get("status") if isinstance(module, dict) else None)
+        for module_id, module in (getattr(repo, "modules", {}) or {}).items()
+    }
+    route_modules = _route_modules(repo)
+    req_modules, obs_requirements = _requirement_modules(repo)
+    mapping = {
+        cluster.cluster_id: _cluster_modules(
+            repo, route_modules, req_modules, obs_requirements, cluster)
+        for cluster in clusters
+    }
+    ranked = rank_clusters(
+        clusters, today=observations.today(), deadlines=deadlines,
+        module_status=module_status, cluster_modules=mapping)
+    return goals, ranked, len(_read_goal_ledger(root))

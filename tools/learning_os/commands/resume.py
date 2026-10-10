@@ -431,7 +431,7 @@ def _top_cluster(root: Path) -> dict | None:
     moves when the top cluster moves and never with the clock.
     """
     try:
-        from .intelligence import ranked_scan
+        from learning_os.ops._legacy_plumbing import ranked_scan
 
         _, ranked, _ = ranked_scan(root, days=30)
     except (GitHistoryError, OSError, ValueError):

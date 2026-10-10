@@ -283,26 +283,6 @@ checks:
     count: 16
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/intelligence.py::_print_brief_json::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/intelligence.py::_print_brief_json::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/intelligence.py::cmd_intelligence_scan::print
-    count: 17
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/intelligence.py::cmd_intelligence_scan::return
-    count: 10
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/intelligence.py::ranked_scan::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::_operator_lock
     count: 1
     since: baseline
@@ -1486,10 +1466,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.intelligence-scan::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.module-list::*
     count: 1
     since: baseline
@@ -1580,10 +1556,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.goal::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.intelligence-scan::*
     count: 1
     since: baseline
     approved_by: null
