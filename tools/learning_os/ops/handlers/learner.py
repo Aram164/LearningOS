@@ -12,7 +12,7 @@ import yaml
 
 from learning_os import observations
 from learning_os.domain.failures import NotFound, WriteRefused
-from learning_os.domain.suggest import not_found
+from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.learning_runtime import requirement_id_for
 from learning_os.ops._legacy_plumbing import (
     _dump_study_map,
@@ -651,6 +651,79 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
             capability="detour.resolve",
             writes={study_map.path: _dump_study_map(study_map, data),
                     unit.path: _dump_yaml(unit_data)},
+            artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+@register("source.feedback.record", kind="command")
+def source_feedback(ctx: OpContext, req: dict) -> Result:
+    """Record source feedback against an exact unit/stage/source."""
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    if req["source_id"] not in repo.sources:
+        message = not_found("source", req["source_id"], repo.sources)
+        raise NotFound(
+            "source", req["source_id"], repo.sources,
+            site="source.feedback.record.unknown-source",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    data = copy.deepcopy(study_map.data)
+    stage = require_stage(ctx, data, req["stage_id"])
+    entry = {"source_id": req["source_id"], "feedback": req["feedback"],
+             "recorded": observations.today().isoformat()}
+    resource_id = req.get("resource_id")
+    if resource_id:
+        # Resolve against THIS stage before writing. The validator rejects a
+        # dangling resource_id, but failing here gives the caller the actual
+        # id list instead of a post-hoc validation error, and keeps the
+        # transaction from being attempted at all.
+        resources = {str(r.get("id")): r for r in (stage.get("resources") or [])
+                     if isinstance(r, dict) and r.get("id")}
+        target = resources.get(resource_id)
+        if target is None:
+            known = (", ".join(sorted(resources))
+                     or "(this stage has no identified resources)")
+            refusal = with_suggestions(
+                f"resource not found on stage {req['stage_id']}: {resource_id}",
+                resource_id, resources)
+            raise NotFound(
+                "resource", resource_id, resources,
+                message=f"{refusal}\n     known: {known}",
+                site="source.feedback.record.unknown-resource",
+                gateway_message=f"los: {refusal}\n     known: {known}",
+                exit_code=2,
+            )
+        declared = target.get("source_id")
+        if declared and declared != req["source_id"]:
+            raise WriteRefused(
+                f"resource {resource_id} belongs to {declared}, "
+                f"not {req['source_id']}",
+                site="source.feedback.record.wrong-source",
+                gateway_message=(f"los: resource {resource_id} belongs to {declared}, "
+                                 f"not {req['source_id']}"),
+                exit_code=2,
+            )
+        entry["resource_id"] = resource_id
+    if req.get("note"):
+        entry["note"] = req["note"]
+    stage.setdefault("source_feedback", []).append(entry)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="source.feedback.record.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "stage_id": req["stage_id"], "feedback": entry},
+        proposal=TransactionProposal(
+            capability="source.feedback.record",
+            writes={study_map.path: _dump_study_map(study_map, data)},
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),

@@ -20,25 +20,25 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, source_id: source-nope, feedback: helpful}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.feedback.record.unknown-source}
   - id: unknown-stage
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-nope, source_id: source-demo-book, feedback: helpful}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.feedback.record.unknown-stage}
   - id: unknown-resource
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, source_id: source-demo-book, feedback: helpful, resource_id: resource-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.feedback.record.unknown-resource}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, stage_id: stage-demo, source_id: source-demo-book, feedback: helpful}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: source.feedback.record.unknown-unit}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

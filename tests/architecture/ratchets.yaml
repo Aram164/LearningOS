@@ -987,18 +987,6 @@ checks:
     count: 7
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::return
-    count: 7
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/source_catalog.py::_plan_intake::load_repo
     count: 1
     since: baseline
