@@ -253,7 +253,8 @@ def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
     env["PYTHONPATH"] = str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", "")
     if extra_env:
         env.update(extra_env)
-    if ctx.operation in _HEALTH_SCENARIO_OPERATIONS:
+    # A recovery context carries no operation and is never a health case.
+    if getattr(ctx, "operation", None) in _HEALTH_SCENARIO_OPERATIONS:
         # Scoped after extras: the health observation must not depend on
         # whether the host carries macOS backup tooling or a configured
         # backup, so the controlled input is never dropped.
