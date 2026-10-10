@@ -1990,14 +1990,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.inbox-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.inbox-read::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.intelligence-scan::*
     count: 1
     since: baseline
@@ -2098,19 +2090,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: garden.seed.create::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: health.report::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: inbox.content::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: inbox.list::*
     count: 1
     since: baseline
     approved_by: null
@@ -2211,14 +2191,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: project.update::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: review.apply::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: review.prepare::*
     count: 1
     since: baseline
     approved_by: null
@@ -2311,14 +2283,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.inbox-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.inbox-read::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.intelligence-scan::*
     count: 1
     since: baseline
@@ -2419,19 +2383,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: garden.seed.create::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: health.report::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: inbox.content::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: inbox.list::*
     count: 1
     since: baseline
     approved_by: null
@@ -2532,14 +2484,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: project.update::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: review.apply::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: review.prepare::*
     count: 1
     since: baseline
     approved_by: null
