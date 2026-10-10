@@ -22,7 +22,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [dossier, unit-nope]
-    expect: {site: null}
+    expect: {site: cli.dossier.unknown-unit}
 untriggered:
   - {where: "tools/learning_os/commands/dossier.py:127", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
   - {where: "tools/learning_os/commands/dossier.py:133", reason: "unit without a module source map: both fixture units sit under module-demo, which has one"}

@@ -58,7 +58,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.dossier.cmd_dossier",
+    "handler": "learning_os.adapters.cli.invoke:cli.dossier",
     "parser_factory": false
   }
 }
