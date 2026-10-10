@@ -156,7 +156,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.module.cmd_module_sitting",
+    "handler": "learning_os.adapters.cli.invoke:module.sitting.update",
     "parser_factory": false
   }
 }

@@ -159,3 +159,4 @@ approvals:
   - {key: "request_schemas.review.prepare.schema.json", change: changed, plan_ref: "PLAN D4 (SC-capture: review.prepare converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.review.apply.schema.json", change: changed, plan_ref: "PLAN D4 (SC-capture: review.apply converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.module.attempt.record.schema.json", change: changed, plan_ref: "PLAN D4 (SC-admin: module.attempt.record converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.module.sitting.update.schema.json", change: changed, plan_ref: "PLAN D4 (SC-admin: module.sitting.update converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

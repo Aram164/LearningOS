@@ -124,3 +124,76 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_refused_first_twelve,
         json_dumps=_dumps_admin,
     )
+
+
+@register("module.sitting.update", kind="command")
+def module_sitting(ctx: OpContext, req: dict) -> Result:
+    """Record one sitting's withdrawal deadline in the owning module.yaml."""
+    if req["termin"] not in (1, 2, 3):
+        message = f"--termin must be 1, 2 or 3, got {req['termin']!r}"
+        raise WriteRefused(
+            message,
+            site="module.sitting.update.bad-termin",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    try:
+        _dt.date.fromisoformat(req["withdrawal_deadline"])
+    except (TypeError, ValueError) as exc:
+        message = ("--withdrawal-deadline must be an ISO date (YYYY-MM-DD), "
+                   f"got {req['withdrawal_deadline']!r}")
+        raise WriteRefused(
+            message,
+            site="module.sitting.update.bad-deadline",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        ) from exc
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    module = repo.modules.get(req["module_id"])
+    if module is None:
+        message = not_found("module", req["module_id"], repo.modules)
+        raise NotFound(
+            "module", req["module_id"], repo.modules,
+            site="module.sitting.update.unknown-module",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    module_path = repo.module_origins[req["module_id"]]
+    data = copy.deepcopy(module)
+    sittings = (data.get("examination") or {}).get("sittings") or []
+    row = next((candidate for candidate in sittings
+                if isinstance(candidate, dict)
+                and candidate.get("termin") == req["termin"]), None)
+    if row is None:
+        known = sorted({sitting.get("termin") for sitting in sittings
+                        if isinstance(sitting, dict)
+                        and sitting.get("termin") is not None})
+        message = (f"module {req['module_id']} has no sitting for termin "
+                   f"{req['termin']} (known termins: {known or 'none'})")
+        raise WriteRefused(
+            message,
+            site="module.sitting.update.no-sitting",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    row["withdrawal_deadline"] = req["withdrawal_deadline"]
+    try:
+        expected_revisions = parse_expected_revisions(
+            req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="module.sitting.update.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "module_id": req["module_id"], "termin": req["termin"],
+         "withdrawal_deadline": req["withdrawal_deadline"]},
+        proposal=TransactionProposal(
+            capability="module.sitting.update",
+            writes={module_path: _dump_yaml(data)},
+            artifact_ids=[req["module_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_refused_first_twelve,
+        json_dumps=_dumps_admin,
+    )

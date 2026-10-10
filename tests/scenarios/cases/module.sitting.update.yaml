@@ -14,19 +14,19 @@ cases:
     transport: gateway
     request: {module_id: module-demo, termin: 2, withdrawal_deadline: "someday"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.sitting.update.bad-deadline}
   - id: unknown-module
     kind: refusal
     transport: gateway
     request: {module_id: module-nope, termin: 2, withdrawal_deadline: "2026-09-30"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.sitting.update.unknown-module}
   - id: no-sitting
     kind: refusal
     transport: gateway
     request: {module_id: module-demo, termin: 1, withdrawal_deadline: "2026-09-30"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.sitting.update.no-sitting}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
