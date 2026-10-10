@@ -193,7 +193,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.unit.cmd_unit_source_selection",
+    "handler": "learning_os.adapters.cli.invoke:unit.source-selection.set",
     "parser_factory": false
   }
 }

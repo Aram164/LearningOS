@@ -27,6 +27,7 @@ from learning_os.ops.handlers._shared import (
 )
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.routes import route_with_identity
 from learning_os.transactions import parse_expected_revisions
 from learning_os.unit_notes import unit_note_marker
 
@@ -874,3 +875,159 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: cannot write unit note: {exc}",
             exit_code=2,
         ) from exc
+
+
+def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
+                                   locator: str) -> bool:
+    """Derive usage from the current map before editing a material choice.
+
+    A stable route ID is authoritative when the resource has one. Older
+    resources identify a choice by its exact source and locator; a shared
+    source alone never means that this particular route is used.
+    """
+    study_map = repo.study_maps.get(unit.data.get("current_study_map"))
+    if study_map is None:
+        return False
+    # Compact references retain identity even with a stage-specific locator;
+    # expansion drops material_ref, so inspect the authored reference for this
+    # mutation precondition, falling back for programmatically built maps.
+    map_data = study_map.authored_data if study_map.authored_data is not None else study_map.data
+    for stage in map_data.get("stages", []) or []:
+        for resource in stage.get("resources", []) or []:
+            material_ref = resource.get("material_ref")
+            route_id = resource.get("route_id") or (
+                material_ref.get("route_id") if isinstance(material_ref, dict) else None)
+            if route_id:
+                if route_id == route["id"]:
+                    return True
+            elif (resource.get("source_id"), resource.get("locator")) == (
+                    source_id, locator):
+                return True
+    return False
+
+
+@register("unit.source-selection.set", kind="command")
+def unit_source_selection(ctx: OpContext, req: dict) -> Result:
+    """Persist one learner choice without changing the complete material menu."""
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    unit = repo.units.get(req["unit_id"])
+    if unit is None:
+        message = not_found("unit", req["unit_id"], repo.units)
+        raise NotFound(
+            "unit", req["unit_id"], repo.units,
+            site="unit.source-selection.set.unknown-unit",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    if req["source_id"] not in repo.sources:
+        message = not_found("source", req["source_id"], repo.sources)
+        raise NotFound(
+            "source", req["source_id"], repo.sources,
+            site="unit.source-selection.set.unknown-source",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+
+    source_map = repo.module_source_maps.get(unit.module_id, {})
+    matching_route = None
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict) or source.get("source_id") != req["source_id"]:
+            continue
+        for route in source.get("unit_routes", []) or []:
+            if (
+                isinstance(route, dict)
+                and route.get("unit_id") == req["unit_id"]
+                and route.get("locator") == req["locator"]
+            ):
+                matching_route = route_with_identity(
+                    unit.module_id, req["source_id"], route
+                )
+                break
+        if matching_route is not None:
+            break
+    if matching_route is None:
+        raise WriteRefused(
+            "selection must match one rich material route on this unit "
+            f"({req['source_id']} · {req['locator']})",
+            site="unit.source-selection.set.no-matching-route",
+            gateway_message=("los: selection must match one rich material route on this unit "
+                             f"({req['source_id']} · {req['locator']})"),
+            exit_code=2,
+        )
+
+    unit_data = copy.deepcopy(unit.data)
+    selections = list(unit_data.get("source_selections", []) or [])
+    index = next((
+        i for i, row in enumerate(selections)
+        if isinstance(row, dict)
+        and row.get("source_id") == req["source_id"]
+        and row.get("locator") == req["locator"]
+    ), None)
+
+    if req["action"] == "select":
+        purpose = str(req.get("purpose") or matching_route.get("angle") or "Chosen learning material").strip()
+        if not purpose:
+            raise WriteRefused(
+                "a selected material needs a purpose",
+                site="unit.source-selection.set.missing-purpose",
+                gateway_message="los: a selected material needs a purpose",
+                exit_code=2,
+            )
+        replacement = {
+            "route_id": matching_route["id"],
+            "source_id": req["source_id"],
+            "locator": req["locator"],
+            "purpose": purpose,
+        }
+        if index is None:
+            selections.append(replacement)
+        else:
+            if selections[index].get("stage_ids"):
+                replacement["stage_ids"] = list(selections[index]["stage_ids"])
+            selections[index] = replacement
+        selected = True
+    elif req["action"] == "remove":
+        if index is not None and _selection_used_by_current_map(
+                repo, unit, matching_route, req["source_id"], req["locator"]):
+            raise WriteRefused(
+                "this choice is used by the current study path; remove it "
+                "from those stages before removing the choice",
+                site="unit.source-selection.set.used-by-map",
+                gateway_message=("los: this choice is used by the current study path; remove it "
+                                 "from those stages before removing the choice"),
+                exit_code=2,
+            )
+        if index is not None:
+            selections.pop(index)
+        selected = False
+    else:
+        raise WriteRefused(
+            f"unknown source-selection action: {req['action']} "
+            "(choose from select, remove)",
+            site="unit.source-selection.set.unknown-action",
+            gateway_message=(f"los: unknown source-selection action: {req['action']} "
+                             "(choose from select, remove)"),
+            exit_code=2,
+        )
+
+    unit_data["source_selections"] = selections
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="unit.source-selection.set.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "source_id": req["source_id"], "locator": req["locator"],
+         "selected": selected},
+        proposal=TransactionProposal(
+            capability="unit.source-selection.set",
+            writes={unit.path: _dump_yaml(unit_data)},
+            artifact_ids=[req["unit_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )

@@ -9166,7 +9166,7 @@
   "unit.material-synthesis.publish.schema.json": "9c6fc9358e6b0853772170bd0e814ed1f651e1393898f8479b483fabc6fe61cf",
   "unit.note.append.schema.json": "9fee2fd2de6cf30298865327150341fec09dea6e13dbd7d9ca6581f55818fcae",
   "unit.plan.revise.schema.json": "f9e2c22bb7b9e0e3cedb3bc7e552c8cec14b773178138dff2a5b22071f2fb08a",
-  "unit.source-selection.set.schema.json": "e65f3e21dffcca76550fa96dd926f161c59fd6987148c96a82df608b3eb651d2",
+  "unit.source-selection.set.schema.json": "5811837b4c9e715dd0210e3cf5819da631460d359299f9d259b15c714d055bf0",
   "workspace.next-action.update.schema.json": "4115ba96af8e7adc75568b45674beb19af0618d833b700795a8d13c62e869d80"
  },
  "tools": {

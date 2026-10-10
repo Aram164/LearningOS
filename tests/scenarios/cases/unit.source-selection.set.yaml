@@ -20,31 +20,31 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: remove}
     artifact_ids: [unit-demo-l01]
-    expect: {site: null}
+    expect: {site: unit.source-selection.set.used-by-map}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, source_id: source-demo-book, locator: "lecture-01.pdf", action: select}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.source-selection.set.unknown-unit}
   - id: unknown-source
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, source_id: source-nope, locator: "lecture-01.pdf", action: select}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.source-selection.set.unknown-source}
   - id: no-matching-route
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "nope.pdf", action: select}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.source-selection.set.no-matching-route}
   - id: empty-purpose
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: select, purpose: " "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.source-selection.set.missing-purpose}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

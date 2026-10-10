@@ -351,17 +351,24 @@ def test_path_handler_refuses_an_unknown_status(mini_repo: Path):
 
 
 def test_source_selection_handler_refuses_an_unknown_action(
-        mini_repo: Path, capsys: pytest.CaptureFixture):
+        mini_repo: Path):
     from repo_builders import rich_fixture
 
-    from learning_os.commands.unit import cmd_unit_source_selection
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers.learner import unit_source_selection
 
     rich_fixture(mini_repo)
-    code = cmd_unit_source_selection(_namespace(
-        mini_repo, unit_id="unit-demo-l01", source_id="source-demo-book",
-        locator="lecture-01.pdf", action="bogus", purpose=None))
-    assert code == 2
-    assert "unknown source-selection action" in capsys.readouterr().err
+    ctx = OpContext(root=mini_repo, operation="unit.source-selection.set",
+                    channel="operator", invocation="command", gateway=None)
+    with pytest.raises(WriteRefused,
+                       match="unknown source-selection action") as caught:
+        unit_source_selection(ctx, {"unit_id": "unit-demo-l01",
+                                    "source_id": "source-demo-book",
+                                    "locator": "lecture-01.pdf",
+                                    "action": "bogus", "purpose": None})
+    assert caught.value.site == "unit.source-selection.set.unknown-action"
+    assert caught.value.exit_code == 2
 
 
 def test_detour_handler_refuses_an_unknown_classification(
