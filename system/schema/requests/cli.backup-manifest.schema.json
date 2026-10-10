@@ -119,7 +119,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_backup_manifest",
+    "handler": "learning_os.adapters.cli.invoke:cli.backup-manifest",
     "parser_factory": false
   }
 }

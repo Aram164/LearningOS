@@ -15,9 +15,15 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.backup_manifest import (
+    BackupManifestError,
+    backup_authorities,
+    build_backup_manifest,
+)
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.ops._legacy_plumbing import (
+    _atomic_text,
     _fresh_manifest,
     _fresh_manifest_and_repo,
     _json_layout,
@@ -349,6 +355,11 @@ def _dumps_rows(payload) -> str:
                       ensure_ascii=False)
 
 
+def _dumps_indented(payload: dict) -> str:
+    """The exact vNext encoder: indented, unescaped."""
+    return json.dumps(payload, indent=2, ensure_ascii=False)
+
+
 def _project_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal line: the engine issues as one JSON object."""
     return [json.dumps({"errors": [str(issue) for issue in errors]},
@@ -484,3 +495,50 @@ def project_list(ctx: OpContext, req: dict) -> Result:
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req.get("status")]
     return Result(rows, json_dumps=_dumps_rows)
+
+
+# ---------------------------------------------------------------------------
+# Backup, health, legacy archive, Master's planning (PLAN D4).
+#
+# Moved with the units from commands.vnext (SPEC §12).
+
+
+@register("backup.manifest", kind="query")
+@register("cli.backup-manifest", kind="tool")
+def backup_manifest(ctx: OpContext, req: dict) -> Result:
+    """Build the backup manifest, or write it outside every backed-up root."""
+    root = ctx.root
+    authorities = backup_authorities(
+        root,
+        ui_root=Path(req.get("ui_root")).expanduser() if req.get("ui_root") else None,
+        materials_root=(Path(req.get("materials_root")).expanduser()
+                        if req.get("materials_root") else None),
+    )
+    manifest = build_backup_manifest(
+        root, ui_root=authorities["ui"], materials_root=authorities["materials"])
+    if req.get("out"):
+        target = Path(req.get("out")).expanduser()
+        resolved = target.resolve()
+        for label, authority in authorities.items():
+            if resolved == authority or authority in resolved.parents:
+                raise BackupManifestError(
+                    f"refusing to write the manifest inside the backed-up "
+                    f"{label} root: {req.get('out')}")
+        _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+        if req.get("stdout"):
+            return Result(manifest, json_dumps=_dumps_indented)
+        return Result({
+            "ok": True,
+            "out": str(resolved),
+            "roots": manifest["roots"],
+            "entries": len(manifest["entries"]),
+            "aggregate_sha256": manifest["aggregate_sha256"],
+        }, json_dumps=_dumps_indented)
+    if req.get("stdout"):
+        return Result(manifest, json_dumps=_dumps_indented)
+    size_kb = len(json.dumps(manifest, ensure_ascii=False).encode("utf-8")) / 1024
+    raise BackupManifestError(
+        f"backup-manifest prints nothing by default: the manifest holds "
+        f"{len(manifest['entries'])} entries (~{size_kb:.0f} KB). Write it "
+        f"with --out PATH (outside every backed-up root) or print it with "
+        f"--stdout")

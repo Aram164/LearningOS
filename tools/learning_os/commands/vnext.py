@@ -6,9 +6,6 @@ import json
 from pathlib import Path
 
 from learning_os.backup_manifest import (
-    BackupManifestError,
-    backup_authorities,
-    build_backup_manifest,
     verify_backup_manifest,
     verify_restored_system,
 )
@@ -36,7 +33,6 @@ from learning_os.material_synthesis import (
     validate_unit_material_synthesis,
 )
 from learning_os.ops._legacy_plumbing import (
-    _atomic_text,
     _dump_yaml,
     _operator_lock,
     _read_structured_file,
@@ -237,47 +233,6 @@ def cmd_health_report(args) -> int:
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
     return 0
-
-
-def cmd_backup_manifest(args) -> int:
-    root = _root(args)
-    authorities = backup_authorities(
-        root,
-        ui_root=Path(args.ui_root).expanduser() if args.ui_root else None,
-        materials_root=(Path(args.materials_root).expanduser()
-                        if args.materials_root else None),
-    )
-    manifest = build_backup_manifest(
-        root, ui_root=authorities["ui"], materials_root=authorities["materials"])
-    if args.out:
-        target = Path(args.out).expanduser()
-        resolved = target.resolve()
-        for label, authority in authorities.items():
-            if resolved == authority or authority in resolved.parents:
-                raise BackupManifestError(
-                    f"refusing to write the manifest inside the backed-up "
-                    f"{label} root: {args.out}")
-        _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
-        if args.stdout:
-            print(json.dumps(manifest, indent=2, ensure_ascii=False))
-            return 0
-        print(json.dumps({
-            "ok": True,
-            "out": str(resolved),
-            "roots": manifest["roots"],
-            "entries": len(manifest["entries"]),
-            "aggregate_sha256": manifest["aggregate_sha256"],
-        }, indent=2, ensure_ascii=False))
-        return 0
-    if args.stdout:
-        print(json.dumps(manifest, indent=2, ensure_ascii=False))
-        return 0
-    size_kb = len(json.dumps(manifest, ensure_ascii=False).encode("utf-8")) / 1024
-    raise BackupManifestError(
-        f"backup-manifest prints nothing by default: the manifest holds "
-        f"{len(manifest['entries'])} entries (~{size_kb:.0f} KB). Write it "
-        f"with --out PATH (outside every backed-up root) or print it with "
-        f"--stdout")
 
 
 def cmd_backup_verify(args) -> int:
