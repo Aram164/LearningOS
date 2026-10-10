@@ -28,6 +28,7 @@ import jsonschema
 import yaml
 
 from learning_os import observations
+from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.contracts.gateway import (
     current_gateway_request,
     intent_sha256,
@@ -1362,16 +1363,6 @@ def _freshness_label(root, binding, observations=None):
 # notes wave (SPEC (bs) item 4).
 
 
-def _window_values(offset: int, limit: int, expected_snapshot: str | None,
-                   maximum: int) -> tuple[int, int]:
-    """Offset/limit validation with the exact commands.reads._window rules."""
-    if offset < 0 or not 1 <= limit <= maximum:
-        raise WriteRefused(f"offset must be nonnegative and limit between 1 and {maximum}")
-    if offset and not expected_snapshot:
-        raise WriteRefused("continuation requires --expected-snapshot from the previous response")
-    return offset, limit
-
-
 # ---------------------------------------------------------------------------
 # Use-evidence tallies and note bytes, moved verbatim from
 # commands.reads for the plan reads (SPEC (bo) item 2).
@@ -1418,24 +1409,50 @@ def _evidence_label(tally):
     return {"counts": dict(sorted(tally.items())),
             "positive": positive, "mismatch": mismatch}
 
-def _bytes_inside_owner(root, path, owner, *, escape, symlink):
-    """Read bytes admitted by one owner directory; symlinks always refuse.
+# Value-based window core (SPEC (bl) item 3): the exact validations and
+# messages of commands/reads.py:_window, taking request values directly so
+# converted handlers pass no namespace.
 
-    The one admission rule for note, garden, and inbox reads: the resolved
-    target must sit below the owner, and no path component may be a link —
-    even one that would resolve in-tree. Only the refusal wording differs
-    per surface.
-    """
-    try:
-        path.resolve(strict=True).relative_to(owner.resolve(strict=True))
-    except (ValueError, OSError) as exc:
-        raise WriteRefused(escape) from exc
-    if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
-        raise WriteRefused(symlink)
-    return path.read_bytes()
 
-def _note_bytes(root, note):
-    return _bytes_inside_owner(
-        root, note.path, root / "knowledge" / "notes",
-        escape="note path escapes its knowledge owner",
-        symlink="note read refuses symlinks")
+# ---------------------------------------------------------------------------
+# Machine discovery/read, moved verbatim from commands/query.py (SPEC (bo)
+# item 2): the bootstrap conversion needs _capabilities while
+# cmd_capabilities is still legacy, so it rests here until that unit
+# converts and carries it into ops/handlers/reads.py.
+
+# The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
+# announces about the gateway itself. This is a third, independent version:
+#   operator/gateway contract  here (CONTRACT_VERSION below)
+#   canonical record format    system/contracts/data-contract.yaml
+#   published manifest shape   system/contracts/manifest-contract.yaml
+# Three contracts sharing the name "contract_version" is how the manifest came
+# to be published under an old version after its shape had already changed
+# (2026-08-08). Stored and projected versions must always be read from their
+# producer-owned declarations, never copied into this comment.
+CONTRACT_VERSION = 2
+
+
+def _capabilities(root: Path) -> dict:
+    """Return the executable capability catalogue, not a duplicated list."""
+    catalogue = load_capability_catalog(root)
+    return {
+        "contract_version": CONTRACT_VERSION,
+        "capability_contract_version": catalogue["contract_version"],
+        "cli_protocol": catalogue.get("cli_protocol", 3),
+        "gateway": "tools/los.py",
+        "projection": "generated/manifest.json",
+        "operator_contract": "system/OPERATOR.md",
+        "queries": catalogue.get("queries", {}),
+        "commands": catalogue.get("commands", {}),
+        "rules": {
+            "canonical_writes_are_transactional": True,
+            "successful_writes_have_receipts": True,
+            "artifact_revision_conflicts_fail_closed": True,
+            "shelving_requires_explicit_approval": True,
+            "ordinary_interfaces_read_projection_only": True,
+            "module_plan_preflight_required": True,
+            "ai_actions_are_provider_independent": True,
+            "bounded_ai_actions_use_exact_context": True,
+        },
+        "root": str(root),
+    }

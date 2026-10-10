@@ -91,7 +91,7 @@ def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
 
 
 def test_domain_glance_keeps_empty_future_and_unbucketed_domains():
-    from learning_os.commands.reads import _domain_glance
+    from learning_os.ops.handlers.reads import _domain_glance
 
     records = [
         {"type": "note", "domain": "future", "role": "crosswalk"},

@@ -27,30 +27,30 @@ cases:
     kind: refusal
     transport: cli
     argv: [bootstrap, --brief, --compact]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.brief-and-compact}
   - id: brief-with-offset
     kind: refusal
     transport: cli
     argv: [bootstrap, --brief, --offset, 3]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.brief-with-offset}
   - id: compact-bad-limit
     kind: refusal
     transport: cli
     argv: [bootstrap, --compact, --limit, 99]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.bad-window}
   - id: compact-offset-needs-snapshot
     kind: refusal
     transport: cli
     argv: [bootstrap, --compact, --offset, 2]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.bad-window}
   - id: compact-stale
     kind: refusal
     transport: cli
     argv: [bootstrap, --compact, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.stale-snapshot}
   - id: brief-stale
     kind: refusal
     transport: cli
     argv: [bootstrap, --brief, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.bootstrap.stale-snapshot}
 untriggered: []

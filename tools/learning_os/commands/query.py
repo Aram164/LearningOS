@@ -8,12 +8,12 @@ import sys
 from pathlib import Path
 
 from learning_os import __version__
-from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.domain.failures import WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
+    _capabilities,
     _discovery_row,
     _fresh_manifest,
     _inbox_search_rows,
@@ -30,8 +30,6 @@ from .reads import (
     _refusal,
     _use_evidence_from_manifest,
     _window,
-    brief_bootstrap,
-    compact_bootstrap,
     content_search,
     empty_search_hint,
     flatten_search_values,
@@ -43,16 +41,6 @@ from .support import (
     _root,
 )
 
-# The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
-# announces about the gateway itself. This is a third, independent version:
-#   operator/gateway contract  here (CONTRACT_VERSION below)
-#   canonical record format    system/contracts/data-contract.yaml
-#   published manifest shape   system/contracts/manifest-contract.yaml
-# Three contracts sharing the name "contract_version" is how the manifest came
-# to be published under an old version after its shape had already changed
-# (2026-08-08). Stored and projected versions must always be read from their
-# producer-owned declarations, never copied into this comment.
-CONTRACT_VERSION = 2
 
 # ----------------------------------------------------------------- status
 def cmd_status(args) -> int:
@@ -178,32 +166,6 @@ def cmd_status(args) -> int:
 
 
 # ---------------------------------------------------- machine discovery/read
-def _capabilities(root: Path) -> dict:
-    """Return the executable capability catalogue, not a duplicated list."""
-    catalogue = load_capability_catalog(root)
-    return {
-        "contract_version": CONTRACT_VERSION,
-        "capability_contract_version": catalogue["contract_version"],
-        "cli_protocol": catalogue.get("cli_protocol", 3),
-        "gateway": "tools/los.py",
-        "projection": "generated/manifest.json",
-        "operator_contract": "system/OPERATOR.md",
-        "queries": catalogue.get("queries", {}),
-        "commands": catalogue.get("commands", {}),
-        "rules": {
-            "canonical_writes_are_transactional": True,
-            "successful_writes_have_receipts": True,
-            "artifact_revision_conflicts_fail_closed": True,
-            "shelving_requires_explicit_approval": True,
-            "ordinary_interfaces_read_projection_only": True,
-            "module_plan_preflight_required": True,
-            "ai_actions_are_provider_independent": True,
-            "bounded_ai_actions_use_exact_context": True,
-        },
-        "root": str(root),
-    }
-
-
 def cmd_capabilities(args) -> int:
     root = _root(args)
     payload = _capabilities(root)
@@ -245,29 +207,6 @@ def cmd_capabilities(args) -> int:
                f"  projection: {payload['projection']}",
                "  transactional commands: " + ", ".join(sorted(payload["commands"])),
                "  every successful canonical write has one receipt"]))
-    return 0
-
-
-def cmd_bootstrap(args) -> int:
-    root = _root(args)
-    if getattr(args, "brief", False):
-        return brief_bootstrap(args)
-    if getattr(args, "compact", False):
-        return compact_bootstrap(args)
-    manifest = _fresh_manifest(root, restamp=True)
-    payload = {
-        "capabilities": _capabilities(root),
-        "snapshot": manifest.get("_generated", {}),
-        "programs": manifest.get("programs", []),
-        "modules": manifest.get("modules", []),
-        "projects": manifest.get("projects", []),
-        "units": manifest.get("units", []),
-        "active_study_maps": [m for m in manifest.get("study_maps", [])
-                              if m.get("status") in {"active", "paused", "ready"}],
-        "resume_pointer": manifest.get("resume_pointer", {}),
-        "next": "Resume the pointer or choose any visible module and unit.",
-    }
-    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

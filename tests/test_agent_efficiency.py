@@ -315,11 +315,14 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
         assert outcome.exit_code == 0, outcome.stderr
         payload = json.loads(outcome.stdout)
     else:
-        args = SimpleNamespace(root=str(mini_repo), expected_snapshot=None,
-                               offset=0, limit=10)
-        invoke = reads.brief_bootstrap if command == "brief" else reads.compact_bootstrap
-        assert invoke(args) == 0
-        payload = json.loads(capsys.readouterr().out)
+        from learning_os.ops.pipeline import run_cli
+
+        args = SimpleNamespace(root=str(mini_repo), brief=(command == "brief"),
+                               compact=(command == "compact"),
+                               expected_snapshot=None, offset=0, limit=10)
+        outcome = run_cli(mini_repo, "cli.bootstrap", args)
+        assert outcome.exit_code == 0, outcome.stderr
+        payload = json.loads(outcome.stdout)
     assert payload["snapshot_id"].startswith("sha256:")
     # Snapshot, rebuild re-walk, revalidation. The rebuild walk always ran
     # here (the fixture keeps no stored manifest); it only became visible

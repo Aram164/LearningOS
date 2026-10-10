@@ -6,7 +6,6 @@ import hashlib
 import json
 import re
 import sys
-from pathlib import PurePosixPath
 
 from learning_os.derived import DerivedError, evaluate
 from learning_os.domain.failures import (
@@ -14,18 +13,13 @@ from learning_os.domain.failures import (
     WriteRefused,
     unreadable_refusal,
 )
-from learning_os.domain.suggest import expansion
-from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.genout.projection.atlas import STAGE_CONCEPT
 from learning_os.loading import FRONTMATTER_RE
 from learning_os.ops._legacy_plumbing import (
-    SESSION_ID_ENV,
     _evidence_label,
-    _fresh_manifest,
     _note_bytes,
     _note_collection,
     _operator_lock,
-    _resolve_session_identity,
     _route_material_files,
     _snapshot,
     _use_evidence,
@@ -60,239 +54,6 @@ def _refusal(exc) -> int:
     return 3 if isinstance(exc, StaleSnapshot) else 2
 
 
-def _domain_glance(manifest):
-    """Summarize the complete projection, independently of record pagination."""
-    domains = {domain: {"domain": domain, "notes": 0, "crosswalks": 0,
-                        "shelves": 0, "entries": 0}
-               for domain in ATLAS_DOMAINS}
-    for record in manifest.get("records", []):
-        kind = record.get("type")
-        if kind not in {"note", "collection", "topic-pack"}:
-            continue
-        domain = record.get("domain") or "cross-domain"
-        if kind == "note" and record.get("path"):
-            # The Domain atlas groups by the first directory under notes;
-            # a record's domain can instead name a deeper subject folder.
-            try:
-                parts = PurePosixPath(record["path"]).relative_to("knowledge/notes").parts
-                domain = parts[0] if len(parts) > 1 else "cross-domain"
-            except ValueError:
-                domain = "cross-domain"
-        row = domains.setdefault(domain, {"domain": domain, "notes": 0,
-                                         "crosswalks": 0, "shelves": 0, "entries": 0})
-        if kind == "note":
-            row["notes"] += 1
-            row["crosswalks"] += record.get("role") == "crosswalk"
-        else:
-            row["shelves"] += 1
-            row["entries"] += len(record.get("entries") or [])
-    order = [*ATLAS_DOMAINS, *sorted(set(domains) - set(ATLAS_DOMAINS))]
-    return [domains[domain] for domain in order]
-
-
-def compact_bootstrap(args) -> int:
-    root = _root(args)
-    try:
-        offset, limit = _window(args, 50)
-        with _operator_lock(root, shared=True):
-            snapshot = _snapshot(root, args.expected_snapshot)
-            manifest = _fresh_manifest(root, snapshot_id=snapshot)
-            fields = ("id", "title", "status", "module_id", "program_id", "unit_id",
-                      "current_study_map", "current_stage", "needs_study_map")
-            collections = {}
-            for name in ("programs", "modules", "projects", "units", "study_maps"):
-                rows = sorted(manifest.get(name, []), key=lambda row: row["id"])
-                items = [{key: row[key] for key in fields if key in row}
-                         for row in rows[offset:offset + limit]]
-                collections[name] = {"items": items, "total": len(rows),
-                                     "next_offset": offset + limit if offset + limit < len(rows) else None}
-            return _print_stable(root, snapshot, {
-                "contract": "bootstrap-summary", "collections": collections,
-                "resume_pointer": manifest.get("resume_pointer", {}),
-                "counts": manifest.get("counts", {}),
-                "domain_atlas": _domain_glance(manifest),
-                "detail": {"record": "inspect ID", "notes": "note-read NOTE_ID",
-                           "content_search": "search QUERY --type note --content",
-                           "capabilities": "capabilities --compact --json",
-                           "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT"},
-            })
-    except (WriteRefused, OSError) as exc:
-        return _refusal(exc)
-
-
-#: What the brief's ``pointer_state`` means. A confirmed pointer is the
-#: learner's last explicit study action -- where study stopped -- never a
-#: recommendation. The note ships in the payload so an agent reading only
-#: this page cannot mistake one for the other.
-POINTER_STATE_NOTE = "confirmed = where study stopped, not a recommendation"
-
-
-def _pointer_state(manifest, pointer) -> str:
-    """confirmed/missing/invalid for the brief page; the same rule as resume.
-
-    Mirrors ``resume._resolve_stage``'s validity check against the manifest
-    instead of the loaded repo, so the brief and resume cannot disagree:
-    the pointer counts only when its module, unit, map, and stage all
-    resolve and link together. Status plays no part here, exactly as in
-    resume -- a pointer to a paused map is still where study stopped.
-    """
-    if not isinstance(pointer, dict) or not pointer:
-        return "missing"
-    units = {row.get("id"): row for row in manifest.get("units", [])
-             if isinstance(row, dict)}
-    maps = {row.get("id"): row for row in manifest.get("study_maps", [])
-            if isinstance(row, dict)}
-    unit = units.get(str(pointer.get("unit_id") or ""))
-    study_map = maps.get(str(pointer.get("study_map_id") or ""))
-    stages = study_map.get("stages", []) \
-        if isinstance(study_map, dict) else []
-    stage_ids = {stage.get("id") for stage in stages
-                 if isinstance(stage, dict)}
-    if (isinstance(unit, dict) and isinstance(study_map, dict)
-            and unit.get("module_id") == pointer.get("module_id")
-            and study_map.get("unit_id") == unit.get("id")
-            and study_map.get("module_id") == unit.get("module_id")
-            and pointer.get("stage_id") in stage_ids):
-        return "confirmed"
-    return "invalid"
-
-
-def _recorded_options(manifest) -> list[dict]:
-    """Every active track's recorded next action, in id order, unranked.
-
-    Shown regardless of pointer state: the pointer says where study stopped,
-    not which active workspace to choose next. Each active workspace's own
-    next action carries its id and source path, never a derived ranking. A
-    workspace with no recorded action still appears, with an empty action,
-    so no track silently drops out of the page.
-    """
-    options = []
-    for record in manifest.get("records", []):
-        if not isinstance(record, dict) or record.get("type") != "workspace":
-            continue
-        if record.get("archived") or record.get("status") != "active":
-            continue
-        options.append({
-            "workspace_id": record.get("id"),
-            "next_action": record.get("next_action") or "",
-            "source": record.get("path") or "",
-        })
-    return sorted(options, key=lambda row: str(row["workspace_id"]))
-
-
-def _brief_deadlines(manifest: dict) -> list[dict]:
-    """Brief-visible deadlines: absence of evidence reads as a missing fact.
-
-    The projection says ``unregistered`` for a sitting with no recorded
-    attempt; the brief is the surface where that absence is most easily
-    misread as a decision, so it says ``registration not recorded``
-    instead. ``unrecorded`` (elapsed — the record should exist by now)
-    passes through unchanged. Row count and order are preserved.
-    """
-    rows = []
-    for row in manifest.get("academic_deadlines", []):
-        if isinstance(row, dict) and row.get("registration_state") == "unregistered":
-            row = {**row, "registration_state": "registration not recorded"}
-        rows.append(row)
-    return rows
-
-
-def brief_bootstrap(args) -> int:
-    """One-page session entry: guards, resume, owed work, deadlines, expands.
-
-    The plan-edit-context-brief shape applied to startup: identities and
-    runnable commands, never collections or prose. Owed study maps name the
-    units to prep, active maps name the stages to resume, deadlines carry
-    the structured exam spine, and every follow-up read is a listed
-    command. Single page by construction: paging belongs to --compact.
-    """
-    if getattr(args, "compact", False):
-        return _refusal("bootstrap takes one of --brief, --compact")
-    if args.offset:
-        return _refusal("bootstrap --brief is a single page; "
-                        "page the collections with --compact instead")
-    root = _root(args)
-    try:
-        with _operator_lock(root, shared=True):
-            snapshot = _snapshot(root, args.expected_snapshot)
-            manifest = _fresh_manifest(root, snapshot_id=snapshot)
-            units = sorted(manifest.get("units", []),
-                           key=lambda row: row["id"])
-            owed = sorted(row["id"] for row in units
-                          if row.get("needs_study_map"))
-            # Resumable work only: paused maps are shelved tracks, not
-            # candidates for the next session. Full bootstrap still lists
-            # them; the brief names what can actually start.
-            active = sorted(
-                ({"id": row["id"], "unit_id": row.get("unit_id"),
-                  "status": row.get("status"),
-                  "current_stage": row.get("current_stage")}
-                 for row in manifest.get("study_maps", [])
-                 if row.get("status") in {"active", "ready"}),
-                key=lambda row: row["id"])
-            deadlines = _brief_deadlines(manifest)
-            pointer = manifest.get("resume_pointer", {})
-            state = _pointer_state(manifest, pointer)
-            session_id, session_source = _resolve_session_identity()
-            return _print_stable(root, snapshot, {
-                "contract": "bootstrap-brief",
-                "session_identity": {
-                    "session_id": session_id,
-                    "source": session_source,
-                    "how_to_set": (
-                        f"name it before the first write — export "
-                        f"{SESSION_ID_ENV}=<id> when the shell persists, or "
-                        f"seal session_id in each write envelope "
-                        f"(.venv/bin/python tools/seal_envelope.py --session-id <id>); without "
-                        f"either, writes share this channel's ledger"
-                    ),
-                },
-                "resume_pointer": pointer,
-                "pointer_state": state,
-                "pointer_state_note": POINTER_STATE_NOTE,
-                "recorded_options": _recorded_options(manifest),
-                "recorded_options_note": (
-                    "workspace next actions are recorded options, not current "
-                    "priorities; compare with current dates and state"
-                ),
-                "counts": manifest.get("counts", {}),
-                "owed_study_maps": owed,
-                "active_study_maps": active,
-                "academic_deadlines": deadlines,
-                "deadline_count": len(deadlines),
-                "domain_atlas": _domain_glance(manifest),
-                "expand": {
-                    "full_compact": expansion(
-                        "bootstrap", "--compact",
-                        "--expected-snapshot", snapshot),
-                    "continuation": expansion(
-                        "bootstrap", "--compact", "--offset", "NEXT_OFFSET",
-                        "--expected-snapshot", "SNAPSHOT"),
-                    "resume": expansion("resume", "--json"),
-                    "inspect": expansion("inspect", "ID"),
-                    "coordination": expansion("inspect", "coordination"),
-                    "intelligence_scan": expansion(
-                        "intelligence-scan", "--brief", "--json"),
-                    "note_read": expansion("note-read", "NOTE_ID"),
-                    "inbox_list": expansion("inbox-list"),
-                    "inbox_read": expansion("inbox-read", "NAME"),
-                    "content_search": expansion(
-                        "search", "QUERY", "--type", "note", "--content"),
-                    "material_context": expansion("material-context", "QUERY"),
-                    "ability_context": expansion(
-                        "ability-context", "--expected-snapshot", snapshot),
-                    "material_span": expansion(
-                        "material-span", "UNIT_ID", "ROUTE_ID"),
-                    "capability_detail": expansion(
-                        "capabilities", "NAME", "--json"),
-                    "plan_brief": [expansion(
-                        "plan-edit-context", unit_id, "--brief",
-                        "--expected-snapshot", snapshot)
-                                   for unit_id in owed],
-                },
-            })
-    except (WriteRefused, OSError) as exc:
-        return _refusal(exc)
 
 
 def empty_search_hint(row_word: str, terms: list[str], hits: list[int]) -> str:
