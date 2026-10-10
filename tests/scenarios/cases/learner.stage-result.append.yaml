@@ -14,36 +14,36 @@ cases:
     transport: gateway
     request: {workspace: workspace-nope, unit: unit-demo-l01, stage: stage-demo, activity: "worked derivation", result: correct}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.bad-workspace}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, unit: unit-nope, stage: stage-demo, activity: "worked derivation", result: correct}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.invalid-input}
   - id: unknown-stage
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, unit: unit-demo-l01, stage: stage-nope, activity: "worked derivation", result: correct}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.invalid-input}
   - id: scope-refused
     kind: refusal
     transport: gateway
     request: {workspace: workspace-second, unit: unit-demo-l01, stage: stage-demo, activity: "worked derivation", result: correct}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.invalid-input}
   - id: supersede-unknown
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, unit: unit-demo-l01, stage: stage-demo, activity: "worked derivation", result: correct, supersedes: stage-result-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.invalid-input}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [stage-result, --workspace, workspace-demo, --unit, unit-demo-l01, --stage, stage-demo, --activity, "worked derivation", --result, correct]
-    expect: {site: null}
+    expect: {site: learner.stage-result.append.direct-cli}
   - id: exact-replay
     kind: sequence
     steps:

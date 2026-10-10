@@ -9121,7 +9121,7 @@
   "inbox.resolve.schema.json": "2985779e307bd8a32aec50fd1f428363b40708a1a2d6e39c5f57ad16d200b53f",
   "learner.ability-observation.append.schema.json": "c8b410db515cbf2ec65d70d3f89c42bcc9469183be50e44fcffad0b24cfac4dd",
   "learner.observation.append.schema.json": "49392fa92db7b39f0cb2f04135e98b50c2e08aa3e60cd2c6ad8b7be81a175ff0",
-  "learner.stage-result.append.schema.json": "43765f1b98f75477442453eb5b94d549fad0823dee99f8340eed18e9e2803bca",
+  "learner.stage-result.append.schema.json": "6bf9031481e3313ee2ea27a77bb18110f2fba71d0e247266341f664068653e50",
   "legacy.archive.inspect.schema.json": "10e7fbf24098707e1b7070965122c2b4c55046dcdb03f6055e48a6a9143b335d",
   "legacy.archive.lock.publish.schema.json": "6db5fa061d93a23e23f713eeda1dfa6d3da43bbf585db43244f164a52293b04f",
   "legacy.archive.status.schema.json": "4f234a27b9245a45aa92e97c822c08fbbea3f394099269c1288e822dea1741e6",

@@ -289,7 +289,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.stage_result.cmd_stage_result",
+    "handler": "learning_os.adapters.cli.invoke:learner.stage-result.append",
     "parser_factory": false
   }
 }

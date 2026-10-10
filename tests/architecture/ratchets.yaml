@@ -1027,22 +1027,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
     count: 1
     since: baseline

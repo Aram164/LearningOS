@@ -6,14 +6,22 @@ import copy
 import json
 import re
 import sys
+from datetime import UTC
 from pathlib import Path
 
 import yaml
 
 from learning_os import observations
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
-from learning_os.learning_runtime import requirement_id_for
+from learning_os.learning_runtime import (
+    RuntimeInputError,
+    read_stage_results,
+    requirement_id_for,
+    runtime_path,
+    validate_runtime_record,
+)
 from learning_os.ops._legacy_plumbing import (
     _dump_study_map,
     _dump_yaml,
@@ -40,6 +48,14 @@ def _dumps_stage(payload: dict) -> str:
 def _on_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
     return list(errors[:12])
+
+
+def _dumps_plain(payload: dict) -> str:
+    """The exact runtime-ledger encoder: default separators, escaped."""
+    return json.dumps(payload)
+
+
+STAGE_RESULT_CAPABILITY = "learner.stage-result.append"
 
 
 #: The one return-to-work record. `los resume` and the app's Home both start
@@ -1031,3 +1047,96 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_stage,
     )
+
+
+@register("learner.stage-result.append", kind="command")
+def stage_result(ctx: OpContext, req: dict) -> Result:
+    """Append an untargeted learner result against a unit/stage."""
+    root = ctx.root
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "stage results require GatewayEnvelopeV2; direct CLI application is disabled",
+            site="learner.stage-result.append.direct-cli",
+            gateway_message="los: stage results require GatewayEnvelopeV2; direct CLI application is disabled",
+            exit_code=2,
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    workspace = repo.workspaces.get(req["workspace"])
+    if workspace is None or workspace.archived or workspace.status != "active":
+        raise WriteRefused(
+            "stage results require a registered active workspace",
+            site="learner.stage-result.append.bad-workspace",
+            gateway_message="los: stage results require a registered active workspace",
+            exit_code=2,
+        )
+    try:
+        unit = repo.units.get(req["unit"])
+        if unit is None:
+            raise RuntimeInputError(f"unknown unit: {req['unit']}")
+        study_map = repo.study_maps.get((unit.data or {}).get("current_study_map"))
+        if study_map is None or study_map.unit_id != unit.id \
+                or study_map.module_id != unit.module_id:
+            raise RuntimeInputError(f"unit {unit.id} has no current study map")
+        stage = next((item for item in study_map.data.get("stages", [])
+                      if isinstance(item, dict) and item.get("id") == req["stage"]), None)
+        if stage is None:
+            raise RuntimeInputError(
+                f"unknown stage {req['stage']} in unit {unit.id}")
+        if (unit.module_id not in workspace.meta.get("module_ids", [])
+                and unit.id not in workspace.meta.get("unit_ids", [])):
+            raise RuntimeInputError("stage is outside the workspace's declared module/unit scope")
+        historical = read_stage_results(repo)
+        ledger = runtime_path(root, workspace.path.parent / "stage-results.jsonl")
+        row = {
+            "id": "stage-result-" + observations.new_hex(),
+            "unit": unit.id,
+            "stage": stage["id"],
+            "activity": req["activity"],
+            "result": req["result"],
+            "timestamp": observations.now().astimezone(UTC).isoformat(),
+            "conditions": list(req.get("condition") or []),
+        }
+        if req.get("assistance") is not None:
+            row["assistance"] = req["assistance"]
+        if req.get("note") is not None:
+            row["note"] = req["note"]
+        if req.get("supersedes"):
+            prior = next((item for item in historical if item["id"] == req["supersedes"]), None)
+            if (prior is None or prior["unit"] != unit.id
+                    or prior["stage"] != stage["id"]
+                    or prior["origin"]["path"] != ledger.relative_to(root).as_posix()
+                    or any(item.get("supersedes") == prior["id"] for item in historical)):
+                raise RuntimeInputError("correction must supersede one uncorrected stage result of this unit/stage in this ledger")
+            row["supersedes"] = req["supersedes"]
+        validate_runtime_record(repo, "learner-stage-result", row)
+        try:
+            old = ledger.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            old = ""
+        separator = "\n" if old and not old.endswith("\n") else ""
+        new = old + separator + json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n"
+        try:
+            expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(str(exc)) from exc
+        return Result(
+            {"ok": True, "stage_result_id": row["id"],
+             "workspace_id": workspace.id, "unit": unit.id,
+             "stage": stage["id"], "credit": "none"},
+            proposal=TransactionProposal(
+                capability=STAGE_RESULT_CAPABILITY,
+                writes={ledger: new},
+                artifact_ids=[workspace.id],
+                expected_revisions=expected_revisions,
+            ),
+            on_commit_refused=_on_commit_refused,
+            json_dumps=_dumps_plain,
+        )
+    except (RuntimeInputError, OSError) as exc:
+        raise WriteRefused(
+            str(exc),
+            site="learner.stage-result.append.invalid-input",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
