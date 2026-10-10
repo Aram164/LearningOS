@@ -1234,3 +1234,139 @@ def test_gateway_raised_refusal_defaults_to_exit_two(pipe, mini_repo):
     pipe("command", handler=handler)
     outcome = _run_test_gateway(mini_repo, None, key="k1-ac-exit-002")
     assert outcome.exit_code == 2
+
+
+# ---------------------------------------------------------------------------
+# SPEC (bp) 1, recipe R8: the STANDARD raise-on-commit-error.
+# ---------------------------------------------------------------------------
+
+#: Thirteen issues with one non-string member: the join keeps the first
+#: twelve with str() applied and drops the thirteenth.
+_R8_ISSUES = ["empty-00", "empty-01", "empty-02", 7, "empty-04", "empty-05",
+              "empty-06", "empty-07", "empty-08", "empty-09", "empty-10",
+              "empty-11", "DROPPED"]
+
+_R8_JOINED = ("empty-00; empty-01; empty-02; 7; empty-04; empty-05; "
+              "empty-06; empty-07; empty-08; empty-09; empty-10; empty-11")
+
+
+def _refusing_commit(monkeypatch, issues):
+    """A commit step returning code 2 with the given issues, verbatim."""
+    monkeypatch.setattr(
+        pipeline_module, "commit_proposal",
+        lambda ctx, proposal: (2, list(issues), {}))
+
+
+def test_cli_standard_after_commit_joins_first_twelve(
+        pipe, mini_repo, monkeypatch):
+    """R8 on the CLI: the exact legacy join, truncated, exit 2."""
+
+    _refusing_commit(monkeypatch, _R8_ISSUES)
+
+    def handler(ctx, req):
+        return Result(
+            {"ok": True}, proposal=_pipe_proposal(mini_repo, "standard"),
+            after_commit="STANDARD")
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 2
+    assert outcome.ok is False
+    assert outcome.stdout == ""
+    assert outcome.stderr == f"los: INVALID_REQUEST: {_R8_JOINED}\n"
+
+
+def test_cli_standard_after_commit_json_keeps_code_and_retryability(
+        pipe, mini_repo, monkeypatch):
+    """R8 on the CLI with --json: the error object keeps code/retryability."""
+
+    _refusing_commit(monkeypatch, _R8_ISSUES)
+
+    def handler(ctx, req):
+        return Result(
+            {"ok": True}, proposal=_pipe_proposal(mini_repo, "std-json"),
+            after_commit="STANDARD")
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, _ns(mini_repo, json=True))
+    assert outcome.exit_code == 2
+    assert outcome.stderr == f"los: INVALID_REQUEST: {_R8_JOINED}\n"
+    assert json.loads(outcome.stdout) == {"error": {
+        "code": "INVALID_REQUEST", "message": _R8_JOINED,
+        "retryable": False, "details": {}}}
+
+
+def test_gateway_standard_after_commit_joins_first_twelve(
+        pipe, mini_repo, monkeypatch):
+    """R8 on the gateway: the joined complaint verbatim, exit 2."""
+
+    _write_gateway_wiring(mini_repo)
+    _refusing_commit(monkeypatch, _R8_ISSUES)
+
+    def handler(ctx, req):
+        return Result(
+            {"ok": True}, proposal=_pipe_proposal(mini_repo, "gstandard"),
+            after_commit="STANDARD")
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-r8-join-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 2
+    assert body["ok"] is False
+    assert body["error"]["message"] == _R8_JOINED
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert body["error"]["retryable"] is False
+    assert body["error"]["details"] == {}
+
+
+def test_standard_after_commit_success_does_not_raise(pipe, mini_repo):
+    """R8 with code 0: no raise; the real CLI commit succeeds."""
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"ok": True}, proposal=_pipe_proposal(mini_repo, "std-ok"),
+            after_commit="STANDARD")
+
+    pipe("command", handler=handler)
+    with _gateway_context(TEST_OP, "cli-std-ok-001"):
+        outcome = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert outcome.ok is True
+    assert outcome.commit == "committed"
+    body = json.loads(outcome.stdout)
+    assert body["ok"] is True
+    assert body["transaction_id"].startswith("transaction-")
+    assert pipeline_module._standard_after_commit(0, ["ignored"], {}) is None
+
+
+def test_unknown_after_commit_string_is_rejected(
+        pipe, mini_repo, monkeypatch):
+    """Any string but STANDARD is rejected loudly on both transports."""
+
+    assert pipeline_module._resolve_after_commit("STANDARD") is (
+        pipeline_module._standard_after_commit)
+    with pytest.raises(TypeError, match="unknown after_commit 'BOGUS'"):
+        pipeline_module._resolve_after_commit("BOGUS")
+    monkeypatch.setattr(
+        pipeline_module, "commit_proposal",
+        lambda ctx, proposal: (0, [], {}))
+
+    def handler(ctx, req):
+        return Result(
+            {"ok": True}, proposal=_pipe_proposal(mini_repo, "bogus"),
+            after_commit="BOGUS")
+
+    pipe("command", handler=handler)
+    with pytest.raises(TypeError, match="unknown after_commit 'BOGUS'"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    _write_gateway_wiring(mini_repo)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-r8-bogus-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 2
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INTERNAL_FAILURE"
+    assert "unknown after_commit 'BOGUS'" in body["error"]["message"]

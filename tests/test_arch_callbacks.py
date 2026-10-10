@@ -202,6 +202,28 @@ def test_replace_fixture_is_counted_but_str_replace_is_not():
         f"A18 the replace fixture counts {dict(counts)} — {FIX}")
 
 
+def test_bespoke_after_commit_is_counted():
+    """R8 control: a callable ``after_commit`` counts once (SPEC (bp) 1)."""
+    rel = "tools/learning_os/ops/handlers/r8control.py"
+    counts, _ = _scan_source(
+        rel,
+        "def handler(ctx, req):\n"
+        "    return Result({}, after_commit=_on_commit)\n")
+    assert dict(counts) == {f"{rel}::handler::after_commit": 1}, (
+        f"A18 the bespoke after_commit counts {dict(counts)} — {FIX}")
+
+
+def test_standard_after_commit_is_not_counted():
+    """R8 control: ``after_commit="STANDARD"`` counts nothing (SPEC (bp) 1)."""
+    rel = "tools/learning_os/ops/handlers/r8control.py"
+    counts, _ = _scan_source(
+        rel,
+        "def handler(ctx, req):\n"
+        "    return Result({}, after_commit=\"STANDARD\")\n")
+    assert dict(counts) == {}, (
+        f"A18 STANDARD after_commit counts {dict(counts)} — {FIX}")
+
+
 # --- (b) discovery: the callbacks each registered operation passes -----------------
 
 #: Rendering-callback keywords on ``Result`` (SPEC §3.5b, (bd)).

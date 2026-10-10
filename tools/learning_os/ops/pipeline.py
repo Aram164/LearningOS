@@ -13,6 +13,7 @@ import io
 import json
 import re
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -127,6 +128,30 @@ def _audit_direct_refused(operation: str | None, code: int) -> None:
               None, None, code)
 
 
+def _standard_after_commit(code: int, errors: list, confirmation: dict) -> None:
+    """Recipe R8: the legacy raise-on-commit-error, shared (SPEC (bp) 1).
+
+    Byte for byte the converted handlers' old ``if code: raise`` line;
+    both transports render the raised refusal through the R4 path.
+    """
+    if code != 0:
+        raise WriteRefused("; ".join(str(issue) for issue in errors[:12]))
+
+
+def _resolve_after_commit(
+        value: Callable[[int, list, dict], None] | str,
+) -> Callable[[int, list, dict], None]:
+    """The ``after_commit`` wiring as a callable: ``"STANDARD"`` resolves to
+    the shared raise; any other string is rejected loudly."""
+    if value == "STANDARD":
+        return _standard_after_commit
+    if isinstance(value, str):
+        raise TypeError(
+            f"unknown after_commit {value!r}: expected a callable or "
+            f"\"STANDARD\"")
+    return value
+
+
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
@@ -179,7 +204,9 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
                         "transaction_id", "receipt_path", "snapshot_after")}
                     replayed = bool(confirmation.get("replayed", False))
                 if result.after_commit is not None:
-                    result.after_commit(code, commit_errors, confirmation)
+                    after_commit = _resolve_after_commit(
+                        result.after_commit)
+                    after_commit(code, commit_errors, confirmation)
             if code != 0:
                 _audit_commit_refused(operation, code)
                 if (result.on_commit_refused is not None
@@ -863,7 +890,8 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
         code, commit_errors, confirmation = commit_proposal(ctx, res.proposal)
         if res.after_commit is not None:
-            res.after_commit(code, commit_errors, confirmation)
+            after_commit = _resolve_after_commit(res.after_commit)
+            after_commit(code, commit_errors, confirmation)
     if code != 0:
         _audit_commit_refused(operation, code)
         refusal = _take_gateway_refusal()
