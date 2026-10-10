@@ -217,6 +217,32 @@ class _CaseContext:
         self.casedata = CASEDATA_DIR / operation / case_id
 
 
+#: Scenario operations whose children observe a controlled Time Machine
+#: input (SPEC (bm), disposition 3): exactly the two health-report
+#: operations, nothing else.
+_HEALTH_SCENARIO_OPERATIONS = frozenset({"cli.health-report", "health.report"})
+
+#: The controlled `tmutil` the health scenarios observe: exit 1 with the
+#: no-destination report on stderr, the external input producing the
+#: already recorded backup row. Production health code is untouched.
+_TMUTIL_SHIM = "#!/bin/sh\necho 'No destinations configured' >&2\nexit 1\n"
+
+
+def _health_command_dir(ctx: _CaseContext) -> Path:
+    """The directory holding one health case's controlled `tmutil`.
+
+    It lives directly under the case workdir — outside the fixture root,
+    never on any live path — and holds only the shim, so prepending it to
+    the child's PATH can shadow nothing else.
+    """
+    bindir = ctx.workdir / "health-bin"
+    bindir.mkdir(parents=True, exist_ok=True)
+    shim = bindir / "tmutil"
+    shim.write_text(_TMUTIL_SHIM, encoding="utf-8")
+    shim.chmod(0o755)
+    return bindir
+
+
 def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
     env = dict(os.environ)
     env["LOS_ARCH_LAUNCH_TOKEN"] = token
@@ -227,6 +253,14 @@ def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
     env["PYTHONPATH"] = str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", "")
     if extra_env:
         env.update(extra_env)
+    if ctx.operation in _HEALTH_SCENARIO_OPERATIONS:
+        # Scoped after extras: the health observation must not depend on
+        # whether the host carries macOS backup tooling or a configured
+        # backup, so the controlled input is never dropped.
+        bindir = _health_command_dir(ctx)
+        path = env.get("PATH")
+        env["PATH"] = (str(bindir) if not path
+                       else str(bindir) + os.pathsep + path)
     return env
 
 
