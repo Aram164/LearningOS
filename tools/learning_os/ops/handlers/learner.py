@@ -17,7 +17,10 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.learning_runtime import (
     RuntimeInputError,
+    collect_requirements,
+    read_observations,
     read_stage_results,
+    requirement_fingerprint,
     requirement_id_for,
     runtime_path,
     validate_runtime_record,
@@ -1137,6 +1140,204 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="learner.stage-result.append.invalid-input",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+OBSERVE_CAPABILITY = "learner.observation.append"
+
+
+def _stage_index(repo):
+    """Every study-map stage: ``stage_id -> (unit_id, has_target)``.
+
+    Only the current map of each unit is indexed: a stage id that exists
+    solely on a superseded map is not observable, and naming it as a
+    stage would point at work that no longer resolves.
+    """
+    index = {}
+    for unit in repo.units.values():
+        study_map = repo.study_maps.get((unit.data or {}).get("current_study_map"))
+        if study_map is None or study_map.unit_id != unit.id:
+            continue
+        for stage in study_map.data.get("stages", []):
+            if isinstance(stage, dict) and isinstance(stage.get("id"), str):
+                index.setdefault(stage["id"], (
+                    unit.id, isinstance(stage.get("runtime_target"), dict)))
+    return index
+
+
+def _unknown_requirement_message(repo, requirements, value):
+    """Refuse an unresolvable id with the way forward named.
+
+    A stage id whose stage carries no ``runtime_target`` is the ordinary
+    untargeted case — most stages have no target — so it names the stage,
+    the untargeted ``stage-result`` path, and the target-authoring
+    ``unit-plan-revise`` path instead of crying unknown. A stage id that
+    already has a target names the requirement id to observe. Anything
+    else is a mistyped id, with suggestions over requirements and stages.
+    """
+    stages = _stage_index(repo)
+    if value in stages:
+        unit_id, has_target = stages[value]
+        if has_target:
+            requirement_id = next(
+                (req["id"] for req in requirements
+                 if req.get("source_stage", {}).get("stage_id") == value
+                 and req.get("source_stage", {}).get("unit_id") == unit_id),
+                None,
+            )
+            observed = f" {requirement_id}" if requirement_id else ""
+            return (f"stage {value} (unit {unit_id}) already has a requirement "
+                    f"target; observe the requirement id{observed} instead of "
+                    f"the stage id")
+        return (f"stage {value} (unit {unit_id}) has no requirement target; "
+                f"record the result without credit via `stage-result "
+                f"--workspace WORKSPACE --unit {unit_id} --stage {value} "
+                f"--activity ACTIVITY --result RESULT`, or author a target "
+                f"with `unit-plan-revise {unit_id} --file REVISION.yaml "
+                f"--check` adding a runtime_target stage patch (WORKFLOWS §8)")
+    return with_suggestions(f"unknown requirement: {value}", value,
+                            [*(req["id"] for req in requirements), *stages])
+
+
+def _condition_notice(requirement: dict, obs: dict) -> dict:
+    """Say what this record does and does not establish, while he can still fix it.
+
+    The write succeeded either way — the ledger is his, and refusing a report
+    of difficulty because it lacked flags would be worse than accepting it.
+    But a report that cannot be read as a failure of the current target needs
+    to say so at the moment it is filed. It used to persist silently and leave
+    the requirement reading `demonstrated`, `satisfied`, no next steps: the
+    successful save was the only feedback, and it concealed that the report
+    had no effect (audit `synthetic-learner-2026-09-12`, F02).
+    """
+    if obs["result"] not in {"incorrect", "partial"}:
+        return {}
+    declared = set(requirement.get("conditions", []))
+    refuted = sorted(declared & set(obs.get("conditions_not_met", [])))
+    if refuted:
+        return {"refuted_conditions": refuted,
+                "interpretation_notice": (
+                    f"recorded as a different situation ({', '.join(refuted)} "
+                    f"did not hold), so it is not read as a failure of this "
+                    f"target and resets nothing")}
+    missing = sorted(declared - set(obs.get("conditions", [])))
+    if not missing:
+        return {"interpretation_notice":
+                "recorded under every condition this target declares; it is "
+                "read as a failure of this target"}
+    flags = " ".join(f"--condition {name}" for name in missing)
+    not_met = " ".join(f"--condition-not-met {name}" for name in missing)
+    return {
+        "unstated_conditions": missing,
+        "interpretation_notice": (
+            f"this result does not say whether the target's conditions held "
+            f"({', '.join(missing)}), so it is held as unresolved: it is not "
+            f"read as a failure of this target, and the successes recorded "
+            f"before it stop counting toward a current conclusion until this "
+            f"is settled. Settle it by superseding this record — "
+            f"los observe {requirement['id']} --activity {obs['activity']} "
+            f"--result {obs['result']} --supersedes {obs['id']} — adding "
+            f"{flags} for the conditions that held, or {not_met} for the ones "
+            f"that did not. Two distinct qualified activities recorded after "
+            f"this also establish a new basis, without claiming the missing "
+            f"facts were ever known."
+        ),
+    }
+
+
+@register("learner.observation.append", kind="command")
+def observation_append(ctx: OpContext, req: dict) -> Result:
+    """Append one immutable learner observation against a requirement."""
+    root = ctx.root
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "observations require GatewayEnvelopeV2; direct CLI application is disabled",
+            site="learner.observation.append.direct-cli",
+            gateway_message="los: observations require GatewayEnvelopeV2; direct CLI application is disabled",
+            exit_code=2,
+        )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    workspace = repo.workspaces.get(req["workspace"])
+    if workspace is None or workspace.archived or workspace.status != "active":
+        raise WriteRefused(
+            "observations require a registered active workspace",
+            site="learner.observation.append.bad-workspace",
+            gateway_message="los: observations require a registered active workspace",
+            exit_code=2,
+        )
+    try:
+        requirements = collect_requirements(repo)
+        requirement = next((row for row in requirements
+                            if row["id"] == req["requirement"]), None)
+        if requirement is None:
+            raise RuntimeInputError(
+                _unknown_requirement_message(repo, requirements, req["requirement"]))
+        source = requirement["source_stage"]
+        if (source["module_id"] not in workspace.meta.get("module_ids", [])
+                and source["unit_id"] not in workspace.meta.get("unit_ids", [])):
+            raise RuntimeInputError("requirement is outside the workspace's declared module/unit scope")
+        historical = read_observations(repo, requirements)
+        ledger = runtime_path(root, workspace.path.parent / "observations.jsonl")
+        obs = {
+            "id": "observation-" + observations.new_hex(),
+            "requirement": req["requirement"],
+            "requirement_sha256": requirement_fingerprint(requirement),
+            "activity": req["activity"],
+            "result": req["result"],
+            "timestamp": observations.now().astimezone(UTC).isoformat(),
+            "conditions": list(req.get("condition") or []),
+            "evidence_tags": [tag.strip() for tag in (req.get("tags") or "").split(",") if tag.strip()],
+        }
+        refuted = list(req.get("condition_not_met") or [])
+        if refuted:
+            both = sorted(set(obs["conditions"]) & set(refuted))
+            if both:
+                raise RuntimeInputError(
+                    "a condition cannot be recorded as both met and not met: "
+                    + ", ".join(both))
+            obs["conditions_not_met"] = refuted
+        if req.get("assistance") is not None:
+            obs["assistance"] = req.get("assistance")
+        if req.get("context") is not None:
+            obs["context"] = req.get("context")
+        if req.get("supersedes"):
+            prior = next((item for item in historical if item["id"] == req["supersedes"]), None)
+            if (prior is None or prior["requirement"] != req["requirement"]
+                    or prior["origin"]["path"] != ledger.relative_to(root).as_posix()
+                    or any(item.get("supersedes") == prior["id"] for item in historical)):
+                raise RuntimeInputError("correction must supersede one uncorrected observation of this requirement in this ledger")
+            obs["supersedes"] = req["supersedes"]
+        validate_runtime_record(repo, "learner-observation", obs)
+        try:
+            old = ledger.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            old = ""
+        separator = "\n" if old and not old.endswith("\n") else ""
+        new = old + separator + json.dumps(obs, sort_keys=True, ensure_ascii=False) + "\n"
+        return Result(
+            {"ok": True, "observation_id": obs["id"],
+             "workspace_id": workspace.id,
+             **_condition_notice(requirement, obs)},
+            proposal=TransactionProposal(
+                capability=OBSERVE_CAPABILITY,
+                writes={ledger: new},
+                artifact_ids=[workspace.id],
+                expected_revisions=expected_revisions,
+            ),
+            on_commit_refused=_on_commit_refused,
+            json_dumps=_dumps_plain,
+        )
+    except (RuntimeInputError, OSError) as exc:
+        raise WriteRefused(
+            str(exc),
+            site="learner.observation.append.invalid-input",
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc

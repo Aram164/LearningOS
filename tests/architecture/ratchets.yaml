@@ -715,18 +715,6 @@ checks:
     count: 3
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::return
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/observation.py::cmd_observe::_operator_lock
     count: 1
     since: baseline

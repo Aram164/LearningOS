@@ -20,7 +20,6 @@ from datetime import UTC
 from learning_os import observations
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
-    current_gateway_request,
     gateway_request_context,
     intent_sha256,
     verified_gateway_snapshot,
@@ -44,7 +43,6 @@ from learning_os.revisions import artifact_revision
 
 from .support import (
     _expected_ok,
-    _expected_revisions_from_args,
     _root,
     _write_transaction,
 )
@@ -239,33 +237,6 @@ def _condition_notice(requirement: dict, obs: dict) -> dict:
             f"facts were ever known."
         ),
     }
-
-
-def cmd_observation_append(args) -> int:
-    root = _root(args)
-    if current_gateway_request() is None:
-        print("los: observations require GatewayEnvelopeV2; direct CLI application is disabled", file=sys.stderr)
-        return 2
-    with _operator_lock(root):
-        code, result = _append_observation(
-            root,
-            workspace_id=args.workspace,
-            requirement_id=args.requirement,
-            activity=args.activity,
-            result=args.result,
-            conditions=args.condition,
-            conditions_not_met=args.condition_not_met,
-            tags=args.tags,
-            assistance=args.assistance,
-            context_note=args.context,
-            supersedes=args.supersedes,
-            expected_snapshot=args.expected_snapshot,
-            expected_revisions=_expected_revisions_from_args(args),
-        )
-    if code:
-        return code
-    print(json.dumps(result))
-    return 0
 
 
 def _resolve_observe_workspace(repo, requirement, explicit_id):

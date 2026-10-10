@@ -312,7 +312,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.observation.cmd_observation_append",
+    "handler": "learning_os.adapters.cli.invoke:learner.observation.append",
     "parser_factory": false
   }
 }

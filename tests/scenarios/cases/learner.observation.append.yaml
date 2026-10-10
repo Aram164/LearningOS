@@ -14,48 +14,48 @@ cases:
     transport: gateway
     request: {workspace: workspace-demo, requirement: req-nope, activity: exercise, result: partial}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: untargeted-stage
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, requirement: stage-demo-pending, activity: exercise, result: partial}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: targeted-stage
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, requirement: stage-demo, activity: exercise, result: partial}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: requirement-outside-scope
     kind: refusal
     transport: gateway
     request: {workspace: workspace-second, requirement: req-demo-l01-demo, activity: exercise, result: partial}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: condition-both-ways
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial, condition: [unfamiliar-example], condition_not_met: [unfamiliar-example]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: supersede-unknown
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial, supersedes: observation-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.invalid-input}
   - id: bad-workspace
     kind: refusal
     transport: gateway
     request: {workspace: workspace-nope, requirement: req-nope, activity: exercise, result: partial}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.observation.append.bad-workspace}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [observation-append, --workspace, workspace-demo, --requirement, req-nope, --activity, exercise, --result, partial]
-    expect: {site: null}
+    expect: {site: learner.observation.append.direct-cli}
   - id: exact-replay
     kind: sequence
     steps:
