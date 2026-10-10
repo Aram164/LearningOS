@@ -1,4 +1,4 @@
-"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status`` (SPEC §12)."""
+"""AI-area handlers: ``ai-action.delivery.apply`` (PLAN D4, SPEC §12 R5, (be)) and ``cli.ai-action-list``, ``cli.ai-action-status``, ``cli.ai-action-prepare`` (SPEC §12)."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from learning_os.domain.failures import (
     Unconfirmed,
     WriteRefused,
 )
-from learning_os.ops._legacy_plumbing import _record_touched
+from learning_os.ops._legacy_plumbing import _publish, _record_touched
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
@@ -173,3 +173,22 @@ def ai_action_status(ctx: OpContext, req: dict) -> Result:
     request = AIActionService(ctx.root).request_status(req["request_id"])
     return Result({"ok": True, "request": request},
                   json_dumps=_dumps_delivery)
+
+
+@register("cli.ai-action-prepare", kind="porcelain")
+def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
+    """Persist a bounded AI request bundle."""
+    root = ctx.root
+    service = AIActionService(root)
+    request = service.prepare(
+        action_id=req["action_id"], target_kind=req["target_kind"],
+        target_id=req["target_id"], provider=req.get("provider"),
+        expected_snapshot=req.get("expected_snapshot"),
+        request_id=req.get("request_id"),
+    )
+    _publish(root)
+    return Result({
+        "ok": True, "request": service.request_status(request["id"]),
+        "bundle_path": service.repository.request_dir(
+            request["id"]).relative_to(root).as_posix(),
+    }, json_dumps=_dumps_delivery)

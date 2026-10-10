@@ -19,23 +19,6 @@ from .support import (
 
 
 # ------------------------------------------------------------- AI actions
-def cmd_ai_action_prepare(args) -> int:
-    root = _root(args)
-    with _operator_lock(root):
-        service = AIActionService(root)
-        request = service.prepare(
-            action_id=args.action_id, target_kind=args.target_kind,
-            target_id=args.target_id, provider=args.provider,
-            expected_snapshot=args.expected_snapshot, request_id=args.request_id,
-        )
-        _publish(root)
-    print(json.dumps({
-        "ok": True, "request": service.request_status(request["id"]),
-        "bundle_path": service.repository.request_dir(request["id"]).relative_to(root).as_posix(),
-    }, indent=2, ensure_ascii=False))
-    return 0
-
-
 def cmd_ai_action_append_slices(args) -> int:
     root = _root(args)
     with _operator_lock(root):

@@ -165,7 +165,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.ai.cmd_ai_action_prepare",
+    "handler": "learning_os.adapters.cli.invoke:cli.ai-action-prepare",
     "parser_factory": false
   }
 }
