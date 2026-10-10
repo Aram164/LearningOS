@@ -169,7 +169,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.review.cmd_shelving_prepare",
+    "handler": "learning_os.adapters.cli.invoke:review.prepare",
     "parser_factory": false
   }
 }

@@ -19,13 +19,11 @@ from learning_os.ops._legacy_plumbing import (
     _load_session_paths,
     _operator_lock,
     _publish,
-    _read_content_bound_file,
     _row_proven_state,
     _row_recorded_at,
     _session_ledger,
     _session_path_state,
 )
-from learning_os.unit_notes import unit_note_sections
 
 from .support import (
     CLIENT_ENV,
@@ -40,147 +38,6 @@ from .support import (
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
-
-def _unit_note_packet_sections(root: Path, unit) -> list[dict]:
-    """The learner's saved session reasoning, in the order it was recorded.
-
-    `unit-note` owns session reasoning at the unit's working note; shelving used
-    to traverse only stage-owned notes, so a saved section stayed safely stored
-    and never reached the review packet it was written for (2026-09-05 audit,
-    F06). Both models are read here; neither rewrites the learner's wording.
-    """
-    if unit is None:
-        return []
-    declared = str(unit.data.get("working_note") or "").strip()
-    note = root / declared if declared else unit.path.parent / "notes.md"
-    try:
-        resolved = note.resolve()
-        resolved.relative_to(root.resolve())
-    except (OSError, ValueError):
-        return []
-    if not resolved.is_file():
-        return []
-    try:
-        text = resolved.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return []
-    return unit_note_sections(text)
-
-
-def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> list[str]:
-    lines: list[str] = []
-    for section in sections:
-        stage_ids = [sid for sid in section.get("stage_ids") or [] if sid]
-        context = ", ".join(
-            f"{stage_titles.get(sid, sid)} (`{sid}`)" for sid in stage_ids
-        ) or "no stage named"
-        lines.extend([
-            f"### {section.get('title') or 'Learning session note'}", "",
-            f"*Session note recorded {section.get('recorded_at') or 'at an unrecorded time'}"
-            f" — stage context: {context}.*", "",
-            section.get("text") or "*(Empty section.)*", "",
-        ])
-        attachments = section.get("attachments") or []
-        if attachments:
-            lines.extend([
-                "Attachments: " + ", ".join(
-                    str(item.get("path")) for item in attachments
-                    if isinstance(item, dict) and item.get("path")
-                ),
-                "",
-            ])
-    return lines
-
-
-def cmd_shelving_prepare(args) -> int:
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        _, unit, study_map = _unit_map_or_error(root, args.unit_id)
-        if study_map is None:
-            return 2
-        data = copy.deepcopy(study_map.data)
-        items = []
-        if args.items_file:
-            try:
-                _source, item_bytes = _read_content_bound_file(
-                    args.items_file,
-                    getattr(args, "items_file_sha256", None),
-                    label="shelving items file",
-                )
-                raw = json.loads(item_bytes.decode("utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError, WriteRefused) as exc:
-                print(f"los: cannot read shelving items: {exc}", file=sys.stderr)
-                return 2
-            items = raw.get("items", raw) if isinstance(raw, dict) else raw
-            if not isinstance(items, list):
-                print("los: shelving items file must contain a JSON list", file=sys.stderr)
-                return 2
-        proposal_path = study_map.path.parent / "shelving-proposal.md"
-        stage_titles = {
-            str(stage.get("id")): str(stage.get("title") or stage.get("id"))
-            for stage in data.get("stages", []) or []
-            if isinstance(stage, dict) and stage.get("id")
-        }
-        sections = _unit_note_packet_sections(root, unit)
-        lines = ["# Shelving proposal review packet", "",
-                 "> Operational proposal only. No canonical change is applied until selected IDs are explicitly approved.", ""]
-        lines.extend(["## Session notes", ""])
-        if sections:
-            lines.extend(_packet_note_lines(sections, stage_titles))
-        else:
-            lines.extend(["*(No session note saved for this unit yet.)*", ""])
-        seen_stage_notes: set[str] = set()
-        for stage in data.get("stages", []) or []:
-            note_ref = str(stage.get("working_note", ""))
-            note = root / note_ref if note_ref else None
-            stage_text = (
-                note.read_text(encoding="utf-8", errors="replace")
-                if note is not None and note.is_file() else ""
-            ).strip()
-            attachments = stage.get("attachments") or []
-            # A stage with neither recorded text nor attachments would add an
-            # empty heading between the sections that do carry reasoning.
-            if not stage_text and not attachments:
-                continue
-            if note_ref and note_ref in seen_stage_notes:
-                continue
-            if note_ref:
-                seen_stage_notes.add(note_ref)
-            lines.extend([f"## {stage.get('title', stage.get('id'))}", "",
-                          f"*Stage note `{note_ref}`.*" if note_ref else "*Stage note.*",
-                          ""])
-            lines.append(stage_text or "*(No stage note text; attachments only.)*")
-            lines.append("")
-            if attachments:
-                lines.append("Attachments: " + ", ".join(a["path"] for a in attachments))
-                lines.append("")
-        shelving = data.setdefault("shelving", {})
-        shelving.update({"state": "proposed" if items else "draft",
-                          "proposal_path": proposal_path.relative_to(root).as_posix(),
-                          "summary": args.summary or "Review stage notes and attachments without rewriting learner wording."})
-        if items:
-            shelving["items"] = items
-        code, errors, confirmation = _write_transaction(
-            root, {
-                proposal_path: "\n".join(lines).rstrip() + "\n",
-                study_map.path: _dump_study_map(study_map, data),
-            },
-            capability="review.prepare",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.unit_id, study_map.id],
-        )
-        if code:
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "proposal_path": shelving["proposal_path"],
-                      "state": shelving["state"],
-                      **confirmation}, ensure_ascii=False))
-    return 0
-
 
 def _approved_destination(root: Path, item: dict) -> Path | None:
     rel = str(item.get("destination", ""))

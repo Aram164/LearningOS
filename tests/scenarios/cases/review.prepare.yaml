@@ -20,31 +20,31 @@ cases:
     transport: gateway
     request: {unit_id: unit-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.prepare.unknown-unit}
   - id: unit-without-map
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l02}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.prepare.no-study-map}
   - id: bad-items-file
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, items_file: "work/inbox/nope.json", items_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.prepare.bad-items-file}
   - id: malformed-items
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:fa6414c5a47b5b431d8db87bebe64702849512a0362d03488f3f15409903ab88"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.prepare.bad-items-file}
   - id: items-not-list
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:15efe024033a9f8bcca390b59b7024a5555d769cedd162c4e87558c2457738b0"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.prepare.items-not-list}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

@@ -803,18 +803,6 @@ checks:
     count: 7
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::print
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::_operator_lock
     count: 1
     since: baseline

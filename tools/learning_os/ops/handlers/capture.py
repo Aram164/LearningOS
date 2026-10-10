@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 import sys
@@ -19,6 +20,7 @@ from learning_os.ops._legacy_plumbing import (
     _collect,
     _content_envelope,
     _discovery_row,
+    _dump_study_map,
     _folder_digest,
     _inbox_search_rows,
     _json_layout,
@@ -27,9 +29,11 @@ from learning_os.ops._legacy_plumbing import (
     _window_values,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.handlers._shared import require_unit_map_or_error
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.transactions import parse_expected_revisions
+from learning_os.unit_notes import unit_note_sections
 
 
 def _dumps_capture(payload: dict) -> str:
@@ -360,3 +364,159 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc
+
+
+def _dumps_review_prepare(payload: dict) -> str:
+    """The exact review-prepare JSON encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _unit_note_packet_sections(root: Path, unit) -> list[dict]:
+    """The learner's saved session reasoning, in the order it was recorded.
+
+    `unit-note` owns session reasoning at the unit's working note; shelving used
+    to traverse only stage-owned notes, so a saved section stayed safely stored
+    and never reached the review packet it was written for (2026-09-05 audit,
+    F06). Both models are read here; neither rewrites the learner's wording.
+    """
+    if unit is None:
+        return []
+    declared = str(unit.data.get("working_note") or "").strip()
+    note = root / declared if declared else unit.path.parent / "notes.md"
+    try:
+        resolved = note.resolve()
+        resolved.relative_to(root.resolve())
+    except (OSError, ValueError):
+        return []
+    if not resolved.is_file():
+        return []
+    try:
+        text = resolved.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return []
+    return unit_note_sections(text)
+
+
+def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> list[str]:
+    lines: list[str] = []
+    for section in sections:
+        stage_ids = [sid for sid in section.get("stage_ids") or [] if sid]
+        context = ", ".join(
+            f"{stage_titles.get(sid, sid)} (`{sid}`)" for sid in stage_ids
+        ) or "no stage named"
+        lines.extend([
+            f"### {section.get('title') or 'Learning session note'}", "",
+            f"*Session note recorded {section.get('recorded_at') or 'at an unrecorded time'}"
+            f" — stage context: {context}.*", "",
+            section.get("text") or "*(Empty section.)*", "",
+        ])
+        attachments = section.get("attachments") or []
+        if attachments:
+            lines.extend([
+                "Attachments: " + ", ".join(
+                    str(item.get("path")) for item in attachments
+                    if isinstance(item, dict) and item.get("path")
+                ),
+                "",
+            ])
+    return lines
+
+
+@register("review.prepare", kind="command")
+def shelving_prepare(ctx: OpContext, req: dict) -> Result:
+    """Prepare a review packet; never applies canonical changes."""
+    root = ctx.root
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    data = copy.deepcopy(study_map.data)
+    items = []
+    if req.get("items_file"):
+        try:
+            _source, item_bytes = _read_content_bound_file(
+                req["items_file"],
+                req.get("items_file_sha256"),
+                label="shelving items file",
+            )
+            raw = json.loads(item_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError, WriteRefused) as exc:
+            raise WriteRefused(
+                f"cannot read shelving items: {exc}",
+                site=f"{ctx.operation}.bad-items-file",
+                gateway_message=f"los: cannot read shelving items: {exc}",
+                exit_code=2,
+            ) from exc
+        items = raw.get("items", raw) if isinstance(raw, dict) else raw
+        if not isinstance(items, list):
+            raise WriteRefused(
+                "shelving items file must contain a JSON list",
+                site=f"{ctx.operation}.items-not-list",
+                gateway_message="los: shelving items file must contain a JSON list",
+                exit_code=2,
+            )
+    proposal_path = study_map.path.parent / "shelving-proposal.md"
+    stage_titles = {
+        str(stage.get("id")): str(stage.get("title") or stage.get("id"))
+        for stage in data.get("stages", []) or []
+        if isinstance(stage, dict) and stage.get("id")
+    }
+    sections = _unit_note_packet_sections(root, unit)
+    lines = ["# Shelving proposal review packet", "",
+             "> Operational proposal only. No canonical change is applied until selected IDs are explicitly approved.", ""]
+    lines.extend(["## Session notes", ""])
+    if sections:
+        lines.extend(_packet_note_lines(sections, stage_titles))
+    else:
+        lines.extend(["*(No session note saved for this unit yet.)*", ""])
+    seen_stage_notes: set[str] = set()
+    for stage in data.get("stages", []) or []:
+        note_ref = str(stage.get("working_note", ""))
+        note = root / note_ref if note_ref else None
+        stage_text = (
+            note.read_text(encoding="utf-8", errors="replace")
+            if note is not None and note.is_file() else ""
+        ).strip()
+        attachments = stage.get("attachments") or []
+        # A stage with neither recorded text nor attachments would add an
+        # empty heading between the sections that do carry reasoning.
+        if not stage_text and not attachments:
+            continue
+        if note_ref and note_ref in seen_stage_notes:
+            continue
+        if note_ref:
+            seen_stage_notes.add(note_ref)
+        lines.extend([f"## {stage.get('title', stage.get('id'))}", "",
+                      f"*Stage note `{note_ref}`.*" if note_ref else "*Stage note.*",
+                      ""])
+        lines.append(stage_text or "*(No stage note text; attachments only.)*")
+        lines.append("")
+        if attachments:
+            lines.append("Attachments: " + ", ".join(a["path"] for a in attachments))
+            lines.append("")
+    shelving = data.setdefault("shelving", {})
+    shelving.update({"state": "proposed" if items else "draft",
+                      "proposal_path": proposal_path.relative_to(root).as_posix(),
+                      "summary": req.get("summary") or "Review stage notes and attachments without rewriting learner wording."})
+    if items:
+        shelving["items"] = items
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "proposal_path": shelving["proposal_path"],
+         "state": shelving["state"]},
+        proposal=TransactionProposal(
+            capability="review.prepare",
+            writes={
+                proposal_path: "\n".join(lines).rstrip() + "\n",
+                study_map.path: _dump_study_map(study_map, data),
+            },
+            artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_review_prepare,
+    )
