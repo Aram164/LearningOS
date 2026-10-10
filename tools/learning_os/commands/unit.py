@@ -10,7 +10,6 @@ from pathlib import Path
 
 import yaml
 
-from learning_os import observations
 from learning_os.contracts import (
     ContractValidationError,
     PlanTemplateError,
@@ -32,7 +31,6 @@ from learning_os.ops._legacy_plumbing import (
 )
 from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
-from learning_os.unit_notes import unit_note_marker
 
 from .reads import _print_stable, _refusal, _window
 from .support import (
@@ -40,7 +38,6 @@ from .support import (
     _expected_revisions_from_args,
     _print_rows,
     _root,
-    _unit_map_or_error,
     _write_transaction,
 )
 
@@ -640,132 +637,6 @@ def cmd_unit_source_selection(args) -> int:
         "source_id": args.source_id,
         "locator": args.locator,
         "selected": selected,
-        **confirmation,
-    }, ensure_ascii=False))
-    return 0
-
-
-def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
-    declared = str(unit.data.get("working_note") or "").strip()
-    target = root / declared if declared else unit.path.parent / "notes.md"
-    try:
-        rel = target.resolve().relative_to(root.resolve()).as_posix()
-    except ValueError as exc:
-        raise WriteRefused("unit working note must stay inside the repository") from exc
-    return target, rel
-
-
-def cmd_unit_note(args) -> int:
-    """Append one session-level section to the unit working note.
-
-    The note belongs to the unit/session context, never to one selected stage.
-    Referenced stage ids are evidence/context only and must belong to the unit's
-    current study map. Existing stage notes remain readable compatibility data.
-    """
-    root = _root(args)
-    value = args.text if args.text is not None else sys.stdin.read()
-    if not value.strip():
-        print("los: refusing to write an empty unit note — pass real text", file=sys.stderr)
-        return 2
-    raw_sources = list(args.attachment or [])
-    source_hashes = list(getattr(args, "attachment_sha256", None) or [])
-    if source_hashes and len(source_hashes) != len(raw_sources):
-        print("los: --attachment-sha256 must be repeated once per --attachment",
-              file=sys.stderr)
-        return 2
-    try:
-        sources = [
-            _read_content_bound_file(
-                raw,
-                source_hashes[index] if index < len(source_hashes) else None,
-                label=f"unit-note attachment[{index}]",
-            )
-            for index, raw in enumerate(raw_sources)
-        ]
-    except WriteRefused as exc:
-        print(f"los: {exc}", file=sys.stderr)
-        return 2
-
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo, unit, study_map = _unit_map_or_error(root, args.unit_id)
-        if unit is None or study_map is None:
-            return 2
-        stage_ids = list(dict.fromkeys(args.stage_id or []))
-        allowed = {row.get("id") for row in study_map.data.get("stages", []) or []}
-        unknown = [stage_id for stage_id in stage_ids if stage_id not in allowed]
-        if unknown:
-            print(f"los: stage does not belong to unit '{args.unit_id}': {unknown[0]}", file=sys.stderr)
-            return 2
-
-        unit_data = copy.deepcopy(unit.data)
-        try:
-            target, rel = _unit_note_target(root, unit)
-        except WriteRefused as exc:
-            print(f"los: {exc}", file=sys.stderr)
-            return 2
-        old = target.read_text(encoding="utf-8") if target.is_file() else ""
-        recorded_at = observations.now().replace(microsecond=0).isoformat()
-        title = " ".join((args.title or "Learning session note").split()) or "Learning session note"
-
-        attachments: list[dict] = []
-        attachment_writes: dict[Path, bytes] = {}
-        stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
-        attachment_dir = unit.path.parent / "attachments" / f"unit-note-{stamp}"
-        try:
-            for source, source_bytes in sources:
-                target_file = attachment_dir / source.name
-                suffix = 2
-                while target_file.exists() or target_file in attachment_writes:
-                    target_file = attachment_dir / f"{suffix}-{source.name}"
-                    suffix += 1
-                attachment_writes[target_file] = source_bytes
-                attachments.append({
-                    "path": target_file.relative_to(root).as_posix(),
-                    "label": source.stem,
-                })
-
-            metadata = {
-                "recorded_at": recorded_at,
-                "title": title,
-                "stage_ids": stage_ids,
-                "attachments": attachments,
-            }
-            lines = [unit_note_marker(metadata), f"## {title}", "", value.rstrip()]
-            if attachments:
-                lines.extend(["", "### Attachments", ""] + [
-                    f"- [{item['label']}]({Path(item['path']).relative_to(unit.path.parent.relative_to(root)).as_posix()})"
-                    for item in attachments
-                ])
-            section = "\n".join(lines).rstrip() + "\n"
-            divider = "\n" if old and not old.endswith("\n\n") else ""
-            updated = old + divider + section
-            if not unit_data.get("working_note"):
-                unit_data["working_note"] = rel
-            writes: dict[Path, str | bytes] = {
-                target: updated,
-                unit.path: _dump_yaml(unit_data),
-                **attachment_writes,
-            }
-            code, errors, confirmation = _write_transaction(
-                root, writes, capability="unit.note.append",
-                expected_revisions=_expected_revisions_from_args(args),
-                artifact_ids=[args.unit_id],
-            )
-            if code:
-                for issue in errors[:12]:
-                    print(issue, file=sys.stderr)
-                return code
-        except (OSError, WriteRefused) as exc:
-            print(f"los: cannot write unit note: {exc}", file=sys.stderr)
-            return 2
-
-
-    print(json.dumps({
-        "ok": True, "unit_id": args.unit_id, "working_note": rel,
-        "recorded_at": recorded_at, "stage_ids": stage_ids,
-        "attachments": attachments,
         **confirmation,
     }, ensure_ascii=False))
     return 0

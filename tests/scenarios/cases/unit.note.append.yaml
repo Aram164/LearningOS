@@ -29,31 +29,31 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, text: "   "}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.note.append.empty-note}
   - id: attachment-sha-count
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, text: "mismatched digests", attachment: ["work/inbox/note-drop.md", "work/inbox/pack/one.md"], attachment_sha256: ["sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.note.append.attachment-sha-count}
   - id: bad-attachment
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, text: "missing scan", attachment: ["work/inbox/nope.md"], attachment_sha256: ["sha256:0000000000000000000000000000000000000000000000000000000000000000"]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.note.append.bad-file}
   - id: unknown-stage-id
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, text: "wrong stage", stage_id: [stage-nope]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.note.append.unknown-stage}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, text: "nowhere to land"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: unit.note.append.unknown-unit}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

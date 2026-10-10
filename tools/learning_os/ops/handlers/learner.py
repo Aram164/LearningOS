@@ -28,6 +28,7 @@ from learning_os.ops.handlers._shared import (
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.transactions import parse_expected_revisions
+from learning_os.unit_notes import unit_note_marker
 
 
 def _dumps_stage(payload: dict) -> str:
@@ -730,3 +731,146 @@ def source_feedback(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_stage,
     )
+
+
+def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
+    declared = str(unit.data.get("working_note") or "").strip()
+    target = root / declared if declared else unit.path.parent / "notes.md"
+    try:
+        rel = target.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise WriteRefused("unit working note must stay inside the repository") from exc
+    return target, rel
+
+
+@register("unit.note.append", kind="command")
+def unit_note(ctx: OpContext, req: dict) -> Result:
+    """Append one session-level section to the unit working note."""
+    root = ctx.root
+    value = req.get("text") if req.get("text") is not None else sys.stdin.read()
+    if not value.strip():
+        raise WriteRefused(
+            "refusing to write an empty unit note — pass real text",
+            site="unit.note.append.empty-note",
+            gateway_message="los: refusing to write an empty unit note — pass real text",
+            exit_code=2,
+        )
+    raw_sources = list(req.get("attachment") or [])
+    source_hashes = list(req.get("attachment_sha256") or [])
+    if source_hashes and len(source_hashes) != len(raw_sources):
+        raise WriteRefused(
+            "--attachment-sha256 must be repeated once per --attachment",
+            site="unit.note.append.attachment-sha-count",
+            gateway_message="los: --attachment-sha256 must be repeated once per --attachment",
+            exit_code=2,
+        )
+    try:
+        sources = [
+            _read_content_bound_file(
+                raw,
+                source_hashes[index] if index < len(source_hashes) else None,
+                label=f"unit-note attachment[{index}]",
+            )
+            for index, raw in enumerate(raw_sources)
+        ]
+    except WriteRefused as exc:
+        raise WriteRefused(
+            str(exc),
+            site="unit.note.append.bad-file",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    stage_ids = list(dict.fromkeys(req.get("stage_id") or []))
+    allowed = {row.get("id") for row in study_map.data.get("stages", []) or []}
+    unknown = [stage_id for stage_id in stage_ids if stage_id not in allowed]
+    if unknown:
+        raise NotFound(
+            "stage", unknown[0], allowed,
+            message=f"stage does not belong to unit '{req['unit_id']}': {unknown[0]}",
+            site="unit.note.append.unknown-stage",
+            gateway_message=(f"los: stage does not belong to unit "
+                             f"'{req['unit_id']}': {unknown[0]}"),
+            exit_code=2,
+        )
+
+    unit_data = copy.deepcopy(unit.data)
+    try:
+        target, rel = _unit_note_target(root, unit)
+    except WriteRefused as exc:
+        raise WriteRefused(
+            str(exc),
+            site="unit.note.append.note-outside-repo",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    old = target.read_text(encoding="utf-8") if target.is_file() else ""
+    recorded_at = observations.now().replace(microsecond=0).isoformat()
+    title = " ".join((req.get("title") or "Learning session note").split()) \
+        or "Learning session note"
+
+    attachments: list[dict] = []
+    attachment_writes: dict[Path, bytes] = {}
+    stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
+    attachment_dir = unit.path.parent / "attachments" / f"unit-note-{stamp}"
+    try:
+        for source, source_bytes in sources:
+            target_file = attachment_dir / source.name
+            suffix = 2
+            while target_file.exists() or target_file in attachment_writes:
+                target_file = attachment_dir / f"{suffix}-{source.name}"
+                suffix += 1
+            attachment_writes[target_file] = source_bytes
+            attachments.append({
+                "path": target_file.relative_to(root).as_posix(),
+                "label": source.stem,
+            })
+
+        metadata = {
+            "recorded_at": recorded_at,
+            "title": title,
+            "stage_ids": stage_ids,
+            "attachments": attachments,
+        }
+        lines = [unit_note_marker(metadata), f"## {title}", "", value.rstrip()]
+        if attachments:
+            lines.extend(["", "### Attachments", ""] + [
+                f"- [{item['label']}]({Path(item['path']).relative_to(unit.path.parent.relative_to(root)).as_posix()})"
+                for item in attachments
+            ])
+        section = "\n".join(lines).rstrip() + "\n"
+        divider = "\n" if old and not old.endswith("\n\n") else ""
+        updated = old + divider + section
+        if not unit_data.get("working_note"):
+            unit_data["working_note"] = rel
+        writes: dict[Path, str | bytes] = {
+            target: updated,
+            unit.path: _dump_yaml(unit_data),
+            **attachment_writes,
+        }
+        try:
+            expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(str(exc)) from exc
+        return Result(
+            {"ok": True, "unit_id": req["unit_id"], "working_note": rel,
+             "recorded_at": recorded_at, "stage_ids": stage_ids,
+             "attachments": attachments},
+            proposal=TransactionProposal(
+                capability="unit.note.append",
+                writes=writes,
+                artifact_ids=[req["unit_id"]],
+                expected_revisions=expected_revisions,
+            ),
+            on_commit_refused=_on_commit_refused,
+            json_dumps=_dumps_stage,
+        )
+    except (OSError, WriteRefused) as exc:
+        raise WriteRefused(
+            f"cannot write unit note: {exc}",
+            site="unit.note.append.write-failed",
+            gateway_message=f"los: cannot write unit note: {exc}",
+            exit_code=2,
+        ) from exc

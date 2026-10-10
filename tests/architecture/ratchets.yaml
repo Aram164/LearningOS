@@ -1107,18 +1107,6 @@ checks:
     count: 12
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::print
-    count: 8
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::return
-    count: 9
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/unit.py::cmd_unit_source_selection::_operator_lock
     count: 1
     since: baseline
