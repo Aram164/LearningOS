@@ -12,7 +12,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose stage gains the attachment",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -33,7 +33,7 @@
     },
     "stage_id": {
       "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+      "description": "stage of the unit's current study map gaining the attachment",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -99,7 +99,7 @@
     },
     "label": {
       "type": "string",
-      "description": "label (no description in the parser yet)",
+      "description": "optional attachment label; the file name stem when omitted",
       "x-los-cli": {
         "flags": [
           "--label"
@@ -120,7 +120,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

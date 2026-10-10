@@ -85,10 +85,12 @@ def _strip_approved_owner_metadata(operation: str, old: dict, new: dict
     return old_copy, new_copy
 
 
-#: Exact SPEC (bf) item 1 pilot description pointers: operation ->
-#: property-node pointer parts. Only a ``description`` change from the
-#: bootstrap placeholder to a real string is stripped, at exactly these
-#: 12 pairs. Alias files carry no descriptions of their own.
+#: Exact SPEC (bf) item 1 pilot description pointers, plus the SPEC
+#: (bi) item 6 wave 1 authorized pointers: operation -> property-node
+#: pointer parts. Only a ``description`` change from the bootstrap
+#: placeholder to a real string is stripped, at exactly these pairs
+#: (12 pilot + 83 wave 1). Alias files carry no descriptions of their
+#: own.
 BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
     "route.patch": (
         ("properties", "unit_id"),
@@ -109,6 +111,129 @@ BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
     ),
     "cli.inspect": (
         ("properties", "id"),
+    ),
+    "cli.ai-action-append-slices": (
+        ("properties", "request_id"),
+        ("properties", "route_id"),
+        ("properties", "expected_snapshot"),
+    ),
+    "cli.ai-action-import-delivery": (
+        ("properties", "path"),
+    ),
+    "cli.ai-action-prepare": (
+        ("properties", "action_id"),
+        ("properties", "target_kind"),
+        ("properties", "target_id"),
+        ("properties", "provider"),
+        ("properties", "expected_snapshot"),
+    ),
+    "cli.ai-action-status": (
+        ("properties", "request_id"),
+    ),
+    "cli.ai-action-validate-delivery": (
+        ("properties", "delivery_id"),
+    ),
+    "detour.create": (
+        ("properties", "unit_id"),
+        ("properties", "stage_id"),
+        ("properties", "title"),
+        ("properties", "classification"),
+        ("properties", "expected_snapshot"),
+    ),
+    "detour.resolve": (
+        ("properties", "unit_id"),
+        ("properties", "detour_id"),
+        ("properties", "resolution"),
+        ("properties", "expected_snapshot"),
+    ),
+    "learner.ability-observation.append": (
+        ("properties", "workspace"),
+        ("properties", "ability"),
+        ("properties", "activity"),
+        ("properties", "result"),
+        ("properties", "assistance"),
+        ("properties", "condition"),
+        ("properties", "evidence_tag"),
+        ("properties", "condition_not_met"),
+        ("properties", "supersedes"),
+        ("properties", "expected_snapshot"),
+    ),
+    "learner.observation.append": (
+        ("properties", "workspace"),
+        ("properties", "requirement"),
+        ("properties", "activity"),
+        ("properties", "result"),
+        ("properties", "assistance"),
+        ("properties", "tags"),
+        ("properties", "context"),
+        ("properties", "expected_snapshot"),
+    ),
+    "learner.stage-result.append": (
+        ("properties", "workspace"),
+        ("properties", "unit"),
+        ("properties", "stage"),
+        ("properties", "activity"),
+        ("properties", "result"),
+        ("properties", "assistance"),
+        ("properties", "expected_snapshot"),
+    ),
+    "note.evidence.add": (
+        ("properties", "note_id"),
+        ("properties", "evidence_type"),
+        ("properties", "expected_snapshot"),
+    ),
+    "note.revise": (
+        ("properties", "note_id"),
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+    ),
+    "path.attachment.add": (
+        ("properties", "path_id"),
+        ("properties", "stage_id"),
+        ("properties", "label"),
+    ),
+    "path.note.write": (
+        ("properties", "path_id"),
+        ("properties", "stage_id"),
+    ),
+    "path.progress.update": (
+        ("properties", "path_id"),
+        ("properties", "stage_id"),
+        ("properties", "status"),
+    ),
+    "source.feedback.record": (
+        ("properties", "unit_id"),
+        ("properties", "stage_id"),
+        ("properties", "source_id"),
+        ("properties", "feedback"),
+        ("properties", "note"),
+        ("properties", "expected_snapshot"),
+    ),
+    "stage.attachment.add": (
+        ("properties", "unit_id"),
+        ("properties", "stage_id"),
+        ("properties", "label"),
+        ("properties", "expected_snapshot"),
+    ),
+    "stage.note.write": (
+        ("properties", "unit_id"),
+        ("properties", "stage_id"),
+        ("properties", "text"),
+        ("properties", "expected_snapshot"),
+    ),
+    "unit.note.append": (
+        ("properties", "unit_id"),
+        ("properties", "title"),
+        ("properties", "text"),
+        ("properties", "expected_snapshot"),
+    ),
+    "unit.source-selection.set": (
+        ("properties", "unit_id"),
+        ("properties", "source_id"),
+        ("properties", "locator"),
+        ("properties", "action"),
+        ("properties", "purpose"),
+        ("properties", "expected_snapshot"),
     ),
 }
 

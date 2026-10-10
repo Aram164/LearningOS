@@ -17,7 +17,7 @@
   "properties": {
     "workspace": {
       "type": "string",
-      "description": "workspace (no description in the parser yet)",
+      "description": "id of the registered active workspace owning the ledger",
       "x-los-cli": {
         "flags": [
           "--workspace"
@@ -38,7 +38,7 @@
     },
     "ability": {
       "type": "string",
-      "description": "ability (no description in the parser yet)",
+      "description": "id of the active reviewed ability the claim is recorded against",
       "x-los-cli": {
         "flags": [
           "--ability"
@@ -122,7 +122,7 @@
     },
     "activity": {
       "type": "string",
-      "description": "activity (no description in the parser yet)",
+      "description": "what was done in the recorded attempt; free text",
       "x-los-cli": {
         "flags": [
           "--activity"
@@ -149,7 +149,7 @@
         "partial",
         "abandoned"
       ],
-      "description": "result (no description in the parser yet)",
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned",
       "x-los-cli": {
         "flags": [
           "--result"
@@ -175,7 +175,7 @@
     },
     "assistance": {
       "type": "string",
-      "description": "assistance (no description in the parser yet)",
+      "description": "optional note on assistance used during the attempt",
       "x-los-cli": {
         "flags": [
           "--assistance"
@@ -199,7 +199,7 @@
       "items": {
         "type": "string"
       },
-      "description": "condition (no description in the parser yet)",
+      "description": "a condition that DID hold for this attempt",
       "x-los-cli": {
         "flags": [
           "--condition"
@@ -223,7 +223,7 @@
       "items": {
         "type": "string"
       },
-      "description": "evidence_tag (no description in the parser yet)",
+      "description": "evidence tag for the claim; repeatable",
       "x-los-cli": {
         "flags": [
           "--evidence-tag"
@@ -247,7 +247,7 @@
       "items": {
         "type": "string"
       },
-      "description": "condition_not_met (no description in the parser yet)",
+      "description": "a condition that did NOT hold; a different fact from silence, which stays unknown",
       "x-los-cli": {
         "flags": [
           "--condition-not-met"
@@ -268,7 +268,7 @@
     },
     "supersedes": {
       "type": "string",
-      "description": "supersedes (no description in the parser yet)",
+      "description": "id of the one uncorrected ability observation this record corrects; the prior bytes are preserved",
       "x-los-cli": {
         "flags": [
           "--supersedes"
@@ -289,7 +289,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

@@ -17,13 +17,16 @@
   ],
   "properties": {
     "ability": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the active reviewed ability the claim is recorded against"
     },
     "activity": {
-      "type": "string"
+      "type": "string",
+      "description": "what was done in the recorded attempt; free text"
     },
     "assistance": {
-      "type": "string"
+      "type": "string",
+      "description": "optional note on assistance used during the attempt"
     },
     "claim": {
       "type": "string",
@@ -33,13 +36,15 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "a condition that DID hold for this attempt"
     },
     "condition_not_met": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "a condition that did NOT hold; a different fact from silence, which stays unknown"
     },
     "confirmation_ref": {
       "type": "string",
@@ -49,7 +54,8 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "evidence tag for the claim; repeatable"
     },
     "result": {
       "type": "string",
@@ -58,17 +64,20 @@
         "incorrect",
         "partial",
         "abandoned"
-      ]
+      ],
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned"
     },
     "supersedes": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the one uncorrected ability observation this record corrects; the prior bytes are preserved"
     },
     "work_ref": {
       "type": "string",
       "description": "pointer to the actual attempt"
     },
     "workspace": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the registered active workspace owning the ledger"
     }
   }
 }

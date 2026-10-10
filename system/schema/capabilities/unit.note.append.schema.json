@@ -33,13 +33,16 @@
       "description": "completed stage context; repeat for multiple stages"
     },
     "text": {
-      "type": "string"
+      "type": "string",
+      "description": "text of the appended section; empty text refuses, omitted text is read from stdin"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "description": "section title for the appended note; 'Learning session note' when omitted"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose working note gains the section"
     }
   },
   "dependentRequired": {

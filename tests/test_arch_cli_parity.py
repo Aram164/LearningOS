@@ -71,9 +71,11 @@ def _normalize_registered_defaults(baseline_defaults: dict, handler: str) -> dic
     return normalized
 
 
-#: SPEC (bf) item 1: pilot (subcommand, dest) pairs whose baseline help
-#: (None: the placeholder suppresses help) normalizes to the live
-#: request-schema description, as (u) item 2 does for handler bindings.
+#: SPEC (bf) item 1, generalized by (bi) item 6: (subcommand, dest)
+#: pairs whose baseline help (None: the placeholder suppresses help)
+#: normalizes to the live request-schema description, as (u) item 2
+#: does for handler bindings. Pilot pairs first, then the wave 1
+#: authorized description pointers, one entry per operation.
 BF_HELP_PAIRS: dict[str, set[str]] = {
     "route-patch": {"unit_id", "route_id", "changes", "check",
                     "expected_snapshot"},
@@ -81,6 +83,39 @@ BF_HELP_PAIRS: dict[str, set[str]] = {
                        "expected_snapshot"},
     "ai-action-apply-delivery": {"delivery_id", "expected_snapshot"},
     "inspect": {"id"},
+    "ai-action-append-slices": {"request_id", "route_id",
+                                "expected_snapshot"},
+    "ai-action-import-delivery": {"path"},
+    "ai-action-prepare": {"action_id", "target_kind", "target_id",
+                          "provider", "expected_snapshot"},
+    "ai-action-status": {"request_id"},
+    "ai-action-validate-delivery": {"delivery_id"},
+    "detour-create": {"unit_id", "stage_id", "title", "classification",
+                      "expected_snapshot"},
+    "detour-resolve": {"unit_id", "detour_id", "resolution",
+                       "expected_snapshot"},
+    "ability-observation-append": {"workspace", "ability", "activity",
+                                   "result", "assistance", "condition",
+                                   "evidence_tag", "condition_not_met",
+                                   "supersedes", "expected_snapshot"},
+    "observation-append": {"workspace", "requirement", "activity",
+                           "result", "assistance", "tags", "context",
+                           "expected_snapshot"},
+    "stage-result": {"workspace", "unit", "stage", "activity", "result",
+                     "assistance", "expected_snapshot"},
+    "note-evidence": {"note_id", "evidence_type", "expected_snapshot"},
+    "note-revise": {"note_id", "approve", "expected_snapshot"},
+    "path-attach": {"path_id", "stage_id", "label"},
+    "path-note": {"path_id", "stage_id"},
+    "path-progress": {"path_id", "stage_id", "status"},
+    "source-feedback": {"unit_id", "stage_id", "source_id", "feedback",
+                        "note", "expected_snapshot"},
+    "stage-attach": {"unit_id", "stage_id", "label",
+                     "expected_snapshot"},
+    "stage-note": {"unit_id", "stage_id", "text", "expected_snapshot"},
+    "unit-note": {"unit_id", "title", "text", "expected_snapshot"},
+    "unit-source-selection": {"unit_id", "source_id", "locator",
+                              "action", "purpose", "expected_snapshot"},
 }
 
 #: The request-schema operation behind each normalized subcommand.
@@ -89,6 +124,26 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "stage-progress": "stage.progress.update",
     "ai-action-apply-delivery": "ai-action.delivery.apply",
     "inspect": "cli.inspect",
+    "ai-action-append-slices": "cli.ai-action-append-slices",
+    "ai-action-import-delivery": "cli.ai-action-import-delivery",
+    "ai-action-prepare": "cli.ai-action-prepare",
+    "ai-action-status": "cli.ai-action-status",
+    "ai-action-validate-delivery": "cli.ai-action-validate-delivery",
+    "detour-create": "detour.create",
+    "detour-resolve": "detour.resolve",
+    "ability-observation-append": "learner.ability-observation.append",
+    "observation-append": "learner.observation.append",
+    "stage-result": "learner.stage-result.append",
+    "note-evidence": "note.evidence.add",
+    "note-revise": "note.revise",
+    "path-attach": "path.attachment.add",
+    "path-note": "path.note.write",
+    "path-progress": "path.progress.update",
+    "source-feedback": "source.feedback.record",
+    "stage-attach": "stage.attachment.add",
+    "stage-note": "stage.note.write",
+    "unit-note": "unit.note.append",
+    "unit-source-selection": "unit.source-selection.set",
 }
 
 
@@ -299,7 +354,7 @@ def test_bf_help_normalization_touches_only_the_listed_pairs():
     assert sorted(changed) == sorted(
         (sub, dest) for sub, dests in BF_HELP_PAIRS.items()
         for dest in dests), changed
-    assert len(changed) == 12, changed
+    assert len(changed) == 12 + 83, changed  # pilot 12 + wave 1 (bi) 6
     # Control: a baseline whose listed help is already a real string —
     # not the placeholder's None — must fail normalization.
     poisoned = copy.deepcopy(baseline)

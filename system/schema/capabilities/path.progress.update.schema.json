@@ -12,10 +12,12 @@
   ],
   "properties": {
     "path_id": {
-      "type": "string"
+      "type": "string",
+      "description": "learning path whose stage status to move"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the learning path to move"
     },
     "status": {
       "type": "string",
@@ -23,7 +25,8 @@
         "active",
         "complete",
         "skipped"
-      ]
+      ],
+      "description": "new status for the learning-path stage: active, complete or skipped"
     }
   }
 }

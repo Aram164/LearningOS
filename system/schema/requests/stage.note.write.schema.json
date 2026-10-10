@@ -11,7 +11,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose stage note to write",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -32,7 +32,7 @@
     },
     "stage_id": {
       "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+      "description": "stage of the unit's current study map whose note to write",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -53,7 +53,7 @@
     },
     "text": {
       "type": "string",
-      "description": "text (no description in the parser yet)",
+      "description": "text written to the stage working note, appended or, with replace, replacing it; empty text refuses, omitted text is read from stdin",
       "x-los-cli": {
         "flags": [
           "--text"
@@ -95,7 +95,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

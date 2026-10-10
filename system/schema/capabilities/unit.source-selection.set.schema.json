@@ -17,19 +17,24 @@
       "enum": [
         "select",
         "remove"
-      ]
+      ],
+      "description": "whether to select or remove the material choice"
     },
     "locator": {
-      "type": "string"
+      "type": "string",
+      "description": "locator of the material route within the source"
     },
     "purpose": {
-      "type": "string"
+      "type": "string",
+      "description": "why this material is chosen; the route's angle when omitted, blank text refuses"
     },
     "source_id": {
-      "type": "string"
+      "type": "string",
+      "description": "source of the material route to select or remove"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose material choice to change"
     }
   }
 }

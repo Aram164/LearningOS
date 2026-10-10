@@ -20,7 +20,8 @@
       "description": "SHA-256 of the exact replacement-note bytes approved for revision"
     },
     "note_id": {
-      "type": "string"
+      "type": "string",
+      "description": "Id of the note to replace."
     }
   },
   "dependentRequired": {

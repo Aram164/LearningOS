@@ -12,7 +12,7 @@
   "properties": {
     "path_id": {
       "type": "string",
-      "description": "path_id (no description in the parser yet)",
+      "description": "learning path whose stage gains the attachment",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -33,7 +33,7 @@
     },
     "stage_id": {
       "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+      "description": "stage of the learning path the file attaches to",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -99,7 +99,7 @@
     },
     "label": {
       "type": "string",
-      "description": "label (no description in the parser yet)",
+      "description": "optional attachment label; the file name stem when omitted",
       "x-los-cli": {
         "flags": [
           "--label"

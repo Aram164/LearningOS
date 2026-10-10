@@ -20,10 +20,12 @@
         "exercise",
         "exam",
         "external"
-      ]
+      ],
+      "description": "Evidence entry type; one of derivation, explanation, implementation, exercise, exam, external."
     },
     "note_id": {
-      "type": "string"
+      "type": "string",
+      "description": "Id of the note that gains the evidence entry."
     },
     "ref": {
       "type": "string",

@@ -11,7 +11,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose detour to resolve",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -32,7 +32,7 @@
     },
     "detour_id": {
       "type": "string",
-      "description": "detour_id (no description in the parser yet)",
+      "description": "id of the detour to resolve",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -53,7 +53,7 @@
     },
     "resolution": {
       "type": "string",
-      "description": "resolution (no description in the parser yet)",
+      "description": "optional resolution text stored on the resolved detour",
       "x-los-cli": {
         "flags": [
           "--resolution"
@@ -74,7 +74,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

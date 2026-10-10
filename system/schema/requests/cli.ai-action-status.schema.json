@@ -31,7 +31,7 @@
     },
     "request_id": {
       "type": "string",
-      "description": "request_id (no description in the parser yet)",
+      "description": "The id of the prepared request to show; unknown ids are refused.",
       "x-los-cli": {
         "flags": [],
         "position": 0,

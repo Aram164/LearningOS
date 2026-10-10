@@ -14,10 +14,12 @@
   ],
   "properties": {
     "activity": {
-      "type": "string"
+      "type": "string",
+      "description": "what was done in the recorded attempt; free text"
     },
     "assistance": {
-      "type": "string"
+      "type": "string",
+      "description": "optional note on assistance used during the attempt"
     },
     "condition": {
       "type": "array",
@@ -37,20 +39,24 @@
         "incorrect",
         "partial",
         "abandoned"
-      ]
+      ],
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned"
     },
     "stage": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the unit's current study map the result is recorded against"
     },
     "supersedes": {
       "type": "string",
       "description": "explicitly correct one earlier stage result; preserves its bytes"
     },
     "unit": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose stage the result is recorded against"
     },
     "workspace": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the registered active workspace owning the ledger"
     }
   }
 }

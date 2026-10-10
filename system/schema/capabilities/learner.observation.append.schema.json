@@ -13,10 +13,12 @@
   ],
   "properties": {
     "activity": {
-      "type": "string"
+      "type": "string",
+      "description": "what was done in the recorded attempt; free text"
     },
     "assistance": {
-      "type": "string"
+      "type": "string",
+      "description": "optional note on assistance used during the attempt"
     },
     "condition": {
       "type": "array",
@@ -33,10 +35,12 @@
       "description": "a condition that did NOT hold; a different fact from silence, which stays unknown"
     },
     "context": {
-      "type": "string"
+      "type": "string",
+      "description": "optional free-text context stored with the record"
     },
     "requirement": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the requirement the evidence is recorded against"
     },
     "result": {
       "type": "string",
@@ -45,17 +49,20 @@
         "incorrect",
         "partial",
         "abandoned"
-      ]
+      ],
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned"
     },
     "supersedes": {
       "type": "string",
       "description": "explicitly correct one earlier observation; preserves its bytes"
     },
     "tags": {
-      "type": "string"
+      "type": "string",
+      "description": "comma-separated evidence tags for the record"
     },
     "workspace": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the registered active workspace owning the ledger"
     }
   }
 }

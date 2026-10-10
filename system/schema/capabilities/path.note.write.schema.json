@@ -12,14 +12,16 @@
   ],
   "properties": {
     "path_id": {
-      "type": "string"
+      "type": "string",
+      "description": "learning path whose stage note to write"
     },
     "replace": {
       "type": "boolean",
       "description": "replace this stage note"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the learning path whose note to write"
     },
     "text": {
       "type": "string",

@@ -11,7 +11,7 @@
   "properties": {
     "note_id": {
       "type": "string",
-      "description": "note_id (no description in the parser yet)",
+      "description": "Id of the note to replace.",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -77,7 +77,7 @@
     },
     "approve": {
       "type": "boolean",
-      "description": "approve (no description in the parser yet)",
+      "description": "direct approval flag; GatewayEnvelopeV2 owns this value for live promotion",
       "x-los-cli": {
         "flags": [
           "--approve"
@@ -98,7 +98,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

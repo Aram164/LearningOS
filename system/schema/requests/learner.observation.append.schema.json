@@ -13,7 +13,7 @@
   "properties": {
     "workspace": {
       "type": "string",
-      "description": "workspace (no description in the parser yet)",
+      "description": "id of the registered active workspace owning the ledger",
       "x-los-cli": {
         "flags": [
           "--workspace"
@@ -34,7 +34,7 @@
     },
     "requirement": {
       "type": "string",
-      "description": "requirement (no description in the parser yet)",
+      "description": "id of the requirement the evidence is recorded against",
       "x-los-cli": {
         "flags": [
           "--requirement"
@@ -55,7 +55,7 @@
     },
     "activity": {
       "type": "string",
-      "description": "activity (no description in the parser yet)",
+      "description": "what was done in the recorded attempt; free text",
       "x-los-cli": {
         "flags": [
           "--activity"
@@ -82,7 +82,7 @@
         "partial",
         "abandoned"
       ],
-      "description": "result (no description in the parser yet)",
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned",
       "x-los-cli": {
         "flags": [
           "--result"
@@ -108,7 +108,7 @@
     },
     "assistance": {
       "type": "string",
-      "description": "assistance (no description in the parser yet)",
+      "description": "optional note on assistance used during the attempt",
       "x-los-cli": {
         "flags": [
           "--assistance"
@@ -129,7 +129,7 @@
     },
     "tags": {
       "type": "string",
-      "description": "tags (no description in the parser yet)",
+      "description": "comma-separated evidence tags for the record",
       "x-los-cli": {
         "flags": [
           "--tags"
@@ -150,7 +150,7 @@
     },
     "context": {
       "type": "string",
-      "description": "context (no description in the parser yet)",
+      "description": "optional free-text context stored with the record",
       "x-los-cli": {
         "flags": [
           "--context"
@@ -240,7 +240,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

@@ -12,7 +12,7 @@
   "properties": {
     "path_id": {
       "type": "string",
-      "description": "path_id (no description in the parser yet)",
+      "description": "learning path whose stage status to move",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -33,7 +33,7 @@
     },
     "stage_id": {
       "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+      "description": "stage of the learning path to move",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -59,7 +59,7 @@
         "complete",
         "skipped"
       ],
-      "description": "status (no description in the parser yet)",
+      "description": "new status for the learning-path stage: active, complete or skipped",
       "x-los-cli": {
         "flags": [],
         "position": 2,

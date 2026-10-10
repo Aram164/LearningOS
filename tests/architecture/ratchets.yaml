@@ -1393,50 +1393,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.ai-action-append-slices::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-append-slices::request_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-append-slices::route_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-import-delivery::path::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::action_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::provider::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::target_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-prepare::target_kind::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-status::request_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-validate-delivery::delivery_id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.atlas-context::concept_id::description
     count: 1
     since: baseline
@@ -1669,42 +1625,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: detour.create::classification::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.create::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.create::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.create::title::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.create::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.resolve::detour_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.resolve::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.resolve::resolution::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.resolve::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: garden.seed.create::expected_snapshot::description
     count: 1
     since: baseline
@@ -1714,106 +1634,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: inbox.resolve::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::ability::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::activity::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::assistance::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::condition::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::condition_not_met::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::evidence_tag::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::result::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::supersedes::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::workspace::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::activity::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::assistance::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::context::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::requirement::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::result::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::tags::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::workspace::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::activity::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::assistance::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::result::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::stage::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::unit::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::workspace::description
     count: 1
     since: baseline
     approved_by: null
@@ -1965,30 +1785,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: note.evidence.add::evidence_type::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.evidence.add::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.evidence.add::note_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.revise::approve::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.revise::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.revise::note_id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: note.search::expected_snapshot::description
     count: 1
     since: baseline
@@ -2010,38 +1806,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: operator.bootstrap::offset::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.attachment.add::label::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.attachment.add::path_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.attachment.add::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.note.write::path_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.note.write::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.progress.update::path_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.progress.update::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.progress.update::status::description
     count: 1
     since: baseline
     approved_by: null
@@ -2129,30 +1893,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: source.feedback.record::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.feedback.record::feedback::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.feedback.record::note::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.feedback.record::source_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.feedback.record::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.feedback.record::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: source.intake.record::approve::description
     count: 1
     since: baseline
@@ -2174,38 +1914,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: source.record.revise::record::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.attachment.add::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.attachment.add::label::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.attachment.add::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.attachment.add::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.note.write::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.note.write::stage_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.note.write::text::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.note.write::unit_id::description
     count: 1
     since: baseline
     approved_by: null
@@ -2237,51 +1945,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: unit.note.append::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.note.append::text::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.note.append::title::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.note.append::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: unit.plan.revise::expected_snapshot::description
     count: 1
     since: baseline
     approved_by: null
   - signature: unit.plan.revise::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::action::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::locator::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::purpose::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::source_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::unit_id::description
     count: 1
     since: baseline
     approved_by: null

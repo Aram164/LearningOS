@@ -16,13 +16,16 @@
       "description": "replace the working note instead of appending to it"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the unit's current study map whose note to write"
     },
     "text": {
-      "type": "string"
+      "type": "string",
+      "description": "text written to the stage working note, appended or, with replace, replacing it; empty text refuses, omitted text is read from stdin"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose stage note to write"
     }
   }
 }

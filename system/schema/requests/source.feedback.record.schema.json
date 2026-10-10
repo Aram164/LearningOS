@@ -13,7 +13,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose stage the feedback is recorded against",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -34,7 +34,7 @@
     },
     "stage_id": {
       "type": "string",
-      "description": "stage_id (no description in the parser yet)",
+      "description": "stage the feedback is recorded against",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -55,7 +55,7 @@
     },
     "source_id": {
       "type": "string",
-      "description": "source_id (no description in the parser yet)",
+      "description": "source the feedback is recorded against",
       "x-los-cli": {
         "flags": [],
         "position": 2,
@@ -84,7 +84,7 @@
         "useful-for-review",
         "skipped"
       ],
-      "description": "feedback (no description in the parser yet)",
+      "description": "the recorded experience of the resource: helpful, too-advanced, wrong-perspective, useful-for-derivation, useful-for-review or skipped",
       "x-los-cli": {
         "flags": [],
         "position": 3,
@@ -110,7 +110,7 @@
     },
     "note": {
       "type": "string",
-      "description": "note (no description in the parser yet)",
+      "description": "optional note stored with the feedback",
       "x-los-cli": {
         "flags": [
           "--note"
@@ -154,7 +154,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

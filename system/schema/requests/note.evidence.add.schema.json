@@ -12,7 +12,7 @@
   "properties": {
     "note_id": {
       "type": "string",
-      "description": "note_id (no description in the parser yet)",
+      "description": "Id of the note that gains the evidence entry.",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -41,7 +41,7 @@
         "exam",
         "external"
       ],
-      "description": "evidence_type (no description in the parser yet)",
+      "description": "Evidence entry type; one of derivation, explanation, implementation, exercise, exam, external.",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -86,7 +86,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

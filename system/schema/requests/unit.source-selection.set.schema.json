@@ -13,7 +13,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose material choice to change",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -34,7 +34,7 @@
     },
     "source_id": {
       "type": "string",
-      "description": "source_id (no description in the parser yet)",
+      "description": "source of the material route to select or remove",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -55,7 +55,7 @@
     },
     "locator": {
       "type": "string",
-      "description": "locator (no description in the parser yet)",
+      "description": "locator of the material route within the source",
       "x-los-cli": {
         "flags": [],
         "position": 2,
@@ -78,7 +78,7 @@
         "select",
         "remove"
       ],
-      "description": "action (no description in the parser yet)",
+      "description": "whether to select or remove the material choice",
       "x-los-cli": {
         "flags": [],
         "position": 3,
@@ -100,7 +100,7 @@
     },
     "purpose": {
       "type": "string",
-      "description": "purpose (no description in the parser yet)",
+      "description": "why this material is chosen; the route's angle when omitted, blank text refuses",
       "x-los-cli": {
         "flags": [
           "--purpose"
@@ -121,7 +121,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

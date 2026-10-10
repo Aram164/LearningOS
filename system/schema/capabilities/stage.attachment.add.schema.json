@@ -21,13 +21,16 @@
       "description": "SHA-256 of the exact attachment bytes approved for this request"
     },
     "label": {
-      "type": "string"
+      "type": "string",
+      "description": "optional attachment label; the file name stem when omitted"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the unit's current study map gaining the attachment"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose stage gains the attachment"
     }
   },
   "dependentRequired": {

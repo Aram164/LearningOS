@@ -19,16 +19,20 @@
         "helpful-now",
         "deferred",
         "reference-only"
-      ]
+      ],
+      "description": "detour classification: required-now, helpful-now, deferred or reference-only"
     },
     "stage_id": {
-      "type": "string"
+      "type": "string",
+      "description": "stage of the unit's current study map spawning the detour"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "description": "title of the detour; slugified into its id"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose stage spawns the detour"
     }
   }
 }

@@ -31,7 +31,7 @@
     },
     "delivery_id": {
       "type": "string",
-      "description": "delivery_id (no description in the parser yet)",
+      "description": "The id of the imported delivery to validate; unknown ids are refused.",
       "x-los-cli": {
         "flags": [],
         "position": 0,

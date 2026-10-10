@@ -15,7 +15,7 @@
   "properties": {
     "request_id": {
       "type": "string",
-      "description": "request_id (no description in the parser yet)",
+      "description": "The id of the prepared request to continue; unknown ids are refused.",
       "x-los-cli": {
         "flags": [
           "--request-id"
@@ -36,7 +36,7 @@
     },
     "route_id": {
       "type": "string",
-      "description": "route_id (no description in the parser yet)",
+      "description": "The id of the request unit's route to continue, which must be one of the unit's declared routes.",
       "x-los-cli": {
         "flags": [
           "--route-id"
@@ -190,7 +190,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "Optional concurrency guard: a sha256: snapshot token that must equal the live source fingerprint, otherwise the continuation is refused as stale.",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

@@ -10,7 +10,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit whose working note gains the section",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -31,7 +31,7 @@
     },
     "title": {
       "type": "string",
-      "description": "title (no description in the parser yet)",
+      "description": "section title for the appended note; 'Learning session note' when omitted",
       "x-los-cli": {
         "flags": [
           "--title"
@@ -52,7 +52,7 @@
     },
     "text": {
       "type": "string",
-      "description": "text (no description in the parser yet)",
+      "description": "text of the appended section; empty text refuses, omitted text is read from stdin",
       "x-los-cli": {
         "flags": [
           "--text"
@@ -150,7 +150,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

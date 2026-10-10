@@ -12,7 +12,7 @@
   "properties": {
     "action_id": {
       "type": "string",
-      "description": "action_id (no description in the parser yet)",
+      "description": "Names the registered AI action to prepare; unknown actions are refused.",
       "x-los-cli": {
         "flags": [
           "--action-id"
@@ -33,7 +33,7 @@
     },
     "target_kind": {
       "type": "string",
-      "description": "target_kind (no description in the parser yet)",
+      "description": "The kind of the action target, which must be one of the action's declared target kinds.",
       "x-los-cli": {
         "flags": [
           "--target-kind"
@@ -54,7 +54,7 @@
     },
     "target_id": {
       "type": "string",
-      "description": "target_id (no description in the parser yet)",
+      "description": "The id of the action target: a unit id when target-kind is unit, otherwise a garden target id; unknown ids are refused.",
       "x-los-cli": {
         "flags": [
           "--target-id"
@@ -75,7 +75,7 @@
     },
     "provider": {
       "type": "string",
-      "description": "provider (no description in the parser yet)",
+      "description": "The provider that will serve the request, default manual-bundle; it must be supported by the action and resolve to an available adapter.",
       "x-los-cli": {
         "flags": [
           "--provider"
@@ -96,7 +96,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "Optional concurrency guard: a sha256: snapshot token that must equal the live source fingerprint, otherwise the request is refused as stale.",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

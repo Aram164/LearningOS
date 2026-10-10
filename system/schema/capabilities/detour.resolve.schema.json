@@ -11,13 +11,16 @@
   ],
   "properties": {
     "detour_id": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the detour to resolve"
     },
     "resolution": {
-      "type": "string"
+      "type": "string",
+      "description": "optional resolution text stored on the resolved detour"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit whose detour to resolve"
     }
   }
 }
