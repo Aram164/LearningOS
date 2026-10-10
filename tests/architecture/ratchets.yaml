@@ -271,14 +271,6 @@ checks:
     count: 4
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/dossier.py::cmd_dossier::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/dossier.py::cmd_dossier::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/goal.py::cmd_goal::_operator_lock
     count: 1
     since: baseline
@@ -439,14 +431,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_bootstrap::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_bootstrap::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::cmd_capabilities::print
     count: 5
     since: baseline
@@ -487,14 +471,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_status::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_status::print
-    count: 10
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/reads.py::_print_stable::print
     count: 1
     since: baseline
@@ -504,14 +480,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/reads.py::_refusal::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::brief_bootstrap::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::compact_bootstrap::_operator_lock
     count: 1
     since: baseline
     approved_by: null
@@ -573,14 +541,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::return
     count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/semantic.py::cmd_semantic::print
-    count: 8
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/semantic.py::cmd_semantic::return
-    count: 7
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
@@ -1510,19 +1470,11 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.capabilities::*
     count: 1
     since: baseline
     approved_by: null
   - signature: cli.capability::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.dossier::*
     count: 1
     since: baseline
     approved_by: null
@@ -1550,10 +1502,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.program-list::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.related::*
     count: 1
     since: baseline
@@ -1570,15 +1518,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.semantic::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.session-end::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.status::*
     count: 1
     since: baseline
     approved_by: null
@@ -1607,10 +1547,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.search::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: operator.bootstrap::*
     count: 1
     since: baseline
     approved_by: null
@@ -1631,19 +1567,11 @@ checks:
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
-  - signature: cli.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.capabilities::*
     count: 1
     since: baseline
     approved_by: null
   - signature: cli.capability::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.dossier::*
     count: 1
     since: baseline
     approved_by: null
@@ -1671,10 +1599,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.program-list::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.related::*
     count: 1
     since: baseline
@@ -1691,15 +1615,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.semantic::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.session-end::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.status::*
     count: 1
     since: baseline
     approved_by: null
@@ -1728,10 +1644,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.search::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: operator.bootstrap::*
     count: 1
     since: baseline
     approved_by: null
