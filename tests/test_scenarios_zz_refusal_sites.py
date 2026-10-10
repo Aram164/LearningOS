@@ -132,6 +132,63 @@ def _assert_shares_entry_point_handler(operation: str,
         f"entry-point operation — {FIX}")
 
 
+def _twin_callers(path: Path) -> tuple[dict[str, set[str]],
+                                     dict[str, str]]:
+    """Static calls per top-level function, plus ``_shared`` aliases.
+
+    Returns ``(calls, shared)`` where ``calls[func]`` is every bare
+    name ``func`` calls (nested functions included) and
+    ``shared[local]`` is the ``_shared.py`` twin a
+    ``from ... _shared import ...`` name binds.
+    """
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    shared: dict[str, str] = {}
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.ImportFrom)
+                and node.module is not None
+                and node.module.endswith("handlers._shared")):
+            for entry in node.names:
+                shared[entry.asname or entry.name] = entry.name
+    calls: dict[str, set[str]] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.FunctionDef):
+            continue
+        names = set()
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Call) \
+                    and isinstance(sub.func, ast.Name):
+                names.add(sub.func.id)
+        calls[node.name] = names
+    return calls, shared
+
+
+def _handler_calls_twin(operation: str, twin_module: str,
+                        twin_func: str) -> bool:
+    """Whether the operation's handler statically calls the twin (R-A9-1).
+
+    True when the registered handler function is the twin itself (a
+    template raised inline) or its body calls the twin's name, resolved
+    through the handler module's ``_shared`` imports or its own
+    top-level functions. Anything else is a never-called expansion and
+    declares no site for the operation.
+    """
+    handler = REGISTRY[operation].handler
+    module = handler.__module__
+    assert module.startswith("learning_os.ops.handlers."), module
+    stem = module.rsplit(".", 1)[1]
+    if (stem, handler.__name__) == (twin_module, twin_func):
+        return True
+    calls, shared = _twin_callers(HANDLERS_DIR / f"{stem}.py")
+    for name in calls.get(handler.__name__, set()):
+        if name in shared:
+            if (twin_module, twin_func) == ("_shared", shared[name]):
+                return True
+            continue
+        if twin_module == stem and name == twin_func:
+            return True
+    return False
+
+
 def _resolve_failure(stem: str, name: object):
     """A failure class named in one handler file, else None (disposition 5).
 
@@ -155,16 +212,33 @@ def _resolve_failure(stem: str, name: object):
     return None
 
 
+def _narrowed_template_ops(entered: list[str], stem: str,
+                           twin_func: str | None) -> list[str]:
+    """Entered operations whose handler reaches the twin (R-A9-1).
+
+    A template site in function ``twin_func`` counts for an operation
+    only when that operation's handler statically calls the twin (or
+    is it). Module-level templates (``twin_func`` None) keep the
+    whole entered set.
+    """
+    if twin_func is None:
+        return list(entered)
+    return [operation for operation in entered
+            if _handler_calls_twin(operation, stem, twin_func)]
+
+
 def _except_handler_sites(node: ast.ExceptHandler, *, stem: str,
                           serving: set[str], entered: list[str],
-                          rel: str) -> list[tuple[str, str, int]]:
+                          rel: str, twin_func: str | None = None,
+                          ) -> list[tuple[str, str, int]]:
     """``[(operation, site, lineno)]`` from one ``except`` site assignment.
 
     The caught name must resolve to a failure (domain or the
     handler's own globals); anything else assigns no site. A literal
     site names its served operation as written, exactly like a
     literal ``site=`` on a raise; a template resolves over the
-    entered operations. Both need the bare re-raise (disposition 5).
+    entered operations whose handler calls the twin (R-A9-1). Both
+    need the bare re-raise (disposition 5).
     """
     if not (isinstance(node.type, ast.Name)
             and _resolve_failure(stem, node.type.id) is not None):
@@ -205,7 +279,8 @@ def _except_handler_sites(node: ast.ExceptHandler, *, stem: str,
                        for sub in ast.walk(node)), (
                 f"A9 {rel}:{stmt.lineno}: the assigned site"
                 f" needs its bare re-raise — {FIX}")
-            for operation in entered:
+            for operation in _narrowed_template_ops(entered, stem,
+                                                    twin_func):
                 for slug in slugs:
                     found.append((operation, f"{operation}.{slug}",
                                   stmt.lineno))
@@ -221,8 +296,9 @@ def _declared_sites() -> dict[tuple[str, str], str]:
     to a ``site`` variable passed as ``site=``. Failure names resolve
     in ``domain.failures`` or the handler module's own globals
     (disposition 5). Templates resolve over the raising module's
-    serving operations that have a runtime entry point (item 9.1);
-    literals name their operation as written.
+    serving operations that have a runtime entry point (item 9.1),
+    narrowed to the operations whose handler statically calls the
+    twin (R-A9-1); literals name their operation as written.
     """
     serving = _serving_ops()
     entry_points = set(_entry_point_ops())
@@ -238,42 +314,48 @@ def _declared_sites() -> dict[tuple[str, str], str]:
         assert serving.get(path.name), f"A9 {rel} serves nothing — {FIX}"
         tree = ast.parse(path.read_text(encoding="utf-8"))
         entered = sorted(set(serving[path.name]) & entry_points)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
-                call = node.exc
-                if not (isinstance(call.func, ast.Name)
-                        and _resolve_failure(path.stem, call.func.id)
-                        is not None):
-                    continue
-                site_kw = next((kw for kw in call.keywords
-                                if kw.arg == "site"), None)
-                if site_kw is None:
-                    continue
-                if isinstance(site_kw.value, ast.Constant):
-                    site = site_kw.value.value
-                    assert isinstance(site, str) and any(
-                        site == op or site.startswith(op + ".")
-                        for op in serving[path.name]), (
-                        f"A9 {rel}:{node.lineno}: site {site!r} names no"
-                        f" served operation — {FIX}")
-                    operation = next(
-                        op for op in serving[path.name]
-                        if site == op or site.startswith(op + "."))
-                    record(operation, site, rel, node.lineno)
-                    continue
-                slugs = _operation_templates(site_kw.value)
-                assert slugs, (
-                    f"A9 {rel}:{node.lineno}: unresolvable site form — {FIX}")
-                for operation in entered:
-                    for slug in slugs:
-                        record(operation, f"{operation}.{slug}", rel,
-                               node.lineno)
-            if isinstance(node, ast.ExceptHandler):
-                for operation, site, lineno in _except_handler_sites(
-                        node, stem=path.stem,
-                        serving=serving[path.name], entered=entered,
-                        rel=rel):
-                    record(operation, site, rel, lineno)
+        for top in tree.body:
+            twin_func = top.name if isinstance(top, ast.FunctionDef) else None
+            for node in ast.walk(top):
+                if isinstance(node, ast.Raise) \
+                        and isinstance(node.exc, ast.Call):
+                    call = node.exc
+                    if not (isinstance(call.func, ast.Name)
+                            and _resolve_failure(path.stem, call.func.id)
+                            is not None):
+                        continue
+                    site_kw = next((kw for kw in call.keywords
+                                    if kw.arg == "site"), None)
+                    if site_kw is None:
+                        continue
+                    if isinstance(site_kw.value, ast.Constant):
+                        site = site_kw.value.value
+                        assert isinstance(site, str) and any(
+                            site == op or site.startswith(op + ".")
+                            for op in serving[path.name]), (
+                            f"A9 {rel}:{node.lineno}: site {site!r} names no"
+                            f" served operation — {FIX}")
+                        operation = next(
+                            op for op in serving[path.name]
+                            if site == op or site.startswith(op + "."))
+                        record(operation, site, rel, node.lineno)
+                        continue
+                    slugs = _operation_templates(site_kw.value)
+                    assert slugs, (
+                        f"A9 {rel}:{node.lineno}: unresolvable site form — "
+                        f"{FIX}")
+                    narrowed = _narrowed_template_ops(entered, path.stem,
+                                                       twin_func)
+                    for operation in narrowed:
+                        for slug in slugs:
+                            record(operation, f"{operation}.{slug}", rel,
+                                   node.lineno)
+                if isinstance(node, ast.ExceptHandler):
+                    for operation, site, lineno in _except_handler_sites(
+                            node, stem=path.stem,
+                            serving=serving[path.name], entered=entered,
+                            rel=rel, twin_func=twin_func):
+                        record(operation, site, rel, lineno)
         for node in ast.walk(tree):
             if not isinstance(node, ast.FunctionDef):
                 continue
@@ -292,9 +374,11 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                             for kw in call.keywords)]
             if not uses:
                 continue
+            narrowed = _narrowed_template_ops(entered, path.stem,
+                                              node.name)
             for stmt in assigns:
                 for slug in _operation_templates(stmt.value):
-                    for operation in entered:
+                    for operation in narrowed:
                         record(operation, f"{operation}.{slug}", rel,
                                stmt.lineno)
     return declared
@@ -414,9 +498,12 @@ def _attributed_witnesses(site: str) -> set[tuple[str, str]]:
     return attributed
 
 
-#: Untriggered reasons (SPEC (bf) item 9.3, fixed vocabulary).
+#: Untriggered reasons (SPEC (bf) item 9.3, fixed vocabulary, plus
+#: R-A9-2's reviewed reason: no scenario fixture input reaches the
+#: site, and the proof triggers it by direct injection instead).
 _UNTRIGGERED_REASONS = frozenset({
     "guarded-before-handler", "os-error-only", "race-only",
+    "fixture-inexpressible",
 })
 
 #: Sites whose untriggered proof passed in this session (item 9.3).
@@ -675,6 +762,335 @@ _PROOF_FNS = {
     "stage.progress.update.unknown-status":
         _prove_stage_unknown_status_guarded,
 }
+
+
+def _a9_world(operation: str, case_id: str, tmp_path: Path):
+    """A fresh rich_world from one success case (proofs only)."""
+    import scenario_harness as harness
+
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    bare = next(item for item in doc["cases"] if item["id"] == case_id)
+    case = {"fixture": doc.get("fixture", "rich_world"),
+            "observations": doc["observations"],
+            "fixture_mtime": doc.get(
+                "fixture_mtime", harness.FIXTURE_MTIME_DEFAULT),
+            **bare}
+    return harness._prepare_world(case, operation, tmp_path / "world")
+
+
+def _a9_run_gateway(root: Path, operation: str, payload: dict,
+                    artifact_ids, key: str, tmp_path: Path, monkeypatch,
+                    channel: str = "operator"):
+    """One gateway attempt with a private witness file (proofs only).
+
+    Returns ``(outcome, lines)``. The envelope is operator-approved,
+    or carries the given channel with its approval recomputed; the
+    attempt runs outside the scenario harness.
+    """
+    import arch_audit_hook
+    from gateway_helpers import approved_v2_envelope
+
+    import los
+    from learning_os.contracts.capability_catalog import (
+        command_definitions,
+    )
+    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.diagnostics import tracer as diag_tracer
+    from learning_os.diagnostics.store import bind_store as _bind_diag_store
+    from learning_os.ops import pipeline as pipeline_module
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    envelope = approved_v2_envelope(
+        root, capability=operation, payload=payload,
+        artifact_ids=list(artifact_ids), idempotency_key=key)
+    if channel != "operator":
+        envelope["channel"] = channel
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        _bind_diag_store(root)
+        attempt = diag_tracer.begin_attempt({"capability": operation})
+        outcome = pipeline_module.run_gateway(
+            root, envelope, requested=operation,
+            definitions=command_definitions(root), attempt=attempt,
+            replay_only=False, parser_factory=los.build_parser)
+    finally:
+        arch_audit_hook.uninstall()
+    return outcome, _read_witness_lines(witness)
+
+
+def _prove_guarded_enum(mini_repo: Path, tmp_path: Path, monkeypatch, *,
+                        site: str, operation: str, cli_argv: list,
+                        field: str, valid: dict, key: str) -> None:
+    """One enum-guarded backstop: guards refuse, the site never fires.
+
+    The real parser refuses the bogus value; gateway admission passes
+    the valid payload (pinning the refusal to the value) and refuses
+    the bogus one; the gateway attempt refuses with no witness line
+    naming the site. The item 9.3 guarded shape, per site data.
+    """
+    from gateway_helpers import approved_v2_envelope
+
+    import los
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.legacy import prepare_dispatch
+
+    with pytest.raises(SystemExit) as refused:
+        los.build_parser().parse_args(cli_argv)
+    assert refused.value.code == 2
+    definitions = command_definitions(mini_repo)
+    definition = definitions[operation]
+    prepare_dispatch(mini_repo, definition,
+                     {"schema_version": 2, "payload": dict(valid)},
+                     dict(valid), parser_factory=los.build_parser)
+    bogus = dict(valid, **{field: "bogus"})
+    envelope = approved_v2_envelope(
+        mini_repo, capability=operation, payload=bogus,
+        artifact_ids=[], idempotency_key=key)
+    with pytest.raises(WriteRefused):
+        prepare_dispatch(mini_repo, definition, envelope, dict(bogus),
+                         parser_factory=los.build_parser)
+    outcome, lines = _a9_run_gateway(
+        mini_repo, operation, bogus, [], key, tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert field in (outcome.error or {}).get("message", "")
+    assert all(line.get("site") != site for line in lines), lines
+
+
+def _prove_detour_unknown_classification_guarded(mini_repo: Path,
+                                                 tmp_path: Path,
+                                                 monkeypatch) -> None:
+    """The classification guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="detour.create.unknown-classification",
+        operation="detour.create",
+        cli_argv=["detour-create", "unit-demo-l01", "stage-demo",
+                  "--title", "Revisit expectation",
+                  "--classification", "bogus"],
+        field="classification",
+        valid={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+               "title": "Revisit expectation",
+               "classification": "required-now"},
+        key="a9-proof-unknown-classification")
+
+
+def _prove_path_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
+                                       monkeypatch) -> None:
+    """The status guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="path.progress.update.unknown-status",
+        operation="path.progress.update",
+        cli_argv=["path-progress", "path-demo", "stage-demo-path",
+                  "bogus"],
+        field="status",
+        valid={"path_id": "path-demo", "stage_id": "stage-demo-path",
+               "status": "complete"},
+        key="a9-proof-path-unknown-status")
+
+
+def _prove_selection_unknown_action_guarded(mini_repo: Path,
+                                            tmp_path: Path,
+                                            monkeypatch) -> None:
+    """The action guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="unit.source-selection.set.unknown-action",
+        operation="unit.source-selection.set",
+        cli_argv=["unit-source-selection", "unit-demo-l01",
+                  "source-demo-book", "lecture-01.pdf", "bogus"],
+        field="action",
+        valid={"unit_id": "unit-demo-l01",
+               "source_id": "source-demo-book",
+               "locator": "lecture-01.pdf", "action": "select",
+               "purpose": "Primary derivation"},
+        key="a9-proof-unknown-action")
+
+
+def _prove_stage_no_working_note(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """A stage without working_note fires the site (R-A9-2).
+
+    Every rich_world stage carries one and no operation clears it,
+    so no case input reaches the gate; the proof injects the
+    condition by direct tree surgery and asserts the witness line,
+    the class and the exit.
+    """
+    import yaml
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("stage.note.write", "append-note", tmp_path)
+    root = ctx.root
+    map_path = (root / "curriculum/modules/module-demo/units"
+                / "unit-demo-l01/study-map.yaml")
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    stage = next(row for row in data["stages"]
+                 if row["id"] == "stage-demo")
+    assert stage["working_note"], "A9 proof needs a working_note to drop"
+    del stage["working_note"]
+    map_path.write_text(yaml.safe_dump(data, sort_keys=False),
+                        encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "stage.note.write",
+        {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+         "text": "a9 proof note"},
+        ["unit-demo-l01"], "a9-proof-no-working-note",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "stage.note.write", "kind": "failure",
+                      "site": "stage.note.write.no-working-note",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_feedback_wrong_source(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """A resource bound to another source fires the site (R-A9-2).
+
+    The registry carries a single source, so no case input can name
+    a valid second one; the proof injects a second source plus a
+    resource declaring the first and asserts the witness line, the
+    class and the exit.
+    """
+    import yaml
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("source.feedback.record", "record-feedback",
+                    tmp_path)
+    root = ctx.root
+    sources_path = root / "sources/sources.yaml"
+    sources = yaml.safe_load(sources_path.read_text(encoding="utf-8"))
+    assert [row["id"] for row in sources["sources"]] == [
+        "source-demo-book"]
+    sources["sources"].append({"id": "source-demo-second",
+                               "title": "Second Source", "type": "book"})
+    sources_path.write_text(yaml.safe_dump(sources, sort_keys=False),
+                            encoding="utf-8")
+    map_path = (root / "curriculum/modules/module-demo/units"
+                / "unit-demo-l01/study-map.yaml")
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    stage = next(row for row in data["stages"]
+                 if row["id"] == "stage-demo")
+    stage.setdefault("resources", []).append(
+        {"id": "resource-a9-proof", "source_id": "source-demo-book"})
+    map_path.write_text(yaml.safe_dump(data, sort_keys=False),
+                        encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "source.feedback.record",
+        {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+         "source_id": "source-demo-second", "feedback": "helpful",
+         "resource_id": "resource-a9-proof"},
+        ["unit-demo-l01", "study-map-demo-l01"],
+        "a9-proof-wrong-source", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "source.feedback.record",
+                      "kind": "failure",
+                      "site": "source.feedback.record.wrong-source",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_unit_note_outside_repo(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """A working note outside the root fires the site (R-A9-2).
+
+    The unit default stays inside and no request field sets the
+    note, so no case input reaches the gate; the proof injects an
+    escaping working_note by direct tree surgery and asserts the
+    witness line, the class and the exit.
+    """
+    import yaml
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("unit.note.append", "append-note", tmp_path)
+    root = ctx.root
+    unit_path = (root / "curriculum/modules/module-demo/units"
+                 / "unit-demo-l01/unit.yaml")
+    data = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    data["working_note"] = "../../../../outside-a9-proof.md"
+    unit_path.write_text(yaml.safe_dump(data, sort_keys=False),
+                         encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "unit.note.append",
+        {"unit_id": "unit-demo-l01", "title": "proof",
+         "text": "a9 proof note"},
+        ["unit-demo-l01"], "a9-proof-note-outside-repo",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "unit.note.append", "kind": "failure",
+                      "site": "unit.note.append.note-outside-repo",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+def _prove_ability_bad_app_confirmation(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """A mismatched app confirmation on channel ui fires it (R-A9-2).
+
+    The harness seals channel operator, so no case input reaches the
+    gate; the proof drives the gateway directly with a ui-channel
+    envelope and asserts the witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import Unconfirmed
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("learner.ability-observation.append",
+                    "append-observation", tmp_path)
+    root = ctx.root
+    outcome, lines = _a9_run_gateway(
+        root, "learner.ability-observation.append",
+        {"workspace": "workspace-demo", "ability": "ability-demo-derive",
+         "claim": "Derived expectation for the fixture gamble.",
+         "work_ref": "conversation://fixture/work-2",
+         "confirmation_ref": "conversation://fixture/confirmation-2",
+         "activity": "worked derivation", "result": "correct",
+         "assistance": "none",
+         "condition": ["finite discrete outcomes"],
+         "evidence_tag": ["correct derivation"]},
+        ["workspace-demo"], "a9-proof-bad-app-confirmation",
+        tmp_path, monkeypatch, channel="ui")
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "learner.ability-observation.append",
+                      "kind": "failure",
+                      "site": "learner.ability-observation.append."
+                              "bad-app-confirmation",
+                      "class": "Unconfirmed", "exit_code": 2}]
+    assert exit_for(Unconfirmed("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+_PROOF_FNS.update({
+    "detour.create.unknown-classification":
+        _prove_detour_unknown_classification_guarded,
+    "path.progress.update.unknown-status":
+        _prove_path_unknown_status_guarded,
+    "unit.source-selection.set.unknown-action":
+        _prove_selection_unknown_action_guarded,
+    "stage.note.write.no-working-note": _prove_stage_no_working_note,
+    "source.feedback.record.wrong-source": _prove_feedback_wrong_source,
+    "unit.note.append.note-outside-repo": _prove_unit_note_outside_repo,
+    "learner.ability-observation.append.bad-app-confirmation":
+        _prove_ability_bad_app_confirmation,
+})
 
 
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
@@ -954,6 +1370,47 @@ def test_control_template_assigned_site_still_resolves():
         entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
         ("cli.ai-action-append-slices",
          "cli.ai-action-append-slices.unknown-route", 4)]
+
+
+def test_control_twin_template_keeps_called_operations():
+    """A twin site counts for handlers that call the twin (R-A9-1)."""
+    declared = _declared_sites()
+    # _shared.py twins over their static callers.
+    assert ("stage.note.write",
+            "stage.note.write.unknown-stage") in declared
+    assert ("path.note.write",
+            "path.note.write.unknown-path") in declared
+    assert ("detour.resolve",
+            "detour.resolve.unknown-unit") in declared
+    # In-handler templates count for their own handler.
+    assert ("stage.progress.update",
+            "stage.progress.update.not-active") in declared
+    assert ("note.evidence.add",
+            "note.evidence.add.already-recorded") in declared
+    # The ai _refusal twin counts for its one caller.
+    assert ("ai-action.delivery.apply",
+            "ai-action.delivery.apply.binding") in declared
+
+
+def test_control_twin_template_drops_never_called_operations():
+    """A twin site counts for no handler that never calls it (R-A9-1)."""
+    declared = _declared_sites()
+    # The learner never-called _shared.py expansions.
+    assert ("unit.source-selection.set",
+            "unit.source-selection.set.unknown-stage") not in declared
+    assert ("path.note.write",
+            "path.note.write.unknown-unit") not in declared
+    assert ("stage.progress.update",
+            "stage.progress.update.unknown-path") not in declared
+    # In-handler templates do not leak across operations.
+    assert ("detour.create", "detour.create.not-active") not in declared
+    assert ("note.revise",
+            "note.revise.already-recorded") not in declared
+    # The AI phantom .binding expansions.
+    assert ("cli.ai-action-list",
+            "cli.ai-action-list.binding") not in declared
+    assert ("cli.ai-action-append-slices",
+            "cli.ai-action-append-slices.binding") not in declared
 
 
 def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
