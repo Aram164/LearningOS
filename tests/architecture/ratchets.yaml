@@ -227,22 +227,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::return
-    count: 3
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save_batch::_operator_lock
     count: 1
     since: baseline
@@ -1426,10 +1410,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: note.analysis.save::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: note.analysis.save_batch::*
     count: 1
     since: baseline
@@ -1500,10 +1480,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: module.plan.import::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.analysis.save::*
     count: 1
     since: baseline
     approved_by: null

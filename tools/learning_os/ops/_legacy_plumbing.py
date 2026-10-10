@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import copy
 import datetime as _dt
 import fcntl
 import hashlib
@@ -29,11 +30,17 @@ import jsonschema
 import yaml
 
 from learning_os import observations
+from learning_os.contracts.batch_notes import (
+    ANALYSIS_FIELDS,
+    ANALYSIS_FIELDS_ORDERED,
+    ANALYSIS_HANDLER_OWNED,
+)
 from learning_os.contracts.gateway import (
     current_gateway_request,
     intent_sha256,
 )
 from learning_os.derived.model import DerivedError
+from learning_os.domain import ids
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.fingerprint import canonical_fingerprint, seed_source_fingerprint
 from learning_os.genout import (
@@ -54,7 +61,11 @@ from learning_os.loader import load_repo
 from learning_os.loading import Repo, load_notes
 from learning_os.loading.yamlio import UniqueKeySafeLoader
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
-from learning_os.material_analysis import observe_local_material
+from learning_os.material_analysis import (
+    binding_consistent,
+    normalize_binding_spellings,
+    observe_local_material,
+)
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
     MATERIAL_RESOURCE_SUFFIXES,
@@ -63,9 +74,11 @@ from learning_os.materials_resolution import (
     leading_material_locator,
     material_location,
     material_uri_authority,
+    resolve_material_target,
     safe_material_locator,
 )
 from learning_os.ops.outcomes import classify, resolve
+from learning_os.pathing import PathBoundaryError
 from learning_os.semantics.goals import (
     CandidateGoal,
     RankedCluster,
@@ -1610,3 +1623,281 @@ def _evidence_label(tally):
                    if value in MISMATCH_FEEDBACK)
     return {"counts": dict(sorted(tally.items())),
             "positive": positive, "mismatch": mismatch}
+
+
+# ---------------------------------------------------------------------------
+# Analysis-note save closure, moved from commands.analysis for the
+# note.analysis.save conversion (SPEC (bo) 2 sentence 1: it still serves the
+# unconverted note.analysis.save_batch and cli.note-analysis-prepare). The
+# four names that collide with behaviour-distinct notes.py/Atlas bodies take
+# the SPEC (bx) R15 area prefix; every call in the moved closure is updated.
+# Bodies, messages and behaviour are otherwise unchanged.
+
+
+NOTES_PREFIX = Path("knowledge/notes")
+
+
+def _analysis_safe(root: Path, path: Path) -> Path:
+    """Reject links before reading even when a link would resolve in-tree."""
+    relative = path.relative_to(root)
+    current = root
+    for part in relative.parts:
+        current /= part
+        if current.is_symlink():
+            raise WriteRefused(f"analysis save cannot use a symlink: {relative}")
+    return path
+
+
+def _analysis_schema(root: Path, name: str, data: object) -> None:
+    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    try:
+        jsonschema.Draft202012Validator(
+            schema, format_checker=jsonschema.FormatChecker()).validate(data)
+    except jsonschema.ValidationError as exc:
+        raise WriteRefused(f"{name}: {exc.message}") from exc
+
+
+def _analysis_render_exact_note(meta: dict, body: bytes) -> bytes:
+    """Frontmatter plus the body bytes verbatim.
+
+    Unlike the ordinary renderer this never strips leading whitespace: the
+    bytes after the frontmatter block are exactly the preserved analysis.
+    """
+    front = "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n"
+    return front.encode("utf-8") + body
+
+
+def _analysis_destination(root: Path, note_id: str, relpath: object) -> Path:
+    if not isinstance(relpath, str) or not relpath:
+        raise WriteRefused("analysis path must be a repo-relative note path")
+    relative = Path(relpath)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise WriteRefused("analysis path must stay inside knowledge/notes/")
+    if relative.suffix != ".md" or relative.stem != note_id:
+        raise WriteRefused("analysis filename must be the note id with .md")
+    try:
+        relative.relative_to(NOTES_PREFIX)
+    except ValueError:
+        raise WriteRefused("analysis path must stay inside knowledge/notes/") from None
+    path = root / relative
+    return _analysis_safe(root, path)
+
+
+def _normalize_binding_material_uri(repo, binding: dict) -> dict:
+    """Resolve a ``material://`` binding to its materials-relative path.
+
+    The URI authority must equal the binding's ``source_id``: naming a
+    registered source's file while withholding (or mismatching) the source
+    claim is incoherent. Resolution prefers the id-alias tree
+    (``materials/.flat``), which maps the authority to the physical folder;
+    without it the REL resolves under the source's registered material
+    folder. An unresolvable URI still normalizes lexically, so the
+    observability check below can diagnose it honestly.
+    """
+    material = binding.get("material")
+    if not isinstance(material, str) or not material.startswith(MATERIAL_SCHEME):
+        return binding
+    source_id = binding.get("source_id")
+    authority = material_uri_authority(material)
+    if authority is None:
+        raise WriteRefused(
+            f"binding.material is not a safe material:// URI: {material!r} "
+            "(expected material://SOURCE_ID/REL)")
+    if source_id is None:
+        raise WriteRefused(
+            "binding.material is a material:// URI but the binding names no "
+            f"source_id; use the materials-relative path instead, or resolve "
+            f"against {authority!r}")
+    if authority != source_id:
+        raise WriteRefused(
+            f"binding.material authority {authority!r} must equal "
+            f"binding.source_id {source_id!r}")
+    parts = PurePosixPath(material[len(MATERIAL_SCHEME):]).parts
+    if len(parts) < 2:
+        raise WriteRefused(
+            f"binding.material names no file: {material!r} "
+            "(expected material://SOURCE_ID/REL)")
+    # Canonical recognition is separate from the legacy safety diagnostics.
+    if ids.is_valid("material-uri", material):
+        material = ids.parse("material-uri", material)
+        parts = PurePosixPath(material[len(MATERIAL_SCHEME):]).parts
+    rel = "/".join(parts[1:])
+    materials_dir = repo.learningos_root / "materials"
+    try:
+        target = resolve_material_target(
+            material, resolution_root=repo.materials_root,
+            boundary_root=materials_dir)
+    except (PathBoundaryError, FileNotFoundError, OSError):
+        target = None
+    if target is not None:
+        relative = target.resolve().relative_to(materials_dir.resolve())
+        return {**binding, "material": relative.as_posix()}
+    registered = (repo.sources.get(source_id) or {}).get("material")
+    if material_uri_authority(registered) is None:
+        raise WriteRefused(
+            f"source {source_id!r} registers no local material; cannot resolve "
+            f"binding.material {material!r}")
+    folder = str(registered)[len(MATERIAL_SCHEME):].rstrip("/")
+    if PurePosixPath(folder).suffix.lower() in MATERIAL_RESOURCE_SUFFIXES:
+        folder = PurePosixPath(folder).parent.as_posix()
+    candidate = f"{folder}/{rel}" if folder not in ("", ".") else rel
+    return {**binding, "material": candidate}
+
+
+def _verify_resolved_material(root: Path, repo, binding: dict) -> None:
+    """A resolved binding claims live registered bytes: observe them.
+
+    Digest agreement proves the agent's story is coherent; this proves it
+    is true. The material must exist and hash to the claimed live digest
+    right now, and it must be the source's registered file or lie under
+    the source's registered directory — compared as resolved filesystem
+    locations so `.flat` id-aliases match their physical targets.
+
+    Each unobservable state names itself: `stale` only when the observed
+    bytes genuinely differ, a missing file as not resolving, an escaping
+    path as not materials-relative.
+    """
+    materials = root.parent / "materials"
+    observation = observe_local_material(
+        materials, str(binding.get("material") or ""),
+        str(binding.get("live_source_digest") or ""))
+    if observation["status"] == "stale":
+        raise WriteRefused(
+            "resolved material is not observable at its claimed live "
+            "digest (stale)")
+    if observation["status"] == "missing":
+        raise WriteRefused(
+            f"resolved material does not resolve: {binding.get('material')!r} "
+            "names no readable file under materials/ (expected a "
+            "materials-relative path like 'course/deck.pdf', a "
+            "material://SOURCE_ID/REL URI, or a leading materials/ path)")
+    if observation["status"] != "current":
+        raise WriteRefused(
+            "resolved material is not a materials-relative path: "
+            f"{binding.get('material')!r} (expected a path under materials/ "
+            "without a leading '/' or '..')")
+    registered = (repo.sources.get(binding.get("source_id")) or {}).get("material")
+    if material_uri_authority(registered) is None:
+        raise WriteRefused("resolved source registers no local material")
+    try:
+        boundary = materials.resolve()
+        base = (repo.materials_root / str(registered)[len(MATERIAL_SCHEME):]).resolve()
+        target = (materials / str(binding.get("material"))).resolve()
+        base.relative_to(boundary)
+        target.relative_to(boundary)
+    except (OSError, ValueError):
+        raise WriteRefused(
+            "resolved material escapes the materials tree") from None
+    if target != base and base not in target.parents:
+        raise WriteRefused(
+            "resolved material is not the source's registered file or "
+            "under its registered directory")
+
+
+def _precheck_analysis(analysis: object, body: bytes) -> dict:
+    """Record shape, binding coherence, and frozen-byte agreement.
+
+    Shared by single and batch saves so both refuse the same bytes for the
+    same reason. Everything needing the loaded repository — source
+    registration, live-byte observation, replay classification — stays in
+    `_resolve_note`, inside the snapshot guard.
+    """
+    if not isinstance(analysis, dict):
+        raise WriteRefused("analysis must be an object")
+    unknown = set(analysis) - ANALYSIS_FIELDS
+    if unknown:
+        raise WriteRefused(
+            "analysis has unknown fields: " + ", ".join(sorted(unknown))
+            + f" (accepted: {', '.join(ANALYSIS_FIELDS_ORDERED)}; "
+            + f"{'/'.join(ANALYSIS_HANDLER_OWNED)} are set by the handler)")
+    if not isinstance(analysis.get("id"), str):
+        raise WriteRefused("analysis needs a string id")
+    if not body:
+        raise WriteRefused("analysis body is empty")
+    try:
+        body.decode("utf-8")
+    except UnicodeDecodeError:
+        raise WriteRefused("analysis body is not valid UTF-8") from None
+    binding = analysis.get("binding")
+    if isinstance(binding, dict):
+        # The read surface's own spellings normalize before any check, so a
+        # sha256:-prefixed digest compares equal to its bare twin below.
+        spelling = normalize_binding_spellings(binding)
+        if spelling is not None:
+            raise WriteRefused(spelling)
+    problem = binding_consistent(binding if isinstance(binding, dict) else {})
+    if problem is not None:
+        raise WriteRefused(problem)
+    missing = [field for field in ("frozen_input_sha256", "frozen_input_bytes")
+               if field not in binding]
+    if missing:
+        # A typed refusal, not a KeyError surfacing as INTERNAL_FAILURE (which
+        # operations must then treat as an ambiguous, possibly-committed write).
+        raise WriteRefused(
+            f"analysis binding lacks {', '.join(missing)}; note-analysis-prepare "
+            "derives both from the body bytes (one note is a batch of one)")
+    frozen = hashlib.sha256(body).hexdigest()
+    if binding["frozen_input_sha256"] != frozen:
+        raise WriteRefused("analysis body does not match frozen_input_sha256")
+    if binding["frozen_input_bytes"] != len(body):
+        raise WriteRefused("analysis body does not match frozen_input_bytes")
+    return binding
+
+
+def _resolve_note(root: Path, repo, analysis: dict, binding: dict,
+                  body: bytes) -> tuple[str, Path, bytes | None]:
+    """Classify one prechecked analysis against the loaded repository.
+
+    Returns (note_id, destination, rendered_bytes); rendered_bytes is None
+    when the request replays an identical note. Any collision, unregistered
+    source, or unobservable resolved material refuses. Callers commit every
+    returned write in one transaction.
+
+    A material:// URI resolves here — this is the first point with the
+    loaded repository — before any check that could misdiagnose it. The
+    normalized binding replaces the request's, so the envelope, the intent
+    hash, and the stored frontmatter all carry the canonical form.
+    """
+    binding = _normalize_binding_material_uri(repo, binding)
+    analysis["binding"] = binding
+    note_id = analysis["id"]
+    if binding["resolution"] == "resolved":
+        if binding.get("source_id") not in repo.sources:
+            raise WriteRefused("resolved source is not registered")
+        _verify_resolved_material(root, repo, binding)
+    existing = repo.notes.get(note_id)
+    path = _analysis_destination(root, note_id, analysis.get("path"))
+    if existing:
+        if "material_analysis" not in existing.meta:
+            raise WriteRefused("this note id is not a source analysis")
+        # The loader strips leading body whitespace on read, so replay
+        # compares exact on-disk bytes: the body is the file's last N
+        # bytes where N is the stored frozen_input_bytes.
+        stored = existing.meta["material_analysis"].get("frozen_input_bytes")
+        try:
+            stored_body = existing.path.read_bytes()[-stored:] \
+                if isinstance(stored, int) else None
+        except OSError:
+            stored_body = None
+        same = (
+            existing.meta.get("title") == analysis.get("title")
+            and existing.meta.get("material_analysis") == binding
+            and stored_body == body
+            and existing.path == path
+        )
+        if not same:
+            raise WriteRefused(
+                "note id collides with a different analysis; refusing")
+        return note_id, path, None
+    if not isinstance(analysis.get("title"), str) or not analysis["title"].strip():
+        raise WriteRefused("new analyses require a title")
+    meta = {"id": note_id, "type": "note", "role": "reference",
+            "title": analysis["title"], "created": observations.today().isoformat(),
+            "state": "rough", "authorship": "operator-drafted",
+            "semantic_review": "unreviewed",
+            "material_analysis": copy.deepcopy(binding)}
+    # Validate id before it can be used as a filename.
+    _analysis_schema(root, "note", meta)
+    if path.exists():
+        raise WriteRefused("analysis destination already exists")
+    return note_id, path, _analysis_render_exact_note(meta, body)

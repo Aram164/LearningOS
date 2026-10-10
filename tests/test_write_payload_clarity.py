@@ -64,7 +64,7 @@ def test_note_precheck_gives_a_missing_id_its_own_message():
 
 
 def test_analysis_precheck_names_the_unknown_fields():
-    from learning_os.commands.analysis import _precheck_analysis
+    from learning_os.ops._legacy_plumbing import _precheck_analysis
 
     with pytest.raises(WriteRefused) as refused:
         _precheck_analysis({"id": "note-x", "title": "T", "domain": "math"}, b"body")
@@ -75,7 +75,7 @@ def test_analysis_precheck_names_the_unknown_fields():
 
 
 def test_analysis_precheck_gives_a_missing_id_its_own_message():
-    from learning_os.commands.analysis import _precheck_analysis
+    from learning_os.ops._legacy_plumbing import _precheck_analysis
 
     with pytest.raises(WriteRefused, match="^analysis needs a string id$"):
         _precheck_analysis({"title": "T"}, b"body")

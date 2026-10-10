@@ -149,7 +149,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.analysis.cmd_note_analysis_save",
+    "handler": "learning_os.adapters.cli.invoke:note.analysis.save",
     "parser_factory": false
   }
 }

@@ -19,7 +19,9 @@ from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
     _note_bytes,
     _note_collection,
+    _precheck_analysis,
     _read_content_bound_file,
+    _resolve_note,
     _snapshot,
     _window_values,
 )
@@ -517,6 +519,47 @@ def note_create(ctx: OpContext, req: dict) -> Result:
         ),
         after_commit="STANDARD",
         json_dumps=_dumps_create,
+    )
+
+
+def _dumps_analysis_save(payload: dict) -> str:
+    """The exact analysis-save encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+@register("note.analysis.save", kind="command")
+def note_analysis_save(ctx: OpContext, req: dict) -> Result:
+    """Preserve one source analysis as a durable reference note."""
+    root = ctx.root
+    _, body = _read_content_bound_file(
+        req["body_file"], req.get("body_file_sha256"),
+        label="analysis body file")
+    binding = _precheck_analysis(req["analysis"], body)
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    note_id, path, content = _resolve_note(
+        root, repo, req["analysis"], binding, body)
+    if content is None:
+        return Result(
+            {"ok": True, "replayed": True, "note_id": note_id,
+             "note_path": path.relative_to(root).as_posix()},
+            json_dumps=_dumps_analysis_save,
+        )
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return Result(
+        {"ok": True, "replayed": False, "note_id": note_id,
+         "note_path": path.relative_to(root).as_posix()},
+        proposal=TransactionProposal(
+            capability="note.analysis.save",
+            writes={path: content},
+            artifact_ids=[note_id],
+            expected_revisions=expected_revisions,
+        ),
+        after_commit="STANDARD",
+        json_dumps=_dumps_analysis_save,
     )
 
 
