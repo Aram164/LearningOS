@@ -189,7 +189,7 @@ def test_transaction_walks_twice_but_reads_each_file_once(
     target_rel = target.relative_to(mini_repo).as_posix()
     digests.clear()
 
-    with command_support._operator_lock(mini_repo):
+    with plumbing_support._operator_lock(mini_repo):
         with gateway_request_context(context), verified_gateway_snapshot(
             mini_repo, expected
         ):
@@ -315,7 +315,7 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
     target = mini_repo / "work/inbox/bounded-fingerprints.md"
     artifact = "capture-test:bounded-fingerprints"
 
-    with command_support._operator_lock(mini_repo):
+    with plumbing_support._operator_lock(mini_repo):
         with gateway_request_context(context), verified_gateway_snapshot(
             mini_repo, expected
         ):
@@ -350,8 +350,8 @@ def test_operator_lock_is_reentrant_in_one_dispatch(
     # The outer acquire probes non-blocking first; the inner re-entrant
     # acquire performs no lock operation at all.
     probe = fcntl.LOCK_EX | fcntl.LOCK_NB
-    with command_support._operator_lock(tmp_path):
-        with command_support._operator_lock(tmp_path):
+    with plumbing_support._operator_lock(tmp_path):
+        with plumbing_support._operator_lock(tmp_path):
             assert calls == [probe]
 
     assert calls == [probe, fcntl.LOCK_UN]
