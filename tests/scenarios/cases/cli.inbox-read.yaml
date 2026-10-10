@@ -29,17 +29,17 @@ cases:
     kind: refusal
     transport: cli
     argv: [inbox-read, nope.md]
-    expect: {site: null}
+    expect: {site: cli.inbox-read.unknown-item}
   - id: bad-name
     kind: refusal
     transport: cli
     argv: [inbox-read, ../escape.md]
-    expect: {site: null}
+    expect: {site: cli.inbox-read.bad-name}
   - id: stale-read
     kind: refusal
     transport: cli
     argv: [inbox-read, note-drop.md, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.inbox-read.stale-snapshot}
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components (worded at reads.py:794 for inbox): the fixture inbox has no symlinks, and no step can create one"}
   - {where: "tools/learning_os/commands/reads.py:556", reason: "escape from work/inbox (worded at reads.py:793): needs a symlink no step can create"}

@@ -1063,3 +1063,53 @@ def _window_values(offset: int, limit: int, expected_snapshot: str | None,
     if offset and not expected_snapshot:
         raise WriteRefused("continuation requires --expected-snapshot from the previous response")
     return offset, limit
+
+
+def _folder_digest(files: dict[str, bytes]) -> str:
+    """One digest for a folder drop: SHA-256 over the sorted name->sha map.
+
+    Canonical JSON over parsed digests, never raw bytes, so the value is
+    stable regardless of read order and re-derivable by any caller holding
+    the same files.
+    """
+    manifest = {name: hashlib.sha256(files[name]).hexdigest()
+                for name in sorted(files)}
+    canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":"),
+                           ensure_ascii=False)
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _admit(inbox: Path, name: str) -> Path:
+    """The inbox path ``name`` addresses, or raise with a refusal message."""
+    if not name or name in {".", "./"} or Path(name).is_absolute() \
+            or ".." in Path(name).parts:
+        raise ValueError(f"inbox name must be relative to work/inbox: {name}")
+    target = inbox / name
+    try:
+        target.resolve(strict=True).relative_to(inbox.resolve(strict=True))
+    except OSError as exc:
+        raise ValueError(f"inbox item not found: {name}") from exc
+    cursor: Path | None = target
+    while cursor is not None and cursor != inbox and inbox in cursor.parents:
+        if cursor.is_symlink():
+            raise ValueError("inbox resolve refuses symlinks")
+        cursor = cursor.parent if cursor != cursor.parent else None
+    return target
+
+
+def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
+    """Every regular file under ``target`` as inbox-relative name -> bytes."""
+    if target.is_file() and not target.is_symlink():
+        return {target.relative_to(inbox).as_posix(): target.read_bytes()}
+    if not target.is_dir() or target.is_symlink():
+        raise ValueError(f"inbox item is not a regular file or folder: {target.name}")
+    files: dict[str, bytes] = {}
+    for path in sorted(target.rglob("*")):
+        if path.is_symlink():
+            raise ValueError("inbox resolve refuses symlinks")
+        if not path.is_file():
+            continue
+        files[path.relative_to(inbox).as_posix()] = path.read_bytes()
+    if not files:
+        raise ValueError(f"inbox item has no files to archive: {target.name}")
+    return files

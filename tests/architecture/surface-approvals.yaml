@@ -155,3 +155,4 @@ approvals:
   - {key: "request_schemas.cli.ai-action-import-delivery.schema.json", change: changed, plan_ref: "PLAN D4 (SC-ai: cli.ai-action-import-delivery converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.garden.seed.create.schema.json", change: changed, plan_ref: "PLAN D4 (SC-capture: garden.seed.create converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.inbox-list.schema.json", change: changed, plan_ref: "PLAN D4 (SC-capture: cli.inbox-list converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.cli.inbox-read.schema.json", change: changed, plan_ref: "PLAN D4 (SC-capture: cli.inbox-read converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

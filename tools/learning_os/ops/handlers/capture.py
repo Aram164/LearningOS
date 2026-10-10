@@ -5,18 +5,26 @@ from __future__ import annotations
 import json
 import re
 import sys
+from pathlib import Path
 
 from learning_os import observations
 from learning_os.contracts.gateway import (
     current_gateway_request,
     request_artifact_id,
 )
-from learning_os.domain.failures import WriteRefused
+from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.ops._legacy_plumbing import (
+    _admit,
+    _bytes_inside_owner,
+    _collect,
+    _content_envelope,
     _discovery_row,
+    _folder_digest,
     _inbox_search_rows,
     _json_layout,
     _read_content_bound_file,
+    _snapshot,
+    _window_values,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
@@ -248,3 +256,107 @@ def inbox_list(ctx: OpContext, req: dict) -> Result:
             row["age_days"] = None
         out.append(row)
     return Result(out, json_dumps=_dumps_inbox_list)
+
+
+def _dumps_inbox_read(payload: dict) -> str:
+    """The exact inbox-read JSON encoder: compact, unsorted, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+def _inbox_folder_envelope(root: Path, name: str) -> dict:
+    """A folder drop's file names and the digest inbox-resolve checks.
+
+    Uses the resolve path's own admission, collection and digest, so the
+    value a reader is handed is exactly the value the write recomputes.
+    """
+    inbox = root / "work" / "inbox"
+    try:
+        files = _collect(inbox, _admit(inbox, name))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return {
+        "contract": "inbox-folder", "item": name,
+        "path": (inbox / name).relative_to(root).as_posix(),
+        "files": sorted(files),
+        "drop_sha256": _folder_digest(files),
+    }
+
+
+@register("cli.inbox-read", kind="query")
+@register("inbox.content", kind="query")
+def inbox_read(ctx: OpContext, req: dict) -> Result:
+    """Read a bounded segment of one work/inbox file by inbox-relative name.
+
+    Inbox drops are addressed by name — they have no registry and no stable
+    ids — and may be binary, so non-UTF-8 bytes refuse rather than decode.
+    Discovery lists non-dot files (the same rule as the inbox count); an
+    exact name reads whatever it addresses, dot-files included. A folder
+    drop answers its file names plus ``drop_sha256``, the digest
+    ``inbox-resolve`` seals for the whole folder; no other read exposes it.
+    """
+    root = ctx.root
+    try:
+        offset, limit = _window_values(
+            req["offset"], req["limit"], req.get("expected_snapshot"), 16000)
+        name = req["name"]
+        if Path(name).is_absolute() or ".." in Path(name).parts:
+            raise WriteRefused(
+                f"inbox name must be relative to work/inbox: {name}",
+                site=f"{ctx.operation}.bad-name",
+                gateway_message=f"los: inbox name must be relative to work/inbox: {name}",
+                exit_code=2,
+            )
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        target = root / "work" / "inbox" / name
+        if target.is_dir() and not target.is_symlink():
+            payload = _inbox_folder_envelope(root, name)
+            _snapshot(root, snapshot)
+            return Result(
+                {"schema_version": 1, "snapshot_id": snapshot, **payload},
+                json_dumps=_dumps_inbox_read,
+            )
+        if not target.is_symlink() and not target.is_file():
+            raise WriteRefused(
+                f"inbox item not found: {name}",
+                site=f"{ctx.operation}.unknown-item",
+                gateway_message=f"los: inbox item not found: {name}",
+                exit_code=2,
+            )
+        raw = _bytes_inside_owner(
+            root, target, root / "work" / "inbox",
+            escape=f"inbox item escapes work/inbox: {name}",
+            symlink="inbox read refuses symlinks")
+        try:
+            content = raw.decode("utf-8")
+        except UnicodeError as exc:
+            raise WriteRefused(
+                f"inbox item is not UTF-8 text and has no text read: {name}",
+                site=f"{ctx.operation}.not-utf8",
+                gateway_message=(
+                    f"los: inbox item is not UTF-8 text and has no text read: {name}"
+                ),
+                exit_code=2,
+            ) from exc
+        payload = _content_envelope(
+            "inbox-content", "item", name,
+            target.relative_to(root).as_posix(),
+            raw, content, offset, limit)
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot, **payload},
+            json_dumps=_dumps_inbox_read,
+        )
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site=f"{ctx.operation}.stale-snapshot",
+            gateway_message=f"los: {exc}",
+            exit_code=3,
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc

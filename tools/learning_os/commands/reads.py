@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 import sys
-from pathlib import Path, PurePosixPath
+from pathlib import PurePosixPath
 
 from learning_os.derived import DerivedError, evaluate
 from learning_os.domain.failures import (
@@ -468,68 +468,6 @@ def cmd_note_read(args) -> int:
             return _print_stable(root, snapshot, _content_envelope(
                 "note-content", "note_id", note.id,
                 note.path.relative_to(root).as_posix(),
-                raw, content, offset, limit))
-    except (WriteRefused, OSError, UnicodeError) as exc:
-        return _refusal(exc)
-
-
-def _inbox_folder_envelope(root: Path, name: str) -> dict:
-    """A folder drop's file names and the digest inbox-resolve checks.
-
-    Uses the resolve path's own admission, collection and digest, so the
-    value a reader is handed is exactly the value the write recomputes.
-    """
-    from .inbox import _admit, _collect, _folder_digest
-
-    inbox = root / "work" / "inbox"
-    try:
-        files = _collect(inbox, _admit(inbox, name))
-    except ValueError as exc:
-        raise WriteRefused(str(exc)) from exc
-    return {
-        "contract": "inbox-folder", "item": name,
-        "path": (inbox / name).relative_to(root).as_posix(),
-        "files": sorted(files),
-        "drop_sha256": _folder_digest(files),
-    }
-
-
-def cmd_inbox_read(args) -> int:
-    """Read a bounded segment of one work/inbox file by inbox-relative name.
-
-    Inbox drops are addressed by name — they have no registry and no stable
-    ids — and may be binary, so non-UTF-8 bytes refuse rather than decode.
-    Discovery lists non-dot files (the same rule as the inbox count); an
-    exact name reads whatever it addresses, dot-files included. A folder
-    drop answers its file names plus ``drop_sha256``, the digest
-    ``inbox-resolve`` seals for the whole folder; no other read exposes it.
-    """
-    root = _root(args)
-    try:
-        offset, limit = _window(args, 16000)
-        name = args.name
-        if Path(name).is_absolute() or ".." in Path(name).parts:
-            raise WriteRefused(f"inbox name must be relative to work/inbox: {name}")
-        with _operator_lock(root, shared=True):
-            snapshot = _snapshot(root, args.expected_snapshot)
-            target = root / "work" / "inbox" / name
-            if target.is_dir() and not target.is_symlink():
-                return _print_stable(root, snapshot, _inbox_folder_envelope(root, name))
-            if not target.is_symlink() and not target.is_file():
-                raise WriteRefused(f"inbox item not found: {name}")
-            raw = _bytes_inside_owner(
-                root, target, root / "work" / "inbox",
-                escape=f"inbox item escapes work/inbox: {name}",
-                symlink="inbox read refuses symlinks")
-            try:
-                content = raw.decode("utf-8")
-            except UnicodeError as exc:
-                raise WriteRefused(
-                    f"inbox item is not UTF-8 text and has no text read: {name}"
-                ) from exc
-            return _print_stable(root, snapshot, _content_envelope(
-                "inbox-content", "item", name,
-                target.relative_to(root).as_posix(),
                 raw, content, offset, limit))
     except (WriteRefused, OSError, UnicodeError) as exc:
         return _refusal(exc)
