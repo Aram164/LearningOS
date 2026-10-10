@@ -5,10 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from learning_os.backup_manifest import (
-    verify_backup_manifest,
-    verify_restored_system,
-)
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
 from learning_os.health import build_health_report
@@ -233,18 +229,3 @@ def cmd_health_report(args) -> int:
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
     return 0
-
-
-def cmd_backup_verify(args) -> int:
-    root = _root(args)
-    value = _read_structured_file(args.manifest)
-    verifier = verify_backup_manifest if args.checksums_only else verify_restored_system
-    result = verifier(
-        root,
-        value,
-        restored_core=Path(args.restored_core).expanduser().resolve(),
-        restored_ui=Path(args.restored_ui).expanduser().resolve(),
-        restored_materials=Path(args.restored_materials).expanduser().resolve(),
-    )
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0 if result["ok"] else 1

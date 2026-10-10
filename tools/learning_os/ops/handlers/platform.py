@@ -19,6 +19,8 @@ from learning_os.backup_manifest import (
     BackupManifestError,
     backup_authorities,
     build_backup_manifest,
+    verify_backup_manifest,
+    verify_restored_system,
 )
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
@@ -542,3 +544,20 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
         f"{len(manifest['entries'])} entries (~{size_kb:.0f} KB). Write it "
         f"with --out PATH (outside every backed-up root) or print it with "
         f"--stdout")
+
+
+@register("cli.backup-verify", kind="tool")
+def backup_verify(ctx: OpContext, req: dict) -> Result:
+    """Verify a backup manifest against the restored trees."""
+    root = ctx.root
+    value = _read_structured_file(req["manifest"])
+    verifier = verify_backup_manifest if req.get("checksums_only") else verify_restored_system
+    result = verifier(
+        root,
+        value,
+        restored_core=Path(req["restored_core"]).expanduser().resolve(),
+        restored_ui=Path(req["restored_ui"]).expanduser().resolve(),
+        restored_materials=Path(req["restored_materials"]).expanduser().resolve(),
+    )
+    return Result(result, diagnostic_failed=not result["ok"],
+                  json_dumps=_dumps_indented)

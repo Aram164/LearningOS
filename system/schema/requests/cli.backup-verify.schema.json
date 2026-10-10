@@ -145,7 +145,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_backup_verify",
+    "handler": "learning_os.adapters.cli.invoke:cli.backup-verify",
     "parser_factory": false
   }
 }
