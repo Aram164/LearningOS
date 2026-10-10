@@ -22,7 +22,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import jsonschema
 import yaml
@@ -47,6 +47,17 @@ from learning_os.loader import load_repo
 from learning_os.loading import Repo, load_notes
 from learning_os.loading.yamlio import UniqueKeySafeLoader
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
+from learning_os.material_analysis import observe_local_material
+from learning_os.material_slices import parse_locator_page_ranges
+from learning_os.materials_resolution import (
+    MATERIAL_RESOURCE_SUFFIXES,
+    MATERIAL_SCHEME,
+    MATERIAL_SUFFIX_TOKEN,
+    leading_material_locator,
+    material_location,
+    material_uri_authority,
+    safe_material_locator,
+)
 from learning_os.ops.outcomes import classify, resolve
 from learning_os.transactions import artifact_revision, reconcile_inflight_transactions
 
@@ -922,47 +933,6 @@ def _input_record_values(record, file_name, label: str) -> dict:
 # plan record/file conversions (SPEC (bo) item 2).
 
 
-def _read_structured_file(
-    path_value: str,
-    *,
-    expected_sha256: str | None = None,
-    label: str = "structured input",
-) -> dict:
-    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
-
-    Stdin matters for callers that build an envelope in memory: writing it to
-    a temp file first means a real file holding canonical intent has to be
-    created, found, and cleaned up on every write path, including the ones
-    that fail. ``-`` removes that lifecycle entirely.
-    """
-    if path_value == "-" and expected_sha256 is None \
-            and current_gateway_request() is None:
-        raw = sys.stdin.read()
-        try:
-            data = json.loads(raw)
-        except ValueError as exc:
-            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
-        if not isinstance(data, dict):
-            raise WriteRefused("structured input must be an object")
-        return data
-    path, raw_bytes = _read_content_bound_file(
-        path_value,
-        expected_sha256,
-        label=label,
-    )
-    try:
-        raw = raw_bytes.decode("utf-8")
-        if path.suffix.lower() == ".json":
-            data = json.loads(raw)
-        else:
-            data = yaml.safe_load(raw)
-    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
-        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
-    if not isinstance(data, dict):
-        raise WriteRefused(f"structured input must be an object: {path}")
-    return data
-
-
 # ---------------------------------------------------------------------------
 # Canonical YAML serialization, moved verbatim from commands.support
 # (SPEC (az) item 2).
@@ -1195,3 +1165,192 @@ def _registries(root: Path) -> dict[Path, dict]:
         _schema(root, "concept-relations", data)
         records[path] = data
     return records
+
+
+# At most this many untargeted rows ride the screen; the section's
+# ``total`` stays exact past the bound. Moved verbatim from
+# commands.resume for the plan reads (SPEC (bo) item 2).
+MAX_STAGE_RESULTS = 5
+
+
+# ---------------------------------------------------------------------------
+# Analysis-note scope and freshness, moved verbatim from commands.reads
+# for the plan reads (SPEC (bo) item 2).
+
+
+def _analysis_notes(repo):
+    return sorted((note for note in repo.notes.values()
+                   if isinstance(note.meta.get("material_analysis"), dict)),
+                  key=lambda note: note.id)
+
+def _approved_assessments(repo):
+    found = []
+    for synthesis_id in sorted(repo.unit_material_syntheses):
+        data = repo.unit_material_syntheses[synthesis_id]
+        if not isinstance(data, dict) or data.get("status") != "approved":
+            continue
+        unit_id = data.get("unit_id")
+        assessments = data.get("route_assessments")
+        if not isinstance(assessments, list):
+            continue
+        for assessment in assessments:
+            if isinstance(assessment, dict):
+                found.append((synthesis_id, unit_id, assessment))
+    found.sort(key=lambda row: (row[1] or "", row[2].get("route_id") or ""))
+    return found
+
+def _materials_rel_for_uri(repo, uri) -> str | None:
+    """The materials-relative file a ``material://`` URI names, or None.
+
+    Identity only: the file need not exist. Anything resolving outside
+    the materials tree — or to a directory rather than a material file —
+    is not a material path at all, so folder-level URIs prove no file.
+    """
+    if not isinstance(uri, str) or not uri:
+        return None
+    path = material_location(repo, uri).get("material_path")
+    if not isinstance(path, str) or not path.startswith("materials/"):
+        return None
+    rel = path[len("materials/"):]
+    if PurePosixPath(rel).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+    return rel
+
+def _route_material_files(repo, source_id, route) -> set[str]:
+    """Every materials-relative file one route reads, or empty when unproven.
+
+    A route's own ``vault_path`` wins as a single file; otherwise a
+    semicolon-separated locator naming two or more files resolves to the
+    set it names — the same deliberate two-file binding the dossier basis
+    resolves for freshness; otherwise the locator's leading file resolves
+    against the route's source; otherwise the route inherits the source
+    record's held material. The multi-file branch is strict: every part
+    must name exactly one safe distinct file, otherwise the route proves
+    no file at all rather than guessing one. String routes, prose-only
+    locators, and material-less sources prove no file.
+    """
+    if not isinstance(route, dict):
+        route = {}
+    vault = _materials_rel_for_uri(repo, route.get("vault_path"))
+    if vault is not None:
+        return {vault}
+    record = repo.sources.get(source_id) if isinstance(source_id, str) else None
+    held = record.get("material") if isinstance(record, dict) else None
+    authority = material_uri_authority(held)
+    if authority is None and isinstance(source_id, str) and source_id:
+        # Legacy routes can name an exact source-id-prefixed file without
+        # a source-level material field. A declared shared authority wins.
+        authority = source_id
+    locator = route.get("locator")
+    if (isinstance(locator, str) and ";" in locator
+            and len(MATERIAL_SUFFIX_TOKEN.findall(locator)) >= 2):
+        if authority is None:
+            return set()
+        candidates: list[str] = []
+        for part in locator.split(";"):
+            matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
+            if len(matches) != 1:
+                return set()
+            candidate = safe_material_locator(part[:matches[0].end()].strip())
+            if candidate is None:
+                return set()
+            candidates.append(candidate)
+        if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+            return set()
+        resolved: set[str] = set()
+        for candidate in candidates:
+            found = _materials_rel_for_uri(
+                repo, f"{MATERIAL_SCHEME}{authority}/{candidate}")
+            if found is None:
+                return set()
+            resolved.add(found)
+        return resolved
+    head = None
+    if isinstance(locator, str):
+        # Strict first, then the weaker head-of-prose question — the same
+        # order the material projection resolves a row.
+        head = safe_material_locator(locator) or leading_material_locator(locator)
+    if head and authority:
+        found = _materials_rel_for_uri(
+            repo, f"{MATERIAL_SCHEME}{authority}/{head}")
+        if found is not None:
+            return {found}
+    inherited = _materials_rel_for_uri(repo, held)
+    return {inherited} if inherited is not None else set()
+
+def _single_route_range(route) -> tuple[int, int] | None:
+    """The one usable page range a route states, or None.
+
+    Zero ranges (a whole-file route) and several ranges (a curated tour)
+    both decline the page test: only a single stated range narrows what a
+    note about the file must overlap to count as direct evidence.
+    """
+    locator = route.get("locator") if isinstance(route, dict) else None
+    ranges = parse_locator_page_ranges(locator) if isinstance(locator, str) else []
+    return ranges[0] if len(ranges) == 1 else None
+
+def _note_pages(binding) -> tuple[int, int] | None:
+    """A note's inspected physical page window, or None when unstated."""
+    inspected = binding.get("inspected_range") if isinstance(binding, dict) else None
+    if not isinstance(inspected, dict):
+        return None
+    start, end = inspected.get("start"), inspected.get("end")
+    if (isinstance(start, bool) or isinstance(end, bool)
+            or not isinstance(start, int) or not isinstance(end, int)):
+        return None
+    return (start, end) if start <= end else None
+
+def _unit_note_scope(repo, binding, routes) -> str | None:
+    """"direct", "related", or None: one note's standing against unit routes.
+
+    THE shared note-to-route rule: material-context and the plan brief
+    both answer from here. Material identity comes from existing
+    resolution, never from a shared source id alone, and a route stating
+    a single usable page range additionally requires physical overlap with
+    the note's inspected window. Same-source-only notes are related, never
+    direct; notes touching neither the source nor the file are out.
+    ``routes`` is (source_id, route-dict) pairs; string routes arrive as
+    (source_id, {}) and prove identity only through inheritance.
+    """
+    if not isinstance(binding, dict):
+        return None
+    note_sid = binding.get("source_id")
+    note_ref = binding.get("material")
+    pages = _note_pages(binding)
+    standing = None
+    for source_id, route in routes:
+        same_source = (isinstance(note_sid, str) and note_sid
+                       and note_sid == source_id)
+        route_files = _route_material_files(repo, source_id, route)
+        same_file = (isinstance(note_ref, str) and note_ref
+                     and note_ref in route_files)
+        if not same_source and not same_file:
+            continue
+        if same_source and same_file:
+            window = _single_route_range(route) if len(route_files) == 1 else None
+            if window is None or (
+                    pages is not None
+                    and window[0] <= pages[1] and pages[0] <= window[1]):
+                return "direct"
+        standing = "related"
+    return standing
+
+def _freshness_label(root, binding, observations=None):
+    """Live source freshness: current, stale, or unreadable. Never inferred.
+
+    When `observations` is given, the observed bytes (or their absence)
+    are recorded under the material relpath so a paged continuation can
+    prove the external state it pages over did not move between pages.
+    """
+    material = str(binding.get("material") or "")
+    observation = observe_local_material(
+        root.parent / "materials", material,
+        str(binding.get("recorded_source_digest") or ""))
+    if observations is not None:
+        live = observation.get("live_digest")
+        observations[f"material:{material}"] = \
+            live if live is not None else observation["status"]
+    status = observation["status"]
+    if status in ("current", "stale"):
+        return status
+    return "unreadable"

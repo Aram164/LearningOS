@@ -33,6 +33,7 @@ from learning_os.learning_runtime import (
 from learning_os.loader import load_repo
 from learning_os.observations import today as observed_today
 from learning_os.ops._legacy_plumbing import (
+    MAX_STAGE_RESULTS,
     _json_layout,
 )
 from learning_os.pathing import PathBoundaryError, resolved_inside
@@ -189,11 +190,6 @@ _STUDY_STATUS_RANK = {"active": 0, "paused": 1, "ready": 2}
 
 #: At most this many options; the menu stays one screen.
 MAX_STUDY_OPTIONS = 5
-
-#: At most this many untargeted rows ride the screen; the section's
-#: ``total`` stays exact past the bound.
-MAX_STAGE_RESULTS = 5
-
 
 def _display_registration_state(state: object) -> object:
     """The learner-facing phrase for one projected registration state.

@@ -244,7 +244,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.material.cmd_plan_edit_context",
+    "handler": "learning_os.adapters.cli.invoke:cli.plan-edit-context",
     "parser_factory": false
   }
 }

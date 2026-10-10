@@ -270,21 +270,26 @@ def test_route_batch_cli_parsing_rejects_empty_and_mixed_selectors(mini_repo):
 
 def test_route_batch_uses_one_repository_load(mini_repo, monkeypatch):
     import los
-    from learning_os.commands import material as material_commands
+    from learning_os.ops import context as context_module
+    from learning_os.ops import pipeline as ops_pipeline
 
     unit_id, (first, second) = _two_route_context(mini_repo)
     loads = []
-    real_load = material_commands.load_repo
+    real_load = context_module.load_repo
 
     def counting(root):
         loads.append(root)
         return real_load(root)
 
-    monkeypatch.setattr(material_commands, "load_repo", counting)
+    # plan.edit-context runs through the registered pipeline; the
+    # context caches the repository, so one batch still loads once.
+    monkeypatch.setattr(context_module, "load_repo", counting)
     args = los.build_parser().parse_args(
         ["--root", str(mini_repo), "plan-edit-context", unit_id,
          "--route-ids", first, second])
-    assert material_commands.cmd_plan_edit_context(args) == 0
+    outcome = ops_pipeline.run_cli(
+        mini_repo, "cli.plan-edit-context", args)
+    assert outcome.exit_code == 0, outcome.stderr
     assert len(loads) == 1
 
 
@@ -292,9 +297,8 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
     mini_repo, monkeypatch, capsys,
 ):
     import los
-    from learning_os.commands import material as material_commands
-    from learning_os.domain.failures import WriteRefused
     from learning_os.ops import _legacy_plumbing as plumbing
+    from learning_os.ops import pipeline as ops_pipeline
 
     unit_id, (first, second) = _two_route_context(mini_repo)
     real_fingerprint = plumbing.canonical_fingerprint
@@ -311,8 +315,14 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
     args = los.build_parser().parse_args(
         ["--root", str(mini_repo), "plan-edit-context", unit_id,
          "--route-ids", first, second])
-    with pytest.raises(WriteRefused, match="snapshot"):
-        material_commands.cmd_plan_edit_context(args)
+    # plan.edit-context runs through the registered pipeline, which
+    # renders the stale snapshot as the D16 stderr line; nothing is
+    # printed before the refusal either way.
+    outcome = ops_pipeline.run_cli(
+        mini_repo, "cli.plan-edit-context", args)
+    assert outcome.exit_code == 3, outcome.stderr
+    assert outcome.stdout == ""
+    assert outcome.stderr.splitlines()[0].startswith("los: STALE_SNAPSHOT: ")
     assert capsys.readouterr().out == ""
 
 

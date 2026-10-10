@@ -327,22 +327,6 @@ checks:
     count: 12
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/material.py::_loaded::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material.py::cmd_plan_edit_context::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material_span.py::cmd_material_span::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material_span.py::cmd_material_span::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::_operator_lock
     count: 1
     since: baseline
@@ -1654,10 +1638,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.plan-edit-context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.plan-template::*
     count: 1
     since: baseline
@@ -1710,10 +1690,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: material.span::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: module.plan.import::*
     count: 1
     since: baseline
@@ -1731,10 +1707,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: operator.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: plan.edit-context::*
     count: 1
     since: baseline
     approved_by: null
@@ -1815,10 +1787,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.plan-edit-context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.plan-template::*
     count: 1
     since: baseline
@@ -1871,10 +1839,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: material.span::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: module.plan.import::*
     count: 1
     since: baseline
@@ -1892,10 +1856,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: operator.bootstrap::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: plan.edit-context::*
     count: 1
     since: baseline
     approved_by: null

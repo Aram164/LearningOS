@@ -47,37 +47,37 @@ cases:
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-nope]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.unknown-unit}
   - id: unknown-route
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-id, route-nope]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.unknown-route}
   - id: batch-too-many
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.batch-too-many}
   - id: batch-duplicate
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.batch-duplicate}
   - id: batch-unknown
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-ids, route-nope]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.unknown-route}
   - id: stage-unknown
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --stage-id, stage-nope]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.unknown-stage}
   - id: stage-no-map
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l02, --stage-id, stage-demo]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.stage-needs-map}
   - id: audit-with-route
     kind: refusal
     transport: cli
@@ -97,12 +97,12 @@ cases:
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --include-related]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.related-needs-brief}
   - id: neighbors-without-brief
     kind: refusal
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --include-neighbors]
-    expect: {site: null}
+    expect: {site: cli.plan-edit-context.neighbors-needs-brief}
   - id: stale-snapshot
     kind: refusal
     transport: cli
