@@ -25,7 +25,7 @@ cases:
     transport: gateway
     request: {module_id: module-nope, check: true}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: module.materials.compact.unknown-module}
   - id: apply-without-plan
     kind: refusal
     transport: gateway

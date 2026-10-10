@@ -2,13 +2,9 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
-
 import yaml
 
-from learning_os.contracts.gateway import current_gateway_request
-from learning_os.domain.failures import ValidationFailed, WriteRefused
+from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import expansion, with_suggestions
 from learning_os.learning_runtime import (
     RuntimeInputError,
@@ -19,23 +15,17 @@ from learning_os.loader import load_repo
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
-    MaterialReferenceError,
     compact_map,
-    expand_map,
     matching_routes,
-    persist_route_ids,
     unit_routes,
 )
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.ops._legacy_plumbing import (
-    _apply_hint,
-    _changed_write,
     _guard_rows,
     _map_for_unit,
     _operator_lock,
     _snapshot,
 )
-from learning_os.ops._plan_gate import _module_plan_validation_errors, _plan_apply_gate
 
 from .reads import (
     _analysis_notes,
@@ -45,12 +35,7 @@ from .reads import (
     _unit_note_scope,
 )
 from .resume import MAX_STAGE_RESULTS
-from .support import (
-    _expected_ok,
-    _expected_revisions_from_args,
-    _root,
-    _write_transaction,
-)
+from .support import _root
 
 
 def _loaded(root):
@@ -554,88 +539,3 @@ def cmd_plan_edit_context(args) -> int:
             if getattr(args, "audit", False):
                 payload.update({"unit_audit": _unit_audit(root, repo, unit)})
         return _print_stable(root, snapshot, payload)
-
-
-def compaction_plan(repo, module_id):
-    if module_id not in repo.module_source_maps:
-        raise WriteRefused(f"module source map not found: {module_id}")
-    source_map = repo.module_source_maps[module_id]
-    writes, artifacts, used = {}, set(), set()
-    saved = 0
-    for sm in sorted(repo.study_maps.values(), key=lambda row: row.id):
-        if sm.module_id != module_id:
-            continue
-        raw = sm.authored_data or sm.data
-        compact, refs = compact_map(raw, source_map, module_id, sm.unit_id)
-        if compact == raw:
-            continue
-        if expand_map(compact, source_map, module_id, sm.unit_id) != sm.data:
-            raise WriteRefused(f"compaction changed {sm.id}")
-        _changed_write(writes, sm.path, compact)
-        used.update(refs)
-        artifacts.update((module_id, sm.unit_id, sm.id))
-        saved += len(sm.path.read_bytes()) - len(writes.get(sm.path, "").encode())
-    pinned = persist_route_ids(source_map, module_id, used)
-    if pinned != source_map:
-        _changed_write(writes, repo.module_source_map_origins[module_id], pinned)
-    return writes, artifacts, {"module_id": module_id, "map_bytes_saved": saved,
-                               "referenced_routes": len(used)}
-
-
-def _execute(args, capability, planner):
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo = _loaded(root)
-        try:
-            writes, artifacts, detail = planner(repo)
-        except MaterialReferenceError as exc:
-            raise WriteRefused(str(exc)) from exc
-        rows = {p.relative_to(root).as_posix(): hashlib.sha256(v.encode()).hexdigest()
-                for p, v in sorted(writes.items())}
-        plan_hash = "sha256:" + hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()
-        result = {"schema_version": 1, **detail, "plan_sha256": plan_hash,
-                  "affected_files": list(rows), "artifact_ids": sorted(artifacts),
-                  "expected_revisions": _guard_rows(root, artifacts)}
-        if getattr(args, "plan_sha256", None) not in (None, plan_hash):
-            raise WriteRefused("compaction plan changed; review the current plan")
-        if not args.check and capability == "module.materials.compact" and args.plan_sha256 is None:
-            raise WriteRefused("compaction requires the reviewed plan SHA-256")
-        if args.check or current_gateway_request() is None:
-            # --check validates the shadow because nothing is written and it
-            # is the only validation. A gateway apply instead enforces the
-            # same gate inside its transaction (one full validation, on the
-            # staged state, still refusing before anything commits); only a
-            # direct CLI apply — which the transaction below refuses as
-            # envelope-less — keeps the shadow refusal text it always had.
-            errors = _module_plan_validation_errors(root, writes) if writes else []
-            if errors:
-                raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, errors[:8])))
-        if args.check:
-            snapshot = _snapshot(root)
-            check_result = {
-                **result, "ok": True, "check": True, "canonical_files_written": 0,
-            }
-            hint = _apply_hint(args, capability, snapshot, result["expected_revisions"])
-            if hint is not None:
-                check_result["next"] = hint
-            return _print_stable(root, snapshot, check_result)
-        if not writes:
-            raise WriteRefused("no material changes to apply")
-        validate_extra, gate_errors = _plan_apply_gate(root)
-        code, errors, confirmation = _write_transaction(
-            root, writes, capability=capability, artifact_ids=sorted(artifacts),
-            expected_revisions=_expected_revisions_from_args(args),
-            validate_extra=validate_extra,
-        )
-        if gate_errors:
-            raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, gate_errors[:8])))
-        print(json.dumps({**result, "ok": code == 0, **confirmation,
-                          **({"errors": list(map(str, errors))} if errors else {})},
-                         ensure_ascii=False, separators=(",", ":")))
-        return code
-
-
-def cmd_module_materials_compact(args) -> int:
-    return _execute(args, "module.materials.compact", lambda repo: compaction_plan(repo, args.module_id))

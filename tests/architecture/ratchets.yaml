@@ -351,18 +351,6 @@ checks:
     count: 12
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/material.py::_execute::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material.py::_execute::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material.py::_execute::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/material.py::_loaded::load_repo
     count: 1
     since: baseline
@@ -2002,10 +1990,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: module.plan.import::validate_extra
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/material.py::_execute::validate_extra
     count: 1
     since: baseline
     approved_by: null

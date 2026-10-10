@@ -15,7 +15,6 @@ import yaml
 from conftest import build_mini_repo
 from scenario_fixtures import INITIAL_WARNING_SIGNATURES, rich_world
 
-from learning_os.commands.material import compaction_plan
 from learning_os.learning_runtime import collect_requirements
 from learning_os.loader import load_repo
 from learning_os.material_inventory import render_manifest
@@ -24,6 +23,7 @@ from learning_os.materials_resolution import (
     material_location,
     resolve_route_material_files,
 )
+from learning_os.ops.handlers.plan import compaction_plan
 from learning_os.semantics.lineage import load_ledger
 from learning_os.warning_baseline import collect, load_baseline
 

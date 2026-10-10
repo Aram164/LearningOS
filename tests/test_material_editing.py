@@ -15,7 +15,6 @@ from gateway_helpers import (
 )
 from repo_builders import material_fixture, run_los, write_yaml
 
-from learning_os.commands.material import compaction_plan
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout import build_manifest
 from learning_os.loader import load_repo
@@ -25,7 +24,7 @@ from learning_os.material_refs import (
     expand_map,
     preserve_map_refs,
 )
-from learning_os.ops.handlers.plan import route_patch_plan
+from learning_os.ops.handlers.plan import compaction_plan, route_patch_plan
 
 
 def compact_via_gateway(root):

@@ -23,7 +23,6 @@ from test_compact_module_plan_revision import _revision, _two_units
 
 import los
 from learning_os.commands.capability import cmd_capability
-from learning_os.commands.material import cmd_module_materials_compact
 from learning_os.commands.module import cmd_module_plan_import
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
@@ -124,8 +123,10 @@ def test_compact_apply_validates_once(mini_repo: Path, tmp_path: Path,
     check_args = argparse.Namespace(
         root=str(mini_repo), module_id="module-demo", check=True,
         plan_sha256=None, expected_snapshot=None, expected_revision=[])
-    assert cmd_module_materials_compact(check_args) == 0
-    plan = json.loads(capsys.readouterr().out)
+    outcome = ops_pipeline.run_cli(
+        mini_repo, "module.materials.compact", check_args)
+    assert outcome.exit_code == 0, outcome.stderr
+    plan = json.loads(outcome.stdout)
     runs = _count_validations(monkeypatch)
     code, body = _apply_in_process(
         mini_repo, tmp_path, capability="module.materials.compact",

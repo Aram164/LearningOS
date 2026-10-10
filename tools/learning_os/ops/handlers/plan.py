@@ -1,4 +1,4 @@
-"""Plan-area handlers: ``route.patch`` (PLAN D4, SPEC §12 R4, (bd))."""
+"""Plan-area handlers: ``route.patch`` and ``module.materials.compact`` (PLAN D4, SPEC §12 R4, (bd))."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
     MaterialReferenceError,
+    compact_map,
     expand_map,
     matching_routes,
     persist_route_ids,
@@ -148,6 +149,40 @@ def route_patch_plan(repo, unit_id, route_id, changes):
             artifacts.add(sm.id)
     return writes, artifacts, {"unit_id": unit_id, "route_id": route_id,
                                "changes": {k: {"before": old.get(k), "after": v} for k, v in changes.items()}}
+
+
+def compaction_plan(repo, module_id):
+    """The module compaction planner, moved for its conversion (SPEC §12 R4).
+
+    Moved verbatim from ``commands.material`` except the module miss, which
+    is a canonical-kind lookup (R6): the typed ``NotFound`` carries the
+    byte-identical legacy complaint.
+    """
+    if module_id not in repo.module_source_maps:
+        raise NotFound("module", module_id, repo.module_source_maps,
+                       message=f"module source map not found: {module_id}",
+                       site="module.materials.compact.unknown-module")
+    source_map = repo.module_source_maps[module_id]
+    writes, artifacts, used = {}, set(), set()
+    saved = 0
+    for sm in sorted(repo.study_maps.values(), key=lambda row: row.id):
+        if sm.module_id != module_id:
+            continue
+        raw = sm.authored_data or sm.data
+        compact, refs = compact_map(raw, source_map, module_id, sm.unit_id)
+        if compact == raw:
+            continue
+        if expand_map(compact, source_map, module_id, sm.unit_id) != sm.data:
+            raise WriteRefused(f"compaction changed {sm.id}")
+        _changed_write(writes, sm.path, compact)
+        used.update(refs)
+        artifacts.update((module_id, sm.unit_id, sm.id))
+        saved += len(sm.path.read_bytes()) - len(writes.get(sm.path, "").encode())
+    pinned = persist_route_ids(source_map, module_id, used)
+    if pinned != source_map:
+        _changed_write(writes, repo.module_source_map_origins[module_id], pinned)
+    return writes, artifacts, {"module_id": module_id, "map_bytes_saved": saved,
+                               "referenced_routes": len(used)}
 
 
 def _check_gate(root, writes):
@@ -287,3 +322,12 @@ def route_patch(ctx: OpContext, req: dict) -> Result:
     return _execute_material_plan(ctx, req, "route.patch", lambda repo: route_patch_plan(
         repo, req["unit_id"], req["route_id"], req["changes"],
     ))
+
+
+@register("module.materials.compact", kind="command",
+          render_check=_render_plan_check)
+def module_materials_compact(ctx: OpContext, req: dict) -> Result:
+    """Share repeated stage material fields losslessly across one module's maps."""
+    return _execute_material_plan(
+        ctx, req, "module.materials.compact",
+        lambda repo: compaction_plan(repo, req["module_id"]))
