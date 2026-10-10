@@ -486,3 +486,58 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_path_progress_refused,
         json_dumps=_dumps_stage,
     )
+
+
+def _on_path_attach_refused(errors: list) -> list[str]:
+    """The exact path-attach commit-refusal lines: the prefix plus the first twelve engine issues, verbatim."""
+    return ["los: attachment rejected by validation", *errors[:12]]
+
+
+@register("path.attachment.add", kind="command")
+def path_attach(ctx: OpContext, req: dict) -> Result:
+    """Attach a content-bound file to a learning-path stage."""
+    root = ctx.root
+    try:
+        source, source_bytes = _read_content_bound_file(
+            req["file"],
+            req.get("file_sha256"),
+            label="path attachment",
+        )
+    except WriteRefused as exc:
+        raise WriteRefused(
+            str(exc),
+            site="path.attachment.add.bad-file",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, learning_path = require_path_or_error(ctx, req["path_id"])
+    data = learning_path.data
+    stage = require_stage(ctx, data, req["stage_id"])
+    workspace = learning_path.path.parent.parent
+    attachment_dir = workspace / "scratch" / "paths" / learning_path.id \
+        / "attachments" / stage["id"]
+    target = _allocate_attachment_path(attachment_dir, source.name)
+    rel = target.relative_to(root).as_posix()
+    stage.setdefault("attachments", []).append({
+        "path": rel, "label": req.get("label") or source.stem})
+    data["updated"] = observations.today().isoformat()
+    rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="path.attachment.add.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "path_id": req["path_id"],
+         "stage_id": req["stage_id"], "attachment": rel},
+        proposal=TransactionProposal(
+            capability="path.attachment.add",
+            writes={learning_path.path: rendered, target: source_bytes},
+            artifact_ids=[req["path_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_path_attach_refused,
+        json_dumps=_dumps_stage,
+    )

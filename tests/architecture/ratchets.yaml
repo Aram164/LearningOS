@@ -779,18 +779,6 @@ checks:
     count: 3
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/path.py::cmd_path_attach::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/path.py::cmd_path_attach::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/path.py::cmd_path_attach::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/plan.py::cmd_plan_template::print
     count: 5
     since: baseline

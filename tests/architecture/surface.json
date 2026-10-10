@@ -9143,7 +9143,7 @@
   "note.revise.schema.json": "5e6056be8b2906bebc1ccbbd675d7a3dc28bf1c875d27e239cb2170b687e7437",
   "note.search.schema.json": "db820abae976955a8ae984a157b652c4caabecd04a0326db746b7d8fcbd0f72a",
   "operator.bootstrap.schema.json": "5ecea058b264e577cd441941aee435ae712f5d74d52e90886fffcba8c6db3c0a",
-  "path.attachment.add.schema.json": "fce27154ca9681a2f6377008d50fe7669ede46f821271b3e0a8889af748ec445",
+  "path.attachment.add.schema.json": "3ad3cffc69ef15cb55db671031f1a094db2a4db80f74e92f1cd26966cc39a560",
   "path.note.write.schema.json": "3b1062b81b194fcae8288331c13823584a468b603604577716d9efb995bde56e",
   "path.progress.update.schema.json": "02bcc50079c93c59be65faf6b856ef633efae3b6eb4f55c72679f6afb674bdb9",
   "plan.edit-context.schema.json": "2d27fedab69fa8b67686c3829bafec0e7b3a420d5474f06e642635d0ec2634ea",

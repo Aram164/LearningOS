@@ -192,7 +192,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.path.cmd_path_attach",
+    "handler": "learning_os.adapters.cli.invoke:path.attachment.add",
     "parser_factory": false
   }
 }
