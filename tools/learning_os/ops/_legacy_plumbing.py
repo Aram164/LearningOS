@@ -894,6 +894,29 @@ def _read_structured_file(
     return data
 
 
+def _require_gateway_v2() -> None:
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "this approved write must use GatewayEnvelopeV2; direct CLI publication is disabled"
+        )
+
+
+def _input_record_values(record, file_name, label: str) -> dict:
+    """The record/file core of ``commands/vnext._input_record`` (SPEC (bl) 3).
+
+    Converted handlers pass their request values directly; the vnext
+    wrapper keeps extracting them from the argparse namespace until its
+    last caller converts. Validations and messages are the originals.
+    """
+    if record is not None:
+        if not isinstance(record, dict):
+            raise WriteRefused(f"{label} must be an object")
+        return record
+    if not file_name:
+        raise WriteRefused(f"{label} is required")
+    return _read_structured_file(file_name)
+
+
 # ---------------------------------------------------------------------------
 # Canonical YAML serialization, moved verbatim from commands.support
 # (SPEC (az) item 2).

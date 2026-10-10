@@ -6,7 +6,6 @@ import json
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
-from learning_os.legacy_archive import legacy_archive_lock_destination
 from learning_os.masters_planning import (
     candidate_comparison_destination,
     master_catalog_destination,
@@ -22,8 +21,9 @@ from learning_os.material_synthesis import (
 )
 from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
+    _input_record_values,
     _operator_lock,
-    _read_structured_file,
+    _require_gateway_v2,
 )
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 
@@ -36,22 +36,8 @@ from .support import (
 
 
 def _input_record(args, label: str) -> dict:
-    value = getattr(args, "record", None)
-    if value is not None:
-        if not isinstance(value, dict):
-            raise WriteRefused(f"{label} must be an object")
-        return value
-    file_name = getattr(args, "file", None)
-    if not file_name:
-        raise WriteRefused(f"{label} is required")
-    return _read_structured_file(file_name)
-
-
-def _require_gateway_v2() -> None:
-    if current_gateway_request() is None:
-        raise WriteRefused(
-            "this approved write must use GatewayEnvelopeV2; direct CLI publication is disabled"
-        )
+    return _input_record_values(
+        getattr(args, "record", None), getattr(args, "file", None), label)
 
 
 def _refuse_without_approval(args, label: str) -> int | None:
@@ -91,34 +77,6 @@ def cmd_unit_material_synthesis_publish(args) -> int:
             capability="unit.material-synthesis.publish",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(args.unit_id, value["id"]),
-        )
-    print(json.dumps({
-        "ok": code == 0, **confirmation,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    }, indent=2, ensure_ascii=False))
-    return code
-
-
-def cmd_legacy_archive_lock_publish(args) -> int:
-    root = _root(args)
-    value = _input_record(args, "Legacy archive lock")
-    # Reuse the exact public reader validation before the write boundary.
-    from learning_os.contracts.json_schema import validate_contract
-    validate_contract(root, "legacy-archive-lock.schema.json", value)
-    denied = _refuse_without_approval(args, "Legacy archive lock publication")
-    if denied is not None:
-        return denied
-    _require_gateway_v2()
-    with _operator_lock(root):
-        validate_contract(root, "legacy-archive-lock.schema.json", value)
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        destination = legacy_archive_lock_destination(root)
-        code, errors, confirmation = _write_transaction(
-            root, {destination: _dump_yaml(value)},
-            capability="legacy.archive.lock.publish",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=("legacy-archive-lock",),
         )
     print(json.dumps({
         "ok": code == 0, **confirmation,

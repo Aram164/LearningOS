@@ -151,7 +151,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_legacy_archive_lock_publish",
+    "handler": "learning_os.adapters.cli.invoke:legacy.archive.lock.publish",
     "parser_factory": false
   }
 }

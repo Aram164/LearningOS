@@ -9123,7 +9123,7 @@
   "learner.observation.append.schema.json": "99eeaee15866beeb246139c36549e614239b43934cc2050d9033294740c63ca8",
   "learner.stage-result.append.schema.json": "defd35bb458142b093c68e2685f3cff748b890270380cc108094ea289f4c8693",
   "legacy.archive.inspect.schema.json": "10e7fbf24098707e1b7070965122c2b4c55046dcdb03f6055e48a6a9143b335d",
-  "legacy.archive.lock.publish.schema.json": "6db5fa061d93a23e23f713eeda1dfa6d3da43bbf585db43244f164a52293b04f",
+  "legacy.archive.lock.publish.schema.json": "bc75c6b77ff6fba82a7b3f35a3d37340cc6922eb9511c286f777080937629375",
   "legacy.archive.status.schema.json": "4f234a27b9245a45aa92e97c822c08fbbea3f394099269c1288e822dea1741e6",
   "lineage.restamp.schema.json": "75c5a2623dbdc79b4727ce205b104ee0b502394f6b057610c6db4d96c818869b",
   "masters-planning.catalog.update.schema.json": "d014f1726e311f9b49d29e80d84faf5ba2489e9756150d126f9173d46f477cfd",

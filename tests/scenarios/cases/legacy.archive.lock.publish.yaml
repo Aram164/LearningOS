@@ -35,7 +35,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [legacy-archive-lock-publish, --record, '{"schema_version": 1, "id": "legacy-archive-lock", "type": "legacy-archive-lock", "created_at": "2026-10-01T09:00:00+02:00", "entries": [], "excluded": {"count": 3, "status": "sealed-not-inspected"}, "verification": {"verified_at": "2026-10-01T09:00:00+02:00", "status": "verified", "issues": []}}']
-    expect: {site: null}
+    expect: {site: legacy.archive.lock.publish.approval-required}
   - id: direct-cli-no-gateway
     kind: refusal
     transport: cli
@@ -73,5 +73,5 @@ cases:
     artifact_ids: [legacy-archive-lock]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/vnext.py:56", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/vnext.py:60", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:907", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:910", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}

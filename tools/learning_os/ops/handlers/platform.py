@@ -37,15 +37,19 @@ from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.health import build_health_report
 from learning_os.legacy_archive import (
     inspect_legacy_archive,
+    legacy_archive_lock_destination,
     load_legacy_allowlist,
     load_legacy_archive_lock,
 )
 from learning_os.ops._legacy_plumbing import (
     _atomic_text,
+    _dump_yaml,
     _fresh_manifest,
     _fresh_manifest_and_repo,
+    _input_record_values,
     _json_layout,
     _read_structured_file,
+    _require_gateway_v2,
     _snapshot,
 )
 from learning_os.ops.context import OpContext
@@ -932,5 +936,58 @@ def operations(ctx: OpContext, req: dict) -> Result:
     limit = req.get("limit") or 20
     return Result(
         {"operations": list_operations(root, limit=min(limit, 50))},
+        json_dumps=_dumps_indented,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Reviewed vNext publishes (PLAN D4).
+#
+# Moved with the units from commands.vnext (SPEC §12). Each publish takes a
+# reviewed record, requires the explicit approval, and commits one receipted
+# transaction; a refused commit prints the result JSON on stdout, as the
+# legacy handlers did (SPEC (bd)).
+
+
+def _publish_refused_stdout(errors: list) -> str:
+    """The exact publish refusal print: ok false plus the engine issues."""
+    return _dumps_indented({
+        "ok": False,
+        **({"errors": [str(error) for error in errors]} if errors else {}),
+    })
+
+
+@register("legacy.archive.lock.publish", kind="command")
+def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
+    """Publish one reviewed safe Legacy disposition lock."""
+    root = ctx.root
+    value = _input_record_values(
+        req.get("record"), req.get("file"), "Legacy archive lock")
+    # Reuse the exact public reader validation before the write boundary.
+    validate_contract(root, "legacy-archive-lock.schema.json", value)
+    if not req.get("approve"):
+        message = "Legacy archive lock publication requires explicit approval"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.approval-required",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    _require_gateway_v2()
+    validate_contract(root, "legacy-archive-lock.schema.json", value)
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return Result(
+        {"ok": True},
+        proposal=TransactionProposal(
+            capability="legacy.archive.lock.publish",
+            writes={legacy_archive_lock_destination(root): _dump_yaml(value)},
+            artifact_ids=["legacy-archive-lock"],
+            expected_revisions=expected_revisions,
+        ),
+        refused_stdout=_publish_refused_stdout,
         json_dumps=_dumps_indented,
     )
