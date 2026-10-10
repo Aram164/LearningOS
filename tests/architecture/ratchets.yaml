@@ -519,22 +519,6 @@ checks:
     count: 13
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::print
-    count: 8
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::return
-    count: 8
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::_operator_lock
     count: 1
     since: baseline
@@ -549,22 +533,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::return
     count: 38
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::return
-    count: 6
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/module.py::cmd_unit_plan_revise::_operator_lock
@@ -1013,38 +981,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::return
     count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::print
-    count: 12
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::return
-    count: 12
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::print
-    count: 7
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::return
-    count: 6
     since: baseline
     approved_by: null
   A4-plumbing-2: []
@@ -2086,10 +2022,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: coordination.section.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: health.report::*
     count: 1
     since: baseline
@@ -2134,19 +2066,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: module.attempt.record::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: module.materials.compact::*
     count: 1
     since: baseline
     approved_by: null
   - signature: module.plan.import::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.sitting.update::*
     count: 1
     since: baseline
     approved_by: null
@@ -2215,10 +2139,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: unit.plan.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: workspace.next-action.update::*
     count: 1
     since: baseline
     approved_by: null
@@ -2379,10 +2299,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: coordination.section.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: health.report::*
     count: 1
     since: baseline
@@ -2427,19 +2343,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: module.attempt.record::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: module.materials.compact::*
     count: 1
     since: baseline
     approved_by: null
   - signature: module.plan.import::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.sitting.update::*
     count: 1
     since: baseline
     approved_by: null
@@ -2508,10 +2416,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: unit.plan.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: workspace.next-action.update::*
     count: 1
     since: baseline
     approved_by: null
