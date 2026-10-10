@@ -36,6 +36,28 @@ def require_unit_map_or_error(ctx: OpContext, unit_id: str):
     return repo, unit, study_map
 
 
+def require_path_or_error(ctx: OpContext, path_id: str):
+    """The raising twin of support._path_or_error (SPEC R3).
+
+    Loads through ``ctx.repo()`` and returns the same
+    ``(repo, learning_path)`` pair; the refusal raises with the
+    original's identical message.
+    """
+    repo = ctx.repo()
+    learning_path = repo.learning_paths.get(path_id)
+    if learning_path is None or learning_path.archived:
+        active = [key for key, row in repo.learning_paths.items()
+                  if not row.archived]
+        message = not_found("active learning path", path_id, active)
+        raise NotFound(
+            "active learning path", path_id, active,
+            site=f"{ctx.operation}.unknown-path",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    return repo, learning_path
+
+
 def require_stage(ctx: OpContext, data: dict, stage_id: str):
     """The raising twin of the support._stage lookup with its refusal (SPEC R3).
 

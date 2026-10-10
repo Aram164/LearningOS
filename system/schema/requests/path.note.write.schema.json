@@ -167,7 +167,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.path.cmd_path_note",
+    "handler": "learning_os.adapters.cli.invoke:path.note.write",
     "parser_factory": false
   }
 }

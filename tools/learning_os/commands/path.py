@@ -27,51 +27,6 @@ from .support import (
 
 
 # ---------------------------------------------------------- learning paths
-def cmd_path_note(args) -> int:
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        _, learning_path = _path_or_error(root, args.path_id)
-        if learning_path is None:
-            return 2
-        stage = next((s for s in learning_path.data.get("stages", [])
-                      if s.get("id") == args.stage_id), None)
-        if stage is None:
-            print(f"los: {not_found('stage', args.stage_id, _stage_ids(learning_path.data))}",
-                  file=sys.stderr)
-            return 2
-        note_ref = stage.get("notes_path")
-        if not note_ref:
-            print(f"los: stage has no notes_path: {args.stage_id}", file=sys.stderr)
-            return 2
-        text_value = args.text if args.text is not None else sys.stdin.read()
-        if not text_value.strip():
-            print("los: refusing to write an empty note — pass real text",
-                  file=sys.stderr)
-            return 2
-        target = root / str(note_ref)
-        old = target.read_text(encoding="utf-8") if target.is_file() else ""
-        if args.replace:
-            updated = text_value.rstrip() + ("\n" if text_value.strip() else "")
-        else:
-            divider = "\n" if old and not old.endswith("\n\n") else ""
-            updated = old + divider + text_value.rstrip() + "\n"
-        code, errors, confirmation = _write_transaction(
-            root, {target: updated}, capability="path.note.write",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.path_id],
-        )
-        if code:
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "path_id": args.path_id,
-                      "stage_id": args.stage_id, "notes_path": note_ref,
-                      **confirmation}, ensure_ascii=False))
-    return 0
-
-
 def cmd_path_progress(args) -> int:
     root = _root(args)
     with _operator_lock(root):

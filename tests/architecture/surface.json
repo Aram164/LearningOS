@@ -9144,7 +9144,7 @@
   "note.search.schema.json": "db820abae976955a8ae984a157b652c4caabecd04a0326db746b7d8fcbd0f72a",
   "operator.bootstrap.schema.json": "5ecea058b264e577cd441941aee435ae712f5d74d52e90886fffcba8c6db3c0a",
   "path.attachment.add.schema.json": "fce27154ca9681a2f6377008d50fe7669ede46f821271b3e0a8889af748ec445",
-  "path.note.write.schema.json": "7cf480f31c3e8069d899687ceaf47a8ff61b60e31fff3e351818be18663f1b21",
+  "path.note.write.schema.json": "3b1062b81b194fcae8288331c13823584a468b603604577716d9efb995bde56e",
   "path.progress.update.schema.json": "7b25598d9500b49562d7343ef0f0728fce84d473866edd49a4adfde304d2d9c2",
   "plan.edit-context.schema.json": "2d27fedab69fa8b67686c3829bafec0e7b3a420d5474f06e642635d0ec2634ea",
   "plan.template.schema.json": "4d9c587646ec5b7f6b786a29d7a2d1e3802bead4d5165506d42bc5969bb8b908",

@@ -17,6 +17,7 @@ from learning_os.ops._legacy_plumbing import (
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.handlers._shared import (
+    require_path_or_error,
     require_stage,
     require_unit_map_or_error,
 )
@@ -352,6 +353,56 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
             writes={study_map.path: _dump_study_map(study_map, data),
                     target: source_bytes},
             artifact_ids=[req["unit_id"], study_map.id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+@register("path.note.write", kind="command")
+def path_note(ctx: OpContext, req: dict) -> Result:
+    """Append to (or replace) a learning-path stage note."""
+    root = ctx.root
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, learning_path = require_path_or_error(ctx, req["path_id"])
+    stage = require_stage(ctx, learning_path.data, req["stage_id"])
+    note_ref = stage.get("notes_path")
+    if not note_ref:
+        raise WriteRefused(
+            f"stage has no notes_path: {req['stage_id']}",
+            site="path.note.write.no-notes-path",
+            gateway_message=f"los: stage has no notes_path: {req['stage_id']}",
+            exit_code=2,
+        )
+    text_value = req.get("text") if req.get("text") is not None else sys.stdin.read()
+    if not text_value.strip():
+        raise WriteRefused(
+            "refusing to write an empty note — pass real text",
+            site="path.note.write.empty-note",
+            gateway_message="los: refusing to write an empty note — pass real text",
+            exit_code=2,
+        )
+    target = root / str(note_ref)
+    old = target.read_text(encoding="utf-8") if target.is_file() else ""
+    if req.get("replace"):
+        updated = text_value.rstrip() + ("\n" if text_value.strip() else "")
+    else:
+        divider = "\n" if old and not old.endswith("\n\n") else ""
+        updated = old + divider + text_value.rstrip() + "\n"
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="path.note.write.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "path_id": req["path_id"],
+         "stage_id": req["stage_id"], "notes_path": note_ref},
+        proposal=TransactionProposal(
+            capability="path.note.write",
+            writes={target: updated},
+            artifact_ids=[req["path_id"]],
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
