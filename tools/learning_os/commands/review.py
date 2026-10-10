@@ -1,4 +1,4 @@
-"""Review surfaces: shelving prepare/apply and the explicit session close."""
+"""Review surfaces: the explicit session close (shelving lives in ops/handlers/capture.py)."""
 
 from __future__ import annotations
 
