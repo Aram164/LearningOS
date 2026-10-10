@@ -32,35 +32,35 @@ cases:
     kind: refusal
     transport: cli
     argv: [unit-list, --module-id, module-nope]
-    expect: {site: null}
+    expect: {site: cli.unit-list.unknown-module}
   - id: unknown-component
     kind: refusal
     transport: cli
     argv: [unit-list, --component-id, comp-nope]
-    expect: {site: null}
+    expect: {site: cli.unit-list.unknown-component}
   - id: unknown-status
     kind: refusal
     transport: cli
     argv: [unit-list, --status, nope]
-    expect: {site: null}
+    expect: {site: cli.unit-list.unknown-status}
   - id: window-needs-compact
     kind: refusal
     transport: cli
     argv: [unit-list, --offset, 1]
-    expect: {site: null}
+    expect: {site: cli.unit-list.window-needs-compact}
   - id: compact-bad-limit
     kind: refusal
     transport: cli
     argv: [unit-list, --compact, --limit, 99]
-    expect: {site: null}
+    expect: {site: cli.unit-list.bad-window}
   - id: compact-offset-needs-snapshot
     kind: refusal
     transport: cli
     argv: [unit-list, --compact, --offset, 2]
-    expect: {site: null}
+    expect: {site: cli.unit-list.bad-window}
   - id: compact-stale
     kind: refusal
     transport: cli
     argv: [unit-list, --compact, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.unit-list.stale-snapshot}
 untriggered: []

@@ -491,18 +491,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/unit.py::_unit_list_compact::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/unit.py::cmd_unit_list::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/unit.py::cmd_unit_list::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::print
     count: 1
     since: baseline
@@ -1426,10 +1414,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.unit-list::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.validate::*
     count: 1
     since: baseline
@@ -1470,6 +1454,10 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: cli.unit-list::/properties/component_id::no-base
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
   - signature: cli.capability::*
     count: 1
@@ -1500,10 +1488,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.session-end::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.unit-list::*
     count: 1
     since: baseline
     approved_by: null

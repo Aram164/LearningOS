@@ -2204,3 +2204,152 @@ def runtime_session(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc
+
+
+_UNIT_SUMMARY_FIELDS = ("id", "title", "status", "module_id", "component_id",
+                        "order", "current_study_map", "needs_study_map")
+_COMPACT_LIMIT_DEFAULT = 20
+
+
+def _unit_summary(row):
+    """The eight discovery fields, with explicit nulls kept and absent dropped."""
+    return {key: row[key] for key in _UNIT_SUMMARY_FIELDS if key in row}
+
+
+#: The unit ``status`` enum from ``system/schema/unit.schema.json``.
+#: A test pins this copy against the schema, so the two cannot drift.
+#: An unknown filter value refuses with exit 2 instead of answering an
+#: empty result, so ``total: 0`` always means "valid filter, no matches".
+UNIT_STATUSES = frozenset({
+    "needs-map", "not-started", "ready", "active", "paused",
+    "ready-to-shelve", "complete",
+})
+
+
+def _component_ids(manifest) -> set[str]:
+    """Every known component: declared on a module or named by a unit."""
+    ids = set()
+    for module in manifest.get("modules", []) or []:
+        if not isinstance(module, dict):
+            continue
+        for component in module.get("components", []) or []:
+            if isinstance(component, dict) and component.get("id"):
+                ids.add(component["id"])
+            elif isinstance(component, str) and component:
+                ids.add(component)
+    for row in manifest.get("units", []) or []:
+        if isinstance(row, dict) and row.get("component_id"):
+            ids.add(row["component_id"])
+    return ids
+
+
+def _filtered_units(manifest, req, operation):
+    rows = manifest.get("units", [])
+    if req.get("module_id"):
+        modules = [row.get("id") for row in manifest.get("modules", []) or []
+                   if isinstance(row, dict) and row.get("id")]
+        if req["module_id"] not in modules:
+            message = not_found("module", req["module_id"], modules)
+            raise NotFound(
+                "module", req["module_id"], modules,
+                site=f"{operation}.unknown-module",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        rows = [row for row in rows if row.get("module_id") == req["module_id"]]
+    if req.get("component_id"):
+        known = _component_ids(manifest)
+        if req["component_id"] not in known:
+            message = not_found("component", req["component_id"], known)
+            raise NotFound(
+                "component", req["component_id"], known,
+                site=f"{operation}.unknown-component",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        rows = [row for row in rows if row.get("component_id") == req["component_id"]]
+    if req.get("status"):
+        if req["status"] not in UNIT_STATUSES:
+            message = with_suggestions(
+                f"unknown status: {req['status']}", req["status"], UNIT_STATUSES)
+            raise WriteRefused(
+                message,
+                site=f"{operation}.unknown-status",
+                gateway_message=f"los: {message}",
+                exit_code=2,
+            )
+        rows = [row for row in rows if row.get("status") == req["status"]]
+    return rows
+
+
+def _dumps_unit_list(payload) -> str:
+    """The exact unit-list encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+def _dumps_unit_list_compact(payload) -> str:
+    """The exact unit-list compact encoder: compact, unsorted, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
+    root = ctx.root
+    try:
+        try:
+            offset, limit = _window_values(
+                req.get("offset"), req.get("limit"),
+                req.get("expected_snapshot"), 50)
+        except WriteRefused as exc:
+            exc.site = f"{ctx.operation}.bad-window"
+            exc.gateway_message = f"los: {exc}"
+            exc.exit_code = 2
+            raise
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        manifest = _fresh_manifest(root, snapshot_id=snapshot)
+        rows = sorted(_filtered_units(manifest, req, ctx.operation),
+                      key=lambda row: row["id"])
+        total = len(rows)
+        items = [_unit_summary(row) for row in rows[offset:offset + limit]]
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot,
+             "contract": "unit-list-summary",
+             "filters": {key: value for key, value in (
+                 ("module_id", req.get("module_id")),
+                 ("component_id", req.get("component_id")),
+                 ("status", req.get("status"))) if value is not None},
+             "items": items, "total": total,
+             "next_offset": offset + limit if offset + limit < total else None,
+             "detail": "inspect UNIT_ID"},
+            json_dumps=_dumps_unit_list_compact)
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site=f"{ctx.operation}.stale-snapshot",
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+@register("cli.unit-list", kind="query")
+def unit_list(ctx: OpContext, req: dict) -> Result:
+    """List units, optionally filtered; compact serves the summary page."""
+    root = ctx.root
+    if req.get("compact"):
+        return _unit_list_compact(ctx, req)
+    if (req.get("offset") or req.get("limit") != _COMPACT_LIMIT_DEFAULT
+            or req.get("expected_snapshot") is not None):
+        raise WriteRefused(
+            "--offset/--limit/--expected-snapshot need --compact",
+            site=f"{ctx.operation}.window-needs-compact",
+            gateway_message="los: --offset/--limit/--expected-snapshot need --compact",
+            exit_code=2,
+        )
+    manifest = _fresh_manifest(root)
+    return Result(_filtered_units(manifest, req, ctx.operation),
+                  json_dumps=_dumps_unit_list)

@@ -929,7 +929,7 @@ def test_compact_unit_list_empty_result_shape(mini_repo):
 
 
 def test_compact_unit_list_keeps_nulls_and_drops_absent(mini_repo):
-    from learning_os.commands.unit import _unit_summary
+    from learning_os.ops.handlers.reads import _unit_summary
 
     assert _unit_summary({"id": "u", "component_id": None}) == {
         "id": "u", "component_id": None}

@@ -9107,7 +9107,7 @@
   "cli.semantic.schema.json": "8d5fe56084590baecfb8fac3636d7206caed23b6aab460e9fc9b611afa6a84f0",
   "cli.session-end.schema.json": "3c37c5a83e215ecde946bdef09651d34e792ab4616fb1f0f710502f9b696a00f",
   "cli.status.schema.json": "e81fee67b221ba29b62a5a0d466c6be5f949862ef526a52547aaae7b7325df24",
-  "cli.unit-list.schema.json": "c952f43394484d2c25f492186ab48c960464e3ba0484f8f4c68fc4808f1e6700",
+  "cli.unit-list.schema.json": "ce9f22bfd90ba392b81ee05330f582998d36e17e52da9d4e4d87f0263b750032",
   "cli.validate.schema.json": "40a61d1158907fa8ca5a07365c286fae46614bd6fbabb00621ae35f885b168d0",
   "collection.entry.revise.schema.json": "4f1feafdb751828061e0953fd5245a5b9b4c470e43ace5f3a0c931892ad2c124",
   "concept.relations.change.schema.json": "996e4bbf085d42dc9714accf9723cf2143747c66da94c350c81239122d4d130b",

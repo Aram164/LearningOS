@@ -186,7 +186,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.unit.cmd_unit_list",
+    "handler": "learning_os.adapters.cli.invoke:cli.unit-list",
     "parser_factory": false
   }
 }
