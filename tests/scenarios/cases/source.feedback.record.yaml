@@ -14,6 +14,7 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, source_id: source-demo-book, feedback: useful-for-derivation, resource_id: resource-demo-book-ch01, note: "Clear derivation."}
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    a5_base: true
     expect: {site: null}
   - id: unknown-source
     kind: refusal

@@ -4,6 +4,7 @@ observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: nu
 cases:
   - id: create-then-resolve
     kind: sequence
+    a5_base: true
     steps:
       - transport: gateway
         operation: detour.create

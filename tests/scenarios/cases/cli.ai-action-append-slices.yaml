@@ -26,6 +26,7 @@ cases:
         argv: [ai-action-append-slices, --request-id, ai-request-append-garden, --route-id, route-x, --start, 1, --end, 2, --kind, example, --reason, "cover the worked example on pp. 1-2"]
   - id: append-success
     kind: sequence
+    a5_base: true
     steps:
       - transport: cli
         argv: [ai-action-prepare, --action-id, unit.compare-materials, --target-kind, unit, --target-id, unit-demo-l01, --request-id, ai-request-append-ok]
