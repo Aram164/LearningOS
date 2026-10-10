@@ -28,15 +28,15 @@ from repo_builders import (
 )
 from test_learning_paths import add_path
 
-from learning_os.commands.note import NOTE_FIELDS
 from learning_os.contracts.batch_notes import ANALYSIS_FIELDS
 from learning_os.domain.failures import WriteRefused
+from learning_os.ops.handlers.notes import NOTE_FIELDS
 
 # ------------------------------------------------------------------ #100
 
 
 def test_note_precheck_names_the_unknown_fields():
-    from learning_os.commands.note import _precheck_note
+    from learning_os.ops.handlers.notes import _precheck_note
 
     with pytest.raises(WriteRefused) as refused:
         _precheck_note(
@@ -53,7 +53,7 @@ def test_note_precheck_names_the_unknown_fields():
 
 
 def test_note_precheck_gives_a_missing_id_its_own_message():
-    from learning_os.commands.note import _precheck_note
+    from learning_os.ops.handlers.notes import _precheck_note
 
     with pytest.raises(WriteRefused, match="^note needs a string id$"):
         _precheck_note({"title": "T"}, b"body")

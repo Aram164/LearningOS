@@ -20,109 +20,109 @@ cases:
     transport: gateway
     request: {note: {id: note-scenario-create-3, title: "Bad concept", path: "knowledge/notes/mathematics/note-scenario-create-3.md", concepts: [concept-nope]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.unknown-concept}
   - id: unknown-source
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-4, title: "Bad source", path: "knowledge/notes/mathematics/note-scenario-create-4.md", sources: [source-nope]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.unknown-source}
   - id: unknown-context
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-5, title: "Bad context", path: "knowledge/notes/mathematics/note-scenario-create-5.md", contexts: [workspace-nope]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.unknown-context}
   - id: unknown-supersedes
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-6, title: "Bad supersedes", path: "knowledge/notes/mathematics/note-scenario-create-6.md", supersedes: [note-nope]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.unknown-supersedes}
   - id: self-supersedes
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-7, title: "Self supersedes", path: "knowledge/notes/mathematics/note-scenario-create-7.md", supersedes: [note-scenario-create-7]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.self-supersedes}
   - id: id-collision
     kind: refusal
     transport: gateway
     request: {note: {id: note-demo, title: "Collision", path: "knowledge/notes/mathematics/note-demo.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.id-collision}
   - id: reserved-role
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-8, title: "Reserved role", path: "knowledge/notes/mathematics/note-scenario-create-8.md", role: reference}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.reserved-role}
   - id: blank-title
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-9, title: " ", path: "knowledge/notes/mathematics/note-scenario-create-9.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.blank-title}
   - id: empty-path
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-10, title: "Empty path", path: ""}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-path}
   - id: bad-path-escape
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-11, title: "Escape path", path: "../escape.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.path-escape}
   - id: bad-path-stem
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-12, title: "Stem mismatch", path: "knowledge/notes/mathematics/wrong.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-filename}
   - id: bad-path-outside
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-13, title: "Outside notes", path: "knowledge/garden/note-scenario-create-13.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.path-outside-notes}
   - id: bad-id-pattern
     kind: refusal
     transport: gateway
     request: {note: {id: nope, title: "Bad id", path: "knowledge/notes/nope.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-note-schema}
   - id: bad-concepts-shape
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-14, title: "Bad concepts", path: "knowledge/notes/mathematics/note-scenario-create-14.md", concepts: [concept-expected-value, 5]}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-id-list}
   - id: empty-body
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-15, title: "Empty body", path: "knowledge/notes/mathematics/note-scenario-create-15.md"}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.empty-body}
   - id: bad-body-encoding
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-16, title: "Binary body", path: "knowledge/notes/mathematics/note-scenario-create-16.md"}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.body-not-utf8}
   - id: bad-body-file
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-17, title: "Missing body", path: "knowledge/notes/mathematics/note-scenario-create-17.md"}, body_file: "work/inbox/nope.bin", body_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-body-file}
   - id: changed-body
     kind: refusal
     transport: gateway
     request: {note: {id: note-scenario-create-18, title: "Changed body", path: "knowledge/notes/mathematics/note-scenario-create-18.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.create.bad-body-file}
   - id: sha-required
     kind: refusal
     transport: gateway
@@ -133,17 +133,17 @@ cases:
     kind: refusal
     transport: cli
     request: {note: {id: note-scenario-create-20, title: "Bogus field", path: "knowledge/notes/mathematics/note-scenario-create-20.md", bogus: 1}, body_file: "work/inbox/note-drop.md"}
-    expect: {site: null}
+    expect: {site: note.create.unknown-fields}
   - id: id-not-string
     kind: refusal
     transport: cli
     request: {note: {id: 5, title: "Numeric id", path: "knowledge/notes/mathematics/note-5.md"}, body_file: "work/inbox/note-drop.md"}
-    expect: {site: null}
+    expect: {site: note.create.id-not-string}
   - id: role-not-string
     kind: refusal
     transport: cli
     request: {note: {id: note-scenario-create-21, title: "Numeric role", path: "knowledge/notes/mathematics/note-scenario-create-21.md", role: 5}, body_file: "work/inbox/note-drop.md"}
-    expect: {site: null}
+    expect: {site: note.create.role-not-string}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

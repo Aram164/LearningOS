@@ -467,22 +467,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/note.py::cmd_note_create::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/note.py::cmd_note_create::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/note.py::cmd_note_create::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/note.py::cmd_note_create::return
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/observation.py::_append_observation::load_repo
     count: 1
     since: baseline
@@ -1990,10 +1974,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: note.create::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: note.search::*
     count: 1
     since: baseline
@@ -2240,10 +2220,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.content::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: note.create::*
     count: 1
     since: baseline
     approved_by: null
