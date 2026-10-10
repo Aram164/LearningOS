@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import datetime as _dt
 import json
 import os
@@ -15,7 +14,6 @@ from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
 from learning_os.ops._legacy_plumbing import (
     _current_session_id,
-    _dump_study_map,
     _load_session_paths,
     _operator_lock,
     _publish,
@@ -28,76 +26,12 @@ from learning_os.ops._legacy_plumbing import (
 from .support import (
     CLIENT_ENV,
     SESSION_LEDGER_STALE_HOURS,
-    _expected_ok,
-    _expected_revisions_from_args,
     _load_other_session_ledgers,
     _root,
     _row_is_stale,
-    _unit_map_or_error,
-    _write_transaction,
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
-
-def _approved_destination(root: Path, item: dict) -> Path | None:
-    rel = str(item.get("destination", ""))
-    target = (root / rel).resolve()
-    allowed = (root / "knowledge" / "notes").resolve(), (root / "knowledge" / "garden").resolve()
-    if not any(parent == target or parent in target.parents for parent in allowed):
-        return None
-    return target
-
-
-def cmd_shelving_apply(args) -> int:
-    if not args.approve:
-        print("los: shelving apply requires --approve and explicit selected proposal IDs",
-              file=sys.stderr)
-        return 2
-    root = _root(args)
-    selected = set(args.selected)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        _, _, study_map = _unit_map_or_error(root, args.unit_id)
-        if study_map is None:
-            return 2
-        data = copy.deepcopy(study_map.data)
-        shelving = data.get("shelving") or {}
-        items = [item for item in shelving.get("items", []) or []
-                 if item.get("id") in selected]
-        if not items or {item.get("id") for item in items} != selected:
-            print("los: every selected ID must exist in the current proposal", file=sys.stderr)
-            return 2
-        writes: dict[Path, str] = {}
-        for item in items:
-            target = _approved_destination(root, item)
-            if target is None or target.exists():
-                print(f"los: unsafe or existing shelving destination: {item.get('destination')}",
-                      file=sys.stderr)
-                return 2
-            content = item.get("content")
-            if not isinstance(content, str) or not content.strip():
-                print(f"los: proposal item {item.get('id')} has no reviewable content", file=sys.stderr)
-                return 2
-            writes[target] = content.rstrip() + "\n"
-        shelving["state"] = "applied"
-        writes[study_map.path] = _dump_study_map(study_map, data)
-        code, errors, confirmation = _write_transaction(
-            root, writes, capability="review.apply",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.unit_id, study_map.id, *sorted(selected)],
-        )
-        if code:
-            print("los: approved shelving changes failed validation and were rolled back",
-                  file=sys.stderr)
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "applied": sorted(selected),
-                      **confirmation}, ensure_ascii=False))
-    return 0
-
 
 def _other_session_summary(rows: dict[str, dict]) -> dict:
     """One foreign session's rows for the `other_sessions` report.

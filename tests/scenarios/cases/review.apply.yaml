@@ -19,19 +19,19 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, selected: [proposal-nope]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.apply.unknown-selected}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, selected: [proposal-keep]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.apply.unknown-unit}
   - id: unit-without-map
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l02, selected: [proposal-keep]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: review.apply.no-study-map}
   - id: unsafe-destination
     kind: sequence
     steps:
@@ -66,7 +66,7 @@ cases:
     kind: refusal
     transport: cli
     request: {unit_id: unit-demo-l01, selected: [proposal-keep]}
-    expect: {site: null}
+    expect: {site: review.apply.needs-approve}
   - id: direct-cli-refused
     kind: sequence
     steps:

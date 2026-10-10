@@ -520,3 +520,89 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_review_prepare,
     )
+
+
+def _dumps_review_apply(payload: dict) -> str:
+    """The exact review-apply JSON encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _on_commit_refused_apply(errors: list) -> list[str]:
+    """The exact apply refusal lines: the rollback note plus the first twelve engine issues."""
+    return ["los: approved shelving changes failed validation and were rolled back",
+            *errors[:12]]
+
+
+def _approved_destination(root: Path, item: dict) -> Path | None:
+    rel = str(item.get("destination", ""))
+    target = (root / rel).resolve()
+    allowed = (root / "knowledge" / "notes").resolve(), (root / "knowledge" / "garden").resolve()
+    if not any(parent == target or parent in target.parents for parent in allowed):
+        return None
+    return target
+
+
+@register("review.apply", kind="command")
+def shelving_apply(ctx: OpContext, req: dict) -> Result:
+    """Apply only explicitly approved proposal IDs."""
+    if not req.get("approve"):
+        raise WriteRefused(
+            "shelving apply requires --approve and explicit selected proposal IDs",
+            site=f"{ctx.operation}.needs-approve",
+            gateway_message="los: shelving apply requires --approve and explicit selected proposal IDs",
+            exit_code=2,
+        )
+    root = ctx.root
+    selected = set(req["selected"])
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    data = copy.deepcopy(study_map.data)
+    shelving = data.get("shelving") or {}
+    items = [item for item in shelving.get("items", []) or []
+             if item.get("id") in selected]
+    if not items or {item.get("id") for item in items} != selected:
+        raise WriteRefused(
+            "every selected ID must exist in the current proposal",
+            site=f"{ctx.operation}.unknown-selected",
+            gateway_message="los: every selected ID must exist in the current proposal",
+            exit_code=2,
+        )
+    writes: dict[Path, str] = {}
+    for item in items:
+        target = _approved_destination(root, item)
+        if target is None or target.exists():
+            raise WriteRefused(
+                f"unsafe or existing shelving destination: {item.get('destination')}",
+                site=f"{ctx.operation}.bad-destination",
+                gateway_message=f"los: unsafe or existing shelving destination: {item.get('destination')}",
+                exit_code=2,
+            )
+        content = item.get("content")
+        if not isinstance(content, str) or not content.strip():
+            raise WriteRefused(
+                f"proposal item {item.get('id')} has no reviewable content",
+                site=f"{ctx.operation}.empty-content",
+                gateway_message=f"los: proposal item {item.get('id')} has no reviewable content",
+                exit_code=2,
+            )
+        writes[target] = content.rstrip() + "\n"
+    shelving["state"] = "applied"
+    writes[study_map.path] = _dump_study_map(study_map, data)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "applied": sorted(selected)},
+        proposal=TransactionProposal(
+            capability="review.apply",
+            writes=writes,
+            artifact_ids=[req["unit_id"], study_map.id, *sorted(selected)],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused_apply,
+        json_dumps=_dumps_review_apply,
+    )
