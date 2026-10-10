@@ -98,6 +98,25 @@ jobs:
         working-directory: obsidian-ui
         run: npm ci --ignore-scripts
 
+      # The procedure transcripts (tests/test_procedures.py, PLAN D11) run under
+      # Scrut v0.5.0. The release archive is pinned by GitHub's published
+      # SHA-256 and checked before use; the binary stays outside the checkout,
+      # clear of the tree-contract test, and reaches the gate as LOS_SCRUT_BIN.
+      - name: Install Scrut v0.5.0 (pinned digest)
+        run: |
+          set -eu
+          dir="$RUNNER_TEMP/scrut"
+          mkdir -p "$dir"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
+            https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+          echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
+          tar -xzf "$dir/scrut.tar.gz" -C "$dir"
+          bin="$(find "$dir" -type f -name scrut | head -n 1)"
+          test -n "$bin"
+          chmod 0755 "$bin"
+          test "$("$bin" --version)" = "scrut 0.5.0"
+          echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
+
       # The exact local paired gate. Full `make stress` is not run here: the
       # checkout provisions neither repository's external materials tree, so
       # it stays the mandatory *local* gate — the receipt below records this

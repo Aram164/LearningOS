@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress clean-derived
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean scrut hooks garden status plan-check projection-check system-check stress clean-derived
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -194,6 +194,7 @@ setup: check-python
 	$(VENV)/bin/python -m pip install --upgrade pip
 	$(VENV)/bin/python -m pip install "-e$(SETUP_SPEC)"
 	$(MAKE) hooks
+	@if [ "$(SETUP_SPEC)" != "." ]; then $(MAKE) scrut; fi
 	@echo "setup complete: .venv created, deps installed, hooks active."
 
 # Fresh-clone fast path: product commands work in seconds; run plain `make
@@ -202,6 +203,34 @@ setup: check-python
 setup-lean:
 	$(MAKE) setup SETUP_SPEC=.
 	@echo "setup-lean complete: runtime-only .venv (no pytest/ruff)."
+
+# The procedure transcripts (tests/test_procedures.py, PLAN D11) run under
+# Scrut v0.5.0 at $(VENV)/bin/scrut, the path that test defaults to. Each
+# platform's release archive is pinned by GitHub's published SHA-256 and
+# checked before anything is installed; CI pins the same Linux archive.
+# `setup-lean` skips it, like pytest and ruff.
+SCRUT_VERSION := v0.5.0
+SCRUT_URL := https://github.com/facebookincubator/scrut/releases/download/$(SCRUT_VERSION)
+scrut:
+	@if [ -x "$(VENV)/bin/scrut" ] && [ "$$($(VENV)/bin/scrut --version 2>/dev/null)" = "scrut 0.5.0" ]; then \
+		echo "setup: reusing $(VENV)/bin/scrut"; \
+	else \
+		case "$$(uname -s)-$$(uname -m)" in \
+		  Darwin-arm64) asset=scrut-$(SCRUT_VERSION)-macos-aarch64.tar.gz; sha=033c6a5ebf189f85169a8f4095ef26a5a9d023ceabb20454c1a48f00b2f2a509;; \
+		  Darwin-x86_64) asset=scrut-$(SCRUT_VERSION)-macos-x86_64.tar.gz; sha=c966c34f2cd9738d97e2de57ec89bb414ec1c3aba0a99794846c6a540fd83198;; \
+		  Linux-x86_64) asset=scrut-$(SCRUT_VERSION)-linux-x86_64.tar.gz; sha=5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15;; \
+		  Linux-aarch64) asset=scrut-$(SCRUT_VERSION)-linux-aarch64.tar.gz; sha=704cd54b42778dc85124739fdfaef75ac7cb1cf65c328a16f6e224c1b66021ba;; \
+		  *) echo "setup: no pinned scrut archive for $$(uname -s)-$$(uname -m)" >&2; exit 1;; \
+		esac; \
+		tmp=$$(mktemp -d) && trap 'rm -rf "$$tmp"' EXIT && \
+		curl --proto '=https' --tlsv1.2 -fsSL -o "$$tmp/$$asset" "$(SCRUT_URL)/$$asset" && \
+		$(VENV)/bin/python -c 'import hashlib, sys; d = hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest(); sys.exit(0 if d == sys.argv[2] else f"setup: scrut archive digest {d} is not the pinned {sys.argv[2]}")' "$$tmp/$$asset" "$$sha" && \
+		tar -xzf "$$tmp/$$asset" -C "$$tmp" && \
+		bin=$$(find "$$tmp" -type f -name scrut | head -n 1) && test -n "$$bin" && \
+		install -m 0755 "$$bin" $(VENV)/bin/scrut && \
+		test "$$($(VENV)/bin/scrut --version)" = "scrut 0.5.0" && \
+		echo "setup: installed $(VENV)/bin/scrut ($(SCRUT_VERSION))"; \
+	fi
 
 hooks:
 	install -m 0755 tools/hooks/pre-commit .git/hooks/pre-commit

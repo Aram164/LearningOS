@@ -158,3 +158,37 @@ def test_release_pair_workflow_is_manual_only_and_read_only():
         "the exact-pair workflow must never trigger on push/pull_request/schedule"
     )
     assert doc.get("permissions") == {"contents": "read"}
+
+
+#: The Linux Scrut archive CI installs, and its GitHub-published SHA-256.
+SCRUT_ARCHIVE = "scrut-v0.5.0-linux-x86_64.tar.gz"
+SCRUT_SHA256 = "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15"
+
+
+def test_ci_installs_the_pinned_scrut_before_the_gate():
+    """The transcript gate (PLAN D11) cannot silently lose its binary in CI.
+
+    Without Scrut, ``tests/test_procedures.py`` fails inside the paired gate;
+    each workflow therefore installs the pinned archive, checks its digest,
+    and hands the binary to the gate through ``$GITHUB_ENV``.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        for job in _load(workflow)["jobs"].values():
+            steps = job.get("steps", [])
+            gates = [index for index, step in enumerate(steps)
+                     if re.search(r"\bmake system-check\b", step.get("run", ""))]
+            if not gates:
+                continue
+            installs = [index for index, step in enumerate(steps)
+                        if SCRUT_ARCHIVE in step.get("run", "")]
+            assert len(installs) == 1 and installs[0] < gates[0], workflow.name
+            script = steps[installs[0]]["run"]
+            assert f"{SCRUT_SHA256}  " in script, workflow.name
+            assert "sha256sum -c -" in script, workflow.name
+            assert 'LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"' in script, workflow.name
+
+
+def test_setup_installs_the_same_pinned_scrut():
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    assert '$(MAKE) scrut' in makefile
+    assert SCRUT_SHA256 in makefile
