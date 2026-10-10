@@ -7,11 +7,8 @@ import json
 import sys
 from pathlib import Path
 
-from learning_os import __version__
-from learning_os.domain.failures import WriteRefused, unreadable_refusal
+from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import expansion, not_found, suggest
-from learning_os.genout import adoption_counts, exam_spine
-from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
     _capabilities,
     _discovery_row,
@@ -23,7 +20,6 @@ from learning_os.ops._legacy_plumbing import (
     _snapshot,
 )
 from learning_os.pathing import PathBoundaryError, read_text_inside
-from learning_os.validation_cache import observe_pins, status_issues
 
 from .reads import (
     _print_stable,
@@ -39,129 +35,6 @@ from .support import (
     _delegate,
     _root,
 )
-
-
-# ----------------------------------------------------------------- status
-def cmd_status(args) -> int:
-    root = _root(args)
-    no_validate = getattr(args, "no_validate", False)
-    # Cache pins are observed before anything is read, so a write landing
-    # mid-read can only cost a later miss, never a stale hit.
-    pins = None if no_validate else observe_pins(root)
-    repo = load_repo(root)
-    if repo.parse_failures:
-        # Fail closed like every other manifest-backed read: the counts
-        # below would silently exclude whatever could not be read.
-        return _refusal(WriteRefused(
-            unreadable_refusal(root, repo.parse_failures, "status")))
-    # --no-validate skips validation but never the refusal above: an
-    # unreadable tree refuses before these counts are even considered.
-    if no_validate:
-        errors = warnings = 0
-    else:
-        issues = status_issues(repo, pins)
-        errors = sum(1 for i in issues if i.severity == "E")
-        warnings = sum(1 for i in issues if i.severity == "W")
-
-    inbox = root / "work" / "inbox"
-    n_inbox = len([f for f in inbox.iterdir()
-                   if not f.name.startswith(".")]) if inbox.is_dir() else 0
-    # The recursive file count agrees with `inbox-list` by construction:
-    # it is the same discovery rows `inbox-list` prints. `inbox_items`
-    # keeps its top-level meaning, so a folder drop still counts 1 there.
-    n_inbox_files = len(_inbox_search_rows(root))
-    active = repo.active_workspaces()
-    ad = adoption_counts(repo)
-    # Programs and modules count the way the manifest does: the quarantined
-    # Master's Planning program and compatibility-only (project-migrated)
-    # modules are boundary records, not study records. The projection in
-    # genout/projection/records_curriculum.py (project_programs,
-    # project_modules) is the authority for the filters; the
-    # status/bootstrap parity test fails if the two drift apart.
-    programs = [p for p in repo.programs.values()
-                if p.data.get("status") not in {"quarantined", "boundary-only"}
-                and p.data.get("kind") not in {"quarantine", "boundary"}]
-    modules = {mid: m for mid, m in repo.modules.items()
-               if not m.get("compatibility_only")}
-    spine = [
-        {"date": date, "module_id": mid,
-         "title": module.get("title", mid), "termin": att.get("termin")}
-        for date, mid, module, att in exam_spine(repo)
-    ]
-
-    payload = {
-        "learning_os": __version__,
-        "root": str(root),
-        "counts": {
-            "notes": len(repo.notes),
-            "concepts": len(repo.concepts),
-            "concept_relations": len(repo.relations),
-            "sources": len(repo.sources),
-            "programs": len(programs),
-            "programs_quarantined": len(repo.programs) - len(programs),
-            "modules": len(modules),
-            "modules_compatibility_only": len(repo.modules) - len(modules),
-            "projects": len(repo.projects),
-            "modules_enrolled": sum(
-                1 for m in modules.values() if m.get("status") == "enrolled"),
-            "active_workspaces": len(active),
-            "standing_workspaces": sum(1 for w in active if w.standing),
-            "archived_workspaces": len(repo.archived_workspaces()),
-            "inbox_items": n_inbox,
-            "inbox_files": n_inbox_files,
-            "garden_notes": len(repo.garden_notes),
-            "units": len(repo.units),
-            "study_maps": len(repo.study_maps),
-        },
-        "adoption": {
-            "notes_reviewed": ad["notes_reviewed"],
-            "notes_with_evidence": ad["notes_with_evidence"],
-        },
-        "exam_spine": spine,
-        # `ok` means what validation success means: zero errors. It used to
-        # require zero warnings too, which made this field permanently false
-        # against a repository carrying 535 deliberately deferred warnings —
-        # an always-red light nobody can act on is not a signal. Whether a
-        # warning is NEW is a separate question with its own gate,
-        # `tools/warning_baseline.py --check`; status does not run it, because
-        # a status read must not depend on a recorded baseline being current.
-        "validation": {"skipped": True} if no_validate else {
-            "errors": errors, "warnings": warnings, "ok": errors == 0},
-    }
-
-    if args.json:
-        print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
-        return 1 if errors else 0
-
-    c = payload["counts"]
-    print(f"Learning OS v3 · learning_os v{__version__} · {root}")
-    print(f"  notes {c['notes']} · concepts {c['concepts']} · "
-          f"relations {c['concept_relations']} · sources {c['sources']}")
-    print(f"  programs {c['programs']} · modules {c['modules']} "
-          f"({c['modules_enrolled']} enrolled) · projects {c['projects']} · units {c['units']} · "
-          f"study maps {c['study_maps']} · "
-          f"workspaces {c['active_workspaces']} active "
-          f"({c['standing_workspaces']} standing), "
-          f"{c['archived_workspaces']} archived")
-    print(f"  inbox {c['inbox_items']} top-level · {c['inbox_files']} files · "
-          f"garden {c['garden_notes']} · "
-          f"reviewed {ad['notes_reviewed']}/{c['notes']} · "
-          f"evidence {ad['notes_with_evidence']}/{c['notes']}")
-    if spine:
-        for e in spine:
-            print(f"  exam: {e['date']} — {e['title']} (Termin {e['termin']})")
-    else:
-        print("  exam: no registered attempt in any module's module.yaml")
-    if no_validate:
-        print("  validation: skipped (--no-validate)")
-    else:
-        state = f"{errors} error(s)" if errors else "OK"
-        if warnings:
-            state += (f" · {warnings} warning(s), visible and nonblocking "
-                      "(`make warnings` for the delta)")
-        print(f"  validation: {state}")
-    print("  human home page: generated/reading-room.md (make views)")
-    return 1 if errors else 0
 
 
 # ---------------------------------------------------- machine discovery/read

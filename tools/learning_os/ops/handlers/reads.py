@@ -6,8 +6,15 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 
-from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
+from learning_os import __version__
+from learning_os.domain.failures import (
+    NotFound,
+    StaleSnapshot,
+    WriteRefused,
+    unreadable_refusal,
+)
 from learning_os.domain.suggest import expansion, not_found
+from learning_os.genout import adoption_counts, exam_spine
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.material_refs import unit_routes
 from learning_os.materials_resolution import (
@@ -19,6 +26,7 @@ from learning_os.ops._legacy_plumbing import (
     SESSION_ID_ENV,
     _capabilities,
     _fresh_manifest,
+    _inbox_search_rows,
     _json_layout,
     _resolve_session_identity,
     _snapshot,
@@ -37,6 +45,7 @@ from learning_os.semantics.dossiers import (
     store_dossier,
 )
 from learning_os.semantics.predicates import CONTRACT_VERSION
+from learning_os.validation_cache import observe_pins, status_issues
 
 #: Operator-contract version hashed into every dossier key. There is no
 #: version constant for OPERATOR.md; this string tracks its title
@@ -570,3 +579,145 @@ def program_list(ctx: OpContext, req: dict) -> Result:
     """List programs as discovery rows."""
     manifest = _fresh_manifest(ctx.root)
     return Result(manifest.get("programs", []), json_dumps=_dumps_program_list)
+
+
+def _dumps_status(payload: dict) -> str:
+    """The exact status encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+def _human_status(payload: dict) -> str:
+    """The exact status screen: counts, exam spine, validation, home page."""
+    c = payload["counts"]
+    adoption = payload["adoption"]
+    spine = payload["exam_spine"]
+    validation = payload["validation"]
+    lines = [
+        f"Learning OS v3 · learning_os v{payload['learning_os']} · {payload['root']}",
+        f"  notes {c['notes']} · concepts {c['concepts']} · "
+        f"relations {c['concept_relations']} · sources {c['sources']}",
+        f"  programs {c['programs']} · modules {c['modules']} "
+        f"({c['modules_enrolled']} enrolled) · projects {c['projects']} · units {c['units']} · "
+        f"study maps {c['study_maps']} · "
+        f"workspaces {c['active_workspaces']} active "
+        f"({c['standing_workspaces']} standing), "
+        f"{c['archived_workspaces']} archived",
+        f"  inbox {c['inbox_items']} top-level · {c['inbox_files']} files · "
+        f"garden {c['garden_notes']} · "
+        f"reviewed {adoption['notes_reviewed']}/{c['notes']} · "
+        f"evidence {adoption['notes_with_evidence']}/{c['notes']}",
+    ]
+    if spine:
+        for e in spine:
+            lines.append(f"  exam: {e['date']} — {e['title']} (Termin {e['termin']})")
+    else:
+        lines.append("  exam: no registered attempt in any module's module.yaml")
+    if validation == {"skipped": True}:
+        lines.append("  validation: skipped (--no-validate)")
+    else:
+        errors = validation["errors"]
+        warnings = validation["warnings"]
+        state = f"{errors} error(s)" if errors else "OK"
+        if warnings:
+            state += (f" · {warnings} warning(s), visible and nonblocking "
+                      "(`make warnings` for the delta)")
+        lines.append(f"  validation: {state}")
+    lines.append("  human home page: generated/reading-room.md (make views)")
+    return "\n".join(lines)
+
+
+@register("cli.status", kind="tool", human=_human_status)
+def status(ctx: OpContext, req: dict) -> Result:
+    """Serve the status screen: counts, exam spine, and validation."""
+    root = ctx.root
+    no_validate = req.get("no_validate")
+    # Cache pins are observed before anything is read, so a write landing
+    # mid-read can only cost a later miss, never a stale hit.
+    pins = None if no_validate else observe_pins(root)
+    repo = ctx.repo()
+    if repo.parse_failures:
+        # Fail closed like every other manifest-backed read: the counts
+        # below would silently exclude whatever could not be read.
+        message = unreadable_refusal(root, repo.parse_failures, "status")
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.unreadable-records",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    # --no-validate skips validation but never the refusal above: an
+    # unreadable tree refuses before these counts are even considered.
+    if no_validate:
+        errors = warnings = 0
+    else:
+        issues = status_issues(repo, pins)
+        errors = sum(1 for i in issues if i.severity == "E")
+        warnings = sum(1 for i in issues if i.severity == "W")
+
+    inbox = root / "work" / "inbox"
+    n_inbox = len([f for f in inbox.iterdir()
+                   if not f.name.startswith(".")]) if inbox.is_dir() else 0
+    # The recursive file count agrees with `inbox-list` by construction:
+    # it is the same discovery rows `inbox-list` prints. `inbox_items`
+    # keeps its top-level meaning, so a folder drop still counts 1 there.
+    n_inbox_files = len(_inbox_search_rows(root))
+    active = repo.active_workspaces()
+    ad = adoption_counts(repo)
+    # Programs and modules count the way the manifest does: the quarantined
+    # Master's Planning program and compatibility-only (project-migrated)
+    # modules are boundary records, not study records. The projection in
+    # genout/projection/records_curriculum.py (project_programs,
+    # project_modules) is the authority for the filters; the
+    # status/bootstrap parity test fails if the two drift apart.
+    programs = [p for p in repo.programs.values()
+                if p.data.get("status") not in {"quarantined", "boundary-only"}
+                and p.data.get("kind") not in {"quarantine", "boundary"}]
+    modules = {mid: m for mid, m in repo.modules.items()
+               if not m.get("compatibility_only")}
+    spine = [
+        {"date": date, "module_id": mid,
+         "title": module.get("title", mid), "termin": att.get("termin")}
+        for date, mid, module, att in exam_spine(repo)
+    ]
+
+    payload = {
+        "learning_os": __version__,
+        "root": str(root),
+        "counts": {
+            "notes": len(repo.notes),
+            "concepts": len(repo.concepts),
+            "concept_relations": len(repo.relations),
+            "sources": len(repo.sources),
+            "programs": len(programs),
+            "programs_quarantined": len(repo.programs) - len(programs),
+            "modules": len(modules),
+            "modules_compatibility_only": len(repo.modules) - len(modules),
+            "projects": len(repo.projects),
+            "modules_enrolled": sum(
+                1 for m in modules.values() if m.get("status") == "enrolled"),
+            "active_workspaces": len(active),
+            "standing_workspaces": sum(1 for w in active if w.standing),
+            "archived_workspaces": len(repo.archived_workspaces()),
+            "inbox_items": n_inbox,
+            "inbox_files": n_inbox_files,
+            "garden_notes": len(repo.garden_notes),
+            "units": len(repo.units),
+            "study_maps": len(repo.study_maps),
+        },
+        "adoption": {
+            "notes_reviewed": ad["notes_reviewed"],
+            "notes_with_evidence": ad["notes_with_evidence"],
+        },
+        "exam_spine": spine,
+        # `ok` means what validation success means: zero errors. It used to
+        # require zero warnings too, which made this field permanently false
+        # against a repository carrying 535 deliberately deferred warnings —
+        # an always-red light nobody can act on is not a signal. Whether a
+        # warning is NEW is a separate question with its own gate,
+        # `tools/warning_baseline.py --check`; status does not run it, because
+        # a status read must not depend on a recorded baseline being current.
+        "validation": {"skipped": True} if no_validate else {
+            "errors": errors, "warnings": warnings, "ok": errors == 0},
+    }
+    return Result(payload, json_dumps=_dumps_status,
+                  diagnostic_failed=bool(errors))

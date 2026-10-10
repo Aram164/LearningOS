@@ -1456,3 +1456,32 @@ def _capabilities(root: Path) -> dict:
         },
         "root": str(root),
     }
+
+
+# ---------------------------------------------------------------------------
+# Inbox discovery rows, moved verbatim from commands/query.py (SPEC (bo)
+# item 2): the status conversion needs them while search and inbox-list
+# still call them from commands.
+
+
+def _inbox_search_rows(root: Path) -> list[dict]:
+    """One discovery row per inbox file, matched on names only, never bytes.
+
+    Inbox drops are arbitrary files (binary captures included), so the
+    metadata search reads no content here: the haystack is the file name
+    and path. Content stays behind ``inbox-read``, which refuses non-text.
+    Raises OSError when the listing itself fails; a missing inbox is empty.
+    """
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return []
+    rows = []
+    for path in sorted(inbox.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(inbox).as_posix()
+        if any(part.startswith(".") for part in rel.split("/")):
+            continue
+        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
+                     "path": f"work/inbox/{rel}"})
+    return rows
