@@ -2983,14 +2983,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: detour.create::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: detour.resolve::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: garden.seed.create::*
     count: 1
     since: baseline
@@ -3008,18 +3000,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: inbox.resolve::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.ability-observation.append::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.observation.append::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: learner.stage-result.append::*
     count: 1
     since: baseline
     approved_by: null
@@ -3107,18 +3087,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: path.attachment.add::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.note.write::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: path.progress.update::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: plan.edit-context::*
     count: 1
     since: baseline
@@ -3151,23 +3119,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: source.feedback.record::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: source.intake.record::*
     count: 1
     since: baseline
     approved_by: null
   - signature: source.record.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.attachment.add::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: stage.note.write::*
     count: 1
     since: baseline
     approved_by: null
@@ -3179,15 +3135,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: unit.note.append::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: unit.plan.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.source-selection.set::*
     count: 1
     since: baseline
     approved_by: null
