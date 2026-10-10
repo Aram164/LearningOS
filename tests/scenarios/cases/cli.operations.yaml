@@ -16,5 +16,5 @@ cases:
     kind: refusal
     transport: cli
     argv: [operations, --request-id, req-nope]
-    expect: {site: null}
+    expect: {site: cli.operations.unknown-request}
 untriggered: []

@@ -298,7 +298,7 @@ def test_missing_store_leaves_canonical_behavior_untouched(tmp_path: Path):
 
 
 def test_structurally_corrupt_trace_lines_do_not_break_operations(tmp_path: Path):
-    from learning_os.commands.operations import list_operations
+    from learning_os.ops.handlers.platform import list_operations
 
     mini = _mini_with_curriculum(tmp_path, "store-shapes")
     proc = _stage_write(mini, "store-shapes-1")

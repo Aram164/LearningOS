@@ -100,9 +100,9 @@ def test_detail_explains_one_request(tmp_path: Path):
 
 def test_detail_unknown_request_is_a_typed_refusal(tmp_path: Path):
     mini = _mini_with_curriculum(tmp_path, "ops-unknown")
-    code, body = _operations(mini, "--request-id", "request-nope")
+    code, body = _operations(mini, "--request-id", "request-nope", "--json")
     assert code == 2
-    assert body["error"] == "unknown request_id"
+    assert body["error"]["message"] == "unknown request_id"
 
 
 def test_list_limit_selects_newest_first(tmp_path: Path):
@@ -121,8 +121,8 @@ def test_list_diagnoses_only_the_requested_recent_operations(tmp_path, monkeypat
     Five traced operations with limit=1 must return the newest row while
     loading the receipt inventory exactly once; limit=0 loads nothing.
     """
-    from learning_os.commands import operations as ops_surface
     from learning_os.diagnostics.store import traces_path
+    from learning_os.ops.handlers import platform as ops_surface
 
     root = tmp_path / "ops-shared"
     path = traces_path(root)
