@@ -14,25 +14,25 @@ cases:
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-nope, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.attachment.add.unknown-stage}
   - id: unknown-unit
     kind: refusal
     transport: gateway
     request: {unit_id: unit-nope, stage_id: stage-demo, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.attachment.add.unknown-unit}
   - id: missing-file
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, file: "work/inbox/nope.png", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.attachment.add.bad-file}
   - id: sha-mismatch
     kind: refusal
     transport: gateway
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, file: "work/inbox/note-drop.md", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: stage.attachment.add.bad-file}
   - id: direct-cli-refused
     kind: refusal
     transport: cli

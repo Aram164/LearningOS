@@ -10,7 +10,11 @@ from pathlib import Path
 from learning_os import observations
 from learning_os.domain.failures import WriteRefused
 from learning_os.learning_runtime import requirement_id_for
-from learning_os.ops._legacy_plumbing import _dump_study_map, _dump_yaml
+from learning_os.ops._legacy_plumbing import (
+    _dump_study_map,
+    _dump_yaml,
+    _read_content_bound_file,
+)
 from learning_os.ops.context import OpContext
 from learning_os.ops.handlers._shared import (
     require_stage,
@@ -268,6 +272,86 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
             capability="stage.note.write",
             writes={target: updated},
             artifact_ids=[req["unit_id"]],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_stage,
+    )
+
+
+def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
+    """A destination no existing attachment occupies.
+
+    Attachment bytes are approved canonical content, so the previous holder of a
+    name must never be overwritten. A timestamp was not a uniqueness argument:
+    it is precise to one second and the name it produced was never itself
+    checked, so two uploads of `handwriting.png` within the same second silently
+    replaced the first one's bytes.
+
+    Every candidate is checked now, and the counter guarantees the search ends
+    on a free name. Checking existence is sufficient here — and only here —
+    because every caller allocates while holding the operator lock, so no other
+    process can take the name between this check and the transaction that writes
+    it.
+    """
+    target = attachment_dir / source_name
+    if not target.exists():
+        return target
+
+    stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
+    target = attachment_dir / f"{stamp}-{source_name}"
+    if not target.exists():
+        return target
+
+    counter = 1
+    while True:
+        target = attachment_dir / f"{stamp}-{counter}-{source_name}"
+        if not target.exists():
+            return target
+        counter += 1
+
+
+@register("stage.attachment.add", kind="command")
+def stage_attach(ctx: OpContext, req: dict) -> Result:
+    """Attach a content-bound file beside a stage's working note."""
+    root = ctx.root
+    try:
+        source, source_bytes = _read_content_bound_file(
+            req["file"],
+            req.get("file_sha256"),
+            label="stage attachment",
+        )
+    except WriteRefused as exc:
+        raise WriteRefused(
+            str(exc),
+            site="stage.attachment.add.bad-file",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
+    data = copy.deepcopy(study_map.data)
+    stage = require_stage(ctx, data, req["stage_id"])
+    note_path = root / stage["working_note"]
+    attachment_dir = note_path.parent / "attachments"
+    target = _allocate_attachment_path(attachment_dir, source.name)
+    rel = target.relative_to(root).as_posix()
+    stage.setdefault("attachments", []).append(
+        {"path": rel, "label": req.get("label") or source.stem})
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site="stage.attachment.add.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "unit_id": req["unit_id"],
+         "stage_id": req["stage_id"], "attachment": rel},
+        proposal=TransactionProposal(
+            capability="stage.attachment.add",
+            writes={study_map.path: _dump_study_map(study_map, data),
+                    target: source_bytes},
+            artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,

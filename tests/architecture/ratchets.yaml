@@ -1099,18 +1099,6 @@ checks:
     count: 6
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::print
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::_operator_lock
     count: 1
     since: baseline
