@@ -86,9 +86,9 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
     import inspect
 
     import los
-    from learning_os.commands import project as project_commands
     from learning_os.commands.capability import _FILE_INPUTS_V2
     from learning_os.contracts.payloads import subparsers
+    from learning_os.ops.handlers import platform as platform_handlers
     from learning_os.ops.registry import REGISTRY
 
     parsers = subparsers(los.build_parser())
@@ -102,7 +102,7 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
             handler = parsers[definitions[name].cli_command].get_default("func")
         source = inspect.getsource(handler)
         if name in {"project.create", "project.update"}:
-            source += inspect.getsource(project_commands._project_record)
+            source += inspect.getsource(platform_handlers._project_record)
         assert (
             "_read_content_bound_file" in source
             or "_read_structured_file" in source

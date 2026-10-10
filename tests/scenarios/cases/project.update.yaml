@@ -46,7 +46,7 @@ cases:
         thematic_group_ids: []
         boundaries: {confidentiality: private, external_code_access: approved}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: project.update.id-mismatch}
   - id: not-found
     kind: refusal
     transport: gateway
@@ -68,7 +68,7 @@ cases:
         thematic_group_ids: []
         boundaries: {confidentiality: private, external_code_access: approved}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: project.update.unknown-project}
   - id: bad-id
     kind: refusal
     transport: gateway

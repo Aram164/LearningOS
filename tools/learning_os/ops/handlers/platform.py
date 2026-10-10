@@ -15,7 +15,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.ops._legacy_plumbing import (
     _fresh_manifest,
@@ -378,8 +378,15 @@ def _project_record(req: dict) -> dict:
     )
 
 
+def _project_ids(root: Path) -> list[str]:
+    """Every project id the registry holds, for R6 suggestion domains."""
+    return sorted(path.stem for path in
+                  (root / "projects" / "registry").glob("*.yaml")
+                  if path.is_file())
+
+
 def _project_write(root: Path, data: dict, *,
-                   capability: str) -> tuple[dict[Path, str], str]:
+                   capability: str, operation: str) -> tuple[dict[Path, str], str]:
     """Validate one project record and stage its registry write.
 
     The pre-transaction half of commands.project._project_write, moved with
@@ -396,7 +403,11 @@ def _project_write(root: Path, data: dict, *,
     if capability == "project.create" and exists:
         raise WriteRefused(f"project already exists: {project_id}")
     if capability == "project.update" and not exists:
-        raise WriteRefused(f"project not found: {project_id}")
+        raise NotFound(
+            "project", project_id, _project_ids(root),
+            message=f"project not found: {project_id}",
+            site=f"{operation}.unknown-project",
+        )
     if exists:
         current = yaml.safe_load(target.read_text(encoding="utf-8")) or {}
         if current.get("id") != project_id or current.get("type") != data.get("type"):
@@ -418,11 +429,43 @@ def project_create(ctx: OpContext, req: dict) -> Result:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
         raise WriteRefused(str(exc)) from exc
-    writes, project_id = _project_write(root, data, capability="project.create")
+    writes, project_id = _project_write(
+        root, data, capability="project.create", operation=ctx.operation)
     return Result(
         {"ok": True, "project_id": project_id},
         proposal=TransactionProposal(
             capability="project.create",
+            writes=writes,
+            artifact_ids=[project_id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_project_commit_refused,
+        json_dumps=_dumps_compact,
+    )
+
+
+@register("project.update", kind="command")
+def project_update(ctx: OpContext, req: dict) -> Result:
+    """Update one first-class project record."""
+    root = ctx.root
+    data = _project_record(req)
+    if data.get("id") != req["project_id"]:
+        raise NotFound(
+            "project", req["project_id"], _project_ids(root),
+            message="project file id does not match command project_id",
+            site=f"{ctx.operation}.id-mismatch",
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    writes, project_id = _project_write(
+        root, data, capability="project.update", operation=ctx.operation)
+    return Result(
+        {"ok": True, "project_id": project_id},
+        proposal=TransactionProposal(
+            capability="project.update",
             writes=writes,
             artifact_ids=[project_id],
             expected_revisions=expected_revisions,

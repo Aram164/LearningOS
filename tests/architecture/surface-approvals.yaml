@@ -173,3 +173,4 @@ approvals:
   - {key: "request_schemas.project.create.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: project.create converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.project-list.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: cli.project-list converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.project.list.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: project.list converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.project.update.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: project.update converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

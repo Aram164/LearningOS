@@ -177,7 +177,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.project.cmd_project_update",
+    "handler": "learning_os.adapters.cli.invoke:project.update",
     "parser_factory": false
   }
 }
