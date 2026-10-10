@@ -616,7 +616,6 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
         payload_schema,
         subparsers,
     )
-    from learning_os.ops import _legacy_plumbing as plumbing
     from learning_os.ops.handlers import notes as notes_handlers
 
     command_parser = subparsers(los.build_parser())["note-analysis-save-batch"]
@@ -632,7 +631,7 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
     notes_schema = batch_notes.bundle_schema()["properties"]["notes"]
     assert notes_schema["minItems"] == batch_notes.BATCH_MIN_NOTES
     assert notes_schema["maxItems"] == batch_notes.BATCH_MAX_NOTES
-    assert plumbing.ANALYSIS_FIELDS is batch_notes.ANALYSIS_FIELDS
+    assert notes_handlers.ANALYSIS_FIELDS is batch_notes.ANALYSIS_FIELDS
     assert notes_handlers.BATCH_FIELDS is batch_notes.BATCH_FIELDS
     assert notes_handlers.BATCH_ITEM_FIELDS is batch_notes.BATCH_ITEM_FIELDS
     assert notes_handlers.BATCH_MIN_NOTES == batch_notes.BATCH_MIN_NOTES
@@ -1086,7 +1085,7 @@ def _normalize_repo(tmp_path, sources, *, flat=False):
 def test_uri_relocation_resolves_canonical_through_the_flat_tree(tmp_path):
     """F8: a canonical URI resolves through .flat to the physical path."""
     from learning_os.domain import ids
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     uri = "material://source-x/deck.pdf"
     assert ids.is_valid("material-uri", uri)
@@ -1106,7 +1105,7 @@ def test_uri_relocation_falls_back_to_the_registered_folder(tmp_path):
     """F8: an unresolvable canonical URI normalizes lexically under the
     source's registered material folder (a registered file counts by its
     parent folder)."""
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(
         tmp_path, {"source-x": {"material": "material://demo/"}})
@@ -1126,7 +1125,7 @@ def test_uri_relocation_keeps_legacy_non_source_authorities(tmp_path):
     """F8: authorities outside the canonical kind skip canonical parsing
     and keep the legacy resolution path."""
     from learning_os.domain import ids
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     assert not ids.is_valid("material-uri", "material://demo/deck.pdf")
     assert not ids.is_valid("material-uri", "material://Folder/book.pdf")
@@ -1149,7 +1148,7 @@ def test_uri_relocation_unsafe_uris_refuse_before_recognition(tmp_path):
     but the legacy guards run first."""
     from learning_os.domain import ids
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     dotdot = "material://source-x/../escape.pdf"
     assert ids.is_valid("material-uri", dotdot)
@@ -1174,7 +1173,7 @@ def test_uri_relocation_missing_file_and_source_diagnostics(tmp_path):
     """F8: the no-file, no-source and authority-mismatch refusals keep
     their exact legacy messages."""
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(
         tmp_path, {"source-x": {"material": "material://demo/"}})
@@ -1204,7 +1203,7 @@ def test_uri_relocation_source_without_registered_material(tmp_path):
     """F8: an unregistered source, or one registering no local material,
     keeps the exact legacy diagnostic echoing the input URI."""
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     uri = "material://source-x/deck.pdf"
     expected = (
@@ -1220,7 +1219,7 @@ def test_uri_relocation_source_without_registered_material(tmp_path):
 
 def test_uri_relocation_passes_non_uri_bindings_through(tmp_path):
     """F8: bindings that are not material:// URIs return unchanged."""
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(tmp_path, {})
     for material in ("demo/deck.pdf", None, 123):
@@ -1234,8 +1233,8 @@ def test_uri_relocation_parser_return_feeds_resolution(
     resolver input and the lexical fallback. ``is_valid`` delegates to
     ``parse``, so recognition is isolated while parse is mocked."""
     from learning_os.domain import ids
-    from learning_os.ops import _legacy_plumbing as plumbing
-    from learning_os.ops._legacy_plumbing import _normalize_binding_material_uri
+    from learning_os.ops.handlers import notes as notes_handlers
+    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     canary = "material://source-x/canary/deep.pdf"
     seen = {}
@@ -1245,7 +1244,7 @@ def test_uri_relocation_parser_return_feeds_resolution(
         raise FileNotFoundError(ref)
 
     monkeypatch.setattr(
-        plumbing, "resolve_material_target", fake_resolve)
+        notes_handlers, "resolve_material_target", fake_resolve)
     monkeypatch.setattr(ids, "is_valid", lambda kind, value: True)
     monkeypatch.setattr(ids, "parse", lambda kind, value: canary)
     repo, _ = _normalize_repo(

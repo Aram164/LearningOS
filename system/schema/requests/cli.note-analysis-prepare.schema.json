@@ -80,7 +80,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.analysis.cmd_note_analysis_prepare",
+    "handler": "learning_os.adapters.cli.invoke:cli.note-analysis-prepare",
     "parser_factory": false
   }
 }

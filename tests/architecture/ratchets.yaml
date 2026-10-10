@@ -36,18 +36,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::_prepare_out_dir::shutil.rmtree
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::write_bytes
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::write_text
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::open
     count: 1
     since: baseline
@@ -108,6 +96,18 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+  - signature: tools/learning_os/ops/handlers/notes.py::_prepare_out_dir::shutil.rmtree
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: tools/learning_os/ops/handlers/notes.py::note_analysis_prepare::write_bytes
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: tools/learning_os/ops/handlers/notes.py::note_analysis_prepare::write_text
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   - signature: tools/learning_os/semantics/dossiers.py::store_dossier::write_text
     count: 1
     since: baseline
@@ -211,22 +211,6 @@ checks:
     since: baseline
     approved_by: null
   A4-plumbing:
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/capability.py::cmd_capability::print
     count: 22
     since: baseline
@@ -1366,10 +1350,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.note-analysis-prepare::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.observe::*
     count: 1
     since: baseline
@@ -1432,10 +1412,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.module-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.note-analysis-prepare::*
     count: 1
     since: baseline
     approved_by: null
