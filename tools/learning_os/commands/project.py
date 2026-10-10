@@ -87,22 +87,6 @@ def cmd_project_list(args) -> int:
     return _print_rows(rows)
 
 
-def cmd_project_create(args) -> int:
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, getattr(args, "expected_snapshot", None)):
-            return 3
-        code, result = _project_write(
-            root, _project_record(args), capability="project.create",
-            expected_revisions=_expected_revisions_from_args(args),
-        )
-    if code:
-        print(json.dumps(result, ensure_ascii=False), file=sys.stderr)
-        return code
-    print(json.dumps({"ok": True, **result}, ensure_ascii=False))
-    return 0
-
-
 def cmd_project_update(args) -> int:
     root = _root(args)
     data = _project_record(args)

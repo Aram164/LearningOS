@@ -154,7 +154,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.project.cmd_project_create",
+    "handler": "learning_os.adapters.cli.invoke:project.create",
     "parser_factory": false
   }
 }

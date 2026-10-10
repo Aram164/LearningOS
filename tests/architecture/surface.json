@@ -9148,7 +9148,7 @@
   "path.progress.update.schema.json": "e3b41826488d41dfadec61a037847a915583404ca4d7487bdf507bc36d19821b",
   "plan.edit-context.schema.json": "2d27fedab69fa8b67686c3829bafec0e7b3a420d5474f06e642635d0ec2634ea",
   "plan.template.schema.json": "4d9c587646ec5b7f6b786a29d7a2d1e3802bead4d5165506d42bc5969bb8b908",
-  "project.create.schema.json": "c09ec4599cf5ce686c6b69b7250f41f20c7cdf7fb252b687c4555c89fbff7b5a",
+  "project.create.schema.json": "455e17d442d173f4ba4d8fe512406541a45ae9c9ba86f0b2701c00327c736593",
   "project.inspect.schema.json": "f2c294899fc6d87e8b2fc098270a45e648afe7f7c3481673a9d99d43bf49a8c5",
   "project.list.schema.json": "d52dd5e7c5b220c9e762f3d999d025920cdd4aab6f5b43228bd2cc51dcc4553a",
   "project.update.schema.json": "da66ab80b981fe3b4fa6e2d3bef80a500b74825bcb19b80fc3198e959de6cd96",

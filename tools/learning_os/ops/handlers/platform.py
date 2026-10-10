@@ -7,21 +7,27 @@ with the unit from ``commands.reads`` (SPEC (az) item 2).
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
+import re
 from pathlib import Path
+
+import yaml
 
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.ops._legacy_plumbing import (
     _fresh_manifest_and_repo,
     _json_layout,
+    _read_structured_file,
     _snapshot,
 )
 from learning_os.ops.context import OpContext
-from learning_os.ops.proposal import Result
+from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
+from learning_os.transactions import parse_expected_revisions
 
 
 def record_payload(manifest, record_id):
@@ -321,3 +327,99 @@ def inspect(ctx: OpContext, req: dict) -> Result:
         )
     payload = with_coordination_digests(root, payload)
     return Result(payload, json_dumps=_dumps_single)
+
+
+# ---------------------------------------------------------------------------
+# Project records (project.create, project.list, project.update; PLAN D4).
+#
+# _project_record and _project_write move with the units from commands.project
+# (SPEC §12). _project_write stages its write for the pipeline's commit
+# instead of calling _write_transaction itself.
+
+
+def _dumps_compact(payload: dict) -> str:
+    """The exact project-write encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _project_commit_refused(errors: list) -> list[str]:
+    """The exact commit-refusal line: the engine issues as one JSON object."""
+    return [json.dumps({"errors": [str(issue) for issue in errors]},
+                       ensure_ascii=False)]
+
+
+def _project_record(req: dict) -> dict:
+    """The project record, from wherever this invocation carried it.
+
+    One command, two ways in: a path for a person at a shell, an inline object
+    for a caller that already holds the record. The parser declares both as one
+    required mutually exclusive group, so the generated capability schema says
+    exactly this — which is the whole point. The gateway used to accept the
+    inline form through a branch of its own, undeclared and unvalidated.
+    """
+    record = req.get("project")
+    if record is not None:
+        if not isinstance(record, dict):
+            raise WriteRefused("project must be an object")
+        return record
+    if not req.get("file"):
+        raise WriteRefused("project record required: pass --file or --project")
+    return _read_structured_file(
+        req.get("file"),
+        expected_sha256=req.get("file_sha256"),
+        label="project file",
+    )
+
+
+def _project_write(root: Path, data: dict, *,
+                   capability: str) -> tuple[dict[Path, str], str]:
+    """Validate one project record and stage its registry write.
+
+    The pre-transaction half of commands.project._project_write, moved with
+    the project units: the same guards in the same order, returning the
+    staged writes and the project id for the pipeline's commit.
+    """
+    project_id = data.get("id")
+    if not isinstance(project_id, str) or not re.fullmatch(r"project-[a-z0-9]+(?:-[a-z0-9]+)*", project_id):
+        raise WriteRefused("project id must match project-<slug>")
+    if data.get("type") != "project":
+        raise WriteRefused("project type must be 'project'")
+    target = root / "projects" / "registry" / f"{project_id}.yaml"
+    exists = target.is_file()
+    if capability == "project.create" and exists:
+        raise WriteRefused(f"project already exists: {project_id}")
+    if capability == "project.update" and not exists:
+        raise WriteRefused(f"project not found: {project_id}")
+    if exists:
+        current = yaml.safe_load(target.read_text(encoding="utf-8")) or {}
+        if current.get("id") != project_id or current.get("type") != data.get("type"):
+            raise WriteRefused("project update cannot change id or type")
+    data = copy.deepcopy(data)
+    data.setdefault("schema_version", 1)
+    data.setdefault("revision", 0)
+    rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
+    return {target: rendered}, project_id
+
+
+@register("project.create", kind="command")
+def project_create(ctx: OpContext, req: dict) -> Result:
+    """Create one first-class project record."""
+    root = ctx.root
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    data = _project_record(req)
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    writes, project_id = _project_write(root, data, capability="project.create")
+    return Result(
+        {"ok": True, "project_id": project_id},
+        proposal=TransactionProposal(
+            capability="project.create",
+            writes=writes,
+            artifact_ids=[project_id],
+            expected_revisions=expected_revisions,
+        ),
+        on_commit_refused=_project_commit_refused,
+        json_dumps=_dumps_compact,
+    )

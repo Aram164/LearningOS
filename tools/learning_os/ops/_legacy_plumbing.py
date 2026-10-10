@@ -853,6 +853,47 @@ def _read_content_bound_file(
     return source, content
 
 
+def _read_structured_file(
+    path_value: str,
+    *,
+    expected_sha256: str | None = None,
+    label: str = "structured input",
+) -> dict:
+    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
+
+    Stdin matters for callers that build an envelope in memory: writing it to
+    a temp file first means a real file holding canonical intent has to be
+    created, found, and cleaned up on every write path, including the ones
+    that fail. ``-`` removes that lifecycle entirely.
+    """
+    if path_value == "-" and expected_sha256 is None \
+            and current_gateway_request() is None:
+        raw = sys.stdin.read()
+        try:
+            data = json.loads(raw)
+        except ValueError as exc:
+            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
+        if not isinstance(data, dict):
+            raise WriteRefused("structured input must be an object")
+        return data
+    path, raw_bytes = _read_content_bound_file(
+        path_value,
+        expected_sha256,
+        label=label,
+    )
+    try:
+        raw = raw_bytes.decode("utf-8")
+        if path.suffix.lower() == ".json":
+            data = json.loads(raw)
+        else:
+            data = yaml.safe_load(raw)
+    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
+        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise WriteRefused(f"structured input must be an object: {path}")
+    return data
+
+
 # ---------------------------------------------------------------------------
 # Canonical YAML serialization, moved verbatim from commands.support
 # (SPEC (az) item 2).
@@ -935,47 +976,6 @@ def _changed_write(writes, path, data):
 # commands.query and commands.reads for the wave-1 notes conversions (SPEC (bl),
 # CODEX-WAVE1-DISPOSITIONS-20261010 items 2-3). Bodies and signatures unchanged;
 # _window_values is the extracted value-based core of commands.reads._window.
-
-
-def _read_structured_file(
-    path_value: str,
-    *,
-    expected_sha256: str | None = None,
-    label: str = "structured input",
-) -> dict:
-    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
-
-    Stdin matters for callers that build an envelope in memory: writing it to
-    a temp file first means a real file holding canonical intent has to be
-    created, found, and cleaned up on every write path, including the ones
-    that fail. ``-`` removes that lifecycle entirely.
-    """
-    if path_value == "-" and expected_sha256 is None \
-            and current_gateway_request() is None:
-        raw = sys.stdin.read()
-        try:
-            data = json.loads(raw)
-        except ValueError as exc:
-            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
-        if not isinstance(data, dict):
-            raise WriteRefused("structured input must be an object")
-        return data
-    path, raw_bytes = _read_content_bound_file(
-        path_value,
-        expected_sha256,
-        label=label,
-    )
-    try:
-        raw = raw_bytes.decode("utf-8")
-        if path.suffix.lower() == ".json":
-            data = json.loads(raw)
-        else:
-            data = yaml.safe_load(raw)
-    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
-        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
-    if not isinstance(data, dict):
-        raise WriteRefused(f"structured input must be an object: {path}")
-    return data
 
 
 def prepare_review_envelope(capability_name: str, payload: dict,
