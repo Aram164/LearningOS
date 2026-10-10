@@ -12,7 +12,12 @@ from learning_os.contracts.gateway import (
     request_artifact_id,
 )
 from learning_os.domain.failures import WriteRefused
-from learning_os.ops._legacy_plumbing import _read_content_bound_file
+from learning_os.ops._legacy_plumbing import (
+    _discovery_row,
+    _inbox_search_rows,
+    _json_layout,
+    _read_content_bound_file,
+)
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -211,3 +216,35 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_commit_refused,
         json_dumps=_dumps_garden_seed,
     )
+
+
+def _dumps_inbox_list(payload: list) -> str:
+    """The exact inbox-list JSON encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+
+
+@register("cli.inbox-list", kind="tool")
+@register("inbox.list", kind="tool")
+def inbox_list(ctx: OpContext, req: dict) -> Result:
+    """List work/inbox files by name, without reading bytes."""
+    root = ctx.root
+    try:
+        rows = _inbox_search_rows(root)
+    except OSError as exc:
+        raise WriteRefused(
+            f"cannot list work/inbox: {exc}",
+            site=f"{ctx.operation}.list-failed",
+            gateway_message=f"los: cannot list work/inbox: {exc}",
+            exit_code=2,
+        ) from exc
+    now = observations.epoch()
+    inbox = root / "work" / "inbox"
+    out = []
+    for rec in rows:
+        row = _discovery_row(rec)
+        try:
+            row["age_days"] = int((now - observations.mtime(inbox / rec["id"], root)) / 86400)
+        except OSError:
+            row["age_days"] = None
+        out.append(row)
+    return Result(out, json_dumps=_dumps_inbox_list)

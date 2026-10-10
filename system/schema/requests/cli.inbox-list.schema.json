@@ -35,7 +35,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.query.cmd_inbox_list",
+    "handler": "learning_os.adapters.cli.invoke:cli.inbox-list",
     "parser_factory": false
   }
 }

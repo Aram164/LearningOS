@@ -25,7 +25,6 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.validation_cache import observe_pins, status_issues
 
-from .. import observations
 from .reads import (
     _print_stable,
     _refusal,
@@ -401,27 +400,6 @@ def cmd_search(args) -> int:
               f"continue with --offset {offset + limit}, or use --page for "
               "totals and a snapshot-bound continuation", file=sys.stderr)
     print(json.dumps(shown, **_json_layout(), sort_keys=True, ensure_ascii=False))
-    return 0
-
-
-def cmd_inbox_list(args) -> int:
-    root = _root(args)
-    try:
-        rows = _inbox_search_rows(root)
-    except OSError as exc:
-        print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
-        return 2
-    now = observations.epoch()
-    inbox = root / "work" / "inbox"
-    out = []
-    for rec in rows:
-        row = _discovery_row(rec)
-        try:
-            row["age_days"] = int((now - observations.mtime(inbox / rec["id"], root)) / 86400)
-        except OSError:
-            row["age_days"] = None
-        out.append(row)
-    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
