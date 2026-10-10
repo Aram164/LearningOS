@@ -14,13 +14,13 @@ cases:
     transport: gateway
     request: {note_id: note-demo, evidence_type: derivation, ref: "ftp://example.com/x"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.evidence.add.bad-scheme}
   - id: unknown-note
     kind: refusal
     transport: gateway
     request: {note_id: note-nope, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.evidence.add.unknown-note}
   - id: add-twice
     kind: sequence
     steps:

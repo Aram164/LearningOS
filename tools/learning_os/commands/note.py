@@ -11,7 +11,7 @@ import jsonschema
 from learning_os import observations
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
+from learning_os.loader import LoaderError, load_repo, parse_frontmatter
 from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
     _operator_lock,
@@ -108,72 +108,6 @@ def cmd_note_revise(args) -> int:
     print(json.dumps({"ok": True, "note_id": args.note_id,
                       "path": note.path.relative_to(root).as_posix(),
                       **confirmation}, ensure_ascii=False))
-    return 0
-
-
-def cmd_note_evidence(args) -> int:
-    """Append one evidence pointer to a note without touching its body.
-
-    Evidence answers "have I actually worked through this?" (PHILOSOPHY §3.6).
-    It is deliberately a pointer, not a verdict: the command records that a
-    derivation, explanation, implementation, exercise or exam artifact exists
-    and where it is. It never scores, ranks, or concludes anything about
-    understanding — retrieval surfaces show the trail or its documented absence.
-
-    The note body is passed through untouched; only the frontmatter is
-    re-rendered. Entries are append-only, so an existing trail can never be
-    silently rewritten or dropped by recording a new one.
-
-    A trail is addressed by typed URI, never by bare path, so it survives the
-    file moving. The scheme is checked here rather than left to REF-EVIDENCE
-    so the failure names the allowed vocabulary instead of arriving as a
-    validation rejection after the transaction has been assembled.
-    """
-    if not args.ref.startswith(EVIDENCE_SCHEMES):
-        print(f"los: evidence ref '{args.ref}' uses no valid URI scheme", file=sys.stderr)
-        print("     expected one of: " + ", ".join(EVIDENCE_SCHEMES), file=sys.stderr)
-        return 2
-    root = _root(args)
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo = load_repo(root)
-        note = repo.notes.get(args.note_id)
-        if note is None:
-            print(f"los: {not_found('note', args.note_id, repo.notes)}",
-                  file=sys.stderr)
-            return 2
-        content = note.path.read_text(encoding="utf-8")
-        try:
-            meta, body = parse_frontmatter(content, note.path)
-        except LoaderError as exc:
-            print(f"los: cannot read note frontmatter: {exc}", file=sys.stderr)
-            return 2
-        existing = list(meta.get("evidence") or [])
-        entry = {"type": args.evidence_type, "ref": args.ref}
-        if any(e.get("type") == entry["type"] and e.get("ref") == entry["ref"]
-               for e in existing):
-            print("los: that evidence is already recorded on this note", file=sys.stderr)
-            return 2
-        meta["evidence"] = existing + [entry]
-        code, errors, confirmation = _write_transaction(
-            root, {note.path: _render_frontmatter(meta, body)},
-            capability="note.evidence.add",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.note_id],
-        )
-        if code:
-            print("los: evidence rejected by validation", file=sys.stderr)
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "note_id": args.note_id,
-                      "path": note.path.relative_to(root).as_posix(),
-                      "evidence": entry,
-                      "evidence_count": len(meta["evidence"]),
-                      "scheme": args.ref.split("://", 1)[0],
-                      **confirmation},
-                     ensure_ascii=False))
     return 0
 
 

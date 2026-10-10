@@ -158,7 +158,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.note.cmd_note_evidence",
+    "handler": "learning_os.adapters.cli.invoke:note.evidence.add",
     "parser_factory": false
   }
 }

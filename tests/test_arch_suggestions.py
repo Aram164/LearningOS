@@ -546,6 +546,10 @@ def _lookup_domain(ctx, operation: str, row: dict,
         routes = unit_routes(source_map, unit.module_id, request["unit_id"])
         ordered = [entry["id"] for entry in routes]
         return ordered, set(ordered)
+    if kind == "note":
+        repo = load_repo(ctx.root)
+        ordered = list(repo.notes)
+        return ordered, set(ordered)
     if owner == "inspect-reference":
         from learning_os.ops._legacy_plumbing import _fresh_manifest_and_repo
         from learning_os.ops.handlers import platform as platform_handlers
@@ -707,6 +711,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("stage.progress.update.unknown-unit", "unknown-unit"),
     ("stage.progress.update", "/properties/stage_id"):
         ("stage.progress.update.unknown-stage", "unknown-stage"),
+    ("note.evidence.add", "/properties/note_id"):
+        ("note.evidence.add.unknown-note", "unknown-note"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -762,6 +768,8 @@ def _canonical_message(operation: str, row: dict, miss: str,
             miss, domain)
     message = not_found(kind, miss, domain)
     if operation == "stage.progress.update":
+        return f"los: {message}"
+    if operation == "note.evidence.add":
         return f"los: {message}"
     return message
 
