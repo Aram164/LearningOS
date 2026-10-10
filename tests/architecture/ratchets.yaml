@@ -499,30 +499,6 @@ checks:
     count: 4
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_create::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_create::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_create::return
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_update::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_update::print
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/project.py::cmd_project_update::return
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::_metadata_search_page::_operator_lock
     count: 1
     since: baseline
@@ -787,34 +763,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_backup_manifest::print
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_backup_manifest::return
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_backup_verify::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_health_report::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_health_report::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_inspect::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_inspect::return
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::_operator_lock
     count: 1
     since: baseline
@@ -824,14 +772,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_status::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_status::return
     count: 1
     since: baseline
     approved_by: null
@@ -856,14 +796,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_dashboard::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_dashboard::return
     count: 1
     since: baseline
     approved_by: null
@@ -1738,10 +1670,6 @@ checks:
     since: baseline
     approved_by: null
   A5-suggestions:
-  - signature: backup.manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.ai-action-append-slices::/properties/request_id::review
     count: 1
     since: approved
@@ -1766,14 +1694,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.backup-manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.backup-verify::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.bootstrap::*
     count: 1
     since: baseline
@@ -1798,23 +1718,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.health-report::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.intelligence-scan::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.legacy-archive-inspect::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.legacy-archive-status::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.masters-planning-dashboard::*
     count: 1
     since: baseline
     approved_by: null
@@ -1843,10 +1747,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.program-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.project-list::*
     count: 1
     since: baseline
     approved_by: null
@@ -1890,19 +1790,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: health.report::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: legacy.archive.inspect::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: legacy.archive.lock.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: legacy.archive.status::*
     count: 1
     since: baseline
     approved_by: null
@@ -1915,10 +1803,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: masters-planning.comparison.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.dashboard::*
     count: 1
     since: baseline
     approved_by: null
@@ -1959,18 +1843,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: plan.template::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.create::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.update::*
     count: 1
     since: baseline
     approved_by: null
@@ -1999,18 +1871,6 @@ checks:
     since: baseline
     approved_by: null
   A7-output:
-  - signature: backup.manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.backup-manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.backup-verify::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.bootstrap::*
     count: 1
     since: baseline
@@ -2035,23 +1895,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.health-report::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.intelligence-scan::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.legacy-archive-inspect::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.legacy-archive-status::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.masters-planning-dashboard::*
     count: 1
     since: baseline
     approved_by: null
@@ -2080,10 +1924,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.program-list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.project-list::*
     count: 1
     since: baseline
     approved_by: null
@@ -2127,19 +1967,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: health.report::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: legacy.archive.inspect::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: legacy.archive.lock.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: legacy.archive.status::*
     count: 1
     since: baseline
     approved_by: null
@@ -2152,10 +1980,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: masters-planning.comparison.publish::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: masters-planning.dashboard::*
     count: 1
     since: baseline
     approved_by: null
@@ -2196,18 +2020,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: plan.template::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.create::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.list::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: project.update::*
     count: 1
     since: baseline
     approved_by: null
