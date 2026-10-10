@@ -346,7 +346,8 @@ def test_study_mode_does_not_offer_a_withdrawn_sitting(mini_repo: Path):
     assert "status" in proc.stderr
 
 
-def test_resume_renders_the_pointer_stage(mini_repo: Path):
+def test_resume_renders_the_pointer_stage(
+        mini_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     proc = run_los(_runtime_repo(mini_repo), "resume", "--json")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
@@ -362,6 +363,12 @@ def test_resume_renders_the_pointer_stage(mini_repo: Path):
     assert [(row["start_date"], row["registration_state"])
             for row in content["sittings"]] == [
         ("2000-01-01", "unrecorded"), ("2026-10-09", "registered")]
+    # Pin the observed clock so the 2026-10-09 sitting is still upcoming.
+    observations = tmp_path / "observations.json"
+    observations.write_text(
+        json.dumps({"now": "2026-10-01T09:00:00+02:00"}) + "\n",
+        encoding="utf-8")
+    monkeypatch.setenv("LOS_OBSERVATIONS", str(observations))
     text = run_los(mini_repo, "resume")
     assert text.returncode == 0, text.stderr
     assert "req-demo-l01-demo" in text.stdout
