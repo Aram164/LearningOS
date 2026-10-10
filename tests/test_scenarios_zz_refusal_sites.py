@@ -7,7 +7,9 @@ item 10; a session fixture owns that file). This module runs after
 every other ``test_scenarios*`` file, so in a full or ``-k
 scenarios`` run it matches each statically declared site to both a
 runtime witness line with a non-null site and a case whose
-``expect.site`` equals it. An empty witness file skips locally and
+``expect.site`` equals it, and requires that line to come from that
+case's own run (amendment (bh): ``scenario_harness`` attributes each
+case run's lines to the case). An empty witness file skips locally and
 fails under CI.
 """
 
@@ -319,6 +321,40 @@ def _cased_sites() -> dict[str, str]:
     return cased
 
 
+def _declaring_cases() -> dict[str, list[str]]:
+    """Typed ``expect.site`` -> every ``"operation:case"`` declaring it (bh).
+
+    Keys use the case file's ``operation``, the name the harness
+    attributes a run to (``scenario_harness.CASE_SITE_WITNESSES``).
+    """
+    import scenario_harness as harness
+
+    declaring: dict[str, list[str]] = {}
+    for path in sorted(CASES_DIR.glob("*.yaml")):
+        doc = harness.load_case_file(path)
+        for case in doc.get("cases", []):
+            site = (case.get("expect") or {}).get("site")
+            if site is not None:
+                declaring.setdefault(site, []).append(
+                    f"{doc['operation']}:{case['id']}")
+    return declaring
+
+
+def _attributed_witnesses(site: str) -> set[tuple[str, str]]:
+    """What the site's declaring cases witnessed in their own runs (bh).
+
+    Only runs attributed to this session's witness file count, so a
+    case run against a private file (a control) never stands in.
+    """
+    import scenario_harness as harness
+
+    path = os.environ.get(SITE_WITNESS_ENV)
+    attributed: set[tuple[str, str]] = set()
+    for key in _declaring_cases().get(site, []):
+        attributed |= harness.CASE_SITE_WITNESSES.get((path, key), set())
+    return attributed
+
+
 #: Untriggered reasons (SPEC (bf) item 9.3, fixed vocabulary).
 _UNTRIGGERED_REASONS = frozenset({
     "guarded-before-handler", "os-error-only", "race-only",
@@ -377,17 +413,23 @@ def _assert_matched(operation: str, site: str, where: str,
                     witnesses: set[tuple[str, str]],
                     cased: dict[str, str], *,
                     entries: dict[str, dict] | None = None,
-                    proofs: dict[str, bool] | None = None) -> None:
+                    proofs: dict[str, bool] | None = None,
+                    attributed: set[tuple[str, str]] | None = None) -> None:
     """The declared site has its witness and its case, or its proof.
 
-    An uncased site is accepted only through an untriggered entry
-    whose proof passed in this session (item 9.3); the proof stands
-    in for both the session witness and the case.
+    The witness must come from the run of a case whose ``expect.site``
+    names the site (SPEC §3.3 A9, amendment (bh)): ``attributed`` holds
+    what the declaring cases witnessed in their own runs. An uncased
+    site is accepted only through an untriggered entry whose proof
+    passed in this session (item 9.3); the proof stands in for the
+    session witness, the case and the attribution.
     """
     if entries is None:
         entries = _untriggered_entries()
     if proofs is None:
         proofs = _PROOFS
+    if attributed is None:
+        attributed = _attributed_witnesses(site)
     if _proof_accepts(site, entries, proofs):
         return
     problems = []
@@ -396,6 +438,9 @@ def _assert_matched(operation: str, site: str, where: str,
         detail = (f" (witnessed only as {others})" if others
                   else " (no witness at all)")
         problems.append(f"unwitnessed{detail}")
+    elif site in cased and (operation, site) not in attributed:
+        problems.append("witnessed, but not by the run of a case whose "
+                        "expect.site names it")
     if site not in cased and not _proof_accepts(site, entries, proofs):
         problems.append("no case carries this expect.site "
                         "(and no untriggered proof passed)")
@@ -635,7 +680,73 @@ def test_control_clean_match_passes():
     _assert_matched("capture.create", "capture.create.empty-input",
                     "a9-control:1",
                     {("capture.create", "capture.create.empty-input")},
-                    {"capture.create.empty-input": "capture.create:x"})
+                    {"capture.create.empty-input": "capture.create:x"},
+                    attributed={("capture.create",
+                                 "capture.create.empty-input")})
+
+
+def test_control_witness_from_another_run_fails():
+    """A session line no declaring case's own run produced fails (bh)."""
+    with pytest.raises(AssertionError, match="not by the run of a case"):
+        _assert_matched("capture.create", "capture.create.empty-input",
+                        "a9-control:1",
+                        {("capture.create", "capture.create.empty-input")},
+                        {"capture.create.empty-input": "capture.create:x"},
+                        attributed=set())
+
+
+def test_control_attribution_counts_only_the_case_run(tmp_path,
+                                                      monkeypatch):
+    """Only lines written inside a case run are attributed to it (bh).
+
+    A line already in the witness file (any non-harness writer, e.g. an
+    A5 probe) stays in the file but is attributed to no case; the case's
+    own line is appended unchanged after it.
+    """
+    import scenario_harness as harness
+
+    dest = tmp_path / "sites.jsonl"
+    outside = json.dumps({"operation": "route.patch", "kind": "failure",
+                          "site": "route.patch.unknown-route",
+                          "class": "NotFound", "exit_code": 2})
+    inside = json.dumps({"operation": "cli.inspect", "kind": "failure",
+                         "site": "cli.inspect.unknown-id",
+                         "class": "WriteRefused", "exit_code": 2})
+    dest.write_text(outside + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
+    with harness._case_site_witnesses("cli.inspect", "a9-control"):
+        private = os.environ[SITE_WITNESS_ENV]
+        assert private != str(dest)
+        with open(private, "a", encoding="utf-8") as handle:
+            handle.write(inside + "\n")
+    assert os.environ[SITE_WITNESS_ENV] == str(dest)
+    assert not Path(private).exists()
+    assert dest.read_text(encoding="utf-8").splitlines() == [outside, inside]
+    attributed = harness.CASE_SITE_WITNESSES.pop(
+        (str(dest), "cli.inspect:a9-control"))
+    assert attributed == {("cli.inspect", "cli.inspect.unknown-id")}
+    assert not [key for key in harness.CASE_SITE_WITNESSES
+                if key[0] == str(dest)]
+
+
+def test_control_failed_append_leaves_the_case_unattributed(tmp_path,
+                                                            monkeypatch):
+    """An unwritable witness file attributes nothing and raises nothing."""
+    import scenario_harness as harness
+
+    dest = tmp_path / "no-such-dir" / "sites.jsonl"
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
+    with harness._case_site_witnesses("cli.inspect", "a9-control-fail"):
+        with open(os.environ[SITE_WITNESS_ENV], "a",
+                  encoding="utf-8") as handle:
+            handle.write(json.dumps({
+                "operation": "cli.inspect", "kind": "failure",
+                "site": "cli.inspect.unknown-id", "class": "WriteRefused",
+                "exit_code": 2}) + "\n")
+    assert os.environ[SITE_WITNESS_ENV] == str(dest)
+    assert not dest.exists()
+    assert (str(dest), "cli.inspect:a9-control-fail") \
+        not in harness.CASE_SITE_WITNESSES
 
 
 def test_control_unshared_excluded_name_fails():
@@ -691,6 +802,10 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
         "operation": "cli.inspect", "kind": "failure",
         "site": "cli.inspect.unknown-id", "class": "WriteRefused",
         "exit_code": 2}
+    # SPEC (bh): the real case run is attributed to exactly that case.
+    assert harness.CASE_SITE_WITNESSES.pop(
+        (str(witness), "cli.inspect:unknown-id")) == {
+        ("cli.inspect", "cli.inspect.unknown-id")}
     monkeypatch.delenv(SITE_WITNESS_ENV)
     bare = harness.run_case(case, "cli.inspect", tmp_path / "bare")
     assert bare == with_witness

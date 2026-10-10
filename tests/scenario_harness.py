@@ -30,6 +30,7 @@ The caller merges file-level context into each case before calling
 from __future__ import annotations
 
 import argparse
+import contextlib
 import copy
 import difflib
 import json
@@ -37,6 +38,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import uuid
 from pathlib import Path
 
@@ -882,35 +884,90 @@ def _prepare_world(case: dict, operation: str, workdir: Path
                         operation=operation, case_id=case["id"])
 
 
+#: ``(witness file, "<operation>:<case-id>")`` -> the ``(operation, site)``
+#: pairs that case's own run witnessed, for every case this process ran
+#: through :func:`run_case`/:func:`run_sequence` while
+#: ``LOS_SITE_WITNESS_FILE`` was set (SPEC (bh)). A9 attributes a declared
+#: site to a case that declares it from this map, not from the shared
+#: session file alone.
+CASE_SITE_WITNESSES: dict[tuple[str, str], set[tuple[str, str]]] = {}
+
+
+@contextlib.contextmanager
+def _case_site_witnesses(operation: str, case_id: str):
+    """Collect one case's witness lines privately, then hand them on (bh).
+
+    The case runs against a private witness file, so its children write
+    only that case's lines there. Afterwards the lines are appended
+    unchanged, in order, to the witness file that was set, and only then
+    are their non-null sites attributed to the case. A failed append is
+    swallowed, as the hook swallows one (SPEC (bf) item 10.2): the case
+    stays unattributed and the missing line fails the A9 match.
+    """
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    dest = os.environ.get(SITE_WITNESS_ENV)
+    if not dest:
+        yield
+        return
+    fd, private = tempfile.mkstemp(prefix="los-case-sites-", suffix=".jsonl")
+    os.close(fd)
+    os.environ[SITE_WITNESS_ENV] = private
+    try:
+        yield
+    finally:
+        os.environ[SITE_WITNESS_ENV] = dest
+        data = Path(private).read_bytes()
+        Path(private).unlink()
+        try:
+            with open(dest, "ab") as handle:
+                handle.write(data)
+        except OSError:
+            pass
+        else:
+            sites = CASE_SITE_WITNESSES.setdefault(
+                (dest, f"{operation}:{case_id}"), set())
+            for line in data.decode("utf-8", "replace").splitlines():
+                try:
+                    record = json.loads(line)
+                except ValueError:
+                    continue
+                if isinstance(record, dict) \
+                        and isinstance(record.get("site"), str):
+                    sites.add((record.get("operation"), record["site"]))
+
+
 def run_case(case: dict, operation: str, workdir: str | Path) -> dict:
     """Run one non-sequence case; returns the normalized §5.3 recording."""
     if case.get("kind") == "sequence":
         raise ValueError("use run_sequence for sequence cases")
-    ctx = _prepare_world(case, operation, Path(workdir))
-    recording = _run_step(ctx, operation, case, 0)
-    check_witnesses(ctx)
+    with _case_site_witnesses(operation, case["id"]):
+        ctx = _prepare_world(case, operation, Path(workdir))
+        recording = _run_step(ctx, operation, case, 0)
+        check_witnesses(ctx)
     return normalize(recording, ctx.root)
 
 
 def run_sequence(case: dict, operation: str, workdir: str | Path) -> dict:
     """Run one sequence case in a single world; returns {"steps": [...]}."""
-    ctx = _prepare_world(case, operation, Path(workdir))
-    steps = []
-    for index, step in enumerate(case.get("steps", [])):
-        full = {"operation": operation, **step}
-        result = _run_step(ctx, operation, full, index)
-        result["step"] = index
-        result["transport"] = step["transport"]
-        if step["transport"] == "gateway":
-            result["operation"] = full["operation"]
-        elif "argv" in step:
-            result["argv"] = [str(item) for item in step["argv"]]
-        else:
-            request = _substitute(
-                copy.deepcopy(step.get("request", {})), ctx)
-            result["argv"] = [
-                _cli_command_for(full["operation"], ctx.root),
-                *request_to_argv(full["operation"], request, ctx.root)]
-        steps.append(result)
-    check_witnesses(ctx)
+    with _case_site_witnesses(operation, case["id"]):
+        ctx = _prepare_world(case, operation, Path(workdir))
+        steps = []
+        for index, step in enumerate(case.get("steps", [])):
+            full = {"operation": operation, **step}
+            result = _run_step(ctx, operation, full, index)
+            result["step"] = index
+            result["transport"] = step["transport"]
+            if step["transport"] == "gateway":
+                result["operation"] = full["operation"]
+            elif "argv" in step:
+                result["argv"] = [str(item) for item in step["argv"]]
+            else:
+                request = _substitute(
+                    copy.deepcopy(step.get("request", {})), ctx)
+                result["argv"] = [
+                    _cli_command_for(full["operation"], ctx.root),
+                    *request_to_argv(full["operation"], request, ctx.root)]
+            steps.append(result)
+        check_witnesses(ctx)
     return normalize({"steps": steps}, ctx.root)

@@ -42,6 +42,20 @@ def _berlin_time(monkeypatch):
     time.tzset()
 
 
+@pytest.fixture(autouse=True)
+def _private_site_witness(tmp_path, monkeypatch):
+    """A5 probes write a private A9 witness file, never the session's (bh).
+
+    A probe's refusal line is not a scenario witness: in the session file
+    it could stand in for a case that no longer reaches its site.
+    """
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    path = tmp_path / "a5-sites.jsonl"
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(path))
+    return path
+
+
 class _NoBase(Exception):
     """No marked base governs this pointer (SPEC (z) item 3, (af))."""
 
@@ -1151,3 +1165,16 @@ def test_nonresolving_alias_does_not_expand_the_domain():
                 "project_aliases": {"ab": "missing-id"}}
     assert platform_handlers.record_payload(manifest, "ab") is None
     assert _inspect_membership(manifest, ["aa"]) == {"aa"}
+
+
+def test_control_probe_lines_stay_out_of_the_session_file(
+        tmp_path, _site_witness_file, _private_site_witness):
+    """A real A5 probe writes its refusal line privately (SPEC (bh))."""
+    before = _site_witness_file.read_bytes()
+    test_pointer_misses(tmp_path, "route.patch", "/properties/route_id")
+    assert _site_witness_file.read_bytes() == before
+    lines = [json.loads(line) for line in
+             _private_site_witness.read_text(encoding="utf-8").splitlines()
+             if line.strip()]
+    assert any(line.get("site") == "route.patch.unknown-route"
+               for line in lines), lines
