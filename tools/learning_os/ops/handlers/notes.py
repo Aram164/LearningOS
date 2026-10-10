@@ -8,6 +8,12 @@ from pathlib import Path
 import jsonschema
 
 from learning_os import observations
+from learning_os.contracts.batch_notes import (
+    BATCH_FIELDS,
+    BATCH_ITEM_FIELDS,
+    BATCH_MAX_NOTES,
+    BATCH_MIN_NOTES,
+)
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.garden import garden_id
@@ -560,6 +566,123 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
         ),
         after_commit="STANDARD",
         json_dumps=_dumps_analysis_save,
+    )
+
+
+def _read_batch_items(bundle: object) -> list[tuple[int, dict, dict, bytes]]:
+    """Read and precheck every batch body before the snapshot guard.
+
+    Each item carries its own content-bound body file, so the bytes hashed
+    here are the approved bytes even if a file changes before the write.
+    Returns (index, analysis, binding, body) per item, in request order.
+    """
+    if not isinstance(bundle, dict):
+        raise WriteRefused("bundle must be an object")
+    unknown = set(bundle) - BATCH_FIELDS
+    if unknown:
+        raise WriteRefused("bundle has unknown fields: "
+                           + ", ".join(sorted(str(key) for key in unknown)))
+    items = bundle.get("notes")
+    if not isinstance(items, list) or len(items) < BATCH_MIN_NOTES:
+        raise WriteRefused("bundle must carry a non-empty notes list")
+    if len(items) > BATCH_MAX_NOTES:
+        raise WriteRefused(f"batch carries {len(items)} notes; "
+                           f"at most {BATCH_MAX_NOTES} per batch")
+    prepared: list[tuple[int, dict, dict, bytes]] = []
+    seen: set[str] = set()
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise WriteRefused(f"batch item {index} must be an object")
+        unknown = set(item) - BATCH_ITEM_FIELDS
+        if unknown:
+            raise WriteRefused(f"batch item {index} has unknown fields: "
+                               + ", ".join(sorted(str(key) for key in unknown)))
+        if not isinstance(item.get("body_file"), str) or not item["body_file"]:
+            raise WriteRefused(f"batch item {index} needs a body_file path")
+        _, body = _read_content_bound_file(
+            item["body_file"], item.get("body_file_sha256"),
+            label=f"batch item {index} body file")
+        try:
+            binding = _precheck_analysis(item.get("analysis"), body)
+        except WriteRefused as exc:
+            raise WriteRefused(f"batch item {index}: {exc}") from exc
+        note_id = item["analysis"]["id"]
+        if note_id in seen:
+            # Even two identical rows refuse: the transaction needs unique
+            # artifact ids, and silently dropping one would lie about what
+            # the batch carried.
+            raise WriteRefused(
+                f"batch carries note id {note_id} twice; refusing")
+        seen.add(note_id)
+        prepared.append((index, item["analysis"], binding, body))
+    return prepared
+
+
+def _dumps_analysis_save_batch(payload: dict) -> str:
+    """The exact batch-save encoder: default separators, unescaped."""
+    return json.dumps(payload, ensure_ascii=False)
+
+
+@register("note.analysis.save_batch", kind="command")
+def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
+    """Preserve up to 20 source analyses atomically under one receipt."""
+    root = ctx.root
+    prepared = _read_batch_items(req["bundle"])
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    writes: dict[Path, bytes] = {}
+    created: list[str] = []
+    replayed_ids: list[str] = []
+    paths: dict[str, str] = {}
+    for index, analysis, binding, body in prepared:
+        try:
+            note_id, path, content = _resolve_note(
+                root, repo, analysis, binding, body)
+        except WriteRefused as exc:
+            raise WriteRefused(
+                f"batch item {index} ({analysis['id']}): {exc}") from exc
+        paths[note_id] = path.relative_to(root).as_posix()
+        if content is None:
+            replayed_ids.append(note_id)
+        else:
+            created.append(note_id)
+            writes[path] = content
+    if not writes:
+        return Result(
+            {"ok": True, "replayed": True, "created_note_ids": [],
+             "replayed_note_ids": replayed_ids, "note_paths": paths},
+            json_dumps=_dumps_analysis_save_batch,
+        )
+    # The envelope guards every batch id, but only new notes become
+    # transaction artifacts: replayed notes keep their revision exactly
+    # as a single-note replay does.
+    try:
+        revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    wanted = set(created)
+    expected = {artifact: revision
+                for artifact, revision
+                in revisions.items()
+                if artifact in wanted}
+
+    def finish_analysis_save_batch(confirmation):
+        return {**confirmation, "ok": True, "replayed": False,
+                "created_note_ids": created,
+                "replayed_note_ids": replayed_ids, "note_paths": paths}
+
+    return Result(
+        {"ok": True, "replayed": False, "created_note_ids": created,
+         "replayed_note_ids": replayed_ids, "note_paths": paths},
+        proposal=TransactionProposal(
+            capability="note.analysis.save_batch",
+            writes=writes,
+            artifact_ids=created,
+            expected_revisions=expected,
+        ),
+        finish=finish_analysis_save_batch,
+        after_commit="STANDARD",
+        json_dumps=_dumps_analysis_save_batch,
     )
 
 

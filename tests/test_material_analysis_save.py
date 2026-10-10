@@ -453,10 +453,10 @@ def test_batch_fully_replayed_makes_no_write(mini_repo):
 
 def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
     import los
-    from learning_os.commands import analysis as analysis_commands
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.legacy import _dispatch
+    from learning_os.diagnostics import tracer as diag_tracer
+    from learning_os.diagnostics.store import bind_store as _bind_diag_store
+    from learning_os.ops import pipeline as pipeline_module
 
     entries = [_batch_entry("txa", "transaction analysis a"),
                _batch_entry("txb", "transaction analysis b")]
@@ -472,17 +472,29 @@ def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
         })
     calls = []
 
-    def failing_transaction(root, writes, **kwargs):
-        calls.append((dict(writes), dict(kwargs)))
+    def failing_commit(ctx, proposal):
+        calls.append((dict(proposal.writes), {
+            "capability": proposal.capability,
+            "artifact_ids": list(proposal.artifact_ids)}))
         return 2, ["simulated transaction failure"], {}
 
-    monkeypatch.setattr(analysis_commands, "_write_transaction",
-                        failing_transaction)
-    definition = command_definitions(mini_repo)["note.analysis.save_batch"]
-    with pytest.raises(WriteRefused, match="simulated transaction failure"):
-        _dispatch(mini_repo, definition, {"schema_version": 2},
-                  {"bundle": {"notes": notes}},
-                  parser_factory=los.build_parser)
+    monkeypatch.setattr(pipeline_module, "commit_proposal", failing_commit)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="note.analysis.save_batch",
+        payload={"bundle": {"notes": notes}},
+        artifact_ids=[entry["note_id"] for entry in entries],
+        idempotency_key="batch-tx-fail")
+    _bind_diag_store(mini_repo)
+    attempt = diag_tracer.begin_attempt(
+        {"capability": "note.analysis.save_batch"})
+    outcome = pipeline_module.run_gateway(
+        mini_repo, envelope, requested="note.analysis.save_batch",
+        definitions=command_definitions(mini_repo), attempt=attempt,
+        replay_only=False, parser_factory=los.build_parser)
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 2
+    assert body["ok"] is False
+    assert body["error"]["message"] == "simulated transaction failure"
     assert len(calls) == 1
     assert len(calls[0][0]) == 2
     assert calls[0][1]["capability"] == "note.analysis.save_batch"
@@ -514,8 +526,8 @@ def test_batch_bounds_refuse(mini_repo):
 
 
 def test_batch_handler_bounds_refuse_directly():
-    from learning_os.commands.analysis import _read_batch_items
     from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.handlers.notes import _read_batch_items
 
     with pytest.raises(WriteRefused, match="non-empty notes list"):
         _read_batch_items({"notes": []})
@@ -598,7 +610,6 @@ def test_batch_retry_returns_the_same_breakdown(mini_repo):
 
 def test_batch_shape_has_one_source_of_truth(repo_root):
     import los
-    from learning_os.commands import analysis as analysis_commands
     from learning_os.contracts import batch_notes
     from learning_os.contracts.payloads import (
         payload_fields,
@@ -606,6 +617,7 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
         subparsers,
     )
     from learning_os.ops import _legacy_plumbing as plumbing
+    from learning_os.ops.handlers import notes as notes_handlers
 
     command_parser = subparsers(los.build_parser())["note-analysis-save-batch"]
     fresh = payload_schema("note.analysis.save_batch", repo_root)
@@ -621,10 +633,10 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
     assert notes_schema["minItems"] == batch_notes.BATCH_MIN_NOTES
     assert notes_schema["maxItems"] == batch_notes.BATCH_MAX_NOTES
     assert plumbing.ANALYSIS_FIELDS is batch_notes.ANALYSIS_FIELDS
-    assert analysis_commands.BATCH_FIELDS is batch_notes.BATCH_FIELDS
-    assert analysis_commands.BATCH_ITEM_FIELDS is batch_notes.BATCH_ITEM_FIELDS
-    assert analysis_commands.BATCH_MIN_NOTES == batch_notes.BATCH_MIN_NOTES
-    assert analysis_commands.BATCH_MAX_NOTES == batch_notes.BATCH_MAX_NOTES
+    assert notes_handlers.BATCH_FIELDS is batch_notes.BATCH_FIELDS
+    assert notes_handlers.BATCH_ITEM_FIELDS is batch_notes.BATCH_ITEM_FIELDS
+    assert notes_handlers.BATCH_MIN_NOTES == batch_notes.BATCH_MIN_NOTES
+    assert notes_handlers.BATCH_MAX_NOTES == batch_notes.BATCH_MAX_NOTES
 
 
 # --------------------------------------------------------------------------
