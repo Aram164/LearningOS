@@ -133,18 +133,6 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
     return False
 
 
-def _path_or_error(root: Path, path_id: str):
-    repo = load_repo(root)
-    learning_path = repo.learning_paths.get(path_id)
-    if learning_path is None or learning_path.archived:
-        active = [key for key, row in repo.learning_paths.items()
-                  if not row.archived]
-        print(f"los: {not_found('active learning path', path_id, active)}",
-              file=sys.stderr)
-        return repo, None
-    return repo, learning_path
-
-
 def _print_rows(rows: list[dict]) -> int:
     print(json.dumps(rows, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
@@ -424,17 +412,6 @@ def _replace_registry_list_record(content: str, record_id: str, record: dict) ->
                               for line in rendered[1:])
     replacement += "\n\n"
     return "".join(lines[:start]) + replacement + "".join(lines[end:]).lstrip("\n")
-
-
-def _stage(data: dict, stage_id: str):
-    return next((row for row in data.get("stages", []) or []
-                 if isinstance(row, dict) and row.get("id") == stage_id), None)
-
-
-def _stage_ids(data: dict) -> list[str]:
-    """Stage ids of one study map or learning path, for not-found suggestions."""
-    return [str(row["id"]) for row in data.get("stages", []) or []
-            if isinstance(row, dict) and row.get("id")]
 
 
 # ---------------------------------------------------- validate / generate
