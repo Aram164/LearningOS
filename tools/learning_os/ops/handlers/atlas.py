@@ -17,8 +17,8 @@ from learning_os.contracts.atlas_question import (
 )
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
-from learning_os.domain.failures import WriteRefused
-from learning_os.domain.suggest import suggest
+from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.suggest import suggest, with_suggestions
 from learning_os.learning_runtime import runtime_path
 from learning_os.ops._legacy_plumbing import (
     RELATION_ARTIFACT,
@@ -31,6 +31,7 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.revisions import artifact_revision
 from learning_os.transactions import parse_expected_revisions
 
 
@@ -481,5 +482,51 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
+        json_dumps=_dumps_atlas,
+    )
+
+
+@register("cli.atlas-context", kind="porcelain")
+@register("atlas.context", kind="porcelain")
+def atlas_context(ctx: OpContext, req: dict) -> Result:
+    """Read connection editor guards and personal questions for one concept."""
+    root = ctx.root
+    snapshot = ctx.snapshot_id()
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    if req["concept_id"] not in repo.concepts:
+        complaint = with_suggestions(
+            f"unknown concept: {req['concept_id']}",
+            req["concept_id"], repo.concepts)
+        raise NotFound(
+            "concept", req["concept_id"], repo.concepts,
+            message=complaint,
+            site=f"{ctx.operation}.unknown-concept",
+        )
+    # This is a scoped editor read, not another full-manifest endpoint.
+    rows = [copy.deepcopy(row) for data in _registries(root).values()
+            for row in data["relations"]
+            if req["concept_id"] in (row["from"], row["to"])]
+    questions = []
+    for note in repo.notes.values():
+        question = note.meta.get("atlas_question")
+        if not isinstance(question, dict):
+            continue
+        target = question["target"]
+        ids = target.get("concepts", []) or [target.get("from"), target.get("to")]
+        if req["concept_id"] in ids:
+            questions.append({"id": note.id, "title": note.meta["title"],
+                              "path": note.path.relative_to(root).as_posix(),
+                              "revision": artifact_revision(root, note.id),
+                              **copy.deepcopy(question)})
+    if _snapshot(root) != snapshot:
+        raise WriteRefused(
+            "snapshot changed while reading Atlas",
+            site=f"{ctx.operation}.snapshot-changed",
+        )
+    return Result(
+        {"schema_version": 1, "snapshot_id": snapshot,
+         "relation_revision": artifact_revision(root, RELATION_ARTIFACT),
+         "relations": rows, "questions": questions},
         json_dumps=_dumps_atlas,
     )

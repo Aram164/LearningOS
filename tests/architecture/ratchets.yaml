@@ -259,26 +259,6 @@ checks:
     count: 3
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::canonical_fingerprint
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::return
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/capability.py::cmd_capability::print
     count: 22
     since: baseline
@@ -1790,10 +1770,6 @@ checks:
     since: baseline
     approved_by: null
   A5-suggestions:
-  - signature: atlas.context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: backup.manifest::*
     count: 1
     since: baseline
@@ -1822,10 +1798,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.atlas-context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.backup-manifest::*
     count: 1
     since: baseline
@@ -2075,15 +2047,7 @@ checks:
     since: baseline
     approved_by: null
   A7-output:
-  - signature: atlas.context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: backup.manifest::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.atlas-context::*
     count: 1
     since: baseline
     approved_by: null

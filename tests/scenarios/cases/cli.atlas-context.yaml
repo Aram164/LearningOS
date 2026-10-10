@@ -12,8 +12,8 @@ cases:
     kind: refusal
     transport: cli
     argv: [atlas-context, concept-nope]
-    expect: {site: null}
+    expect: {site: cli.atlas-context.unknown-concept}
 untriggered:
-  - {where: "tools/learning_os/commands/atlas.py:43", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/atlas.py:53", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}
-  - {where: "tools/learning_os/commands/atlas.py:109", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
+  - {where: "tools/learning_os/ops/_legacy_plumbing.py:966", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}
+  - {where: "tools/learning_os/ops/handlers/atlas.py:524", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
