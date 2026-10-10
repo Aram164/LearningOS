@@ -15,6 +15,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os import masters_planning
 from learning_os.backup_manifest import (
     BackupManifestError,
     backup_authorities,
@@ -604,4 +605,14 @@ def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
         "lock": lock,
     }
     validate_contract(root, "legacy-archive-status.schema.json", value)
+    return Result(value, json_dumps=_dumps_indented)
+
+
+@register("cli.masters-planning-dashboard", kind="tool")
+@register("masters-planning.dashboard", kind="query")
+def masters_planning_dashboard(ctx: OpContext, req: dict) -> Result:
+    """Render the Master's Planning dashboard."""
+    value = masters_planning.masters_planning_dashboard(
+        ctx.root, confirmed=bool(req.get("confirm_masters_planning")),
+    )
     return Result(value, json_dumps=_dumps_indented)

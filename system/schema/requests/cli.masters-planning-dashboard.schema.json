@@ -56,7 +56,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.vnext.cmd_masters_planning_dashboard",
+    "handler": "learning_os.adapters.cli.invoke:cli.masters-planning-dashboard",
     "parser_factory": false
   }
 }

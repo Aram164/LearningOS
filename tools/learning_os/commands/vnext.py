@@ -10,7 +10,6 @@ from learning_os.legacy_archive import legacy_archive_lock_destination
 from learning_os.masters_planning import (
     candidate_comparison_destination,
     master_catalog_destination,
-    masters_planning_dashboard,
     validate_candidate_comparison,
     validate_catalog_revision,
     validate_master_catalog,
@@ -126,14 +125,6 @@ def cmd_legacy_archive_lock_publish(args) -> int:
         **({"errors": [str(error) for error in errors]} if errors else {}),
     }, indent=2, ensure_ascii=False))
     return code
-
-
-def cmd_masters_planning_dashboard(args) -> int:
-    value = masters_planning_dashboard(
-        _root(args), confirmed=bool(args.confirm_masters_planning),
-    )
-    print(json.dumps(value, indent=2, ensure_ascii=False))
-    return 0
 
 
 def cmd_masters_planning_catalog_update(args) -> int:
