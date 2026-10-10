@@ -188,3 +188,4 @@ approvals:
   - {key: "request_schemas.cli.plan-edit-context.schema.json", change: changed, plan_ref: "PLAN D4 (SC-plan: cli.plan-edit-context converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.material.span.schema.json", change: changed, plan_ref: "PLAN D4 (SC-plan: material.span converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.plan-template.schema.json", change: changed, plan_ref: "PLAN D4 (SC-plan: cli.plan-template converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.material.context.schema.json", change: changed, plan_ref: "PLAN D4 (SC-plan: material.context converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

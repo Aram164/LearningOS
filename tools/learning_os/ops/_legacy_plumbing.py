@@ -1354,3 +1354,88 @@ def _freshness_label(root, binding, observations=None):
     if status in ("current", "stale"):
         return status
     return "unreadable"
+
+
+# ---------------------------------------------------------------------------
+# Offset/limit validation with the exact commands.reads._window rules,
+# added with exactly the conductor's text for the plan reads and the
+# notes wave (SPEC (bs) item 4).
+
+
+def _window_values(offset: int, limit: int, expected_snapshot: str | None,
+                   maximum: int) -> tuple[int, int]:
+    """Offset/limit validation with the exact commands.reads._window rules."""
+    if offset < 0 or not 1 <= limit <= maximum:
+        raise WriteRefused(f"offset must be nonnegative and limit between 1 and {maximum}")
+    if offset and not expected_snapshot:
+        raise WriteRefused("continuation requires --expected-snapshot from the previous response")
+    return offset, limit
+
+
+# ---------------------------------------------------------------------------
+# Use-evidence tallies and note bytes, moved verbatim from
+# commands.reads for the plan reads (SPEC (bo) item 2).
+
+
+POSITIVE_FEEDBACK = frozenset({"helpful", "useful-for-derivation",
+                               "useful-for-review"})
+
+MISMATCH_FEEDBACK = frozenset({"too-advanced", "wrong-perspective"})
+
+def _use_evidence(repo):
+    """Recorded stage-use evidence per source id: raw feedback counts.
+
+    Canonical study-map data, so the read's snapshot guard already binds
+    it — no observation entry is owed. Counts only; grouping into
+    positive/mismatch happens at rank time from the sets above, so a new
+    vocabulary value degrades to reported-but-unranked, never to a crash
+    or a silent demotion.
+    """
+    tallies: dict[str, dict[str, int]] = {}
+    for study_map in repo.study_maps.values():
+        stages = study_map.data.get("stages", []) or []
+        for stage in stages:
+            if not isinstance(stage, dict):
+                continue
+            for entry in stage.get("source_feedback", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                source_id = entry.get("source_id")
+                if not source_id:
+                    continue
+                tally = tallies.setdefault(source_id, {})
+                value = entry.get("feedback")
+                if not value:
+                    continue
+                tally[value] = tally.get(value, 0) + 1
+    return tallies
+
+def _evidence_label(tally):
+    positive = sum(count for value, count in tally.items()
+                   if value in POSITIVE_FEEDBACK)
+    mismatch = sum(count for value, count in tally.items()
+                   if value in MISMATCH_FEEDBACK)
+    return {"counts": dict(sorted(tally.items())),
+            "positive": positive, "mismatch": mismatch}
+
+def _bytes_inside_owner(root, path, owner, *, escape, symlink):
+    """Read bytes admitted by one owner directory; symlinks always refuse.
+
+    The one admission rule for note, garden, and inbox reads: the resolved
+    target must sit below the owner, and no path component may be a link —
+    even one that would resolve in-tree. Only the refusal wording differs
+    per surface.
+    """
+    try:
+        path.resolve(strict=True).relative_to(owner.resolve(strict=True))
+    except (ValueError, OSError) as exc:
+        raise WriteRefused(escape) from exc
+    if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
+        raise WriteRefused(symlink)
+    return path.read_bytes()
+
+def _note_bytes(root, note):
+    return _bytes_inside_owner(
+        root, note.path, root / "knowledge" / "notes",
+        escape="note path escapes its knowledge owner",
+        symlink="note read refuses symlinks")

@@ -7,7 +7,7 @@ import copy
 import hashlib
 import json
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -24,6 +24,7 @@ from learning_os.domain.failures import (
     StaleSnapshot,
     ValidationFailed,
     WriteRefused,
+    unreadable_refusal,
 )
 from learning_os.domain.suggest import (
     MAX_SUGGESTIONS,
@@ -36,6 +37,7 @@ from learning_os.learning_runtime import (
     read_stage_results,
     stage_results_for,
 )
+from learning_os.loading import FRONTMATTER_RE
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
@@ -59,12 +61,17 @@ from learning_os.ops._legacy_plumbing import (
     _apply_hint,
     _approved_assessments,
     _changed_write,
+    _evidence_label,
     _freshness_label,
     _guard_rows,
     _map_for_unit,
+    _note_bytes,
     _read_structured_file,
+    _route_material_files,
     _snapshot,
     _unit_note_scope,
+    _use_evidence,
+    _window_values,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -1517,3 +1524,647 @@ def plan_template(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         ) from exc
     return Result(response, json_dumps=_dumps_default)
+
+
+# ---------------------------------------------------------------------------
+# Material-context helpers, moved verbatim from commands.reads with
+# their last legacy caller (SPEC (bo) item 2).
+
+
+ASSESSMENT_TEXT_FIELDS = ("contribution", "assumptions", "notation",
+                          "exercise_value", "best_for", "limitations",
+                          "locator")
+
+_CONCEPT_VIA_LIMIT = 20
+
+_ANCHOR_PREVIEW_LIMIT = 8
+
+_ANCHOR_TEXT_LIMIT = 200
+
+
+def _unit_route_pairs(repo, unit_id) -> list:
+    """(source_id, route-dict) pairs routed to one unit.
+
+    The same membership the scope check always used — a bare unit id or
+    an expanded route carrying it — with string routes arriving as empty
+    dicts so the shared rule, not the caller, decides what they prove.
+    """
+    unit = repo.units[unit_id]
+    source_map = repo.module_source_maps.get(unit.module_id) or {}
+    pairs = []
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict) or not source.get("source_id"):
+            continue
+        for route in source.get("unit_routes", []) or []:
+            if route == unit.id:
+                pairs.append((source["source_id"], {}))
+            elif isinstance(route, dict) and route.get("unit_id") == unit.id:
+                pairs.append((source["source_id"], route))
+    return pairs
+
+def _route_material_index(repo, unit_id=None) -> dict:
+    """route_id -> (source_id, route-dict), for one unit or every module."""
+    if unit_id is not None:
+        return {route.get("id"): pair for pair in _unit_route_pairs(repo, unit_id)
+                for route in [pair[1]] if route.get("id")}
+    index = {}
+    for source_map in (repo.module_source_maps or {}).values():
+        if not isinstance(source_map, dict):
+            continue
+        for source in source_map.get("sources", []) or []:
+            if not isinstance(source, dict) or not source.get("source_id"):
+                continue
+            for route in source.get("unit_routes", []) or []:
+                if isinstance(route, dict) and route.get("id"):
+                    index.setdefault(route["id"], (source["source_id"], route))
+    return index
+
+def _concept_stage_routes(repo) -> dict[str, dict[str, list[tuple[str, dict]]]]:
+    """concept id -> stage id -> the (source_id, route) pairs that stage places (F12).
+
+    A stage joins a concept to a route when it tags the concept AND places
+    the route — two declared edges, read-side only. Nothing is inferred and
+    nothing is recorded: analysis notes carry no concept tags by
+    construction, so without this join the concept filter's note branch
+    could never match them. A note then joins only through the shared
+    note-to-route rule (`_unit_note_scope`), never through a shared source
+    id alone: one source (a lecture deck, a textbook) serves many concepts,
+    and an analysis of its other pages is not evidence for this one.
+    """
+    routes = _route_material_index(repo, None)
+    joined: dict[str, dict[str, list[tuple[str, dict]]]] = {}
+    for map_id in sorted(repo.study_maps):
+        stages = repo.study_maps[map_id].data.get("stages", []) or []
+        for stage in stages:
+            if not isinstance(stage, dict):
+                continue
+            stage_id = stage.get("id")
+            if not isinstance(stage_id, str) or not stage_id:
+                continue
+            concepts = stage.get("concepts") or []
+            if not concepts:
+                continue
+            placed: list[tuple[str, dict]] = []
+            for resource in stage.get("resources", []) or []:
+                if not isinstance(resource, dict):
+                    continue
+                route_id = resource.get("route_id")
+                if not route_id and isinstance(
+                        resource.get("material_ref"), dict):
+                    route_id = resource["material_ref"].get("route_id")
+                hit = routes.get(route_id)
+                if hit is not None and isinstance(hit[0], str) and hit[0]:
+                    placed.append(hit)
+            if not placed:
+                continue
+            for concept_id in concepts:
+                if not isinstance(concept_id, str) or not concept_id:
+                    continue
+                joined.setdefault(concept_id, {}).setdefault(
+                    stage_id, []).extend(placed)
+    return joined
+
+def _explanation_snippets(title, text, body_offset, terms) -> list:
+    """Title label plus true-file-line body windows for matched terms.
+
+    A title hit yields one title snippet; body hits reuse the content
+    search's windowing over the full text, so the reported lines are true
+    file lines even though matching never sees the frontmatter. At most
+    eight snippets either way, the title counting as one.
+    """
+    snippets = []
+    if any(regex.search(title) for regex in terms):
+        snippets.append({"label": "title", "text": title})
+    body = text[body_offset:]
+    positions = sorted({match.start() for regex in terms
+                        if (match := regex.search(body)) is not None})
+    for position in positions[:8 - len(snippets)]:
+        absolute = body_offset + position
+        start = max(text.rfind("\n", 0, absolute) + 1, absolute - 100)
+        end = text.find("\n", absolute)
+        end = min(end if end >= 0 else len(text), absolute + 180)
+        snippets.append({"line": text.count("\n", 0, absolute) + 1,
+                         "text": text[start:end]})
+    return snippets
+
+def _observations_digest(observations: dict) -> str:
+    encoded = json.dumps(
+        {key: observations[key] for key in sorted(observations)},
+        ensure_ascii=False, sort_keys=True,
+        separators=(",", ":")).encode("utf-8")
+    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
+
+def _note_purpose_hit(binding, purpose):
+    if purpose is None:
+        return True
+    wanted = purpose.casefold()
+    anchors = binding.get("anchors")
+    if not isinstance(anchors, list):
+        return False
+    return any(wanted in str(anchor.get("purpose", "")).casefold()
+               for anchor in anchors if isinstance(anchor, dict))
+
+def _assessment_purpose_hit(assessment, purpose):
+    if purpose is None:
+        return True
+    wanted = purpose.casefold()
+    return any(wanted in str(assessment.get(field) or "").casefold()
+               for field in ("best_for", "exercise_value"))
+
+def _anchor_purpose_hit(anchor, wanted) -> bool:
+    return (isinstance(anchor, dict)
+            and wanted in str(anchor.get("purpose", "")).casefold())
+
+def _anchor_selection(anchors, purpose):
+    """Original-order anchors with literal purpose matches first, deduplicated.
+
+    Returns (ordered, match_count): match_count is None without a purpose
+    filter. Both groups keep file order; no anchor appears twice.
+    """
+    if not purpose:
+        return list(anchors), None
+    wanted = purpose.casefold()
+    matches = [anchor for anchor in anchors
+               if _anchor_purpose_hit(anchor, wanted)]
+    seen = {id(anchor) for anchor in matches}
+    return (matches + [anchor for anchor in anchors
+                       if id(anchor) not in seen], len(matches))
+
+def _clip_anchor_text(anchor):
+    """The anchor with every long text field bounded, naming what clipped."""
+    if not isinstance(anchor, dict):
+        return anchor
+    clipped = []
+    shaped = {}
+    for key, value in anchor.items():
+        if isinstance(value, str) and len(value) > _ANCHOR_TEXT_LIMIT:
+            shaped[key] = value[:_ANCHOR_TEXT_LIMIT]
+            clipped.append(key)
+        else:
+            shaped[key] = value
+    shaped["clipped_fields"] = clipped
+    return shaped
+
+def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
+                        unit, material_ref, scope, evidence, observations,
+                        include_anchors=False, concept_via=None):
+    """One matched analysis note, or None when the terms miss.
+
+    Terms match the explanation text — title plus body — with lexical AND;
+    frontmatter (provenance paths, digests, ids) never matches. Title hits
+    yield a title snippet; body hits yield true file line numbers. The
+    scope label exists only under --unit, where direct and related mean
+    something. Anchors preview bounded (purpose matches first) with exact
+    totals; the complete index needs the explicit expansion.
+    """
+    raw = _note_bytes(root, note)
+    text = raw.decode("utf-8")
+    title = note.meta.get("title", note.id)
+    front = FRONTMATTER_RE.match(text)
+    body_offset = front.end() if front else 0
+    body = text[body_offset:]
+    matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
+               if regex.search(title) or regex.search(body)]
+    if len(matched) != len(raw_terms):
+        return None
+    binding = note.meta["material_analysis"]
+    inspected = binding.get("inspected_range") or {}
+    reasons = {"terms": matched}
+    if concept_id is not None:
+        reasons["concept"] = concept_id
+    if concept_via:
+        reasons["concept_via"] = [f"stage:{stage_id}" for stage_id in concept_via]
+    if purpose:
+        reasons["purpose"] = purpose
+    if unit:
+        reasons["unit"] = unit
+    if material_ref is not None:
+        reasons["material"] = material_ref
+    item = {
+        "origin": "analysis-note",
+        "id": note.id, "title": title,
+        "path": note.path.relative_to(root).as_posix(),
+        "use_evidence": _evidence_label(
+            evidence.get(binding.get("source_id")) or {}),
+        "match": {**reasons, "snippets": _explanation_snippets(
+            title, text, body_offset, terms)},
+        "source": {
+            "ref": binding.get("material"),
+            "pages": [inspected.get("start"), inspected.get("end")],
+            "freshness": _freshness_label(root, binding, observations),
+        },
+        "review": {
+            "semantic_review": note.meta.get("semantic_review"),
+            "resolution": binding.get("resolution"),
+        },
+    }
+    anchors = binding.get("anchors") or []
+    ordered, match_count = _anchor_selection(anchors, purpose)
+    if include_anchors:
+        item["anchors"] = list(anchors)
+        item["anchor_returned"] = len(anchors)
+        item["anchors_truncated"] = False
+    else:
+        item["anchors"] = [_clip_anchor_text(anchor)
+                           for anchor in ordered[:_ANCHOR_PREVIEW_LIMIT]]
+        item["anchor_returned"] = len(item["anchors"])
+        item["anchors_truncated"] = len(anchors) > _ANCHOR_PREVIEW_LIMIT
+    item["anchor_total"] = len(anchors)
+    if purpose:
+        item["purpose_match_count"] = match_count
+        item["purpose_other_count"] = len(anchors) - match_count
+    if scope is not None:
+        item["scope"] = scope
+    return item
+
+
+def _resolve_concept(ctx, repo, raw):
+    """A concept id or declared alias, matched case-insensitively.
+
+    Moved from ``commands.reads`` with its last legacy caller (SPEC
+    (bo) item 2); only the miss carries the caller's site, the
+    ambiguous match keeps the legacy plain refusal and its text.
+    """
+    if raw in repo.concepts:
+        return raw
+    lowered = raw.casefold()
+    hits = [cid for cid, concept in repo.concepts.items()
+            if isinstance(concept, dict)
+            and any(str(alias).casefold() == lowered
+                    for alias in (concept.get("aliases") or []))]
+    if len(hits) == 1:
+        return hits[0]
+    if not hits:
+        raise WriteRefused(
+            f"unknown concept: {raw!r} matches no id or declared alias",
+            site=f"{ctx.operation}.unknown-concept")
+    raise WriteRefused(f"concept {raw!r} is ambiguous across {len(hits)} concepts; use an id")
+
+
+def _check_material_ref(ctx, root, ref) -> str:
+    """The exact materials-tree path a --material filter names, else refused.
+
+    Exact: no canonicalization, so a near-miss matches nothing rather than
+    something nearby. The boundary is still enforced — an escape refuses
+    instead of reading outside the tree.
+
+    Moved from ``commands.reads`` with its last legacy caller (SPEC
+    (bo) item 2); only the caller's site is added.
+    """
+    materials = root.parent / "materials"
+    pure = PurePosixPath(ref) if isinstance(ref, str) else None
+    if (pure is None or not ref or pure.is_absolute()
+            or "\\" in ref
+            or any(part in {".", ".."} for part in pure.parts)):
+        raise WriteRefused(
+            f"--material must be a materials-tree-relative path: {ref!r}",
+            site=f"{ctx.operation}.bad-material")
+    try:
+        (materials / ref).resolve(strict=False).relative_to(materials.resolve())
+    except (OSError, ValueError) as exc:
+        raise WriteRefused(
+            f"--material must be a materials-tree-relative path: {ref!r}",
+            site=f"{ctx.operation}.bad-material") from exc
+    return ref
+
+
+def _anchor_expansion_command(req, limit, snapshot, observed) -> str:
+    """Re-run this read's selected page with complete anchor indexes.
+
+    Moved from ``commands.reads`` with its last legacy caller (SPEC
+    (bo) item 2); the request replaces the namespace.
+    """
+    parts = ["material-context", req.get("query") or ""]
+    if req.get("concept"):
+        parts += ["--concept", req["concept"]]
+    if req.get("purpose"):
+        parts += ["--purpose", req["purpose"]]
+    if req.get("unit"):
+        parts += ["--unit", req["unit"]]
+    if req.get("material"):
+        parts += ["--material", req["material"]]
+    if req.get("include_related", False):
+        parts += ["--include-related"]
+    parts += ["--include-anchors", "--limit", str(limit),
+              "--offset", str(req.get("offset")),
+              "--expected-snapshot", snapshot,
+              "--expected-observations", observed]
+    return expansion(*parts)
+
+
+@register("material.context", kind="query")
+def material_context(ctx: OpContext, req: dict) -> Result:
+    """Find saved explanations from an explanation need."""
+    root = ctx.root
+    try:
+        try:
+            offset, limit = _window_values(
+                req.get("offset") or 0, req.get("limit") or 20,
+                req.get("expected_snapshot"), 20)
+        except WriteRefused as exc:
+            exc.site = f"{ctx.operation}.bad-window"
+            raise
+        if offset and not req.get("expected_observations"):
+            raise WriteRefused(
+                "continuation requires --expected-observations from the "
+                "previous response",
+                site=f"{ctx.operation}.offset-needs-observations")
+        raw_terms = (req.get("query") or "").split()
+        terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
+        material_ref = req.get("material")
+        if not terms and material_ref is None and not req.get("concept"):
+            raise WriteRefused(
+                "material context requires a nonempty query, --concept, "
+                "or --material",
+                site=f"{ctx.operation}.empty-need")
+        if req.get("include_related") and not req.get("unit"):
+            raise WriteRefused("--include-related needs --unit",
+                               site=f"{ctx.operation}.related-needs-unit")
+        if material_ref is not None:
+            _check_material_ref(ctx, root, material_ref)
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        repo = ctx.repo()
+        note_dir = root / "knowledge" / "notes"
+        note_failures = [
+            (path, message) for path, message in repo.parse_failures
+            if path.is_relative_to(note_dir)
+        ]
+        if note_failures:
+            raise WriteRefused(unreadable_refusal(root, note_failures, "context"))
+        synthesis_failures = [
+            (path, message) for path, message in repo.parse_failures
+            if path.name == "material-synthesis.yaml"
+        ]
+        if synthesis_failures:
+            raise WriteRefused(unreadable_refusal(root, synthesis_failures, "context"))
+        concept_id = _resolve_concept(ctx, repo, req["concept"]) \
+            if req.get("concept") else None
+        if req.get("unit") and req["unit"] not in repo.units:
+            complaint = with_suggestions(
+                f"unknown unit: {req['unit']!r}", req["unit"], repo.units)
+            raise NotFound("unit", req["unit"], repo.units,
+                           message=complaint,
+                           site=f"{ctx.operation}.unknown-unit")
+        assessments = _approved_assessments(repo)
+        related_count = 0
+        searched_related: list = []
+        if req.get("unit"):
+            assessments = [row for row in assessments if row[1] == req["unit"]]
+            pairs = _unit_route_pairs(repo, req["unit"])
+            direct_pool = []
+            related_pool = []
+            for note in _analysis_notes(repo):
+                standing = _unit_note_scope(
+                    repo, note.meta.get("material_analysis") or {}, pairs)
+                if standing == "direct":
+                    direct_pool.append(note)
+                elif standing == "related":
+                    related_pool.append(note)
+            notes = direct_pool
+            related_count = len(related_pool)
+            if req.get("include_related"):
+                searched_related = related_pool
+        else:
+            notes = _analysis_notes(repo)
+        if concept_id is not None:
+            concept_join = _concept_stage_routes(repo).get(concept_id, {})
+
+            def _note_concept_via(note) -> list[str]:
+                binding = note.meta.get("material_analysis") or {}
+                if not isinstance(binding, dict):
+                    return []
+                via = [stage_id
+                       for stage_id, placed in sorted(concept_join.items())
+                       if _unit_note_scope(repo, binding, placed) == "direct"]
+                return via[:_CONCEPT_VIA_LIMIT]
+
+            def _note_matches_concept(note) -> bool:
+                return (concept_id in (note.meta.get("concepts") or [])
+                        or bool(_note_concept_via(note)))
+
+            notes = [note for note in notes
+                     if _note_matches_concept(note)]
+            searched_related = [
+                note for note in searched_related
+                if _note_matches_concept(note)]
+            assessments = [row for row in assessments
+                           if concept_id in (row[2].get("concept_ids") or [])]
+            via_by_note = {note.id: _note_concept_via(note)
+                           for note in (*notes, *searched_related)}
+        else:
+            via_by_note = {}
+        notes = [note for note in notes
+                 if _note_purpose_hit(note.meta["material_analysis"], req.get("purpose"))]
+        searched_related = [
+            note for note in searched_related
+            if _note_purpose_hit(note.meta["material_analysis"], req.get("purpose"))]
+        assessments = [row for row in assessments
+                       if _assessment_purpose_hit(row[2], req.get("purpose"))]
+        if material_ref is not None:
+            notes = [note for note in notes
+                     if (note.meta.get("material_analysis") or {}).get("material")
+                     == material_ref]
+            searched_related = [
+                note for note in searched_related
+                if (note.meta.get("material_analysis") or {}).get("material")
+                == material_ref]
+            route_index = _route_material_index(repo, req.get("unit"))
+            assessments = [
+                row for row in assessments
+                if material_ref in _route_material_files(
+                    repo, *route_index.get(row[2].get("route_id"), (None, {})))]
+        # Use evidence is deliberately global: feedback says a source
+        # served in some stage, which bears on every result bound to
+        # that source, however the query scoped the pool.
+        evidence = _use_evidence(repo)
+        pool = {
+            "analysis_notes": len(notes),
+            "assessments": len(assessments),
+            # Related notes are counted, never pooled: the resolution
+            # tallies below describe the default-visible direct set.
+            "related_analysis_notes": related_count,
+            "analysis_by_resolution": {},
+            "analysis_unreviewed": 0,
+        }
+        for note in notes:
+            binding = note.meta["material_analysis"]
+            resolution = binding.get("resolution")
+            pool["analysis_by_resolution"][resolution] = \
+                pool["analysis_by_resolution"].get(resolution, 0) + 1
+            if note.meta.get("semantic_review") == "unreviewed":
+                pool["analysis_unreviewed"] += 1
+        items = []
+        observations: dict[str, str] = {}
+        dossier_freshness: dict[str, dict] = {}
+        include_anchors = bool(req.get("include_anchors", False))
+        for note in notes:
+            item = _analysis_note_item(
+                root, note, raw_terms=raw_terms, terms=terms,
+                concept_id=concept_id, purpose=req.get("purpose"),
+                unit=req.get("unit"), material_ref=material_ref,
+                scope="direct" if req.get("unit") else None,
+                evidence=evidence, observations=observations,
+                include_anchors=include_anchors,
+                concept_via=via_by_note.get(note.id))
+            if item is not None:
+                items.append(item)
+        for synthesis_id, unit_id, assessment in assessments:
+            joined = "\n".join(str(assessment.get(field) or "")
+                               for field in ASSESSMENT_TEXT_FIELDS)
+            matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
+                       if regex.search(joined)]
+            if len(matched) != len(raw_terms):
+                continue
+            excerpts = []
+            for field in ASSESSMENT_TEXT_FIELDS:
+                if len(excerpts) >= 3:
+                    break
+                value = str(assessment.get(field) or "")
+                if value and any(regex.search(value) for regex in terms):
+                    excerpts.append({"field": field, "text": value[:200]})
+            reasons = {"terms": matched}
+            if concept_id is not None:
+                reasons["concept"] = concept_id
+            if req.get("purpose"):
+                reasons["purpose"] = req["purpose"]
+            if req.get("unit"):
+                reasons["unit"] = req["unit"]
+            if material_ref is not None:
+                reasons["material"] = material_ref
+            origin = repo.unit_material_synthesis_origins.get(synthesis_id)
+            fresh = dossier_freshness.get(synthesis_id)
+            if fresh is None:
+                dossier = repo.unit_material_syntheses.get(synthesis_id)
+                material_hashes = {}
+                fresh = material_synthesis_freshness(
+                    root, unit_id, dossier
+                    if isinstance(dossier, dict) else {}, repo=repo,
+                    cache=material_hashes)
+                dossier_freshness[synthesis_id] = fresh
+                observations[f"dossier:{synthesis_id}"] = (
+                    f"{fresh['status']}:{','.join(fresh['reasons'])}")
+                # Bind the bytes actually read by the shared freshness
+                # calculation: two different sources can both be stale
+                # for the same reason. Missing files remove an entry;
+                # newly available files add one on the next read.
+                observations.update({
+                    f"dossier-material:{path}": digest
+                    for path, digest in material_hashes.items()
+                })
+            items.append({
+                "origin": "unit-assessment",
+                "unit_id": unit_id, "synthesis_id": synthesis_id,
+                "use_evidence": _evidence_label(
+                    evidence.get(assessment.get("source_id")) or {}),
+                "route_id": assessment.get("route_id"),
+                "source_id": assessment.get("source_id"),
+                "locator": assessment.get("locator"),
+                "review_status": assessment.get("review_status"),
+                "freshness": fresh,
+                "concept_ids": assessment.get("concept_ids") or [],
+                "match": {**reasons, "excerpts": excerpts},
+                "open": {
+                    "synthesis": origin.relative_to(root).as_posix()
+                    if origin is not None else None,
+                    "route_id": assessment.get("route_id"),
+                },
+            })
+        related_items = []
+        for note in searched_related:
+            item = _analysis_note_item(
+                root, note, raw_terms=raw_terms, terms=terms,
+                concept_id=concept_id, purpose=req.get("purpose"),
+                unit=req.get("unit"), material_ref=material_ref,
+                scope="related",
+                evidence=evidence, observations=observations,
+                include_anchors=include_anchors,
+                concept_via=via_by_note.get(note.id))
+            if item is not None:
+                related_items.append(item)
+        # Stable sort: evidence ranks, ties keep insertion order
+        # (notes by id, then assessments by unit and route). Without
+        # recorded feedback every key is (0, 0) and the order is
+        # exactly the pre-ranking stable order. Related notes rank
+        # under the same key but append after every direct item.
+        items.sort(key=lambda row: (-row["use_evidence"]["positive"],
+                                    row["use_evidence"]["mismatch"]))
+        related_items.sort(key=lambda row: (
+            -row["use_evidence"]["positive"],
+            row["use_evidence"]["mismatch"]))
+        items.extend(related_items)
+        # The continuation binds the normalized filters alongside the
+        # observed bytes: equivalent filters (reordered terms, a
+        # concept alias for its id) page on, changed ones refuse.
+        observations["filter/query"] = " ".join(
+            sorted(term.casefold() for term in raw_terms))
+        observations["filter/unit"] = req.get("unit") or ""
+        observations["filter/concept"] = concept_id or ""
+        observations["filter/purpose"] = (req.get("purpose") or "").casefold()
+        observations["filter/material"] = material_ref or ""
+        observations["filter/related"] = \
+            "related" if req.get("include_related") else "direct"
+        observed = _observations_digest(observations)
+        expected_observations = req.get("expected_observations")
+        if expected_observations is not None and expected_observations != observed:
+            raise StaleSnapshot(
+                "material or filters observed by this query changed "
+                "between pages; re-run from offset 0")
+        ranked_by = ("recorded stage use-evidence per source: positive "
+                     "feedback first, mismatch feedback last; ties keep "
+                     "stable order (notes by id, then assessments by "
+                     "unit and route)")
+        if req.get("include_related"):
+            ranked_by += ("; --include-related appends related notes "
+                          "under the same ranking")
+        returned = items[offset:offset + limit]
+        payload = {
+            "contract": "material-context",
+            "ranked_by": ranked_by,
+            "items": returned,
+            "total": len(items),
+            "next_offset": offset + limit if offset + limit < len(items) else None,
+            "observations_sha256": observed,
+            "searched": {
+                "query_terms": raw_terms, "concept": concept_id,
+                "purpose": req.get("purpose"), "unit": req.get("unit"),
+                "material": material_ref,
+                "include_related": bool(req.get("include_related")),
+                "analysis_notes": len(_analysis_notes(repo)),
+                "assessments": len(_approved_assessments(repo)),
+            },
+            "pool": pool,
+        }
+        if not items:
+            payload["empty"] = (
+                "no match in the searched records; this never proves "
+                "no source explains the topic")
+        if not include_anchors and any(
+                item.get("origin") == "analysis-note"
+                and (item.get("anchors_truncated")
+                     or any(row.get("clipped_fields")
+                            for row in item.get("anchors", [])
+                            if isinstance(row, dict)))
+                for item in returned):
+            payload["expand"] = {"anchors": _anchor_expansion_command(
+                req, limit, snapshot, observed)}
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot, **payload},
+            json_dumps=_dumps_compact,
+        )
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc), site=f"{ctx.operation}.stale-snapshot",
+            gateway_message=f"los: {exc}", exit_code=3,
+        ) from exc
+    except WriteRefused as exc:
+        if exc.gateway_message is None:
+            exc.gateway_message = f"los: {exc}"
+        if exc.exit_code is None:
+            exc.exit_code = 2
+        raise
+    except (OSError, UnicodeError) as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.read-failed",
+            gateway_message=f"los: {exc}", exit_code=2,
+        ) from exc

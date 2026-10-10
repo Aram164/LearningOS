@@ -9129,7 +9129,7 @@
   "masters-planning.catalog.update.schema.json": "b4489d91a637e6bb58df7a9f4052e767a14d4f433afd854725ce548abed87925",
   "masters-planning.comparison.publish.schema.json": "5c181035586376e2a951e8a3c7ca648b689fe7035476835409aadbc1d29430bc",
   "masters-planning.dashboard.schema.json": "c825b374e28c80747620142dbdac0dc591dea29e1d13e5cbd09b63ec5001e4aa",
-  "material.context.schema.json": "e15fe944cdf9f22cf53117b58452fd9a044992300e228851ab0ebe6e0586e7eb",
+  "material.context.schema.json": "1a1be4f98e36ec95bbc0678e9096c94e4e5687c17fd4c9ea6c0c7bf186b60931",
   "material.span.schema.json": "d470db729ad3507527eedc392cacd80f7db2e3094e78f5d61360bf0e02961bae",
   "module.attempt.record.schema.json": "48f7f06711a0214f2c28e9812b9c92bcbe063c3b45d9665563528d30fff46867",
   "module.materials.compact.schema.json": "43b0ed49b69c19bd340498ea471d4dc2451626870ef418ac9c7713fb00966eb5",

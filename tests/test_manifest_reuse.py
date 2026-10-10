@@ -23,7 +23,6 @@ import yaml
 from repo_builders import add_curriculum, run_los, write_yaml
 
 from learning_os.commands.reads import (
-    _use_evidence,
     _use_evidence_from_manifest,
     related_records,
 )
@@ -38,6 +37,7 @@ from learning_os.manifest_identity import (
     operations_digest,
 )
 from learning_os.ops import _legacy_plumbing as plumbing
+from learning_os.ops._legacy_plumbing import _use_evidence
 
 
 def _generate(root) -> dict:

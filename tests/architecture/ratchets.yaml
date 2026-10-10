@@ -117,12 +117,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/commands/reads.py::_explanation_snippets::method::
-
-      '
-    count: 3
-    since: baseline
-    approved_by: null
   - signature: 'tools/learning_os/commands/reads.py::_match_verified::method::
 
       '
@@ -180,6 +174,12 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: 'tools/learning_os/ops/handlers/plan.py::_explanation_snippets::method::
+
+      '
+    count: 3
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   A3-prose-2:
   - signature: tools/learning_os/derived/store.py::read_state::regex::[0-9a-f]{64}
     count: 1
@@ -508,14 +508,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/reads.py::brief_bootstrap::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::cmd_material_context::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/reads.py::cmd_material_context::load_repo
     count: 1
     since: baseline
     approved_by: null
@@ -1674,10 +1666,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: material.context::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: module.plan.import::*
     count: 1
     since: baseline
@@ -1812,10 +1800,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: lineage.restamp::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: material.context::*
     count: 1
     since: baseline
     approved_by: null

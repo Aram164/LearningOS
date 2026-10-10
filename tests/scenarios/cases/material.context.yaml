@@ -37,52 +37,52 @@ cases:
     kind: refusal
     transport: cli
     argv: [material-context]
-    expect: {site: null}
+    expect: {site: material.context.empty-need}
   - id: related-without-unit
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --include-related]
-    expect: {site: null}
+    expect: {site: material.context.related-needs-unit}
   - id: unknown-unit
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --unit, unit-nope]
-    expect: {site: null}
+    expect: {site: material.context.unknown-unit}
   - id: unknown-concept
     kind: refusal
     transport: cli
     argv: [material-context, --concept, concept-nope]
-    expect: {site: null}
+    expect: {site: material.context.unknown-concept}
   - id: bad-material
     kind: refusal
     transport: cli
     argv: [material-context, --material, /abs/path.pdf]
-    expect: {site: null}
+    expect: {site: material.context.bad-material}
   - id: bad-window
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --limit, 99]
-    expect: {site: null}
+    expect: {site: material.context.bad-window}
   - id: offset-no-snapshot
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --offset, 1]
-    expect: {site: null}
+    expect: {site: material.context.bad-window}
   - id: offset-no-observations
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --offset, 1, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: material.context.offset-needs-observations}
   - id: observations-mismatch
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:94e93d3032e1f89b5112208e9614cc86243f8c850a1a8ff3855510d85170350b", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: material.context.stale-snapshot}
   - id: stale-snapshot
     kind: refusal
     transport: cli
     argv: [material-context, derivation, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: material.context.stale-snapshot}
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:1172", reason: "ambiguous concept: no two fixture concepts share an alias, and no step can add one"}
   - {where: "tools/learning_os/commands/reads.py:1456", reason: "symlink escape in --material: the fixture materials tree has no symlinks, and no step can create one outside the fixture root"}
