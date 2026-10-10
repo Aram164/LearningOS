@@ -235,8 +235,13 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             payload = result.payload
         exit_code = 1 if result.diagnostic_failed else 0
         if entry.human is not None and not getattr(args, "json", False):
-            stdout = call_renderer(
-                operation, "human", entry.human, payload) + "\n"
+            if result.human_view is not None:
+                stdout = call_renderer(
+                    operation, "human", entry.human, payload,
+                    result.human_view) + "\n"
+            else:
+                stdout = call_renderer(
+                    operation, "human", entry.human, payload) + "\n"
         elif result.json_dumps is not None:
             stdout = result.json_dumps(payload) + "\n"
         else:

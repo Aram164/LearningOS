@@ -14,7 +14,9 @@ class Operation:
     name: str
     kind: str                          # query | command | porcelain
     handler: Callable[[OpContext, dict], Result]
-    human: Callable[[dict], str] | None = None     # renders the human default output; None = JSON default
+    # Renders the human default output; None = JSON default. One argument
+    # (payload), or two (payload, human_view) when the Result sets one (SPEC (bu) 1).
+    human: Callable[[dict], str] | Callable[[dict, dict], str] | None = None
     render_check: Callable[[dict, dict], dict] | None = None  # (check record, prepared Result.payload)
 
 
@@ -25,7 +27,7 @@ def register(
     name: str,
     *,
     kind: str,
-    human: Callable[[dict], str] | None = None,
+    human: Callable[[dict], str] | Callable[[dict, dict], str] | None = None,
     render_check: Callable[[dict, dict], dict] | None = None,
 ):
     """Register ``fn`` under ``name``; returns ``fn`` unchanged (stackable)."""

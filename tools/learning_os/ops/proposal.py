@@ -47,3 +47,4 @@ class Result:
     after_commit: Callable[[int, list, dict], None] | Literal["STANDARD"] | None = None   # recipes R4/R8: a callable may raise a typed refusal; "STANDARD" is the shared legacy raise
     json_dumps: Callable[[dict], str] | None = None  # SPEC (az) item 1: internal CLI JSON-format metadata; None = today's S13 encoder
     refused_stdout: Callable[[list[str]], str] | None = None  # SPEC (bd): the legacy refusal print to stdout, without its newline
+    human_view: dict | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it

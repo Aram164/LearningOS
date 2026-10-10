@@ -191,6 +191,81 @@ def test_json_default_without_human(pipe, mini_repo):
     assert outcome.stdout == '{"echo":"hi","n":7}\n'
 
 
+def test_human_view_reaches_two_arg_renderer(pipe, mini_repo):
+    """SPEC (bu) 1: a set view reaches human(payload, view)."""
+
+    def handler(ctx, req):
+        return Result({"echo": req.get("alpha")}, human_view={"mark": "!"})
+
+    def human(payload, view):
+        return f"ECHO {payload['echo']}{view['mark']}"
+
+    pipe("query", handler=handler, human=human)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.stdout == "ECHO hi!\n"
+    assert outcome.stderr == ""
+    assert outcome.exit_code == 0
+
+
+@pytest.mark.parametrize("mutate", ["payload", "view"])
+def test_human_view_purity_sees_both_arguments(
+        pipe, mini_repo, monkeypatch, mutate):
+    """SPEC (bu) 1: the purity marker sees payload and view alike."""
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, human_view={"mark": "!"})
+
+    def human(payload, view):
+        if mutate == "payload":
+            payload["echo"] = "mut"
+        else:
+            view["mark"] = "mut"
+        return "MUT"
+
+    pipe("query", handler=handler, human=human)
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+    with pytest.raises(RenderPurityError) as caught:
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert str(caught.value) == f"{TEST_OP}::human::argument-mutated"
+    assert current_render() is None
+
+
+def test_json_bytes_identical_with_and_without_view(pipe, mini_repo):
+    """SPEC (bu) 1: --json output is the payload alone, view or not."""
+
+    def human(payload, view):
+        return "NEVER"
+
+    def with_view(ctx, req):
+        return Result({"echo": req.get("alpha")}, human_view={"mark": "!"})
+
+    def without_view(ctx, req):
+        return Result({"echo": req.get("alpha")})
+
+    pipe("query", handler=with_view, human=human)
+    with_outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, _ns(mini_repo, json=True))
+    REGISTRY.pop(TEST_OP, None)
+    pipe("query", handler=without_view, human=lambda payload: "NEVER")
+    without_outcome = pipeline_module.run_cli(
+        mini_repo, TEST_OP, _ns(mini_repo, json=True))
+    assert with_outcome.stdout == without_outcome.stdout
+    assert with_outcome.stdout == '{"echo":"hi"}\n'
+
+
+def test_one_arg_renderer_still_works(pipe, mini_repo):
+    """SPEC (bu) 1: an unset view keeps the one-argument call."""
+
+    def handler(ctx, req):
+        return Result({"echo": req.get("alpha")})
+
+    pipe("query", handler=handler,
+         human=lambda payload: f"ECHO {payload['echo']}")
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.stdout == "ECHO hi\n"
+    assert outcome.exit_code == 0
+
+
 def test_finish_applies_to_empty_confirmation(pipe, mini_repo):
     def handler(ctx, req):
         return Result({"echo": "x"}, finish=lambda conf: {"folded": True, **conf})
