@@ -10,10 +10,15 @@ from datetime import UTC
 from pathlib import Path
 
 import yaml
+from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os import observations
+from learning_os.abilities import (
+    ability_fingerprint,
+    read_ability_observations,
+)
 from learning_os.contracts.gateway import current_gateway_request
-from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.failures import NotFound, Unconfirmed, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.learning_runtime import (
     RuntimeInputError,
@@ -1338,6 +1343,133 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="learner.observation.append.invalid-input",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+def _valid_work_ref(value: str) -> bool:
+    if not value.startswith(("conversation://", "note://", "project://", "curriculum/")):
+        return False
+    if any(character.isspace() for character in value):
+        return False
+    if value.startswith("curriculum/"):
+        path = value.split("#", 1)[0]
+        parts = path.split("/")
+        return "\\" not in path and len(parts) > 1 and all(
+            part not in ("", ".", "..") for part in parts)
+    return True
+
+
+@register("learner.ability-observation.append", kind="command")
+def ability_observation_append(ctx: OpContext, req: dict) -> Result:
+    """Record an exact learner-confirmed claim; the V2 approval binds payload."""
+    root = ctx.root
+    request = current_gateway_request()
+    if request is None:
+        raise WriteRefused(
+            "ability observations require GatewayEnvelopeV2",
+            site="learner.ability-observation.append.direct-cli",
+            gateway_message="los: ability observations require GatewayEnvelopeV2",
+            exit_code=2,
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    repo = ctx.repo()
+    workspace = repo.workspaces.get(req["workspace"])
+    if workspace is None or workspace.archived or workspace.status != "active":
+        raise WriteRefused(
+            "a registered active workspace must own this work",
+            site="learner.ability-observation.append.bad-workspace",
+            gateway_message="los: a registered active workspace must own this work",
+            exit_code=2,
+        )
+    ability = repo.abilities.get(req["ability"])
+    if (ability is None or ability.get("review", {}).get("state") != "reviewed"
+            or ability.get("lifecycle") == "retired"):
+        raise WriteRefused(
+            "evidence requires an active reviewed ability identity",
+            site="learner.ability-observation.append.unknown-ability",
+            gateway_message="los: evidence requires an active reviewed ability identity",
+            exit_code=2,
+        )
+    if not _valid_work_ref(req["work_ref"]):
+        raise WriteRefused(
+            "work-ref must safely point to conversation, note, project, or curriculum work",
+            site="learner.ability-observation.append.bad-work-ref",
+            gateway_message="los: work-ref must safely point to conversation, note, project, or curriculum work",
+            exit_code=2,
+        )
+    if not req["confirmation_ref"].startswith(("conversation://", "note://")):
+        raise Unconfirmed(
+            "confirmation-ref must point to Aram's confirmation",
+            site="learner.ability-observation.append.bad-confirmation-ref",
+            gateway_message="los: confirmation-ref must point to Aram's confirmation",
+            exit_code=2,
+        )
+    if (request.channel == "ui" and req["confirmation_ref"] !=
+            f"conversation://learningos-app/{request.idempotency_key}"):
+        raise Unconfirmed(
+            "app confirmation-ref must name this exact request",
+            site="learner.ability-observation.append.bad-app-confirmation",
+            gateway_message="los: app confirmation-ref must name this exact request",
+            exit_code=2,
+        )
+    try:
+        history = read_ability_observations(repo)
+        path = runtime_path(root, workspace.path.parent / "ability-observations.jsonl")
+        if req.get("supersedes"):
+            prior = next((row for row in history if row["id"] == req["supersedes"]), None)
+            if (prior is None or prior["ability_id"] != req["ability"]
+                    or prior["origin"]["path"] != path.relative_to(root).as_posix()
+                    or any(row.get("supersedes") == prior["id"] for row in history)):
+                raise WriteRefused("correction must supersede one uncorrected observation in this ledger")
+        row = {
+            "id": "ability-observation-" + observations.new_hex(),
+            "ability_id": req["ability"],
+            "ability_sha256": ability_fingerprint(ability),
+            "claim": req["claim"],
+            "work_ref": req["work_ref"],
+            "confirmation_ref": req["confirmation_ref"],
+            "activity": req["activity"],
+            "result": req["result"],
+            "timestamp": observations.now().astimezone(UTC).isoformat(),
+            "conditions": list(req.get("condition") or []),
+            "evidence_tags": list(req.get("evidence_tag") or []),
+            "assistance": req["assistance"],
+            "confirmed_by": "learner",
+        }
+        if req.get("condition_not_met"):
+            row["conditions_not_met"] = list(req.get("condition_not_met"))
+        if req.get("supersedes"):
+            row["supersedes"] = req["supersedes"]
+        if set(row["conditions"]) & set(row.get("conditions_not_met", [])):
+            raise WriteRefused("condition cannot be both met and not met")
+        schema = json.loads((root / "system/schema/ability-observation.schema.json").read_text())
+        errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(row), key=str)
+        if errors:
+            raise WriteRefused(f"ability observation: {errors[0].message}")
+        old = path.read_text(encoding="utf-8") if path.exists() else ""
+        new = old + ("\n" if old and not old.endswith("\n") else "")
+        new += json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n"
+        try:
+            expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+        except ValueError as exc:
+            raise WriteRefused(str(exc)) from exc
+        return Result(
+            {"ok": True, "observation_id": row["id"]},
+            proposal=TransactionProposal(
+                capability="learner.ability-observation.append",
+                writes={path: new},
+                artifact_ids=[workspace.id],
+                expected_revisions=expected_revisions,
+            ),
+            on_commit_refused=_on_commit_refused,
+            json_dumps=_dumps_plain,
+        )
+    except (WriteRefused, OSError, ValueError) as exc:
+        raise WriteRefused(
+            str(exc),
+            site="learner.ability-observation.append.invalid-input",
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc

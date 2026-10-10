@@ -14,48 +14,48 @@ cases:
     transport: gateway
     request: {workspace: workspace-nope, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.bad-workspace}
   - id: unknown-ability
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-nope, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.unknown-ability}
   - id: bad-work-ref
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "bogus", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.bad-work-ref}
   - id: bad-confirmation-ref
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "project://fixture/x", activity: "worked derivation", result: correct, assistance: none}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.bad-confirmation-ref}
   - id: bad-supersedes
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, supersedes: observation-nope}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.invalid-input}
   - id: condition-both-ways
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, condition: ["finite discrete outcomes"], condition_not_met: ["finite discrete outcomes"]}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.invalid-input}
   - id: blank-claim
     kind: refusal
     transport: gateway
     request: {workspace: workspace-demo, ability: ability-demo-derive, claim: " ", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.invalid-input}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [ability-observation-append, --workspace, workspace-demo, --ability, ability-demo-derive, --claim, x, --work-ref, conversation://fixture/work-2, --confirmation-ref, conversation://fixture/confirmation-2, --activity, a, --result, correct, --assistance, none]
-    expect: {site: null}
+    expect: {site: learner.ability-observation.append.direct-cli}
   - id: exact-replay
     kind: sequence
     steps:

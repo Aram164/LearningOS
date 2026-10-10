@@ -9119,7 +9119,7 @@
   "inbox.content.schema.json": "f196c246be47d78ced7a3d33d350e755ae0f95b42584304b42ac62c0caa36341",
   "inbox.list.schema.json": "f1191ad2ea79e2e2238dfc38018bde90d4cbafa278ea99b001ab4d9be26e4f6e",
   "inbox.resolve.schema.json": "2985779e307bd8a32aec50fd1f428363b40708a1a2d6e39c5f57ad16d200b53f",
-  "learner.ability-observation.append.schema.json": "c8b410db515cbf2ec65d70d3f89c42bcc9469183be50e44fcffad0b24cfac4dd",
+  "learner.ability-observation.append.schema.json": "1ff3cd437f60d2ecf54cb692479e6bc13a60df63b11dd6ac6e56821e730bfecf",
   "learner.observation.append.schema.json": "9f4e56362c101dd28060bc97f5a77ce7024dbd20157dc5555eca98da7633821f",
   "learner.stage-result.append.schema.json": "6bf9031481e3313ee2ea27a77bb18110f2fba71d0e247266341f664068653e50",
   "legacy.archive.inspect.schema.json": "10e7fbf24098707e1b7070965122c2b4c55046dcdb03f6055e48a6a9143b335d",

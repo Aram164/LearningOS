@@ -361,7 +361,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.abilities.cmd_ability_observation_append",
+    "handler": "learning_os.adapters.cli.invoke:learner.ability-observation.append",
     "parser_factory": false
   }
 }
