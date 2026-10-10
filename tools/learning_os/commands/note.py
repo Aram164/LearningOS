@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import jsonschema
 
 from learning_os import observations
 from learning_os.domain.failures import WriteRefused
-from learning_os.domain.suggest import not_found
 from learning_os.loader import LoaderError, load_repo, parse_frontmatter
 from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
@@ -51,64 +49,6 @@ RESERVED_ROLES = {
     "reference": "note.analysis.save",
     "question": "atlas.question.save",
 }
-
-
-def cmd_note_revise(args) -> int:
-    """Replace one existing note after explicit, reviewable approval.
-
-    IDs, paths, and roles are held stable; this is a semantic revision gateway,
-    not a rename, move, role change, merge, or split operation.
-    """
-    if not args.approve:
-        print("los: note revision requires --approve after reviewing the full replacement",
-              file=sys.stderr)
-        return 2
-    root = _root(args)
-    try:
-        source, content_bytes = _read_content_bound_file(
-            args.file,
-            getattr(args, "file_sha256", None),
-            label="revised note file",
-        )
-        content = content_bytes.decode("utf-8")
-    except (UnicodeDecodeError, WriteRefused) as exc:
-        print(f"los: cannot read revised note: {exc}", file=sys.stderr)
-        return 2
-    with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo = load_repo(root)
-        note = repo.notes.get(args.note_id)
-        if note is None:
-            print(f"los: {not_found('note', args.note_id, repo.notes)}",
-                  file=sys.stderr)
-            return 2
-        try:
-            meta, _ = parse_frontmatter(content, source)
-        except LoaderError as exc:
-            print(f"los: invalid revised note: {exc}", file=sys.stderr)
-            return 2
-        if meta.get("id") != args.note_id or meta.get("type") != "note":
-            print("los: revised note must preserve the requested note id and type", file=sys.stderr)
-            return 2
-        if meta.get("role") != note.meta.get("role"):
-            print("los: note-revise cannot change a note role", file=sys.stderr)
-            return 2
-        code, errors, confirmation = _write_transaction(
-            root, {note.path: content.rstrip() + "\n"},
-            capability="note.revise",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[args.note_id],
-        )
-        if code:
-            print("los: note revision rejected by validation", file=sys.stderr)
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return code
-    print(json.dumps({"ok": True, "note_id": args.note_id,
-                      "path": note.path.relative_to(root).as_posix(),
-                      **confirmation}, ensure_ascii=False))
-    return 0
 
 
 def _safe(root: Path, path: Path) -> Path:

@@ -170,7 +170,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.note.cmd_note_revise",
+    "handler": "learning_os.adapters.cli.invoke:note.revise",
     "parser_factory": false
   }
 }

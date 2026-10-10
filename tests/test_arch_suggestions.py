@@ -713,6 +713,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("stage.progress.update.unknown-stage", "unknown-stage"),
     ("note.evidence.add", "/properties/note_id"):
         ("note.evidence.add.unknown-note", "unknown-note"),
+    ("note.revise", "/properties/note_id"):
+        ("note.revise.unknown-note", "unknown-note"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -770,6 +772,8 @@ def _canonical_message(operation: str, row: dict, miss: str,
     if operation == "stage.progress.update":
         return f"los: {message}"
     if operation == "note.evidence.add":
+        return f"los: {message}"
+    if operation == "note.revise":
         return f"los: {message}"
     return message
 

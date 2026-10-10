@@ -14,19 +14,19 @@ cases:
     transport: gateway
     request: {note_id: note-nope, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.revise.unknown-note}
   - id: bad-file
     kind: refusal
     transport: gateway
     request: {note_id: note-demo, file: "work/inbox/nope.md", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.revise.bad-file}
   - id: bad-encoding
     kind: refusal
     transport: gateway
     request: {note_id: note-demo, file: "<CASEDATA>/file.bin", file_sha256: "sha256:812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.revise.bad-file}
   - id: invalid-note
     kind: sequence
     steps:
@@ -41,18 +41,18 @@ cases:
     transport: gateway
     request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:bc9397d34d1ec03204ff7477b4f16654f9b40f8e4e717bb9d163f914bf47d406"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.revise.id-mismatch}
   - id: role-change
     kind: refusal
     transport: gateway
     request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:9bc4e6d47ddda6a09ee21992b5ba788fc1da8421581a6a41824d56552b18197b"}
     artifact_ids: []
-    expect: {site: null}
+    expect: {site: note.revise.role-change}
   - id: revise-needs-approve
     kind: refusal
     transport: cli
     argv: [note-revise, note-demo, --file, work/inbox/note-drop.md]
-    expect: {site: null}
+    expect: {site: note.revise.needs-approve}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
