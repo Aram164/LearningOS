@@ -1031,3 +1031,45 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
         refused_stdout=_publish_refused_stdout,
         json_dumps=_dumps_indented,
     )
+
+
+@register("masters-planning.comparison.publish", kind="command")
+def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
+    """Publish one prospective source comparison against its catalog."""
+    root = ctx.root
+    value = masters_planning.validate_candidate_comparison(
+        root,
+        _input_record_values(
+            req.get("record"), req.get("file"),
+            "prospective source comparison"),
+    )
+    if value["candidate_module_id"] != req["candidate_module_id"]:
+        raise WriteRefused(
+            "comparison candidate_module_id does not match the command")
+    if not req.get("approve"):
+        message = "prospective comparison publication requires explicit approval"
+        raise WriteRefused(
+            message,
+            site=f"{ctx.operation}.approval-required",
+            gateway_message=json.dumps({"ok": False, "error": message}),
+            exit_code=2,
+        )
+    _require_gateway_v2()
+    value = masters_planning.validate_candidate_comparison(root, value)
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return Result(
+        {"ok": True},
+        proposal=TransactionProposal(
+            capability="masters-planning.comparison.publish",
+            writes={masters_planning.candidate_comparison_destination(
+                root, value["id"]): _dump_yaml(value)},
+            artifact_ids=[req["candidate_module_id"], value["id"]],
+            expected_revisions=expected_revisions,
+        ),
+        refused_stdout=_publish_refused_stdout,
+        json_dumps=_dumps_indented,
+    )

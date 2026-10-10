@@ -182,3 +182,4 @@ approvals:
   - {key: "request_schemas.cli.operations.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: cli.operations converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.legacy.archive.lock.publish.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: legacy.archive.lock.publish converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.masters-planning.catalog.update.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: masters-planning.catalog.update converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.masters-planning.comparison.publish.schema.json", change: changed, plan_ref: "PLAN D4 (SC-platform: masters-planning.comparison.publish converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

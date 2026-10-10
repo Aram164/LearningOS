@@ -5,11 +5,6 @@ from __future__ import annotations
 import json
 
 from learning_os.contracts.gateway import current_gateway_request
-from learning_os.domain.failures import WriteRefused
-from learning_os.masters_planning import (
-    candidate_comparison_destination,
-    validate_candidate_comparison,
-)
 from learning_os.material_synthesis import (
     current_unit_material_basis,
     publication_lineage,
@@ -74,35 +69,6 @@ def cmd_unit_material_synthesis_publish(args) -> int:
             capability="unit.material-synthesis.publish",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(args.unit_id, value["id"]),
-        )
-    print(json.dumps({
-        "ok": code == 0, **confirmation,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    }, indent=2, ensure_ascii=False))
-    return code
-
-
-def cmd_masters_planning_comparison_publish(args) -> int:
-    root = _root(args)
-    value = validate_candidate_comparison(
-        root, _input_record(args, "prospective source comparison")
-    )
-    if value["candidate_module_id"] != args.candidate_module_id:
-        raise WriteRefused("comparison candidate_module_id does not match the command")
-    denied = _refuse_without_approval(args, "prospective comparison publication")
-    if denied is not None:
-        return denied
-    _require_gateway_v2()
-    with _operator_lock(root):
-        value = validate_candidate_comparison(root, value)
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        destination = candidate_comparison_destination(root, value["id"])
-        code, errors, confirmation = _write_transaction(
-            root, {destination: _dump_yaml(value)},
-            capability="masters-planning.comparison.publish",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=(args.candidate_module_id, value["id"]),
         )
     print(json.dumps({
         "ok": code == 0, **confirmation,
