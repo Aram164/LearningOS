@@ -57,6 +57,7 @@ from learning_os.material_slices import SliceResolutionError, _read_part
 from learning_os.material_synthesis import (
     _COMPARED_BASIS_FIELDS,
     MaterialSynthesisError,
+    MaterialSynthesisUnitNotFound,
     current_unit_material_basis,
     material_synthesis_freshness,
     publication_lineage,
@@ -1309,6 +1310,12 @@ def _placement_route(ctx, repo, unit, source_map, routes, route, req):
                            site=f"{ctx.operation}.placement-needs-map")
     stages = [row for row in study_map.data.get("stages", [])
               if isinstance(row, dict) and row.get("id") == stage_id]
+    if not stages:
+        raise NotFound("stage", stage_id,
+                       [row["id"] for row in study_map.data.get("stages", [])
+                        if isinstance(row, dict) and row.get("id")],
+                       message="placement is missing or ambiguous in this unit",
+                       site=f"{ctx.operation}.unknown-placement")
     if len(stages) != 1 or index < 0 or index >= len(stages[0].get("resources", [])):
         raise WriteRefused("placement is missing or ambiguous in this unit",
                            site=f"{ctx.operation}.unknown-placement")
@@ -3554,8 +3561,9 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     unit = repo.units.get(req["unit_id"])
     if unit is None:
         message = not_found("unit", req["unit_id"], repo.units)
-        raise WriteRefused(
-            message,
+        raise NotFound(
+            "unit", req["unit_id"], repo.units,
+            message=message,
             site=f"{ctx.operation}.unknown-unit",
             gateway_message=f"los: {message}",
             exit_code=2,
@@ -3739,14 +3747,37 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
     )
 
 
+def _validate_publication_synthesis(root, unit_id: str, value: dict) -> dict:
+    """Validate a publication dossier, typing only the unknown-unit lookup.
+
+    SPEC (cq) 5: the validator's own schema, dossier/request binding,
+    then repository lookup order is unchanged; only the structured
+    unknown-unit subclass becomes a typed ``NotFound`` with the
+    byte-identical complaint. Every other ``MaterialSynthesisError``
+    propagates exactly as before, with no prose matching and no new
+    repository read.
+    """
+    try:
+        return validate_unit_material_synthesis(root, unit_id, value)
+    except MaterialSynthesisUnitNotFound as exc:
+        raise NotFound(
+            "unit", exc.unit_id, exc.candidates,
+            message=str(exc),
+            site="unit.material-synthesis.publish.unknown-unit",
+            gateway_message=str(exc),
+            exit_code=2,
+        ) from exc
+
+
 @register("unit.material-synthesis.publish", kind="command")
 def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed unit dossier, with lineage, atomically."""
     root = ctx.root
     # Unwrapped, exactly as legacy: admission and dossier validation
-    # propagate with both refusal fields None ((ac) pre-existing raise).
+    # propagate with both refusal fields None ((ac) pre-existing raise),
+    # except the unknown-unit lookup, which is typed (SPEC (cq) 5).
     value = _input_record(req, "unit material synthesis")
-    validate_unit_material_synthesis(root, req["unit_id"], value)
+    _validate_publication_synthesis(root, req["unit_id"], value)
     basis = current_unit_material_basis(root, req["unit_id"])
     if req.get("check") is True:
         return Result(
@@ -3766,7 +3797,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     # Re-read every canonical basis guard inside the serialized write
     # window. The earlier validation gives fast feedback; this one is the
     # authority for the commit.
-    validate_unit_material_synthesis(root, req["unit_id"], value)
+    _validate_publication_synthesis(root, req["unit_id"], value)
     ctx.require_snapshot(req.get("expected_snapshot"))
     destination = synthesis_destination(root, req["unit_id"])
     content = _dump_yaml(value)

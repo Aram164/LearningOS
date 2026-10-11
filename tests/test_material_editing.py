@@ -24,7 +24,11 @@ from learning_os.material_refs import (
     expand_map,
     preserve_map_refs,
 )
-from learning_os.ops.handlers.plan import compaction_plan, route_patch_plan
+from learning_os.ops.handlers.plan import (
+    compaction_plan,
+    route_patch_plan,
+    unit_map_import,
+)
 
 
 def compact_via_gateway(root):
@@ -178,6 +182,33 @@ def test_compact_edit_context_reconstructs_plan_and_preserves_explicit_edits(min
     stored = preserve_map_refs(sm, edited)
     assert "angle_detail" not in stored["stages"][0]["resources"][0]["material_ref"]["inherit"]
     assert expand_map(stored, load_repo(mini_repo).module_source_maps[sm.module_id], sm.module_id, sm.unit_id) == edited
+
+
+def test_map_import_missing_unit_is_typed_with_the_legacy_complaint(
+        mini_repo, tmp_path):
+    """SPEC (cq) 4: only the class changes; message, site, exit, effects stay."""
+    from learning_os.domain.failures import NotFound
+    from learning_os.domain.suggest import not_found, suggestions
+    from learning_os.ops.context import OpContext
+
+    repo, _, _ = material_fixture(mini_repo)
+    draft = tmp_path / "reviewed-map.yaml"
+    write_yaml(draft, {"unit_id": "unit-nope"})
+    ctx = OpContext(root=mini_repo, operation="unit.map.import",
+                    channel="cli", invocation="command", gateway=None)
+    before = canonical_fingerprint(mini_repo)
+    with pytest.raises(NotFound) as caught:
+        unit_map_import(ctx, {"unit_id": "unit-nope", "file": str(draft),
+                              "file_sha256": file_sha256(draft)})
+    exc = caught.value
+    assert type(exc) is NotFound
+    assert str(exc) == not_found("unit", "unit-nope", repo.units)
+    assert exc.site == "unit.map.import.unknown-unit"
+    assert exc.gateway_message == f"los: {exc}"
+    assert exc.exit_code == 2
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggestions("unit-nope", repo.units)
+    assert canonical_fingerprint(mini_repo) == before
 
 
 def test_compact_map_import_and_feedback_preserve_storage(mini_repo, tmp_path):

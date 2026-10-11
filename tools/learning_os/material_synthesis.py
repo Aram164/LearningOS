@@ -43,6 +43,22 @@ class MaterialSynthesisError(ValueError):
     """A dossier is invalid or stale; callers must leave canonical state unchanged."""
 
 
+class MaterialSynthesisUnitNotFound(MaterialSynthesisError):
+    """The dossier's unit is absent from the repository's units (SPEC (cq) 5).
+
+    Raised only at the genuine repository-unit lookup in
+    ``validate_unit_material_synthesis``. Carries the missing id and the
+    actual unit candidates from the already-loaded repository, so the
+    publication helper can type the refusal without another read. A
+    ``ValueError`` subclass: every existing caller keeps working.
+    """
+
+    def __init__(self, unit_id: str, candidates) -> None:
+        super().__init__(f"unit not found: {unit_id}")
+        self.unit_id = unit_id
+        self.candidates = candidates
+
+
 def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
     unit = repo.units.get(unit_id)
     if unit is None:
@@ -275,7 +291,7 @@ def validate_unit_material_synthesis(
         repo = load_repo(root)
     unit = repo.units.get(unit_id)
     if unit is None:
-        raise MaterialSynthesisError(f"unit not found: {unit_id}")
+        raise MaterialSynthesisUnitNotFound(unit_id, repo.units)
     routes = _rich_routes(repo, unit_id)
     by_route = {str(route.get("id")): route for route in routes if route.get("id")}
     if len(by_route) != len(routes):

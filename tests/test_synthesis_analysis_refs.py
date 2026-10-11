@@ -20,6 +20,7 @@ from repo_builders import _compact_setup, _valid_dossier
 from learning_os.material_synthesis import (
     ANALYSIS_REFS_STALE,
     MaterialSynthesisError,
+    MaterialSynthesisUnitNotFound,
     current_unit_material_basis,
     material_synthesis_freshness,
     synthesis_destination,
@@ -169,6 +170,123 @@ def test_malformed_ref_fails_schema(mini_repo):
     del _assessment_ref(dossier)["note_revision"]
     with pytest.raises(MaterialSynthesisError, match="note_revision"):
         validate_unit_material_synthesis(mini_repo, "unit-demo-l01", dossier)
+
+
+def test_unknown_unit_lookup_raises_the_structured_subclass(mini_repo):
+    """SPEC (cq) 5: the genuine lookup carries id and actual candidates."""
+    from learning_os.loader import load_repo
+
+    dossier = _seed(mini_repo, None)
+    dossier["unit_id"] = "unit-nope"
+    with pytest.raises(MaterialSynthesisUnitNotFound) as caught:
+        validate_unit_material_synthesis(mini_repo, "unit-nope", dossier)
+    exc = caught.value
+    assert type(exc) is MaterialSynthesisUnitNotFound
+    assert str(exc) == "unit not found: unit-nope"
+    assert exc.unit_id == "unit-nope"
+    assert list(exc.candidates) == list(load_repo(mini_repo).units)
+    # ValueError compatibility for every other caller.
+    assert isinstance(exc, MaterialSynthesisError)
+    with pytest.raises(ValueError, match="unit not found: unit-nope"):
+        validate_unit_material_synthesis(mini_repo, "unit-nope", dossier)
+
+
+def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
+    """SPEC (cq) 5: NotFound for the lookup; other errors pass through."""
+    import learning_os.material_synthesis as synthesis_mod
+    from learning_os.domain import suggest as suggest_mod
+    from learning_os.domain.failures import NotFound
+    from learning_os.loader import load_repo
+    from learning_os.ops.handlers.plan import _validate_publication_synthesis
+
+    dossier = _seed(mini_repo, None)
+    miss = "unit-nope"
+    dossier["unit_id"] = miss
+    repo = load_repo(mini_repo)
+    with pytest.raises(NotFound) as caught:
+        _validate_publication_synthesis(mini_repo, miss, dossier)
+    exc = caught.value
+    assert type(exc) is NotFound
+    assert str(exc) == "unit not found: unit-nope"
+    assert exc.site == "unit.material-synthesis.publish.unknown-unit"
+    assert exc.gateway_message == "unit not found: unit-nope"
+    assert exc.exit_code == 2
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggest_mod.suggestions(miss, repo.units)
+
+    # A non-lookup dossier failure propagates unwrapped, exact type.
+    stale = _seed(mini_repo, None)
+    stale["basis"]["policy"] = "tiered-v1"
+    with pytest.raises(MaterialSynthesisError) as caught:
+        _validate_publication_synthesis(mini_repo, "unit-demo-l01", stale)
+    assert type(caught.value) is MaterialSynthesisError
+
+    # The helper adds no repository read of its own: the validator's
+    # single load supplies the carried candidates.
+    loads = []
+    real_load = synthesis_mod.load_repo
+
+    def counting(root):
+        loads.append(root)
+        return real_load(root)
+
+    monkeypatch.setattr(synthesis_mod, "load_repo", counting)
+    with pytest.raises(NotFound):
+        _validate_publication_synthesis(mini_repo, miss, dossier)
+    assert loads == [mini_repo]
+
+
+def test_publication_validations_route_through_the_helper(mini_repo, monkeypatch):
+    """SPEC (cq) 5: both publication validations translate the lookup."""
+    from learning_os.contracts.gateway import (
+        GatewayRequestContext,
+        gateway_request_context,
+    )
+    from learning_os.domain.failures import NotFound
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers import plan as plan_handlers
+
+    dossier = _seed(mini_repo, None)
+    miss = "unit-nope"
+    dossier["unit_id"] = miss
+    ctx = OpContext(root=mini_repo, operation="unit.material-synthesis.publish",
+                    channel="operator", invocation="command", gateway=None)
+    # First validation: the fast-feedback call translates the lookup.
+    with pytest.raises(NotFound) as caught:
+        plan_handlers.unit_material_synthesis_publish(
+            ctx, {"unit_id": miss, "record": dossier})
+    assert type(caught.value) is NotFound
+    assert caught.value.site == "unit.material-synthesis.publish.unknown-unit"
+
+    # Second validation: the commit authority translates a unit lost
+    # after feedback, with the real validator on both calls.
+    raced = _seed(mini_repo, None)
+    real_basis = plan_handlers.current_unit_material_basis
+
+    def basis_then_vanish(root, unit_id, **kwargs):
+        out = real_basis(root, unit_id, **kwargs)
+        (root / "curriculum/modules/module-demo/units/unit-demo-l01"
+         / "unit.yaml").unlink()
+        return out
+
+    monkeypatch.setattr(plan_handlers, "current_unit_material_basis",
+                        basis_then_vanish)
+    context = GatewayRequestContext(
+        request_id="req-1", idempotency_key="key-1",
+        capability="unit.material-synthesis.publish", channel="operator",
+        intent_sha256="sha256:" + "0" * 64,
+        approval_kind="direct-user-gesture",
+        approval_subject_sha256="sha256:" + "0" * 64)
+    ctx2 = OpContext(root=mini_repo, operation="unit.material-synthesis.publish",
+                     channel="operator", invocation="command", gateway=context)
+    with gateway_request_context(context):
+        with pytest.raises(NotFound) as caught:
+            plan_handlers.unit_material_synthesis_publish(
+                ctx2, {"unit_id": "unit-demo-l01", "record": raced,
+                       "approve": True})
+    assert type(caught.value) is NotFound
+    assert str(caught.value) == "unit not found: unit-demo-l01"
+    assert caught.value.site == "unit.material-synthesis.publish.unknown-unit"
 
 
 def test_ref_rides_projection(mini_repo):

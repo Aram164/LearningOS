@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 
@@ -211,6 +212,132 @@ def test_stage_span_refuses_a_source_mismatch(mini_repo):
                      "--stage", "stage-demo", "--resource-index", "0", "--extract")
     assert result.returncode == 2
     assert "placement source" in result.stderr
+
+
+def _placement_parts(root: Path):
+    """Direct-call fixtures for ``_placement_route`` sibling tests."""
+    from learning_os.ops.context import OpContext
+
+    repo = load_repo(root)
+    unit = repo.units["unit-demo-l01"]
+    source_map = repo.module_source_maps[unit.module_id]
+    routes = unit_routes(source_map, unit.module_id, unit.id)
+    assert len(routes) == 1
+    ctx = OpContext(root=root, operation="material.span",
+                    channel="cli", invocation="query", gateway=None)
+    return ctx, repo, unit, source_map, routes, routes[0]
+
+
+def test_zero_matching_stage_is_a_typed_notfound(mini_repo):
+    """SPEC (cq) 3: only the zero-stage branch is typed."""
+    from learning_os.domain import suggest as suggest_mod
+    from learning_os.domain.failures import NotFound
+    from learning_os.ops._legacy_plumbing import _map_for_unit
+    from learning_os.ops.handlers.plan import _placement_route
+
+    _placement_setup(mini_repo)
+    ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
+    study_map = _map_for_unit(repo, unit.id)
+    expected_ids = [row["id"] for row in study_map.data.get("stages", [])
+                    if isinstance(row, dict) and row.get("id")]
+    assert expected_ids == ["stage-demo"]
+    with pytest.raises(NotFound) as caught:
+        _placement_route(ctx, repo, unit, source_map, routes, route,
+                         {"stage_id": "stage-ghost", "resource_index": 0})
+    exc = caught.value
+    assert type(exc) is NotFound
+    assert str(exc) == "placement is missing or ambiguous in this unit"
+    assert exc.site == "material.span.unknown-placement"
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggest_mod.suggestions(
+        "stage-ghost", expected_ids)
+    assert exc.suggestions == ["stage-demo"]
+    assert exc.gateway_message is None
+    assert exc.exit_code is None
+
+
+@pytest.mark.parametrize("mutate", ["duplicate-stage", "negative-index",
+                                    "index-past-end"])
+def test_duplicate_stage_and_bad_index_stay_untyped(mini_repo, mutate):
+    """SPEC (cq) 3: the sibling branches keep the plain refusal."""
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops._legacy_plumbing import _map_for_unit
+    from learning_os.ops.handlers.plan import _placement_route
+
+    _placement_setup(mini_repo)
+    ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
+    if mutate == "duplicate-stage":
+        study_map = _map_for_unit(repo, unit.id)
+        study_map.data["stages"].append(
+            copy.deepcopy(study_map.data["stages"][0]))
+        request = {"stage_id": "stage-demo", "resource_index": 0}
+    elif mutate == "negative-index":
+        request = {"stage_id": "stage-demo", "resource_index": -1}
+    else:
+        request = {"stage_id": "stage-demo", "resource_index": 99}
+    with pytest.raises(WriteRefused) as caught:
+        _placement_route(ctx, repo, unit, source_map, routes, route, request)
+    exc = caught.value
+    assert type(exc) is WriteRefused
+    assert str(exc) == "placement is missing or ambiguous in this unit"
+    assert exc.site == "material.span.unknown-placement"
+    assert exc.reason is None
+    assert not hasattr(exc, "suggestions")
+
+
+def test_foreign_placement_and_source_mismatch_stay_distinct(mini_repo):
+    """SPEC (cq) 3: the later sibling guards keep site and message."""
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.handlers.plan import _placement_route
+
+    _placement_setup(mini_repo)
+    study_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    study_map = yaml.safe_load(study_path.read_text(encoding="utf-8"))
+    study_map["stages"][0]["resources"][0]["route_id"] = "route-" + "f" * 24
+    write_yaml(study_path, study_map)
+    ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
+    with pytest.raises(WriteRefused) as caught:
+        _placement_route(ctx, repo, unit, source_map, routes, route,
+                         {"stage_id": "stage-demo", "resource_index": 0})
+    exc = caught.value
+    assert type(exc) is WriteRefused
+    assert str(exc) == "placement is missing or does not belong to this route"
+    assert exc.site == "material.span.placement-foreign"
+
+    study_map["stages"][0]["resources"][0]["route_id"] = route["id"]
+    study_map["stages"][0]["resources"][0]["source_id"] = "source-other"
+    write_yaml(study_path, study_map)
+    ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
+    with pytest.raises(WriteRefused) as caught:
+        _placement_route(ctx, repo, unit, source_map, routes, route,
+                         {"stage_id": "stage-demo", "resource_index": 0})
+    exc = caught.value
+    assert type(exc) is WriteRefused
+    assert str(exc) == "placement source does not match its route"
+    assert exc.site == "material.span.placement-source-mismatch"
+
+
+def test_zero_stage_cli_refusal_keeps_the_legacy_line_and_writes_nothing(mini_repo):
+    """SPEC (cq) 3: the typed miss renders the legacy line; no write."""
+    route_id = _placement_setup(mini_repo)
+    before = {path: path.read_bytes() for path in mini_repo.rglob("*") if path.is_file()}
+    result = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                     "--stage", "stage-ghost", "--resource-index", "0")
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == (
+        "los: INVALID_REQUEST: placement is missing or ambiguous in this unit\n"
+        "  did you mean: stage-demo\n")
+    typed = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
+                    "--stage", "stage-ghost", "--resource-index", "0", "--json")
+    assert typed.returncode == 2
+    error = json.loads(typed.stdout)["error"]
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["message"] == "placement is missing or ambiguous in this unit"
+    assert error["retryable"] is False
+    assert error["details"] == {"reason": "NOT_FOUND",
+                                "suggestions": ["stage-demo"]}
+    assert before == {path: path.read_bytes() for path in mini_repo.rglob("*") if path.is_file()}
 
 
 def test_span_binding_round_trips_through_prepare(mini_repo: Path, tmp_path: Path):
