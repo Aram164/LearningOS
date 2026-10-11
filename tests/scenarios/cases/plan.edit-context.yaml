@@ -12,16 +12,19 @@ cases:
     kind: success
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-id, route-b2f1f80014860a929a3af0bc]
+    a5_base: true
     expect: {site: null}
   - id: batch-entry
     kind: success
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc]
+    a5_base: true
     expect: {site: null}
   - id: stage-entry
     kind: success
     transport: cli
     argv: [plan-edit-context, unit-demo-l01, --stage-id, stage-demo]
+    a5_base: true
     expect: {site: null}
   - id: brief-unit
     kind: success
