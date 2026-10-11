@@ -1364,6 +1364,635 @@ _PROOF_FNS.update({
 })
 
 
+def _a9_run_cli(root: Path, operation: str, argv: list,
+                tmp_path: Path, monkeypatch):
+    """One CLI attempt with a private witness file (proofs only).
+
+    Returns ``(outcome, lines)``. The real parser turns ``argv``
+    into args; the attempt runs outside the scenario harness.
+    """
+    import arch_audit_hook
+
+    import los
+    from learning_os.ops import pipeline as pipeline_module
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        args = los.build_parser().parse_args(argv)
+        outcome = pipeline_module.run_cli(root, operation, args)
+    finally:
+        arch_audit_hook.uninstall()
+    return outcome, _read_witness_lines(witness)
+
+def _prove_inbox_list_failed(mini_repo: Path, tmp_path: Path,
+                             monkeypatch) -> None:
+    """An OSError listing the inbox fires the site (os-error-only proof).
+
+    No step can arrange an unreadable inbox, so no case input reaches
+    the gate; the proof injects the OSError and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.capture as capture
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.inbox-list", "list-drops", tmp_path)
+    root = ctx.root
+
+    def boom(root):
+        raise OSError("a9-proof: the listing failed")
+
+    monkeypatch.setattr(capture, "_inbox_search_rows", boom)
+    outcome, lines = _a9_run_cli(root, "cli.inbox-list", ["inbox-list"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.inbox-list", "kind": "failure",
+                      "site": "cli.inbox-list.list-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_inbox_read_failed(mini_repo: Path, tmp_path: Path,
+                             monkeypatch) -> None:
+    """An OSError reading a drop fires the site (os-error-only proof).
+
+    No step can arrange an unreadable drop, so no case input reaches
+    the gate; the proof injects the OSError and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.capture as capture
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.inbox-read", "read-file", tmp_path)
+    root = ctx.root
+
+    def boom(*args, **kwargs):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(capture, "_bytes_inside_owner", boom)
+    outcome, lines = _a9_run_cli(root, "cli.inbox-read",
+                                 ["inbox-read", "note-drop.md"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.inbox-read", "kind": "failure",
+                      "site": "cli.inbox-read.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_inbox_archive_collision(mini_repo: Path, tmp_path: Path,
+                                   monkeypatch) -> None:
+    """A pre-existing archive destination fires the site (R-A9-2).
+
+    The archive starts empty and only this operation writes it,
+    atomically with the removal, so no case input reaches the gate;
+    the proof pre-creates the destination by direct tree surgery and
+    asserts the witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("inbox.resolve", "resolve-file", tmp_path)
+    root = ctx.root
+    dest = root / "archive" / "inbox" / "2026" / "note-drop.md"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text("a9-proof: a previous archive generation\n",
+                    encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "inbox.resolve",
+        {"name": "note-drop.md",
+         "drop_sha256": "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+         "routed_to": ["note-demo"]},
+        ["file:archive/inbox/2026/note-drop.md",
+         "file:work/inbox/note-drop.md"],
+        "a9-proof-archive-collision", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "inbox.resolve", "kind": "failure",
+                      "site": "inbox.resolve.archive-collision",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+def _prove_inbox_resolve_read_failed(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """An unreadable drop fires the site (os-error-only proof).
+
+    No step can set unreadable permissions, so no case input reaches
+    the gate; the proof revokes the drop's read bit by direct tree
+    surgery and asserts the witness line, the class and the exit.
+    """
+    import os
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("inbox.resolve", "resolve-file", tmp_path)
+    root = ctx.root
+    drop = root / "work" / "inbox" / "note-drop.md"
+    assert drop.is_file(), "A9 proof needs the drop to revoke"
+    os.chmod(drop, 0)
+    try:
+        outcome, lines = _a9_run_gateway(
+            root, "inbox.resolve",
+            {"name": "note-drop.md",
+             "drop_sha256": "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+             "routed_to": ["note-demo"]},
+            ["file:archive/inbox/2026/note-drop.md",
+             "file:work/inbox/note-drop.md"],
+            "a9-proof-inbox-resolve-read-failed", tmp_path, monkeypatch)
+    finally:
+        os.chmod(drop, 0o644)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "inbox.resolve", "kind": "failure",
+                      "site": "inbox.resolve.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+def _prove_note_not_an_object_guarded(mini_repo: Path, tmp_path: Path,
+                                      monkeypatch) -> None:
+    """The note guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="note.create.not-an-object",
+        operation="note.create",
+        cli_argv=["note-create", "--note", "bogus",
+                  "--body-file", "work/inbox/note-drop.md"],
+        field="note",
+        valid={"note": {"id": "note-scenario-create-1",
+                        "title": "Scenario synthesis one",
+                        "path": "knowledge/notes/mathematics/"
+                                "note-scenario-create-1.md",
+                        "concepts": ["concept-expected-value"],
+                        "sources": ["source-demo-book"],
+                        "contexts": ["workspace-demo"],
+                        "supersedes": ["note-demo"]},
+               "body_file": "work/a9-proof-body.md",
+               "body_file_sha256": "sha256:" + "0" * 64},
+        key="a9-proof-note-not-an-object")
+
+def _note_create_proof_body(root: Path) -> dict:
+    """A real body file plus its sha for note.create proofs."""
+    import hashlib
+
+    body = root / "work" / "a9-proof-body.md"
+    body.write_text("A9 proof body.\n", encoding="utf-8")
+    digest = "sha256:" + hashlib.sha256(
+        body.read_bytes()).hexdigest()
+    # Absolute: the bound reader resolves against the process cwd.
+    return {"body_file": str(body), "body_file_sha256": digest}
+
+def _prove_note_destination_exists(mini_repo: Path, tmp_path: Path,
+                                   monkeypatch) -> None:
+    """An unregistered destination file fires the site (R-A9-2).
+
+    Every fixture ``.md`` under knowledge/notes/ registers, and
+    creating one registers it too, so no case input reaches the
+    gate; the proof pre-creates the destination by direct tree
+    surgery and asserts the witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("note.create", "create-note", tmp_path)
+    root = ctx.root
+    # Valid frontmatter under a different id: the path exists but the
+    # created id stays fresh, so the destination check fires instead
+    # of the earlier id collision.
+    dest = (root / "knowledge" / "notes" / "mathematics"
+            / "note-scenario-create-24.md")
+    dest.write_text("---\nid: note-scenario-other\ntitle: Other\n---\n"
+                    "A9 proof body.\n", encoding="utf-8")
+    payload = {"note": {"id": "note-scenario-create-24",
+                        "title": "A9 proof note",
+                        "path": "knowledge/notes/mathematics/"
+                                "note-scenario-create-24.md"},
+               **_note_create_proof_body(root)}
+    outcome, lines = _a9_run_gateway(
+        root, "note.create", payload, ["note-scenario-create-24"],
+        "a9-proof-destination-exists", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "note.create", "kind": "failure",
+                      "site": "note.create.destination-exists",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "gateway.dispatch") == 2
+
+def _prove_note_symlink_path(mini_repo: Path, tmp_path: Path,
+                             monkeypatch) -> None:
+    """A symlinked destination fires the site (R-A9-2).
+
+    The fixture carries no symlinks and no step can create one, so
+    no case input reaches the gate; the proof plants the symlink by
+    direct tree surgery and asserts the witness line, the class and
+    the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("note.create", "create-note", tmp_path)
+    root = ctx.root
+    # The link target carries a different id, so the created id stays
+    # fresh and the symlink check fires instead of id collision.
+    target = (root / "knowledge" / "notes" / "mathematics"
+              / "note-scenario-other.md")
+    target.write_text("---\nid: note-scenario-other\ntitle: Other\n---\n"
+                      "A9 proof body.\n", encoding="utf-8")
+    dest = (root / "knowledge" / "notes" / "mathematics"
+            / "note-scenario-create-25.md")
+    dest.symlink_to(target)
+    payload = {"note": {"id": "note-scenario-create-25",
+                        "title": "A9 proof note",
+                        "path": "knowledge/notes/mathematics/"
+                                "note-scenario-create-25.md"},
+               **_note_create_proof_body(root)}
+    outcome, lines = _a9_run_gateway(
+        root, "note.create", payload, ["note-scenario-create-25"],
+        "a9-proof-symlink-path", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "note.create", "kind": "failure",
+                      "site": "note.create.symlink-path",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "gateway.dispatch") == 2
+
+def _prove_note_unreadable_superseded(mini_repo: Path, tmp_path: Path,
+                                      monkeypatch) -> None:
+    """An unreadable superseded note fires the site (R-A9-2).
+
+    Fixture notes read cleanly and no write path stores an
+    unreadable one, so no case input reaches the gate; the proof
+    injects the loader failure and asserts the witness line, the
+    class and the exit.
+    """
+    import learning_os.ops.handlers.notes as notes
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.loader import LoaderError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("note.create", "create-note", tmp_path)
+    root = ctx.root
+
+    def boom(content, source):
+        raise LoaderError("a9-proof: the superseded note is unreadable")
+
+    monkeypatch.setattr(notes, "parse_frontmatter", boom)
+    payload = {"note": {"id": "note-scenario-create-26",
+                        "title": "A9 proof note",
+                        "path": "knowledge/notes/mathematics/"
+                                "note-scenario-create-26.md",
+                        "supersedes": ["note-demo"]},
+               **_note_create_proof_body(root)}
+    outcome, lines = _a9_run_gateway(
+        root, "note.create", payload,
+        ["note-scenario-create-26", "note-demo"],
+        "a9-proof-unreadable-superseded", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "note.create", "kind": "failure",
+                      "site": "note.create.unreadable-superseded",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "gateway.dispatch") == 2
+
+def _prove_note_read_failed(mini_repo: Path, tmp_path: Path,
+                            monkeypatch) -> None:
+    """An OSError reading a note fires the site (os-error-only proof).
+
+    No step can arrange an unreadable note, so no case input reaches
+    the gate; the proof injects the OSError and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.notes as notes
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.note-read", "read-note", tmp_path)
+    root = ctx.root
+
+    def boom(root, note):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(notes, "_note_bytes", boom)
+    outcome, lines = _a9_run_cli(root, "cli.note-read",
+                                 ["note-read", "note-demo"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.note-read", "kind": "failure",
+                      "site": "cli.note-read.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_note_read_bad_encoding(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """Non-UTF-8 note bytes fire the site (R-A9-2).
+
+    Writes validate UTF-8, so no step can author non-UTF-8 canonical
+    bytes and no case input reaches the gate; the proof injects the
+    bad bytes and asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.notes as notes
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.note-read", "read-note", tmp_path)
+    root = ctx.root
+
+    def boom(root, note):
+        return b"\xff\xfe-not-utf8-\xff"
+
+    monkeypatch.setattr(notes, "_note_bytes", boom)
+    outcome, lines = _a9_run_cli(root, "cli.note-read",
+                                 ["note-read", "note-demo"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.note-read", "kind": "failure",
+                      "site": "cli.note-read.bad-encoding",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_search_read_failed(mini_repo: Path, tmp_path: Path,
+                              monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit. It fires the content arm;
+    the entry pins the metadata arm's identical raise.
+    """
+    import learning_os.ops.handlers.notes as notes
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.search", "content", tmp_path)
+    root = ctx.root
+
+    def boom(root, note):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(notes, "_note_bytes", boom)
+    outcome, lines = _a9_run_cli(root, "cli.search",
+                                 ["search", "demo", "--content"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.search", "kind": "failure",
+                      "site": "cli.search.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_search_bad_encoding(mini_repo: Path, tmp_path: Path,
+                               monkeypatch) -> None:
+    """Non-UTF-8 note bytes fire the site (R-A9-2).
+
+    Writes validate UTF-8, so no step can author non-UTF-8 canonical
+    bytes and no case input reaches the gate; the proof injects the
+    bad bytes and asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.notes as notes
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.search", "content", tmp_path)
+    root = ctx.root
+
+    def boom(root, note):
+        return b"\xff\xfe-not-utf8-\xff"
+
+    monkeypatch.setattr(notes, "_note_bytes", boom)
+    outcome, lines = _a9_run_cli(root, "cli.search",
+                                 ["search", "demo", "--content"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.search", "kind": "failure",
+                      "site": "cli.search.bad-encoding",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_goal_malformed_ledger(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """A corrupt goal ledger fires the site (R-A9-2).
+
+    The fixture ledger parses and the only writer stores valid
+    YAML, so no case input reaches the gate; the proof corrupts the
+    ledger by direct tree surgery and asserts the witness line, the
+    class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    root = ctx.root
+    ledger = root / "operations" / "goal-ledger.yaml"
+    assert ledger.is_file(), "A9 proof needs the ledger to corrupt"
+    ledger.write_text("not: [valid\n  yaml: {\n", encoding="utf-8")
+    outcome, lines = _a9_run_cli(root, "cli.goal",
+                                 ["goal", "goal-demo-deferred", "--close"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.goal", "kind": "failure",
+                      "site": "cli.goal.malformed-ledger",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_goal_unreadable_ledger(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """An unreadable goal ledger fires the site (os-error-only proof).
+
+    No step can set unreadable permissions, so no case input reaches
+    the gate; the proof revokes the ledger's read bit by direct tree
+    surgery and asserts the witness line, the class and the exit.
+    """
+    import os
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    root = ctx.root
+    ledger = root / "operations" / "goal-ledger.yaml"
+    assert ledger.is_file(), "A9 proof needs the ledger to revoke"
+    os.chmod(ledger, 0)
+    try:
+        outcome, lines = _a9_run_cli(
+            root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+            tmp_path, monkeypatch)
+    finally:
+        os.chmod(ledger, 0o644)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.goal", "kind": "failure",
+                      "site": "cli.goal.unreadable-ledger",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_goal_unreadable_session(mini_repo: Path, tmp_path: Path,
+                                   monkeypatch) -> None:
+    """A corrupt own session ledger fires the site (R-A9-2).
+
+    Session files are written valid and no case input corrupts the
+    caller's own session ledger, so no case input reaches the gate;
+    the proof injects the load failure and asserts the witness line,
+    the class and the exit.
+    """
+    import learning_os.ops.handlers.goals as goals
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    root = ctx.root
+
+    def fake_ledger(root, session_id):
+        return root / "operations" / "goal-ledger.yaml"
+
+    def boom(root, session_id):
+        raise WriteRefused("a9-proof: the session ledger is corrupt")
+
+    monkeypatch.setattr(goals, "_session_ledger", fake_ledger)
+    monkeypatch.setattr(goals, "_load_session_paths", boom)
+    outcome, lines = _a9_run_cli(
+        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.goal", "kind": "failure",
+                      "site": "cli.goal.unreadable-session",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_goal_not_admitted(mini_repo: Path, tmp_path: Path,
+                             monkeypatch) -> None:
+    """A gated gesture fires the site (R-A9-2).
+
+    The static allowlist admits the gesture in this tree and no case
+    input changes it, so no case input reaches the gate; the proof
+    closes the gate by direct injection and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.goals as goals
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    root = ctx.root
+    monkeypatch.setattr(goals, "gesture_allowed",
+                        lambda capability: False)
+    outcome, lines = _a9_run_cli(
+        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.goal", "kind": "failure",
+                      "site": "cli.goal.not-admitted",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """A broken runtime target fires the site (R-A9-2).
+
+    The fixture carries one valid target and no step can break a
+    study map's runtime_target, so no case input reaches the gate;
+    the proof injects the collection failure and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.learner as learner
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.learning_runtime import RuntimeInputError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
+    root = ctx.root
+
+    def boom(repo):
+        raise RuntimeInputError("a9-proof: the target is broken")
+
+    monkeypatch.setattr(learner, "collect_requirements", boom)
+    outcome, lines = _a9_run_cli(
+        root, "cli.observe",
+        ["observe", "req-demo-l01-demo", "--activity", "exercise",
+         "--result", "partial"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.observe", "kind": "failure",
+                      "site": "cli.observe.invalid-target",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+def _prove_observe_not_admitted(mini_repo: Path, tmp_path: Path,
+                                monkeypatch) -> None:
+    """A gated gesture fires the site (R-A9-2).
+
+    The static allowlist admits the gesture in this tree and no case
+    input changes it, so no case input reaches the gate; the proof
+    closes the gate by direct injection and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.learner as learner
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
+    root = ctx.root
+    monkeypatch.setattr(learner, "gesture_allowed",
+                        lambda capability: False)
+    outcome, lines = _a9_run_cli(
+        root, "cli.observe",
+        ["observe", "req-demo-l01-demo", "--activity", "exercise",
+         "--result", "partial"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.observe", "kind": "failure",
+                      "site": "cli.observe.not-admitted",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+_PROOF_FNS.update({
+    'cli.inbox-list.list-failed': _prove_inbox_list_failed,
+    'cli.inbox-read.read-failed': _prove_inbox_read_failed,
+    'inbox.resolve.archive-collision': _prove_inbox_archive_collision,
+    'inbox.resolve.read-failed': _prove_inbox_resolve_read_failed,
+    'note.create.not-an-object': _prove_note_not_an_object_guarded,
+    'note.create.destination-exists': _prove_note_destination_exists,
+    'note.create.symlink-path': _prove_note_symlink_path,
+    'note.create.unreadable-superseded': _prove_note_unreadable_superseded,
+    'cli.note-read.read-failed': _prove_note_read_failed,
+    'cli.note-read.bad-encoding': _prove_note_read_bad_encoding,
+    'cli.search.read-failed': _prove_search_read_failed,
+    'cli.search.bad-encoding': _prove_search_bad_encoding,
+    'cli.goal.malformed-ledger': _prove_goal_malformed_ledger,
+    'cli.goal.unreadable-ledger': _prove_goal_unreadable_ledger,
+    'cli.goal.unreadable-session': _prove_goal_unreadable_session,
+    'cli.goal.not-admitted': _prove_goal_not_admitted,
+    'cli.observe.invalid-target': _prove_observe_invalid_target,
+    'cli.observe.not-admitted': _prove_observe_not_admitted,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)

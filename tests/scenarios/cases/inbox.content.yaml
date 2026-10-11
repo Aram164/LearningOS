@@ -32,6 +32,7 @@ cases:
         request: {file: "<CASEDATA>/blob.bin", file_sha256: "sha256:0110e19f3e9dedbd01f38a8834e0237ab30dc980189664ef01b900293f3077d0"}
       - transport: cli
         argv: [inbox-read, blob.bin]
+    expect: {site: cli.inbox-read.not-utf8}
   - id: unknown-drop
     kind: refusal
     transport: cli

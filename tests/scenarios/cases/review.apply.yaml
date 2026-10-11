@@ -42,6 +42,7 @@ cases:
       - transport: gateway
         request: {unit_id: unit-demo-l01, selected: [proposal-evil]}
         artifact_ids: []
+    expect: {site: review.apply.bad-destination}
   - id: existing-destination
     kind: sequence
     steps:
@@ -52,6 +53,7 @@ cases:
       - transport: gateway
         request: {unit_id: unit-demo-l01, selected: [proposal-clash]}
         artifact_ids: []
+    expect: {site: review.apply.bad-destination}
   - id: empty-content
     kind: sequence
     steps:
@@ -62,6 +64,7 @@ cases:
       - transport: gateway
         request: {unit_id: unit-demo-l01, selected: [proposal-empty]}
         artifact_ids: []
+    expect: {site: review.apply.empty-content}
   - id: apply-needs-approve
     kind: refusal
     transport: cli

@@ -38,6 +38,8 @@ cases:
     argv: [observe, req-demo-l01-demo, --activity, exercise, --result, partial, --supersedes, observation-nope]
     expect: {site: learner.observation.append.invalid-input}
 untriggered:
-  - {where: "tools/learning_os/commands/observation.py:313", reason: "gesture not admitted: static allowlist admits the gesture in this tree"}
-  - {where: "tools/learning_os/commands/observation.py:321", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world carries one valid target"}
+  - {where: "tools/learning_os/ops/handlers/learner.py:1399", reason: "gesture not admitted: static allowlist admits the gesture in this tree"}
+  - {where: "tools/learning_os/ops/handlers/learner.py:1410", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world carries one valid target"}
+  - {site: cli.observe.not-admitted, where: "tools/learning_os/ops/handlers/learner.py:1399", reason: fixture-inexpressible}
+  - {site: cli.observe.invalid-target, where: "tools/learning_os/ops/handlers/learner.py:1410", reason: fixture-inexpressible}
   - {where: "tools/learning_os/commands/observation.py:141", reason: "shared core, workspace scope: unreachable via observe, which only calls the core with a covering workspace (explicit ids are scope-checked at :330 first)"}

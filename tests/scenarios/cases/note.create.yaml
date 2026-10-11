@@ -165,7 +165,11 @@ cases:
     artifact_ids: [note-scenario-create-23]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/note.py:185", reason: "symlink in the note path: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/note.py:240", reason: "note not an object: argparse json_object and the gateway schema both require an object first"}
-  - {where: "tools/learning_os/commands/note.py:281", reason: "destination exists for an unregistered id: every fixture .md under knowledge/notes/ registers, and creating one registers it too"}
-  - {where: "tools/learning_os/commands/note.py:313", reason: "unreadable superseded note: fixture notes read cleanly, and no write path stores an unreadable one"}
+  - {where: "tools/learning_os/ops/handlers/notes.py:309", reason: "symlink in the note path: the fixture carries none, and no step can create one"}
+  - {where: "tools/learning_os/ops/handlers/notes.py:385", reason: "note not an object: argparse json_object and the gateway schema both require an object first"}
+  - {where: "tools/learning_os/ops/handlers/notes.py:450", reason: "destination exists for an unregistered id: every fixture .md under knowledge/notes/ registers, and creating one registers it too"}
+  - {where: "tools/learning_os/ops/handlers/notes.py:500", reason: "unreadable superseded note: fixture notes read cleanly, and no write path stores an unreadable one"}
+  - {site: note.create.symlink-path, where: "tools/learning_os/ops/handlers/notes.py:309", reason: fixture-inexpressible}
+  - {site: note.create.not-an-object, where: "tools/learning_os/ops/handlers/notes.py:385", reason: guarded-before-handler}
+  - {site: note.create.destination-exists, where: "tools/learning_os/ops/handlers/notes.py:450", reason: fixture-inexpressible}
+  - {site: note.create.unreadable-superseded, where: "tools/learning_os/ops/handlers/notes.py:500", reason: fixture-inexpressible}

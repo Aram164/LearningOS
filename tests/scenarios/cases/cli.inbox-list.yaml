@@ -14,4 +14,5 @@ cases:
     observations: {now: "2026-10-16T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/query.py:447", reason: "unreadable inbox: needs an OSError no step can arrange (the helper raise at query.py:352 needs the same)"}
+  - {where: "tools/learning_os/ops/handlers/capture.py:244", reason: "unreadable inbox: needs an OSError no step can arrange (the helper raise at query.py:352 needs the same)"}
+  - {site: cli.inbox-list.list-failed, where: "tools/learning_os/ops/handlers/capture.py:244", reason: os-error-only}

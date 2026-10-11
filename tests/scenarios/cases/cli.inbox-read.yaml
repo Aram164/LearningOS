@@ -25,6 +25,7 @@ cases:
         request: {file: "<CASEDATA>/blob.bin", file_sha256: "sha256:a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3"}
       - transport: cli
         argv: [inbox-read, blob.bin]
+    expect: {site: cli.inbox-read.not-utf8}
   - id: unknown-drop
     kind: refusal
     transport: cli
@@ -43,3 +44,4 @@ cases:
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components (worded at reads.py:794 for inbox): the fixture inbox has no symlinks, and no step can create one"}
   - {where: "tools/learning_os/commands/reads.py:556", reason: "escape from work/inbox (worded at reads.py:793): needs a symlink no step can create"}
+  - {site: cli.inbox-read.read-failed, where: "tools/learning_os/ops/handlers/capture.py:359", reason: os-error-only}
