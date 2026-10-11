@@ -58,6 +58,12 @@ cases:
     transport: cli
     argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.span.stale-snapshot}
+  - id: span-placement-base
+    kind: success
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo, --resource-index, 3]
+    a5_base: true
+    expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/plan.py:1324", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
   - {site: material.span.placement-source-mismatch, where: "tools/learning_os/ops/handlers/plan.py:1324", reason: fixture-inexpressible}
