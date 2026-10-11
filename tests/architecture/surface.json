@@ -9094,7 +9094,7 @@
   "cli.module-list.schema.json": "1945f4be2b2508b32c68b36dfedcbeba14d0346b8f22dfe6bc2c5072e0d0b3b5",
   "cli.note-analysis-prepare.schema.json": "844eff927d26004891c19747673d565a21547c4f9c01fcfa8eb6baddb5c49165",
   "cli.note-read.schema.json": "34632d8b42bd7a420886cc0a3406892a111d053572be743112f145ca9bc17c00",
-  "cli.observe.schema.json": "def52ac506f69d3bc1bbea0236261e4cdfb6ec20256725bb355815c18d685135",
+  "cli.observe.schema.json": "2da4b483ca48f55c6dec1c83d140b29a33929f4261ab9fb8271d3e020379d156",
   "cli.operations.schema.json": "117ae33dac2e374536f636bde00f1e78bfa8265a3c13b5b791607528a60c5c12",
   "cli.plan-edit-context.schema.json": "4c79e1b0f8819870a7298ddc55f7f19653c61cd9f0a5a373bc10791da7a40e87",
   "cli.plan-template.schema.json": "adf0cbc86990451bcfb2e577128fc095358ecc36781f7772bdc8fcb29d14dff9",

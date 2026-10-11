@@ -17,7 +17,13 @@ from learning_os.abilities import (
     ability_fingerprint,
     read_ability_observations,
 )
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+    intent_sha256,
+    verified_gateway_snapshot,
+)
 from learning_os.domain.failures import NotFound, Unconfirmed, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.learning_runtime import (
@@ -41,8 +47,10 @@ from learning_os.ops.handlers._shared import (
     require_stage,
     require_unit_map_or_error,
 )
+from learning_os.ops.legacy import gesture_allowed
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
+from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
 from learning_os.transactions import parse_expected_revisions
 from learning_os.unit_notes import unit_note_marker
@@ -1346,6 +1354,148 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc
+
+
+def _resolve_observe_workspace(repo, requirement, explicit_id):
+    """Return ``(workspace, refusal)`` for the direct path.
+
+    An explicit id behaves exactly like ``observation-append``. An omitted
+    id resolves the single active workspace covering the requirement's
+    module or unit scope; zero or several candidates refuse rather than
+    guess, because the ledger line cannot move workspaces afterwards.
+    """
+    source = requirement["source_stage"]
+
+    def covers(workspace) -> bool:
+        return (source["module_id"] in workspace.meta.get("module_ids", [])
+                or source["unit_id"] in workspace.meta.get("unit_ids", []))
+
+    if explicit_id is not None:
+        workspace = repo.workspaces.get(explicit_id)
+        if workspace is None or workspace.archived or workspace.status != "active":
+            return None, "observations require a registered active workspace"
+        if not covers(workspace):
+            return None, "requirement is outside the workspace's declared module/unit scope"
+        return workspace, ""
+    candidates = sorted(
+        workspace.id for workspace in repo.workspaces.values()
+        if not workspace.archived and workspace.status == "active" and covers(workspace)
+    )
+    if not candidates:
+        return None, (f"no active workspace covers requirement {requirement['id']}; "
+                      "pass --workspace to choose one")
+    if len(candidates) > 1:
+        return None, (f"requirement {requirement['id']} is covered by "
+                      f"{len(candidates)} workspaces ({', '.join(candidates)}); "
+                      "pass --workspace to choose one")
+    return repo.workspaces[candidates[0]], ""
+
+
+@register("cli.observe", kind="command")
+def cli_observe(ctx: OpContext, req: dict) -> Result:
+    """Record Aram's own evidence directly; the terminal session is the approval."""
+    root = ctx.root
+    if not gesture_allowed(OBSERVE_CAPABILITY):
+        raise WriteRefused(
+            "the direct observation path is not admitted",
+            site="cli.observe.not-admitted",
+            gateway_message="los: the direct observation path is not admitted",
+            exit_code=2,
+        )
+    snapshot = ctx.snapshot_id()
+    repo = ctx.repo()
+    try:
+        requirements = collect_requirements(repo)
+    except RuntimeInputError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.observe.invalid-target",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    requirement = next((row for row in requirements
+                        if row["id"] == req["requirement"]), None)
+    if requirement is None:
+        message = _unknown_requirement_message(
+            repo, requirements, req["requirement"])
+        raise WriteRefused(
+            message,
+            site="cli.observe.unknown-requirement",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    workspace, refusal = _resolve_observe_workspace(
+        repo, requirement, req.get("workspace"))
+    if workspace is None:
+        raise WriteRefused(
+            refusal,
+            site="cli.observe.unresolved-workspace",
+            gateway_message=f"los: {refusal}",
+            exit_code=2,
+        )
+    payload: dict = {
+        "workspace": workspace.id,
+        "requirement": requirement["id"],
+        "activity": req["activity"],
+        "result": req["result"],
+    }
+    if req.get("assistance") is not None:
+        payload["assistance"] = req["assistance"]
+    if req.get("tags") is not None:
+        payload["tags"] = req["tags"]
+    if req.get("note") is not None:
+        payload["context"] = req["note"]
+    if req.get("condition"):
+        payload["condition"] = list(req["condition"])
+    if req.get("condition_not_met"):
+        payload["condition_not_met"] = list(req["condition_not_met"])
+    if req.get("supersedes"):
+        payload["supersedes"] = req["supersedes"]
+    expected_revisions = {workspace.id: artifact_revision(root, workspace.id)}
+    subject = intent_sha256({
+        "schema_version": 2,
+        "capability": OBSERVE_CAPABILITY,
+        "channel": "operator",
+        "expected_snapshot": snapshot,
+        "expected_revisions": expected_revisions,
+        "payload": payload,
+    })
+    key = observations.new_hex()
+    context = GatewayRequestContext(
+        request_id=f"observe-{key}",
+        idempotency_key=f"observe-{key}",
+        capability=OBSERVE_CAPABILITY,
+        channel="operator",
+        intent_sha256=subject,
+        approval_kind="direct-user-gesture",
+        approval_subject_sha256=subject,
+        expected_snapshot=snapshot,
+    )
+    core_req = {
+        "workspace": workspace.id,
+        "requirement": requirement["id"],
+        "activity": req["activity"],
+        "result": req["result"],
+        "expected_snapshot": snapshot,
+        "expected_revision": [
+            f"{workspace.id}={expected_revisions[workspace.id]}"],
+        "assistance": req.get("assistance"),
+        "tags": req.get("tags"),
+        "context": req.get("note"),
+        "condition": req.get("condition"),
+        "condition_not_met": req.get("condition_not_met"),
+        "supersedes": req.get("supersedes"),
+    }
+    with gateway_request_context(context), verified_gateway_snapshot(
+            root, snapshot):
+        core = observation_append(ctx, core_req)
+    return Result(
+        core.payload,
+        proposal=core.proposal,
+        on_commit_refused=_on_commit_refused,
+        json_dumps=_dumps_plain,
+        gesture=context,
+    )
 
 
 def _valid_work_ref(value: str) -> bool:

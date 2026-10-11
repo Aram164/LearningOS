@@ -209,3 +209,4 @@ approvals:
   - {key: "request_schemas.cli.note-analysis-prepare.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.note-analysis-prepare converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.search.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.search converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.module-list.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.module-list converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.cli.observe.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.observe converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

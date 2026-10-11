@@ -327,34 +327,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/observation.py::_append_observation::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::_append_observation::print
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observe::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observe::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observe::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observe::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/observation.py::cmd_observe::return
-    count: 5
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/commands/query.py::cmd_generate::_operator_lock
     count: 1
     since: baseline
