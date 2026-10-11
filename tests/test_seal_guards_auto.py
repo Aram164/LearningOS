@@ -522,3 +522,162 @@ def test_legacy_guards_auto_reads_the_live_tree_once(
     assert counts["validate"] == 0, counts
     assert canonical_fingerprint(mini_repo) == before
     assert {path for path in mini_repo.rglob("*")} == tree_before
+
+
+# ---------------------------------------------------------------------------
+# File-guard sealing (SPEC (cr)): inbox.resolve declares no artifact ids,
+# so the registered seal must derive its file: guards. Before this repair
+# the sealed envelope carried an empty revision map and the first
+# submission refused with the exact-coverage INVALID_REQUEST (Task62's
+# process-inbox evidence). The seal/check itself writes nothing.
+# ---------------------------------------------------------------------------
+
+def _inbox_drop_payload(mini_repo: Path, name: str = "note-drop.md"):
+    """A real routed drop plus its seal payload, year, and raw bytes."""
+    import datetime
+
+    drop = mini_repo / "work/inbox" / name
+    data = b"# Drop\n\nRouted.\n"
+    drop.write_bytes(data)
+    year = str(datetime.date.today().year)
+    payload = {"name": name, "drop_sha256": file_sha256(drop),
+               "routed_to": ["note-demo"]}
+    return payload, data, year
+
+
+def test_inbox_resolve_seal_derives_file_guards_and_first_submit_commits(
+        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+    """Registered inbox.resolve: exact file guards seal, first submit lands."""
+    import seal_envelope
+    import yaml
+
+    payload, data, year = _inbox_drop_payload(mini_repo)
+    inbox_guard = f"file:work/inbox/{payload['name']}"
+    archive_guard = f"file:archive/inbox/{year}/{payload['name']}"
+    before = canonical_fingerprint(mini_repo)
+    tree_before = {path for path in mini_repo.rglob("*")}
+
+    def legacy_must_not_run(*args, **kwargs):
+        raise AssertionError(
+            "public selector routed a registered operation "
+            "to legacy derivation")
+
+    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
+                        legacy_must_not_run)
+    out = tmp_path / "sealed.json"
+    code = seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "inbox.resolve",
+        "--payload", json.dumps(payload), "--key", "guards-auto-inbox-001",
+        "--guards", "auto", "--out", str(out)])
+    captured = capsys.readouterr()
+    assert code == 0, captured.err
+    assert "guards auto:" in captured.err
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["expected_snapshot"] == f"sha256:{before}"
+    assert envelope["expected_revisions"] == {inbox_guard: 0,
+                                              archive_guard: 0}
+    assert canonical_fingerprint(mini_repo) == before
+    assert {path for path in mini_repo.rglob("*")} == tree_before
+    assert not list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    applied = _submit(mini_repo, out)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    body = json.loads(applied.stdout)
+    assert body["ok"] is True, body
+    assert body["replayed"] is False
+    assert body["transaction_id"] is not None
+    assert body["result"]["resolved"] == payload["name"]
+    assert body["result"]["archived"] == [
+        f"archive/inbox/{year}/{payload['name']}"]
+    assert not (mini_repo / "work/inbox" / payload["name"]).exists()
+    archived = mini_repo / f"archive/inbox/{year}/{payload['name']}"
+    assert archived.read_bytes() == data
+    receipt = yaml.safe_load(
+        (mini_repo / body["receipt_path"]).read_text(encoding="utf-8"))
+    assert sorted(row["path"] for row in receipt["writes"]) == sorted([
+        f"archive/inbox/{year}/{payload['name']}",
+        f"work/inbox/{payload['name']}"])
+    assert receipt["expected_revisions"] == {inbox_guard: 0,
+                                             archive_guard: 0}
+    assert receipt["artifact_revisions"] == {
+        inbox_guard: {"before": 0, "after": 1},
+        archive_guard: {"before": 0, "after": 1},
+    }
+    assert receipt["metadata"]["routed_to"] == ["note-demo"]
+
+
+def test_inbox_resolve_explicit_revision_wins_over_a_derived_file_guard(
+        mini_repo: Path, tmp_path: Path):
+    """An explicit --revision overrides one derived file guard, keeps cover."""
+    payload, _, year = _inbox_drop_payload(mini_repo)
+    inbox_guard = f"file:work/inbox/{payload['name']}"
+    archive_guard = f"file:archive/inbox/{year}/{payload['name']}"
+    out = tmp_path / "sealed.json"
+    sealed = _seal(mini_repo, out, capability="inbox.resolve",
+                   payload=payload, key="guards-auto-inbox-002",
+                   extra=["--revision", f"{inbox_guard}=99"])
+    assert sealed.returncode == 0, sealed.stderr
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["expected_revisions"][inbox_guard] == 99
+    assert envelope["expected_revisions"][archive_guard] == 0
+    applied = _submit(mini_repo, out)
+    assert applied.returncode == 3, applied.stdout
+    assert json.loads(applied.stdout)["error"]["code"] == "REVISION_CONFLICT"
+    assert (mini_repo / "work/inbox" / payload["name"]).is_file()
+
+
+def test_inbox_resolve_sealed_envelope_still_refuses_a_stale_snapshot(
+        mini_repo: Path, tmp_path: Path):
+    """A concurrent canonical write still stale-refuses the sealed envelope."""
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload, _, _ = _inbox_drop_payload(mini_repo)
+    out = tmp_path / "first.json"
+    sealed = _seal(mini_repo, out, capability="inbox.resolve",
+                   payload=payload, key="guards-auto-inbox-003")
+    assert sealed.returncode == 0, sealed.stderr
+    concurrent = _seal(mini_repo, tmp_path / "concurrent.json",
+                       capability="capture.create",
+                       payload={"text": "concurrent write"},
+                       key="guards-auto-inbox-004")
+    assert concurrent.returncode == 0, concurrent.stderr
+    applied = _submit(mini_repo, tmp_path / "concurrent.json")
+    assert applied.returncode == 0, applied.stdout
+    assert json.loads(applied.stdout)["ok"] is True
+    stale = _submit(mini_repo, out)
+    assert stale.returncode == 3, stale.stdout
+    body = json.loads(stale.stdout)
+    assert body["ok"] is False
+    assert body["error"]["code"] == "STALE_SNAPSHOT"
+    assert (mini_repo / "work/inbox" / payload["name"]).is_file()
+
+
+def test_inbox_resolve_envelope_missing_a_file_guard_still_refuses(
+        mini_repo: Path, tmp_path: Path):
+    """Dropping one sealed file guard still trips the exact-coverage guard."""
+    from learning_os.contracts.gateway import intent_sha256
+
+    payload, _, year = _inbox_drop_payload(mini_repo)
+    inbox_guard = f"file:work/inbox/{payload['name']}"
+    archive_guard = f"file:archive/inbox/{year}/{payload['name']}"
+    out = tmp_path / "sealed.json"
+    sealed = _seal(mini_repo, out, capability="inbox.resolve",
+                   payload=payload, key="guards-auto-inbox-005")
+    assert sealed.returncode == 0, sealed.stderr
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["expected_revisions"] == {inbox_guard: 0,
+                                              archive_guard: 0}
+    del envelope["expected_revisions"][archive_guard]
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    tampered = tmp_path / "tampered.json"
+    tampered.write_text(json.dumps(envelope), encoding="utf-8")
+    applied = _submit(mini_repo, tampered)
+    assert applied.returncode == 2, applied.stdout
+    body = json.loads(applied.stdout)
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert "must cover exactly every transaction artifact" in body["error"]["message"]
+    assert archive_guard in body["error"]["message"]
+    assert (mini_repo / "work/inbox" / payload["name"]).is_file()

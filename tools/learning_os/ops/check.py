@@ -23,7 +23,7 @@ from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.revisions import load_revisions
 from learning_os.rules import validate
-from learning_os.transactions import _atomic_write_bytes
+from learning_os.transactions import _atomic_write_bytes, transaction_artifacts
 from learning_os.warning_baseline import (
     delta,
     load_baseline,
@@ -141,6 +141,9 @@ def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
         baseline, _ = load_baseline(root)
         regressions, _repairs = delta(baseline, signatures)
     revisions = load_revisions(root)
+    artifacts = transaction_artifacts(
+        root, proposal.artifact_ids, proposal.writes,
+        proposal.deletes or ())
     return {
         "schema": 1,
         "capability": proposal.capability,
@@ -150,7 +153,7 @@ def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
         "expected_snapshot": ctx.snapshot_id(),
         "expected_revisions": {
             artifact: revisions.get(artifact, 0)
-            for artifact in proposal.artifact_ids
+            for artifact in artifacts
         },
         "writes": sorted(write_rels),
         "deletes": sorted(delete_rels),

@@ -578,3 +578,75 @@ def test_registered_check_mode_renders_without_committing(
     assert not (mini_repo / "work/inbox/journey.md").exists()
     assert not list(
         (mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+# ---------------------------------------------------------------------------
+# File-guard enumeration (SPEC (cr)): the check record carries the
+# transaction's exact artifact set through transaction_artifacts, not just
+# its declared ids. inbox.resolve declares none, so before this repair its
+# sealed envelope carried an empty revision map and the first submission
+# refused with the exact-coverage INVALID_REQUEST.
+# ---------------------------------------------------------------------------
+
+def _file_guard_ctx(mini_repo: Path):
+    from learning_os.ops.context import OpContext
+
+    return OpContext(root=mini_repo, operation=TEST_OP, channel="operator",
+                     invocation="check", gateway=None)
+
+
+def test_check_proposal_guards_touched_files_when_no_ids_are_declared(
+        mini_repo: Path):
+    """Empty artifact_ids: writes+deletes become file: guards, live values."""
+    import datetime
+
+    from learning_os.ops.check import check_proposal
+    from learning_os.ops.proposal import TransactionProposal
+    from learning_os.revisions import dump_revisions, revision_ledger_path
+
+    year = str(datetime.date.today().year)
+    drop = mini_repo / "work/inbox/guard-drop.md"
+    drop.write_text("# Drop\n", encoding="utf-8")
+    archived = f"archive/inbox/{year}/guard-drop.md"
+    ledger = revision_ledger_path(mini_repo)
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(
+        dump_revisions({f"file:{archived}": 4}), encoding="utf-8")
+    fingerprint_before = canonical_fingerprint(mini_repo)
+    tree_before = {path for path in mini_repo.rglob("*")}
+    proposal = TransactionProposal(
+        capability=TEST_OP,
+        writes={mini_repo / archived: "# Drop\n"},
+        artifact_ids=(),
+        deletes=(drop,),
+    )
+    record = check_proposal(_file_guard_ctx(mini_repo), proposal)
+    assert record["ok"] is True, record["errors"]
+    assert record["expected_revisions"] == {
+        "file:work/inbox/guard-drop.md": 0,
+        f"file:{archived}": 4,
+    }
+    assert record["writes"] == [archived]
+    assert record["deletes"] == ["work/inbox/guard-drop.md"]
+    assert canonical_fingerprint(mini_repo) == fingerprint_before
+    assert {path for path in mini_repo.rglob("*")} == tree_before
+    assert not list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_check_proposal_declared_ids_win_over_touched_paths(
+        mini_repo: Path):
+    """Declared artifact_ids keep precedence: no file: guards are added."""
+    from learning_os.ops.check import check_proposal
+    from learning_os.ops.proposal import TransactionProposal
+
+    proposal = TransactionProposal(
+        capability=TEST_OP,
+        writes={mini_repo / "work/inbox/journey.md": "pipe\n"},
+        artifact_ids=("test-only:journey",),
+        deletes=(),
+    )
+    record = check_proposal(_file_guard_ctx(mini_repo), proposal)
+    assert record["expected_revisions"] == {"test-only:journey": 0}
+    assert record["writes"] == ["work/inbox/journey.md"]
+    assert record["deletes"] == []
