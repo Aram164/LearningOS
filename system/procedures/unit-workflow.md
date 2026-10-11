@@ -50,7 +50,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:5a7e4519f29c6f2eb2fb60a2fb26479b09d8ccdf10f9bfcc27724306269a16d1",
+  "snapshot_after": "sha256:4448346ca5bc41bb5517653b258c551468b62c86d0fbd280a27b220b18f9479c",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -62,7 +62,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
     "artifact_revisions": {
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:5a7e4519f29c6f2eb2fb60a2fb26479b09d8ccdf10f9bfcc27724306269a16d1",
+    "snapshot_after": "sha256:4448346ca5bc41bb5517653b258c551468b62c86d0fbd280a27b220b18f9479c",
     "replayed": false
   },
   "error": null
@@ -101,7 +101,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:7d2b79672815a3212bb6f4d1c0b8bc5e13bcb109e40f6caf73fa2127386c6311",
+  "snapshot_after": "sha256:d223a2f7ce021aaa63037e1df297c57484c6b126a7156ec33a14f3c1bf67da25",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -113,7 +113,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
     "artifact_revisions": {
       "unit-demo-l02": 2
     },
-    "snapshot_after": "sha256:7d2b79672815a3212bb6f4d1c0b8bc5e13bcb109e40f6caf73fa2127386c6311",
+    "snapshot_after": "sha256:d223a2f7ce021aaa63037e1df297c57484c6b126a7156ec33a14f3c1bf67da25",
     "replayed": false
   },
   "error": null
@@ -136,7 +136,7 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l02/unit.yam
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l01", "source_id": "source-demo-book", "locator": "lecture-02.pdf", "action": "select"}' --key sel-cross-l01 --request-id request-sel-cross-l01 --guards auto --out "$TMPDIR/sel-cross.json"
-seal_envelope: los: selection must match one rich material route on this unit (source-demo-book · lecture-02.pdf); fix the payload and seal again
+seal_envelope: selection must match one rich material route on this unit (source-demo-book · lecture-02.pdf); fix the payload and seal again
 [2]
 ```
 
@@ -148,7 +148,7 @@ constructed explicitly (the latter is checked by `tests/test_mismatches.py`).
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l01", "source_id": "source-demo-book", "locator": "lecture-01.pdf", "action": "remove"}' --key sel-remove-l01 --request-id request-sel-remove-l01 --guards auto --out "$TMPDIR/sel-wired.json"
-seal_envelope: los: this choice is used by the current study path; remove it from those stages before removing the choice; fix the payload and seal again
+seal_envelope: this choice is used by the current study path; remove it from those stages before removing the choice; fix the payload and seal again
 [2]
 ```
 

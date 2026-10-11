@@ -59,7 +59,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:05f5b2aa5e25edf7a1f180cad728d52a84ea0ac393cbcea9d774e800b0ff5d1e",
+  "snapshot_after": "sha256:50809373896fd2af78b6502683531de5541ed689c58ef4e3119dca57ce572ef6",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-unrouted-fragment-for-later-triage.md",
@@ -68,7 +68,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
     "artifact_revisions": {
       "capture-request:temp-capture-001": 1
     },
-    "snapshot_after": "sha256:05f5b2aa5e25edf7a1f180cad728d52a84ea0ac393cbcea9d774e800b0ff5d1e",
+    "snapshot_after": "sha256:50809373896fd2af78b6502683531de5541ed689c58ef4e3119dca57ce572ef6",
     "replayed": false
   },
   "error": null

@@ -10,4 +10,4 @@ operations:
   - {capability: garden.add-transcription, target_id: garden-note-seed, artifact_ref: artifacts/transcription.md}
   - {capability: garden.update, target_id: garden-note-seed, patch: {title: "Shelved Thought", state: developing}}
   - {capability: relationship.create, payload: {id: relationship-garden-module-demo, from: {kind: garden-note, id: garden-note-seed}, relation: supports, to: {kind: module, id: module-demo}}}
-preconditions: {snapshot_id: "sha256:dc19fd6c8e4838f7ec4b4bfce7b9fb82cbb45072ddb2226171cafe6c0875d9b8", artifact_revisions: {garden-note-seed: "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"}}
+preconditions: {snapshot_id: "sha256:94e93d3032e1f89b5112208e9614cc86243f8c850a1a8ff3855510d85170350b", artifact_revisions: {garden-note-seed: "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"}}

@@ -26,7 +26,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:0927a3637aa8cebc6ab0c608f483d35af3e5e7ab89559ecdded801ec92820c8a", "replayed": false}
+{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:a20f72e0df6ab92bc05376ef3b09e7e3f8f08d9da8bcfb34e94c7c730dccaf2d", "replayed": false}
 ```
 
 ## The newest receipt names the capability
@@ -65,7 +65,7 @@ message §25c quotes for the class (M-01 in
 
 ```scrut {output_stream: stderr}
 $ los stage-result --workspace workspace-demo --unit unit-demo-l01 --stage stage-demo-pending --activity exercise --result correct
-los: stage results require GatewayEnvelopeV2; direct CLI application is disabled
+los: INVALID_REQUEST: stage results require GatewayEnvelopeV2; direct CLI application is disabled
 [2]
 ```
 
@@ -89,7 +89,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:a12fea7ff5c7520889ba28354f389dd954d57a2bf14ff5ec8bcb50ee0d2caa91",
+  "snapshot_after": "sha256:ccd41103d5064c23dab80083e53b385624f5374c3c847d2f6c08222a002d954e",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +102,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:a12fea7ff5c7520889ba28354f389dd954d57a2bf14ff5ec8bcb50ee0d2caa91",
+    "snapshot_after": "sha256:ccd41103d5064c23dab80083e53b385624f5374c3c847d2f6c08222a002d954e",
     "replayed": false
   },
   "error": null
