@@ -527,8 +527,10 @@ def _lookup_domain(ctx, operation: str, row: dict,
     ``require_path_or_error`` lists them; path stages from the
     path's own stage list resolved from ``path_id`` (those requests
     carry no ``unit_id``); sources from ``repo.sources`` as both
-    source handlers pass it. The ordered list feeds the complaint
-    template in handler traversal order.
+    source handlers pass it; resources from the stage's own resource
+    list as the feedback handler lists it (SPEC (bz) item 1). The
+    ordered list feeds the complaint template in handler traversal
+    order.
     """
     from learning_os.loader import load_repo
 
@@ -578,6 +580,22 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # Both source handlers pass repo.sources (SPEC (bv) item 1).
         repo = load_repo(ctx.root)
         ordered = list(repo.sources)
+        return ordered, set(ordered)
+    if kind == "resource":
+        # The feedback handler lists the stage's own resource ids,
+        # resolved through the unit's current study map exactly as
+        # ``require_unit_map_or_error`` plus ``require_stage`` resolve
+        # them (SPEC (bz) item 1).
+        repo = load_repo(ctx.root)
+        unit = repo.units[request["unit_id"]]
+        study_map = repo.study_maps[unit.data["current_study_map"]]
+        stage = next((row for row in study_map.data.get("stages", [])
+                      or []
+                      if isinstance(row, dict)
+                      and row.get("id") == request["stage_id"]), None)
+        resources = stage.get("resources") or [] if stage else []
+        ordered = [str(row["id"]) for row in resources
+                   if isinstance(row, dict) and row.get("id")]
         return ordered, set(ordered)
     if kind == "route" and operation == "cli.ai-action-append-slices":
         # The append request carries no unit_id; the unit resolves
@@ -850,6 +868,10 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
 #:   multi-line, with ``{miss}`` and ``{known}`` (the handler's own
 #:   listing of the domain) substituted and no ``with_suggestions``
 #:   (SPEC (bv) item 2).
+#: - ``("legacy-lines-suggested", text)``: the first template line as
+#:   ``legacy`` renders it (``with_suggestions``, the same function),
+#:   the remaining lines as ``legacy-lines``, joined by ``\n``
+#:   (SPEC (bz) item 1).
 #: No branch on an operation name remains in ``_canonical_message``.
 MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("route.patch", "/properties/unit_id"): ("template", "unit"),
@@ -876,6 +898,10 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("prefixed", "active learning path"),
     ("path.progress.update", "/properties/stage_id"):
         ("prefixed", "stage"),
+    ("source.feedback.record", "/properties/resource_id"):
+        ("legacy-lines-suggested",
+         "los: resource not found on stage stage-demo: {miss}\n"
+         "     known: {known}"),
     ("source.feedback.record", "/properties/stage_id"):
         ("prefixed", "stage"),
     ("source.feedback.record", "/properties/source_id"):
@@ -950,6 +976,13 @@ def _render_message_form(form: tuple[str, str], miss: str,
         return text.format(miss=miss)
     if kind == "legacy-lines":
         return text.format(miss=miss, known=", ".join(sorted(domain)))
+    if kind == "legacy-lines-suggested":
+        first, *rest = text.split("\n")
+        rendered = [with_suggestions(first.format(miss=miss), miss, domain)]
+        known = ", ".join(sorted(domain))
+        rendered.extend(line.format(miss=miss, known=known)
+                        for line in rest)
+        return "\n".join(rendered)
     raise AssertionError(f"A5 message form {kind!r} is unknown — {FIX}")
 
 
@@ -1124,6 +1157,78 @@ def test_message_form_legacy_lines_mutant_fails(tmp_path, operation,
     rebuilt, recorded = _mutant_rebuild(
         tmp_path, operation, pointer,
         ("legacy-lines", text[len("los: "):]))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a dropped prefix still rebuilds "
+        f"{recorded!r} — {FIX}")
+
+
+def test_legacy_lines_suggested_probe_miss_matches_pipeline(tmp_path):
+    """The resource form renders the probe miss as the pipeline does.
+
+    SPEC (bz) item 1: at the probe's own miss (the (af) mutation over
+    the enumerated domain), the tabled form must equal the real
+    pipeline's complaint byte for byte — the same ``_run_step`` run
+    ``scratch/t47-probe-values.py`` used to exhibit the
+    miss-dependent suggestion suffix.
+    """
+    import scenario_harness as harness
+
+    operation = "source.feedback.record"
+    pointer = "/properties/resource_id"
+    rows = {row["pointer"]: row for row in _probe_rows()
+            if row["operation"] == operation}
+    row = rows[pointer]
+    case, target_index, _ = _select_base(operation, row)
+    ctx = harness._prepare_world(
+        _merged_case(operation, case), operation, tmp_path / "world")
+    steps = case.get("steps", []) if case.get("kind") == "sequence" else [case]
+    for prereq in range(target_index):
+        full = {"operation": operation, **steps[prereq]}
+        result = harness._run_step(ctx, operation, full, prereq)
+        assert result["exit"] == 0, (
+            f"A5 {operation}::{pointer}: prerequisite step {prereq} exits "
+            f"{result['exit']}: {result['stderr']!r} — {FIX}")
+    transport, request, positions = _derive_target(
+        ctx, operation, row, case, target_index)
+    domain_list, domain_set = _lookup_domain(ctx, operation, row, request)
+    prop, _ = _pointer_prop(pointer)
+    position = _probe_positions(positions)[0]
+    assert position[0] == "scalar", (operation, pointer, position)
+    validates = _validates_for_row(operation, row, request, position)
+    parses = _parses_for_row(row)
+    miss = _near_miss_candidate(
+        position[2], parses=parses, validates=validates,
+        forbidden_texts=_exclusion_texts(ctx.root), domain=domain_set)
+    base_step = dict(steps[target_index])
+    mutant = _mutated_step(base_step, transport, prop, position, miss)
+    result = harness._run_step(ctx, operation, mutant, 1000)
+    error = _gateway_error(result)
+    rebuilt = _render_message_form(MESSAGE_FORM[(operation, pointer)],
+                                   miss, domain_list)
+    assert rebuilt == error["message"], (
+        f"A5 {operation}::{pointer}: at the probe miss {miss!r} the "
+        f"tabled form rebuilds {rebuilt!r}, the pipeline says "
+        f"{error['message']!r} — {FIX}")
+
+
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind == "legacy-lines-suggested"))
+def test_message_form_legacy_lines_suggested_mutant_fails(tmp_path, operation,
+                                                          pointer):
+    """One legacy-lines-suggested mutant per entry must fail it (bz 1).
+
+    The dropped ``los: `` prefix cannot rebuild the recorded
+    complaint.
+    """
+    _, text = MESSAGE_FORM[(operation, pointer)]
+    assert text.startswith("los: "), (operation, pointer, text)
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer,
+        ("legacy-lines-suggested", text[len("los: "):]))
     assert rebuilt != recorded, (
         f"A5 {operation}::{pointer}: a dropped prefix still rebuilds "
         f"{recorded!r} — {FIX}")
