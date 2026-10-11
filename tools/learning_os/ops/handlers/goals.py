@@ -187,15 +187,21 @@ def goal(ctx: OpContext, req: dict) -> Result:
         for goal_id in unknown:
             lines.append(not_found("goal", goal_id, candidates))
         extra = tuple(f"los: {line}" for line in lines[1:])
-        failure = NotFound(
-            "goal", unknown[0], candidates,
-            message=lines[0],
-            site="cli.goal.unknown-goal",
-            gateway_message="los: " + lines[0] + "".join(f"\n{line}" for line in extra),
-            exit_code=2,
-        )
-        failure.extra_stderr = extra
-        raise failure
+        # The raise stays a direct NotFound construction so the A9
+        # site collector sees the literal site; the existing extra
+        # stderr lines attach to the constructed failure on capture,
+        # like the exc.site capture the collector already supports.
+        try:
+            raise NotFound(
+                "goal", unknown[0], candidates,
+                message=lines[0],
+                site="cli.goal.unknown-goal",
+                gateway_message="los: " + lines[0] + "".join(f"\n{line}" for line in extra),
+                exit_code=2,
+            )
+        except NotFound as exc:
+            exc.extra_stderr = extra
+            raise
     entry: dict = {"state": state, "decided_at": observations.today().isoformat()}
     if revisit_on is not None:
         entry["revisit_on"] = revisit_on
