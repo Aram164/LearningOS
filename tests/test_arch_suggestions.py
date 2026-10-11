@@ -524,22 +524,60 @@ def _lookup_domain(ctx, operation: str, row: dict,
     against; workspaces from ``repo.workspaces``; projects from the
     registry stems ``_project_ids`` lists;
     inspect references from ``_inspect_candidates``; deliveries
-    from the delivery directory entries; digests from the real bound
-    digest. SPEC (bv) item 1 adds: detours from the unit's current
+    from the delivery directory entries; digests from the request's
+    own real digest at the row's pointer. SPEC (bv) item 1 adds:
+    detours from the unit's current
     study map as ``detour_resolve`` lists them; paths from the
     non-archived ``repo.learning_paths`` keys as
     ``require_path_or_error`` lists them; path stages from the
     path's own stage list resolved from ``path_id`` (those requests
     carry no ``unit_id``); sources from ``repo.sources`` as both
     source handlers pass it; resources from the stage's own resource
-    list as the feedback handler lists it (SPEC (bz) item 1). The
-    ordered list feeds the complaint template in handler traversal
-    order.
+    list as the feedback handler lists it (SPEC (bz) item 1);
+    abilities from ``repo.abilities`` as ``ability_context``
+    suggests over them; goal ids from the ledger's decision keys
+    plus the live scan ids, sorted, as the goal handler decides
+    them; unit-list modules from the manifest's module ids as
+    ``_filtered_units`` matches them; note reads from the note
+    registry plus the garden stable ids as ``note_read`` refuses
+    over them (SPEC (cn) item 1). The ordered
+    list feeds the complaint template in handler traversal order.
     """
     from learning_os.loader import load_repo
 
     kind = row.get("kind")
     owner = row.get("owner")
+    if kind == "ability":
+        # SPEC (cn) item 1: ability_context suggests over
+        # repo.abilities (atlas.py), the candidates the tolerated
+        # miss's stdout suggestions come from.
+        repo = load_repo(ctx.root)
+        ordered = list(repo.abilities)
+        return ordered, set(ordered)
+    if kind == "goal" and operation == "cli.goal":
+        # SPEC (cn) item 1: the goal handler's decidable ids: the
+        # ledger's decision keys plus the live scan ids, sorted
+        # (goals.py). A scan that cannot be read degrades to
+        # ledger-only, exactly as the handler degrades.
+        import yaml
+
+        from learning_os.ops.handlers.goals import LEDGER_RELATIVE
+        from learning_os.semantics.scan import intelligence_scan
+
+        ledger_path = ctx.root / LEDGER_RELATIVE
+        raw = ledger_path.read_text(encoding="utf-8") \
+            if ledger_path.is_file() else ""
+        data = yaml.safe_load(raw) if raw.strip() else {"decisions": {}}
+        decisions = data.get("decisions") or {}
+        try:
+            scan_ids = {goal.goal_id
+                        for goal in intelligence_scan(ctx.root)}
+        except Exception:  # noqa: BLE001 - handler degrades the same way
+            scan_ids = set()
+        known = {key for key in decisions if isinstance(key, str)}
+        known |= scan_ids
+        ordered = sorted(known)
+        return ordered, set(ordered)
     if kind == "unit":
         repo = load_repo(ctx.root)
         ordered = list(repo.units)
@@ -637,6 +675,20 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = sorted(repo.concepts)
         return ordered, set(ordered)
+    if kind == "note" and operation in ("cli.note-read", "note.content"):
+        # SPEC (cn) item 1: note_read looks up the note registry,
+        # then the garden seeds, and refuses over both lists
+        # (notes.py), through the same two loaders.
+        from learning_os.ops.handlers.notes import (
+            _garden_notes,
+            _note_collection,
+        )
+
+        repo = _note_collection(ctx.root)
+        seeds = _garden_notes(ctx.root)
+        ordered = [*repo.notes,
+                   *[stable_id for stable_id, _ in seeds]]
+        return ordered, set(ordered)
     if kind == "note":
         repo = load_repo(ctx.root)
         ordered = list(repo.notes)
@@ -653,6 +705,17 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # repo.module_source_maps (plan.py:compaction_plan).
         repo = load_repo(ctx.root)
         ordered = list(repo.module_source_maps)
+        return ordered, set(ordered)
+    if kind == "module" and operation == "cli.unit-list":
+        # SPEC (cn) item 1: _filtered_units matches against the
+        # manifest's module ids (reads.py), through the same
+        # _fresh_manifest the handler reads.
+        from learning_os.ops._legacy_plumbing import _fresh_manifest
+
+        manifest = _fresh_manifest(ctx.root)
+        ordered = [row.get("id")
+                   for row in manifest.get("modules", []) or []
+                   if isinstance(row, dict) and row.get("id")]
         return ordered, set(ordered)
     if kind == "workspace":
         # SPEC (bv) item 1: repo.workspaces (admin.py).
@@ -679,7 +742,12 @@ def _lookup_domain(ctx, operation: str, row: dict,
                          ) if deliveries.is_dir() else []
         return ordered, set(ordered)
     if kind == "digest":
-        ordered = [request["delivery_sha256"]]
+        # SPEC (cn) item 1: a content-binding digest's domain is the
+        # request's own real digest at the row's pointer (delivery,
+        # coordination and inbox alike): the miss must differ from
+        # the value the base proves valid.
+        prop, _ = _pointer_prop(row["pointer"])
+        ordered = [request[prop]]
         return ordered, set(ordered)
     if owner == "ai-delivery-artifact-digests":
         ordered = [request["delivery_sha256"],
@@ -772,22 +840,26 @@ def _check_owner_inspect_miss(result: dict, *, miss: str, domain: list,
         f"A5 inspect miss committed {result['receipts']} — {FIX}")
 
 
-def _cli_sequence_failure(pointer: str, miss: str, domain: list,
-                          message: str):
-    """The handler's failure for a CLI sequence miss (SPEC (cd) 2).
+def _cli_sequence_failure(operation: str, pointer: str, kind: str,
+                          miss: str, domain: list, message: str):
+    """The handler's failure for a CLI miss (SPEC (cd) 2, (cn) 1).
 
-    The same class, kind word and message the service raises with
-    (``append_slices`` in ``service.py``), over the oracle's
-    enumerated domain.
+    The same class, kind word and message the handler raises with
+    (``append_slices`` in ``service.py`` for the two sequence
+    anchors; the converted handler's own ``NotFound`` for every
+    refused anchor), over the oracle's enumerated domain.
     """
     from learning_os.ai_actions.errors import (
         ConceptNotFound,
         RouteNotFound,
     )
+    from learning_os.domain.failures import NotFound
 
-    if pointer == "/properties/route_id":
-        return RouteNotFound("route", miss, domain, message=message)
-    return ConceptNotFound("concept", miss, domain, message=message)
+    if operation == "cli.ai-action-append-slices":
+        if pointer == "/properties/route_id":
+            return RouteNotFound("route", miss, domain, message=message)
+        return ConceptNotFound("concept", miss, domain, message=message)
+    return NotFound(kind, miss, domain, message=message)
 
 
 def _cli_sequence_stderr(failure, message: str, *, miss: str,
@@ -821,15 +893,17 @@ def _cli_sequence_stderr(failure, message: str, *, miss: str,
 
 def _check_cli_sequence_miss(result: dict, *, want_exit: int,
                              want_code: str, want_message: str,
-                             miss: str, domain: list, pointer: str,
+                             miss: str, domain: list, operation: str,
+                             pointer: str, kind: str,
                              want_outcome: str) -> None:
-    """The (cd) CLI-sequence oracle: the (ay) shape for a sequence anchor.
+    """The (cd) CLI oracle: the (ay) shape for a CLI anchor (cn 1).
 
-    Exit is the anchor's ``steps[-1].exit``; stdout is empty; the live
+    Exit is the anchor's last-step exit; stdout is empty; the live
     stderr matches ``_D16_RE`` with the handler failure class's code;
     the D16-stripped stderr equals the (cd) 2 rendering; outcome is
-    the anchor's recorded ``steps[-1]`` outcome; no canonical change,
-    no receipts.
+    the anchor's recorded last-step outcome (``diagnostic-failure``
+    for the exit-1 sequence anchors, ``refused`` for the exit-2
+    refused anchors); no canonical change, no receipts.
     """
     import scenario_harness as harness
 
@@ -845,11 +919,12 @@ def _check_cli_sequence_miss(result: dict, *, want_exit: int,
         f"A5 CLI miss code {code_match.group(1)!r}, want "
         f"{want_code!r} — {FIX}")
     normalized = harness._D16_RE.sub("los: ", result["stderr"])
-    failure = _cli_sequence_failure(pointer, miss, domain, want_message)
+    failure = _cli_sequence_failure(operation, pointer, kind, miss,
+                                    domain, want_message)
     assert normalized == _cli_sequence_stderr(
         failure, want_message, miss=miss, domain=domain), (
         f"A5 CLI miss complaint differs — {FIX}")
-    assert want_outcome == "diagnostic-failure", (
+    assert want_outcome in ("diagnostic-failure", "refused"), (
         f"A5 CLI miss anchor outcome is {want_outcome} — {FIX}")
     assert result["outcome"] == want_outcome, (
         f"A5 CLI miss outcome is {result['outcome']}, want "
@@ -986,6 +1061,43 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("module.materials.compact.unknown-module", "unknown-module"),
     ("project.update", "/properties/project_id"):
         ("project.update.id-mismatch", "id-mismatch"),
+    # SPEC (cn) item 1: the refused CLI anchors. The gateway
+    # operations served through the same CLI command witness the
+    # CLI operation's site, as their cases declare.
+    ("cli.dossier", "/properties/unit_id"):
+        ("cli.dossier.unknown-unit", "unknown-unit"),
+    ("cli.note-read", "/properties/note_id"):
+        ("cli.note-read.unknown-note", "unknown-note"),
+    ("note.content", "/properties/note_id"):
+        ("cli.note-read.unknown-note", "unknown-note"),
+    ("cli.unit-list", "/properties/module_id"):
+        ("cli.unit-list.unknown-module", "unknown-module"),
+    ("cli.plan-edit-context", "/properties/unit_id"):
+        ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
+    ("cli.plan-edit-context", "/properties/route_id"):
+        ("cli.plan-edit-context.unknown-route", "unknown-route"),
+    ("cli.plan-edit-context", "/properties/route_ids/items"):
+        ("cli.plan-edit-context.unknown-route", "batch-unknown"),
+    ("plan.edit-context", "/properties/unit_id"):
+        ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
+    ("plan.edit-context", "/properties/route_id"):
+        ("cli.plan-edit-context.unknown-route", "unknown-route"),
+    ("plan.edit-context", "/properties/route_ids/items"):
+        ("cli.plan-edit-context.unknown-route", "batch-unknown"),
+    ("material.span", "/properties/unit_id"):
+        ("material.span.unknown-unit", "unknown-unit"),
+    ("material.span", "/properties/route_id"):
+        ("material.span.unknown-route", "route-near-miss"),
+    ("atlas.context", "/properties/concept_id"):
+        ("cli.atlas-context.unknown-concept", "unknown-concept"),
+    ("cli.atlas-context", "/properties/concept_id"):
+        ("cli.atlas-context.unknown-concept", "unknown-concept"),
+    # SPEC (cn) item 1: the content-binding digest anchors (bf 4).
+    ("coordination.section.revise",
+     "/properties/expected_content_sha256"):
+        ("coordination.section.revise.content-changed", "stale-digest"),
+    ("inbox.resolve", "/properties/drop_sha256"):
+        ("inbox.resolve.drop-changed", "changed-drop"),
 }
 
 #: The expected complaint form per anchored pointer (SPEC (bk) item 1,
@@ -1075,6 +1187,46 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("project.update", "/properties/project_id"):
         ("legacy-verbatim",
          "project file id does not match command project_id"),
+    # SPEC (cn) item 1: the refused CLI complaints. The CLI renders
+    # the message part; the oracle adds the (cd) 2 suggestion lines.
+    ("cli.dossier", "/properties/unit_id"): ("template", "unit"),
+    ("cli.note-read", "/properties/note_id"): ("template", "note"),
+    ("note.content", "/properties/note_id"): ("template", "note"),
+    ("cli.unit-list", "/properties/module_id"): ("template", "module"),
+    ("cli.plan-edit-context", "/properties/unit_id"):
+        ("template", "unit"),
+    ("cli.plan-edit-context", "/properties/route_id"):
+        ("legacy",
+         "route {miss} is missing or ambiguous in this unit"),
+    ("cli.plan-edit-context", "/properties/route_ids/items"):
+        ("legacy",
+         "route {miss} is missing or ambiguous in this unit"),
+    ("plan.edit-context", "/properties/unit_id"): ("template", "unit"),
+    ("plan.edit-context", "/properties/route_id"):
+        ("legacy",
+         "route {miss} is missing or ambiguous in this unit"),
+    ("plan.edit-context", "/properties/route_ids/items"):
+        ("legacy",
+         "route {miss} is missing or ambiguous in this unit"),
+    ("material.span", "/properties/unit_id"):
+        ("legacy", "unknown unit {miss}"),
+    ("material.span", "/properties/route_id"):
+        ("legacy", "route not found: {miss} in unit-demo-l01"),
+    ("atlas.context", "/properties/concept_id"):
+        ("legacy", "unknown concept: {miss}"),
+    ("cli.atlas-context", "/properties/concept_id"):
+        ("legacy", "unknown concept: {miss}"),
+    # SPEC (cn) item 1: the content-binding digest complaints.
+    ("coordination.section.revise",
+     "/properties/expected_content_sha256"):
+        ("legacy-lines",
+         "los: reviewed coordination content changed before use: "
+         "supplied {miss}, current is {known}; "
+         "re-read with `inspect coordination`"),
+    ("inbox.resolve", "/properties/drop_sha256"):
+        ("legacy-verbatim",
+         "los: inbox drop changed since read: note-drop.md "
+         "(re-read it with `inbox-read note-drop.md` and re-seal)"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -1093,15 +1245,52 @@ _CLI_SEQUENCE_POINTERS = frozenset({
     ("cli.ai-action-append-slices", "/properties/concept_id/items"),
 })
 
+#: The refused CLI anchors (SPEC (cn) item 1): single CLI refusal
+#: cases, exit 2, outcome refused, no error object. They use the
+#: same (cd) oracle as the sequence anchors; the anchor's own argv
+#: is the last step and there are no prerequisites to replay.
+_CLI_REFUSED_POINTERS = frozenset({
+    ("cli.dossier", "/properties/unit_id"),
+    ("cli.note-read", "/properties/note_id"),
+    ("note.content", "/properties/note_id"),
+    ("cli.unit-list", "/properties/module_id"),
+    ("cli.plan-edit-context", "/properties/unit_id"),
+    ("cli.plan-edit-context", "/properties/route_id"),
+    ("cli.plan-edit-context", "/properties/route_ids/items"),
+    ("plan.edit-context", "/properties/unit_id"),
+    ("plan.edit-context", "/properties/route_id"),
+    ("plan.edit-context", "/properties/route_ids/items"),
+    ("material.span", "/properties/unit_id"),
+    ("material.span", "/properties/route_id"),
+    ("atlas.context", "/properties/concept_id"),
+    ("cli.atlas-context", "/properties/concept_id"),
+})
+
+#: Every CLI-anchored pointer: sequence plus refused anchors.
+_CLI_ANCHORED_POINTERS = _CLI_SEQUENCE_POINTERS | _CLI_REFUSED_POINTERS
+
+#: The content-binding digest pointers with mismatch anchors (SPEC
+#: (bf) item 4, (cn) item 1): asserted against their recorded
+#: mismatch refusal, never relabelled NOT_FOUND.
+_DIGEST_MISMATCH_POINTERS = frozenset({
+    ("coordination.section.revise",
+     "/properties/expected_content_sha256"),
+    ("inbox.resolve", "/properties/drop_sha256"),
+})
+
 
 def _recorded_cli_last_step(operation: str, case_id: str) -> dict:
-    """The last step of a recorded CLI sequence anchor (SPEC (cb))."""
+    """The last step of a recorded CLI anchor (SPEC (cb), (cn) 1)."""
     recorded = json.loads(
         (RECORDED_DIR / operation / f"{case_id}.json").read_text(
             encoding="utf-8"))
     steps = recorded.get("steps")
-    assert isinstance(steps, list) and steps, (operation, case_id)
-    return steps[-1]
+    if isinstance(steps, list) and steps:
+        return steps[-1]
+    assert steps is None, (operation, case_id)
+    assert recorded.get("stdout_json") is None, (operation, case_id)
+    assert "stderr" in recorded, (operation, case_id)
+    return recorded
 
 
 def _recorded_exit_and_error(operation: str,
@@ -1200,18 +1389,35 @@ def _form_check_domain(ctx, operation: str, pointer: str,
     """The enumerated domain behind one form entry's rebuild."""
     rows = {row["pointer"]: row for row in _probe_rows()
             if row["operation"] == operation}
-    domain_list, _ = _lookup_domain(ctx, operation, rows[pointer],
-                                    request)
+    row = rows[pointer]
+    if row.get("kind") == "digest":
+        # SPEC (cn) item 1: the anchor request carries the anchor
+        # miss, but the digest domain is the real digest — the base
+        # request's value at the pointer, proven valid by the
+        # base-last run. The probe enumerates the same value from
+        # its own (unmutated) target request.
+        base_case, base_index, _ = _select_base(operation, row)
+        _, request, _ = _derive_target(ctx, operation, row, base_case,
+                                       base_index)
+    domain_list, _ = _lookup_domain(ctx, operation, row, request)
     return domain_list
+
+
+def _row_for(operation: str, pointer: str) -> dict:
+    """The probe row for one anchored pointer."""
+    rows = {row["pointer"]: row for row in _probe_rows()
+            if row["operation"] == operation}
+    return rows[pointer]
 
 
 def _cli_anchor_rebuild_parts(tmp_path, operation: str,
                               pointer: str) -> tuple[list, str, str]:
-    """``(domain, miss, recorded stderr)`` for a CLI anchor (SPEC (cb) 2).
+    """``(domain, miss, recorded stderr)`` for a CLI anchor (cb 2, cn 1).
 
-    Replays the anchor's prerequisite steps in the self-check's world,
-    parses the last step's argv with the real CLI parser into its
-    request, and enumerates the domain exactly as the probe does.
+    Replays the anchor's prerequisite steps in the self-check's world
+    (none for a single-case refused anchor), parses the last step's
+    argv with the real CLI parser into its request, and enumerates
+    the domain exactly as the probe does.
     """
     import scenario_harness as harness
 
@@ -1220,21 +1426,33 @@ def _cli_anchor_rebuild_parts(tmp_path, operation: str,
     case = _merged_case(operation, anchor)
     ctx = harness._prepare_world(
         case, operation, tmp_path / "world" / operation)
-    for index, step in enumerate(anchor.get("steps", [])[:-1]):
+    raw_steps = anchor.get("steps")
+    if raw_steps is None:
+        assert anchor.get("transport") == "cli", (operation, case_id)
+        prerequisites: list = []
+        last = anchor
+    else:
+        prerequisites, last = raw_steps[:-1], raw_steps[-1]
+    for index, step in enumerate(prerequisites):
         full = {"operation": operation, **step}
         result = harness._run_step(ctx, operation, full, index)
         assert result["exit"] == 0, (
             f"A5 {operation}::{pointer}: anchor prerequisite step "
             f"{index} exits {result['exit']}: {result['stderr']!r} — {FIX}")
-    last = anchor["steps"][-1]
     request = _parse_cli_request(ctx, operation, last, last["argv"])
     domain = _form_check_domain(ctx, operation, pointer, request)
     prop, is_items = _pointer_prop(pointer)
     value = request.get(prop)
     if is_items:
-        assert isinstance(value, list) and len(value) == 1, (
+        # The anchor's refused member: the one item absent from the
+        # enumerated domain (the batch handler resolves in order and
+        # raises on the unknown member). Exactly one must be absent;
+        # the rebuild below proves it is the recorded miss.
+        assert isinstance(value, list) and value, (
             operation, case_id, pointer)
-        value = value[0]
+        absent = [item for item in value if item not in set(domain)]
+        assert len(absent) == 1, (operation, case_id, pointer, value)
+        value = absent[0]
     assert isinstance(value, str) and value, (operation, case_id, pointer)
     recorded = _recorded_cli_last_step(operation, case_id)["stderr"]
     return domain, value, recorded
@@ -1252,16 +1470,18 @@ def test_message_forms_rebuild_recorded_complaints(
     """
     import scenario_harness as harness
 
-    if (operation, pointer) in _CLI_SEQUENCE_POINTERS:
+    if (operation, pointer) in _CLI_ANCHORED_POINTERS:
         domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
             tmp_path, operation, pointer)
         message = _render_message_form(
             MESSAGE_FORM[(operation, pointer)], miss, domain)
-        failure = _cli_sequence_failure(pointer, miss, domain, message)
+        kind = _row_for(operation, pointer).get("kind")
+        failure = _cli_sequence_failure(operation, pointer, kind, miss,
+                                        domain, message)
         rebuilt = _cli_sequence_stderr(
             failure, message, miss=miss, domain=domain)
         # (cd) 4: the same rendering as the probe oracle, at the
-        # anchor's miss, against the recorded steps[-1].stderr.
+        # anchor's miss, against the recorded last-step stderr.
         assert rebuilt == recorded_stderr, (
             f"A5 {operation}::{pointer}: the tabled form rebuilds "
             f"{rebuilt!r}, recorded {recorded_stderr!r} — {FIX}")
@@ -1295,11 +1515,13 @@ def _mutant_rebuild(tmp_path, operation: str, pointer: str,
     """``(mutant rebuild, recorded message)`` for one form mutant."""
     import scenario_harness as harness
 
-    if (operation, pointer) in _CLI_SEQUENCE_POINTERS:
+    if (operation, pointer) in _CLI_ANCHORED_POINTERS:
         domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
             tmp_path, operation, pointer)
         message = _render_message_form(form, miss, domain)
-        failure = _cli_sequence_failure(pointer, miss, domain, message)
+        kind = _row_for(operation, pointer).get("kind")
+        failure = _cli_sequence_failure(operation, pointer, kind, miss,
+                                        domain, message)
         return (_cli_sequence_stderr(
             failure, message, miss=miss, domain=domain),
             recorded_stderr)
@@ -1606,6 +1828,28 @@ def test_message_form_wrong_template_fails(tmp_path, operation, pointer):
         f"{recorded!r} — {FIX}")
 
 
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind == "legacy"))
+def test_message_form_legacy_wrong_template_fails(tmp_path, operation,
+                                                  pointer):
+    """A wrong suggested-legacy template cannot rebuild it (cn 1).
+
+    The (bl) 6 wrong-template mutant for ``legacy`` entries: the
+    mutant template, suggested over the same domain, still carries
+    the wrong words.
+    """
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer,
+        ("legacy", "wrong-template {miss}"))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a wrong template still rebuilds "
+        f"{recorded!r} — {FIX}")
+
+
 def _inspect_exit(operation: str, pointer: str) -> int:
     """The recorded exit of the same inspect refusal shape."""
     case_id = INSPECT_REFUSAL_CASE[(operation, pointer)]
@@ -1755,7 +1999,7 @@ def _check_probe(result: dict, operation: str, row: dict, position,
             result, want_exit=want_exit, want_code=want_code,
             want_message=want_message, want_retryable=want_retryable)
         return
-    if (operation, row["pointer"]) in _CLI_SEQUENCE_POINTERS:
+    if (operation, row["pointer"]) in _CLI_ANCHORED_POINTERS:
         from learning_os.ops.pipeline import _cli_error_code
 
         # (cd): exit and outcome from the anchor's last step; code
@@ -1767,12 +2011,31 @@ def _check_probe(result: dict, operation: str, row: dict, position,
         want_message = _canonical_message(operation, row, miss,
                                           domain_list)
         want_code, _ = _cli_error_code(
-            _cli_sequence_failure(row["pointer"], miss, domain_list,
+            _cli_sequence_failure(operation, row["pointer"],
+                                  row.get("kind"), miss, domain_list,
                                   want_message))
         _check_cli_sequence_miss(
             result, want_exit=last["exit"], want_code=want_code,
             want_message=want_message, miss=miss, domain=domain_list,
-            pointer=row["pointer"], want_outcome=last["outcome"])
+            operation=operation, pointer=row["pointer"],
+            kind=row.get("kind"), want_outcome=last["outcome"])
+        return
+    if (operation, row["pointer"]) in _DIGEST_MISMATCH_POINTERS:
+        # SPEC (bf) item 4, (cn) item 1: a content-binding digest
+        # miss is asserted against its recorded mismatch refusal,
+        # never relabelled NOT_FOUND: exit, code and retryability
+        # from the anchor's recorded error, the complaint from the
+        # pointer's MESSAGE_FORM entry applied to the probe miss
+        # over the real digest.
+        want_exit, want_code = _canonical_expectations(
+            operation, row["pointer"])
+        _, case_id = POINTER_SITE_CASE[(operation, row["pointer"])]
+        _, recorded_error = _recorded_exit_and_error(operation, case_id)
+        _check_owner_delivery_miss(
+            result, want_exit=want_exit, want_code=want_code,
+            want_message=_canonical_message(operation, row, miss,
+                                            domain_list),
+            want_retryable=recorded_error["retryable"])
         return
     want_exit, want_code = _canonical_expectations(
         operation, row["pointer"])
