@@ -53,4 +53,5 @@ cases:
     transport: cli
     argv: [bootstrap, --brief, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: cli.bootstrap.stale-snapshot}
-untriggered: []
+untriggered:
+  - {site: cli.bootstrap.read-failed, where: "tools/learning_os/ops/handlers/reads.py:446", reason: os-error-only}

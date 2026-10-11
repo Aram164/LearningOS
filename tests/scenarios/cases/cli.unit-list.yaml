@@ -63,4 +63,5 @@ cases:
     transport: cli
     argv: [unit-list, --compact, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: cli.unit-list.stale-snapshot}
-untriggered: []
+untriggered:
+  - {site: cli.unit-list.read-failed, where: "tools/learning_os/ops/handlers/reads.py:2331", reason: os-error-only}

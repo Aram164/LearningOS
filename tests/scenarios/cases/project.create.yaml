@@ -158,3 +158,4 @@ cases:
 untriggered:
   - {where: "tools/learning_os/commands/project.py:68", reason: "project/file admission: argparse json_object and the payload schema enforce the object shape first"}
   - {where: "tools/learning_os/commands/project.py:71", reason: "project/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {site: project.create.unknown-project, where: "tools/learning_os/ops/handlers/platform.py:439", reason: fixture-inexpressible}

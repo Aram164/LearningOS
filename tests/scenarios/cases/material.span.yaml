@@ -59,6 +59,8 @@ cases:
     argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.span.stale-snapshot}
 untriggered:
-  - {where: "tools/learning_os/commands/material_span.py:44", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:1324", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
+  - {site: material.span.placement-source-mismatch, where: "tools/learning_os/ops/handlers/plan.py:1324", reason: fixture-inexpressible}
+  - {site: material.span.read-failed, where: "tools/learning_os/ops/handlers/plan.py:1482", reason: os-error-only}
   - {where: "tools/learning_os/commands/material_span.py:62", reason: "unit without a module source map: every fixture unit's module carries one"}
   - {where: "tools/learning_os/commands/material_span.py:67", reason: "ambiguous route: the fixture carries each route id once per unit"}

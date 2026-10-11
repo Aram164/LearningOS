@@ -88,3 +88,4 @@ untriggered:
   - {where: "tools/learning_os/commands/reads.py:1456", reason: "symlink escape in --material: the fixture materials tree has no symlinks, and no step can create one outside the fixture root"}
   - {where: "tools/learning_os/commands/reads.py:1722", reason: "unreadable analysis notes: the fixture parses cleanly, and no step can break it"}
   - {where: "tools/learning_os/commands/reads.py:1728", reason: "unreadable syntheses: the fixture parses cleanly, and no step can break it"}
+  - {site: material.context.read-failed, where: "tools/learning_os/ops/handlers/plan.py:2190", reason: os-error-only}

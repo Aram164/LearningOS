@@ -24,7 +24,13 @@ cases:
     argv: [dossier, unit-nope]
     expect: {site: cli.dossier.unknown-unit}
 untriggered:
-  - {where: "tools/learning_os/commands/dossier.py:127", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
-  - {where: "tools/learning_os/commands/dossier.py:133", reason: "unit without a module source map: both fixture units sit under module-demo, which has one"}
-  - {where: "tools/learning_os/commands/dossier.py:139", reason: "knowledge map not a mapping: both fixture units carry mapping knowledge maps"}
-  - {where: "tools/learning_os/commands/dossier.py:160", reason: "dossier build failure: the handler builds its inputs well-shaped, and both fixture units build"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:175", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:191", reason: "unit without a module source map: both fixture units sit under module-demo, which has one"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:201", reason: "knowledge map not a mapping: both fixture units carry mapping knowledge maps"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:226", reason: "dossier build failure: the handler builds its inputs well-shaped, and both fixture units build"}
+  - {site: cli.dossier.unreadable-records, where: "tools/learning_os/ops/handlers/reads.py:175", reason: fixture-inexpressible}
+  - {site: cli.dossier.no-source-map, where: "tools/learning_os/ops/handlers/reads.py:191", reason: fixture-inexpressible}
+  - {site: cli.dossier.bad-knowledge-map, where: "tools/learning_os/ops/handlers/reads.py:201", reason: fixture-inexpressible}
+  - {site: cli.dossier.build-failed, where: "tools/learning_os/ops/handlers/reads.py:226", reason: fixture-inexpressible}
+  - {site: cli.dossier.stale-snapshot, where: "tools/learning_os/ops/handlers/reads.py:268", reason: race-only}
+  - {site: cli.dossier.read-failed, where: "tools/learning_os/ops/handlers/reads.py:275", reason: os-error-only}

@@ -16,4 +16,5 @@ cases:
 untriggered:
   - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
   - {where: "tools/learning_os/ops/_legacy_plumbing.py:966", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}
-  - {where: "tools/learning_os/ops/handlers/atlas.py:524", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
+  - {where: "tools/learning_os/ops/handlers/atlas.py:527", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
+  - {site: cli.atlas-context.snapshot-changed, where: "tools/learning_os/ops/handlers/atlas.py:527", reason: race-only}

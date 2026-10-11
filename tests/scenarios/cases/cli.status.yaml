@@ -18,4 +18,5 @@ cases:
     argv: [status, --no-validate]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/query.py:74", reason: "parse failures need unreadable canonical files; the fixture validates and no step can damage it"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:673", reason: "parse failures need unreadable canonical files; the fixture validates and no step can damage it"}
+  - {site: cli.status.unreadable-records, where: "tools/learning_os/ops/handlers/reads.py:673", reason: fixture-inexpressible}

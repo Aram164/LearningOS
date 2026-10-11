@@ -49,5 +49,7 @@ cases:
     argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
     expect: {site: cli.intelligence-scan.invalid-feed}
 untriggered:
-  - {where: "tools/learning_os/commands/intelligence.py:274", reason: "unreadable Git history: the seam supplies an empty history; needs corrupt git"}
-  - {where: "tools/learning_os/commands/intelligence.py:276", reason: "rank failure: the fixture scans and ranks cleanly; needs malformed repo data"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:1011", reason: "unreadable Git history: the seam supplies an empty history; needs corrupt git"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:1017", reason: "rank failure: the fixture scans and ranks cleanly; needs malformed repo data"}
+  - {site: cli.intelligence-scan.git-history, where: "tools/learning_os/ops/handlers/reads.py:1011", reason: fixture-inexpressible}
+  - {site: cli.intelligence-scan.unrankable-queue, where: "tools/learning_os/ops/handlers/reads.py:1017", reason: fixture-inexpressible}

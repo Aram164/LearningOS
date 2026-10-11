@@ -1993,6 +1993,845 @@ _PROOF_FNS.update({
 })
 
 
+def _prove_cli_guarded(tmp_path: Path, monkeypatch, *, site: str,
+                       cli_argv: list, valid_argv: list) -> None:
+    """A CLI-only guard: the real parser refuses, the site never fires.
+
+    The bogus argv dies in argparse (exit 2) before any handler runs;
+    the valid argv parses, pinning the refusal to the value. No query
+    routes through the gateway, so the parser is the only guard.
+    """
+    import arch_audit_hook
+
+    import los
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        with pytest.raises(SystemExit) as refused:
+            los.build_parser().parse_args(cli_argv)
+        los.build_parser().parse_args(valid_argv)
+    finally:
+        arch_audit_hook.uninstall()
+    assert refused.value.code == 2
+    assert [line for line in _read_witness_lines(witness)
+            if line.get("site") == site] == []
+
+def _corrupt_note_demo(root: Path) -> None:
+    """Break one note's frontmatter so the loader records a failure."""
+    note = root / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    assert note.is_file(), "A9 proof needs note-demo to corrupt"
+    note.write_text("---\n\t: bad: [yaml\n---\nA9 proof body.\n",
+                    encoding="utf-8")
+
+def _prove_dossier_unreadable_records(mini_repo: Path, tmp_path: Path,
+                                      monkeypatch) -> None:
+    """Unreadable canonical records fire the site (R-A9-2).
+
+    The fixture parses cleanly and no write path stores a broken
+    record, so no case input reaches the gate; the proof corrupts one
+    note by direct tree surgery and asserts the witness line, the
+    class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+    _corrupt_note_demo(root)
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.unreadable-records",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_dossier_no_source_map(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """A module without a source map fires the site (R-A9-2).
+
+    Every fixture unit's module carries a map and no step can
+    remove one, so no case input reaches the gate; the proof drops
+    the map by direct tree surgery and asserts the witness line,
+    the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+    source_map = (root / "curriculum" / "modules" / "module-demo"
+                  / "source-map.yaml")
+    assert source_map.is_file(), "A9 proof needs the map to drop"
+    source_map.unlink()
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.no-source-map",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_dossier_bad_knowledge_map(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """A non-mapping knowledge map fires the site (R-A9-2).
+
+    Both fixture units carry mapping knowledge maps and no step can
+    rewrite one, so no case input reaches the gate; the proof swaps
+    in a list by direct tree surgery and asserts the witness line,
+    the class and the exit.
+    """
+    import yaml
+
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+    unit_file = (root / "curriculum" / "modules" / "module-demo"
+                 / "units" / "unit-demo-l01" / "unit.yaml")
+    data = yaml.safe_load(unit_file.read_text(encoding="utf-8"))
+    assert isinstance(data.get("knowledge_map"), dict), (
+        "A9 proof needs a mapping knowledge map to break")
+    data["knowledge_map"] = ["not", "a", "mapping"]
+    unit_file.write_text(yaml.safe_dump(data, sort_keys=False),
+                         encoding="utf-8")
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.bad-knowledge-map",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
+                                monkeypatch) -> None:
+    """A dossier build failure fires the site (R-A9-2).
+
+    The handler builds well-shaped inputs and both fixture units
+    build, so no case input reaches the gate; the proof injects the
+    builder failure and asserts the witness line, the class and the
+    exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+    from learning_os.semantics.dossiers import DossierError
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+
+    def boom(**kwargs):
+        raise DossierError("a9-proof: the build failed")
+
+    monkeypatch.setattr(reads, "build_dossier", boom)
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.build-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """A mid-read change fires the site (race-only proof).
+
+    A single-threaded read cannot race itself, so no case input
+    reaches the gate; the proof injects the mid-read change and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import StaleSnapshot
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+    real_snapshot = reads._snapshot
+    calls = []
+
+    def racing(root, expected=None):
+        calls.append(expected)
+        if len(calls) == 1:
+            return real_snapshot(root, expected)
+        raise StaleSnapshot("a9-proof: a write landed mid-read")
+
+    monkeypatch.setattr(reads, "_snapshot", racing)
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 3
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.stale-snapshot",
+                      "class": "StaleSnapshot", "exit_code": 3}]
+    assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
+
+def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
+                               monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    root = ctx.root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(reads, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(root, "cli.dossier",
+                                 ["dossier", "unit-demo-l01"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+                      "site": "cli.dossier.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_bootstrap_read_failed(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.bootstrap", "compact", tmp_path)
+    root = ctx.root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(reads, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(root, "cli.bootstrap",
+                                 ["bootstrap", "--compact"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.bootstrap", "kind": "failure",
+                      "site": "cli.bootstrap.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_status_unreadable_records(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """Unreadable canonical records fire the site (R-A9-2).
+
+    The fixture validates and no step can damage it, so no case
+    input reaches the gate; the proof corrupts one note by direct
+    tree surgery and asserts the witness line, the class and the
+    exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.status", "screen", tmp_path)
+    root = ctx.root
+    _corrupt_note_demo(root)
+    outcome, lines = _a9_run_cli(root, "cli.status", ["status"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.status", "kind": "failure",
+                      "site": "cli.status.unreadable-records",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_intelligence_git_history(mini_repo: Path, tmp_path: Path,
+                                    monkeypatch) -> None:
+    """An unreadable Git history fires the site (R-A9-2).
+
+    The seam supplies an empty history and the fixture scans
+    cleanly, so no case input reaches the gate; the proof injects
+    the history failure and asserts the witness line, the class and
+    the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.githistory import GitHistoryError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
+    root = ctx.root
+
+    def boom(root, days=None, feed=None):
+        raise GitHistoryError("a9-proof: git is corrupt")
+
+    monkeypatch.setattr(reads, "ranked_scan", boom)
+    outcome, lines = _a9_run_cli(root, "cli.intelligence-scan",
+                                 ["intelligence-scan"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.intelligence-scan",
+                      "kind": "failure",
+                      "site": "cli.intelligence-scan.git-history",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_intelligence_unrankable_queue(mini_repo: Path, tmp_path: Path,
+                                         monkeypatch) -> None:
+    """An unrankable queue fires the site (R-A9-2).
+
+    The fixture scans and ranks cleanly, so no case input reaches
+    the gate; the proof injects the rank failure and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
+    root = ctx.root
+
+    def boom(root, days=None, feed=None):
+        raise ValueError("a9-proof: the queue is malformed")
+
+    monkeypatch.setattr(reads, "ranked_scan", boom)
+    outcome, lines = _a9_run_cli(root, "cli.intelligence-scan",
+                                 ["intelligence-scan"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.intelligence-scan",
+                      "kind": "failure",
+                      "site": "cli.intelligence-scan.unrankable-queue",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """No resumable stage fires the site (R-A9-2).
+
+    The fixture pointer resolves and no step can break it, so no
+    case input reaches the gate; the proof injects the resolution
+    failure and asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.resume", "screen", tmp_path)
+    root = ctx.root
+
+    def boom(repo):
+        return None, "a9-proof: nothing is resumable"
+
+    monkeypatch.setattr(reads, "_resolve_stage", boom)
+    outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.resume", "kind": "failure",
+                      "site": "cli.resume.no-resumable-stage",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
+                                       monkeypatch) -> None:
+    """A resume dossier build failure fires the site (R-A9-2).
+
+    The fixture builds cleanly and no step can author
+    dossier-breaking data, so no case input reaches the gate; the
+    proof injects the builder failure and asserts the witness line,
+    the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.genout.resume_dossier import ResumeDossierError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.resume", "screen", tmp_path)
+    root = ctx.root
+
+    def boom(**kwargs):
+        raise ResumeDossierError("a9-proof: the build failed")
+
+    monkeypatch.setattr(reads, "build_resume_dossier", boom)
+    outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.resume", "kind": "failure",
+                      "site": "cli.resume.dossier-build-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_runtime_mid_read_stale(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """A mid-read change fires the site (race-only proof).
+
+    A single-threaded read cannot race itself, so no case input
+    reaches the gate; the proof injects the mid-read change and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import StaleSnapshot
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.runtime-session", "propose", tmp_path)
+    root = ctx.root
+
+    def stale(root):
+        return "a9-proof-stale-snapshot"
+
+    monkeypatch.setattr(reads, "_snapshot", stale)
+    outcome, lines = _a9_run_cli(
+        root, "cli.runtime-session",
+        ["runtime-session", "--requirement", "req-demo-l01-demo"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 3
+    assert lines == [{"operation": "cli.runtime-session", "kind": "failure",
+                      "site": "cli.runtime-session.mid-read-stale",
+                      "class": "StaleSnapshot", "exit_code": None}]
+    assert exit_for(StaleSnapshot("a9-proof"), "cli") == 3
+
+def _prove_capabilities_unreadable_schema(mini_repo: Path, tmp_path: Path,
+                                          monkeypatch) -> None:
+    """A missing payload schema fires the site (R-A9-2).
+
+    Every catalog command carries one and no step can remove it,
+    so no case input reaches the gate; the proof drops the schema
+    by direct tree surgery and asserts the witness line, the class
+    and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.capabilities", "one-command", tmp_path)
+    root = ctx.root
+    schema = (root / "system" / "schema" / "capabilities"
+              / "stage.progress.update.schema.json")
+    assert schema.is_file(), "A9 proof needs the schema to drop"
+    schema.unlink()
+    outcome, lines = _a9_run_cli(root, "cli.capabilities",
+                                 ["capabilities", "stage.progress.update"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.capabilities", "kind": "failure",
+                      "site": "cli.capabilities.unreadable-payload-schema",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.reads as reads
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.unit-list", "filter-module", tmp_path)
+    root = ctx.root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(reads, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(
+        root, "cli.unit-list",
+        ["unit-list", "--module-id", "module-demo", "--compact"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.unit-list", "kind": "failure",
+                      "site": "cli.unit-list.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_ability_unreadable_records(mini_repo: Path, tmp_path: Path,
+                                      monkeypatch) -> None:
+    """Unreadable canonical records fire the site (R-A9-2).
+
+    The fixture parses cleanly and no write path stores a broken
+    record, so no case input reaches the gate; the proof corrupts
+    one note by direct tree surgery and asserts the witness line,
+    the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("ability.context", "horizon", tmp_path)
+    root = ctx.root
+    _corrupt_note_demo(root)
+    outcome, lines = _a9_run_cli(root, "ability.context",
+                                 ["ability-context"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "ability.context", "kind": "failure",
+                      "site": "ability.context.unreadable-records",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_ability_reasons_not_parallel(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """Non-parallel reason rows fire the site (R-A9-2).
+
+    The computed horizon rows are always consistent, so no case
+    input reaches the gate; the proof injects ragged rows and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.atlas as atlas
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("ability.context", "horizon", tmp_path)
+    root = ctx.root
+
+    def ragged(repo, **kwargs):
+        return {"abilities": [{"reasons": ["a9-proof reason"],
+                               "reason_codes": []}]}
+
+    monkeypatch.setattr(atlas.abilities, "ability_context", ragged)
+    monkeypatch.setattr(atlas, "validate_contract",
+                        lambda *args, **kwargs: None)
+    outcome, lines = _a9_run_cli(root, "ability.context",
+                                 ["ability-context"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "ability.context", "kind": "failure",
+                      "site": "ability.context.reasons-not-parallel",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """A mid-read change fires the site (race-only proof).
+
+    A single-threaded read cannot race itself, so no case input
+    reaches the gate; the proof injects the mid-read change and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.atlas as atlas
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.atlas-context", "editor-read", tmp_path)
+    root = ctx.root
+    calls = []
+
+    def racing(root, expected=None):
+        calls.append(expected)
+        return f"a9-proof-snapshot-{len(calls)}"
+
+    monkeypatch.setattr(atlas, "_snapshot", racing)
+    outcome, lines = _a9_run_cli(root, "cli.atlas-context",
+                                 ["atlas-context", "concept-expected-value"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.atlas-context", "kind": "failure",
+                      "site": "cli.atlas-context.snapshot-changed",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "cli") == 2
+
+def _prove_edit_empty_batch_guarded(mini_repo: Path, tmp_path: Path,
+                                    monkeypatch) -> None:
+    """The batch guard refuses zero ids first (R-A9-3)."""
+    _prove_cli_guarded(
+        tmp_path, monkeypatch,
+        site="cli.plan-edit-context.empty-batch",
+        cli_argv=["plan-edit-context", "unit-demo-l01", "--route-ids"],
+        valid_argv=["plan-edit-context", "unit-demo-l01",
+                    "--route-ids", "route-b2f1f80014860a929a3af0bc"])
+
+def _prove_edit_one_selector_guarded(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """The selector guard refuses two selectors first (R-A9-3)."""
+    _prove_cli_guarded(
+        tmp_path, monkeypatch,
+        site="cli.plan-edit-context.one-selector",
+        cli_argv=["plan-edit-context", "unit-demo-l01",
+                  "--route-id", "route-b2f1f80014860a929a3af0bc",
+                  "--stage-id", "stage-demo"],
+        valid_argv=["plan-edit-context", "unit-demo-l01",
+                    "--route-id", "route-b2f1f80014860a929a3af0bc"])
+
+def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
+                                  monkeypatch) -> None:
+    """Broken stage results fire the site (R-A9-2).
+
+    The fixture ledgers read cleanly and no step can damage them,
+    so no case input reaches the gate; the proof injects the read
+    failure and asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.learning_runtime import RuntimeInputError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.plan-edit-context", "stage", tmp_path)
+    root = ctx.root
+
+    def boom(*args, **kwargs):
+        raise RuntimeInputError("a9-proof: the results are broken")
+
+    monkeypatch.setattr(plan, "stage_results_for", boom)
+    outcome, lines = _a9_run_cli(
+        root, "cli.plan-edit-context",
+        ["plan-edit-context", "unit-demo-l01",
+         "--stage-id", "stage-demo"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.plan-edit-context", "kind": "failure",
+                      "site": "cli.plan-edit-context.bad-stage-results",
+                      "class": "WriteRefused", "exit_code": None}]
+    assert exit_for(WriteRefused("a9-proof"), "cli") == 2
+
+def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
+                                 monkeypatch) -> None:
+    """A schema-breaking template fires the site (R-A9-2).
+
+    The producer-owned shape validates for every fixture input, so
+    no case input reaches the gate; the proof injects the response
+    validator's failure and asserts the witness line, the class and
+    the exit.
+    """
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.contracts.json_schema import ContractValidationError
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.plan-template", "yaml", tmp_path)
+    root = ctx.root
+    real_validate = plan.validate_contract
+    calls = []
+
+    def second_fails(*args, **kwargs):
+        calls.append(args)
+        if len(calls) == 1:
+            return real_validate(*args, **kwargs)
+        raise ContractValidationError("a9-proof: the response is invalid")
+
+    monkeypatch.setattr(plan, "validate_contract", second_fails)
+    outcome, lines = _a9_run_cli(
+        root, "cli.plan-template",
+        ["plan-template", "curriculum", "--title", "Scenario Template",
+         "--unit-id", "unit-demo-l01", "--module-id", "module-demo"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.plan-template", "kind": "failure",
+                      "site": "cli.plan-template.bad-response",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_span_placement_mismatch(mini_repo: Path, tmp_path: Path,
+                                   monkeypatch) -> None:
+    """A mismatched placement source fires the site (R-A9-2).
+
+    No fixture placement links the route, so the foreign check
+    fires first, and every fixture placement matches its route's
+    source; no case input reaches the gate. The proof injects a
+    belonging use plus a flipped loaded source by direct injection
+    and asserts the witness line, the class and the exit.
+    """
+    import learning_os.loading.curriculum as curriculum
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("material.span", "span", tmp_path)
+    root = ctx.root
+    real_expand = curriculum.expand_map
+
+    def flipped(data, source_map, module_id, unit_id):
+        expanded = real_expand(data, source_map, module_id, unit_id)
+        for stage in expanded.get("stages", []):
+            for resource in stage.get("resources", []):
+                resource["source_id"] = "source-other"
+        return expanded
+
+    real_entry = plan._route_entry
+
+    def belonging(ctx, routes, study_map, source_map, unit, route_id):
+        entry = real_entry(ctx, routes, study_map, source_map, unit,
+                           route_id)
+        entry["uses"].append({"stage_id": "stage-demo",
+                              "resource_index": 0})
+        return entry
+
+    monkeypatch.setattr(curriculum, "expand_map", flipped)
+    monkeypatch.setattr(plan, "_route_entry", belonging)
+    outcome, lines = _a9_run_cli(
+        root, "material.span",
+        ["material-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc",
+         "--stage", "stage-demo", "--resource-index", "0"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    # The span's outer arm stamps exit 2 onto the bare raise.
+    assert lines == [{"operation": "material.span", "kind": "failure",
+                      "site": "material.span.placement-source-mismatch",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof"), "cli") == 2
+
+def _prove_span_read_failed(mini_repo: Path, tmp_path: Path,
+                            monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("material.span", "span", tmp_path)
+    root = ctx.root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(plan, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(
+        root, "material.span",
+        ["material-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "material.span", "kind": "failure",
+                      "site": "material.span.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_material_context_read_failed(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """An OSError mid-read fires the site (os-error-only proof).
+
+    No step can arrange an unreadable record, so no case input
+    reaches the gate; the proof injects the OSError and asserts the
+    witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("material.context", "query-hit", tmp_path)
+    root = ctx.root
+
+    def boom(root, expected=None):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(plan, "_snapshot", boom)
+    outcome, lines = _a9_run_cli(root, "material.context",
+                                 ["material-context", "derivation"],
+                                 tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "material.context", "kind": "failure",
+                      "site": "material.context.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
+
+def _prove_project_create_unknown_project(mini_repo: Path, tmp_path: Path,
+                                          monkeypatch) -> None:
+    """The update-only arm fires for create (R-A9-2).
+
+    The create handler hardcodes its own capability, so no case
+    input reaches the update-only arm; the proof drives the shared
+    writer with the update capability by direct injection and
+    asserts the witness line, the class and the exit.
+    """
+    import learning_os.ops.handlers.platform as platform
+    from learning_os.domain.failures import NotFound
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("project.create", "create-project", tmp_path)
+    root = ctx.root
+    real_write = platform._project_write
+
+    def as_update(root, data, *, capability, operation):
+        return real_write(root, data, capability="project.update",
+                          operation=operation)
+
+    monkeypatch.setattr(platform, "_project_write", as_update)
+    outcome, lines = _a9_run_gateway(
+        root, "project.create",
+        {"project": {"schema_version": 1, "id": "project-scenario-new",
+                     "type": "project", "title": "Scenario project",
+                     "project_type": "software", "status": "active",
+                     "root_uri": "project://scenario",
+                     "objective": "Characterize project creation.",
+                     "milestone_ids": [], "linked_module_ids": [],
+                     "unit_ids": [], "workspace_ids": [],
+                     "thematic_group_ids": [],
+                     "boundaries": {"confidentiality": "private",
+                                    "external_code_access": "approved"}}},
+        ["project-scenario-new"], "a9-proof-create-unknown-project",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "project.create", "kind": "failure",
+                      "site": "project.create.unknown-project",
+                      "class": "NotFound", "exit_code": None}]
+    assert exit_for(NotFound("project", "project-scenario-new", []),
+                    "gateway.dispatch") == 2
+
+_PROOF_FNS.update({
+    'cli.dossier.unreadable-records': _prove_dossier_unreadable_records,
+    'cli.dossier.no-source-map': _prove_dossier_no_source_map,
+    'cli.dossier.bad-knowledge-map': _prove_dossier_bad_knowledge_map,
+    'cli.dossier.build-failed': _prove_dossier_build_failed,
+    'cli.dossier.stale-snapshot': _prove_dossier_stale_snapshot,
+    'cli.dossier.read-failed': _prove_dossier_read_failed,
+    'cli.bootstrap.read-failed': _prove_bootstrap_read_failed,
+    'cli.status.unreadable-records': _prove_status_unreadable_records,
+    'cli.intelligence-scan.git-history': _prove_intelligence_git_history,
+    'cli.intelligence-scan.unrankable-queue': _prove_intelligence_unrankable_queue,
+    'cli.resume.no-resumable-stage': _prove_resume_no_resumable_stage,
+    'cli.resume.dossier-build-failed': _prove_resume_dossier_build_failed,
+    'cli.runtime-session.mid-read-stale': _prove_runtime_mid_read_stale,
+    'cli.capabilities.unreadable-payload-schema': _prove_capabilities_unreadable_schema,
+    'cli.unit-list.read-failed': _prove_unit_list_read_failed,
+    'ability.context.unreadable-records': _prove_ability_unreadable_records,
+    'ability.context.reasons-not-parallel': _prove_ability_reasons_not_parallel,
+    'cli.atlas-context.snapshot-changed': _prove_atlas_snapshot_changed,
+    'cli.plan-edit-context.empty-batch': _prove_edit_empty_batch_guarded,
+    'cli.plan-edit-context.one-selector': _prove_edit_one_selector_guarded,
+    'cli.plan-edit-context.bad-stage-results': _prove_edit_bad_stage_results,
+    'cli.plan-template.bad-response': _prove_template_bad_response,
+    'material.span.placement-source-mismatch': _prove_span_placement_mismatch,
+    'material.span.read-failed': _prove_span_read_failed,
+    'material.context.read-failed': _prove_material_context_read_failed,
+    'project.create.unknown-project': _prove_project_create_unknown_project,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)
