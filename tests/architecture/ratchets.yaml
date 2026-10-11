@@ -690,30 +690,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-append-slices::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/action_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/target_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-status::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-validate-delivery::/properties/delivery_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
   - signature: cli.unit-list::/properties/component_id::no-base
     count: 1
     since: approved
