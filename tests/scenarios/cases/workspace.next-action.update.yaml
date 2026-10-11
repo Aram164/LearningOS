@@ -42,5 +42,7 @@ cases:
     artifact_ids: [workspace-demo]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/workspace.py:133", reason: "inactive workspace: the fixture carries two active workspaces, none archived"}
-  - {where: "tools/learning_os/commands/workspace.py:138", reason: "missing Next Action section: both fixture workspaces carry it"}
+  - {where: "tools/learning_os/ops/handlers/admin.py:377", reason: "inactive workspace: the fixture carries two active workspaces, none archived"}
+  - {where: "tools/learning_os/ops/handlers/admin.py:386", reason: "missing Next Action section: both fixture workspaces carry it"}
+  - {site: workspace.next-action.update.workspace-not-active, where: "tools/learning_os/ops/handlers/admin.py:377", reason: fixture-inexpressible}
+  - {site: workspace.next-action.update.no-next-action, where: "tools/learning_os/ops/handlers/admin.py:386", reason: fixture-inexpressible}

@@ -1132,6 +1132,238 @@ _PROOF_FNS.update({
 })
 
 
+def _prove_attempt_bad_termin_guarded(mini_repo: Path, tmp_path: Path,
+                                          monkeypatch) -> None:
+    """The termin guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="module.attempt.record.bad-termin",
+        operation="module.attempt.record",
+        cli_argv=["module-attempt", "module-demo", "--termin", "bogus",
+                  "--date", "2026-10-09", "--result", "sat"],
+        field="termin",
+        valid={"module_id": "module-demo", "termin": 2,
+               "date": "2026-10-09", "result": "sat"},
+        key="a9-proof-attempt-bad-termin")
+
+def _prove_attempt_bad_result_guarded(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """The result guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="module.attempt.record.bad-result",
+        operation="module.attempt.record",
+        cli_argv=["module-attempt", "module-demo", "--termin", "2",
+                  "--date", "2026-10-09", "--result", "bogus"],
+        field="result",
+        valid={"module_id": "module-demo", "termin": 2,
+               "date": "2026-10-09", "result": "sat"},
+        key="a9-proof-attempt-bad-result")
+
+def _prove_attempt_bad_grade_guarded(mini_repo: Path, tmp_path: Path,
+                                       monkeypatch) -> None:
+    """The grade guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="module.attempt.record.bad-grade",
+        operation="module.attempt.record",
+        cli_argv=["module-attempt", "module-demo", "--termin", "2",
+                  "--date", "2026-10-09", "--result", "sat",
+                  "--grade", "bogus"],
+        field="grade",
+        valid={"module_id": "module-demo", "termin": 2,
+               "date": "2026-10-09", "result": "sat", "grade": 2.0},
+        key="a9-proof-attempt-bad-grade")
+
+def _prove_sitting_bad_termin_guarded(mini_repo: Path, tmp_path: Path,
+                                        monkeypatch) -> None:
+    """The termin guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="module.sitting.update.bad-termin",
+        operation="module.sitting.update",
+        cli_argv=["module-sitting", "module-demo", "--termin", "bogus",
+                  "--withdrawal-deadline", "2026-09-30"],
+        field="termin",
+        valid={"module_id": "module-demo", "termin": 2,
+               "withdrawal_deadline": "2026-09-30"},
+        key="a9-proof-sitting-bad-termin")
+
+def _prove_coordination_unknown_section_guarded(
+        mini_repo: Path, tmp_path: Path, monkeypatch) -> None:
+    """The section guards refuse ``bogus`` first (R-A9-3)."""
+    _prove_guarded_enum(
+        mini_repo, tmp_path, monkeypatch,
+        site="coordination.section.revise.unknown-section",
+        operation="coordination.section.revise",
+        cli_argv=["coordination-section-revise", "bogus",
+                  "--text", "Ship it.",
+                  "--expected-content-sha256",
+                  "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"],
+        field="section",
+        valid={"section": "Commitments", "text": "Ship it.",
+               "expected_content_sha256":
+               "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"},
+        key="a9-proof-coordination-unknown-section")
+
+def _prove_coordination_no_file(mini_repo: Path, tmp_path: Path,
+                                monkeypatch) -> None:
+    """A missing COORDINATION.md fires the site (R-A9-2).
+
+    The fixture always carries the file and no operation deletes
+    it, so no case input reaches the gate; the proof removes it by
+    direct tree surgery and asserts the witness line, the class and
+    the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("coordination.section.revise", "revise-commitments",
+                    tmp_path)
+    root = ctx.root
+    coord = root / "work" / "COORDINATION.md"
+    assert coord.is_file(), "A9 proof needs COORDINATION.md to remove"
+    coord.unlink()
+    outcome, lines = _a9_run_gateway(
+        root, "coordination.section.revise",
+        {"section": "Commitments", "text": "Ship the demo module plan.",
+         "expected_content_sha256":
+         "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"},
+        ["coordination"], "a9-proof-no-coordination-file",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "coordination.section.revise",
+                      "kind": "failure",
+                      "site": "coordination.section.revise."
+                              "no-coordination-file",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+def _prove_coordination_read_failed(mini_repo: Path, tmp_path: Path,
+                                    monkeypatch) -> None:
+    """An OSError reading the file fires the site (os-error-only proof).
+
+    No step can set unreadable permissions, so no case input reaches
+    the gate; the proof injects the OSError and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.admin as admin
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("coordination.section.revise", "revise-commitments",
+                    tmp_path)
+    root = ctx.root
+
+    def boom(root, path):
+        raise OSError("a9-proof: the read failed")
+
+    monkeypatch.setattr(admin, "read_bytes_inside", boom)
+    outcome, lines = _a9_run_gateway(
+        root, "coordination.section.revise",
+        {"section": "Commitments", "text": "Ship the demo module plan.",
+         "expected_content_sha256":
+         "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"},
+        ["coordination"], "a9-proof-coordination-read-failed",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "coordination.section.revise",
+                      "kind": "failure",
+                      "site": "coordination.section.revise.read-failed",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+def _prove_workspace_not_active(mini_repo: Path, tmp_path: Path,
+                                monkeypatch) -> None:
+    """A paused workspace fires the site (R-A9-2).
+
+    Both fixture workspaces are active and no operation archives
+    or pauses one, so no case input reaches the gate; the proof
+    pauses workspace-demo by direct tree surgery and asserts the
+    witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("workspace.next-action.update", "update-action",
+                    tmp_path)
+    root = ctx.root
+    context = root / "work" / "active" / "workspace-demo" / "CONTEXT.md"
+    text = context.read_text(encoding="utf-8")
+    assert "\nstatus: active\n" in text, (
+        "A9 proof needs an active workspace to pause")
+    context.write_text(text.replace("\nstatus: active\n",
+                                    "\nstatus: paused\n", 1),
+                       encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "workspace.next-action.update",
+        {"workspace_id": "workspace-demo",
+         "next_action": "Work the appendix example."},
+        ["workspace-demo"], "a9-proof-workspace-not-active",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "workspace.next-action.update",
+                      "kind": "failure",
+                      "site": "workspace.next-action.update."
+                              "workspace-not-active",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+def _prove_workspace_no_next_action(mini_repo: Path, tmp_path: Path,
+                                    monkeypatch) -> None:
+    """A workspace without the section fires the site (R-A9-2).
+
+    Both fixture workspaces carry a Next Action section and no
+    operation removes one, so no case input reaches the gate; the
+    proof drops the section by direct tree surgery and asserts the
+    witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("workspace.next-action.update", "update-action",
+                    tmp_path)
+    root = ctx.root
+    context = root / "work" / "active" / "workspace-demo" / "CONTEXT.md"
+    text = context.read_text(encoding="utf-8")
+    assert "\n## Next Action\n" in text, (
+        "A9 proof needs a Next Action section to drop")
+    head, _, _ = text.partition("\n## Next Action\n")
+    context.write_text(head.rstrip("\n") + "\n", encoding="utf-8")
+    outcome, lines = _a9_run_gateway(
+        root, "workspace.next-action.update",
+        {"workspace_id": "workspace-demo",
+         "next_action": "Work the appendix example."},
+        ["workspace-demo"], "a9-proof-no-next-action",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "workspace.next-action.update",
+                      "kind": "failure",
+                      "site": "workspace.next-action.update.no-next-action",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+_PROOF_FNS.update({
+    'module.attempt.record.bad-termin': _prove_attempt_bad_termin_guarded,
+    'module.attempt.record.bad-result': _prove_attempt_bad_result_guarded,
+    'module.attempt.record.bad-grade': _prove_attempt_bad_grade_guarded,
+    'module.sitting.update.bad-termin': _prove_sitting_bad_termin_guarded,
+    'coordination.section.revise.unknown-section': _prove_coordination_unknown_section_guarded,
+    'coordination.section.revise.no-coordination-file': _prove_coordination_no_file,
+    'coordination.section.revise.read-failed': _prove_coordination_read_failed,
+    'workspace.next-action.update.workspace-not-active': _prove_workspace_not_active,
+    'workspace.next-action.update.no-next-action': _prove_workspace_no_next_action,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)

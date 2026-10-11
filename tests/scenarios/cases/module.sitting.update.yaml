@@ -48,4 +48,5 @@ cases:
     artifact_ids: [module-demo]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/module.py:187", reason: "bad termin: the payload enum and argparse choices refuse it first"}
+  - {where: "tools/learning_os/ops/handlers/admin.py:156", reason: "bad termin: the payload enum and argparse choices refuse it first"}
+  - {site: module.sitting.update.bad-termin, where: "tools/learning_os/ops/handlers/admin.py:156", reason: guarded-before-handler}
