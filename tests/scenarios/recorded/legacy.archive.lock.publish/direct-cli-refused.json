@@ -6,10 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\"ok\": false, \"error\": \"Legacy archive lock publication requires explicit approval\"}\n",
-  "stdout_json": {
-    "error": "Legacy archive lock publication requires explicit approval",
-    "ok": false
-  }
+  "stderr": "los: Legacy archive lock publication requires explicit approval\n",
+  "stdout": "",
+  "stdout_json": null
 }

@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "intelligence scan: malformed feed: duplicate JSON key 'a'\n",
+  "stderr": "los: intelligence scan: malformed feed: duplicate JSON key 'a'\n",
   "stdout": "",
   "stdout_json": null
 }

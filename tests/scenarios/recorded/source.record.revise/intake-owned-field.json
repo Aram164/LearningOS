@@ -6,10 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\"ok\": false, \"error\": \"source-demo-book: field 'title' is owned by intake\"}\n",
-  "stdout_json": {
-    "error": "source-demo-book: field 'title' is owned by intake",
-    "ok": false
-  }
+  "stderr": "los: source-demo-book: field 'title' is owned by intake\n",
+  "stdout": "",
+  "stdout_json": null
 }

@@ -1,10 +1,101 @@
 {
   "canonical_changed": {},
   "exit": 0,
-  "idempotency_changed": {},
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY1": {
+          "capability": "goal.decision.record",
+          "channel": "operator",
+          "intent_sha256": "sha256:163ddc5b19d5df5469d878856601e8b427cae779b540e3cd45d6d830107950a8",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "file:operations/goal-ledger.yaml": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP1",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
   "outcome": "ok",
-  "receipts": [],
-  "revisions_changed": {},
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "file:operations/goal-ledger.yaml": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "goal.decision.record",
+            "declared_writes": [
+              "operations/goal-ledger.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "goal.decision.record",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "file:operations/goal-ledger.yaml": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:7d83fda3a0689813d4e5721f73abd6183f50adee3e8c8363fa818cec49f24200",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "direct-user-gesture",
+          "subject_sha256": "sha256:163ddc5b19d5df5469d878856601e8b427cae779b540e3cd45d6d830107950a8"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY1",
+        "intent_sha256": "sha256:163ddc5b19d5df5469d878856601e8b427cae779b540e3cd45d6d830107950a8",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP1",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "operations/goal-ledger.yaml",
+          "sha256_after": "c3b5940a09a37ea6486cf99b745a13572232836c2f31c5e6823bce99e1a45568",
+          "sha256_before": "eb3d9638be9378e8254a9848d56f844cb0d4ce4213ce31bcfc6053db35c6a1b5"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "file:operations/goal-ledger.yaml": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
   "session_ledger_changed": {
     "after": {
       "paths": {
@@ -12,6 +103,24 @@
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
           "sha256": "c3b5940a09a37ea6486cf99b745a13572232836c2f31c5e6823bce99e1a45568",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "2ef482aff76fc589f4f60e38511944fb4a81af597c8b4d184c57bbb4d4d9015b",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e1a768cbf8b13ea1f335e8473d3961941c23048982b1948d1f189a7abab2aaa7",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "4e5eb1a6c1f8f059b5fc34020ffb2128b4cca742b000ef97812b20e6a57f20d1",
           "state": "file"
         }
       },

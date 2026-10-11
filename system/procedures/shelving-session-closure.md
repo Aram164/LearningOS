@@ -49,7 +49,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:ef6bf9768bbc144bd66f68f5411006441ca73946a568cc908d49aa5669ea1253",
+  "snapshot_after": "sha256:353fb5f7fd4ce4e8bfd8fae04a6d0e5e8fb5a1cb1416112021bea2d43bd97a83",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -60,7 +60,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:ef6bf9768bbc144bd66f68f5411006441ca73946a568cc908d49aa5669ea1253",
+    "snapshot_after": "sha256:353fb5f7fd4ce4e8bfd8fae04a6d0e5e8fb5a1cb1416112021bea2d43bd97a83",
     "replayed": false
   },
   "error": null
@@ -103,7 +103,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:0499c93a5af9df62729292342f13d872641c875ee77f516ec494596d28e5e6c8",
+  "snapshot_after": "sha256:39a4e92000cf76de1850bb4671674630e6edf29963a16a4be6e1977173c716b7",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -115,7 +115,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:0499c93a5af9df62729292342f13d872641c875ee77f516ec494596d28e5e6c8",
+    "snapshot_after": "sha256:39a4e92000cf76de1850bb4671674630e6edf29963a16a4be6e1977173c716b7",
     "replayed": false
   },
   "error": null
@@ -132,7 +132,7 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/shelving
 
 ```scrut {output_stream: stderr}
 $ los shelving-apply unit-demo-l01 --selected proposal-derivation-note
-los: shelving apply requires --approve and explicit selected proposal IDs
+los: INVALID_REQUEST: shelving apply requires --approve and explicit selected proposal IDs
 [2]
 ```
 
@@ -156,7 +156,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:71acff3646912744357a999edfaf109998df2705f56ccedfc71ac2c6427e56aa",
+  "snapshot_after": "sha256:9d8b2c25aa602e8d88746a9014514dbf2a838b8ff73e34397df02d38e7d28e74",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -170,7 +170,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:71acff3646912744357a999edfaf109998df2705f56ccedfc71ac2c6427e56aa",
+    "snapshot_after": "sha256:9d8b2c25aa602e8d88746a9014514dbf2a838b8ff73e34397df02d38e7d28e74",
     "replayed": false
   },
   "error": null

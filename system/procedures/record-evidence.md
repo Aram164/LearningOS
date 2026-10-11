@@ -26,7 +26,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:a20f72e0df6ab92bc05376ef3b09e7e3f8f08d9da8bcfb34e94c7c730dccaf2d", "replayed": false}
+{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:fa761fb0e85278eb59b66e10926ff7865b717a7a61963018b37e1e2c745869a4", "replayed": false}
 ```
 
 ## The newest receipt names the capability
@@ -45,7 +45,7 @@ $ $H/los-assert-file work/active/workspace-demo/observations.jsonl --sha256 5281
 
 ```scrut {output_stream: stderr}
 $ los observe req-demo-l01-demb --activity exercise --result correct
-los: unknown requirement: req-demo-l01-demb (did you mean: req-demo-l01-demo?)
+los: INVALID_REQUEST: unknown requirement: req-demo-l01-demb (did you mean: req-demo-l01-demo?)
 [2]
 ```
 
@@ -53,7 +53,7 @@ los: unknown requirement: req-demo-l01-demb (did you mean: req-demo-l01-demo?)
 
 ```scrut {output_stream: stderr}
 $ los observe stage-demo-pending --activity exercise --result correct
-los: stage stage-demo-pending (unit unit-demo-l01) has no requirement target; record the result without credit via `stage-result --workspace WORKSPACE --unit unit-demo-l01 --stage stage-demo-pending --activity ACTIVITY --result RESULT`, or author a target with `unit-plan-revise unit-demo-l01 --file REVISION.yaml --check` adding a runtime_target stage patch (WORKFLOWS §8)
+los: INVALID_REQUEST: stage stage-demo-pending (unit unit-demo-l01) has no requirement target; record the result without credit via `stage-result --workspace WORKSPACE --unit unit-demo-l01 --stage stage-demo-pending --activity ACTIVITY --result RESULT`, or author a target with `unit-plan-revise unit-demo-l01 --file REVISION.yaml --check` adding a runtime_target stage patch (WORKFLOWS §8)
 [2]
 ```
 
@@ -89,7 +89,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:ccd41103d5064c23dab80083e53b385624f5374c3c847d2f6c08222a002d954e",
+  "snapshot_after": "sha256:c68991de06296c2d2385e0e6be4bf5800951bee7c1c1e75ddf8c3552a61520f7",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +102,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:ccd41103d5064c23dab80083e53b385624f5374c3c847d2f6c08222a002d954e",
+    "snapshot_after": "sha256:c68991de06296c2d2385e0e6be4bf5800951bee7c1c1e75ddf8c3552a61520f7",
     "replayed": false
   },
   "error": null

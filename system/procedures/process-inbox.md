@@ -31,7 +31,7 @@ $ los inbox-list
 
 ```scrut
 $ los inbox-read note-drop.md
-{"schema_version":1,"snapshot_id":"sha256:94e93d3032e1f89b5112208e9614cc86243f8c850a1a8ff3855510d85170350b","contract":"inbox-content","item":"note-drop.md","path":"work/inbox/note-drop.md","content_sha256":"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d","offset":0,"offset_unit":"unicode_characters","total_characters":26,"start_line":1,"content":"# Dropped note\n\nUnrouted.\n","next_offset":null}
+{"schema_version":1,"snapshot_id":"sha256:d503571f734be06095c3f966efef73a7c9da5b6ff410f934c6c56a8c5fa7b478","contract":"inbox-content","item":"note-drop.md","path":"work/inbox/note-drop.md","content_sha256":"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d","offset":0,"offset_unit":"unicode_characters","total_characters":26,"start_line":1,"content":"# Dropped note\n\nUnrouted.\n","next_offset":null}
 ```
 
 ## Bind the drop sha for the envelope
@@ -61,7 +61,7 @@ $ los capability inbox.resolve --payload-file "$TMPDIR/inbox-resolve.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:2df41a8cfca6e37b5475240b2608b5d9b90bd34015a05843e709b71b3e547ad9",
+  "snapshot_after": "sha256:fd4d25ab6c3de75490dc93a34d0e752d6dd0654f87c8c75c37d04f9e06a55345",
   "result": {
     "ok": true,
     "resolved": "note-drop.md",
@@ -77,7 +77,7 @@ $ los capability inbox.resolve --payload-file "$TMPDIR/inbox-resolve.json"
       "file:archive/inbox/2026/note-drop.md": 1,
       "file:work/inbox/note-drop.md": 1
     },
-    "snapshot_after": "sha256:2df41a8cfca6e37b5475240b2608b5d9b90bd34015a05843e709b71b3e547ad9",
+    "snapshot_after": "sha256:fd4d25ab6c3de75490dc93a34d0e752d6dd0654f87c8c75c37d04f9e06a55345",
     "replayed": false
   },
   "error": null
@@ -106,6 +106,6 @@ $ $H/los-assert-file work/inbox/note-drop.md --absent
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability inbox.resolve --payload '{"name": "pack/one.md", "drop_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "routed_to": ["note-demo"]}' --key inbox-resolve-002 --request-id request-inbox-resolve-002 --guards auto --out "$TMPDIR/inbox-resolve-stale.json"
-seal_envelope: los: inbox drop changed since read: pack/one.md (re-read it with `inbox-read pack/one.md` and re-seal); fix the payload and seal again
+seal_envelope: inbox drop changed since read: pack/one.md (re-read it with `inbox-read pack/one.md` and re-seal); fix the payload and seal again
 [2]
 ```

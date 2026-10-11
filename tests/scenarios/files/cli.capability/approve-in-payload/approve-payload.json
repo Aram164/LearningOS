@@ -1,14 +1,14 @@
 {
   "approval": {
     "kind": "operator-approval",
-    "subject_sha256": "sha256:b8ab1184ac8f05dd6aca27a59ae7fb39587165b19f0461b63f8ed0e63e3be52d"
+    "subject_sha256": "sha256:5fe7015e616ce0a04b4ecdee55f8f8499276336c4e96b8f4a9da1c7a4b33286c"
   },
   "capability": "capture.create",
   "channel": "operator",
   "expected_revisions": {
     "capture-request:scenario-capability-approve": 0
   },
-  "expected_snapshot": "sha256:94e93d3032e1f89b5112208e9614cc86243f8c850a1a8ff3855510d85170350b",
+  "expected_snapshot": "sha256:d503571f734be06095c3f966efef73a7c9da5b6ff410f934c6c56a8c5fa7b478",
   "idempotency_key": "scenario-capability-approve",
   "payload": {
     "approve": true,

@@ -6,10 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\"ok\": false, \"error\": \"source intake requires explicit approval\"}\n",
-  "stdout_json": {
-    "error": "source intake requires explicit approval",
-    "ok": false
-  }
+  "stderr": "los: source intake requires explicit approval\n",
+  "stdout": "",
+  "stdout_json": null
 }

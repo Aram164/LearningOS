@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "project.create",
               "channel": "operator",
-              "intent_sha256": "sha256:b267a4ad67f4d37b24acd991a17d28403e8d779e19580aeda5b193e6fcdaac8f",
+              "intent_sha256": "sha256:907afed4128b146d2eb7e38a515a6030e231605c013c0c82d43c34a9c429c140",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:b267a4ad67f4d37b24acd991a17d28403e8d779e19580aeda5b193e6fcdaac8f"
+              "subject_sha256": "sha256:907afed4128b146d2eb7e38a515a6030e231605c013c0c82d43c34a9c429c140"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:b267a4ad67f4d37b24acd991a17d28403e8d779e19580aeda5b193e6fcdaac8f",
+            "intent_sha256": "sha256:907afed4128b146d2eb7e38a515a6030e231605c013c0c82d43c34a9c429c140",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -107,13 +107,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "aeff6863ef7cb7c5dc9477e6e830e60c8e7ad019d108838ed9002f7719396b7f",
+              "sha256": "077419a1367ce977480553b01db107448b065871dc3929b7cdd466f917382121",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fdf3087f04b6f601b1e61ad042d780ef85a6ec0332084bb05c339fe7b8ab589e",
+              "sha256": "dfde81d4c3abe863811a5f3509b17ace04acc68356e7ebee7a74e0598c21da40",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -176,13 +176,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "aeff6863ef7cb7c5dc9477e6e830e60c8e7ad019d108838ed9002f7719396b7f",
+              "sha256": "077419a1367ce977480553b01db107448b065871dc3929b7cdd466f917382121",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fdf3087f04b6f601b1e61ad042d780ef85a6ec0332084bb05c339fe7b8ab589e",
+              "sha256": "dfde81d4c3abe863811a5f3509b17ace04acc68356e7ebee7a74e0598c21da40",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -206,13 +206,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "aeff6863ef7cb7c5dc9477e6e830e60c8e7ad019d108838ed9002f7719396b7f",
+              "sha256": "077419a1367ce977480553b01db107448b065871dc3929b7cdd466f917382121",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fdf3087f04b6f601b1e61ad042d780ef85a6ec0332084bb05c339fe7b8ab589e",
+              "sha256": "dfde81d4c3abe863811a5f3509b17ace04acc68356e7ebee7a74e0598c21da40",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {

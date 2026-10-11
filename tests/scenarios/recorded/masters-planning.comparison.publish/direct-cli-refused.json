@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "masters-planning.catalog.update",
               "channel": "operator",
-              "intent_sha256": "sha256:4a805e5fded5f68c36e8626f13a85cac81100f9e5a0179e6619a1f93fc79dd1c",
+              "intent_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:4a805e5fded5f68c36e8626f13a85cac81100f9e5a0179e6619a1f93fc79dd1c"
+              "subject_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:4a805e5fded5f68c36e8626f13a85cac81100f9e5a0179e6619a1f93fc79dd1c",
+            "intent_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -113,13 +113,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e18a2901910200b70fe1ba5a8bd817a319bddd645d634629fe9305a568fe5232",
+              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d2966c381172b08f7f7bcc1ef5b4a18354319f593e08981a5af56bb8b90c0b09",
+              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -186,13 +186,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e18a2901910200b70fe1ba5a8bd817a319bddd645d634629fe9305a568fe5232",
+              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d2966c381172b08f7f7bcc1ef5b4a18354319f593e08981a5af56bb8b90c0b09",
+              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -216,13 +216,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e18a2901910200b70fe1ba5a8bd817a319bddd645d634629fe9305a568fe5232",
+              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d2966c381172b08f7f7bcc1ef5b4a18354319f593e08981a5af56bb8b90c0b09",
+              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -236,12 +236,9 @@
           "session_id": "channel:operator"
         }
       },
-      "stderr": "",
-      "stdout": "{\"ok\": false, \"error\": \"prospective comparison publication requires explicit approval\"}\n",
-      "stdout_json": {
-        "error": "prospective comparison publication requires explicit approval",
-        "ok": false
-      },
+      "stderr": "los: prospective comparison publication requires explicit approval\n",
+      "stdout": "",
+      "stdout_json": null,
       "step": 1,
       "transport": "cli"
     }

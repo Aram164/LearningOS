@@ -22,16 +22,16 @@ from learning_os.ops.proposal import Result
 from learning_os.ops.registry import REGISTRY
 
 SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
-# The unregistered probe operation for the seal-path tests: text in, JSON
-# out, legacy dispatch. (capture.create held this role until S15 converted
-# it; a session converting garden.seed.create repoints this again.)
+# Default text-in/JSON-out probe for seal-path tests. Phase3 registered
+# garden.seed.create; the unregistered rejection control explicitly selects
+# the still-deferred lineage.restamp and verifies that premise below.
 CAPABILITY = "garden.seed.create"
 
 
 def _seal(root: Path, out: Path, *, payload: dict, key: str,
-          extra: list[str] | None = None):
+          extra: list[str] | None = None, capability: str = CAPABILITY):
     command = [sys.executable, str(SEAL), "--root", str(root),
-               "--capability", CAPABILITY, "--payload", json.dumps(payload),
+               "--capability", capability, "--payload", json.dumps(payload),
                "--key", key, "--out", str(out)]
     command.extend(extra or [])
     return subprocess.run(command, capture_output=True, text=True, timeout=120)
@@ -58,10 +58,11 @@ def test_no_leaked_test_registrations():
 
 
 def test_check_out_unregistered_refuses_before_output(mini_repo: Path, tmp_path: Path):
+    assert "lineage.restamp" not in REGISTRY
     out = tmp_path / "check.json"
     sealed = _seal(mini_repo, tmp_path / "sealed.json",
                    payload={"text": "check-out probe"}, key="check-out-001",
-                   extra=["--guards", "auto", "--check-out", str(out)])
+                   capability="lineage.restamp", extra=["--guards", "auto", "--check-out", str(out)])
     assert sealed.returncode == 2
     assert sealed.stderr == "seal_envelope: --check-out requires a registered operation\n"
     assert sealed.stdout == ""

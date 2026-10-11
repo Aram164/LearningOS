@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "intelligence scan: --feed is not JSON: Expecting value: line 1 column 1 (char 0)\n",
+  "stderr": "los: intelligence scan: --feed is not JSON: Expecting value: line 1 column 1 (char 0)\n",
   "stdout": "",
   "stdout_json": null
 }

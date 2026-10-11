@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: stage stage-nope is missing or ambiguous in this unit\n",
+  "stderr": "los: stage stage-nope is missing or ambiguous in this unit\n  did you mean: stage-demo\n  did you mean: stage-demo-pending\n",
   "stdout": "",
   "stdout_json": null
 }
