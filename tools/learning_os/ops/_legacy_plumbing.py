@@ -51,7 +51,6 @@ from learning_os.learning_runtime import (
     read_observations,
 )
 from learning_os.loader import load_repo
-from learning_os.loading import Repo, load_notes
 from learning_os.loading.yamlio import UniqueKeySafeLoader
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
 from learning_os.material_analysis import observe_local_material
@@ -1113,17 +1112,6 @@ def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, lim
         "content": content[offset:offset + limit],
         "next_offset": offset + limit if offset + limit < len(content) else None,
     }
-
-
-def _note_collection(root):
-    """Load only the note registry for note reads/search, not a complete Repo.
-
-    The partial model stays inside these note-only paths. Full canonical
-    fingerprints still guard the read before and after, including continuation.
-    """
-    repo = Repo(root=root)
-    load_notes(repo, root)
-    return repo
 
 
 def _window_values(offset: int, limit: int, expected_snapshot: str | None,

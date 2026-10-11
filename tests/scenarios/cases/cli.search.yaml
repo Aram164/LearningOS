@@ -57,7 +57,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [search, demo, --page, --content]
-    expect: {site: null}
+    expect: {site: cli.search.page-content}
   - id: bad-array-window
     kind: refusal
     transport: cli
@@ -77,7 +77,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [search, demo, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.search.stale-snapshot}
   - id: content-wrong-type
     kind: refusal
     transport: cli

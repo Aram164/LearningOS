@@ -16,7 +16,6 @@ import pytest
 from repo_builders import run_los
 
 from learning_os import fingerprint
-from learning_os.commands import reads
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import _json_layout
 
@@ -129,7 +128,7 @@ def test_named_query_preserves_definition_without_inventing_a_write_schema(mini_
 
 @pytest.mark.parametrize("command", ["cmd_note_read", "content_search"])
 def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
-    mini_repo, monkeypatch, capsys, command,
+    mini_repo, monkeypatch, command,
 ):
     from learning_os.loading import yamlio
 
@@ -143,24 +142,22 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
         return safe_yaml(text)
 
     monkeypatch.setattr(yamlio, "_safe_yaml", tracked_parse)
-    args = SimpleNamespace(
-        root=str(mini_repo), note_id=note.id, query=note.id, type="note",
-        offset=0, limit=100, expected_snapshot=None,
-    )
-    if command == "cmd_note_read":
-        import los
-        from learning_os.ops.pipeline import run_cli
+    import los
+    from learning_os.ops.pipeline import run_cli
 
-        parser = los.build_parser()
+    parser = los.build_parser()
+    if command == "cmd_note_read":
         cli_args = parser.parse_args(
             ["note-read", note.id, "--offset", "0", "--limit", "100"])
         outcome = run_cli(mini_repo, "cli.note-read", cli_args)
         assert outcome.exit_code == 0
         payload = json.loads(outcome.stdout)
     else:
-        invoke = getattr(reads, command)
-        assert invoke(args) == 0
-        payload = json.loads(capsys.readouterr().out)
+        cli_args = parser.parse_args(
+            ["search", note.id, "--content", "--offset", "0", "--limit", "100"])
+        outcome = run_cli(mini_repo, "cli.search", cli_args)
+        assert outcome.exit_code == 0
+        payload = json.loads(outcome.stdout)
     assert len(parsed) == len(repo.notes)
     if command == "cmd_note_read":
         assert payload["content"] == note.path.read_text()[:100]
@@ -181,12 +178,13 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
         assert not outcome.stdout
         assert "snapshot changed" in outcome.stderr
     else:
-        args.expected_snapshot = payload["snapshot_id"]
-        args.offset = 1
-        assert invoke(args) == 3
-        output = capsys.readouterr()
-        assert not output.out
-        assert "snapshot changed" in output.err
+        cli_args = parser.parse_args(
+            ["search", note.id, "--content", "--offset", "1", "--limit", "100",
+             "--expected-snapshot", payload["snapshot_id"]])
+        outcome = run_cli(mini_repo, "cli.search", cli_args)
+        assert outcome.exit_code == 3
+        assert not outcome.stdout
+        assert "snapshot changed" in outcome.stderr
     assert parsed == []
 
 

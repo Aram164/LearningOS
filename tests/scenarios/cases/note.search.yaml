@@ -42,7 +42,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [search, demo, --content, --page]
-    expect: {site: null}
+    expect: {site: cli.search.page-content}
   - id: bad-window
     kind: refusal
     transport: cli
@@ -72,7 +72,7 @@ cases:
     kind: refusal
     transport: cli
     argv: [search, prose, --content, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: null}
+    expect: {site: cli.search.stale-snapshot}
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:556", reason: "note path escapes its owner during content search: fixture notes sit in-tree, and no step can move them out"}
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink among note components during content search: the fixture carries none, and no step can create one"}

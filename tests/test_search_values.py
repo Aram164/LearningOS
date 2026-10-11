@@ -52,7 +52,7 @@ def test_metadata_value_search_still_finds_rows(mini_repo):
 
 
 def test_value_flattening_covers_scalars_and_skips_keys():
-    from learning_os.commands.reads import flatten_search_values
+    from learning_os.ops.handlers.notes import flatten_search_values
 
     values = flatten_search_values(
         {"status": "ready", "count": 42, "standing": True,

@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path, PurePosixPath
 
@@ -20,12 +21,18 @@ from learning_os.contracts.batch_notes import (
     BATCH_MAX_NOTES,
     BATCH_MIN_NOTES,
 )
+from learning_os.derived import DerivedError, evaluate
 from learning_os.domain import ids
-from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
-from learning_os.domain.suggest import not_found
+from learning_os.domain.failures import (
+    NotFound,
+    StaleSnapshot,
+    WriteRefused,
+    unreadable_refusal,
+)
+from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.garden import garden_id
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, parse_frontmatter
-from learning_os.loading import Repo, load_garden
+from learning_os.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
 from learning_os.material_analysis import (
     binding_consistent,
     normalize_binding_spellings,
@@ -40,9 +47,12 @@ from learning_os.materials_resolution import (
 from learning_os.ops._legacy_plumbing import (
     _bytes_inside_owner,
     _content_envelope,
+    _discovery_row,
     _dump_yaml,
+    _fresh_manifest,
+    _inbox_search_rows,
+    _json_layout,
     _note_bytes,
-    _note_collection,
     _read_content_bound_file,
     _read_structured_file,
     _snapshot,
@@ -54,6 +64,9 @@ from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError
 from learning_os.revisions import artifact_revision
+from learning_os.search.index import NoteBlob, build_registry
+from learning_os.search.model import POSTINGS_NODE_ID
+from learning_os.search.query import candidates
 from learning_os.transactions import parse_expected_revisions
 
 
@@ -1254,3 +1267,454 @@ def note_read(ctx: OpContext, req: dict) -> Result:
             gateway_message=f"los: {exc}",
             exit_code=2,
         ) from exc
+
+
+#: Every record family ``search --type`` accepts: the manifest's
+#: record types plus the two virtual discovery rows (garden seeds and
+#: inbox files). An unknown value refuses with exit 2 instead of
+#: answering an empty result, so ``total: 0`` always means "valid
+#: filter, no matches". A test pins this set against the live
+#: manifest's types, so a new record family updates it explicitly.
+VALID_RECORD_TYPES = frozenset({
+    "collection", "compatibility-alias", "concept", "coordination",
+    "garden-note", "inbox-item", "module", "module-source-map", "note",
+    "program", "project", "project-relationship", "source", "study-map",
+    "topic-pack", "unit", "unit-material-synthesis", "workspace",
+})
+
+
+def _unknown_record_type(value: str) -> str:
+    """Refusal for a mistyped ``--type``: suggestions plus the valid list."""
+    hints = suggest(value, VALID_RECORD_TYPES)
+    message = f"unknown record type: {value}"
+    if hints:
+        return (f"{message} (did you mean: {', '.join(hints)}? "
+                f"valid types: {', '.join(sorted(VALID_RECORD_TYPES))})")
+    return f"{message} (valid types: {', '.join(sorted(VALID_RECORD_TYPES))})"
+
+
+def _array_window(req) -> tuple[int, int]:
+    """Offset/limit check for the legacy array response: unbounded, valid only."""
+    offset, limit = req["offset"], req["limit"]
+    if offset < 0 or limit < 1:
+        raise WriteRefused("offset must be nonnegative and limit at least 1")
+    return offset, limit
+
+
+def _metadata_matches(root: Path, req, snapshot: str) -> tuple[list[dict], list[str], list[int]]:
+    """Literal-AND metadata matches in deterministic manifest order.
+
+    Shared by the legacy array response and the opt-in page packet, so the
+    two cannot disagree about what matches. An inbox listing failure refuses
+    here: discovery must not silently omit drops. The caller's snapshot is
+    shared with the manifest read so one search hashes once, not twice.
+    """
+    manifest = _fresh_manifest(root, snapshot_id=snapshot)
+    words = [w for w in req["query"].lower().split() if w]
+    rows = list(manifest["records"])
+    if not req["type"] or req["type"] == "garden-note":
+        rows.extend(manifest.get("garden_entries", []) or [])
+    if not req["type"] or req["type"] == "inbox-item":
+        try:
+            rows.extend(_inbox_search_rows(root))
+        except OSError as exc:
+            raise WriteRefused(f"cannot list work/inbox: {exc}") from exc
+    matches = []
+    hits = [0] * len(words)
+    for rec in rows:
+        if req["type"] and rec.get("type") != req["type"]:
+            continue
+        hay = "\n".join(flatten_search_values(rec)).lower()
+        found = [word in hay for word in words]
+        for index, hit in enumerate(found):
+            if hit:
+                hits[index] += 1
+        if all(found):
+            matches.append(_discovery_row(rec))
+    return matches, words, hits
+
+
+def _metadata_next_command(req, limit: int, next_offset: int, snapshot: str) -> str:
+    parts = ["search", req["query"]]
+    if req["type"]:
+        parts += ["--type", req["type"]]
+    parts += ["--page", "--limit", str(limit), "--offset", str(next_offset),
+              "--expected-snapshot", snapshot]
+    return expansion(*parts)
+
+
+def _metadata_search_page(ctx: OpContext, req: dict) -> Result:
+    """Opt-in paged metadata packet: totals and a snapshot-bound continuation."""
+    root = ctx.root
+    try:
+        offset, limit = _window_values(
+            req["offset"], req["limit"], req.get("expected_snapshot"), 100)
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        matches, words, hits = _metadata_matches(root, req, snapshot)
+        notices = []
+        if not matches and words:
+            notices.append(
+                f"los: {empty_search_hint('record', words, hits)}")
+        total = len(matches)
+        items = matches[offset:offset + limit]
+        next_offset = offset + limit if offset + limit < total else None
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot,
+             "contract": "metadata-search-page",
+             "items": items, "total": total,
+             "offset": offset, "returned": len(items),
+             "next_offset": next_offset,
+             "has_more": next_offset is not None,
+             "expand": {"next": _metadata_next_command(req, limit, next_offset, snapshot)
+                        if next_offset is not None else None}},
+            notices=tuple(notices),
+            json_dumps=_dumps_search_stable,
+        )
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site="cli.search.stale-snapshot",
+            gateway_message=f"los: {exc}",
+            exit_code=3,
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.search.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+def empty_search_hint(row_word: str, terms: list[str], hits: list[int]) -> str:
+    """One-line stderr disclosure for an empty literal-AND result.
+
+    Names how many rows each term matched on its own, so the caller can
+    see which term eliminated the answer. stdout shapes stay untouched.
+    """
+    shown = [f"{term}={count}"
+             for term, count in zip(terms[:20], hits[:20], strict=True)]
+    if len(terms) > 20:
+        shown.append(f"+{len(terms) - 20} more")
+    plural = "s" if len(terms) != 1 else ""
+    return (f"no {row_word} matches all {len(terms)} term{plural}; "
+            f"per-term {row_word} hits: {' '.join(shown)}")
+
+
+def flatten_search_values(value) -> list[str]:
+    """Every searchable scalar inside a JSON-like value, in stable order.
+
+    THE shared search haystack (F14): metadata search flattens each record
+    and content search flattens each note's frontmatter through here, so a
+    key name can never match in either path. Every string, number and
+    boolean is searchable — ids and paths included — while key names,
+    punctuation and nulls are not.
+    """
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, bool):
+        return ["true" if value else "false"]
+    if isinstance(value, (int, float)):
+        return [json.dumps(value, ensure_ascii=False)]
+    if isinstance(value, dict):
+        found: list[str] = []
+        for item in value.values():
+            found.extend(flatten_search_values(item))
+        return found
+    if isinstance(value, (list, tuple)):
+        found = []
+        for item in value:
+            found.extend(flatten_search_values(item))
+        return found
+    return []
+
+
+#: A frontmatter mapping key at the start of its line: `key:`, an indented
+#: `nested:`, a `- listed:` pair, or a quoted key. Values stay verbatim.
+_FRONTMATTER_KEY_RE = re.compile(
+    r"^(\s*(?:-\s+)?)"
+    r"(?:[A-Za-z0-9_][A-Za-z0-9_.\-]*|\"[^\"]*\"|'[^']*')"
+    r"(\s*:)")
+
+
+def _blank_frontmatter_keys(front: str) -> str:
+    """The frontmatter block with every key's `name:` footprint blanked.
+
+    Length-preserving (spaces), so positions in the blanked text are true
+    file positions and snippets keep true line numbers. Values — including
+    colons and quotes inside them — stay verbatim and searchable.
+    """
+    out = []
+    for line in front.split("\n"):
+        match = _FRONTMATTER_KEY_RE.match(line)
+        if match:
+            end = match.end(2)
+            line = " " * end + line[end:]
+        out.append(line)
+    return "\n".join(out)
+
+
+def _note_match_text(meta: dict, text: str) -> str:
+    """One note's content haystack: frontmatter values plus the verbatim body.
+
+    Values come from the loader-parsed frontmatter through the shared
+    flattener, so keys never match; the body is unchanged.
+    """
+    front = FRONTMATTER_RE.match(text)
+    body = text[front.end():] if front else text
+    return "\n".join([*flatten_search_values(meta), body])
+
+
+def _content_term_hits(root, ordered, terms):
+    """Per-term note counts for an empty content result, or None.
+
+    Best-effort by design: the search itself already answered [], so a
+    read racing the hint must never fail the command.
+    """
+    try:
+        hits = [0] * len(terms)
+        for note in ordered:
+            text = _note_match_text(
+                note.meta, _note_bytes(root, note).decode("utf-8"))
+            for index, term in enumerate(terms):
+                if term.search(text):
+                    hits[index] += 1
+        return hits
+    except (WriteRefused, OSError, UnicodeError):
+        return None
+
+
+def _match_verified(items, terms):
+    """Run the current regex verification over admitted note bytes.
+
+    ``items`` is (note id, title, repo-relative path, raw bytes, parsed
+    frontmatter). Pure: every read happened before this call, so the
+    indexed path verifies from discovered bytes without re-reading.
+    Matching is values-only in frontmatter (the shared flattener over the
+    parsed meta) plus the verbatim body; snippet positions come from the
+    key-blanked raw text, so they keep true file line numbers.
+    """
+    matches = []
+    for note_id, title, relpath, raw, meta in items:
+        text = raw.decode("utf-8")
+        found = [term.search(_note_match_text(meta, text)) for term in terms]
+        if not all(found):
+            continue
+        front = FRONTMATTER_RE.match(text)
+        blanked = (_blank_frontmatter_keys(text[:front.end()])
+                   + text[front.end():]) if front else text
+        positions = sorted({match.start() for term in terms
+                            if (match := term.search(blanked)) is not None})
+        snippets = []
+        for position in positions[:8]:
+            start = max(text.rfind("\n", 0, position) + 1, position - 100)
+            end = text.find("\n", position)
+            end = min(end if end >= 0 else len(text), position + 180)
+            snippets.append({"line": text.count("\n", 0, position) + 1,
+                             "text": text[start:end]})
+        matches.append({"id": note_id, "type": "note", "title": title,
+                        "path": relpath,
+                        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+                        "snippets": snippets})
+    return matches
+
+
+# MEASURED (S23 cold-search scaling, 2026-09-26): 145 notes 1.02s cold /
+# 0.76s warm; 290 notes 1.07s / 0.84s; 725 notes 2.00s / 1.14s. Loader
+# dominates (warm tracks cold); no index or rebuild work triggered.
+def _exhaustive_content_search(root, ordered, terms):
+    """The current implementation, kept as the differential oracle."""
+    matches = []
+    for note in ordered:
+        raw = _note_bytes(root, note)
+        matches.extend(_match_verified(
+            [(note.id, note.meta.get("title", note.id),
+              note.path.relative_to(root).as_posix(), raw, note.meta)], terms))
+    return matches
+
+
+def _indexed_content_search(root, ordered, terms, raw_terms):
+    """Indexed path: derived postings narrow candidates, regex verifies.
+
+    Reads every note once with the same admitted reader (identical
+    refusals), then verifies only candidates from those bytes. A query
+    the prefilter cannot narrow (None) verifies every note instead. The
+    prefilter grams the full raw text — keys included — which stays a
+    sound superset now that verification narrows to values plus body:
+    every true match is still a candidate, and false positives verify out.
+    """
+    blobs = {}
+    for note in ordered:
+        blobs[note.id] = NoteBlob(
+            note_id=note.id,
+            relpath=note.path.relative_to(root).as_posix(),
+            title=note.meta.get("title", note.id),
+            raw=_note_bytes(root, note))
+    registry, inputs = build_registry(list(blobs.values()))
+    postings = evaluate(root, POSTINGS_NODE_ID, registry=registry, inputs=inputs).value
+    shortlist = candidates(root, postings, raw_terms)
+    if shortlist is None:
+        selected = ordered
+    else:
+        wanted = set(shortlist)
+        selected = [note for note in ordered if note.id in wanted]
+    matches = []
+    for note in selected:
+        blob = blobs[note.id]
+        matches.extend(_match_verified(
+            [(blob.note_id, blob.title, blob.relpath, blob.raw, note.meta)],
+            terms))
+    return matches
+
+
+def _note_collection(root):
+    """Load only the note registry for note reads/search, not a complete Repo.
+
+    The partial model stays inside these note-only paths. Full canonical
+    fingerprints still guard the read before and after, including continuation.
+    """
+    repo = Repo(root=root)
+    load_notes(repo, root)
+    return repo
+
+
+def _content_search(ctx: OpContext, req: dict) -> Result:
+    root = ctx.root
+    try:
+        offset, limit = _window_values(
+            req["offset"], req["limit"], req.get("expected_snapshot"), 100)
+        if req["type"] not in (None, "note"):
+            raise WriteRefused(
+                "--content currently supports durable notes; use --type note")
+        raw_terms = req["query"].split()
+        terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
+        if not terms:
+            raise WriteRefused("content search requires a nonempty query")
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        repo = _note_collection(root)
+        # A read refuses when the failures bear on the answer it is about to
+        # give, and this search is over notes: an unreadable note may be a
+        # hit that never appears, while an unreadable project cannot be.
+        # Refusal rather than a partial answer, because the bounded-read
+        # envelope is a closed contract — a short answer here would have to
+        # report itself as total.
+        note_dir = root / "knowledge" / "notes"
+        note_failures = [
+            (path, message) for path, message in repo.parse_failures
+            if path.is_relative_to(note_dir)
+        ]
+        if note_failures:
+            raise WriteRefused(unreadable_refusal(root, note_failures, "search"))
+        ordered = sorted(repo.notes.values(), key=lambda row: row.id)
+        try:
+            matches = _indexed_content_search(root, ordered, terms, raw_terms)
+        except DerivedError:
+            # The index is a pure accelerator: any cache failure
+            # (tampering already self-healed before raising) falls
+            # back to the exhaustive implementation, never to a
+            # partial answer. Bytes/symlink refusals are not
+            # DerivedError and still propagate unchanged.
+            matches = _exhaustive_content_search(root, ordered, terms)
+        notices = []
+        if not matches:
+            hint_hits = _content_term_hits(root, ordered, terms)
+            if hint_hits is not None:
+                notices.append(
+                    f"los: {empty_search_hint('note', raw_terms, hint_hits)}")
+        _snapshot(root, snapshot)
+        return Result(
+            {"schema_version": 1, "snapshot_id": snapshot,
+             "contract": "note-content-search",
+             "items": matches[offset:offset + limit],
+             "total": len(matches),
+             "next_offset": offset + limit if offset + limit < len(matches) else None},
+            notices=tuple(notices),
+            json_dumps=_dumps_search_stable,
+        )
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site="cli.search.stale-snapshot",
+            gateway_message=f"los: {exc}",
+            exit_code=3,
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.search.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    except UnicodeError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.search.bad-encoding",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+
+
+def _dumps_search_array(payload) -> str:
+    """The exact metadata-array encoder: layout, sorted keys, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True,
+                      ensure_ascii=False)
+
+
+def _dumps_search_stable(payload: dict) -> str:
+    """The exact stable-search encoder: compact, unsorted, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+
+@register("cli.search", kind="query")
+@register("note.search", kind="query")
+def search(ctx: OpContext, req: dict) -> Result:
+    """Search records, garden seeds, and inbox filenames; empty query lists rows."""
+    if req["type"] is not None and req["type"] not in VALID_RECORD_TYPES:
+        raise WriteRefused(_unknown_record_type(req["type"]))
+    if req.get("content"):
+        if req.get("page"):
+            raise WriteRefused(
+                "--page pages metadata search; --content already paginates",
+                site="cli.search.page-content",
+                gateway_message=("los: --page pages metadata search; "
+                                 "--content already paginates"),
+                exit_code=2,
+            )
+        return _content_search(ctx, req)
+    if req.get("page"):
+        return _metadata_search_page(ctx, req)
+    root = ctx.root
+    try:
+        offset, limit = _array_window(req)
+        snapshot = _snapshot(root, req.get("expected_snapshot"))
+        matches, words, hits = _metadata_matches(root, req, snapshot)
+        _snapshot(root, snapshot)
+    except StaleSnapshot as exc:
+        raise StaleSnapshot(
+            str(exc),
+            site="cli.search.stale-snapshot",
+            gateway_message=f"los: {exc}",
+            exit_code=3,
+        ) from exc
+    except OSError as exc:
+        raise WriteRefused(
+            str(exc),
+            site="cli.search.read-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    notices = []
+    if not matches and words:
+        notices.append(f"los: {empty_search_hint('record', words, hits)}")
+    shown = matches[offset:offset + limit]
+    if len(matches) > offset + limit:
+        notices.append(
+            f"los: showing {len(shown)} of {len(matches)} matches; "
+            f"continue with --offset {offset + limit}, or use --page for "
+            "totals and a snapshot-bound continuation")
+    return Result(
+        shown,
+        notices=tuple(notices),
+        json_dumps=_dumps_search_array,
+    )

@@ -11,19 +11,17 @@ from __future__ import annotations
 import random
 import re
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
-import learning_os.commands.reads as reads_module
+import learning_os.ops.handlers.notes as notes_module
 import learning_os.search.index as search_index_module
-from learning_os.commands.reads import (
+from learning_os.derived import DerivedError, Evaluation, NodeSpec
+from learning_os.ops.handlers.notes import (
     _exhaustive_content_search,
     _indexed_content_search,
-    content_search,
+    _note_collection,
 )
-from learning_os.derived import DerivedError, Evaluation, NodeSpec
-from learning_os.ops._legacy_plumbing import _note_collection
 from learning_os.search.index import (
     NoteBlob,
     build_postings,
@@ -512,8 +510,8 @@ def test_verification_reads_no_note_bytes(tmp_path: Path, monkeypatch):
     ordered = _ordered_notes(tmp_path)
     verifying = {"active": False}
     reads = []
-    original_bytes = reads_module._note_bytes
-    original_query = reads_module.candidates
+    original_bytes = notes_module._note_bytes
+    original_query = notes_module.candidates
 
     def counting_bytes(root, note):
         if verifying["active"]:
@@ -526,8 +524,8 @@ def test_verification_reads_no_note_bytes(tmp_path: Path, monkeypatch):
         finally:
             verifying["active"] = True
 
-    monkeypatch.setattr(reads_module, "_note_bytes", counting_bytes)
-    monkeypatch.setattr(reads_module, "candidates", gated)
+    monkeypatch.setattr(notes_module, "_note_bytes", counting_bytes)
+    monkeypatch.setattr(notes_module, "candidates", gated)
     terms = _compiled("gradient")
     got = _indexed_content_search(tmp_path, ordered, terms, ["gradient"])
     assert [match["id"] for match in got] == ["n1"]
@@ -646,23 +644,33 @@ def test_wrongly_shaped_segment_self_heals(tmp_path: Path):
 # CLI envelope: production must equal the oracle end to end.
 # ---------------------------------------------------------------------------
 
-def _run_search(root: Path, query: str, *, capsys,
+def _run_search(root: Path, query: str, *,
                 offset=0, limit=100, expected_snapshot=None, type_="note"):
-    args = SimpleNamespace(
-        query=query, type=type_, offset=offset, limit=limit,
-        expected_snapshot=expected_snapshot, root=str(root))
-    code = content_search(args)
-    out, err = capsys.readouterr()
-    return code, out, err
+    from learning_os.domain.failures import StaleSnapshot, WriteRefused
+    from learning_os.ops.context import OpContext
+
+    ctx = OpContext(root=root, operation="cli.search", channel="cli",
+                    invocation="query", gateway=None)
+    req = {"query": query, "type": type_, "offset": offset, "limit": limit,
+           "expected_snapshot": expected_snapshot, "content": True}
+    try:
+        result = notes_module.search(ctx, req)
+    except StaleSnapshot as exc:
+        return 3, "", f"los: {exc}\n"
+    except WriteRefused as exc:
+        return 2, "", f"los: {exc}\n"
+    out = notes_module._dumps_search_stable(result.payload)
+    err = "".join(f"{line}\n" for line in result.notices)
+    return 0, out, err
 
 
-def test_cli_matches_exhaustive_oracle(tmp_path: Path, capsys):
+def test_cli_matches_exhaustive_oracle(tmp_path: Path):
     import json
 
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
     for query in QUERIES:
-        code, out, err = _run_search(tmp_path, query, capsys=capsys)
+        code, out, err = _run_search(tmp_path, query)
         assert code == 0, err
         payload = json.loads(out)
         ordered = _ordered_notes(tmp_path)
@@ -673,20 +681,20 @@ def test_cli_matches_exhaustive_oracle(tmp_path: Path, capsys):
         assert payload["next_offset"] == (100 if 100 < len(expected) else None)
 
 
-def test_cli_uses_index_not_fallback(tmp_path: Path, monkeypatch, capsys):
+def test_cli_uses_index_not_fallback(tmp_path: Path, monkeypatch):
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
 
     def boom(*args, **kwargs):
         raise AssertionError("exhaustive fallback taken")
 
-    monkeypatch.setattr(reads_module, "_exhaustive_content_search", boom)
+    monkeypatch.setattr(notes_module, "_exhaustive_content_search", boom)
     for query in QUERIES:
-        code, _out, err = _run_search(tmp_path, query, capsys=capsys)
+        code, _out, err = _run_search(tmp_path, query)
         assert code == 0, err
 
 
-def test_cli_falls_back_on_derived_error(tmp_path: Path, monkeypatch, capsys):
+def test_cli_falls_back_on_derived_error(tmp_path: Path, monkeypatch):
     import json
 
     _write_corpus(tmp_path)
@@ -695,15 +703,15 @@ def test_cli_falls_back_on_derived_error(tmp_path: Path, monkeypatch, capsys):
     def broken(*args, **kwargs):
         raise DerivedError("injected")
 
-    monkeypatch.setattr(reads_module, "candidates", broken)
-    code, out, err = _run_search(tmp_path, "gradient", capsys=capsys)
+    monkeypatch.setattr(notes_module, "candidates", broken)
+    code, out, err = _run_search(tmp_path, "gradient")
     assert code == 0, err
     ordered = _ordered_notes(tmp_path)
     expected = _exhaustive_content_search(tmp_path, ordered, _compiled("gradient"))
     assert json.loads(out)["items"] == expected
 
 
-def test_cli_pagination_pages_the_oracle(tmp_path: Path, capsys):
+def test_cli_pagination_pages_the_oracle(tmp_path: Path):
     import json
 
     _write_corpus(tmp_path)
@@ -715,7 +723,7 @@ def test_cli_pagination_pages_the_oracle(tmp_path: Path, capsys):
     snapshot = None
     for offset in range(len(expected)):
         code, out, err = _run_search(
-            tmp_path, "the", capsys=capsys, offset=offset, limit=1,
+            tmp_path, "the", offset=offset, limit=1,
             expected_snapshot=snapshot)
         assert code == 0, err
         payload = json.loads(out)
@@ -725,24 +733,24 @@ def test_cli_pagination_pages_the_oracle(tmp_path: Path, capsys):
     assert seen == expected
 
 
-def test_cli_malformed_note_still_refuses(tmp_path: Path, capsys):
+def test_cli_malformed_note_still_refuses(tmp_path: Path):
     notes_dir = _write_corpus(tmp_path)
     _stage_producers(tmp_path)
     (notes_dir / "broken.md").write_text("---\nid: [unclosed\n---\nbody\n", encoding="utf-8")
-    code, out, err = _run_search(tmp_path, "gradient", capsys=capsys)
+    code, out, err = _run_search(tmp_path, "gradient")
     assert code == 2
     assert out == "" and "search" in err
     # Repair: production answers again.
     (notes_dir / "broken.md").write_text(
         "---\nid: repaired\ntitle: Repaired\n---\nrepaired body\n", encoding="utf-8")
-    code, out, err = _run_search(tmp_path, "repaired", capsys=capsys)
+    code, out, err = _run_search(tmp_path, "repaired")
     assert code == 0, err
 
 
-def test_cli_snapshot_mismatch_still_refuses(tmp_path: Path, capsys):
+def test_cli_snapshot_mismatch_still_refuses(tmp_path: Path):
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
     code, _out, err = _run_search(
-        tmp_path, "gradient", capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
+        tmp_path, "gradient", expected_snapshot="sha256:" + "0" * 64)
     assert code == 3
     assert "snapshot" in err
