@@ -27,13 +27,21 @@ FIX = "Complete the request schema (PLAN D2)."
 
 PLACEHOLDER_MARK = "(no description in the parser yet)"
 
-#: SPEC (bu) 4: inventory rows that are filters, not lookups.
+#: SPEC (bu) 4 and (cq) 2: inventory rows that are not lookups.
 #: (operation, pointer) -> reason. Both the id-fields row and the schema
 #: annotation sit at ``false``; the D4 purity test tolerates the base
 #: annotation flip for exactly these pairs, and nothing else.
 BU4_FILTER_NOT_LOOKUP = {
     ("cli.module-list", "/properties/program_id"):
         "SPEC (bu) 4: filter, not a lookup",
+    ("cli.plan-template", "/properties/module_id"):
+        "SPEC (cq) 2: generated-template seed, not a lookup",
+    ("cli.plan-template", "/properties/unit_id"):
+        "SPEC (cq) 2: generated-template seed, not a lookup",
+    ("plan.template", "/properties/module_id"):
+        "SPEC (cq) 2: generated-template seed, not a lookup",
+    ("plan.template", "/properties/unit_id"):
+        "SPEC (cq) 2: generated-template seed, not a lookup",
 }
 
 
@@ -661,4 +669,87 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
 
     message = delta(inventory_lookup_back)
     assert ("cli.module-list::/properties/program_id::id-annotation"
+            in message)
+    # SPEC (cq) 2: the flip-back above also restores the four
+    # generation-input rows; each must raise again.
+    for operation, pointer in (
+            ("cli.plan-template", "/properties/module_id"),
+            ("cli.plan-template", "/properties/unit_id"),
+            ("plan.template", "/properties/module_id"),
+            ("plan.template", "/properties/unit_id")):
+        assert f"{operation}::{pointer}::id-annotation" in message
+
+    def generation_seed_schema_lookup_back(root):
+        # A retained true marker on the schema side (the inventory
+        # stays false) raises on the primary and, through the
+        # effective alias, on plan.template. The work trees nest, so
+        # the earlier inventory flip-back is reset for these rows.
+        def edit(doc):
+            doc["properties"]["module_id"]["x-los-lookup"] = True
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.plan-template.schema.json",
+            edit)
+        path = root / "tests/architecture/id-fields.yaml"
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        for row in doc["fields"]:
+            if row["operation"] in ("cli.plan-template", "plan.template"):
+                row["lookup"] = False
+        path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
+
+    message = delta(generation_seed_schema_lookup_back)
+    assert ("cli.plan-template::/properties/module_id::id-annotation"
+            in message)
+    assert ("plan.template::/properties/module_id::id-annotation"
+            in message)
+
+    def generation_seed_kind_drift(root):
+        def edit(doc):
+            doc["properties"]["module_id"]["x-los-id-kind"] = "unit"
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.plan-template.schema.json",
+            edit)
+
+    message = delta(generation_seed_kind_drift)
+    assert ("cli.plan-template::/properties/module_id::id-annotation"
+            in message)
+    assert ("plan.template::/properties/module_id::id-annotation"
+            in message)
+
+    def generation_seed_type_drift(root):
+        def edit(doc):
+            doc["properties"]["unit_id"]["type"] = "integer"
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.plan-template.schema.json",
+            edit)
+
+    message = delta(generation_seed_type_drift)
+    assert ("cli.plan-template::/properties/unit_id::id-annotation"
+            in message)
+    assert ("plan.template::/properties/unit_id::id-annotation"
+            in message)
+
+    def generation_seed_description_drift(root):
+        def edit(doc):
+            doc["properties"]["unit_id"]["description"] = ""
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.plan-template.schema.json",
+            edit)
+
+    message = delta(generation_seed_description_drift)
+    assert "cli.plan-template::unit_id::description" in message
+    assert "plan.template::unit_id::description" in message
+
+    def generation_seed_inventory_lookup_back(root):
+        # Flipping one generation-input inventory row back to true
+        # raises exactly that operation's annotation.
+        path = root / "tests/architecture/id-fields.yaml"
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        for row in doc["fields"]:
+            if (row["operation"], row["pointer"]) == (
+                    "plan.template", "/properties/unit_id"):
+                row["lookup"] = True
+        path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
+
+    message = delta(generation_seed_inventory_lookup_back)
+    assert ("plan.template::/properties/unit_id::id-annotation"
             in message)

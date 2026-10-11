@@ -140,11 +140,11 @@ fields:
 - operation: cli.plan-template
   pointer: /properties/module_id
   kind: module
-  lookup: true
+  lookup: false
 - operation: cli.plan-template
   pointer: /properties/unit_id
   kind: unit
-  lookup: true
+  lookup: false
 - operation: cli.related
   pointer: /properties/id
   kind: null
@@ -334,11 +334,11 @@ fields:
 - operation: plan.template
   pointer: /properties/module_id
   kind: module
-  lookup: true
+  lookup: false
 - operation: plan.template
   pointer: /properties/unit_id
   kind: unit
-  lookup: true
+  lookup: false
 - operation: project.create
   pointer: /properties/file_sha256
   kind: digest

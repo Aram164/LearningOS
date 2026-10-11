@@ -75,7 +75,7 @@
         "envelope_owned": false
       },
       "x-los-id-kind": "unit",
-      "x-los-lookup": true
+      "x-los-lookup": false
     },
     "module_id": {
       "type": "string",
@@ -98,7 +98,7 @@
         "envelope_owned": false
       },
       "x-los-id-kind": "module",
-      "x-los-lookup": true
+      "x-los-lookup": false
     },
     "json": {
       "type": "boolean",

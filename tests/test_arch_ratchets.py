@@ -1044,18 +1044,25 @@ def test_bf_description_strip_accepts_only_the_listed_replacement():
         differs(mutator)
 
 
+def _strip_bf_then_bu4(operation: str, old: dict, new: dict
+                       ) -> tuple[dict, dict]:
+    """The real A11 order: BF descriptions, then the BU4 lookup flip."""
+    mid_old, mid_new = _strip_bf_description_updates(operation, old, new)
+    return _strip_bu4_filter_flip(operation, mid_old, mid_new)
+
+
 def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
     rel = "system/schema/requests/cli.module-list.schema.json"
     old = json.loads(_git_show(base_ref, rel))
     new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
-    _, stripped = _strip_bu4_filter_flip("cli.module-list", old, new)
+    _, stripped = _strip_bf_then_bu4("cli.module-list", old, new)
     assert stripped["properties"] == old["properties"]
 
     def rejects(mutator):
         mutant = copy.deepcopy(new)
         mutator(mutant)
         with pytest.raises(AssertionError):
-            _strip_bu4_filter_flip("cli.module-list", old, mutant)
+            _strip_bf_then_bu4("cli.module-list", old, mutant)
 
     def flipped_back(doc):
         doc["properties"]["program_id"]["x-los-lookup"] = True
@@ -1070,17 +1077,17 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
     reversed_base = copy.deepcopy(old)
     reversed_base["properties"]["program_id"]["x-los-lookup"] = False
     with pytest.raises(AssertionError):
-        _strip_bu4_filter_flip("cli.module-list", reversed_base, new)
+        _strip_bf_then_bu4("cli.module-list", reversed_base, new)
 
     # Another operation's annotation change is not stripped: it stays
     # for the exact comparison, which fails it.
-    _, untouched = _strip_bu4_filter_flip("cli.note-read", old, new)
+    _, untouched = _strip_bf_then_bu4("cli.note-read", old, new)
     assert untouched == new
 
     def differs(mutator):
         mutant = copy.deepcopy(new)
         mutator(mutant)
-        _, stripped_mutant = _strip_bu4_filter_flip(
+        _, stripped_mutant = _strip_bf_then_bu4(
             "cli.module-list", old, mutant)
         assert stripped_mutant["properties"] != old["properties"]
 
@@ -1099,3 +1106,75 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
     for mutator in (extra_keyword, changed_default, flipped_kind,
                     other_pointer):
         differs(mutator)
+
+    # SPEC (cq) 2: the same composed allowance for the two
+    # cli.plan-template generation seeds (plan.template inherits
+    # through its alias and its file never changes).
+    seed_rel = "system/schema/requests/cli.plan-template.schema.json"
+    seed_old = json.loads(_git_show(base_ref, seed_rel))
+    seed_new = json.loads((ROOT / seed_rel).read_text(encoding="utf-8"))
+    _, seed_stripped = _strip_bf_then_bu4(
+        "cli.plan-template", seed_old, seed_new)
+    assert seed_stripped["properties"] == seed_old["properties"]
+
+    def seed_rejects(mutator):
+        mutant = copy.deepcopy(seed_new)
+        mutator(mutant)
+        with pytest.raises(AssertionError):
+            _strip_bf_then_bu4("cli.plan-template", seed_old, mutant)
+
+    def retained_unit_true(doc):
+        doc["properties"]["unit_id"]["x-los-lookup"] = True
+
+    def retained_module_true(doc):
+        doc["properties"]["module_id"]["x-los-lookup"] = True
+
+    def deleted_seed(doc):
+        del doc["properties"]["unit_id"]
+
+    for mutator in (retained_unit_true, retained_module_true,
+                    deleted_seed):
+        seed_rejects(mutator)
+
+    # A reversed base at either seed pointer is rejected too.
+    reversed_seed = copy.deepcopy(seed_old)
+    reversed_seed["properties"]["module_id"]["x-los-lookup"] = False
+    with pytest.raises(AssertionError):
+        _strip_bf_then_bu4("cli.plan-template", reversed_seed, seed_new)
+
+    # Another operation's annotation change is not stripped.
+    _, seed_untouched = _strip_bf_then_bu4(
+        "cli.note-read", seed_old, seed_new)
+    assert seed_untouched == seed_new
+
+    def seed_differs(mutator):
+        mutant = copy.deepcopy(seed_new)
+        mutator(mutant)
+        _, stripped_mutant = _strip_bf_then_bu4(
+            "cli.plan-template", seed_old, mutant)
+        assert stripped_mutant["properties"] != seed_old["properties"]
+
+    def seed_extra_keyword(doc):
+        doc["properties"]["module_id"]["additionalProperties"] = False
+
+    def seed_changed_default(doc):
+        doc["properties"]["unit_id"]["x-los-cli"]["default"] = "x"
+
+    def seed_changed_type(doc):
+        doc["properties"]["unit_id"]["type"] = "integer"
+
+    def seed_flipped_kind(doc):
+        doc["properties"]["module_id"]["x-los-id-kind"] = "unit"
+
+    def seed_drifted_description(doc):
+        # The json leaf is outside the BF description list: a
+        # description change there is not an allowance.
+        doc["properties"]["json"]["description"] = "another envelope story"
+
+    def seed_other_pointer(doc):
+        doc["properties"]["title"]["x-los-lookup"] = False
+
+    for mutator in (seed_extra_keyword, seed_changed_default,
+                    seed_changed_type, seed_flipped_kind,
+                    seed_drifted_description, seed_other_pointer):
+        seed_differs(mutator)
