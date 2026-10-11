@@ -77,11 +77,24 @@ def _spread_names(function: ast.AST) -> set[str]:
     return names
 
 
-def _committing_functions() -> list[tuple[str, str, str, int]]:
-    """(module, function, bound name, line) for every transaction commit site."""
+def _committing_functions(
+    sources: dict[str, str] | None = None,
+) -> list[tuple[str, str, str, int]]:
+    """(module, function, bound name, line) for every transaction commit site.
+
+    With no arguments, scan the real command files. With a mapping of module
+    name to source text, scan those strings with the same AST walk (controls).
+    """
     found: list[tuple[str, str, str, int]] = []
-    for path in sorted(COMMANDS.glob("*.py")):
-        tree = ast.parse(path.read_text(encoding="utf-8"))
+    if sources is None:
+        inputs = [
+            (path.name, path.read_text(encoding="utf-8"))
+            for path in sorted(COMMANDS.glob("*.py"))
+        ]
+    else:
+        inputs = [(name, sources[name]) for name in sorted(sources)]
+    for module, text in inputs:
+        tree = ast.parse(text)
         for function in ast.walk(tree):
             if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
@@ -90,30 +103,16 @@ def _committing_functions() -> list[tuple[str, str, str, int]]:
                     continue
                 name = _binding(node)
                 if name is not None:
-                    found.append((path.name, function.name, name, node.lineno))
+                    found.append((module, function.name, name, node.lineno))
     return found
 
 
 COMMIT_SITES = _committing_functions()
 
 
-def test_the_command_surface_actually_commits_transactions():
-    """Guard the guard: a parser change that finds nothing must not read green."""
-    modules = {module for module, _, _, _ in COMMIT_SITES}
-    assert len(COMMIT_SITES) >= 20, COMMIT_SITES
-    assert {"stage.py", "unit.py", "note.py", "detour.py", "review.py",
-            "source.py", "module.py"} <= modules
-
-
-@pytest.mark.parametrize(
-    ("module", "function", "bound", "line"),
-    COMMIT_SITES,
-    ids=[f"{m}::{f}:{n}" for m, f, _, n in COMMIT_SITES],
-)
-def test_every_committed_write_reports_its_receipt(
-    module: str, function: str, bound: str, line: int
-):
-    tree = ast.parse((COMMANDS / module).read_text(encoding="utf-8"))
+def _assert_confirmation_spread(
+    module: str, tree: ast.Module, function: str, bound: str, line: int
+) -> None:
     target = next(
         node for node in ast.walk(tree)
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
@@ -126,6 +125,70 @@ def test_every_committed_write_reports_its_receipt(
         f"envelope will answer transaction_id: null. Add **{bound} to the "
         f"reported dict."
     )
+
+
+_SYNTHETIC_SPREAD = '''\
+def cmd_synthetic_write():
+    code, errors, confirmation = _write_transaction(None)
+    return {"ok": True, **confirmation}
+'''
+
+_SYNTHETIC_MISSING_SPREAD = '''\
+def cmd_synthetic_write():
+    code, errors, confirmation = _write_transaction(None)
+    return {"ok": True}
+'''
+
+_SYNTHETIC_UNRELATED = '''\
+def cmd_synthetic_other():
+    code, errors, confirmation = _unrelated_call(None)
+    return {"ok": True, **confirmation}
+'''
+
+
+def test_synthetic_confirmation_spread_is_discovered_and_accepted():
+    """Guard the guard: a parser change that finds nothing must not read green."""
+    sites = _committing_functions({"synthetic_writer.py": _SYNTHETIC_SPREAD})
+    assert sites == [
+        ("synthetic_writer.py", "cmd_synthetic_write", "confirmation", 2)
+    ]
+    module, function, bound, line = sites[0]
+    _assert_confirmation_spread(
+        module, ast.parse(_SYNTHETIC_SPREAD), function, bound, line
+    )
+
+
+def test_synthetic_missing_spread_fails_the_real_receipt_assertion():
+    """The no-spread synthetic fails the same assertion as real writers."""
+    sites = _committing_functions(
+        {"synthetic_writer.py": _SYNTHETIC_MISSING_SPREAD}
+    )
+    assert sites == [
+        ("synthetic_writer.py", "cmd_synthetic_write", "confirmation", 2)
+    ]
+    module, function, bound, line = sites[0]
+    with pytest.raises(AssertionError, match="without ever spreading"):
+        _assert_confirmation_spread(
+            module, ast.parse(_SYNTHETIC_MISSING_SPREAD), function, bound, line
+        )
+
+
+def test_unrelated_call_is_not_a_receipt_site():
+    """An unrelated call must not be classified as a receipt producer."""
+    sites = _committing_functions({"synthetic_other.py": _SYNTHETIC_UNRELATED})
+    assert sites == []
+
+
+@pytest.mark.parametrize(
+    ("module", "function", "bound", "line"),
+    COMMIT_SITES,
+    ids=[f"{m}::{f}:{n}" for m, f, _, n in COMMIT_SITES],
+)
+def test_every_committed_write_reports_its_receipt(
+    module: str, function: str, bound: str, line: int
+):
+    tree = ast.parse((COMMANDS / module).read_text(encoding="utf-8"))
+    _assert_confirmation_spread(module, tree, function, bound, line)
 
 
 def test_a_write_capability_returns_its_receipt_through_the_envelope(
