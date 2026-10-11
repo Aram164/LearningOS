@@ -32,7 +32,7 @@
     },
     "archive_root": {
       "type": "string",
-      "description": "archive_root (no description in the parser yet)",
+      "description": "path to the legacy archive directory to inspect",
       "x-los-cli": {
         "flags": [
           "--archive-root"
@@ -53,7 +53,7 @@
     },
     "allowlist": {
       "type": "string",
-      "description": "allowlist (no description in the parser yet)",
+      "description": "path to the YAML allowlist of safe legacy entries",
       "x-los-cli": {
         "flags": [
           "--allowlist"

@@ -29,7 +29,7 @@
     },
     "module_id": {
       "type": "string",
-      "description": "module_id (no description in the parser yet)",
+      "description": "only units of this module; unknown ids refuse",
       "x-los-cli": {
         "flags": [
           "--module-id"
@@ -52,7 +52,7 @@
     },
     "component_id": {
       "type": "string",
-      "description": "component_id (no description in the parser yet)",
+      "description": "only units carrying this component id, which must be declared on a module or named by a unit",
       "x-los-cli": {
         "flags": [
           "--component-id"
@@ -75,7 +75,7 @@
     },
     "status": {
       "type": "string",
-      "description": "status (no description in the parser yet)",
+      "description": "only units whose status is one of needs-map, not-started, ready, active, paused, ready-to-shelve, complete",
       "x-los-cli": {
         "flags": [
           "--status"
@@ -117,7 +117,7 @@
     },
     "offset": {
       "type": "integer",
-      "description": "offset (no description in the parser yet)",
+      "description": "rows to skip before the compact page; a nonzero offset requires the previous response's expected snapshot",
       "x-los-cli": {
         "flags": [
           "--offset"
@@ -138,7 +138,7 @@
     },
     "limit": {
       "type": "integer",
-      "description": "limit (no description in the parser yet)",
+      "description": "rows per compact page, between 1 and 50",
       "x-los-cli": {
         "flags": [
           "--limit"
@@ -159,7 +159,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

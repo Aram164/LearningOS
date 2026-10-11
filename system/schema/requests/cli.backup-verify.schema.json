@@ -34,7 +34,7 @@
     },
     "manifest": {
       "type": "string",
-      "description": "manifest (no description in the parser yet)",
+      "description": "path to a JSON or YAML backup manifest file",
       "x-los-cli": {
         "flags": [
           "--manifest"
@@ -55,7 +55,7 @@
     },
     "restored_core": {
       "type": "string",
-      "description": "restored_core (no description in the parser yet)",
+      "description": "path to the restored Core checkout to verify",
       "x-los-cli": {
         "flags": [
           "--restored-core"
@@ -76,7 +76,7 @@
     },
     "restored_ui": {
       "type": "string",
-      "description": "restored_ui (no description in the parser yet)",
+      "description": "path to the restored Obsidian UI checkout to verify",
       "x-los-cli": {
         "flags": [
           "--restored-ui"
@@ -97,7 +97,7 @@
     },
     "restored_materials": {
       "type": "string",
-      "description": "restored_materials (no description in the parser yet)",
+      "description": "path to the restored materials checkout to verify",
       "x-los-cli": {
         "flags": [
           "--restored-materials"

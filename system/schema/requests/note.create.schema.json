@@ -11,7 +11,7 @@
   "properties": {
     "note": {
       "type": "object",
-      "description": "note (no description in the parser yet)",
+      "description": "the note object to create: known fields only, with a string id and title",
       "x-los-cli": {
         "flags": [
           "--note"
@@ -77,7 +77,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

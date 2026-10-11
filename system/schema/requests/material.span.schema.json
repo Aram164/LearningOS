@@ -32,7 +32,7 @@
     },
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit holding the route to describe; unknown ids refuse with suggestions",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -53,7 +53,7 @@
     },
     "route_id": {
       "type": "string",
-      "description": "route_id (no description in the parser yet)",
+      "description": "exact id of the route to describe, as plan-edit-context reports it",
       "x-los-cli": {
         "flags": [],
         "position": 1,
@@ -118,7 +118,7 @@
     },
     "extract": {
       "type": "boolean",
-      "description": "extract (no description in the parser yet)",
+      "description": "also read the route's local file bytes and include a bounded excerpt",
       "x-los-cli": {
         "flags": [
           "--extract"
@@ -139,7 +139,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

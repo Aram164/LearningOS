@@ -10,7 +10,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "ID of the unit whose review packet is prepared",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -76,7 +76,7 @@
     },
     "summary": {
       "type": "string",
-      "description": "summary (no description in the parser yet)",
+      "description": "optional summary recorded on the shelving proposal, defaulting to the stock review line when omitted",
       "x-los-cli": {
         "flags": [
           "--summary"
@@ -97,7 +97,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

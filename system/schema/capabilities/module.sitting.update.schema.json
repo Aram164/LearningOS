@@ -12,7 +12,8 @@
   ],
   "properties": {
     "module_id": {
-      "type": "string"
+      "type": "string",
+      "description": "the id of the module whose sitting gains the withdrawal deadline; ids outside the module registry refuse"
     },
     "termin": {
       "type": "integer",

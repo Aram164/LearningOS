@@ -15,7 +15,7 @@
   "properties": {
     "from_ability": {
       "type": "string",
-      "description": "from_ability (no description in the parser yet)",
+      "description": "id of the ability where the candidate connection starts; it must name an existing, non-retired ability",
       "x-los-cli": {
         "flags": [
           "--from-ability"
@@ -36,7 +36,7 @@
     },
     "to_ability": {
       "type": "string",
-      "description": "to_ability (no description in the parser yet)",
+      "description": "id of the ability where the candidate connection ends; it must name an existing, non-retired ability distinct from the start",
       "x-los-cli": {
         "flags": [
           "--to-ability"
@@ -62,7 +62,7 @@
         "extension",
         "connection"
       ],
-      "description": "kind (no description in the parser yet)",
+      "description": "the candidate connection kind: equivalence, extension or connection",
       "x-los-cli": {
         "flags": [
           "--kind"
@@ -87,7 +87,7 @@
     },
     "carries": {
       "type": "string",
-      "description": "carries (no description in the parser yet)",
+      "description": "what the candidate connection carries, as non-empty text",
       "x-los-cli": {
         "flags": [
           "--carries"
@@ -108,7 +108,7 @@
     },
     "changes": {
       "type": "string",
-      "description": "changes (no description in the parser yet)",
+      "description": "what changes across the candidate connection, as non-empty text",
       "x-los-cli": {
         "flags": [
           "--changes"
@@ -132,7 +132,7 @@
       "items": {
         "type": "string"
       },
-      "description": "condition (no description in the parser yet)",
+      "description": "conditions carried on the candidate connection; repeat the flag once per condition",
       "x-los-cli": {
         "flags": [
           "--condition"
@@ -153,7 +153,7 @@
     },
     "source_ref": {
       "type": "string",
-      "description": "source_ref (no description in the parser yet)",
+      "description": "where the candidate connection was found, as a whitespace-free conversation://, note:// or project:// reference",
       "x-los-cli": {
         "flags": [
           "--source-ref"
@@ -174,7 +174,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

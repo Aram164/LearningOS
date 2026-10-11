@@ -31,7 +31,7 @@
     },
     "note_id": {
       "type": "string",
-      "description": "note_id (no description in the parser yet)",
+      "description": "id of the note or garden seed to read; unknown ids refuse with suggestions",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -94,7 +94,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

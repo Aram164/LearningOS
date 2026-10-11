@@ -34,7 +34,7 @@
     },
     "reject": {
       "type": "boolean",
-      "description": "reject (no description in the parser yet)",
+      "description": "reject the goal instead of closing or deferring it",
       "x-los-cli": {
         "flags": [
           "--reject"
@@ -55,7 +55,7 @@
     },
     "defer": {
       "type": "boolean",
-      "description": "defer (no description in the parser yet)",
+      "description": "defer the goal instead of closing or rejecting it; --revisit-on requires deferring",
       "x-los-cli": {
         "flags": [
           "--defer"
@@ -76,7 +76,7 @@
     },
     "close": {
       "type": "boolean",
-      "description": "close (no description in the parser yet)",
+      "description": "decide the goal as closed; the decision when neither --reject nor --defer is given",
       "x-los-cli": {
         "flags": [
           "--close"

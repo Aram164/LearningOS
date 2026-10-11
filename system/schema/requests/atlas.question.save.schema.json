@@ -10,7 +10,7 @@
   "properties": {
     "question": {
       "type": "object",
-      "description": "question (no description in the parser yet)",
+      "description": "the explicitly authored question to save or resolve: id is required, and new questions also need title, text and target",
       "x-los-cli": {
         "flags": [
           "--question"
@@ -31,7 +31,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

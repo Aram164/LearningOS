@@ -10,7 +10,7 @@
   "properties": {
     "candidate_module_id": {
       "type": "string",
-      "description": "candidate_module_id (no description in the parser yet)",
+      "description": "id of the candidate module the comparison must name",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -50,7 +50,7 @@
     },
     "record": {
       "type": "object",
-      "description": "record (no description in the parser yet)",
+      "description": "the prospective source comparison as an inline object (alternative to --file)",
       "x-los-cli": {
         "flags": [
           "--record"
@@ -71,7 +71,7 @@
     },
     "approve": {
       "type": "boolean",
-      "description": "approve (no description in the parser yet)",
+      "description": "explicit approval for the prospective comparison publication",
       "x-los-cli": {
         "flags": [
           "--approve"
@@ -92,7 +92,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

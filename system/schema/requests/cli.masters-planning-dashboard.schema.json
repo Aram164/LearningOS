@@ -8,7 +8,7 @@
   "properties": {
     "confirm_masters_planning": {
       "type": "boolean",
-      "description": "confirm_masters_planning (no description in the parser yet)",
+      "description": "explicit access gesture that opens Future Master's Planning",
       "x-los-cli": {
         "flags": [
           "--confirm-masters-planning"

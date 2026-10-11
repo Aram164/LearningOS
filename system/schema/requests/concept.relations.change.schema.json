@@ -10,7 +10,7 @@
   "properties": {
     "change": {
       "type": "object",
-      "description": "change (no description in the parser yet)",
+      "description": "the explicitly authored relation changes to apply: 1 to 50 exact add, replace or remove operations",
       "x-los-cli": {
         "flags": [
           "--change"
@@ -31,7 +31,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

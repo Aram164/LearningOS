@@ -10,7 +10,7 @@
   "properties": {
     "module_id": {
       "type": "string",
-      "description": "module_id (no description in the parser yet)",
+      "description": "module whose study maps to compact; unknown ids refuse",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -31,7 +31,7 @@
     },
     "check": {
       "type": "boolean",
-      "description": "check (no description in the parser yet)",
+      "description": "return the compaction plan, affected files and exact expected revisions without writing",
       "x-los-cli": {
         "flags": [
           "--check"
@@ -76,7 +76,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

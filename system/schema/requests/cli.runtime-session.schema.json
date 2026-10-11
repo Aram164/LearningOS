@@ -31,7 +31,7 @@
     },
     "requirement": {
       "type": "string",
-      "description": "requirement (no description in the parser yet)",
+      "description": "requirement id to propose the session for; unknown ids refuse",
       "x-los-cli": {
         "flags": [
           "--requirement"
@@ -52,7 +52,7 @@
     },
     "context_json": {
       "type": "string",
-      "description": "context_json (no description in the parser yet)",
+      "description": "extra proposal context as a JSON object string",
       "x-los-cli": {
         "flags": [
           "--context-json"
@@ -94,7 +94,7 @@
     },
     "event": {
       "type": "string",
-      "description": "event (no description in the parser yet)",
+      "description": "event name recorded with a bounded repair; requires previous-json",
       "x-los-cli": {
         "flags": [
           "--event"
@@ -115,7 +115,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

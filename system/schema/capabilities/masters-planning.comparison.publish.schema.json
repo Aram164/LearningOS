@@ -10,7 +10,8 @@
   ],
   "properties": {
     "candidate_module_id": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the candidate module the comparison must name"
     },
     "file": {
       "type": "string",

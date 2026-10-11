@@ -19,10 +19,12 @@
       "description": "SHA-256 of the exact shelving-items file bytes approved for review"
     },
     "summary": {
-      "type": "string"
+      "type": "string",
+      "description": "optional summary recorded on the shelving proposal, defaulting to the stock review line when omitted"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "ID of the unit whose review packet is prepared"
     }
   },
   "dependentRequired": {

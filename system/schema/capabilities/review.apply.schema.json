@@ -14,10 +14,12 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "proposal IDs to apply, where every ID must exist in the current proposal"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "ID of the unit whose shelving proposal is applied"
     }
   }
 }

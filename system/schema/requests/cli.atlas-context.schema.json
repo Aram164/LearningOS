@@ -31,7 +31,7 @@
     },
     "concept_id": {
       "type": "string",
-      "description": "concept_id (no description in the parser yet)",
+      "description": "id of the concept whose connection editor guards and personal questions to read; it must name an existing concept",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -52,7 +52,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

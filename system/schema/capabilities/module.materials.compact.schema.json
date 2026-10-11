@@ -10,10 +10,12 @@
   ],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "return the compaction plan, affected files and exact expected revisions without writing"
     },
     "module_id": {
-      "type": "string"
+      "type": "string",
+      "description": "module whose study maps to compact; unknown ids refuse"
     },
     "plan_sha256": {
       "type": "string",

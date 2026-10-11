@@ -11,7 +11,7 @@
   "properties": {
     "workspace_id": {
       "type": "string",
-      "description": "workspace_id (no description in the parser yet)",
+      "description": "the id of the workspace whose Next Action section is replaced; unknown or non-active workspaces refuse",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -53,7 +53,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

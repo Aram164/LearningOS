@@ -31,7 +31,7 @@
     },
     "id": {
       "type": "string",
-      "description": "id (no description in the parser yet)",
+      "description": "record id to find related records for, resolved through project aliases against manifest record ids",
       "x-los-cli": {
         "flags": [],
         "position": 0,

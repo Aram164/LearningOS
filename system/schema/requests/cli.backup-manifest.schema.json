@@ -8,7 +8,7 @@
   "properties": {
     "ui_root": {
       "type": "string",
-      "description": "ui_root (no description in the parser yet)",
+      "description": "path to the Obsidian UI checkout to inventory (default: the obsidian-ui sibling of Core)",
       "x-los-cli": {
         "flags": [
           "--ui-root"
@@ -29,7 +29,7 @@
     },
     "materials_root": {
       "type": "string",
-      "description": "materials_root (no description in the parser yet)",
+      "description": "path to the materials checkout to inventory (default: the materials sibling of Core)",
       "x-los-cli": {
         "flags": [
           "--materials-root"

@@ -71,7 +71,7 @@
     },
     "limit": {
       "type": "integer",
-      "description": "limit (no description in the parser yet)",
+      "description": "matches shown per response; at least 1, at most 100 with --page or --content",
       "x-los-cli": {
         "flags": [
           "--limit"
@@ -113,7 +113,7 @@
     },
     "offset": {
       "type": "integer",
-      "description": "offset (no description in the parser yet)",
+      "description": "matches to skip before the shown page; with --page or --content a nonzero offset needs the previous snapshot",
       "x-los-cli": {
         "flags": [
           "--offset"
@@ -134,7 +134,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

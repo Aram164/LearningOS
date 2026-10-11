@@ -29,7 +29,7 @@
     },
     "record": {
       "type": "object",
-      "description": "record (no description in the parser yet)",
+      "description": "inline intake object carrying the records list; --file reads it from disk instead",
       "x-los-cli": {
         "flags": [
           "--record"
@@ -95,7 +95,7 @@
     },
     "approve": {
       "type": "boolean",
-      "description": "approve (no description in the parser yet)",
+      "description": "direct-CLI approval flag for the write; the gateway refuses it in the payload",
       "x-los-cli": {
         "flags": [
           "--approve"
@@ -116,7 +116,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

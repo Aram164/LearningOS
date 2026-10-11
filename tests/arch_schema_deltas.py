@@ -86,11 +86,11 @@ def _strip_approved_owner_metadata(operation: str, old: dict, new: dict
 
 
 #: Exact SPEC (bf) item 1 pilot description pointers, plus the SPEC
-#: (bi) item 6 wave 1 authorized pointers: operation -> property-node
-#: pointer parts. Only a ``description`` change from the bootstrap
-#: placeholder to a real string is stripped, at exactly these pairs
-#: (12 pilot + 83 wave 1). Alias files carry no descriptions of their
-#: own.
+#: (bi) item 6 wave 1 and final-wave authorized pointers: operation ->
+#: property-node pointer parts. Only a ``description`` change from the
+#: bootstrap placeholder to a real string is stripped, at exactly these
+#: pairs (12 pilot + 83 wave 1 + 122 final wave). Alias files carry no
+#: descriptions of their own.
 BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
     "route.patch": (
         ("properties", "unit_id"),
@@ -234,6 +234,220 @@ BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
         ("properties", "action"),
         ("properties", "purpose"),
         ("properties", "expected_snapshot"),
+    ),
+    "ability.candidate.append": (
+        ("properties", "carries"),
+        ("properties", "changes"),
+        ("properties", "condition"),
+        ("properties", "expected_snapshot"),
+        ("properties", "from_ability"),
+        ("properties", "kind"),
+        ("properties", "source_ref"),
+        ("properties", "to_ability"),
+    ),
+    "ability.context": (
+        ("properties", "expected_snapshot"),
+        ("properties", "limit"),
+    ),
+    "atlas.question.save": (
+        ("properties", "expected_snapshot"),
+        ("properties", "question"),
+    ),
+    "cli.atlas-context": (
+        ("properties", "concept_id"),
+        ("properties", "expected_snapshot"),
+    ),
+    "cli.backup-manifest": (
+        ("properties", "materials_root"),
+        ("properties", "ui_root"),
+    ),
+    "cli.backup-verify": (
+        ("properties", "manifest"),
+        ("properties", "restored_core"),
+        ("properties", "restored_materials"),
+        ("properties", "restored_ui"),
+    ),
+    "cli.bootstrap": (
+        ("properties", "expected_snapshot"),
+        ("properties", "limit"),
+        ("properties", "offset"),
+    ),
+    "cli.goal": (
+        ("properties", "close"),
+        ("properties", "defer"),
+        ("properties", "reject"),
+    ),
+    "cli.inbox-read": (
+        ("properties", "expected_snapshot"),
+    ),
+    "cli.legacy-archive-inspect": (
+        ("properties", "allowlist"),
+        ("properties", "archive_root"),
+    ),
+    "cli.masters-planning-dashboard": (
+        ("properties", "confirm_masters_planning"),
+    ),
+    "cli.module-list": (
+        ("properties", "program_id"),
+        ("properties", "status"),
+    ),
+    "cli.note-read": (
+        ("properties", "expected_snapshot"),
+        ("properties", "note_id"),
+    ),
+    "cli.observe": (
+        ("properties", "activity"),
+        ("properties", "assistance"),
+        ("properties", "result"),
+        ("properties", "tags"),
+    ),
+    "cli.plan-edit-context": (
+        ("properties", "expected_snapshot"),
+        ("properties", "unit_id"),
+    ),
+    "cli.plan-template": (
+        ("properties", "module_id"),
+        ("properties", "profile"),
+        ("properties", "title"),
+        ("properties", "unit_id"),
+    ),
+    "cli.project-list": (
+        ("properties", "status"),
+    ),
+    "cli.related": (
+        ("properties", "id"),
+    ),
+    "cli.runtime-session": (
+        ("properties", "context_json"),
+        ("properties", "event"),
+        ("properties", "expected_snapshot"),
+        ("properties", "requirement"),
+    ),
+    "cli.search": (
+        ("properties", "expected_snapshot"),
+        ("properties", "limit"),
+        ("properties", "offset"),
+    ),
+    "cli.unit-list": (
+        ("properties", "component_id"),
+        ("properties", "expected_snapshot"),
+        ("properties", "limit"),
+        ("properties", "module_id"),
+        ("properties", "offset"),
+        ("properties", "status"),
+    ),
+    "collection.entry.revise": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "concept.relations.change": (
+        ("properties", "change"),
+        ("properties", "expected_snapshot"),
+    ),
+    "coordination.section.revise": (
+        ("properties", "expected_snapshot"),
+        ("properties", "section"),
+    ),
+    "garden.seed.create": (
+        ("properties", "expected_snapshot"),
+    ),
+    "inbox.resolve": (
+        ("properties", "expected_snapshot"),
+    ),
+    "legacy.archive.lock.publish": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "masters-planning.catalog.update": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "masters-planning.comparison.publish": (
+        ("properties", "approve"),
+        ("properties", "candidate_module_id"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "material.context": (
+        ("properties", "expected_snapshot"),
+        ("properties", "limit"),
+        ("properties", "offset"),
+    ),
+    "material.span": (
+        ("properties", "expected_snapshot"),
+        ("properties", "extract"),
+        ("properties", "route_id"),
+        ("properties", "unit_id"),
+    ),
+    "module.attempt.record": (
+        ("properties", "expected_snapshot"),
+        ("properties", "module_id"),
+    ),
+    "module.materials.compact": (
+        ("properties", "check"),
+        ("properties", "expected_snapshot"),
+        ("properties", "module_id"),
+    ),
+    "module.sitting.update": (
+        ("properties", "expected_snapshot"),
+        ("properties", "module_id"),
+    ),
+    "note.analysis.save": (
+        ("properties", "analysis"),
+        ("properties", "expected_snapshot"),
+    ),
+    "note.analysis.save_batch": (
+        ("properties", "expected_snapshot"),
+    ),
+    "note.create": (
+        ("properties", "expected_snapshot"),
+        ("properties", "note"),
+    ),
+    "project.create": (
+        ("properties", "expected_snapshot"),
+    ),
+    "project.update": (
+        ("properties", "expected_snapshot"),
+        ("properties", "project_id"),
+    ),
+    "review.apply": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "selected"),
+        ("properties", "unit_id"),
+    ),
+    "review.prepare": (
+        ("properties", "expected_snapshot"),
+        ("properties", "summary"),
+        ("properties", "unit_id"),
+    ),
+    "source.intake.record": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "source.record.revise": (
+        ("properties", "approve"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+    ),
+    "unit.map.import": (
+        ("properties", "expected_snapshot"),
+        ("properties", "unit_id"),
+    ),
+    "unit.material-synthesis.publish": (
+        ("properties", "approve"),
+        ("properties", "check"),
+        ("properties", "expected_snapshot"),
+        ("properties", "record"),
+        ("properties", "unit_id"),
+    ),
+    "workspace.next-action.update": (
+        ("properties", "expected_snapshot"),
+        ("properties", "workspace_id"),
     ),
 }
 

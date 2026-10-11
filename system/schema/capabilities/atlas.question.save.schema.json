@@ -46,7 +46,8 @@
           },
           "description": "Durable note ids answering the question; each must resolve to another durable note."
         }
-      }
+      },
+      "description": "the explicitly authored question to save or resolve: id is required, and new questions also need title, text and target"
     }
   }
 }

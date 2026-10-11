@@ -63,7 +63,8 @@
       "description": "Full project record governed by system/schema/project.schema.json; schema_version defaults when omitted."
     },
     "project_id": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the project record to update, matching project-<slug>"
     }
   },
   "oneOf": [

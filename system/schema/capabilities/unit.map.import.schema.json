@@ -47,7 +47,8 @@
       "description": "acknowledge one stage this revision removes (repeatable)"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "unit receiving the imported study map; unknown ids refuse"
     }
   },
   "dependentRequired": {

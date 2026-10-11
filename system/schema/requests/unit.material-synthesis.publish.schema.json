@@ -10,7 +10,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit the published dossier belongs to",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -52,7 +52,7 @@
     },
     "record": {
       "type": "object",
-      "description": "record (no description in the parser yet)",
+      "description": "inline unit dossier to publish; --file reads it from disk instead",
       "x-los-cli": {
         "flags": [
           "--record"
@@ -73,7 +73,7 @@
     },
     "check": {
       "type": "boolean",
-      "description": "check (no description in the parser yet)",
+      "description": "validate the dossier and show its basis without writing",
       "x-los-cli": {
         "flags": [
           "--check"
@@ -94,7 +94,7 @@
     },
     "approve": {
       "type": "boolean",
-      "description": "approve (no description in the parser yet)",
+      "description": "direct-CLI approval flag for the write; the gateway refuses it in the payload",
       "x-los-cli": {
         "flags": [
           "--approve"
@@ -115,7 +115,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

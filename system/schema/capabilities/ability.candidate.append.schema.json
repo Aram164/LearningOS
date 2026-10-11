@@ -15,19 +15,23 @@
   ],
   "properties": {
     "carries": {
-      "type": "string"
+      "type": "string",
+      "description": "what the candidate connection carries, as non-empty text"
     },
     "changes": {
-      "type": "string"
+      "type": "string",
+      "description": "what changes across the candidate connection, as non-empty text"
     },
     "condition": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "conditions carried on the candidate connection; repeat the flag once per condition"
     },
     "from_ability": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the ability where the candidate connection starts; it must name an existing, non-retired ability"
     },
     "kind": {
       "type": "string",
@@ -35,13 +39,16 @@
         "equivalence",
         "extension",
         "connection"
-      ]
+      ],
+      "description": "the candidate connection kind: equivalence, extension or connection"
     },
     "source_ref": {
-      "type": "string"
+      "type": "string",
+      "description": "where the candidate connection was found, as a whitespace-free conversation://, note:// or project:// reference"
     },
     "to_ability": {
-      "type": "string"
+      "type": "string",
+      "description": "id of the ability where the candidate connection ends; it must name an existing, non-retired ability distinct from the start"
     }
   }
 }

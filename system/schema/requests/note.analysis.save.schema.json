@@ -11,7 +11,7 @@
   "properties": {
     "analysis": {
       "type": "object",
-      "description": "analysis (no description in the parser yet)",
+      "description": "the analysis object to preserve: known fields only, with a string id and a binding the body bytes match",
       "x-los-cli": {
         "flags": [
           "--analysis"
@@ -77,7 +77,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

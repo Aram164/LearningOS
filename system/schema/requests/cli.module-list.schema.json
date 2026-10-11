@@ -29,7 +29,7 @@
     },
     "program_id": {
       "type": "string",
-      "description": "program_id (no description in the parser yet)",
+      "description": "only modules whose area id equals this program id",
       "x-los-cli": {
         "flags": [
           "--program-id"
@@ -52,7 +52,7 @@
     },
     "status": {
       "type": "string",
-      "description": "status (no description in the parser yet)",
+      "description": "only modules whose status equals this value",
       "x-los-cli": {
         "flags": [
           "--status"

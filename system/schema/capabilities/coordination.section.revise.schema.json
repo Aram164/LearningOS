@@ -25,7 +25,8 @@
         "Priorities",
         "Dependencies",
         "Deferrals"
-      ]
+      ],
+      "description": "the coordination section to revise: one of Commitments, Priorities, Dependencies or Deferrals"
     },
     "text": {
       "type": "string",

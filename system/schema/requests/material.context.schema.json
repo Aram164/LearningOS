@@ -174,7 +174,7 @@
     },
     "limit": {
       "type": "integer",
-      "description": "limit (no description in the parser yet)",
+      "description": "page size from 1 to 20 items",
       "x-los-cli": {
         "flags": [
           "--limit"
@@ -195,7 +195,7 @@
     },
     "offset": {
       "type": "integer",
-      "description": "offset (no description in the parser yet)",
+      "description": "zero-based offset into the ranked items; nonzero offsets require the previous observations digest",
       "x-los-cli": {
         "flags": [
           "--offset"
@@ -216,7 +216,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

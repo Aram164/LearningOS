@@ -50,7 +50,7 @@
     },
     "limit": {
       "type": "integer",
-      "description": "limit (no description in the parser yet)",
+      "description": "page size for the horizon or the evidence section, from 1 to 50",
       "x-los-cli": {
         "flags": [
           "--limit"
@@ -139,7 +139,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

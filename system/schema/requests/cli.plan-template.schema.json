@@ -14,7 +14,7 @@
       "enum": [
         "curriculum"
       ],
-      "description": "profile (no description in the parser yet)",
+      "description": "template profile selecting the build schema; curriculum is the only profile",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -35,7 +35,7 @@
     },
     "title": {
       "type": "string",
-      "description": "title (no description in the parser yet)",
+      "description": "working title stamped into the new map's first stage; blank titles refuse",
       "x-los-cli": {
         "flags": [
           "--title"
@@ -56,7 +56,7 @@
     },
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "unit id stamped into the new study map; the curriculum profile requires it",
       "x-los-cli": {
         "flags": [
           "--unit-id"
@@ -79,7 +79,7 @@
     },
     "module_id": {
       "type": "string",
-      "description": "module_id (no description in the parser yet)",
+      "description": "module id stamped into the new map's stage note paths; the curriculum profile requires it",
       "x-los-cli": {
         "flags": [
           "--module-id"

@@ -29,7 +29,7 @@
     },
     "status": {
       "type": "string",
-      "description": "status (no description in the parser yet)",
+      "description": "list only projects whose status equals this value",
       "x-los-cli": {
         "flags": [
           "--status"

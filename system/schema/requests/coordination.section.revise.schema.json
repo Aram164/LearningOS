@@ -17,7 +17,7 @@
         "Dependencies",
         "Deferrals"
       ],
-      "description": "section (no description in the parser yet)",
+      "description": "the coordination section to revise: one of Commitments, Priorities, Dependencies or Deferrals",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -106,7 +106,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"
