@@ -265,13 +265,173 @@ def test_seal_blank_session_id_is_refused(mini_repo: Path, tmp_path: Path):
     assert not out.exists()
 
 
-def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
-    """F4: `--guards auto` loads the repository once and walks it once.
+def test_registered_guards_auto_pins_read_costs(
+        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+    """F4 (registered path): the converted seal reads via the pipeline check.
 
-    The seal used to load the repository for its own snapshot read and let
-    the dry-run handler load and re-walk the same state under the same
-    lock. The snapshot is a content digest, so the seal takes it with a
-    bare walk and the handler's single load serves its planner.
+    stage.note.write is registered, so the public selector
+    (``seal_envelope.main --guards auto``) derives through
+    ``_derive_registered_guards``: the seal's bare snapshot walk, the
+    handler's single live load for its planner, one shadow load staging
+    the proposal, and exactly one validation per the check contract
+    (``check_proposal`` "Exactly one validate call" -> ``validate`` ->
+    one ``Validator.run``).
+
+    Legacy derivation is patched to fail: a selector regression routing
+    this converted operation to ``_derive_guards_auto`` fails here.
+    Unpatched, that routing crashes the seal with ``AttributeError:
+    _operation`` (the stale-test failure this repair replaces), so the
+    mutant cannot silently succeed.
+
+    STOP (Task55 NEEDS-DECISION-1): the seal walks the live tree twice
+    (``live_snapshot`` at seal_envelope.py:278 plus the check record's
+    ``ctx.snapshot_id()`` at ops/check.py:150), same digest under the same
+    lock. F4's one-walk invariant needs a production fix (seed the check
+    context with the live snapshot) or a spec amendment allowing the
+    record walk. Pinned at 2 with both walks attributed live, not hidden.
+    """
+    import functools
+
+    import seal_envelope
+    from repo_builders import material_fixture
+
+    import learning_os.fingerprint as fingerprint_module
+    import learning_os.loader as loader_module
+    from learning_os.rules.core import Validator
+
+    material_fixture(mini_repo)
+    before = canonical_fingerprint(mini_repo)
+    tree_before = {path for path in mini_repo.rglob("*")}
+    live = mini_repo.resolve()
+    counts = {"load_repo": 0, "live_loads": 0, "shadow_loads": 0,
+              "walks": 0, "live_walks": 0, "validate": 0}
+    original_load = loader_module.load_repo
+    original_roots = fingerprint_module._fingerprint_roots
+    original_cds = fingerprint_module.canonical_data_and_stat_fingerprints
+    original_validate = Validator.run
+
+    @functools.wraps(original_validate)
+    def counted_validate(self, *args, **kwargs):
+        counts["validate"] += 1
+        return original_validate(self, *args, **kwargs)
+
+    @functools.wraps(original_roots)
+    def counted_roots(root, *args, **kwargs):
+        counts["walks"] += 1
+        if Path(root).resolve() == live:
+            counts["live_walks"] += 1
+        return original_roots(root, *args, **kwargs)
+
+    @functools.wraps(original_cds)
+    def counted_cds(root, *args, **kwargs):
+        counts["walks"] += 1
+        if Path(root).resolve() == live:
+            counts["live_walks"] += 1
+        return original_cds(root, *args, **kwargs)
+
+    @functools.wraps(original_load)
+    def counted_load(root, *args, **kwargs):
+        counts["load_repo"] += 1
+        if Path(root).resolve() == live:
+            counts["live_loads"] += 1
+        else:
+            counts["shadow_loads"] += 1
+        return original_load(root, *args, **kwargs)
+
+    monkeypatch.setattr(Validator, "run", counted_validate)
+    monkeypatch.setattr(fingerprint_module, "_fingerprint_roots",
+                        counted_roots)
+    monkeypatch.setattr(fingerprint_module,
+                        "canonical_data_and_stat_fingerprints", counted_cds)
+    # Every consumer binds load_repo by name at import; rebind each one.
+    # An earlier counting test in this file may have left its own counter
+    # bound in a module imported mid-test (monkeypatch restores only what
+    # it patched), so reclaim one stale functools.wraps layer as well.
+    for module in list(sys.modules.values()):
+        current = getattr(module, "load_repo", None)
+        if current is original_load or getattr(
+                current, "__wrapped__", None) is original_load:
+            monkeypatch.setattr(module, "load_repo", counted_load)
+
+    def legacy_must_not_run(*args, **kwargs):
+        raise AssertionError(
+            "public selector routed a registered operation "
+            "to legacy derivation")
+
+    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
+                        legacy_must_not_run)
+
+    out = tmp_path / "sealed.json"
+    code = seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "stage.note.write",
+        "--payload", json.dumps({"unit_id": "unit-demo-l01",
+                                 "stage_id": "stage-demo",
+                                 "text": "A counted note"}),
+        "--key", "guards-auto-once-001", "--guards", "auto",
+        "--out", str(out)])
+    captured = capsys.readouterr()
+    assert code == 0, captured.err
+    assert "guards auto:" in captured.err
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["expected_snapshot"] == f"sha256:{before}"
+    assert envelope["expected_revisions"] == {"unit-demo-l01": 0}
+    assert counts["live_loads"] == 1, counts
+    assert counts["shadow_loads"] == 1, counts
+    assert counts["load_repo"] == 2, counts
+    assert counts["walks"] == 2, counts
+    assert counts["live_walks"] == 2, counts
+    assert counts["validate"] == 1, counts
+    assert canonical_fingerprint(mini_repo) == before
+    assert {path for path in mini_repo.rglob("*")} == tree_before
+
+
+def test_public_selector_routes_converted_stage_note_write(
+        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+    """A converted seal succeeds through the public selector, never legacy.
+
+    stage.note.write is registered: ``seal_envelope.main --guards auto``
+    must derive through ``_derive_registered_guards`` and the sealed
+    envelope must commit on the first submission. Legacy derivation is
+    patched to fail, so any routing regression fails this test.
+    """
+    import seal_envelope
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+
+    def legacy_must_not_run(*args, **kwargs):
+        raise AssertionError(
+            "public selector routed a registered operation "
+            "to legacy derivation")
+
+    monkeypatch.setattr(seal_envelope, "_derive_guards_auto",
+                        legacy_must_not_run)
+
+    out = tmp_path / "sealed.json"
+    code = seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "stage.note.write",
+        "--payload", json.dumps({"unit_id": "unit-demo-l01",
+                                 "stage_id": "stage-demo",
+                                 "text": "selector probe note"}),
+        "--key", "guards-auto-selector-001", "--guards", "auto",
+        "--out", str(out)])
+    assert code == 0, capsys.readouterr().err
+    applied = _submit(mini_repo, out)
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    body = json.loads(applied.stdout)
+    assert body["ok"] is True, body
+    assert body["replayed"] is False
+
+
+def test_legacy_guards_auto_reads_the_live_tree_once(
+        mini_repo: Path, monkeypatch):
+    """F4 (legacy branch): an unregistered seal loads once and walks once.
+
+    workspace.next-action.update is still unregistered, so it takes the
+    legacy dry-run path: the seal's bare snapshot walk plus the handler's
+    single load, with no validation (interception stops at the transaction
+    boundary before any check). Preserves the original zero-validation
+    invariant on a real capability and fixture.
     """
     import functools
     import sys
@@ -285,6 +445,7 @@ def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
 
     material_fixture(mini_repo)
     before = canonical_fingerprint(mini_repo)
+    tree_before = {path for path in mini_repo.rglob("*")}
     counts = {"load_repo": 0, "walks": 0, "validate": 0}
 
     def counted(key, function):
@@ -301,23 +462,29 @@ def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
     monkeypatch.setattr(fingerprint_module, "canonical_data_and_stat_fingerprints",
                         counted("walks", fingerprint_module.canonical_data_and_stat_fingerprints))
     # Every consumer binds load_repo by name at import; rebind each one.
+    # An earlier counting test in this file may have left its own counter
+    # bound in a module imported mid-test (monkeypatch restores only what
+    # it patched), so reclaim one stale functools.wraps layer as well.
     original_load = loader_module.load_repo
     load_counter = counted("load_repo", original_load)
     for module in list(sys.modules.values()):
-        if getattr(module, "load_repo", None) is original_load:
+        current = getattr(module, "load_repo", None)
+        if current is original_load or getattr(
+                current, "__wrapped__", None) is original_load:
             monkeypatch.setattr(module, "load_repo", load_counter)
 
-    # route.patch is registered since S15 and derives its guards through
-    # the pipeline check; stage.note.write still takes this dry-run path.
     snapshot, derived = seal_envelope._derive_guards_auto(
-        mini_repo, capability="stage.note.write",
-        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
-                 "text": "A counted note"},
-        key="guards-auto-once-001", request_id="request-guards-auto-once-001",
+        mini_repo, capability="workspace.next-action.update",
+        payload={"workspace_id": "workspace-demo",
+                 "next_action": "A counted action"},
+        key="guards-auto-legacy-once-001",
+        request_id="request-guards-auto-legacy-once-001",
         channel="operator", approval_kind="operator-approval", snapshot=None)
 
     assert snapshot == f"sha256:{before}"
-    assert set(derived) == {"unit-demo-l01"}
+    assert derived == {"workspace-demo": 0}
     assert counts["load_repo"] == 1, counts
     assert counts["walks"] == 1, counts
     assert counts["validate"] == 0, counts
+    assert canonical_fingerprint(mini_repo) == before
+    assert {path for path in mini_repo.rglob("*")} == tree_before
