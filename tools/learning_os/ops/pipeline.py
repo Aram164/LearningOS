@@ -129,6 +129,12 @@ def _audit_direct_refused(operation: str | None, code: int) -> None:
               None, None, code)
 
 
+def _audit_diagnostic_failed(operation: str | None) -> None:
+    """Witness a rendered diagnostic failure's exit 1 (SPEC (ct) item 1)."""
+    sys.audit("learningos.refusal", operation, "diagnostic-failure",
+              None, None, 1)
+
+
 def _standard_after_commit(code: int, errors: list, confirmation: dict) -> None:
     """Recipe R8: the legacy raise-on-commit-error, shared (SPEC (bp) 1).
 
@@ -265,6 +271,8 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             stdout = result.json_dumps(payload) + "\n"
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
+        if result.diagnostic_failed:
+            _audit_diagnostic_failed(operation)
     except Exception as exc:
         # The row check mirrors _cli_refusal's: an unlisted exception is
         # re-raised, not a refusal, and witnesses nothing.
@@ -909,6 +917,7 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             final = res.payload
         _take_gateway_refusal()
         if res.diagnostic_failed:
+            _audit_diagnostic_failed(operation)
             return 1, {"error": json.dumps(final, separators=(",", ":"))}
         return 0, final
     captured, errors = io.StringIO(), io.StringIO()
@@ -943,6 +952,7 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     else:
         final = {**res.payload, **confirmation}
     if res.diagnostic_failed:
+        _audit_diagnostic_failed(operation)
         return 1, {"error": json.dumps(final, separators=(",", ":"))}
     return 0, final
 

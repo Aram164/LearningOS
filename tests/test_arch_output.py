@@ -106,9 +106,10 @@ def _merged_case(operation: str, case_id: str) -> dict:
             **bare}
 
 
-#: ``unit id -> (live exit, witness lines)`` for the target step,
-#: shared by the exit and CLI clauses over the same live evidence.
-_LIVE: dict[str, tuple[int, list[dict]]] = {}
+#: ``unit id -> (live exit, witness lines, live stdout)`` for the
+#: target step, shared by the exit and CLI clauses over the same
+#: live evidence.
+_LIVE: dict[str, tuple[int, list[dict], str]] = {}
 
 
 @pytest.fixture(scope="module")
@@ -118,12 +119,14 @@ def _witness_dir(tmp_path_factory):
 
 
 def _live_target(unit, tmp_path: Path, witness_dir: Path):
-    """``(live exit, lines)`` for the unit's target step (item 8.2).
+    """``(live exit, lines, live stdout)`` for the unit's target step.
 
-    A fresh fixture with its prerequisites through the unchanged
-    harness; prerequisites run unwitnessed and their live exits must
-    match recorded, then the target step runs with the per-unit
-    witness file in the harness environment.
+    Item 8.2 plus SPEC (ct) item 2: a fresh fixture with its
+    prerequisites through the unchanged harness; prerequisites run
+    unwitnessed and their live exits must match recorded, then the
+    target step runs with the per-unit witness file in the harness
+    environment. The cached live stdout lets the diagnostic CLI
+    clause require byte-identical recorded output.
     """
     import scenario_harness as harness
     from arch_audit_hook import SITE_WITNESS_ENV
@@ -171,7 +174,7 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
              for line in witness_file.read_text(
                  encoding="utf-8").splitlines()
              if line.strip()]
-    _LIVE[key] = (result["exit"], lines)
+    _LIVE[key] = (result["exit"], lines, result["stdout"])
     return _LIVE[key]
 
 
@@ -281,13 +284,16 @@ _CONTEXT = {"cli": "cli", "gateway": "gateway.dispatch"}
 def _check_live_exit(label: str, transport: str, recorded_exit: int,
                      live_exit: int, lines: list[dict],
                      operation: str) -> None:
-    """Item 8.2 plus (bg) 1: the target step's single witness line.
+    """Item 8.2 plus (bg) 1 and (ct) 2: the target step's single line.
 
     A ``failure`` line gives ``exit_for`` for the reconstructed class
     with its witnessed ``exit_code``; a ``commit-refused`` line gives
     the witnessed code; a ``direct-refused`` line gives the witnessed
     direct code with its exact shape, null site, target operation and
-    nonzero integer code. No line, or more than one, fails.
+    nonzero integer code; a ``diagnostic-failure`` line gives the
+    witnessed integer 1 with its exact shape, target operation and
+    null site, and recorded/live/witnessed exits are all 1 with no
+    ``exit_for`` class. No line, or more than one, fails.
     """
     from learning_os.ops.outcomes import exit_for
 
@@ -332,6 +338,26 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
             f"A7 {label}: witnessed direct code {line['code']}, "
             f"recorded {recorded_exit} — {FIX}")
         return
+    if line.get("kind") == "diagnostic-failure":
+        assert set(line) == {"operation", "kind", "site", "code"}, (
+            f"A7 {label}: diagnostic line has shape "
+            f"{sorted(line)} — {FIX}")
+        assert line["operation"] == operation, (
+            f"A7 {label}: diagnostic line names "
+            f"{line['operation']!r}, unit {operation!r} — {FIX}")
+        assert line["site"] is None, (
+            f"A7 {label}: diagnostic line names site "
+            f"{line['site']!r} — {FIX}")
+        assert type(line["code"]) is int and line["code"] == 1, (
+            f"A7 {label}: diagnostic code {line['code']!r} is not "
+            f"integer 1 — {FIX}")
+        assert recorded_exit == 1 and live_exit == 1, (
+            f"A7 {label}: diagnostic exits recorded {recorded_exit}, "
+            f"live {live_exit}, want 1 — {FIX}")
+        assert recorded_exit == line["code"], (
+            f"A7 {label}: witnessed diagnostic code {line['code']}, "
+            f"recorded {recorded_exit} — {FIX}")
+        return
     raise AssertionError(
         f"A7 {label}: witness kind {line.get('kind')!r} — {FIX}")
 
@@ -374,13 +400,32 @@ def _handler_module_has_refused_stdout(operation: str) -> bool:
 
 def _check_cli_refusal_stdout(label: str, operation: str,
                               recorded_stdout: str,
-                              line: dict | None) -> None:
-    """Item 8.3: a non-error-object stdout needs the (bd) legacy stream.
+                              line: dict | None,
+                              live_stdout: str | None = None) -> None:
+    """Item 8.3 plus (ct) 2: ordinary shape or the diagnostic report.
 
-    Allowed only for a ``commit-refused`` unit of an operation whose
-    registered handler module passes ``refused_stdout``. Every other
-    CLI refusal stdout is empty or an error object.
+    A ``diagnostic-failure`` unit's stdout is the rendered JSON report
+    object, byte-identical live and recorded. Every other non-empty
+    non-error-object stdout needs the (bd) legacy stream: allowed only
+    for a ``commit-refused`` unit of an operation whose registered
+    handler module passes ``refused_stdout``. Every other CLI refusal
+    stdout is empty or an error object.
     """
+    if line is not None and line.get("kind") == "diagnostic-failure":
+        try:
+            parsed = json.loads(recorded_stdout)
+        except ValueError as exc:
+            raise AssertionError(
+                f"A7 {label}: diagnostic stdout is not JSON — {FIX}"
+            ) from exc
+        assert isinstance(parsed, dict), (
+            f"A7 {label}: diagnostic stdout is not a JSON object — {FIX}")
+        assert live_stdout is not None, (
+            f"A7 {label}: diagnostic live stdout is missing — {FIX}")
+        assert live_stdout == recorded_stdout, (
+            f"A7 {label}: diagnostic live stdout differs from "
+            f"recorded — {FIX}")
+        return
     if not recorded_stdout or _is_cli_error_object(recorded_stdout):
         return
     assert line is not None and line.get("kind") == "commit-refused", (
@@ -411,15 +456,18 @@ def test_gateway_refusal_stdout_validates(unit):
 @pytest.mark.parametrize("unit", _cli_units(), ids=_unit_id)
 def test_cli_refusal_stdout_shape(unit, tmp_path, _witness_dir):
     operation, case_id, step, _, _site, _exit, stdout = unit
-    _live_exit, lines = _live_target(unit, tmp_path, _witness_dir)
+    _live_exit, lines, live_stdout = _live_target(
+        unit, tmp_path, _witness_dir)
     line = lines[0] if len(lines) == 1 else None
-    _check_cli_refusal_stdout(_unit_id(unit), operation, stdout, line)
+    _check_cli_refusal_stdout(
+        _unit_id(unit), operation, stdout, line, live_stdout)
 
 
 @pytest.mark.parametrize("unit", _all_refusal_units(), ids=_unit_id)
 def test_refusal_exit_matches_outcomes_live(unit, tmp_path, _witness_dir):
     operation, case_id, step, transport, _site, exit, _stdout = unit
-    live_exit, lines = _live_target(unit, tmp_path, _witness_dir)
+    live_exit, lines, _live_stdout = _live_target(
+        unit, tmp_path, _witness_dir)
     _check_live_exit(_unit_id(unit), transport, exit, live_exit, lines,
                      operation)
 
@@ -763,3 +811,110 @@ def test_control_cli_error_shape_is_checked():
                               json.dumps(clean), _a_failure_line())
     _check_cli_refusal_stdout("a7-control::empty", "capture.create",
                               "", _a_failure_line())
+
+
+# --- SPEC (ct) diagnostic controls -------------------------------------------
+
+def _a_diagnostic_line() -> dict:
+    return {"operation": "cli.backup-verify",
+            "kind": "diagnostic-failure", "site": None, "code": 1}
+
+
+def _a_diagnostic_stdout() -> str:
+    return json.loads((RECORDED_DIR / "cli.backup-verify"
+                       / "checksums-fail.json").read_text(
+                           encoding="utf-8"))["stdout"]
+
+
+def test_control_diagnostic_clean_passes():
+    """The recorded backup report passes both diagnostic clauses."""
+    stdout = _a_diagnostic_stdout()
+    assert isinstance(json.loads(stdout), dict)
+    _check_live_exit("a7-control::diag-clean", "cli", 1, 1,
+                     [_a_diagnostic_line()], "cli.backup-verify")
+    _check_cli_refusal_stdout("a7-control::diag-clean",
+                              "cli.backup-verify", stdout,
+                              _a_diagnostic_line(), stdout)
+
+
+def test_control_diagnostic_duplicate_lines_fail():
+    with pytest.raises(AssertionError, match="2 witness lines"):
+        _check_live_exit("a7-control::diag-two", "cli", 1, 1,
+                         [_a_diagnostic_line(), _a_diagnostic_line()],
+                         "cli.backup-verify")
+
+
+def test_control_diagnostic_wrong_operation_fails():
+    line = _a_diagnostic_line()
+    line["operation"] = "route.patch"
+    with pytest.raises(AssertionError, match="unit 'cli.backup-verify'"):
+        _check_live_exit("a7-control::diag-op", "cli", 1, 1,
+                         [line], "cli.backup-verify")
+
+
+def test_control_diagnostic_non_null_site_fails():
+    line = _a_diagnostic_line()
+    line["site"] = "cli.backup-verify.bad-file"
+    with pytest.raises(AssertionError, match="diagnostic line names site"):
+        _check_live_exit("a7-control::diag-site", "cli", 1, 1,
+                         [line], "cli.backup-verify")
+
+
+def test_control_diagnostic_malformed_shape_fails():
+    extra = _a_diagnostic_line()
+    extra["class"] = "WriteRefused"
+    with pytest.raises(AssertionError, match="diagnostic line has shape"):
+        _check_live_exit("a7-control::diag-shape", "cli", 1, 1,
+                         [extra], "cli.backup-verify")
+
+
+def test_control_diagnostic_zero_code_fails():
+    line = _a_diagnostic_line()
+    line["code"] = 0
+    with pytest.raises(AssertionError, match="not integer 1"):
+        _check_live_exit("a7-control::diag-zero", "cli", 1, 1,
+                         [line], "cli.backup-verify")
+
+
+def test_control_diagnostic_bool_code_fails():
+    line = _a_diagnostic_line()
+    line["code"] = True
+    with pytest.raises(AssertionError, match="not integer 1"):
+        _check_live_exit("a7-control::diag-bool", "cli", 1, 1,
+                         [line], "cli.backup-verify")
+
+
+def test_control_diagnostic_wrong_code_fails():
+    line = _a_diagnostic_line()
+    line["code"] = 2
+    with pytest.raises(AssertionError, match="not integer 1"):
+        _check_live_exit("a7-control::diag-code", "cli", 1, 1,
+                         [line], "cli.backup-verify")
+
+
+def test_control_diagnostic_wrong_exit_fails():
+    with pytest.raises(AssertionError, match="want 1"):
+        _check_live_exit("a7-control::diag-exit", "cli", 2, 2,
+                         [_a_diagnostic_line()], "cli.backup-verify")
+
+
+def test_control_diagnostic_non_json_stdout_fails():
+    with pytest.raises(AssertionError, match="not JSON"):
+        _check_cli_refusal_stdout("a7-control::diag-nojson",
+                                  "cli.backup-verify", "not json",
+                                  _a_diagnostic_line(), "not json")
+
+
+def test_control_diagnostic_non_object_stdout_fails():
+    with pytest.raises(AssertionError, match="not a JSON object"):
+        _check_cli_refusal_stdout("a7-control::diag-noobj",
+                                  "cli.backup-verify", "[]",
+                                  _a_diagnostic_line(), "[]")
+
+
+def test_control_diagnostic_changed_stdout_fails():
+    stdout = _a_diagnostic_stdout()
+    with pytest.raises(AssertionError, match="differs from recorded"):
+        _check_cli_refusal_stdout("a7-control::diag-changed",
+                                  "cli.backup-verify", stdout,
+                                  _a_diagnostic_line(), stdout + " ")

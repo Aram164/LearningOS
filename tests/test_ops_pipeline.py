@@ -1638,3 +1638,285 @@ def test_gateway_ignores_notices(pipe, mini_repo):
     assert body["ok"] is True
     assert body["result"] == {"echo": "x"}
     assert outcome.stderr == ""
+
+
+# ---------------------------------------------------------------------------
+# SPEC (ct): diagnostic-failure witnesses.
+# ---------------------------------------------------------------------------
+
+def _read_witness_lines(path: Path) -> list[dict]:
+    return [json.loads(line)
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+
+
+def test_control_diagnostic_audit_helper_emits_the_exact_line(
+        tmp_path, monkeypatch):
+    """The helper plus hook write exactly the (ct) 1 line shape."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    from learning_os.ops.pipeline import _audit_diagnostic_failed
+
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        _audit_diagnostic_failed("route.patch")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert _read_witness_lines(witness) == [
+        {"operation": "route.patch", "kind": "diagnostic-failure",
+         "site": None, "code": 1}]
+    assert "learningos.refusal" not in log.read_text(encoding="utf-8")
+
+
+def test_cli_diagnostic_failed_emits_exactly_one_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """A CLI diagnostic renders the report and witnesses exit 1 once."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    def handler(ctx, req):
+        return Result({"echo": "diag"}, diagnostic_failed=True)
+
+    pipe("query", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.stdout == '{"echo":"diag"}\n'
+    assert outcome.exit_code == 1
+    assert outcome.ok is False
+    assert outcome.payload == {"echo": "diag"}
+    assert outcome.error is None
+    assert _read_witness_lines(witness) == [
+        {"operation": TEST_OP, "kind": "diagnostic-failure",
+         "site": None, "code": 1}]
+
+
+def test_cli_success_without_flag_writes_no_diagnostic_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Flag-false success renders normally and witnesses nothing."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    pipe("query")
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.stdout == '{"echo":"hi","n":7}\n'
+    assert outcome.exit_code == 0
+    assert _read_witness_lines(witness) == []
+
+
+def test_cli_diagnostic_renderer_failure_emits_only_failure(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """A renderer exception during a diagnostic witnesses only failure."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    def handler(ctx, req):
+        def finish(conf):
+            raise WriteRefused("render-nope",
+                               site="test-only.pipe.render-bad")
+        return Result({"echo": "x"}, diagnostic_failed=True,
+                      finish=finish)
+
+    pipe("query", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 2
+    assert outcome.stdout == ""
+    assert outcome.stderr == "los: INVALID_REQUEST: render-nope\n"
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1
+    assert lines[0]["kind"] == "failure"
+    assert lines[0]["site"] == "test-only.pipe.render-bad"
+    assert lines[0]["class"] == "WriteRefused"
+
+
+def test_gateway_diagnostic_without_proposal_emits_exactly_one_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Registered gateway without a proposal witnesses the diagnostic."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result({"echo": "diag"}, diagnostic_failed=True)
+
+    pipe("command", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = _run_test_gateway(
+            mini_repo, None, key="k1-ct-diag-noproposal-001")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 1
+    assert body["ok"] is False
+    assert body["error"]["message"] == '{"echo":"diag"}'
+    assert _read_witness_lines(witness) == [
+        {"operation": TEST_OP, "kind": "diagnostic-failure",
+         "site": None, "code": 1}]
+
+
+def test_gateway_diagnostic_with_commit_emits_exactly_one_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Registered gateway with a committed proposal witnesses once."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"},
+            proposal=_pipe_proposal(mini_repo, "ct-diag"),
+            diagnostic_failed=True)
+
+    pipe("command", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = _run_test_gateway(
+            mini_repo, None, key="k1-ct-diag-commit-001")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 1
+    assert (mini_repo / "work/inbox/ct-diag.md").read_text(
+        encoding="utf-8") == "pipe\n"
+    assert _read_witness_lines(witness) == [
+        {"operation": TEST_OP, "kind": "diagnostic-failure",
+         "site": None, "code": 1}]
+
+
+def test_diagnostic_outputs_identical_with_and_without_witness_env(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Absent witness environment preserves every diagnostic byte."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    def handler(ctx, req):
+        return Result({"echo": "diag"}, diagnostic_failed=True)
+
+    pipe("query", handler=handler)
+    monkeypatch.delenv(SITE_WITNESS_ENV, raising=False)
+    log = tmp_path / "audit.jsonl"
+    arch_audit_hook.install(str(log))
+    try:
+        plain = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    log2 = tmp_path / "audit2.jsonl"
+    arch_audit_hook.install(str(log2))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        witnessed = pipeline_module.run_cli(
+            mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert witnessed.stdout == plain.stdout == '{"echo":"diag"}\n'
+    assert witnessed.stderr == plain.stderr == ""
+    assert witnessed.exit_code == plain.exit_code == 1
+    assert witnessed.payload == plain.payload
+    assert witnessed.error == plain.error
+    assert (witnessed.commit, witnessed.receipt, witnessed.replayed) == (
+        plain.commit, plain.receipt, plain.replayed)
+    assert _read_witness_lines(witness) == [
+        {"operation": TEST_OP, "kind": "diagnostic-failure",
+         "site": None, "code": 1}]
+
+
+def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
+        mini_repo, tmp_path, monkeypatch):
+    """The real backup report is byte-identical with/without the file."""
+    import argparse
+    import shutil
+
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    src = (Path(__file__).resolve().parent / "scenarios" / "files"
+           / "cli.backup-verify" / "checksums-fail" / "manifest.json")
+    manifest = tmp_path / "manifest.json"
+    shutil.copy(src, manifest)
+    restored = {}
+    for name in ("r-core", "r-ui", "r-materials"):
+        path = tmp_path / name
+        path.mkdir()
+        restored[name] = path
+
+    def ns():
+        return argparse.Namespace(
+            root=str(mini_repo), _operation="cli.backup-verify",
+            json=False, manifest=str(manifest),
+            restored_core=str(restored["r-core"]),
+            restored_ui=str(restored["r-ui"]),
+            restored_materials=str(restored["r-materials"]),
+            checksums_only=True)
+
+    monkeypatch.delenv(SITE_WITNESS_ENV, raising=False)
+    log = tmp_path / "audit.jsonl"
+    arch_audit_hook.install(str(log))
+    try:
+        plain = pipeline_module.run_cli(
+            mini_repo, "cli.backup-verify", ns())
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert plain.exit_code == 1
+    assert isinstance(json.loads(plain.stdout), dict)
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    log2 = tmp_path / "audit2.jsonl"
+    arch_audit_hook.install(str(log2))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        witnessed = pipeline_module.run_cli(
+            mini_repo, "cli.backup-verify", ns())
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert witnessed.stdout == plain.stdout
+    assert witnessed.stderr == plain.stderr == ""
+    assert witnessed.exit_code == plain.exit_code == 1
+    assert witnessed.payload == plain.payload
+    assert _read_witness_lines(witness) == [
+        {"operation": "cli.backup-verify",
+         "kind": "diagnostic-failure", "site": None, "code": 1}]
