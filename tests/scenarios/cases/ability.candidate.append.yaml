@@ -53,4 +53,19 @@ cases:
     request: {from_ability: ability-demo-derive, to_ability: ability-demo-derive, kind: connection, carries: "the derivation habit", changes: "the example domain", source_ref: "conversation://fixture/s1"}
     artifact_ids: []
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      from_ability: ability-demo-derive
+      to_ability: ability-demo-variance
+      kind: connection
+      carries: the derivation habit
+      changes: the example domain
+      source_ref: conversation://fixture/s1
+    artifact_ids:
+    - ''
+    expect:
+      site: ability.candidate.append.bad-expected-revision
 untriggered: []

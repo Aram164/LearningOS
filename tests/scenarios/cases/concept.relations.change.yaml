@@ -74,6 +74,22 @@ cases:
     request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
     artifact_ids: [registry-concept-relations]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      change:
+        operations:
+        - action: add
+          new:
+            from: concept-variance
+            to: concept-expected-value
+            type: builds-on
+    artifact_ids:
+    - ''
+    expect:
+      site: concept.relations.change.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
   - {where: "tools/learning_os/ops/_legacy_plumbing.py:966", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}

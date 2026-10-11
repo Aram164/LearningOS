@@ -65,4 +65,15 @@ cases:
     request: {unit_id: unit-demo-l01}
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - shelving-prepare
+    - unit-demo-l01
+    - --expected-revision
+    - bogus
+    expect:
+      site: review.prepare.bad-expected-revision
 untriggered: []

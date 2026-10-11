@@ -59,6 +59,19 @@ cases:
     request: {name: "note-drop.md", drop_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", routed_to: [note-demo]}
     artifact_ids: ["file:archive/inbox/2026/note-drop.md", "file:work/inbox/note-drop.md"]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      name: note-drop.md
+      drop_sha256: sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d
+      routed_to:
+      - note-demo
+    artifact_ids:
+    - ''
+    expect:
+      site: inbox.resolve.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/commands/inbox.py:65", reason: "symlinks: the fixture inbox has none, and no step can create one"}
   - {where: "tools/learning_os/commands/inbox.py:75", reason: "not a regular file or folder: needs a special file no step can create"}

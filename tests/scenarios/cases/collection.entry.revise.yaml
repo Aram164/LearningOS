@@ -89,6 +89,43 @@ cases:
     request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
     artifact_ids: []
     expect: {site: null}
+
+  - id: missing-diff
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+    artifact_ids: []
+    expect:
+      site: collection.entry.revise.needs-expected-diff
+  - id: diff-changed
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+      expected_diff_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+    artifact_ids: []
+    expect:
+      site: collection.entry.revise.diff-changed
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+      expected_diff_sha256: sha256:d8c6bcf1b6ebd8a223150c072b3743d16ee7c303591b7d2b1c61b0f5c70004aa
+    artifact_ids:
+    - ''
+    expect:
+      site: collection.entry.revise.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/commands/collection_entry.py:46", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
   - {where: "tools/learning_os/commands/collection_entry.py:50", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}

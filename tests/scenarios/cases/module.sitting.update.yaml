@@ -47,6 +47,21 @@ cases:
     request: {module_id: module-demo, termin: 2, withdrawal_deadline: "2026-09-30"}
     artifact_ids: [module-demo]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - module-sitting
+    - module-demo
+    - --termin
+    - 2
+    - --withdrawal-deadline
+    - 2026-09-30
+    - --expected-revision
+    - bogus
+    expect:
+      site: module.sitting.update.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/handlers/admin.py:156", reason: "bad termin: the payload enum and argparse choices refuse it first"}
   - {site: module.sitting.update.bad-termin, where: "tools/learning_os/ops/handlers/admin.py:156", reason: guarded-before-handler}

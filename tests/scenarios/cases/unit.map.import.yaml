@@ -172,4 +172,17 @@ cases:
     request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4"}
     artifact_ids: [unit-demo-l02, study-map-demo-l02]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - unit-map-import
+    - unit-demo-l02
+    - --file
+    - <CASEDATA>/map.yaml
+    - --expected-revision
+    - nope
+    expect:
+      site: unit.map.import.bad-expected-revision
 untriggered: []

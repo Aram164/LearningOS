@@ -71,6 +71,21 @@ cases:
     request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
     artifact_ids: [coordination]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - coordination-section-revise
+    - Commitments
+    - --text
+    - Ship it.
+    - --expected-content-sha256
+    - sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
+    - --expected-revision
+    - bogus
+    expect:
+      site: coordination.section.revise.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/handlers/admin.py:232", reason: "unknown section: the payload enum and argparse choices refuse it first"}
   - {where: "tools/learning_os/ops/handlers/admin.py:239", reason: "missing COORDINATION.md: the fixture always carries it, and no step can delete it"}

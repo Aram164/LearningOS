@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "content": "# Kept idea\n\nOriginal wording.",
+      "destination": "knowledge/garden/kept-idea.md",
+      "id": "proposal-keep",
+      "kind": "garden",
+      "rationale": "Worth gestating.",
+      "title": "Keep"
+    },
+    {
+      "content": "# Skipped idea",
+      "destination": "knowledge/garden/skipped-idea.md",
+      "id": "proposal-skip",
+      "kind": "garden",
+      "rationale": "Optional.",
+      "title": "Skip"
+    }
+  ]
+}

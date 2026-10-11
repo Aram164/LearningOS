@@ -98,4 +98,28 @@ cases:
     request: {unit_id: unit-demo-l01, selected: [proposal-keep]}
     artifact_ids: [unit-demo-l01, study-map-demo-l01, proposal-keep]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: sequence
+    steps:
+    - transport: gateway
+      operation: review.prepare
+      request:
+        unit_id: unit-demo-l01
+        items_file: <CASEDATA>/items.json
+        items_file_sha256: sha256:f3cd4927fa60ad66c05875641b68484bfcc0e3ac1691d59e8b3d01d2bff64ccd
+      artifact_ids:
+      - unit-demo-l01
+      - study-map-demo-l01
+    - transport: cli
+      argv:
+      - shelving-apply
+      - unit-demo-l01
+      - --selected
+      - proposal-keep
+      - --approve
+      - --expected-revision
+      - bogus
+    expect:
+      site: review.apply.bad-expected-revision
 untriggered: []

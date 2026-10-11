@@ -96,6 +96,38 @@ cases:
     request: {question: {id: note-demo-question-1, title: "Why does variance build on expectation?", text: "The registry says variance builds on expectation. What breaks if I learn them in the other order?", target: {concepts: [concept-expected-value]}}}
     artifact_ids: [note-demo-question-1]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      question:
+        id: note-demo-q9
+        title: bad revision pin
+        text: a question whose revision pin is malformed
+        target:
+          concepts:
+          - concept-expected-value
+    artifact_ids:
+    - ''
+    expect:
+      site: atlas.question.save.bad-expected-revision
+  - id: bad-question-fields
+    kind: refusal
+    transport: gateway
+    request:
+      question:
+        id: note-demo-q9
+        title: bogus state
+        text: a question whose state value is outside the enum
+        target:
+          concepts:
+          - concept-expected-value
+        state: bogus
+    artifact_ids:
+    - note-demo-q9
+    expect:
+      site: atlas.question.save.bad-question-fields
 untriggered:
   - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
   - {where: "tools/learning_os/ops/handlers/atlas.py:289", reason: "question not an object: the payload type and argparse json_object refuse it first"}

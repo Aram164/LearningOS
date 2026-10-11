@@ -41,6 +41,19 @@ cases:
     request: {workspace_id: workspace-demo, next_action: "Work the appendix example."}
     artifact_ids: [workspace-demo]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - workspace-next-action
+    - workspace-demo
+    - --next-action
+    - Do it.
+    - --expected-revision
+    - bogus
+    expect:
+      site: workspace.next-action.update.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/handlers/admin.py:377", reason: "inactive workspace: the fixture carries two active workspaces, none archived"}
   - {where: "tools/learning_os/ops/handlers/admin.py:386", reason: "missing Next Action section: both fixture workspaces carry it"}

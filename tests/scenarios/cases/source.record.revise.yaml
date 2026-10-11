@@ -658,6 +658,27 @@ cases:
       expected_diff_sha256: "sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34"
     artifact_ids: [source-demo-book]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+        - level: introductory
+          roles:
+          - first-learning
+          strengths:
+          - clear intuition
+          - scenario coverage
+          concepts:
+          - concept-expected-value
+      expected_diff_sha256: sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34
+    artifact_ids:
+    - ''
+    expect:
+      site: source.record.revise.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "binding shape admission: argparse json_object and the payload schema enforce the object shape first"}
   - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "binding shape admission: the argparse required group and the payload oneOf enforce presence first"}

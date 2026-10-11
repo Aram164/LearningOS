@@ -164,6 +164,20 @@ cases:
     request: {note: {id: note-scenario-create-23, title: "Miss", path: "knowledge/notes/mathematics/note-scenario-create-23.md"}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: [note-scenario-create-23]
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    request:
+      note:
+        id: note-scenario-create-24
+        title: Bad revision
+        path: knowledge/notes/mathematics/note-scenario-create-24.md
+      body_file: work/inbox/note-drop.md
+      expected_revision:
+      - oops-no-equals
+    expect:
+      site: note.create.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/handlers/notes.py:309", reason: "symlink in the note path: the fixture carries none, and no step can create one"}
   - {where: "tools/learning_os/ops/handlers/notes.py:385", reason: "note not an object: argparse json_object and the gateway schema both require an object first"}

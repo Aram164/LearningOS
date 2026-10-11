@@ -44,4 +44,16 @@ cases:
     replay_only: true
     request: {text: "A seed that was never planted."}
     expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - garden-seed-create
+    - --text
+    - hello
+    - --expected-revision
+    - bogus
+    expect:
+      site: garden.seed.create.bad-expected-revision
 untriggered: []

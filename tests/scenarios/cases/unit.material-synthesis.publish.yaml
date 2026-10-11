@@ -334,6 +334,67 @@ cases:
           - {concept_id: concept-expected-value, local_node_ids: [knowledge-demo-expectation], related_unit_ids: [unit-demo-l01], bridge_note_ids: [note-demo], narrative: "The local derivation is the canonical expectation concept."}
     artifact_ids: []
     expect: {site: unit.material-synthesis.publish.unknown-unit}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l01
+      record:
+        schema_version: 1
+        id: material-synthesis-demo-l01
+        type: unit-material-synthesis
+        unit_id: unit-demo-l01
+        status: approved
+        basis:
+          material_checksums:
+            route-b2f1f80014860a929a3af0bc: sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5
+          policy: tiered-v2
+          route_set_checksum: sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39
+          source_map_checksum: sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9
+          source_map_revision: 0
+          unit_revision: 3
+          ai_provenance:
+            request_id: ai-request-demo
+            delivery_id: ai-delivery-scenario
+            provider: manual-bundle
+        route_assessments:
+        - route_id: route-b2f1f80014860a929a3af0bc
+          source_id: source-demo-book
+          locator: lecture-01.pdf
+          review_status: deep-reviewed
+          concept_ids:
+          - concept-expected-value
+          contribution: A direct derivation of the weighted sum.
+          assumptions: Finite discrete outcomes are assumed.
+          notation: Uses uppercase X and lowercase outcome values.
+          exercise_value: Includes a small worked calculation.
+          best_for: Checking the lecture core derivation.
+          limitations: Does not cover continuous variables.
+          scope_of_absence: lecture-01.pdf, PDF pp. 1-20
+          evidence:
+          - locator: lecture-01.pdf p.1
+            checksum: sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5
+        comparisons: []
+        concept_groups:
+        - concept_id: concept-variance
+          local_node_ids:
+          - knowledge-demo-outcomes
+          related_unit_ids: []
+          bridge_note_ids: []
+          narrative: Outcome values feed later dispersion measures.
+        - concept_id: concept-expected-value
+          local_node_ids:
+          - knowledge-demo-expectation
+          related_unit_ids:
+          - unit-demo-l01
+          bridge_note_ids:
+          - note-demo
+          narrative: The local derivation is the canonical expectation concept.
+    artifact_ids:
+    - ''
+    expect:
+      site: unit.material-synthesis.publish.bad-expected-revision
 untriggered:
   - {where: "tools/learning_os/ops/handlers/plan.py:422", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
   - {where: "tools/learning_os/ops/handlers/plan.py:426", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
