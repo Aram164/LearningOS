@@ -49,4 +49,33 @@ cases:
     request: {unit_id: unit-demo-l01, detour_id: detour-revisit-expectation}
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: sequence
+    steps:
+    - transport: gateway
+      operation: detour.create
+      request:
+        unit_id: unit-demo-l01
+        stage_id: stage-demo
+        title: Revisit expectation
+        classification: required-now
+      artifact_ids:
+      - unit-demo-l01
+      - study-map-demo-l01
+    - transport: cli
+      argv:
+      - detour-resolve
+      - unit-demo-l01
+      - detour-revisit-expectation
+      - --expected-revision
+      - bogus
+    expect: {site: detour.resolve.bad-expected-revision}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      detour_id: detour-nope
+    artifact_ids: []
+    expect: {site: detour.resolve.no-study-map}
 untriggered: []

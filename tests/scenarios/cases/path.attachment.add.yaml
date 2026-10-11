@@ -53,4 +53,16 @@ cases:
     request: {path_id: path-demo, stage_id: stage-demo-path, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: [path-demo]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - path-attach
+    - path-demo
+    - stage-demo-path
+    - --file
+    - work/inbox/note-drop.md
+    - --expected-revision
+    - bogus
+    expect: {site: path.attachment.add.bad-expected-revision}
 untriggered: []

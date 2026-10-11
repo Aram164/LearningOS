@@ -53,4 +53,26 @@ cases:
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - stage-attach
+    - unit-demo-l01
+    - stage-demo
+    - --file
+    - work/inbox/note-drop.md
+    - --expected-revision
+    - bogus
+    expect: {site: stage.attachment.add.bad-expected-revision}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      stage_id: stage-demo
+      file: work/inbox/note-drop.md
+      file_sha256: sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d
+    artifact_ids: []
+    expect: {site: stage.attachment.add.no-study-map}
 untriggered: []

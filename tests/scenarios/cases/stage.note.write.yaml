@@ -53,6 +53,27 @@ cases:
     request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "A derivation worth keeping."}
     artifact_ids: [unit-demo-l01]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - stage-note
+    - unit-demo-l01
+    - stage-demo
+    - --text
+    - hello
+    - --expected-revision
+    - bogus
+    expect: {site: stage.note.write.bad-expected-revision}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      stage_id: stage-demo
+      text: A derivation worth keeping.
+    artifact_ids: []
+    expect: {site: stage.note.write.no-study-map}
 untriggered:
   - {where: "tools/learning_os/commands/stage.py:46", reason: "no working_note: every rich_world stage carries one, and no operation clears it"}
   - {site: stage.note.write.no-working-note, where: "tools/learning_os/ops/handlers/learner.py:270", reason: fixture-inexpressible}

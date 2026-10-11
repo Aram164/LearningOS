@@ -51,6 +51,17 @@ cases:
     request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
     artifact_ids: [path-demo]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - path-progress
+    - path-demo
+    - stage-demo-path
+    - active
+    - --expected-revision
+    - bogus
+    expect: {site: path.progress.update.bad-expected-revision}
 untriggered:
   - {where: "tools/learning_os/commands/path.py:114", reason: "unknown status: argparse choices and payload_to_namespace enforce the value set first"}
   - {site: path.progress.update.unknown-status, where: "tools/learning_os/ops/handlers/learner.py:487", reason: guarded-before-handler}

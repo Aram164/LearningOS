@@ -53,4 +53,16 @@ cases:
     request: {path_id: path-demo, stage_id: stage-demo-path, text: "nowhere to land"}
     artifact_ids: [path-demo]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - path-note
+    - path-demo
+    - stage-demo-path
+    - --text
+    - hello
+    - --expected-revision
+    - bogus
+    expect: {site: path.note.write.bad-expected-revision}
 untriggered: []

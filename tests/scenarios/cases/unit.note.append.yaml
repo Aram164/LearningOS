@@ -74,6 +74,26 @@ cases:
     request: {unit_id: unit-demo-l01, title: "First session", text: "Worked the derivation."}
     artifact_ids: [unit-demo-l01]
     expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - unit-note
+    - unit-demo-l01
+    - --text
+    - hello
+    - --expected-revision
+    - bogus
+    expect: {site: unit.note.append.write-failed}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      title: First session
+      text: Worked the derivation.
+    artifact_ids: []
+    expect: {site: unit.note.append.no-study-map}
 untriggered:
   - {where: "tools/learning_os/commands/unit.py:621", reason: "working-note escape: the unit default stays inside the repository, and no operation writes a crafted working_note"}
   - {site: unit.note.append.note-outside-repo, where: "tools/learning_os/ops/handlers/learner.py:828", reason: fixture-inexpressible}
