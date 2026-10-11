@@ -73,4 +73,4 @@ cases:
     expect: {site: detour.create.no-study-map}
 untriggered:
   - {where: "tools/learning_os/commands/detour.py:60", reason: "unknown classification: argparse choices and payload_to_namespace enforce the value set first"}
-  - {site: detour.create.unknown-classification, where: "tools/learning_os/ops/handlers/learner.py:602", reason: guarded-before-handler}
+  - {site: detour.create.unknown-classification, where: "tools/learning_os/ops/handlers/learner.py:610", reason: guarded-before-handler}

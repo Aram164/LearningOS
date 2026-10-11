@@ -95,6 +95,6 @@ cases:
     artifact_ids: []
     expect: {site: unit.note.append.no-study-map}
 untriggered:
-  - {where: "tools/learning_os/commands/unit.py:621", reason: "working-note escape: the unit default stays inside the repository, and no operation writes a crafted working_note"}
-  - {site: unit.note.append.note-outside-repo, where: "tools/learning_os/ops/handlers/learner.py:828", reason: fixture-inexpressible}
-  - {where: "tools/learning_os/commands/unit.py:728", reason: "cannot write unit note: needs an OSError mid-write (unwritable path)"}
+  - {where: "tools/learning_os/ops/handlers/learner.py:836", reason: "working-note escape: the unit default stays inside the repository, and no operation writes a crafted working_note"}
+  - {site: unit.note.append.note-outside-repo, where: "tools/learning_os/ops/handlers/learner.py:836", reason: fixture-inexpressible}
+  - {where: "tools/learning_os/ops/handlers/learner.py:904", reason: "cannot write unit note: needs an OSError mid-write (unwritable path)"}

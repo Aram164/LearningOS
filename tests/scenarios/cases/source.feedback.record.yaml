@@ -84,4 +84,4 @@ cases:
     expect: {site: source.feedback.record.no-study-map}
 untriggered:
   - {where: "tools/learning_os/commands/source.py:62", reason: "resource/source mismatch: rich_world has a single source, so a valid second source_id cannot be named"}
-  - {site: source.feedback.record.wrong-source, where: "tools/learning_os/ops/handlers/learner.py:729", reason: fixture-inexpressible}
+  - {site: source.feedback.record.wrong-source, where: "tools/learning_os/ops/handlers/learner.py:737", reason: fixture-inexpressible}

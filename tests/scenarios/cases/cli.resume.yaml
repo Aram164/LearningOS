@@ -33,5 +33,5 @@ cases:
     argv: [resume, --unit, unit-demo-l01]
     expect: {site: cli.resume.unit-without-study}
 untriggered:
-  - {where: "tools/learning_os/commands/resume.py:567", reason: "unresolvable stage: the fixture pointer resolves, and no step can break it"}
-  - {where: "tools/learning_os/commands/resume.py:650", reason: "dossier build failure: needs dossier-breaking data no step can author"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:2034", reason: "unresolvable stage: the fixture pointer resolves, and no step can break it"}
+  - {where: "tools/learning_os/ops/handlers/reads.py:2122", reason: "dossier build failure: needs dossier-breaking data no step can author"}

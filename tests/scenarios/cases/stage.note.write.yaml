@@ -76,4 +76,4 @@ cases:
     expect: {site: stage.note.write.no-study-map}
 untriggered:
   - {where: "tools/learning_os/commands/stage.py:46", reason: "no working_note: every rich_world stage carries one, and no operation clears it"}
-  - {site: stage.note.write.no-working-note, where: "tools/learning_os/ops/handlers/learner.py:270", reason: fixture-inexpressible}
+  - {site: stage.note.write.no-working-note, where: "tools/learning_os/ops/handlers/learner.py:278", reason: fixture-inexpressible}

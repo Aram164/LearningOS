@@ -84,4 +84,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/stage.py:168", reason: "unknown status: argparse choices and payload_to_namespace enforce the value set first"}
-  - {site: stage.progress.update.unknown-status, where: "tools/learning_os/ops/handlers/learner.py:194", reason: guarded-before-handler}
+  - {site: stage.progress.update.unknown-status, where: "tools/learning_os/ops/handlers/learner.py:202", reason: guarded-before-handler}

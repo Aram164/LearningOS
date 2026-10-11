@@ -296,5 +296,5 @@ cases:
     artifact_ids: [unit-demo-l01, material-synthesis-demo-l01]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/vnext.py:56", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/vnext.py:60", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:422", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/ops/handlers/plan.py:426", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
