@@ -743,14 +743,64 @@ def _check_owner_inspect_miss(result: dict, *, miss: str, domain: list,
         f"A5 inspect miss committed {result['receipts']} — {FIX}")
 
 
+def _cli_sequence_failure(pointer: str, miss: str, domain: list,
+                          message: str):
+    """The handler's failure for a CLI sequence miss (SPEC (cd) 2).
+
+    The same class, kind word and message the service raises with
+    (``append_slices`` in ``service.py``), over the oracle's
+    enumerated domain.
+    """
+    from learning_os.ai_actions.errors import (
+        ConceptNotFound,
+        RouteNotFound,
+    )
+
+    if pointer == "/properties/route_id":
+        return RouteNotFound("route", miss, domain, message=message)
+    return ConceptNotFound("concept", miss, domain, message=message)
+
+
+def _cli_sequence_stderr(failure, message: str, *, miss: str,
+                         domain: list) -> str:
+    """The (cd) 2 rendering of one CLI sequence miss.
+
+    Reproduces ``ops/pipeline.py`` exactly: ``los: message`` plus one
+    ``  did you mean: s`` line per suggestion not contained in the
+    message, where the suggestions are the failure's own. (cd) 2
+    guards: the candidates the failure uses must equal the
+    ``_lookup_domain`` list, and the failure carries no remedy and no
+    extra lines.
+    """
+    from learning_os.domain import suggest as suggest_mod
+
+    assert list(failure.suggestions) == suggest_mod.suggestions(
+        miss, domain), (
+        f"A5 CLI miss suggestions {failure.suggestions!r} differ from "
+        f"suggest.suggestions over the domain — {FIX}")
+    assert failure.remedy is None, (
+        f"A5 CLI miss failure carries remedy {failure.remedy!r} — {FIX}")
+    assert failure.extra_stderr == (), (
+        f"A5 CLI miss failure carries extra lines "
+        f"{failure.extra_stderr!r} — {FIX}")
+    lines = ["los: " + message]
+    for shown in failure.suggestions:
+        if shown not in message:
+            lines.append(f"  did you mean: {shown}")
+    return "\n".join(lines) + "\n"
+
+
 def _check_cli_sequence_miss(result: dict, *, want_exit: int,
-                             want_code: str, want_message: str) -> None:
-    """The (cb) CLI-sequence oracle: the (ay) shape for a sequence anchor.
+                             want_code: str, want_message: str,
+                             miss: str, domain: list, pointer: str,
+                             want_outcome: str) -> None:
+    """The (cd) CLI-sequence oracle: the (ay) shape for a sequence anchor.
 
     Exit is the anchor's ``steps[-1].exit``; stdout is empty; the live
     stderr matches ``_D16_RE`` with the handler failure class's code;
-    the D16-stripped stderr equals ``"los: " + MESSAGE_FORM rendering
-    + "\\n"``; outcome refused, no canonical change, no receipts.
+    the D16-stripped stderr equals the (cd) 2 rendering; outcome is
+    the anchor's recorded ``steps[-1]`` outcome; no canonical change,
+    no receipts.
     """
     import scenario_harness as harness
 
@@ -766,10 +816,15 @@ def _check_cli_sequence_miss(result: dict, *, want_exit: int,
         f"A5 CLI miss code {code_match.group(1)!r}, want "
         f"{want_code!r} — {FIX}")
     normalized = harness._D16_RE.sub("los: ", result["stderr"])
-    assert normalized == f"los: {want_message}\n", (
+    failure = _cli_sequence_failure(pointer, miss, domain, want_message)
+    assert normalized == _cli_sequence_stderr(
+        failure, want_message, miss=miss, domain=domain), (
         f"A5 CLI miss complaint differs — {FIX}")
-    assert result["outcome"] == "refused", (
-        f"A5 CLI miss outcome is {result['outcome']} — {FIX}")
+    assert want_outcome == "diagnostic-failure", (
+        f"A5 CLI miss anchor outcome is {want_outcome} — {FIX}")
+    assert result["outcome"] == want_outcome, (
+        f"A5 CLI miss outcome is {result['outcome']}, want "
+        f"{want_outcome} — {FIX}")
     assert result["canonical_changed"] == {}, (
         f"A5 CLI miss changed canonical bytes "
         f"{sorted(result['canonical_changed'])} — {FIX}")
@@ -957,12 +1012,12 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("unit.source-selection.set", "/properties/source_id"):
         ("prefixed", "source"),
     ("cli.ai-action-append-slices", "/properties/route_id"):
-        ("legacy", "route {miss} is not part of this request's unit"),
+        ("legacy-verbatim",
+         "route {miss} is not part of this request's unit"),
     ("cli.ai-action-append-slices", "/properties/concept_id/items"):
         ("legacy-verbatim",
          "route route-b2f1f80014860a929a3af0bc continuation refused: "
-         "unknown concept ids: ['{miss}']\n"
-         "  did you mean: concept-variance"),
+         "unknown concept ids: ['{miss}']"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -973,9 +1028,9 @@ INSPECT_REFUSAL_CASE: dict[tuple[str, str], str] = {
     ("project.inspect", "/properties/more_ids/items"): "batch-unknown-member",
 }
 
-#: The two CLI sequence anchors (SPEC (cb)): their recordings carry
-#: no error object and a D16-stripped stderr; they use the (ay) CLI
-#: oracle shape generalized to a sequence anchor.
+#: The two CLI sequence anchors (SPEC (cb), oracle (cd)): their
+#: recordings carry no error object and a D16-stripped stderr; they
+#: use the (ay) CLI oracle shape generalized to a sequence anchor.
 _CLI_SEQUENCE_POINTERS = frozenset({
     ("cli.ai-action-append-slices", "/properties/route_id"),
     ("cli.ai-action-append-slices", "/properties/concept_id/items"),
@@ -1143,13 +1198,14 @@ def test_message_forms_rebuild_recorded_complaints(
     if (operation, pointer) in _CLI_SEQUENCE_POINTERS:
         domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
             tmp_path, operation, pointer)
-        rebuilt = _render_message_form(MESSAGE_FORM[(operation, pointer)],
-                                       miss, domain)
-        # (cb) 1's shape: the D16-stripped recording equals "los: " +
-        # rendering + "\n" (the recording is already D16-stripped;
-        # the bare rendering lacks the prefix and newline even for
-        # the specified route entry).
-        assert f"los: {rebuilt}\n" == recorded_stderr, (
+        message = _render_message_form(
+            MESSAGE_FORM[(operation, pointer)], miss, domain)
+        failure = _cli_sequence_failure(pointer, miss, domain, message)
+        rebuilt = _cli_sequence_stderr(
+            failure, message, miss=miss, domain=domain)
+        # (cd) 4: the same rendering as the probe oracle, at the
+        # anchor's miss, against the recorded steps[-1].stderr.
+        assert rebuilt == recorded_stderr, (
             f"A5 {operation}::{pointer}: the tabled form rebuilds "
             f"{rebuilt!r}, recorded {recorded_stderr!r} — {FIX}")
         return
@@ -1185,8 +1241,11 @@ def _mutant_rebuild(tmp_path, operation: str, pointer: str,
     if (operation, pointer) in _CLI_SEQUENCE_POINTERS:
         domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
             tmp_path, operation, pointer)
-        return (f"los: {_render_message_form(form, miss, domain)}\n",
-                recorded_stderr)
+        message = _render_message_form(form, miss, domain)
+        failure = _cli_sequence_failure(pointer, miss, domain, message)
+        return (_cli_sequence_stderr(
+            failure, message, miss=miss, domain=domain),
+            recorded_stderr)
     _, case_id = POINTER_SITE_CASE[(operation, pointer)]
     case = _merged_case(operation, _anchor_case(operation, case_id))
     ctx = harness._prepare_world(
@@ -1347,10 +1406,10 @@ def test_message_form_legacy_lines_suggested_mutant_fails(tmp_path, operation,
 
 
 def test_message_form_cli_sequence_route_mutant_fails(tmp_path):
-    """The route entry's wrong form cannot rebuild the anchor (cb 3).
+    """The route entry's wrong form cannot rebuild the anchor (cd 4).
 
-    The legacy complaint rendered as a plain template misses the
-    recorded bytes.
+    The message-only complaint rendered as a plain template misses
+    the recorded bytes.
     """
     rebuilt, recorded = _mutant_rebuild(
         tmp_path, "cli.ai-action-append-slices", "/properties/route_id",
@@ -1360,23 +1419,30 @@ def test_message_form_cli_sequence_route_mutant_fails(tmp_path):
         f"form still rebuilds {recorded!r} — {FIX}")
 
 
-def test_message_form_cli_sequence_concept_mutant_fails(tmp_path):
-    """The concept entry's wrong suggestion cannot rebuild it (cb 3).
+def test_message_form_cli_sequence_concept_dropped_line_fails(
+        tmp_path):
+    """The concept anchor needs its suggestion line (cd 4).
 
-    The recorded second line names concept-variance; swapping in the
-    other domain member misses the bytes.
+    The recorded stderr carries the pipeline's separate ``did you
+    mean:`` line; the bare message alone misses the bytes.
     """
-    _, text = MESSAGE_FORM[("cli.ai-action-append-slices",
-                            "/properties/concept_id/items")]
-    assert "concept-variance" in text
-    mutant = text.replace("concept-variance", "concept-expected-value")
-    rebuilt, recorded = _mutant_rebuild(
-        tmp_path, "cli.ai-action-append-slices",
-        "/properties/concept_id/items",
-        ("legacy-verbatim", mutant))
-    assert rebuilt != recorded, (
-        "A5 cli.ai-action-append-slices::/properties/concept_id/items: "
-        f"a wrong suggestion still rebuilds {recorded!r} — {FIX}")
+    from learning_os.domain.suggest import suggestions
+
+    operation = "cli.ai-action-append-slices"
+    pointer = "/properties/concept_id/items"
+    domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
+        tmp_path, operation, pointer)
+    message = _render_message_form(MESSAGE_FORM[(operation, pointer)],
+                                   miss, domain)
+    shown = [seen for seen in suggestions(miss, domain)
+             if seen not in message]
+    assert shown, (
+        f"A5 {operation}::{pointer}: the anchor renders no "
+        f"suggestion line to drop — {FIX}")
+    dropped = f"los: {message}\n"
+    assert dropped != recorded_stderr, (
+        f"A5 {operation}::{pointer}: a dropped suggestion line still "
+        f"rebuilds {recorded_stderr!r} — {FIX}")
 
 
 #: The (bv) 1 S1 pointers: one per new domain branch kind.
@@ -1616,28 +1682,23 @@ def _check_probe(result: dict, operation: str, row: dict, position,
             want_message=want_message, want_retryable=want_retryable)
         return
     if (operation, row["pointer"]) in _CLI_SEQUENCE_POINTERS:
-        from learning_os.ai_actions.errors import (
-            ConceptNotFound,
-            RouteNotFound,
-        )
         from learning_os.ops.pipeline import _cli_error_code
 
-        # (cb) 1: exit from the anchor's last step; code from the
-        # handler's failure class for that miss; message from the
-        # pointer's MESSAGE_FORM entry. _recorded_exit_and_error is
-        # not used for CLI anchors.
+        # (cd): exit and outcome from the anchor's last step; code
+        # from the handler's failure class for that miss; message
+        # from the pointer's MESSAGE_FORM entry.
+        # _recorded_exit_and_error is not used for CLI anchors.
         _, case_id = POINTER_SITE_CASE[(operation, row["pointer"])]
-        want_exit = _recorded_cli_last_step(operation, case_id)["exit"]
-        if row["pointer"] == "/properties/route_id":
-            want_code, _ = _cli_error_code(
-                RouteNotFound("route", miss, domain_list))
-        else:
-            want_code, _ = _cli_error_code(
-                ConceptNotFound("concept", miss, domain_list))
+        last = _recorded_cli_last_step(operation, case_id)
+        want_message = _canonical_message(operation, row, miss,
+                                          domain_list)
+        want_code, _ = _cli_error_code(
+            _cli_sequence_failure(row["pointer"], miss, domain_list,
+                                  want_message))
         _check_cli_sequence_miss(
-            result, want_exit=want_exit, want_code=want_code,
-            want_message=_canonical_message(operation, row, miss,
-                                            domain_list))
+            result, want_exit=last["exit"], want_code=want_code,
+            want_message=want_message, miss=miss, domain=domain_list,
+            pointer=row["pointer"], want_outcome=last["outcome"])
         return
     want_exit, want_code = _canonical_expectations(
         operation, row["pointer"])
