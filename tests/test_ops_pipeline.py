@@ -496,6 +496,146 @@ def test_cli_proposal_runs_after_commit_then_finish(pipe, mini_repo):
         encoding="utf-8") == "pipe\n"
 
 
+def _pipe_gesture(ctx, capability: str):
+    """The (br) R7 handler-built context, exactly as `los observe` builds it."""
+    from learning_os import observations
+    from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
+
+    snapshot = ctx.snapshot_id()
+    subject = intent_sha256({
+        "schema_version": 2,
+        "capability": capability,
+        "channel": "operator",
+        "expected_snapshot": snapshot,
+        "expected_revisions": {},
+        "payload": {},
+    })
+    key = observations.new_hex()
+    return GatewayRequestContext(
+        request_id=f"observe-{key}",
+        idempotency_key=f"observe-{key}",
+        capability=capability,
+        channel="operator",
+        intent_sha256=subject,
+        approval_kind="direct-user-gesture",
+        approval_subject_sha256=subject,
+        expected_snapshot=snapshot,
+    )
+
+
+def test_cli_gesture_commit_succeeds_with_a_receipt(pipe, mini_repo):
+    """SPEC (br) R7: the same proposal with a gesture commits on the CLI."""
+    from learning_os.contracts.gateway import current_gateway_request
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "gesture"),
+            gesture=_pipe_gesture(ctx, TEST_OP))
+
+    pipe("command", handler=handler)
+    assert current_gateway_request() is None
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert outcome.ok is True
+    assert outcome.commit == "committed"
+    assert outcome.receipt["transaction_id"].startswith("transaction-")
+    assert outcome.receipt["receipt_path"]
+    body = json.loads(outcome.stdout)
+    assert body["transaction_id"] == outcome.receipt["transaction_id"]
+    assert (mini_repo / "work/inbox/gesture.md").read_text(
+        encoding="utf-8") == "pipe\n"
+    assert current_gateway_request() is None
+
+
+def test_cli_gesture_refusal_resets_the_context(pipe, mini_repo):
+    """SPEC (br) R7: a refused gesture commit still resets the context."""
+    from learning_os.contracts.gateway import (
+        current_gateway_request,
+        gateway_snapshot_is_verified,
+    )
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        proposal = TransactionProposal(
+            capability=TEST_OP,
+            writes={mini_repo: "pipe\n"},
+            artifact_ids=("test-only:dir",),
+            expected_revisions={},
+        )
+        return Result(
+            {"echo": "x"}, proposal=proposal,
+            gesture=_pipe_gesture(ctx, TEST_OP))
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 2
+    assert outcome.ok is False
+    assert outcome.commit == "none"
+    assert current_gateway_request() is None
+    assert not gateway_snapshot_is_verified(mini_repo, "sha256:" + "0" * 64)
+
+
+def test_cli_gesture_under_a_gateway_request_is_a_programming_error(
+        pipe, mini_repo):
+    """SPEC (br) R7: a gesture under an ambient gateway context raises."""
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "nested"),
+            gesture=_pipe_gesture(ctx, TEST_OP))
+
+    pipe("command", handler=handler)
+    with _gateway_context(TEST_OP, "cli-nested-001"):
+        with pytest.raises(AssertionError, match="needs no ambient"):
+            pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert not (mini_repo / "work/inbox/nested.md").exists()
+
+
+def test_cli_gesture_handler_refuses_a_non_admitted_capability(
+        pipe, mini_repo):
+    """SPEC (br) R7: the handler refuses before any write unless admitted."""
+    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.ops.legacy import gesture_allowed
+
+    def handler(ctx, req):
+        if not gesture_allowed(TEST_OP):
+            raise WriteRefused(
+                "the direct test path is not admitted",
+                site="test-only.pipe.not-admitted",
+                gateway_message="los: the direct test path is not admitted",
+                exit_code=2,
+            )
+        return Result({"echo": "x"})
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 2
+    assert outcome.ok is False
+    assert outcome.commit == "none"
+    assert outcome.stderr == "los: INVALID_REQUEST: the direct test path is not admitted\n"
+    assert current_gateway_request() is None
+
+
+def test_observation_core_without_a_context_keeps_the_direct_cli_guard(
+        mini_repo):
+    """SPEC (br) R7: without a gesture the observe core refuses directly."""
+    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers.learner import observation_append
+
+    assert current_gateway_request() is None
+    ctx = OpContext(
+        root=mini_repo, operation="learner.observation.append",
+        channel="cli", invocation="command", gateway=None)
+    with pytest.raises(WriteRefused) as caught:
+        observation_append(ctx, {})
+    assert caught.value.site == "learner.observation.append.direct-cli"
+
+
 def test_cli_proposal_merges_confirmation_by_default(pipe, mini_repo):
     """Without finish, success renders {**payload, **confirmation}."""
 

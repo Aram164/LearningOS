@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from learning_os.contracts.gateway import (
+    current_gateway_request,
     gateway_request_context,
     verified_gateway_snapshot,
 )
@@ -152,6 +153,24 @@ def _resolve_after_commit(
     return value
 
 
+def _commit_with_gesture(ctx, operation: str, result):
+    """Commit one handler result, entering a gesture context when set.
+
+    SPEC (br) R7: a terminal direct-user-gesture write commits inside the
+    handler-built context, exactly as `los observe` does. A gesture under
+    an ambient gateway request is a programming error: the handler must
+    not be reached that way. Without a gesture this is commit_proposal.
+    """
+    if result.gesture is None:
+        return commit_proposal(ctx, result.proposal)
+    if current_gateway_request() is not None:
+        raise AssertionError(
+            f"{operation}: a gesture commit needs no ambient gateway request")
+    with gateway_request_context(result.gesture), verified_gateway_snapshot(
+            ctx.root, result.gesture.expected_snapshot):
+        return commit_proposal(ctx, result.proposal)
+
+
 def run_cli(root: Path, operation: str, args) -> Outcome:
     """Run registered ``operation`` for a direct CLI invocation (SPEC 11.2).
 
@@ -196,8 +215,8 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             captured, errors = io.StringIO(), io.StringIO()
             with contextlib.redirect_stdout(captured), \
                     contextlib.redirect_stderr(errors):
-                code, commit_errors, confirmation = commit_proposal(
-                    ctx, result.proposal)
+                code, commit_errors, confirmation = _commit_with_gesture(
+                    ctx, operation, result)
                 if code == 0:
                     commit = "committed"
                     receipt = {key: confirmation.get(key) for key in (
@@ -894,7 +913,8 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
         return 0, final
     captured, errors = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
-        code, commit_errors, confirmation = commit_proposal(ctx, res.proposal)
+        code, commit_errors, confirmation = _commit_with_gesture(
+            ctx, operation, res)
         if res.after_commit is not None:
             after_commit = _resolve_after_commit(res.after_commit)
             after_commit(code, commit_errors, confirmation)
