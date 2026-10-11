@@ -271,11 +271,12 @@ def test_registered_guards_auto_pins_read_costs(
 
     stage.note.write is registered, so the public selector
     (``seal_envelope.main --guards auto``) derives through
-    ``_derive_registered_guards``: the seal's bare snapshot walk, the
-    handler's single live load for its planner, one shadow load staging
-    the proposal, and exactly one validation per the check contract
-    (``check_proposal`` "Exactly one validate call" -> ``validate`` ->
-    one ``Validator.run``).
+    ``_derive_registered_guards``: one live snapshot walk shared through
+    the check context's cache (``ctx.snapshot_id()`` supplies both the
+    seal token and the check record), the handler's single live load for
+    its planner, one shadow load staging the proposal, and exactly one
+    validation per the check contract (``check_proposal`` "Exactly one
+    validate call" -> ``validate`` -> one ``Validator.run``).
 
     Legacy derivation is patched to fail: a selector regression routing
     this converted operation to ``_derive_guards_auto`` fails here.
@@ -283,12 +284,11 @@ def test_registered_guards_auto_pins_read_costs(
     _operation`` (the stale-test failure this repair replaces), so the
     mutant cannot silently succeed.
 
-    STOP (Task55 NEEDS-DECISION-1): the seal walks the live tree twice
-    (``live_snapshot`` at seal_envelope.py:278 plus the check record's
-    ``ctx.snapshot_id()`` at ops/check.py:150), same digest under the same
-    lock. F4's one-walk invariant needs a production fix (seed the check
-    context with the live snapshot) or a spec amendment allowing the
-    record walk. Pinned at 2 with both walks attributed live, not hidden.
+    The one-walk pin is the SPEC (co) proof: a restored duplicate walk
+    (the record re-walking instead of reusing the cached token) reads
+    ``walks == 2`` and fails here. An explicit caller snapshot never
+    seeds the cache, so the record keeps its independent walk on that
+    path; this test covers the default read-live path.
     """
     import functools
 
@@ -378,8 +378,8 @@ def test_registered_guards_auto_pins_read_costs(
     assert counts["live_loads"] == 1, counts
     assert counts["shadow_loads"] == 1, counts
     assert counts["load_repo"] == 2, counts
-    assert counts["walks"] == 2, counts
-    assert counts["live_walks"] == 2, counts
+    assert counts["walks"] == 1, counts
+    assert counts["live_walks"] == 1, counts
     assert counts["validate"] == 1, counts
     assert canonical_fingerprint(mini_repo) == before
     assert {path for path in mini_repo.rglob("*")} == tree_before
@@ -424,26 +424,60 @@ def test_public_selector_routes_converted_stage_note_write(
 
 
 def test_legacy_guards_auto_reads_the_live_tree_once(
-        mini_repo: Path, monkeypatch):
+        mini_repo: Path, tmp_path: Path, monkeypatch):
     """F4 (legacy branch): an unregistered seal loads once and walks once.
 
-    workspace.next-action.update is still unregistered, so it takes the
-    legacy dry-run path: the seal's bare snapshot walk plus the handler's
-    single load, with no validation (interception stops at the transaction
-    boundary before any check). Preserves the original zero-validation
-    invariant on a real capability and fixture.
+    module.plan.import is a permanent Phase3 deferral (SPEC (bs) item 5:
+    it converts with the transport adapter in PLAN 4.1, unlike
+    workspace.next-action.update, which the final wave converts), so it
+    takes the legacy dry-run path: the seal's bare snapshot walk plus
+    the handler's single load, with no validation (interception stops at
+    the transaction boundary before any check). Preserves the original
+    zero-validation invariant on a real capability and fixture.
     """
     import functools
     import sys
 
     import seal_envelope
-    from repo_builders import material_fixture
+    import yaml
+    from repo_builders import add_curriculum
 
     import learning_os.fingerprint as fingerprint_module
     import learning_os.loader as loader_module
     from learning_os.rules.core import Validator
 
-    material_fixture(mini_repo)
+    add_curriculum(mini_repo)
+    audit_rel = "work/active/workspace-demo/outputs/demo-coverage-audit.md"
+    audit = mini_repo / audit_rel
+    audit.parent.mkdir(parents=True, exist_ok=True)
+    audit.write_text(
+        "# Complete demo coverage audit\n\n## Local inventory\n\nDone.\n\n"
+        "## Linked inventory\n\nDone.\n\n## Completeness sign-off\n\nDone.\n",
+        encoding="utf-8",
+    )
+    package = tmp_path / "module-plan.yaml"
+    package.write_text(
+        yaml.safe_dump(
+            {
+                "module_id": "module-demo",
+                "plan_contract": {
+                    "version": 2,
+                    "plan_template_version": 1,
+                    "coverage_audit": audit_rel,
+                    "checks": {
+                        "local_inventory_complete": True,
+                        "linked_inventory_complete": True,
+                        "materials_opened_and_content_checked": True,
+                        "current_and_prior_scope_reconciled": True,
+                        "duplicates_and_numbering_checked": True,
+                        "exclusions_and_unresolved_gaps_recorded": True,
+                    },
+                },
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
     before = canonical_fingerprint(mini_repo)
     tree_before = {path for path in mini_repo.rglob("*")}
     counts = {"load_repo": 0, "walks": 0, "validate": 0}
@@ -474,15 +508,15 @@ def test_legacy_guards_auto_reads_the_live_tree_once(
             monkeypatch.setattr(module, "load_repo", load_counter)
 
     snapshot, derived = seal_envelope._derive_guards_auto(
-        mini_repo, capability="workspace.next-action.update",
-        payload={"workspace_id": "workspace-demo",
-                 "next_action": "A counted action"},
+        mini_repo, capability="module.plan.import",
+        payload={"module_id": "module-demo", "file": str(package),
+                 "file_sha256": file_sha256(package)},
         key="guards-auto-legacy-once-001",
         request_id="request-guards-auto-legacy-once-001",
         channel="operator", approval_kind="operator-approval", snapshot=None)
 
     assert snapshot == f"sha256:{before}"
-    assert derived == {"workspace-demo": 0}
+    assert derived == {"module-demo": 0}
     assert counts["load_repo"] == 1, counts
     assert counts["walks"] == 1, counts
     assert counts["validate"] == 0, counts

@@ -275,7 +275,19 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         expected_snapshot=None,  # set once the snapshot below is read
     )
     with _operator_lock(root):
-        live_snapshot = snapshot or f"sha256:{canonical_fingerprint(root)}"
+        # SPEC (co): one context, one walk. The context is built before
+        # the snapshot read so the seal reuses its cached walk; the check
+        # record below then reads the same cached token instead of
+        # walking again. An explicit caller snapshot never seeds the
+        # cache: the record keeps its independent walk.
+        ctx = OpContext(
+            root=root,
+            operation=capability,
+            channel=channel,
+            invocation="check",
+            gateway=context,
+        )
+        live_snapshot = snapshot or ctx.snapshot_id()
         envelope_stub["expected_snapshot"] = live_snapshot
         context = GatewayRequestContext(
             request_id=context.request_id,
@@ -287,13 +299,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
             approval_subject_sha256=context.approval_subject_sha256,
             expected_snapshot=live_snapshot,
         )
-        ctx = OpContext(
-            root=root,
-            operation=capability,
-            channel=channel,
-            invocation="check",
-            gateway=context,
-        )
+        ctx.gateway = context
         with gateway_request_context(context), verified_gateway_snapshot(
                 root, live_snapshot):
             try:
