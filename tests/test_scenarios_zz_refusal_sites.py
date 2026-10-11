@@ -132,16 +132,30 @@ def _assert_shares_entry_point_handler(operation: str,
         f"entry-point operation — {FIX}")
 
 
-def _twin_callers(path: Path) -> tuple[dict[str, set[str]],
-                                     dict[str, str]]:
+#: Bound on the twin-call map cache: the handler tree holds about
+#: twenty files, so 64 keeps every live entry while bounding growth.
+_TWIN_CALLERS_CACHE_MAX = 64
+
+#: Exact source text -> the ``(calls, shared)`` map it analyzes to
+#: (SPEC (cm)). The analysis is pure over the text; the path is
+#: still read on every call, so edited source selects a fresh
+#: entry. Only this static map is cached — never REGISTRY, the
+#: census, witnesses or proof state. Callers must not mutate the
+#: returned maps.
+_TWIN_CALLERS_CACHE: dict[
+    str, tuple[dict[str, set[str]], dict[str, str]]] = {}
+
+
+def _analyze_twin_source(source: str) -> tuple[dict[str, set[str]],
+                                               dict[str, str]]:
     """Static calls per top-level function, plus ``_shared`` aliases.
 
     Returns ``(calls, shared)`` where ``calls[func]`` is every bare
     name ``func`` calls (nested functions included) and
     ``shared[local]`` is the ``_shared.py`` twin a
-    ``from ... _shared import ...`` name binds.
+    ``from ... _shared import ...`` name binds. Pure over ``source``.
     """
-    tree = ast.parse(path.read_text(encoding="utf-8"))
+    tree = ast.parse(source)
     shared: dict[str, str] = {}
     for node in ast.walk(tree):
         if (isinstance(node, ast.ImportFrom)
@@ -160,6 +174,31 @@ def _twin_callers(path: Path) -> tuple[dict[str, set[str]],
                 names.add(sub.func.id)
         calls[node.name] = names
     return calls, shared
+
+
+def _twin_callers_cached(source: str) -> tuple[dict[str, set[str]],
+                                               dict[str, str]]:
+    """``_analyze_twin_source`` memoized by exact source text (cm)."""
+    try:
+        return _TWIN_CALLERS_CACHE[source]
+    except KeyError:
+        pass
+    result = _analyze_twin_source(source)
+    if len(_TWIN_CALLERS_CACHE) >= _TWIN_CALLERS_CACHE_MAX:
+        _TWIN_CALLERS_CACHE.pop(next(iter(_TWIN_CALLERS_CACHE)))
+    _TWIN_CALLERS_CACHE[source] = result
+    return result
+
+
+def _twin_callers(path: Path) -> tuple[dict[str, set[str]],
+                                     dict[str, str]]:
+    """Static calls per top-level function, plus ``_shared`` aliases.
+
+    Reads the path on every call; the pure analysis over its text
+    is memoized by exact source (SPEC (cm)), so edited source and
+    monkeypatched fixture paths select fresh entries.
+    """
+    return _twin_callers_cached(path.read_text(encoding="utf-8"))
 
 
 def _handler_calls_twin(operation: str, twin_module: str,
@@ -3188,6 +3227,81 @@ def test_control_twin_template_drops_never_called_operations():
             "cli.ai-action-list.binding") not in declared
     assert ("cli.ai-action-append-slices",
             "cli.ai-action-append-slices.binding") not in declared
+
+
+def test_control_twin_cache_matches_uncached_analysis():
+    """The cached map equals a fresh analysis of the same text (cm).
+
+    Over every real handler file: the wrapper (which reads the path)
+    and the cached helper (which keys the text) both return the same
+    call/import map as the uncached analysis, and a repeated call
+    returns the identical map.
+    """
+    for path in sorted(HANDLERS_DIR.glob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        fresh = _analyze_twin_source(source)
+        assert _twin_callers(path) == fresh, path.name
+        assert _twin_callers_cached(source) == fresh, path.name
+        assert _twin_callers_cached(source) is _twin_callers_cached(
+            source), path.name
+
+
+def test_control_twin_cache_invalidates_on_source_change(
+        tmp_path, monkeypatch):
+    """Edited source changes called-site behavior (SPEC (cm)).
+
+    The same path read before and after an edit selects the fresh
+    entry: removing the handler's twin call flips
+    ``_handler_calls_twin`` from True to False, and restoring the
+    bytes flips it back. Not a counter check: the asserted values
+    are the R-A9-1 narrowing predicate's own answers.
+    """
+    import test_scenarios_zz_refusal_sites as zz
+
+    staged = tmp_path / "handlers"
+    staged.mkdir()
+    staged_ai = staged / "ai.py"
+    original = (HANDLERS_DIR / "ai.py").read_text(encoding="utf-8")
+    staged_ai.write_text(original, encoding="utf-8")
+    monkeypatch.setattr(zz, "HANDLERS_DIR", staged)
+    operation = "ai-action.delivery.apply"
+    assert REGISTRY[operation].handler.__name__ == (
+        "ai_action_apply_delivery")
+    assert _handler_calls_twin(operation, "ai", "_refusal") is True
+    calls, _ = _twin_callers(staged_ai)
+    assert "_refusal" in calls["ai_action_apply_delivery"]
+    edited = original.replace(
+        "raise _refusal(exc, ctx.operation) from exc",
+        "raise _refusal_gone(exc, ctx.operation) from exc").replace(
+        "else _refusal(translated, ctx.operation)",
+        "else _refusal_gone(translated, ctx.operation)")
+    assert edited != original
+    staged_ai.write_text(edited, encoding="utf-8")
+    assert _handler_calls_twin(operation, "ai", "_refusal") is False
+    calls, _ = _twin_callers(staged_ai)
+    assert "_refusal" not in calls["ai_action_apply_delivery"]
+    staged_ai.write_text(original, encoding="utf-8")
+    assert _handler_calls_twin(operation, "ai", "_refusal") is True
+
+
+def test_control_twin_cache_is_bounded():
+    """The cache keeps at most ``_TWIN_CALLERS_CACHE_MAX`` entries (cm).
+
+    Past the bound the oldest entry is evicted; every text — kept
+    or evicted — still analyzes exactly as the uncached analysis.
+    The cache is transparent, so clearing it here changes no other
+    test's answers.
+    """
+    _TWIN_CALLERS_CACHE.clear()
+    sources = [f"def f{index}():\n    g{index}()\n"
+               for index in range(_TWIN_CALLERS_CACHE_MAX + 6)]
+    for source in sources:
+        _twin_callers_cached(source)
+    assert len(_TWIN_CALLERS_CACHE) == _TWIN_CALLERS_CACHE_MAX
+    assert sources[0] not in _TWIN_CALLERS_CACHE
+    for source in sources:
+        assert _twin_callers_cached(source) == _analyze_twin_source(
+            source)
 
 
 def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
