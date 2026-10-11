@@ -47,6 +47,7 @@ cases:
       - transport: gateway
         request: {module_id: module-demo, plan_sha256: "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"}
         artifact_ids: []
+    expect: {site: module.materials.compact.no-changes}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
