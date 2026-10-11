@@ -241,7 +241,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.goal.cmd_goal",
+    "handler": "learning_os.adapters.cli.invoke:cli.goal",
     "parser_factory": false
   }
 }

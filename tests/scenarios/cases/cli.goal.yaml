@@ -22,37 +22,37 @@ cases:
     kind: refusal
     transport: cli
     argv: [goal, "goal-*", --reject]
-    expect: {site: null}
+    expect: {site: cli.goal.bad-goal-ids}
   - id: blank-id
     kind: refusal
     transport: cli
     argv: [goal, "with space", --reject]
-    expect: {site: null}
+    expect: {site: cli.goal.bad-goal-ids}
   - id: revisit-needs-defer
     kind: refusal
     transport: cli
     argv: [goal, goal-demo-deferred, --reject, --revisit-on, 2026-12-01]
-    expect: {site: null}
+    expect: {site: cli.goal.revisit-needs-defer}
   - id: bad-revisit
     kind: refusal
     transport: cli
     argv: [goal, goal-demo-deferred, --defer, --revisit-on, someday]
-    expect: {site: null}
+    expect: {site: cli.goal.bad-revisit}
   - id: past-revisit
     kind: refusal
     transport: cli
     argv: [goal, goal-demo-deferred, --defer, --revisit-on, 2026-01-01]
-    expect: {site: null}
+    expect: {site: cli.goal.past-revisit}
   - id: unknown-goal
     kind: refusal
     transport: cli
     argv: [goal, goal-nope, --reject]
-    expect: {site: null}
+    expect: {site: cli.goal.unknown-goal}
   - id: batch-needs-sha
     kind: refusal
     transport: cli
     argv: [goal, goal-demo-deferred, goal-demo-rejected, --reject]
-    expect: {site: null}
+    expect: {site: cli.goal.batch-needs-review}
 untriggered:
   - {where: "tools/learning_os/commands/goal.py:94", reason: "unreadable goal ledger: needs permissions no step can set"}
   - {where: "tools/learning_os/commands/goal.py:102", reason: "malformed ledger YAML: the fixture ledger parses, and no step can corrupt it"}

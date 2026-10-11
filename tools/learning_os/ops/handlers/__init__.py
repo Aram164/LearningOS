@@ -7,6 +7,7 @@ from learning_os.ops.handlers import (
     ai,  # noqa: F401  (registration side effect)
     atlas,  # noqa: F401  (registration side effect)
     capture,  # noqa: F401  (registration side effect)
+    goals,  # noqa: F401  (registration side effect)
     learner,  # noqa: F401  (registration side effect)
     notes,  # noqa: F401  (registration side effect)
     plan,  # noqa: F401  (registration side effect)

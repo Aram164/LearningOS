@@ -210,3 +210,5 @@ approvals:
   - {key: "request_schemas.cli.search.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.search converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.module-list.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.module-list converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.observe.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.observe converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.cli.goal.schema.json", change: changed, plan_ref: "PLAN D4 (SC-wavethree: cli.goal converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "catalog.internal_commands.goal.decision.record", change: added, plan_ref: "PLAN D8 (goals: cli.goal becomes a transaction)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

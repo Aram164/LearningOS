@@ -407,7 +407,9 @@
    "relationship.create",
    "unit.material-synthesis.publish"
   ],
-  "internal_commands": [],
+  "internal_commands": [
+   "goal.decision.record"
+  ],
   "queries": {
    "ability.context": {
     "cli_command": "ability-context",
@@ -9082,7 +9084,7 @@
   "cli.capability.schema.json": "10d2504875ad3ba3a96e1b5fd4b25def15fab6c480dc4e250cfbad846b7b43c6",
   "cli.dossier.schema.json": "ce0294297592216392916d07f954c48dadb7b657200d0a82d462da8e741029c5",
   "cli.generate.schema.json": "0c240bbdf20a214ccd13af70fc9b242d6035cb989ab82ff6846d0ad2e419f5cc",
-  "cli.goal.schema.json": "ec303abb0a84fdc82c8a8ee69f184bd4164e3c77c88fd00799992e974f78f279",
+  "cli.goal.schema.json": "88856ee855b829d35d0a42992ddbd8db90963ef2f09b386b9eb9a2822b5cd825",
   "cli.health-report.schema.json": "ed1e004eb9c3bddb0a7e6b17efb3578864c5d28b6c73f110fa58ca1c0005aaac",
   "cli.inbox-list.schema.json": "aaf9fa1fc08957a3af9468744bda896ce8e17fd6cebdac59a39595fd50160c99",
   "cli.inbox-read.schema.json": "bac2f46af70c11d053b908ff46fe29fcedf64e321b9d19ad0888ce07db1f098b",

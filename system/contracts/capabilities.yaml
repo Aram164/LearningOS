@@ -952,7 +952,16 @@ commands:
         - workspace_ids
         - thematic_group_ids
         - boundaries
-internal_commands: {}
+internal_commands:
+  goal.decision.record:
+    handler: goal
+    admission: direct-user-gesture
+    writes:
+    - operations/goal-ledger.yaml
+    invariants:
+    - one decision per goal id on the goal ledger, for a scanned or ledger-known id
+    - batch apply binds the exact --check reviewed bytes; a changed ledger needs a fresh review
+    - receipt and session row per decision (PLAN D8)
 forbidden:
 - direct interface filesystem writes
 - partial application of a validated transaction

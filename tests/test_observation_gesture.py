@@ -206,13 +206,15 @@ def test_a_write_with_no_admission_at_all_is_refused_from_every_channel(
 def test_allowlist_matches_the_capability_contract(repo_root: Path):
     contract = yaml.safe_load(
         (repo_root / "system/contracts/capabilities.yaml").read_text(encoding="utf-8"))
-    rows = contract["commands"]
+    rows = {**contract["commands"], **contract.get("internal_commands", {})}
     admitted = {name for name, row in rows.items()
                 if row.get("admission") == "direct-user-gesture"
                 and not row.get("admission_channels")}
     assert admitted == set(GESTURE_ALLOWLIST) == {
         # Aram's own evidence, and the two unrouted inbox/Garden writers.
         "learner.observation.append", "capture.create", "garden.seed.create",
+        # Her explicit goal decision, terminal-approved like her evidence (PLAN D8).
+        "goal.decision.record",
         # His own study record for one stage or unit, his own experience of a
         # resource, his own question, his own selection among authored routes.
         # Added 2026-09-13 for the installed UI's actual write paths; the

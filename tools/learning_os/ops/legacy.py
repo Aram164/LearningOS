@@ -61,6 +61,9 @@ GESTURE_ALLOWLIST = frozenset({
     # correction path, one JSONL line of blast radius, and a local
     # `los observe` command where the terminal session is the approval.
     "learner.observation.append",
+    # Her explicit decision on a proposed goal: one ledger map write,
+    # batch-bound by the exact `--check` review, terminal-approved (D8).
+    "goal.decision.record",
     # Unrouted, unclassified inbox and Garden input; the handler names the
     # file, so both guard the request rather than an artifact.
     "capture.create",
