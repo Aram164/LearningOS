@@ -29,6 +29,7 @@ from arch_schema_deltas import (
     _strip_approved_owner_metadata,
     _strip_bf_description_updates,
 )
+from test_arch_request_schemas import BU4_FILTER_NOT_LOOKUP
 
 ROOT = Path(__file__).resolve().parent.parent
 ARCH = ROOT / arch_surface.ARCHITECTURE_DIR
@@ -761,6 +762,41 @@ def _assert_alias_schema_identical(operation: str, old_text: str,
             raise AssertionError(f"{operation} is not a pure alias")
 
 
+def _strip_bu4_filter_flip(operation: str, old: dict, new: dict
+                           ) -> tuple[dict, dict]:
+    """Strip exactly the SPEC (bu) 4 filter flip; fail on any deviation.
+
+    Returns ``(old, new)`` copies with the enumerated pair's
+    ``x-los-lookup`` restored to its base value. Raises when the pointer
+    is missing, the base is not lookup-true, or the tip is not
+    flipped to false; every other difference stays for the exact
+    recursive comparison.
+    """
+    allowed = {pointer for (op, pointer) in BU4_FILTER_NOT_LOOKUP
+               if op == operation}
+    old_copy = copy.deepcopy(old)
+    new_copy = copy.deepcopy(new)
+    for pointer in allowed:
+        parts = pointer.split("/")[1:]
+        old_node = old_copy
+        new_node = new_copy
+        try:
+            for part in parts:
+                old_node = old_node[part]
+                new_node = new_node[part]
+        except (KeyError, TypeError):
+            raise AssertionError(
+                f"filter pointer {pointer} is missing") from None
+        if old_node.get("x-los-lookup") is not True:
+            raise AssertionError(
+                f"filter pointer {pointer} is not lookup at base")
+        if new_node.get("x-los-lookup") is not False:
+            raise AssertionError(
+                f"filter pointer {pointer} is not flipped to false")
+        new_node["x-los-lookup"] = True
+    return old_copy, new_copy
+
+
 def test_converted_request_schema_changes_only_the_handler(base_ref):
     base_approvals_text = _git_show(
         base_ref, APPROVALS_PATH.relative_to(ROOT).as_posix())
@@ -792,6 +828,11 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
             failures.append(f"A11 {key}: {exc} — {rel} — {FIX['A11']}")
             continue
         old, new = _strip_bf_description_updates(operation, old, new)
+        try:
+            old, new = _strip_bu4_filter_flip(operation, old, new)
+        except AssertionError as exc:
+            failures.append(f"A11 {key}: {exc} — {rel} — {FIX['A11']}")
+            continue
         want = f"learning_os.adapters.cli.invoke:{operation}"
         if set(new) != set(old):
             failures.append(
@@ -1000,4 +1041,61 @@ def test_bf_description_strip_accepts_only_the_listed_replacement():
 
     for mutator in (unlisted_pointer, keeps_mark, non_string,
                     other_keyword):
+        differs(mutator)
+
+
+def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
+    rel = "system/schema/requests/cli.module-list.schema.json"
+    old = json.loads(_git_show(base_ref, rel))
+    new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    _, stripped = _strip_bu4_filter_flip("cli.module-list", old, new)
+    assert stripped["properties"] == old["properties"]
+
+    def rejects(mutator):
+        mutant = copy.deepcopy(new)
+        mutator(mutant)
+        with pytest.raises(AssertionError):
+            _strip_bu4_filter_flip("cli.module-list", old, mutant)
+
+    def flipped_back(doc):
+        doc["properties"]["program_id"]["x-los-lookup"] = True
+
+    def deleted_node(doc):
+        del doc["properties"]["program_id"]
+
+    for mutator in (flipped_back, deleted_node):
+        rejects(mutator)
+
+    # A reversed base (not lookup-true) is rejected too.
+    reversed_base = copy.deepcopy(old)
+    reversed_base["properties"]["program_id"]["x-los-lookup"] = False
+    with pytest.raises(AssertionError):
+        _strip_bu4_filter_flip("cli.module-list", reversed_base, new)
+
+    # Another operation's annotation change is not stripped: it stays
+    # for the exact comparison, which fails it.
+    _, untouched = _strip_bu4_filter_flip("cli.note-read", old, new)
+    assert untouched == new
+
+    def differs(mutator):
+        mutant = copy.deepcopy(new)
+        mutator(mutant)
+        _, stripped_mutant = _strip_bu4_filter_flip(
+            "cli.module-list", old, mutant)
+        assert stripped_mutant["properties"] != old["properties"]
+
+    def extra_keyword(doc):
+        doc["properties"]["program_id"]["additionalProperties"] = False
+
+    def changed_default(doc):
+        doc["properties"]["program_id"]["x-los-cli"]["default"] = "x"
+
+    def flipped_kind(doc):
+        doc["properties"]["program_id"]["x-los-id-kind"] = "unit"
+
+    def other_pointer(doc):
+        doc["properties"]["status"]["x-los-lookup"] = False
+
+    for mutator in (extra_keyword, changed_default, flipped_kind,
+                    other_pointer):
         differs(mutator)

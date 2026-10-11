@@ -2353,3 +2353,22 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
     manifest = _fresh_manifest(root)
     return Result(_filtered_units(manifest, req, ctx.operation),
                   json_dumps=_dumps_unit_list)
+
+
+def _dumps_module_list(payload) -> str:
+    """The exact module-list encoder: terminal layout, sorted, unescaped."""
+    return json.dumps(payload, **_json_layout(), sort_keys=True,
+                      ensure_ascii=False)
+
+
+@register("cli.module-list", kind="query")
+def module_list(ctx: OpContext, req: dict) -> Result:
+    """List modules with optional program/status filters."""
+    root = ctx.root
+    manifest = _fresh_manifest(root)
+    rows = manifest.get("modules", [])
+    if req.get("program_id"):
+        rows = [row for row in rows if row.get("area_id") == req["program_id"]]
+    if req.get("status"):
+        rows = [row for row in rows if row.get("status") == req["status"]]
+    return Result(rows, json_dumps=_dumps_module_list)

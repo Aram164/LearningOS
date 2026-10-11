@@ -111,7 +111,7 @@ fields:
 - operation: cli.module-list
   pointer: /properties/program_id
   kind: program
-  lookup: true
+  lookup: false
 - operation: cli.note-read
   pointer: /properties/note_id
   kind: note

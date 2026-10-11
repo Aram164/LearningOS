@@ -38,7 +38,6 @@ from learning_os.materials_resolution import sha256_file
 from learning_os.ops._legacy_plumbing import (
     _dump_study_map,
     _dump_yaml,
-    _fresh_manifest,
     _operator_lock,
     _read_content_bound_file,
     _record_gateway_refusal,
@@ -74,7 +73,6 @@ from learning_os.semantics.lineage import (
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
-    _print_rows,
     _replace_registry_list_record,
     _root,
     _write_transaction,
@@ -88,16 +86,6 @@ _PLAN_COMPLETENESS_CHECKS = (
     "duplicates_and_numbering_checked",
     "exclusions_and_unresolved_gaps_recorded",
 )
-
-
-def cmd_module_list(args) -> int:
-    manifest = _fresh_manifest(_root(args))
-    rows = manifest.get("modules", [])
-    if args.program_id:
-        rows = [row for row in rows if row.get("area_id") == args.program_id]
-    if args.status:
-        rows = [row for row in rows if row.get("status") == args.status]
-    return _print_rows(rows)
 
 
 _LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")

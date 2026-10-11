@@ -27,6 +27,15 @@ FIX = "Complete the request schema (PLAN D2)."
 
 PLACEHOLDER_MARK = "(no description in the parser yet)"
 
+#: SPEC (bu) 4: inventory rows that are filters, not lookups.
+#: (operation, pointer) -> reason. Both the id-fields row and the schema
+#: annotation sit at ``false``; the D4 purity test tolerates the base
+#: annotation flip for exactly these pairs, and nothing else.
+BU4_FILTER_NOT_LOOKUP = {
+    ("cli.module-list", "/properties/program_id"):
+        "SPEC (bu) 4: filter, not a lookup",
+}
+
 
 def _primaries() -> dict[str, dict]:
     out: dict[str, dict] = {}
@@ -594,3 +603,62 @@ def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
 
     message = delta(mapping_shape)
     assert f"{AI}::/properties/artifact_sha256::id-annotation" in message
+
+
+def test_bu4_filter_rows_are_false_on_both_sides():
+    """The enumerated (bu) 4 pairs sit at lookup false, row and schema."""
+    rows = {(row["operation"], row["pointer"]): row
+            for row in yaml.safe_load(ID_FIELDS_PATH.read_text())["fields"]}
+    for (operation, pointer), reason in BU4_FILTER_NOT_LOOKUP.items():
+        row = rows[(operation, pointer)]
+        assert row.get("lookup") is False, (operation, pointer, reason)
+        node = _navigate(request_schema(ROOT, operation), pointer)
+        assert isinstance(node, dict), (operation, pointer, reason)
+        assert node.get("x-los-lookup") is False, (operation, pointer, reason)
+
+
+def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
+    """Any other annotation change still raises id-annotation."""
+    counter = 0
+
+    def delta(mutator):
+        nonlocal counter
+        counter += 1
+        root = _a13_work_tree(tmp_path / f"bu4-{counter}")
+        mutator(root)
+        _point_a13_at(monkeypatch, root)
+        with pytest.raises(AssertionError) as raised:
+            test_current_exceptions_are_recorded()
+        return str(raised.value)
+
+    def other_operation_lookup(root):
+        def edit(doc):
+            doc["properties"]["note_id"]["x-los-lookup"] = False
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.note-read.schema.json", edit)
+
+    message = delta(other_operation_lookup)
+    assert "cli.note-read::/properties/note_id::id-annotation" in message
+    assert "note.content::/properties/note_id::id-annotation" in message
+
+    def other_annotation_same_pointer(root):
+        def edit(doc):
+            doc["properties"]["program_id"]["x-los-id-kind"] = "unit"
+        _rewrite_schema_json(
+            root / "system/schema/requests/cli.module-list.schema.json", edit)
+
+    message = delta(other_annotation_same_pointer)
+    assert ("cli.module-list::/properties/program_id::id-annotation"
+            in message)
+
+    def inventory_lookup_back(root):
+        path = root / "tests/architecture/id-fields.yaml"
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+        for row in doc["fields"]:
+            if (row["operation"], row["pointer"]) in BU4_FILTER_NOT_LOOKUP:
+                row["lookup"] = True
+        path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
+
+    message = delta(inventory_lookup_back)
+    assert ("cli.module-list::/properties/program_id::id-annotation"
+            in message)

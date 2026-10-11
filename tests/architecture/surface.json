@@ -9091,7 +9091,7 @@
   "cli.legacy-archive-inspect.schema.json": "8b6b513aa6f2214b313b267f4f1af9da7ce59c74602ebfb55fc526bea670835a",
   "cli.legacy-archive-status.schema.json": "644977b10b2a6bec2760291f1685eb235688cb95e9dbee9802ec62d2e344f983",
   "cli.masters-planning-dashboard.schema.json": "a57b90c5519f495d19939e87bee103e955bb9febae2dac40f73e945405673703",
-  "cli.module-list.schema.json": "42d9872b6508b1e66c7b73e992f915cbdec0c8f8beea838384e2e38cd64a7a13",
+  "cli.module-list.schema.json": "1945f4be2b2508b32c68b36dfedcbeba14d0346b8f22dfe6bc2c5072e0d0b3b5",
   "cli.note-analysis-prepare.schema.json": "844eff927d26004891c19747673d565a21547c4f9c01fcfa8eb6baddb5c49165",
   "cli.note-read.schema.json": "34632d8b42bd7a420886cc0a3406892a111d053572be743112f145ca9bc17c00",
   "cli.observe.schema.json": "def52ac506f69d3bc1bbea0236261e4cdfb6ec20256725bb355815c18d685135",
