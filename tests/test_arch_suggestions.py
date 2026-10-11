@@ -772,9 +772,8 @@ def _check_tolerant_success(result: dict, *, real_value: str) -> None:
 #: carrying that site supplies the expected exit and code. Cross-checked
 #: against the case file's own ``expect.site`` at every run. SPEC (bk)
 #: item 1: one entry per probed canonical pointer of a converted
-#: operation with such a case; an A9-uncased pointer (the two
-#: append-slices misses, whose (bi) item 8 cases are not yet recorded)
-#: has no entry.
+#: operation with such a case, including the two append-slices misses
+#: whose (bi) item 8 cases are now recorded (SPEC (bv) item 3).
 POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     ("route.patch", "/properties/unit_id"):
         ("route.patch.unknown-unit", "unknown-unit"),
@@ -832,6 +831,10 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("unit.source-selection.set.unknown-source", "unknown-source"),
     ("unit.source-selection.set", "/properties/unit_id"):
         ("unit.source-selection.set.unknown-unit", "unknown-unit"),
+    ("cli.ai-action-append-slices", "/properties/route_id"):
+        ("cli.ai-action-append-slices.unknown-route", "unknown-route"),
+    ("cli.ai-action-append-slices", "/properties/concept_id/items"):
+        ("cli.ai-action-append-slices.unknown-concept", "unknown-concept"),
 }
 
 #: The expected complaint form per anchored pointer (SPEC (bk) item 1,
