@@ -2832,6 +2832,44 @@ _PROOF_FNS.update({
 })
 
 
+def _prove_goal_invalid_ledger(mini_repo: Path, tmp_path: Path,
+                               monkeypatch) -> None:
+    """A schema-invalid ledger row fires the site (R-A9-2).
+
+    The load guards accept any mapping ledger while the handler-built
+    entry always validates, so no case input reaches the gate; the
+    proof plants a pre-existing invalid row by direct tree surgery
+    and asserts the witness line, the class and the exit.
+    """
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    root = ctx.root
+    ledger = root / "operations" / "goal-ledger.yaml"
+    assert ledger.is_file(), "A9 proof needs the ledger to plant into"
+    import yaml
+    data = yaml.safe_load(ledger.read_text(encoding="utf-8"))
+    data["decisions"]["goal-demo-bogus"] = {
+        "state": "bogus", "decided_at": "2026-10-01"}
+    ledger.write_text(yaml.safe_dump(data, sort_keys=False),
+                      encoding="utf-8")
+    outcome, lines = _a9_run_cli(
+        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "cli.goal", "kind": "failure",
+                      "site": "cli.goal.invalid-ledger",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "cli") == 2
+
+_PROOF_FNS.update({
+    'cli.goal.invalid-ledger': _prove_goal_invalid_ledger,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)

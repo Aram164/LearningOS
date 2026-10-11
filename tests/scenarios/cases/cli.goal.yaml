@@ -64,5 +64,6 @@ untriggered:
   - {site: cli.goal.malformed-ledger, where: "tools/learning_os/ops/handlers/goals.py:162", reason: fixture-inexpressible}
   - {site: cli.goal.unreadable-session, where: "tools/learning_os/ops/handlers/goals.py:298", reason: fixture-inexpressible}
   - {site: cli.goal.not-admitted, where: "tools/learning_os/ops/handlers/goals.py:82", reason: fixture-inexpressible}
+  - {site: cli.goal.invalid-ledger, where: "tools/learning_os/ops/handlers/goals.py:213", reason: fixture-inexpressible}
   - {where: "tools/learning_os/commands/goal.py:183", reason: "ledger write failure: needs an unwritable operations/ directory"}
   - {where: "tools/learning_os/commands/goal.py:191", reason: "session claim race: needs a concurrent writer"}
