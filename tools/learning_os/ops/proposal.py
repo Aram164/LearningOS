@@ -48,3 +48,4 @@ class Result:
     json_dumps: Callable[[dict], str] | None = None  # SPEC (az) item 1: internal CLI JSON-format metadata; None = today's S13 encoder
     refused_stdout: Callable[[list[str]], str] | None = None  # SPEC (bd): the legacy refusal print to stdout, without its newline
     human_view: dict | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it
+    notices: tuple[str, ...] = ()  # SPEC (bx) 2: success-path stderr lines; the CLI writes them verbatim, the gateway ignores them

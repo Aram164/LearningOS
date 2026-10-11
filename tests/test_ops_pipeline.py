@@ -1445,3 +1445,56 @@ def test_unknown_after_commit_string_is_rejected(
     assert body["ok"] is False
     assert body["error"]["code"] == "INTERNAL_FAILURE"
     assert "unknown after_commit 'BOGUS'" in body["error"]["message"]
+
+
+# ---------------------------------------------------------------------------
+# SPEC (bx) 2, recipe R16: success-path stderr notices.
+# ---------------------------------------------------------------------------
+
+def test_cli_notices_write_verbatim_stderr_in_order(pipe, mini_repo):
+    """R16 on the CLI: notices land on stderr verbatim and in order."""
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"},
+            notices=("los: first notice", "los: second notice"))
+
+    pipe("query", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert outcome.ok is True
+    assert outcome.stdout == '{"echo":"x"}\n'
+    assert outcome.stderr == "los: first notice\nlos: second notice\n"
+
+
+def test_cli_empty_notices_change_nothing(pipe, mini_repo):
+    """R16 with no notices: stderr stays empty, success bytes unchanged."""
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, notices=())
+
+    pipe("query", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert outcome.ok is True
+    assert outcome.stdout == '{"echo":"x"}\n'
+    assert outcome.stderr == ""
+
+
+def test_gateway_ignores_notices(pipe, mini_repo):
+    """R16 on the gateway: success bytes are identical with notices set."""
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"echo": "x"},
+            notices=("los: a notice the gateway drops",))
+
+    pipe("command", handler=handler)
+    outcome = _run_test_gateway(mini_repo, None, key="k1-r16-ignore-001")
+    body = json.loads(outcome.stdout)
+    assert outcome.exit_code == 0
+    assert body["ok"] is True
+    assert body["result"] == {"echo": "x"}
+    assert outcome.stderr == ""

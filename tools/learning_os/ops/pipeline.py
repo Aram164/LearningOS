@@ -256,7 +256,8 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
     return Outcome(
         commit=commit, ok=exit_code == 0, payload=payload, error=None,
         exit_code=exit_code, receipt=receipt, replayed=replayed,
-        stdout=stdout, stderr="",
+        stdout=stdout,
+        stderr="".join(f"{line}\n" for line in result.notices),
     )
 
 
