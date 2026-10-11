@@ -773,7 +773,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="inbox.resolve.bad-expected-revision",
-            gateway_message=f"los: {exc}",
+            gateway_message=str(exc),
             exit_code=2,
         ) from exc
 
