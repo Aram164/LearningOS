@@ -843,6 +843,10 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
 #:   passed through ``with_suggestions``;
 #: - ``("legacy-verbatim", text)``: the legacy complaint with ``{miss}``,
 #:   without ``with_suggestions``.
+#: - ``("legacy-lines", text)``: the exact legacy complaint, possibly
+#:   multi-line, with ``{miss}`` and ``{known}`` (the handler's own
+#:   listing of the domain) substituted and no ``with_suggestions``
+#:   (SPEC (bv) item 2).
 #: No branch on an operation name remains in ``_canonical_message``.
 MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("route.patch", "/properties/unit_id"): ("template", "unit"),
@@ -882,6 +886,9 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("stage.note.write", "/properties/stage_id"): ("prefixed", "stage"),
     ("stage.note.write", "/properties/unit_id"): ("prefixed", "unit"),
     ("unit.note.append", "/properties/unit_id"): ("prefixed", "unit"),
+    ("unit.note.append", "/properties/stage_id/items"):
+        ("legacy-lines",
+         "los: stage does not belong to unit 'unit-demo-l01': {miss}"),
     ("unit.source-selection.set", "/properties/unit_id"):
         ("prefixed", "unit"),
     ("unit.source-selection.set", "/properties/source_id"):
@@ -938,6 +945,8 @@ def _render_message_form(form: tuple[str, str], miss: str,
         return with_suggestions(text.format(miss=miss), miss, domain)
     if kind == "legacy-verbatim":
         return text.format(miss=miss)
+    if kind == "legacy-lines":
+        return text.format(miss=miss, known=", ".join(sorted(domain)))
     raise AssertionError(f"A5 message form {kind!r} is unknown — {FIX}")
 
 
@@ -1091,6 +1100,29 @@ def test_message_form_wrong_form_fails(tmp_path):
         ("legacy-verbatim", "stage not found: {miss}"))
     assert rebuilt != recorded, (
         f"A5 stage.note.write stage as legacy-verbatim still rebuilds "
+        f"{recorded!r} — {FIX}")
+
+
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind == "legacy-lines"))
+def test_message_form_legacy_lines_mutant_fails(tmp_path, operation,
+                                                pointer):
+    """One legacy-lines mutant per entry must fail it (SPEC (bv) 2).
+
+    The dropped ``los: `` prefix cannot rebuild the recorded
+    complaint.
+    """
+    _, text = MESSAGE_FORM[(operation, pointer)]
+    assert text.startswith("los: "), (operation, pointer, text)
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer,
+        ("legacy-lines", text[len("los: "):]))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a dropped prefix still rebuilds "
         f"{recorded!r} — {FIX}")
 
 
