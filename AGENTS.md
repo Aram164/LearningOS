@@ -8,6 +8,6 @@ Read one capability's complete definition with `.venv/bin/python tools/los.py
 capabilities NAME --json`. Do not recursively scan the repository or
 sibling code repositories such as `Stratum/` to infer application state.
 
-Codex reads this file as **planner and reviewer, not executor**: it plans and
-challenges, Claude Code implements. The full role is in `AGENTS.md` at the
-`semestercontext/` root, which Codex loads only when started from there.
+No agent has a standing role here: Aram assigns planning, reviewing and
+implementing per task. Workspace-wide guidance for plans and reviews is in
+`AGENTS.md` at the `semestercontext/` root.

@@ -79,20 +79,23 @@ entries:
     authority: binding
     owner: agent-roles
     purpose: >-
-      The 0x-alpha reviewer rule set. Instruction-bearing and binding on the
-      reviewer, and governed by nothing else — the normative corpus cannot
-      reach outside the repository.
+      The 0x-alpha agent's instructions. Instruction-bearing and binding on
+      0x-alpha, and governed by nothing else — the normative corpus cannot
+      reach outside the repository. It presets no role; Aram assigns tasks
+      case by case.
 
   - path: AGENTS.md
     kind: document
     class: contract
     authority: binding
     owner: agent-roles
-    annotation: role division for Codex and other agents
+    annotation: workspace-wide plan and review guidance for every agent
     purpose: >-
-      The role division for Codex and other agents. Loaded only when an agent
-      starts from the wrapper root; repository/AGENTS.md names it as a required
-      read precisely because an agent starting inside repository/ never sees it.
+      Workspace-wide guidance for every agent: no standing roles (Aram assigns
+      planning, reviewing and implementing per task), the subtrees, and what a
+      good plan and review look like. Loaded only when an agent starts from the
+      wrapper root; repository/AGENTS.md points to it because an agent starting
+      inside repository/ never sees it.
 
   - path: tools
     kind: directory
