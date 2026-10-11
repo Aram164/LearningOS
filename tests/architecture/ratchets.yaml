@@ -718,6 +718,10 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: cli.goal::/properties/session_id::review
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
   - signature: cli.capability::*
     count: 1
