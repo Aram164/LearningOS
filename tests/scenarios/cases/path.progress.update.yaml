@@ -11,6 +11,7 @@ cases:
     expect: {site: null}
   - id: complete-twice
     kind: sequence
+    expect: {site: path.progress.update.not-active}
     steps:
       - transport: gateway
         request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}

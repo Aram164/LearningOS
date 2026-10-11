@@ -1078,6 +1078,43 @@ def _prove_ability_bad_app_confirmation(mini_repo: Path, tmp_path: Path,
                     "gateway.dispatch") == 2
 
 
+def _prove_evidence_unreadable_frontmatter(mini_repo: Path, tmp_path: Path,
+                                           monkeypatch) -> None:
+    """An unreadable note frontmatter fires the site (R-A9-2).
+
+    The loader skips a corrupt note at load (a static corruption
+    then refuses as unknown-note instead), so no static fixture
+    input reaches the gate; the proof injects the LoaderError into
+    the handler's own frontmatter re-read and asserts the witness
+    line, the class and the exit.
+    """
+    import learning_os.ops.handlers.notes as notes_handlers
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.loader import LoaderError
+    from learning_os.ops.outcomes import exit_for
+
+    ctx = _a9_world("note.evidence.add", "add-evidence", tmp_path)
+    root = ctx.root
+
+    def unreadable(content, path):
+        raise LoaderError("a9-proof: frontmatter unreadable")
+
+    monkeypatch.setattr(notes_handlers, "parse_frontmatter", unreadable)
+    outcome, lines = _a9_run_gateway(
+        root, "note.evidence.add",
+        {"note_id": "note-demo", "evidence_type": "derivation",
+         "ref": "material://source-demo-book/book.pdf"},
+        ["note-demo"], "a9-proof-unreadable-frontmatter",
+        tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "note.evidence.add", "kind": "failure",
+                      "site": "note.evidence.add.unreadable-frontmatter",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
 _PROOF_FNS.update({
     "detour.create.unknown-classification":
         _prove_detour_unknown_classification_guarded,
@@ -1090,6 +1127,8 @@ _PROOF_FNS.update({
     "unit.note.append.note-outside-repo": _prove_unit_note_outside_repo,
     "learner.ability-observation.append.bad-app-confirmation":
         _prove_ability_bad_app_confirmation,
+    "note.evidence.add.unreadable-frontmatter":
+        _prove_evidence_unreadable_frontmatter,
 })
 
 
