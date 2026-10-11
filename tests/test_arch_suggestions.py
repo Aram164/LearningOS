@@ -519,6 +519,10 @@ def _lookup_domain(ctx, operation: str, row: dict,
     unit, except the append-slices route domain, which is the raw
     source-map traversal ``append_slices`` matches against; concepts
     from ``repo.concepts`` as ``plan_continuation`` checks them;
+    modules from ``repo.modules``, except the compact domain, which is
+    the ``repo.module_source_maps`` the compaction planner matches
+    against; workspaces from ``repo.workspaces``; projects from the
+    registry stems ``_project_ids`` lists;
     inspect references from ``_inspect_candidates``; deliveries
     from the delivery directory entries; digests from the real bound
     digest. SPEC (bv) item 1 adds: detours from the unit's current
@@ -636,6 +640,31 @@ def _lookup_domain(ctx, operation: str, row: dict,
     if kind == "note":
         repo = load_repo(ctx.root)
         ordered = list(repo.notes)
+        return ordered, set(ordered)
+    if kind == "module" and operation in ("module.attempt.record",
+                                          "module.sitting.update"):
+        # SPEC (bv) item 1: the ordered list the converted handler
+        # passes to its NotFound: repo.modules (admin.py).
+        repo = load_repo(ctx.root)
+        ordered = list(repo.modules)
+        return ordered, set(ordered)
+    if kind == "module" and operation == "module.materials.compact":
+        # SPEC (bv) item 1: the compaction planner matches against
+        # repo.module_source_maps (plan.py:compaction_plan).
+        repo = load_repo(ctx.root)
+        ordered = list(repo.module_source_maps)
+        return ordered, set(ordered)
+    if kind == "workspace":
+        # SPEC (bv) item 1: repo.workspaces (admin.py).
+        repo = load_repo(ctx.root)
+        ordered = list(repo.workspaces)
+        return ordered, set(ordered)
+    if kind == "project":
+        # SPEC (bv) item 1: the same _project_ids function the
+        # converted handler passes to its NotFound (platform.py).
+        from learning_os.ops.handlers import platform as platform_handlers
+
+        ordered = platform_handlers._project_ids(ctx.root)
         return ordered, set(ordered)
     if owner == "inspect-reference":
         from learning_os.ops._legacy_plumbing import _fresh_manifest_and_repo
@@ -942,6 +971,21 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("cli.ai-action-append-slices.unknown-route", "unknown-route"),
     ("cli.ai-action-append-slices", "/properties/concept_id/items"):
         ("cli.ai-action-append-slices.unknown-concept", "unknown-concept"),
+    ("module.attempt.record", "/properties/module_id"):
+        ("module.attempt.record.unknown-module", "unknown-module"),
+    ("module.sitting.update", "/properties/module_id"):
+        ("module.sitting.update.unknown-module", "unknown-module"),
+    ("workspace.next-action.update", "/properties/workspace_id"):
+        ("workspace.next-action.update.unknown-workspace",
+         "unknown-workspace"),
+    ("review.prepare", "/properties/unit_id"):
+        ("review.prepare.unknown-unit", "unknown-unit"),
+    ("review.apply", "/properties/unit_id"):
+        ("review.apply.unknown-unit", "unknown-unit"),
+    ("module.materials.compact", "/properties/module_id"):
+        ("module.materials.compact.unknown-module", "unknown-module"),
+    ("project.update", "/properties/project_id"):
+        ("project.update.id-mismatch", "id-mismatch"),
 }
 
 #: The expected complaint form per anchored pointer (SPEC (bk) item 1,
@@ -1018,6 +1062,19 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("legacy-verbatim",
          "route route-b2f1f80014860a929a3af0bc continuation refused: "
          "unknown concept ids: ['{miss}']"),
+    ("module.attempt.record", "/properties/module_id"):
+        ("prefixed", "module"),
+    ("module.sitting.update", "/properties/module_id"):
+        ("prefixed", "module"),
+    ("workspace.next-action.update", "/properties/workspace_id"):
+        ("legacy-verbatim", "los: workspace not found: {miss}"),
+    ("review.prepare", "/properties/unit_id"): ("prefixed", "unit"),
+    ("review.apply", "/properties/unit_id"): ("prefixed", "unit"),
+    ("module.materials.compact", "/properties/module_id"):
+        ("legacy-verbatim", "module source map not found: {miss}"),
+    ("project.update", "/properties/project_id"):
+        ("legacy-verbatim",
+         "project file id does not match command project_id"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -1530,6 +1587,23 @@ def test_lookup_domain_equals_handler_notfound_domain(
         f"A5 {operation}::{pointer}: the handler passes "
         f"{captured.get('domain')!r}, the branch lists "
         f"{domain_list!r} — {FIX}")
+
+
+
+@pytest.mark.parametrize(
+    ("operation", "pointer"),
+    sorted((operation, pointer)
+           for (operation, pointer), (kind, _)
+           in MESSAGE_FORM.items()
+           if kind == "legacy-verbatim"))
+def test_message_form_wrong_template_fails(tmp_path, operation, pointer):
+    """A wrong legacy template cannot rebuild the complaint (bl 6)."""
+    rebuilt, recorded = _mutant_rebuild(
+        tmp_path, operation, pointer,
+        ("legacy-verbatim", "wrong-template {miss}"))
+    assert rebuilt != recorded, (
+        f"A5 {operation}::{pointer}: a wrong template still rebuilds "
+        f"{recorded!r} — {FIX}")
 
 
 def _inspect_exit(operation: str, pointer: str) -> int:
