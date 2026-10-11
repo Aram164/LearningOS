@@ -48,4 +48,12 @@ cases:
     - transport: cli
       argv: [ai-action-append-slices, --request-id, ai-request-append-unknown-concept, --route-id, route-b2f1f80014860a929a3af0bc, --start, 21, --end, 24, --kind, example, --concept-id, concept-nope, --material-uri, "material://source-demo-book/book.pdf", --reason, "cover the worked example on pp. 21-24"]
     expect: {site: cli.ai-action-append-slices.unknown-concept}
+  - id: append-success-with-concepts
+    kind: sequence
+    a5_base: true
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, unit.compare-materials, --target-kind, unit, --target-id, unit-demo-l01, --request-id, ai-request-append-with-concepts]
+      - transport: cli
+        argv: [ai-action-append-slices, --request-id, ai-request-append-with-concepts, --route-id, route-b2f1f80014860a929a3af0bc, --start, 21, --end, 24, --kind, example, --concept-id, concept-expected-value, --reason, "cover the worked example on pp. 21-24"]
 untriggered: []
