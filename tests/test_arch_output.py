@@ -532,6 +532,26 @@ NO_REFUSAL_UNIT = {
     "cli.status": ("only refusal is cli.status.unreadable-records, unreachable "
                    "from inputs: parse failures need corrupt canonical records "
                    "and no status input writes records"),
+    "cli.health-report": ("no refusal raise in the handler closure: "
+                           "health_report only builds the report"),
+    "health.report": ("shares cli.health-report's handler; no refusal raise "
+                       "declares for health.report"),
+    "cli.inbox-list": ("only refusal is cli.inbox-list.list-failed, unreachable "
+                        "from inputs: listing work/inbox fails only on OSError"),
+    "inbox.list": ("shares cli.inbox-list's handler; the closure's only "
+                    "refusal declares as cli.inbox-list.list-failed"),
+    "cli.legacy-archive-status": ("no refusal raise in the handler closure: "
+                                   "legacy_archive_status only loads the "
+                                   "published lock"),
+    "legacy.archive.status": ("shares cli.legacy-archive-status's handler; no "
+                               "refusal raise declares for "
+                               "legacy.archive.status"),
+    "cli.module-list": ("no refusal raise in the handler closure: module_list "
+                         "only filters manifest rows"),
+    "cli.project-list": ("no refusal raise in the handler closure: "
+                          "project_list only filters manifest rows"),
+    "project.list": ("shares cli.project-list's handler; no refusal raise "
+                      "declares for project.list"),
 }
 
 
