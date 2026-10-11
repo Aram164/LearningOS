@@ -805,3 +805,7 @@ checks:
     count: 2
     since: baseline
     approved_by: null
+  - signature: tools/learning_os/ops/handlers/goals.py::goal::touched
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
