@@ -521,8 +521,14 @@ def _lookup_domain(ctx, operation: str, row: dict,
     from ``repo.concepts`` as ``plan_continuation`` checks them;
     inspect references from ``_inspect_candidates``; deliveries
     from the delivery directory entries; digests from the real bound
-    digest. The ordered list feeds the complaint template in handler
-    traversal order.
+    digest. SPEC (bv) item 1 adds: detours from the unit's current
+    study map as ``detour_resolve`` lists them; paths from the
+    non-archived ``repo.learning_paths`` keys as
+    ``require_path_or_error`` lists them; path stages from the
+    path's own stage list resolved from ``path_id`` (those requests
+    carry no ``unit_id``); sources from ``repo.sources`` as both
+    source handlers pass it. The ordered list feeds the complaint
+    template in handler traversal order.
     """
     from learning_os.loader import load_repo
 
@@ -532,6 +538,17 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = list(repo.units)
         return ordered, set(ordered)
+    if kind == "stage" and "path_id" in request:
+        # The path operations carry no unit_id; the stage list is the
+        # path's own, resolved from path_id exactly as
+        # ``require_path_or_error`` plus ``require_stage`` resolve it
+        # (SPEC (bv) item 1).
+        repo = load_repo(ctx.root)
+        learning_path = repo.learning_paths[request["path_id"]]
+        ordered = [str(row["id"])
+                   for row in learning_path.data.get("stages", []) or []
+                   if isinstance(row, dict) and row.get("id")]
+        return ordered, set(ordered)
     if kind == "stage":
         repo = load_repo(ctx.root)
         unit = repo.units[request["unit_id"]]
@@ -539,6 +556,28 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = [str(entry["id"])
                    for entry in study_map.data.get("stages", []) or []
                    if isinstance(entry, dict) and entry.get("id")]
+        return ordered, set(ordered)
+    if kind == "detour":
+        # detour.resolve passes the unit's current study-map detour
+        # ids (SPEC (bv) item 1).
+        repo = load_repo(ctx.root)
+        unit = repo.units[request["unit_id"]]
+        study_map = repo.study_maps[unit.data["current_study_map"]]
+        ordered = [row.get("id")
+                   for row in study_map.data.get("detours", []) or []
+                   if isinstance(row, dict) and row.get("id")]
+        return ordered, set(ordered)
+    if kind == "path":
+        # require_path_or_error passes the non-archived path keys
+        # (SPEC (bv) item 1).
+        repo = load_repo(ctx.root)
+        ordered = [key for key, row in repo.learning_paths.items()
+                   if not row.archived]
+        return ordered, set(ordered)
+    if kind == "source":
+        # Both source handlers pass repo.sources (SPEC (bv) item 1).
+        repo = load_repo(ctx.root)
+        ordered = list(repo.sources)
         return ordered, set(ordered)
     if kind == "route" and operation == "cli.ai-action-append-slices":
         # The append request carries no unit_id; the unit resolves
@@ -818,8 +857,22 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("detour.create", "/properties/unit_id"): ("prefixed", "unit"),
     ("detour.create", "/properties/stage_id"): ("prefixed", "stage"),
     ("detour.resolve", "/properties/unit_id"): ("prefixed", "unit"),
+    ("detour.resolve", "/properties/detour_id"): ("prefixed", "detour"),
+    ("path.attachment.add", "/properties/path_id"):
+        ("prefixed", "active learning path"),
+    ("path.attachment.add", "/properties/stage_id"):
+        ("prefixed", "stage"),
+    ("path.note.write", "/properties/path_id"):
+        ("prefixed", "active learning path"),
+    ("path.note.write", "/properties/stage_id"): ("prefixed", "stage"),
+    ("path.progress.update", "/properties/path_id"):
+        ("prefixed", "active learning path"),
+    ("path.progress.update", "/properties/stage_id"):
+        ("prefixed", "stage"),
     ("source.feedback.record", "/properties/stage_id"):
         ("prefixed", "stage"),
+    ("source.feedback.record", "/properties/source_id"):
+        ("prefixed", "source"),
     ("source.feedback.record", "/properties/unit_id"):
         ("prefixed", "unit"),
     ("stage.attachment.add", "/properties/stage_id"):
@@ -831,6 +884,8 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("unit.note.append", "/properties/unit_id"): ("prefixed", "unit"),
     ("unit.source-selection.set", "/properties/unit_id"):
         ("prefixed", "unit"),
+    ("unit.source-selection.set", "/properties/source_id"):
+        ("prefixed", "source"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -1037,6 +1092,93 @@ def test_message_form_wrong_form_fails(tmp_path):
     assert rebuilt != recorded, (
         f"A5 stage.note.write stage as legacy-verbatim still rebuilds "
         f"{recorded!r} — {FIX}")
+
+
+#: The (bv) 1 S1 pointers: one per new domain branch kind.
+_DOMAIN_SELF_CHECK_POINTERS = (
+    ("detour.resolve", "/properties/detour_id"),
+    ("path.attachment.add", "/properties/path_id"),
+    ("path.attachment.add", "/properties/stage_id"),
+    ("path.note.write", "/properties/path_id"),
+    ("path.note.write", "/properties/stage_id"),
+    ("path.progress.update", "/properties/path_id"),
+    ("path.progress.update", "/properties/stage_id"),
+    ("source.feedback.record", "/properties/source_id"),
+    ("unit.source-selection.set", "/properties/source_id"),
+)
+
+
+@pytest.mark.parametrize(("operation", "pointer"),
+                         _DOMAIN_SELF_CHECK_POINTERS)
+def test_lookup_domain_equals_handler_notfound_domain(
+        tmp_path, monkeypatch, operation, pointer):
+    """Each (bv) 1 branch's list equals the handler's (bv 1 self-check).
+
+    At the probe's own fixture (base case plus prerequisites), the
+    real converted handler is driven with the probe's miss; the
+    ordered domain it passes to ``NotFound`` must equal the branch's
+    list exactly, in order.
+    """
+    import scenario_harness as harness
+
+    from learning_os.domain import failures as failures_module
+    from learning_os.ops.context import OpContext
+    from learning_os.ops.handlers import _shared as shared_handlers
+    from learning_os.ops.handlers import learner as learner_handlers
+
+    rows = {row["pointer"]: row for row in _probe_rows()
+            if row["operation"] == operation}
+    row = rows[pointer]
+    case, target_index, _ = _select_base(operation, row)
+    workdir = tmp_path / "world"
+    ctx = harness._prepare_world(
+        _merged_case(operation, case), operation, workdir)
+    steps = case.get("steps", []) if case.get("kind") == "sequence" else [case]
+    for prereq in range(target_index):
+        full = {"operation": operation, **steps[prereq]}
+        result = harness._run_step(ctx, operation, full, prereq)
+        assert result["exit"] == 0, (
+            f"A5 {operation}::{pointer}: prerequisite step {prereq} exits "
+            f"{result['exit']}: {result['stderr']!r} — {FIX}")
+    _, request, positions = _derive_target(
+        ctx, operation, row, case, target_index)
+    domain_list, domain_set = _lookup_domain(ctx, operation, row, request)
+    prop, _ = _pointer_prop(pointer)
+    position = _probe_positions(positions)[0]
+    assert position[0] == "scalar", (operation, pointer, position)
+    validates = _validates_for_row(operation, row, request, position)
+    parses = _parses_for_row(row)
+    miss = _near_miss_candidate(
+        position[2], parses=parses, validates=validates,
+        forbidden_texts=_exclusion_texts(ctx.root), domain=domain_set)
+    handler_request = dict(request)
+    handler_request[prop] = miss
+    # The base's snapshot token is stale in this fresh world; the
+    # domain comes from the loaded files, not the guard.
+    handler_request.pop("expected_snapshot", None)
+    op_ctx = OpContext(root=ctx.root, operation=operation,
+                       channel="operator", invocation="command",
+                       gateway=None)
+    captured: dict = {}
+    real_not_found = failures_module.NotFound
+
+    class RecordingNotFound(real_not_found):
+        def __init__(self, kind, value, candidates, **kwargs):
+            captured["domain"] = list(candidates)
+            super().__init__(kind, value, candidates, **kwargs)
+
+    monkeypatch.setattr(learner_handlers, "NotFound", RecordingNotFound)
+    monkeypatch.setattr(shared_handlers, "NotFound", RecordingNotFound)
+    # cwd=root, as the harness child's: case-relative file references
+    # (path attachments) resolve inside the fixture.
+    monkeypatch.chdir(ctx.root)
+    handler = REGISTRY[operation].handler
+    with pytest.raises(real_not_found):
+        handler(op_ctx, handler_request)
+    assert captured.get("domain") == domain_list, (
+        f"A5 {operation}::{pointer}: the handler passes "
+        f"{captured.get('domain')!r}, the branch lists "
+        f"{domain_list!r} — {FIX}")
 
 
 def _inspect_exit(operation: str, pointer: str) -> int:
