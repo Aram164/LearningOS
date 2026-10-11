@@ -363,14 +363,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::return
-    count: 1
-    since: baseline
-    approved_by: null
   A4-plumbing-2: []
   A8-transcripts:
   - signature: system/WORKFLOWS.md::## 1. Start a workspace
