@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os import observations
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
-from learning_os.domain.failures import ValidationFailed, WriteRefused
+from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.ops._legacy_plumbing import (
     _current_session_id,
@@ -187,13 +187,15 @@ def goal(ctx: OpContext, req: dict) -> Result:
         for goal_id in unknown:
             lines.append(not_found("goal", goal_id, candidates))
         extra = tuple(f"los: {line}" for line in lines[1:])
-        raise WriteRefused(
-            lines[0],
+        failure = NotFound(
+            "goal", unknown[0], candidates,
+            message=lines[0],
             site="cli.goal.unknown-goal",
-            extra_stderr=extra,
             gateway_message="los: " + lines[0] + "".join(f"\n{line}" for line in extra),
             exit_code=2,
         )
+        failure.extra_stderr = extra
+        raise failure
     entry: dict = {"state": state, "decided_at": observations.today().isoformat()}
     if revisit_on is not None:
         entry["revisit_on"] = revisit_on

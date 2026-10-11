@@ -115,6 +115,79 @@ def test_goal_refuses_unknown_ids_with_suggestions(mini_repo: Path):
     assert ledger_path.read_bytes() == before
 
 
+def test_goal_unknown_batch_keeps_input_order_and_extra_lines(mini_repo: Path):
+    """SPEC (cq) 6: batch order, first message and extra lines preserved."""
+    from learning_os.domain.suggest import not_found
+
+    (goal_id,) = seed_live_goal_ids(mini_repo, "ordered")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    known = sorted(["g-untouched", goal_id])
+    proc = run_los(mini_repo, "goal", "bogus-second", "bogus-first", "--reject")
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    first = not_found("goal", "bogus-second", known)
+    second = not_found("goal", "bogus-first", known)
+    assert first == "goal not found: bogus-second"
+    assert second == "goal not found: bogus-first"
+    assert proc.stderr == (f"los: INVALID_REQUEST: {first}\n"
+                           f"los: {second}\n")
+    assert ledger_path.read_bytes() == before
+
+
+def test_goal_unknown_carries_typed_details(mini_repo: Path):
+    """SPEC (cq) 6: the unknown-goal miss is a typed NOT_FOUND."""
+    from learning_os.domain.suggest import not_found
+
+    (goal_id,) = seed_live_goal_ids(mini_repo, "typed")
+    seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    typo = goal_id[:-1] + ("X" if not goal_id.endswith("X") else "Y")
+    proc = run_los(mini_repo, "goal", typo, "--reject", "--json")
+    assert proc.returncode == 2
+    error = json.loads(proc.stdout)["error"]
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["retryable"] is False
+    assert error["message"] == not_found(
+        "goal", typo, sorted(["g-untouched", goal_id]))
+    assert error["details"]["reason"] == "NOT_FOUND"
+    assert goal_id in error["details"]["suggestions"]
+
+
+def test_goal_scan_failure_degrades_to_ledger_only(mini_repo: Path, monkeypatch):
+    """SPEC (cq) 6: scan diagnostics and ledger-only behavior preserved."""
+    import learning_os.ops.handlers.goals as goals_mod
+    from learning_os.domain.failures import NotFound
+    from learning_os.domain.suggest import not_found, suggestions
+    from learning_os.ops.context import OpContext
+
+    seed_goal_ledger(mini_repo, {"g-ledger": "rejected"})
+
+    def boom(root):
+        raise OSError("disk gone")
+
+    monkeypatch.setattr(goals_mod, "intelligence_scan", boom)
+    ctx = OpContext(root=mini_repo, operation="cli.goal",
+                    channel="cli", invocation="command", gateway=None)
+    with pytest.raises(NotFound) as caught:
+        goals_mod.goal(ctx, {"goal_id": ["bogus-id"], "reject": True})
+    exc = caught.value
+    assert type(exc) is NotFound
+    diag = ("the live scan is unavailable (disk gone); "
+            "deciding only ledger-known ids")
+    first = not_found("goal", "bogus-id", ["g-ledger"])
+    assert str(exc) == diag
+    assert exc.extra_stderr == (f"los: {first}",)
+    assert exc.site == "cli.goal.unknown-goal"
+    assert exc.gateway_message == f"los: {diag}\nlos: {first}"
+    assert exc.exit_code == 2
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggestions("bogus-id", ["g-ledger"])
+    # A ledger-known id still decides under a failed scan.
+    result = goals_mod.goal(
+        ctx, {"goal_id": ["g-ledger"], "reject": True, "check": True})
+    assert result.payload["goal_ids"] == ["g-ledger"]
+
+
 def test_goal_batch_with_unknown_id_writes_nothing(mini_repo: Path):
     """F7: a batch is all-or-nothing; one unknown id refuses the batch."""
     (goal_id,) = seed_live_goal_ids(mini_repo, "batched")

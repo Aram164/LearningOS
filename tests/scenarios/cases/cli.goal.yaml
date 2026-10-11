@@ -2,6 +2,12 @@ operation: cli.goal
 fixture: rich_world
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
+  - id: canonical-goal-preview
+    kind: success
+    transport: cli
+    argv: [goal, study-map-obligation:unit-demo-l02, --close, --check]
+    a5_base: true
+    expect: {site: null}
   - id: close-goal
     kind: success
     transport: cli

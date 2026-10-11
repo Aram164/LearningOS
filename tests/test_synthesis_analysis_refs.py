@@ -165,6 +165,38 @@ def test_misbound_refs_refused(mini_repo):
             validate_unit_material_synthesis(mini_repo, "unit-demo-l01", dossier)
 
 
+def test_uncoordinated_unit_mutation_refuses_at_the_binding_guard(mini_repo):
+    """SPEC (cq) 5: the binding guard precedes the repository lookup."""
+    dossier = _seed(mini_repo, None)
+    assert dossier["unit_id"] == "unit-demo-l01"
+    # A request for another unit against this dossier refuses at the
+    # binding guard, even when the requested unit would also miss.
+    for requested in ("unit-demo-l02", "unit-nope"):
+        with pytest.raises(MaterialSynthesisError) as caught:
+            validate_unit_material_synthesis(mini_repo, requested, dossier)
+        assert type(caught.value) is MaterialSynthesisError
+        assert str(caught.value) == (
+            "dossier unit_id does not match the requested unit")
+
+
+def test_malformed_dossier_schema_precedes_the_lookup(mini_repo):
+    """SPEC (cq) 5: schema failures precede binding and lookup alike."""
+    dossier = _seed(mini_repo, None)
+    dossier["unit_id"] = "unit-nope"
+    del dossier["comparisons"]
+    with pytest.raises(MaterialSynthesisError) as caught:
+        validate_unit_material_synthesis(mini_repo, "unit-nope", dossier)
+    assert type(caught.value) is MaterialSynthesisError
+    assert "unit not found" not in str(caught.value)
+
+    bound = _seed(mini_repo, None)
+    del bound["comparisons"]
+    with pytest.raises(MaterialSynthesisError) as caught:
+        validate_unit_material_synthesis(mini_repo, "unit-demo-l02", bound)
+    assert type(caught.value) is MaterialSynthesisError
+    assert "does not match the requested unit" not in str(caught.value)
+
+
 def test_malformed_ref_fails_schema(mini_repo):
     dossier = _seed(mini_repo, "valid")
     del _assessment_ref(dossier)["note_revision"]

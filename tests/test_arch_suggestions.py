@@ -309,6 +309,35 @@ def _mutated_step(step, transport, prop, position, miss):
     return mutant
 
 
+#: The one owner-coordinated probe pointer (SPEC (cq) 5): the dossier's
+#: own unit binding must travel with the request's, or the probe stops
+#: at the binding guard instead of the repository lookup.
+_SYNTHESIS_UNIT_POINTER = ("unit.material-synthesis.publish",
+                           "/properties/unit_id")
+
+
+def _coordinate_synthesis_unit(mutant: dict, transport: str,
+                               miss: str) -> dict:
+    """Bind the inline dossier record to the probe miss (SPEC (cq) 5).
+
+    Only for the marked synthesis base's inline record: the request
+    already carries the miss; the record's own ``unit_id`` follows it.
+    Anything else — another transport, a file-backed record, a missing
+    binding — fails closed. This repairs no other request shape.
+    """
+    assert transport == "gateway" or "request" in mutant, (
+        f"A5 {mutant.get('operation')}: the synthesis probe needs the "
+        f"gateway request form — {FIX}")
+    request = mutant.get("request")
+    assert isinstance(request, dict), (
+        f"A5 synthesis probe has no request object — {FIX}")
+    record = request.get("record")
+    assert isinstance(record, dict) and "unit_id" in record, (
+        f"A5 synthesis probe needs the marked base's inline record — {FIX}")
+    record["unit_id"] = miss
+    return mutant
+
+
 # --- the (af) near-miss generator -------------------------------------------
 
 #: The fixed cyclic alphabet (SPEC (af)).
@@ -1098,6 +1127,16 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("coordination.section.revise.content-changed", "stale-digest"),
     ("inbox.resolve", "/properties/drop_sha256"):
         ("inbox.resolve.drop-changed", "changed-drop"),
+    # SPEC (cq) items 3-6: the repaired lookup anchors.
+    ("unit.map.import", "/properties/unit_id"):
+        ("unit.map.import.unknown-unit", "unknown-unit"),
+    ("unit.material-synthesis.publish", "/properties/unit_id"):
+        ("unit.material-synthesis.publish.unknown-unit",
+         "unknown-unit-coordinated"),
+    ("cli.goal", "/properties/goal_id/items"):
+        ("cli.goal.unknown-goal", "unknown-goal"),
+    ("material.span", "/properties/stage_id"):
+        ("material.span.unknown-placement", "placement-missing"),
 }
 
 #: The expected complaint form per anchored pointer (SPEC (bk) item 1,
@@ -1227,6 +1266,14 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("legacy-verbatim",
          "los: inbox drop changed since read: note-drop.md "
          "(re-read it with `inbox-read note-drop.md` and re-seal)"),
+    # SPEC (cq) items 3-6: the repaired lookup complaints.
+    ("unit.map.import", "/properties/unit_id"): ("prefixed", "unit"),
+    ("unit.material-synthesis.publish", "/properties/unit_id"):
+        ("legacy-verbatim", "unit not found: {miss}"),
+    ("cli.goal", "/properties/goal_id/items"): ("template", "goal"),
+    ("material.span", "/properties/stage_id"):
+        ("legacy-verbatim",
+         "placement is missing or ambiguous in this unit"),
 }
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
@@ -1264,6 +1311,9 @@ _CLI_REFUSED_POINTERS = frozenset({
     ("material.span", "/properties/route_id"),
     ("atlas.context", "/properties/concept_id"),
     ("cli.atlas-context", "/properties/concept_id"),
+    # SPEC (cq) items 3 and 6: the repaired CLI lookup anchors.
+    ("cli.goal", "/properties/goal_id/items"),
+    ("material.span", "/properties/stage_id"),
 })
 
 #: Every CLI-anchored pointer: sequence plus refused anchors.
@@ -1964,6 +2014,8 @@ def test_pointer_misses(tmp_path, operation, pointer):
                 f"A5 route.patch unit probe uses {miss!r}, want the (af) "
                 f"collision candidate unit-demo-l03 — {FIX}")
         mutant = _mutated_step(base_step, transport, prop, position, miss)
+        if (operation, pointer) == _SYNTHESIS_UNIT_POINTER:
+            mutant = _coordinate_synthesis_unit(mutant, transport, miss)
         if case.get("kind") == "sequence":
             mutant.setdefault("operation", operation)
         step_no += 1
