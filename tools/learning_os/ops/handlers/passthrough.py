@@ -12,6 +12,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from learning_os.ops._legacy_plumbing import _publish
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import CommandOutput, Result
 from learning_os.ops.registry import register
@@ -30,3 +31,12 @@ def validate_command(ctx: OpContext, req: dict) -> Result:
     return Result({}, command_output=CommandOutput(
         stdout=proc.stdout, stderr=proc.stderr,
         exit_code=proc.returncode))
+
+
+@register("cli.generate", kind="porcelain")
+def generate_command(ctx: OpContext, req: dict) -> Result:
+    """Publish generated/manifest.json in-process (R6 form b)."""
+    _publish(ctx.root)
+    return Result({}, command_output=CommandOutput(
+        stdout="published generated/manifest.json (atomic contract snapshot)\n",
+        stderr="", exit_code=0))
