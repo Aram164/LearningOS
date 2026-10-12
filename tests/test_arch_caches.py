@@ -1187,6 +1187,89 @@ def test_text_custom_cache_stays_file_only(tmp_path: Path, capsys, monkeypatch):
 
 
 @needs_pdftotext
+@needs_pdftotext
+def test_text_warm_run_uses_one_shared_session(tmp_path: Path, capsys, monkeypatch):
+    """Warm lookups batch into one session: N materials, one identity."""
+    import learning_os.derived.engine as engine_module
+
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Session text A"),
+            "deck-b.pdf": _tiny_pdf("Session text B")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    calls = []
+    real_identity = engine_module.digest_code_identity
+
+    def counted(root):
+        calls.append(root)
+        return real_identity(root)
+
+    monkeypatch.setattr(engine_module, "digest_code_identity", counted)
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (2, 0)
+    assert len(calls) == 1
+
+
+@needs_pdftotext
+def test_text_shared_digest_counts_match_single_pass(tmp_path: Path, capsys, monkeypatch):
+    """Two materials, identical bytes: the second serves from the first's
+    publish within the run, exactly as one lookup per material does."""
+    mt = _load_material_text()
+    data = _tiny_pdf("Shared bytes text")
+    spec = {"deck-a.pdf": data, "deck-b.pdf": data}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, cold = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0 and (cold["cached"], cold["extracted"]) == (1, 1)
+    digest = _digest_of(data)
+    assert len(_text_nodes(fake)) == 1
+    index = json.loads((mt.CACHE_DIR / digest / "index.json").read_text(encoding="utf-8"))
+    assert index["material"] == "deck-a.pdf"
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (2, 0)
+
+
+@needs_pdftotext
+def test_text_coherent_tamper_reextracts(tmp_path: Path, capsys, monkeypatch):
+    """Files rewritten coherently (fresh hashes, same extractor) still
+    rebuild: the node value, not the view, is the authority."""
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("True page text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    page_path = mt.CACHE_DIR / digest / "pp-0001.txt"
+    page_path.write_text("Coherent lies\n", encoding="utf-8")
+    index_path = mt.CACHE_DIR / digest / "index.json"
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    index["pages_sha256"] = [hashlib.sha256(b"Coherent lies\n").hexdigest()]
+    index_path.write_text(json.dumps(index), encoding="utf-8")
+    assert mt._index_valid(mt.CACHE_DIR, digest, 1)
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    assert "True page text" in page_path.read_text(encoding="utf-8")
+
+
+@needs_pdftotext
+def test_text_skipped_order_matches_manifest_order(tmp_path: Path, capsys, monkeypatch):
+    """Refusals print in manifest order although phases split them."""
+    mt = _load_material_text()
+    data = _tiny_pdf("Order text")
+    spec = {"deck-a.pdf": data, "../outside.pdf": None, "gone.pdf": None}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    real_count = mt._page_count
+    monkeypatch.setattr(
+        mt, "_page_count",
+        lambda path: 99 if Path(path).name == "deck-a.pdf" else real_count(path))
+    code, summary = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0
+    assert [entry["material"] for entry in summary["skipped"]] == [
+        "../outside.pdf", "deck-a.pdf", "gone.pdf"]
+    assert [entry["reason"] for entry in summary["skipped"]] == [
+        "boundary", "extract-failed", "missing"]
+
+
 def test_text_explicit_default_dir_uses_derived_nodes(tmp_path: Path, capsys, monkeypatch):
     """Passing --cache-dir equal to the default selects the same path:
     behavior keys on the selected location, never on flag presence."""

@@ -49,7 +49,7 @@ from materials_manifest import (  # noqa: E402
     sha256,
 )
 
-from learning_os.derived.engine import BuildContext, evaluate  # noqa: E402
+from learning_os.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
 from learning_os.derived.model import (  # noqa: E402
     DERIVED_SUBSTRATE_FILES,
     DerivedError,
@@ -213,6 +213,17 @@ def _valid_text_value(value: object) -> bool:
     return all(isinstance(item, str) for item in hashes)
 
 
+def _checked_text_value(node_id: str, value: object) -> dict | None:
+    """A looked-up value, or None when wrongly shaped (then invalidated)."""
+    if _valid_text_value(value):
+        return value
+    try:
+        invalidate(REPO, node_id)
+    except (OSError, TransactionFailure):
+        pass
+    return None
+
+
 def _default_text_lookup(digest: str, pages: int) -> dict | None:
     """The derived value for one digest, or None on any miss.
 
@@ -233,14 +244,43 @@ def _default_text_lookup(digest: str, pages: int) -> dict | None:
             inputs=inputs)
     except (OSError, DerivedError, TransactionFailure, ValueError):
         return None
-    value = evaluation.value
-    if not _valid_text_value(value):
-        try:
-            invalidate(REPO, node_id)
-        except (OSError, TransactionFailure):
-            pass
-        return None
-    return value
+    return _checked_text_value(node_id, evaluation.value)
+
+
+def _default_text_lookups(pairs: list[tuple[str, int]]) -> dict[tuple[str, int], dict | None]:
+    """Lookup-only values for many digests sharing one session.
+
+    One `evaluate_many` serves every warm hit with one session's
+    identity costs; a miss aborts the batch (lookup builds never
+    rebuild), and then each pair resolves singly, exactly as
+    `_default_text_lookup` does. Read-only either way: hits never
+    write, and a wrongly shaped value invalidates and misses.
+    """
+    unique = list(dict.fromkeys(pairs))
+    if not unique:
+        return {}
+
+    def _no_rebuild(_ctx: BuildContext) -> dict:
+        raise DerivedError("text-cache lookup miss (no rebuild)")
+
+    registry = {
+        _text_node_id(digest): (_text_spec(digest), _no_rebuild)
+        for digest, _pages in unique
+    }
+    inputs: dict[str, str] = {}
+    for digest, pages in unique:
+        inputs.update(_text_inputs(digest, pages))
+    try:
+        evaluations = evaluate_many(
+            REPO, [_text_node_id(digest) for digest, _pages in unique],
+            registry=registry, inputs=inputs)
+    except (OSError, DerivedError, TransactionFailure, ValueError):
+        return {pair: _default_text_lookup(*pair) for pair in unique}
+    return {
+        (digest, pages): _checked_text_value(
+            _text_node_id(digest), evaluations[_text_node_id(digest)].value)
+        for digest, pages in unique
+    }
 
 
 def _value_matches_inputs(value: dict, digest: str, pages: int) -> bool:
@@ -500,6 +540,7 @@ def main(argv: list[str] | None = None) -> int:
     skipped: list[dict] = []
     stale: list[str] = []
     live: set[str] = set()
+    pending: list[tuple[str, Path, str, int, bool]] = []
     for rel in sorted(recorded):
         path = base / rel
         try:
@@ -528,8 +569,31 @@ def main(argv: list[str] | None = None) -> int:
             healed += 1
             continue
         if default_cache:
-            value = _default_text_lookup(digest, pages)
-            files_ok = _index_valid(cache, digest, pages)
+            # File facts now; the node's lookup joins one shared
+            # session below, so a run pays one session's identity
+            # costs however many materials it holds.
+            pending.append((rel, path, digest, pages,
+                            _index_valid(cache, digest, pages)))
+            continue
+        if _index_valid(cache, digest, pages):
+            cached += 1
+            continue
+        outcome = _extract(path, digest, rel, cache, pages)
+        if "pages" in outcome:
+            extracted += 1
+        else:
+            skipped.append(outcome)
+    if pending:
+        values = _default_text_lookups(
+            [(digest, pages) for _, _, digest, pages, _ in pending])
+        for rel, path, digest, pages, files_ok in pending:
+            value = values[(digest, pages)]
+            if value is None:
+                # A batch miss resolves singly now, picking up any node
+                # or view this run published for a shared digest — the
+                # same interleaving as one lookup per material.
+                value = _default_text_lookup(digest, pages)
+                files_ok = _index_valid(cache, digest, pages)
             if (value is not None and files_ok
                     and _texts_match_index(value, cache, digest)):
                 cached += 1
@@ -540,16 +604,16 @@ def main(argv: list[str] | None = None) -> int:
                         path, digest, rel, cache, pages, value["texts"])):
                 cached += 1
                 continue
-        elif _index_valid(cache, digest, pages):
-            cached += 1
-            continue
-        outcome = _extract(path, digest, rel, cache, pages)
-        if default_cache and "pages" in outcome:
-            _persist_text_node(digest, rel, cache, pages)
-        if "pages" in outcome:
-            extracted += 1
-        else:
-            skipped.append(outcome)
+            outcome = _extract(path, digest, rel, cache, pages)
+            if "pages" in outcome:
+                _persist_text_node(digest, rel, cache, pages)
+                extracted += 1
+            else:
+                skipped.append(outcome)
+        # Phase-1 refusals precede phase-3 outcomes above; restore the
+        # manifest order a single pass produces.
+        order = {rel: index for index, rel in enumerate(sorted(recorded))}
+        skipped.sort(key=lambda entry: order[entry["material"]])
     pruned = _prune(cache, live) if (args.refresh or not args.build) else 0
     print(json.dumps({"cached": cached, "extracted": extracted,
                       "healed": healed, "skipped": skipped, "stale": sorted(stale),
