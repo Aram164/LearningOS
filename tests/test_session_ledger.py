@@ -21,6 +21,7 @@ from repo_builders import run_los, seed_live_goal_ids
 
 from learning_os.commands import support as command_support
 from learning_os.contracts.gateway import intent_sha256, request_artifact_id
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.ops import _legacy_plumbing as plumbing_support
 
@@ -656,3 +657,92 @@ def test_session_end_reports_the_client_marker(mini_repo, monkeypatch):
     marked = _session_end(mini_repo)
     assert marked.returncode == 0, marked.stderr
     assert json.loads(marked.stdout)["client"] == "obsidian-ui/test-build"
+
+
+#: The base commit's v2 writer bytes, captured verbatim (SPEC §13, M-06).
+#: Produced by running the pre-move `_write_session_ledger` for two sessions
+#: over identical stamped rows; provenance is the pair session's
+#: `scratch/task70/capture_v2_bytes.py` plus its `v2_bytes.txt` output.
+V2_WRITER_BYTES = """{
+  "paths": {
+    "work/inbox/note-alpha.md": {
+      "channel": "operator",
+      "recorded_at": "2026-10-12T12:55:28+00:00",
+      "sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+      "state": "file"
+    },
+    "work/notes.md": {
+      "channel": "operator",
+      "recorded_at": "2026-10-12T12:55:28+00:00",
+      "sha256": "5da8f23decf397b13f4f55b6fb8a61936238bfe08ed9d901132974f1beccc45c",
+      "state": "file"
+    }
+  },
+  "schema_version": 2,
+  "session_id": "fixture-session"
+}
+"""
+
+#: The same capture for a different session: reading it under
+#: `fixture-session` must refuse as a foreign ledger.
+V2_WRONG_SESSION_TWIN_BYTES = """{
+  "paths": {
+    "work/inbox/note-alpha.md": {
+      "channel": "operator",
+      "recorded_at": "2026-10-12T12:55:28+00:00",
+      "sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+      "state": "file"
+    },
+    "work/notes.md": {
+      "channel": "operator",
+      "recorded_at": "2026-10-12T12:55:28+00:00",
+      "sha256": "5da8f23decf397b13f4f55b6fb8a61936238bfe08ed9d901132974f1beccc45c",
+      "state": "file"
+    }
+  },
+  "schema_version": 2,
+  "session_id": "other-session"
+}
+"""
+
+#: Truncated copy of the capture: unreadable, never a bare paths dict.
+V2_CORRUPT_BYTES = """{
+  "paths": {
+    "work/inbox/note-alpha.md": {
+      "channel": "operator",
+      "recorded_at": "2026-10-12T12:55:28+00:00",
+      "sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060",
+      "state": "file"
+    },
+    "work/notes.md"""
+
+
+def test_v2_writer_fixture_matches_the_writer_and_reads(mini_repo):
+    """The literal fixture is genuine v2 writer output and loads today.
+
+    The round-trip proves the literal's formatting (sorted keys, indent 2,
+    trailing newline) is exactly what `_write_session_ledger` produces; the
+    loads prove the twin and corrupt variants refuse with today's messages.
+    """
+    assert (json.dumps(json.loads(V2_WRITER_BYTES), indent=2, sort_keys=True)
+            + "\n") == V2_WRITER_BYTES
+    ledger = plumbing_support._session_ledger(mini_repo, "fixture-session")
+    try:
+        ledger.write_text(V2_WRITER_BYTES, encoding="utf-8")
+        recorded = plumbing_support._load_session_paths(
+            mini_repo, "fixture-session")
+        assert set(recorded) == {"work/inbox/note-alpha.md", "work/notes.md"}
+        assert recorded["work/notes.md"] == {
+            "channel": "operator",
+            "recorded_at": "2026-10-12T12:55:28+00:00",
+            "sha256": "5da8f23decf397b13f4f55b6fb8a61936238bfe08ed9d901132974f1beccc45c",
+            "state": "file",
+        }
+        ledger.write_text(V2_WRONG_SESSION_TWIN_BYTES, encoding="utf-8")
+        with pytest.raises(WriteRefused, match="names a different session"):
+            plumbing_support._load_session_paths(mini_repo, "fixture-session")
+        ledger.write_text(V2_CORRUPT_BYTES, encoding="utf-8")
+        with pytest.raises(WriteRefused, match="ledger is unreadable"):
+            plumbing_support._load_session_paths(mini_repo, "fixture-session")
+    finally:
+        ledger.unlink(missing_ok=True)
