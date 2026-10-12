@@ -6,6 +6,7 @@ import json
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 from .common import (
     CANONICAL_TREES,
@@ -111,6 +112,49 @@ def _probe_external_url(url: str, timeout: int = 10,
     return "transient", last_error or "unknown network failure"
 
 
+def generated_file_findings(path: Path) -> list[tuple[str, str]]:
+    """Per-file GEN-JSON/GEN-HEADER findings for one generated path. Pure.
+
+    Exactly the per-file logic `check_generated` applies to each `*.md`
+    and `*.json` under `generated/`: same codes, same messages, same
+    order (at most one finding per file). Other suffixes have no
+    findings. Raises `OSError` on unreadable files and
+    `UnicodeDecodeError` on non-UTF-8 JSON, as `check_generated` does;
+    callers that pin outcomes catch `ValueError` and treat it as a
+    distinct state. Shared with the validation cache so its
+    derived-state pin reuses these checks instead of copying them.
+    """
+    name = path.name
+    if name.endswith(".md"):
+        if not path.is_file():
+            return [("GEN-HEADER",
+                     "generated Markdown is a directory, not the published "
+                     "view — delete it and rebuild")]
+        head = path.read_text(encoding="utf-8", errors="replace")[:400]
+        if "GENERATED" not in head:
+            return [("GEN-HEADER",
+                     "generated file lacks a generated-file warning header")]
+        return []
+    if name.endswith(".json"):
+        if path.is_symlink() and not path.exists():
+            return [("GEN-JSON",
+                     "generated JSON is a broken symlink, not the published "
+                     "view — delete it and rebuild")]
+        if not path.is_file():
+            return [("GEN-JSON",
+                     "generated JSON is a directory, not the published "
+                     "view — delete it and rebuild")]
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return [("GEN-JSON", "generated JSON does not parse")]
+        if isinstance(data, dict) and "_generated" not in data:
+            return [("GEN-HEADER",
+                     "generated JSON lacks the '_generated' warning key")]
+        return []
+    return []
+
+
 class ChecksGenerated:
     """Mixed into Validator; see rules/core.py."""
     def check_generated(self):
@@ -132,32 +176,14 @@ class ChecksGenerated:
         # Generated warning headers. A directory carrying a view's name
         # matches the glob but has no bytes to check: name the shape with
         # its recovery instead of crashing on the read (JF-20).
+        # Per-file findings come from the shared pure helper above, so the
+        # validator and the validation-cache pin cannot drift apart.
         for f in sorted(gen.rglob("*.md")):
-            if not f.is_file():
-                self.err("GEN-HEADER", "generated Markdown is a directory, not the published "
-                         "view — delete it and rebuild", self._rel(f))
-                continue
-            head = f.read_text(encoding="utf-8", errors="replace")[:400]
-            if "GENERATED" not in head:
-                self.err("GEN-HEADER", "generated file lacks a generated-file warning header",
-                         self._rel(f))
+            for code, message in generated_file_findings(f):
+                self.err(code, message, self._rel(f))
         for f in sorted(gen.rglob("*.json")):
-            if f.is_symlink() and not f.exists():
-                self.err("GEN-JSON", "generated JSON is a broken symlink, not the published "
-                         "view — delete it and rebuild", self._rel(f))
-                continue
-            if not f.is_file():
-                self.err("GEN-JSON", "generated JSON is a directory, not the published "
-                         "view — delete it and rebuild", self._rel(f))
-                continue
-            try:
-                data = json.loads(f.read_text(encoding="utf-8"))
-            except json.JSONDecodeError:
-                self.err("GEN-JSON", "generated JSON does not parse", self._rel(f))
-                continue
-            if isinstance(data, dict) and "_generated" not in data:
-                self.err("GEN-HEADER", "generated JSON lacks the '_generated' warning key",
-                         self._rel(f))
+            for code, message in generated_file_findings(f):
+                self.err(code, message, self._rel(f))
         # Archived workspaces excluded from generated indexes
         archived_ids = [w.id for w in self.repo.archived_workspaces()]
         for name in ("concept-index.md", "source-index.md"):
