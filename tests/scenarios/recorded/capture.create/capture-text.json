@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "capture.create",
           "channel": "operator",
-          "intent_sha256": "sha256:34b884067a7b52a0c788468ec6b8e7e176833f01ddd4c9f65a894b77aa97bf27",
+          "intent_sha256": "sha256:c6f1d7fbaeb929345c888a882c7d9aff4d5281e4b2710fb41f491fc87ddab8ef",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,11 +59,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:34b884067a7b52a0c788468ec6b8e7e176833f01ddd4c9f65a894b77aa97bf27"
+          "subject_sha256": "sha256:c6f1d7fbaeb929345c888a882c7d9aff4d5281e4b2710fb41f491fc87ddab8ef"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:34b884067a7b52a0c788468ec6b8e7e176833f01ddd4c9f65a894b77aa97bf27",
+        "intent_sha256": "sha256:c6f1d7fbaeb929345c888a882c7d9aff4d5281e4b2710fb41f491fc87ddab8ef",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -100,17 +100,18 @@
   },
   "session_ledger_changed": {
     "after": {
+      "commit_sha": null,
       "paths": {
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "af7da5da25b0a40b43e33e66dd67ca5ecb8fa46a94116afad3d52c7ab1ffc222",
+          "sha256": "ad3f93a0cea171928a44ea99d79e79944dc1c4b241090219b2e99d3741456234",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "b8c37759f1d4fcb6fc01a57c47672d08b57b104cfd46fc95aa3a3a1ad95e427f",
+          "sha256": "0c95669b1b53815b81eb882c971b7382644cf12226cb289db5e290f5560044bd",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -126,8 +127,11 @@
           "state": "file"
         }
       },
-      "schema_version": 2,
-      "session_id": "channel:operator"
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
     },
     "before": null
   },

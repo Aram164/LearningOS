@@ -12,7 +12,7 @@
             "KEY2": {
               "capability": "review.prepare",
               "channel": "operator",
-              "intent_sha256": "sha256:e4a81e217aadb96d620cec70118f07219e965b70cdef84722f4c04d92abafd81",
+              "intent_sha256": "sha256:4e1801fd48c27cbafacba8ed525183db0742846ef3e064e61f97671927f98613",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -69,11 +69,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:e4a81e217aadb96d620cec70118f07219e965b70cdef84722f4c04d92abafd81"
+              "subject_sha256": "sha256:4e1801fd48c27cbafacba8ed525183db0742846ef3e064e61f97671927f98613"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:e4a81e217aadb96d620cec70118f07219e965b70cdef84722f4c04d92abafd81",
+            "intent_sha256": "sha256:4e1801fd48c27cbafacba8ed525183db0742846ef3e064e61f97671927f98613",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -116,6 +116,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
               "channel": "operator",
@@ -132,13 +133,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "95f120a5f2fa91af9354c3ed08b784e0413ed037400182cbdf1ceb088c7fd776",
+              "sha256": "10453f9958f997edfeb9c869d21fce3fe36c3800c7bffc6208c18b660b3fb1df",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c4f33be04c847c184481a732879efa8917b1b10d3f1e030b1c0ddfaa33f10d88",
+              "sha256": "c72ba263890608b32eb29e8591cbf32f64cd4410dd5b78d33d73312249e51737",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -148,8 +149,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -194,6 +198,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
               "channel": "operator",
@@ -210,13 +215,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "95f120a5f2fa91af9354c3ed08b784e0413ed037400182cbdf1ceb088c7fd776",
+              "sha256": "10453f9958f997edfeb9c869d21fce3fe36c3800c7bffc6208c18b660b3fb1df",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c4f33be04c847c184481a732879efa8917b1b10d3f1e030b1c0ddfaa33f10d88",
+              "sha256": "c72ba263890608b32eb29e8591cbf32f64cd4410dd5b78d33d73312249e51737",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -226,10 +231,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
               "channel": "operator",
@@ -246,13 +255,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "95f120a5f2fa91af9354c3ed08b784e0413ed037400182cbdf1ceb088c7fd776",
+              "sha256": "10453f9958f997edfeb9c869d21fce3fe36c3800c7bffc6208c18b660b3fb1df",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c4f33be04c847c184481a732879efa8917b1b10d3f1e030b1c0ddfaa33f10d88",
+              "sha256": "c72ba263890608b32eb29e8591cbf32f64cd4410dd5b78d33d73312249e51737",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -262,8 +271,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",

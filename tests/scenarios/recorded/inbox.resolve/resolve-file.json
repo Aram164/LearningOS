@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "inbox.resolve",
           "channel": "operator",
-          "intent_sha256": "sha256:f48e02b5efef3a1aebcba07c7183d979652826c82500dca9a9aa6906c2acff12",
+          "intent_sha256": "sha256:ff86620b954f4466688dfe85355dba8c038fe9fb1ef048f38813df89f32e7b0d",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -69,11 +69,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:f48e02b5efef3a1aebcba07c7183d979652826c82500dca9a9aa6906c2acff12"
+          "subject_sha256": "sha256:ff86620b954f4466688dfe85355dba8c038fe9fb1ef048f38813df89f32e7b0d"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:f48e02b5efef3a1aebcba07c7183d979652826c82500dca9a9aa6906c2acff12",
+        "intent_sha256": "sha256:ff86620b954f4466688dfe85355dba8c038fe9fb1ef048f38813df89f32e7b0d",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -117,6 +117,7 @@
   },
   "session_ledger_changed": {
     "after": {
+      "commit_sha": null,
       "paths": {
         "archive/inbox/2026/note-drop.md": {
           "channel": "operator",
@@ -127,13 +128,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "7cd14bcd12d3572ae8affd1aee523be5a1bad75c61c57e46e3691ee46d4ca29c",
+          "sha256": "7fa0e9216e02003ddd3a18b596d96b3a0a4e81c5613f595c675a8fc50f5b4a10",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "99fc1badbb5961c88d7119f1529cd81b04f3d07b245c394f4e325d7c5f1151ea",
+          "sha256": "007635f65fa069b58bc5c36c114f66ee68f559ff9a51e88824f394468590550a",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -148,8 +149,11 @@
           "state": "absent"
         }
       },
-      "schema_version": 2,
-      "session_id": "channel:operator"
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
     },
     "before": null
   },

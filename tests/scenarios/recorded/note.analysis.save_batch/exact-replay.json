@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "note.analysis.save_batch",
               "channel": "operator",
-              "intent_sha256": "sha256:dfe1e4768522dae4d798918eada4572fd99f5f8e6c67023c1f10dfe2ddbe493e",
+              "intent_sha256": "sha256:3beacac8c818c5e6b4df166400980430d0994f67511464b3a0ffef663ada5278",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:dfe1e4768522dae4d798918eada4572fd99f5f8e6c67023c1f10dfe2ddbe493e"
+              "subject_sha256": "sha256:3beacac8c818c5e6b4df166400980430d0994f67511464b3a0ffef663ada5278"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:dfe1e4768522dae4d798918eada4572fd99f5f8e6c67023c1f10dfe2ddbe493e",
+            "intent_sha256": "sha256:3beacac8c818c5e6b4df166400980430d0994f67511464b3a0ffef663ada5278",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -103,6 +103,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/mathematics/note-scenario-batch-10.md": {
               "channel": "operator",
@@ -113,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b65ac0a90869be8be51179651be2b0bee38a2d378dea2386800f50ce3e925f02",
+              "sha256": "18a6bd5deb8b4646c5921260e150131976af24319549a33eef9b9e37ce120481",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "92342249ad1b3e0ee208a827553cc9f7bd77bbca2541a9e79c22a4226e412318",
+              "sha256": "3d9b6b964e0a81823b3938185b6b56741c32ef9ea6f9b914f1bc151d70039b44",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -129,8 +130,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -178,6 +182,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/mathematics/note-scenario-batch-10.md": {
               "channel": "operator",
@@ -188,13 +193,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b65ac0a90869be8be51179651be2b0bee38a2d378dea2386800f50ce3e925f02",
+              "sha256": "18a6bd5deb8b4646c5921260e150131976af24319549a33eef9b9e37ce120481",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "92342249ad1b3e0ee208a827553cc9f7bd77bbca2541a9e79c22a4226e412318",
+              "sha256": "3d9b6b964e0a81823b3938185b6b56741c32ef9ea6f9b914f1bc151d70039b44",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -204,10 +209,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/mathematics/note-scenario-batch-10.md": {
               "channel": "operator",
@@ -218,13 +227,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b65ac0a90869be8be51179651be2b0bee38a2d378dea2386800f50ce3e925f02",
+              "sha256": "18a6bd5deb8b4646c5921260e150131976af24319549a33eef9b9e37ce120481",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "92342249ad1b3e0ee208a827553cc9f7bd77bbca2541a9e79c22a4226e412318",
+              "sha256": "3d9b6b964e0a81823b3938185b6b56741c32ef9ea6f9b914f1bc151d70039b44",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -234,8 +243,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",

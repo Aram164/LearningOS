@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "atlas.question.save",
               "channel": "operator",
-              "intent_sha256": "sha256:e505f0943863f2c2d980bf62b1c7c4bdbe8703978ae74cdf863606f557cd2328",
+              "intent_sha256": "sha256:a7458b7cd25159d2c5995ddcbf0ba06806c8d6a56db96f2f3813250afacd46a4",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:e505f0943863f2c2d980bf62b1c7c4bdbe8703978ae74cdf863606f557cd2328"
+              "subject_sha256": "sha256:a7458b7cd25159d2c5995ddcbf0ba06806c8d6a56db96f2f3813250afacd46a4"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:e505f0943863f2c2d980bf62b1c7c4bdbe8703978ae74cdf863606f557cd2328",
+            "intent_sha256": "sha256:a7458b7cd25159d2c5995ddcbf0ba06806c8d6a56db96f2f3813250afacd46a4",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -103,6 +103,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/questions/note-demo-question-1.md": {
               "channel": "operator",
@@ -113,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b5b90821aa548712b0cf9c1e5cb44ec64d08837130e06d5869b49c851b84c14a",
+              "sha256": "4ba083ad4c84b825cbfa053d2d644ae5e8733fee50cfbe2f6a5d5db6a2886832",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3dbf90fdb9163c1925123d6310c33bbe8cc37db9422d0b59cb74001d300db160",
+              "sha256": "c1c7990e1941a5e8fd07af12e6a5e130b746cd17680408df3c0f0d83a67b3ce2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -129,8 +130,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -173,6 +177,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/questions/note-demo-question-1.md": {
               "channel": "operator",
@@ -183,13 +188,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b5b90821aa548712b0cf9c1e5cb44ec64d08837130e06d5869b49c851b84c14a",
+              "sha256": "4ba083ad4c84b825cbfa053d2d644ae5e8733fee50cfbe2f6a5d5db6a2886832",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3dbf90fdb9163c1925123d6310c33bbe8cc37db9422d0b59cb74001d300db160",
+              "sha256": "c1c7990e1941a5e8fd07af12e6a5e130b746cd17680408df3c0f0d83a67b3ce2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -199,10 +204,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "knowledge/notes/questions/note-demo-question-1.md": {
               "channel": "operator",
@@ -213,13 +222,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b5b90821aa548712b0cf9c1e5cb44ec64d08837130e06d5869b49c851b84c14a",
+              "sha256": "4ba083ad4c84b825cbfa053d2d644ae5e8733fee50cfbe2f6a5d5db6a2886832",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3dbf90fdb9163c1925123d6310c33bbe8cc37db9422d0b59cb74001d300db160",
+              "sha256": "c1c7990e1941a5e8fd07af12e6a5e130b746cd17680408df3c0f0d83a67b3ce2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -229,8 +238,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",

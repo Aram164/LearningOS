@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "masters-planning.catalog.update",
               "channel": "operator",
-              "intent_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223",
+              "intent_sha256": "sha256:0dbd341994882bcaa2085e434afe013c3e5896cd3be66c0676c9c20bbc5e8cc9",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223"
+              "subject_sha256": "sha256:0dbd341994882bcaa2085e434afe013c3e5896cd3be66c0676c9c20bbc5e8cc9"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:4cbd345ed447c573c3f57849e0db2ee228724933c1780357bff540fe16aae223",
+            "intent_sha256": "sha256:0dbd341994882bcaa2085e434afe013c3e5896cd3be66c0676c9c20bbc5e8cc9",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -103,6 +103,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/quarantine/masters-planning/catalog.yaml": {
               "channel": "operator",
@@ -113,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
+              "sha256": "e7100034b283f8bcdcb771b36ad49109677e8ca3b08c51a0154c730c5a94b380",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
+              "sha256": "f208511c121715a292ce225097ccfb85bcd28e4f9ace8027678e3e54438e9e8d",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -129,8 +130,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -176,6 +180,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/quarantine/masters-planning/catalog.yaml": {
               "channel": "operator",
@@ -186,13 +191,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
+              "sha256": "e7100034b283f8bcdcb771b36ad49109677e8ca3b08c51a0154c730c5a94b380",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
+              "sha256": "f208511c121715a292ce225097ccfb85bcd28e4f9ace8027678e3e54438e9e8d",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -202,10 +207,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "curriculum/quarantine/masters-planning/catalog.yaml": {
               "channel": "operator",
@@ -216,13 +225,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52dde751f5db41d159e4fe69ef2946d12780fbf4d1559215c652fbf8607096dd",
+              "sha256": "e7100034b283f8bcdcb771b36ad49109677e8ca3b08c51a0154c730c5a94b380",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "027aa00643f029777f4877f53fcf7df90a0afef7fc163069de9f8ca7a0e54fb2",
+              "sha256": "f208511c121715a292ce225097ccfb85bcd28e4f9ace8027678e3e54438e9e8d",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -232,8 +241,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "los: prospective comparison publication requires explicit approval\n",

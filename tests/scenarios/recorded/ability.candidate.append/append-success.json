@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "ability.candidate.append",
           "channel": "operator",
-          "intent_sha256": "sha256:74c13321ab6263421453b381ad490eb536ffcff07b882d9a69effd3393730ed1",
+          "intent_sha256": "sha256:a043dfe54b7ad52d48a4ac3b5d6aaea039f21db63c5672c366423a735a53e440",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,11 +59,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:74c13321ab6263421453b381ad490eb536ffcff07b882d9a69effd3393730ed1"
+          "subject_sha256": "sha256:a043dfe54b7ad52d48a4ac3b5d6aaea039f21db63c5672c366423a735a53e440"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:74c13321ab6263421453b381ad490eb536ffcff07b882d9a69effd3393730ed1",
+        "intent_sha256": "sha256:a043dfe54b7ad52d48a4ac3b5d6aaea039f21db63c5672c366423a735a53e440",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -100,6 +100,7 @@
   },
   "session_ledger_changed": {
     "after": {
+      "commit_sha": null,
       "paths": {
         "knowledge/ability-candidates.jsonl": {
           "channel": "operator",
@@ -110,13 +111,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "18cfd85870b0ead26a0f8734d666a4d222b0da80f3b14f7f7f7569c8cef2bcc4",
+          "sha256": "d37d2112b261845e6991b2e99d46c26905b406537da9ae0110ce1b3b83cb63bf",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "27bf99c634c5d32ea63e3e3797c1182f258e28230ad88f66db0e71d33dc61701",
+          "sha256": "ceb07352b632aee58d16846c6217a0cd6ad008d3cd8f7d1337776d97e6c03060",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -126,8 +127,11 @@
           "state": "file"
         }
       },
-      "schema_version": 2,
-      "session_id": "channel:operator"
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
     },
     "before": null
   },

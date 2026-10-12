@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "garden.seed.create",
               "channel": "operator",
-              "intent_sha256": "sha256:8cf3b5eb50df8f372aef2c992479fdd268e2850e0d68149e3db375ae4beda04d",
+              "intent_sha256": "sha256:59f0e0a9c792a3347721f455f0a808ca535df1469ba6a33242f18d5842700045",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:8cf3b5eb50df8f372aef2c992479fdd268e2850e0d68149e3db375ae4beda04d"
+              "subject_sha256": "sha256:59f0e0a9c792a3347721f455f0a808ca535df1469ba6a33242f18d5842700045"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:8cf3b5eb50df8f372aef2c992479fdd268e2850e0d68149e3db375ae4beda04d",
+            "intent_sha256": "sha256:59f0e0a9c792a3347721f455f0a808ca535df1469ba6a33242f18d5842700045",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -103,6 +103,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/a-replayed-seed.md": {
               "channel": "operator",
@@ -113,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65c34a50fe915564ff904803d505202a8d220ee638bb95afaff4a6a86b2cb52b",
+              "sha256": "99dd3bd9ca6fbe23e762c288fef5e01c881fbbe8e6fd1c384ac1b427f75e3056",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "000c6cbf003f201da0f38988eca0d78797c13ebabec8f5a53666432cf709ef4b",
+              "sha256": "d5daed46cca35ae4e972cbb4d371f9e9b1c3ee5f67449c03f83a10f91b906028",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -129,8 +130,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -172,6 +176,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/a-replayed-seed.md": {
               "channel": "operator",
@@ -182,13 +187,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65c34a50fe915564ff904803d505202a8d220ee638bb95afaff4a6a86b2cb52b",
+              "sha256": "99dd3bd9ca6fbe23e762c288fef5e01c881fbbe8e6fd1c384ac1b427f75e3056",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "000c6cbf003f201da0f38988eca0d78797c13ebabec8f5a53666432cf709ef4b",
+              "sha256": "d5daed46cca35ae4e972cbb4d371f9e9b1c3ee5f67449c03f83a10f91b906028",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -198,10 +203,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/a-replayed-seed.md": {
               "channel": "operator",
@@ -212,13 +221,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65c34a50fe915564ff904803d505202a8d220ee638bb95afaff4a6a86b2cb52b",
+              "sha256": "99dd3bd9ca6fbe23e762c288fef5e01c881fbbe8e6fd1c384ac1b427f75e3056",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "000c6cbf003f201da0f38988eca0d78797c13ebabec8f5a53666432cf709ef4b",
+              "sha256": "d5daed46cca35ae4e972cbb4d371f9e9b1c3ee5f67449c03f83a10f91b906028",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -228,8 +237,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",

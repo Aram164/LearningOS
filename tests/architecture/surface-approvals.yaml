@@ -216,3 +216,4 @@ approvals:
   - {key: "request_schemas.cli.generate.schema.json", change: changed, plan_ref: "PLAN D4 (T84: cli.generate converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.module.plan.import.schema.json", change: changed, plan_ref: "PLAN D4 (T82: module.plan.import converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.unit.plan.revise.schema.json", change: changed, plan_ref: "PLAN D4 (T82: unit.plan.revise converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.cli.session-end.schema.json", change: changed, plan_ref: "PLAN D7 (4.2 session-end nonlookup identity; reviewed 78092576 in adopted e0b94185)", pre_approved_by: "Muse conductor 2026-10-12, technical authority delegated by Aram; reviewer-confirmed"}

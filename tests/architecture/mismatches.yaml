@@ -44,51 +44,6 @@
   observed: "exit 1, E PATH-NOTE-OWNER on the unchanged move; repaired pointer fails schema ^work/active/.+\\.md$"
   proposed_fix: code
   decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc correction; complete path-owning workspaces in place. Path-free archival needs a separately reviewed migration. Defer an archive capability and data-format expansion rather than weakening ownership guards."
-- id: M-06
-  doc: PLAN.md
-  heading: 'D7 The session as a state machine with a versioned review witness'
-  step: persisted review witness and ledger v3 format (SPEC §13)
-  documented: reviewed records the ledger version plus the exact file states (digests);
-    the ledger carries schema_version 3 with version, state, review and commit_sha.
-  observed: recorded ledgers are schema_version 2 (session_id and paths only); a review
-    persists nothing, so no recording carries a witness, a version or a state.
-  proposed_fix: code
-  decision: '2026-10-12 Codex conductor, technical authority delegated by Aram through
-    CODEX-NEXT-SESSION-20261012.md: implement PLAN D7 and SPEC (cx), Phase 4.2.
-    SPEC (cx) D-1: read v2 as recording/version 0/null witness, rewrite it as v3 on
-    the next write, and persist the review witness on every review. Refresh the
-    affected recordings in the conductor batch.'
-- id: M-07
-  doc: PLAN.md
-  heading: 'D7 The session as a state machine with a versioned review witness'
-  step: review-write-commit scenario (tests/scenarios/recorded/cli.session-end/review-write-commit.json)
-  documented: a commit from reviewed requires a matching witness; a write after review
-    invalidates it and the commit refuses INVALID_REQUEST, 'the session changed after
-    review — run session-end again', exit 2.
-  observed: the review-write-commit recording's final step exits 0 with committed True;
-    today's code has no invalidation and commits the post-review write.
-  proposed_fix: code
-  decision: '2026-10-12 Codex conductor, technical authority delegated by Aram through
-    CODEX-NEXT-SESSION-20261012.md: implement PLAN D7 and SPEC (cx), Phase 4.2.
-    SPEC (cx) D-1: the review-then-write commit refuses as documented; retain the
-    invalidated witness rather than falling back to never-reviewed direct commit.
-    Refresh the affected recordings in the conductor batch.'
-- id: M-08
-  doc: PLAN.md
-  heading: 'D7 The session as a state machine with a versioned review witness'
-  step: failed-push scenario (tests/scenarios/recorded/cli.session-end/failed-push.json)
-  documented: a failed push after a successful commit moves to committed_unpushed holding
-    the commit SHA; only an exact-SHA push retry or close are then allowed, and the
-    retry refuses when the branch/HEAD no longer identifies the stored commit.
-  observed: the failed-push recording is a bare exit-128 failure with the v2 ledger kept
-    and no recorded SHA or state; no standalone --push retry exists.
-  proposed_fix: code
-  decision: '2026-10-12 Codex conductor, technical authority delegated by Aram through
-    CODEX-NEXT-SESSION-20261012.md: implement PLAN D7 and SPEC (cx), Phase 4.2.
-    SPEC (cx) D-1/D-2: record committed_unpushed with the actual commit SHA, retry it
-    through session-end --push without a commit message, refuse another commit or
-    review in that state, allow close, and refuse a retry when HEAD moved. Refresh
-    the affected recordings in the conductor batch.'
 - id: M-09
   doc: system/WORKFLOWS.md
   heading: '## 1. Start a workspace'

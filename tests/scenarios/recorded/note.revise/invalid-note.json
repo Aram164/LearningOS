@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "garden.seed.create",
               "channel": "operator",
-              "intent_sha256": "sha256:da544ff8f37a0b0a1f78b0adf6045b402b2a6046c586cf70c138a3438fd05560",
+              "intent_sha256": "sha256:c8d757c040f3dd134e60af34b4a192b4a331b16a2b37cd4f493ed94bd39c11d6",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:da544ff8f37a0b0a1f78b0adf6045b402b2a6046c586cf70c138a3438fd05560"
+              "subject_sha256": "sha256:c8d757c040f3dd134e60af34b4a192b4a331b16a2b37cd4f493ed94bd39c11d6"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:da544ff8f37a0b0a1f78b0adf6045b402b2a6046c586cf70c138a3438fd05560",
+            "intent_sha256": "sha256:c8d757c040f3dd134e60af34b4a192b4a331b16a2b37cd4f493ed94bd39c11d6",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -103,6 +103,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/garden-seed.md": {
               "channel": "operator",
@@ -113,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "166b9831450f655f687074d1b0bfee71714b9cd4c208d8c4461948e4e349426c",
+              "sha256": "6e0fcae4c3bbdee7db92006a2d221d29ea5af00ffe68ebf3141c0ff4da932f3c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99885e329d9462e3a4465e538589fd2585d759c707ccf19cd0d87a28f08b7f10",
+              "sha256": "6f84311dc17bc78c9aabac3670a8db82570d3575c380de07c1b8f9840ee75273",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -129,8 +130,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -172,6 +176,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/garden-seed.md": {
               "channel": "operator",
@@ -182,13 +187,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "166b9831450f655f687074d1b0bfee71714b9cd4c208d8c4461948e4e349426c",
+              "sha256": "6e0fcae4c3bbdee7db92006a2d221d29ea5af00ffe68ebf3141c0ff4da932f3c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99885e329d9462e3a4465e538589fd2585d759c707ccf19cd0d87a28f08b7f10",
+              "sha256": "6f84311dc17bc78c9aabac3670a8db82570d3575c380de07c1b8f9840ee75273",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -198,10 +203,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "knowledge/garden/garden-seed.md": {
               "channel": "operator",
@@ -212,13 +221,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "166b9831450f655f687074d1b0bfee71714b9cd4c208d8c4461948e4e349426c",
+              "sha256": "6e0fcae4c3bbdee7db92006a2d221d29ea5af00ffe68ebf3141c0ff4da932f3c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99885e329d9462e3a4465e538589fd2585d759c707ccf19cd0d87a28f08b7f10",
+              "sha256": "6f84311dc17bc78c9aabac3670a8db82570d3575c380de07c1b8f9840ee75273",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -228,8 +237,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",

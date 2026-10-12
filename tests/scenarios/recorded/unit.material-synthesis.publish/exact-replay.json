@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "unit.material-synthesis.publish",
               "channel": "operator",
-              "intent_sha256": "sha256:5fec85da7c903613a33da8d0e296cc283c047ba2b4d6e55955d46cd6f759a325",
+              "intent_sha256": "sha256:229cef7299fa7320dc8cac5d17850ec8dad6b7af991364728409bf21dd54c23e",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -69,11 +69,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:5fec85da7c903613a33da8d0e296cc283c047ba2b4d6e55955d46cd6f759a325"
+              "subject_sha256": "sha256:229cef7299fa7320dc8cac5d17850ec8dad6b7af991364728409bf21dd54c23e"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:5fec85da7c903613a33da8d0e296cc283c047ba2b4d6e55955d46cd6f759a325",
+            "intent_sha256": "sha256:229cef7299fa7320dc8cac5d17850ec8dad6b7af991364728409bf21dd54c23e",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -116,6 +116,7 @@
       },
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
               "channel": "operator",
@@ -126,13 +127,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cc4d146e1c5d6300e9f7d31eaa14a854f473a7b1c45816fc445abc25bd382cd5",
+              "sha256": "f8d5765b80ec16fec3c549cf6e841f3e038db4fd0aeea8cd5e261aea9183fb4b",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1c22a75a7e2084d226b6891403d3b0a98374258ba2d3dab9f92fe761f05f04fb",
+              "sha256": "92cc453e26fd5f29492d5da7ef7b5c4e7ac5cef3d6bdc04e3dd02bf13e2f0858",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {
@@ -148,8 +149,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": null
       },
@@ -191,6 +195,7 @@
       "revisions_changed": {},
       "session_ledger_changed": {
         "after": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
               "channel": "operator",
@@ -201,13 +206,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cc4d146e1c5d6300e9f7d31eaa14a854f473a7b1c45816fc445abc25bd382cd5",
+              "sha256": "f8d5765b80ec16fec3c549cf6e841f3e038db4fd0aeea8cd5e261aea9183fb4b",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1c22a75a7e2084d226b6891403d3b0a98374258ba2d3dab9f92fe761f05f04fb",
+              "sha256": "92cc453e26fd5f29492d5da7ef7b5c4e7ac5cef3d6bdc04e3dd02bf13e2f0858",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {
@@ -223,10 +228,14 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         },
         "before": {
+          "commit_sha": null,
           "paths": {
             "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
               "channel": "operator",
@@ -237,13 +246,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cc4d146e1c5d6300e9f7d31eaa14a854f473a7b1c45816fc445abc25bd382cd5",
+              "sha256": "f8d5765b80ec16fec3c549cf6e841f3e038db4fd0aeea8cd5e261aea9183fb4b",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1c22a75a7e2084d226b6891403d3b0a98374258ba2d3dab9f92fe761f05f04fb",
+              "sha256": "92cc453e26fd5f29492d5da7ef7b5c4e7ac5cef3d6bdc04e3dd02bf13e2f0858",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {
@@ -259,8 +268,11 @@
               "state": "file"
             }
           },
-          "schema_version": 2,
-          "session_id": "channel:operator"
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
         }
       },
       "stderr": "",
