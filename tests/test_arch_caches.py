@@ -166,16 +166,23 @@ def test_live_pin_functions_match_the_independent_inventory(mini_repo: Path):
     assert set(pins) == set(RECEIPT_GLOBAL_INPUTS)
 
 
-def test_derived_state_findings_mirror_the_validator(tmp_path: Path):
-    """The cache pin's copy of the GEN checks agrees with the validator's.
+def test_generated_findings_have_one_shared_implementation(tmp_path: Path):
+    """One read, not two: the validator and the cache pin import it.
 
-    `validation_cache` cannot import `rules.generated` (A1 layers), so it
-    carries an exact copy; this battery proves the two agree on every
-    shape, including what they raise, so they cannot drift silently.
+    `domain.generated_reads.generated_file_findings` is the single
+    implementation (both callers import it with no new A1 exception, so
+    neither keeps a copy); this battery pins its codes, messages, and
+    raise behavior on every shape.
     """
-    from learning_os.rules.generated import generated_file_findings as validator_findings
+    import learning_os.domain.generated_reads as shared
+    import learning_os.rules.generated as validator_module
 
-    pin_findings = vc._generated_file_findings
+    assert validator_module.generated_reads is shared
+    assert vc.generated_reads is shared
+    assert not hasattr(validator_module, "generated_file_findings")
+    assert not hasattr(vc, "generated_file_findings")
+    assert not hasattr(vc, "_generated_file_findings")
+    findings = shared.generated_file_findings
     (tmp_path / "valid.json").write_text(
         json.dumps({"_generated": {"warning": "GENERATED x", "generator": "t"}}),
         encoding="utf-8")
@@ -190,29 +197,27 @@ def test_derived_state_findings_mirror_the_validator(tmp_path: Path):
     (tmp_path / "broken.json").symlink_to(tmp_path / "nowhere.json")
     (tmp_path / "link.json").symlink_to(tmp_path / "valid.json")
     (tmp_path / "note.txt").write_text("not a checked suffix\n", encoding="utf-8")
-    for name in ("valid.json", "noheader.json", "bad.json", "list.json",
-                 "valid.md", "bare.md", "dir.json", "dir.md",
-                 "broken.json", "link.json", "note.txt"):
-        path = tmp_path / name
-        assert pin_findings(path) == validator_findings(path), name
-    assert pin_findings(tmp_path / "valid.json") == []
-    assert pin_findings(tmp_path / "noheader.json")[0][0] == "GEN-HEADER"
-    assert pin_findings(tmp_path / "bad.json")[0][0] == "GEN-JSON"
-    assert pin_findings(tmp_path / "bare.md")[0][0] == "GEN-HEADER"
+    assert findings(tmp_path / "valid.json") == []
+    assert findings(tmp_path / "list.json") == []
+    assert findings(tmp_path / "link.json") == []
+    assert findings(tmp_path / "note.txt") == []
+    assert findings(tmp_path / "valid.md") == []
+    assert findings(tmp_path / "noheader.json")[0][0] == "GEN-HEADER"
+    assert findings(tmp_path / "bad.json")[0][0] == "GEN-JSON"
+    assert findings(tmp_path / "bare.md")[0][0] == "GEN-HEADER"
+    assert findings(tmp_path / "dir.json")[0][0] == "GEN-JSON"
+    assert findings(tmp_path / "dir.md")[0][0] == "GEN-HEADER"
+    assert findings(tmp_path / "broken.json")[0][0] == "GEN-JSON"
     non_utf8 = tmp_path / "nonutf8.json"
     non_utf8.write_bytes(b"\xff\xfe not utf-8")
     with pytest.raises(ValueError):
-        pin_findings(non_utf8)
-    with pytest.raises(ValueError):
-        validator_findings(non_utf8)
+        findings(non_utf8)
     unreadable = tmp_path / "unreadable.json"
     unreadable.write_text(json.dumps({"x": 1}), encoding="utf-8")
     unreadable.chmod(0o000)
     try:
         with pytest.raises(OSError):
-            pin_findings(unreadable)
-        with pytest.raises(OSError):
-            validator_findings(unreadable)
+            findings(unreadable)
     finally:
         unreadable.chmod(0o644)
 
@@ -447,6 +452,88 @@ def test_validation_derived_state_deletion_repairs_after_cached_error(
     warm_clean = _warm_validation(mini_repo)
     assert not [entry for entry in warm_clean if "extra.json" in entry[3]]
     assert warm_clean == _fresh_validation(mini_repo, monkeypatch)
+
+
+def test_validation_derived_state_extra_dir_matches_fresh(mini_repo: Path, monkeypatch):
+    """An empty extra.json directory is a real GEN-JSON input: the pin
+    must miss and warm must equal fresh (the confirmed Task 76 omission:
+    the old walk descended into directories without pinning their
+    finding, so warm served stale pre-directory issues)."""
+    _stage_validation_producers(mini_repo)
+    vc.status_issues(load_repo(mini_repo))
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    extra = mini_repo / "generated" / "derived-state" / "extra.json"
+    extra.mkdir(parents=True)
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm = _warm_validation(mini_repo)
+    assert any(code == "GEN-JSON" and "extra.json" in path
+               for _, code, _, path in warm)
+    assert warm == _fresh_validation(mini_repo, monkeypatch)
+    # A malformed file nested inside pins too: the directory finding
+    # comes first, then the descent covers the children.
+    (extra / "inner.json").write_text("{ not json", encoding="utf-8")
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm_nested = _warm_validation(mini_repo)
+    assert any(code == "GEN-JSON" and "inner.json" in path
+               for _, code, _, path in warm_nested)
+    assert warm_nested == _fresh_validation(mini_repo, monkeypatch)
+    # Removing the directory heals the pin back to clean.
+    (extra / "inner.json").unlink()
+    extra.rmdir()
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm_clean = _warm_validation(mini_repo)
+    assert not [entry for entry in warm_clean if "extra.json" in entry[3]]
+    assert warm_clean == _fresh_validation(mini_repo, monkeypatch)
+    assert vc.read_cached_static_issues(mini_repo) is not None
+
+
+def test_validation_derived_state_file_to_dir_shape_matches_fresh(
+        mini_repo: Path, monkeypatch):
+    """A clean extra.json file replaced by a directory: the same name
+    with a new shape must miss exactly when the findings change, in
+    both directions."""
+    _stage_validation_producers(mini_repo)
+    extra = mini_repo / "generated" / "derived-state" / "extra.json"
+    extra.parent.mkdir(parents=True, exist_ok=True)
+    clean = json.dumps({"_generated": {"warning": "GENERATED x", "generator": "t"},
+                        "x": 1})
+    extra.write_text(clean, encoding="utf-8")
+    vc.status_issues(load_repo(mini_repo))
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    extra.unlink()
+    extra.mkdir()
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm = _warm_validation(mini_repo)
+    assert any(code == "GEN-JSON" and "extra.json" in path
+               for _, code, _, path in warm)
+    assert warm == _fresh_validation(mini_repo, monkeypatch)
+    extra.rmdir()
+    extra.write_text(clean, encoding="utf-8")
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm_clean = _warm_validation(mini_repo)
+    assert not [entry for entry in warm_clean if "extra.json" in entry[3]]
+    assert warm_clean == _fresh_validation(mini_repo, monkeypatch)
+    assert vc.read_cached_static_issues(mini_repo) is not None
+
+
+def test_validation_derived_state_broken_link_matches_fresh(mini_repo: Path, monkeypatch):
+    """A broken extra.json symlink is a GEN-JSON input like any shape:
+    directory, file, and broken-link changes must each invalidate
+    exactly when the fresh findings change."""
+    _stage_validation_producers(mini_repo)
+    vc.status_issues(load_repo(mini_repo))
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    extra = mini_repo / "generated" / "derived-state" / "extra.json"
+    extra.symlink_to(mini_repo / "generated" / "derived-state" / "nowhere.json")
+    assert vc.read_cached_static_issues(mini_repo) is None
+    warm = _warm_validation(mini_repo)
+    assert any(code == "GEN-JSON" and "extra.json" in path
+               for _, code, _, path in warm)
+    assert warm == _fresh_validation(mini_repo, monkeypatch)
+    extra.unlink()
+    assert vc.read_cached_static_issues(mini_repo) is None
+    assert _warm_validation(mini_repo) == _fresh_validation(mini_repo, monkeypatch)
+    assert vc.read_cached_static_issues(mini_repo) is not None
 
 
 def test_validation_unreadable_state_matches_fresh_by_raising(mini_repo: Path, monkeypatch):

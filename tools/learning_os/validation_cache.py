@@ -28,9 +28,10 @@ Pinned inputs (all must match; anything else misses and re-validates):
   declared local-only attachment (definition 2 took them out of the
   content fingerprint, so a scan rewrite would otherwise serve stale).
   Inside ``generated/derived-state`` (skipped by the stat walk to avoid
-  self-invalidation) each checked JSON/Markdown file contributes its
+  self-invalidation) each checked JSON/Markdown path contributes its
   GEN-JSON/GEN-HEADER outcome instead of its stat, so healthy cache
-  writes keep hitting while a malformed or header-stripped file misses.
+  writes keep hitting while a malformed or header-stripped file — or a
+  directory or broken link carrying a view's name — misses.
 
 All pins are observed *before* validation runs and stored with its
 result. `status` holds no lock, so a write landing mid-run then leaves a
@@ -72,6 +73,7 @@ from .derived.engine import BuildContext, evaluate
 from .derived.identity import digest_code_identity, runtime_digest
 from .derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
 from .derived.store import invalidate
+from .domain import generated_reads
 from .domain.failures import TransactionFailure
 from .fingerprint import CANONICAL_ROOTS, canonical_fingerprint
 from .manifest_identity import materials_digest, operations_digest
@@ -138,47 +140,6 @@ _WALK_NAME_ONLY = frozenset({"generated/text-cache", "operations/diagnostics"})
 #: index still misses through the store's own empty-on-corrupt read,
 #: which rebuilds and heals.
 _WALK_SKIP = frozenset({"generated/derived-state"})
-
-
-def _generated_file_findings(path: Path) -> list[tuple[str, str]]:
-    """Per-file GEN-JSON/GEN-HEADER findings, mirroring the validator.
-
-    An exact copy of `rules.generated.generated_file_findings` (same
-    codes, messages, and raise behavior); it cannot be imported because
-    A1 layers forbid this module importing `rules.generated`
-    (`test_arch_layers` fails without a new `pyproject` exception, which
-    no cache task may add). `test_arch_caches.py` verifies the two agree
-    on every shape, so they cannot drift apart silently.
-    """
-    name = path.name
-    if name.endswith(".md"):
-        if not path.is_file():
-            return [("GEN-HEADER",
-                     "generated Markdown is a directory, not the published "
-                     "view — delete it and rebuild")]
-        head = path.read_text(encoding="utf-8", errors="replace")[:400]
-        if "GENERATED" not in head:
-            return [("GEN-HEADER",
-                     "generated file lacks a generated-file warning header")]
-        return []
-    if name.endswith(".json"):
-        if path.is_symlink() and not path.exists():
-            return [("GEN-JSON",
-                     "generated JSON is a broken symlink, not the published "
-                     "view — delete it and rebuild")]
-        if not path.is_file():
-            return [("GEN-JSON",
-                     "generated JSON is a directory, not the published "
-                     "view — delete it and rebuild")]
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            return [("GEN-JSON", "generated JSON does not parse")]
-        if isinstance(data, dict) and "_generated" not in data:
-            return [("GEN-HEADER",
-                     "generated JSON lacks the '_generated' warning key")]
-        return []
-    return []
 
 
 def cache_pins(root: Path) -> dict[str, str]:
@@ -286,13 +247,14 @@ def validator_inputs_digest(root: Path) -> str:
 
     ``generated/derived-state`` is skipped by the main walk (it holds
     this module's own cache entries, and statting it would
-    self-invalidate every write), but its JSON/Markdown files are real
+    self-invalidate every write), but its JSON/Markdown paths are real
     GEN-* inputs, so they are pinned separately by check outcome: each
-    file with findings contributes its code and message, while clean
+    path with findings contributes its code and message, while clean
     files contribute nothing — healthy cache writes stay clean and keep
-    hitting, and a malformed, header-stripped, or unreadable file
-    misses. Corruption still misses via the store's own empty-on-corrupt
-    read as well, which rebuilds and heals.
+    hitting, and a malformed, header-stripped, or unreadable file, or a
+    directory or broken link carrying a view's name, misses. Corruption
+    still misses via the store's own empty-on-corrupt read as well,
+    which rebuilds and heals.
     """
     root = root.resolve()
     digest = hashlib.sha256()
@@ -374,6 +336,27 @@ def validator_inputs_digest(root: Path) -> str:
         else:
             emit(f"{label}\0{st.st_size}\0{st.st_mtime_ns}\0{st.st_ctime_ns}")
 
+    def pin_shaped(child: os.DirEntry, rel: str) -> None:
+        """Pin one derived-state path's GEN outcome, files and shape alike.
+
+        The single shared read both the validator and this pin use, so a
+        directory, file, or broken link carrying a view's name moves the
+        pin exactly when the validator's findings change. `OSError`
+        (unreadable) and `ValueError` (non-UTF-8 JSON, whose
+        UnicodeDecodeError subclasses it) pin as distinct markers; the
+        warm run then misses and the validator reports or raises exactly
+        as a fresh run does.
+        """
+        try:
+            findings = generated_reads.generated_file_findings(Path(child.path))
+        except OSError:
+            emit(f"{rel}\0<unreadable>")
+        except ValueError:
+            emit(f"{rel}\0<undecodable>")
+        else:
+            for code, message in sorted(findings):
+                emit(f"{rel}\0GEN:{code}:{message}")
+
     root_str = os.fspath(root)
     stack = [root_str]
     while stack:
@@ -423,12 +406,12 @@ def validator_inputs_digest(root: Path) -> str:
                 text_stack.append(child.path)
 
     # Derived-state GEN outcomes: the main walk skips this subtree to
-    # avoid self-invalidation, but its *.json/*.md files are real GEN-*
-    # inputs (the validator's rglob reads them). Pin each file's check
-    # outcome — same findings as the validator — instead of its stat:
-    # clean files emit nothing (healthy writes keep hitting), while a
-    # file with findings emits its code and message (miss and revalidate).
-    # Unreadable files and directories emit markers (miss, then the
+    # avoid self-invalidation, but its *.json/*.md paths are real GEN-*
+    # inputs (the validator's rglob reads them). Pin each path's check
+    # outcome — the same findings the validator reports — instead of its
+    # stat: clean files emit nothing (healthy writes keep hitting),
+    # while a path with findings emits its code and message (miss and
+    # revalidate). Unreadable files emit markers (miss, then the
     # validator reports or raises exactly as a fresh run does).
     derived_state = os.path.join(root_str, "generated", "derived-state")
     derived_stack = [derived_state]
@@ -443,17 +426,17 @@ def validator_inputs_digest(root: Path) -> str:
             rel = os.path.relpath(child.path, root_str).replace(os.sep, "/")
             is_directory = child.is_dir(follow_symlinks=False) and not child.is_symlink()
             if is_directory:
+                # A directory carrying a view's name is itself a GEN-*
+                # input (the validator's rglob matches it and names the
+                # shape): pin its finding before descending for the
+                # children the rglob also reads. Symlinks are never
+                # descended, exactly as the validator does not follow
+                # them into another tree.
+                if child.name.endswith((".json", ".md")):
+                    pin_shaped(child, rel)
                 derived_stack.append(child.path)
             elif child.name.endswith((".json", ".md")):
-                try:
-                    findings = _generated_file_findings(Path(child.path))
-                except OSError:
-                    emit(f"{rel}\0<unreadable>")
-                except ValueError:
-                    emit(f"{rel}\0<undecodable>")
-                else:
-                    for code, message in sorted(findings):
-                        emit(f"{rel}\0GEN:{code}:{message}")
+                pin_shaped(child, rel)
 
     # Declared local-only attachments: present ones read full stats, so a
     # scan rewrite misses; absent ones contribute nothing (their add/delete
