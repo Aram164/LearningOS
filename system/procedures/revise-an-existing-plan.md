@@ -13,10 +13,11 @@ structural creation/import path (a module package, compact route
 operations, and one unit map — each drafted outside the repository,
 reviewed as a diff, preflighted from the CLI with zero canonical
 writes, and applied through the gateway). The assembler refuses the
-fixture batch, so the drafts below are edited copies; the hand-edit
-audit tool reads only the live checkout and cannot run against a
-fixture. `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes
-from the `LOS_REPO` environment variable the test sets.
+fixture batch, so the drafts below are edited copies; the closing
+sections run a byte-identical copy of the hand-edit audit tool
+against a disposable git history built from the fixture's real plan
+and receipt files. `tests/test_procedures.py` runs it with Scrut;
+`<REPO>` comes from the `LOS_REPO` environment variable the test sets.
 
 ## Build the fixture
 
@@ -546,4 +547,91 @@ $ (set -o pipefail; los validate | tail -n 1)
 ```scrut
 $ los generate
 published generated/manifest.json (atomic contract snapshot)
+```
+
+## Copy the hand-edit audit into a disposable pair
+
+`tools/plan_write_audit.py` anchors the inspected repository to its
+own file location, so a byte-identical copy audits wherever it is
+placed. The helper copies only the entrypoint and refuses any
+destination outside the transcript `TMPDIR`.
+
+```scrut
+$ mkdir -p "$TMPDIR/audit-pair/repo" && export AUDIT_REPO="$(realpath "$TMPDIR/audit-pair/repo")" && $H/los-anchored-copy plan_write_audit "$AUDIT_REPO"
+sha256:d58cbf1bdd8de190aea7e3497287afd89c8dfb815b6ba42c792ebc14488ef286 tools/plan_write_audit.py
+```
+
+## Commit the fixture's real plans and receipts
+
+The first commit carries every plan record and every transaction
+receipt the gateway wrote above; the second is a labeled fixture
+hand-edit with no receipt, the control the audit must catch. Only
+the plan tree and the receipts copy over — the diagnostics traces
+beside them vary per run. Identity and dates are fixed, but the two
+file-import envelopes carry their draft's absolute run-temporary
+path, so their intent hashes — and the receipts and ledger rows
+recording them — vary per run, and the commit hashes vary with them.
+Subjects, dates and counts pin the history instead.
+
+```scrut
+$ mkdir -p "$AUDIT_REPO/operations" && cp -R curriculum "$AUDIT_REPO/curriculum" && cp -R operations/transactions "$AUDIT_REPO/operations/transactions" && git -C "$AUDIT_REPO" init --quiet -b main . && git -C "$AUDIT_REPO" config user.name Fixture && git -C "$AUDIT_REPO" config user.email fixture@local && git -C "$AUDIT_REPO" add -A && GIT_AUTHOR_DATE="2026-10-01T09:00:00+02:00" GIT_COMMITTER_DATE="2026-10-01T09:00:00+02:00" git -C "$AUDIT_REPO" commit --quiet -m "gateway plan revisions with receipts"
+```
+
+```scrut
+$ printf '%s\n' '# fixture hand-edit: an unmediated plan touch for the audit demo' >> "$AUDIT_REPO/curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml" && git -C "$AUDIT_REPO" add -A && GIT_AUTHOR_DATE="2026-10-02T09:00:00+02:00" GIT_COMMITTER_DATE="2026-10-02T09:00:00+02:00" git -C "$AUDIT_REPO" commit --quiet -m "hand-edit one study map without a receipt"
+```
+
+## The fixture history holds one mediated and one bare plan commit
+
+```scrut
+$ git -C "$AUDIT_REPO" log --format=%s
+hand-edit one study map without a receipt
+gateway plan revisions with receipts
+```
+
+## Audit the fixture history with the copied entrypoint
+
+Nine files sit under `operations/transactions/`: the five new
+receipts, the three fixture records, and the gateway idempotency
+ledger the applies wrote.
+
+```scrut
+$ $LOS_REPO/.venv/bin/python $AUDIT_REPO/tools/plan_write_audit.py
+commits that changed a plan record : 2
+  carrying a transaction receipt   : 1 (50%)
+  with no receipt in the same commit: 1
+
+receipts on disk                   : 9
+
+Run with --list to see which commits those were.
+
+A commit without a receipt is not automatically a defect — migrations
+under tools/migrations/ and the assembler's reviewed drafts are
+legitimate. What the number measures is how much of the plan surface
+changed outside the one path that leaves evidence.
+```
+
+```scrut
+$ $LOS_REPO/.venv/bin/python $AUDIT_REPO/tools/plan_write_audit.py --list | sed -E "s/^  [0-9a-f]{7,} ([0-9]{4}-[0-9]{2}-[0-9]{2}) /  <hash> \1 /"
+commits that changed a plan record : 2
+  carrying a transaction receipt   : 1 (50%)
+  with no receipt in the same commit: 1
+
+receipts on disk                   : 9
+
+off-gateway commits, newest first:
+  <hash> 2026-10-02 hand-edit one study map without a receipt
+
+A commit without a receipt is not automatically a defect — migrations
+under tools/migrations/ and the assembler's reviewed drafts are
+legitimate. What the number measures is how much of the plan surface
+changed outside the one path that leaves evidence.
+```
+
+## The audit bound to the fixture repository
+
+```scrut
+$ grep '^REPO =' $AUDIT_REPO/tools/plan_write_audit.py && [ "$(git -C "$AUDIT_REPO" rev-parse --show-toplevel)" = "$AUDIT_REPO" ] && echo "audit history lives under the pair"
+REPO = Path(__file__).resolve().parents[1]
+audit history lives under the pair
 ```
