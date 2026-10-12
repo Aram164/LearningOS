@@ -723,7 +723,7 @@ def test_gateway_promotes_one_bundle_and_manifest_contains_only_canonical_ids(
 def test_promotion_apply_validates_once(mini_repo, tmp_path, monkeypatch, capsys):
     """F4: a Master Planning promotion apply runs the full validator once."""
     import los
-    from learning_os.commands.capability import cmd_capability
+    from learning_os.adapters.capability import cmd_capability
     from learning_os.rules.core import Validator
 
     _existing_package, _comparison_bytes = _setup(mini_repo)

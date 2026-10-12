@@ -99,7 +99,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.capability.cmd_capability",
+    "handler": "learning_os.adapters.capability.cmd_capability",
     "parser_factory": true
   }
 }

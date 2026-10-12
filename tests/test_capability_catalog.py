@@ -44,7 +44,7 @@ def test_every_v2_external_file_input_is_content_bound_or_inline_only(
 ):
     """A newly exposed file path cannot silently approve only its pathname."""
     import los
-    from learning_os.commands.capability import _FILE_INPUTS_V2
+    from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.contracts.payloads import payload_fields, subparsers
     from learning_os.ops.legacy import _CONTENT_BOUND_V2
 
@@ -86,7 +86,7 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
     import inspect
 
     import los
-    from learning_os.commands.capability import _FILE_INPUTS_V2
+    from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.contracts.payloads import subparsers
     from learning_os.ops.handlers import platform as platform_handlers
     from learning_os.ops.registry import REGISTRY

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.commands.capability import _validate_capability_envelope
 from learning_os.domain.failures import WriteRefused
+from learning_os.ops.legacy import _validate_capability_envelope
 
 
 def _response(details: dict) -> dict:

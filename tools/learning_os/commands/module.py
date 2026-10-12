@@ -1550,7 +1550,7 @@ def _cmd_compact_module_plan_import(args, root: Path, source: Path,
             print("los: --check and --apply-reviewed-sha256 are mutually exclusive",
                   file=sys.stderr)
             return 2
-        from learning_os.commands.capability import reviewed_envelope_apply
+        from learning_os.adapters.capability import reviewed_envelope_apply
         stale_material = _verify_observed_material(
             root, revision.get("plan_contract") or {},
             getattr(args, "review_report", None))
@@ -1654,7 +1654,7 @@ def cmd_module_plan_import(args) -> int:
               file=sys.stderr)
         return 2
     if apply_sha:
-        from learning_os.commands.capability import reviewed_envelope_apply
+        from learning_os.adapters.capability import reviewed_envelope_apply
 
         if not getattr(args, "file", None):
             print("los: --apply-reviewed-sha256 applies a --file plan package",
@@ -2366,7 +2366,7 @@ def _unit_plan_revise_locked(args) -> int:
         if args.check or getattr(args, "record", None) is not None:
             print("los: reviewed apply needs --file and cannot use --check or --record", file=sys.stderr)
             return 2
-        from learning_os.commands.capability import reviewed_envelope_apply
+        from learning_os.adapters.capability import reviewed_envelope_apply
 
         stale_material = _verify_observed_material(
             root, revision.get("plan_contract") or {},

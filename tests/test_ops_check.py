@@ -395,7 +395,7 @@ def test_registered_journey_applies_with_exactly_two_validations(
     """check-out, seal from the record, apply: one validate per check/apply."""
 
     from learning_os import rules as rules_module
-    from learning_os.commands.capability import cmd_capability
+    from learning_os.adapters.capability import cmd_capability
     from learning_os.ops import check as check_module
     from learning_os.ops import commit as commit_module
     from learning_os.rules import core as rules_core
@@ -547,7 +547,7 @@ def test_registered_check_mode_renders_without_committing(
         check_pipe, mini_repo: Path, tmp_path: Path, capsys):
     """payload check:true checks the proposal and renders, never commits."""
 
-    from learning_os.commands.capability import cmd_capability
+    from learning_os.adapters.capability import cmd_capability
 
     rendered_calls: list = []
 

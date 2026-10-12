@@ -2576,7 +2576,7 @@
       "prog": "los capability",
       "defaults": {
         "_parser_factory": "los.build_parser",
-        "func": "learning_os.commands.capability.cmd_capability"
+        "func": "learning_os.adapters.capability.cmd_capability"
       },
       "groups": [],
       "actions": [

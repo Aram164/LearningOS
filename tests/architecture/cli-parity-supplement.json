@@ -252,7 +252,7 @@
      "payload_file": "/path/to/approved-apply-v2.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -346,7 +346,7 @@
      "payload_file": "ENVELOPE.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -798,7 +798,7 @@
      "payload_file": "envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -832,7 +832,7 @@
      "payload_file": "<out>/envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -897,7 +897,7 @@
      "payload_file": "envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -992,7 +992,7 @@
      "payload_file": "envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -1441,7 +1441,7 @@
      "payload_file": "operations/gateway-requests/AML-source-rigor-P3-envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -1877,7 +1877,7 @@
      "payload_file": "envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -8027,7 +8027,7 @@
      "payload_file": "envelope.json",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""
@@ -8432,7 +8432,7 @@
      "payload_file": "-",
      "replay_only": false,
      "json": false,
-     "func": "learning_os.commands.capability.cmd_capability",
+     "func": "learning_os.adapters.capability.cmd_capability",
      "_parser_factory": "los.build_parser"
     },
     "stdout": ""

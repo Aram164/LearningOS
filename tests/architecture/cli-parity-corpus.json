@@ -984,7 +984,7 @@
           "payload_file": "$TMPDIR/relation-requires.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -1017,7 +1017,7 @@
           "payload_file": "$TMPDIR/relation-duplicate.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -1911,7 +1911,7 @@
           "payload_file": "$TMPDIR/capture-a.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -1944,7 +1944,7 @@
           "payload_file": "$TMPDIR/capture-a.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -1977,7 +1977,7 @@
           "payload_file": "$TMPDIR/capture-b.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2010,7 +2010,7 @@
           "payload_file": "$TMPDIR/capture-c.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2083,7 +2083,7 @@
           "payload_file": "$TMPDIR/log-stage-note.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2116,7 +2116,7 @@
           "payload_file": "$TMPDIR/log-capture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2245,7 +2245,7 @@
           "payload_file": "$TMPDIR/temp-capture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2373,7 +2373,7 @@
           "payload_file": "$TMPDIR/durable-revise.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2406,7 +2406,7 @@
           "payload_file": "$TMPDIR/durable-create.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2439,7 +2439,7 @@
           "payload_file": "$TMPDIR/durable-question.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2472,7 +2472,7 @@
           "payload_file": "$TMPDIR/durable-analysis.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2580,7 +2580,7 @@
           "payload_file": "$TMPDIR/stage-progress.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2613,7 +2613,7 @@
           "payload_file": "$TMPDIR/unit-note.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2782,7 +2782,7 @@
           "payload_file": "$TMPDIR/crosswalk-create.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2815,7 +2815,7 @@
           "payload_file": "$TMPDIR/crosswalk-narrative.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2901,7 +2901,7 @@
           "payload_file": "$TMPDIR/crosswalk-judgment.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -2988,7 +2988,7 @@
           "payload_file": "$TMPDIR/crosswalk-table.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3044,7 +3044,7 @@
           "payload_file": "$TMPDIR/crosswalk-restore.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3296,7 +3296,7 @@
           "payload_file": "$TMPDIR/inbox-resolve.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3383,7 +3383,7 @@
           "payload_file": "$TMPDIR/ops-first.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3499,7 +3499,7 @@
           "payload_file": "$TMPDIR/ops-refused.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3586,7 +3586,7 @@
           "payload_file": "$TMPDIR/ops-reuse-one.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3619,7 +3619,7 @@
           "payload_file": "$TMPDIR/ops-reuse-two.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3901,7 +3901,7 @@
           "payload_file": "$TMPDIR/stage-result.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -3979,7 +3979,7 @@
           "payload_file": "$TMPDIR/module-attempt-sat.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -4012,7 +4012,7 @@
           "payload_file": "$TMPDIR/module-sitting-deadline.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -4416,7 +4416,7 @@
           "payload_file": "$TMPDIR/review-demo.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5036,7 +5036,7 @@
           "payload_file": "$TMPDIR/stage1/envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5102,7 +5102,7 @@
           "payload_file": "$TMPDIR/stage2/envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5168,7 +5168,7 @@
           "payload_file": "$TMPDIR/stage2b/envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5234,7 +5234,7 @@
           "payload_file": "$TMPDIR/stage3/envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5418,7 +5418,7 @@
           "payload_file": "$TMPDIR/shelve-note.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5451,7 +5451,7 @@
           "payload_file": "$TMPDIR/shelve-prepare.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -5520,7 +5520,7 @@
           "payload_file": "$TMPDIR/shelve-apply.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -6320,7 +6320,7 @@
           "payload_file": "$TMPDIR/sel-remove.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -6353,7 +6353,7 @@
           "payload_file": "$TMPDIR/sel-select.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -6386,7 +6386,7 @@
           "payload_file": "$TMPDIR/sel-wired.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -6483,7 +6483,7 @@
           "payload_file": "$TMPDIR/coord-commit.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19633,7 +19633,7 @@
           "payload_file": "casedata/valid-capture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19663,7 +19663,7 @@
           "payload_file": "casedata/valid-capture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19693,7 +19693,7 @@
           "payload_file": "casedata/valid-capture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19723,7 +19723,7 @@
           "payload_file": "casedata/first.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19753,7 +19753,7 @@
           "payload_file": "casedata/second.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19782,7 +19782,7 @@
           "payload_file": "no-such-envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19811,7 +19811,7 @@
           "payload_file": "/nonexistent/no-such-envelope.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19840,7 +19840,7 @@
           "payload_file": "casedata/legacy.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19869,7 +19869,7 @@
           "payload_file": "casedata/mismatch.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19898,7 +19898,7 @@
           "payload_file": "casedata/invalid.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19927,7 +19927,7 @@
           "payload_file": "casedata/tampered.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19956,7 +19956,7 @@
           "payload_file": "casedata/gesture.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -19986,7 +19986,7 @@
           "payload_file": "casedata/valid-capture.json",
           "replay_only": true,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -20015,7 +20015,7 @@
           "payload_file": "casedata/stale.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -20044,7 +20044,7 @@
           "payload_file": "casedata/approve-payload.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -20073,7 +20073,7 @@
           "payload_file": "casedata/invalid-payload.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -20102,7 +20102,7 @@
           "payload_file": "casedata/refused-stage.json",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -37382,7 +37382,7 @@
           "payload_file": "X",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -37411,7 +37411,7 @@
           "payload_file": "X",
           "replay_only": true,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -37440,7 +37440,7 @@
           "payload_file": "X",
           "replay_only": false,
           "json": true,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }
@@ -37468,7 +37468,7 @@
           "payload_file": "-",
           "replay_only": false,
           "json": false,
-          "func": "learning_os.commands.capability.cmd_capability",
+          "func": "learning_os.adapters.capability.cmd_capability",
           "_parser_factory": "los.build_parser"
         }
       }

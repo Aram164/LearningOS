@@ -130,7 +130,7 @@ def cmd_lineage_restamp(args) -> int:
         except LineageError as exc:
             print(f"los: {exc}", file=sys.stderr)
             return 2
-        from learning_os.commands.capability import reviewed_envelope_apply
+        from learning_os.adapters.capability import reviewed_envelope_apply
 
         return reviewed_envelope_apply(
             root=root, capability_name=CAPABILITY,

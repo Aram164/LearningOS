@@ -22,7 +22,7 @@ from repo_builders import material_fixture, run_los, write_yaml
 from test_compact_module_plan_revision import _revision, _two_units
 
 import los
-from learning_os.commands.capability import cmd_capability
+from learning_os.adapters.capability import cmd_capability
 from learning_os.commands.module import cmd_module_plan_import
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
