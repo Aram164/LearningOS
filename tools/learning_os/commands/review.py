@@ -13,10 +13,15 @@ from learning_os import observations
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
 from learning_os.ops._legacy_plumbing import (
-    _current_session_id,
-    _load_session_paths,
     _operator_lock,
     _publish,
+)
+from learning_os.store.session_ledger import (
+    SESSION_LEDGER_STALE_HOURS,
+    _current_session_id,
+    _load_other_session_ledgers,
+    _load_session_paths,
+    _row_is_stale,
     _row_proven_state,
     _row_recorded_at,
     _session_ledger,
@@ -25,10 +30,7 @@ from learning_os.ops._legacy_plumbing import (
 
 from .support import (
     CLIENT_ENV,
-    SESSION_LEDGER_STALE_HOURS,
-    _load_other_session_ledgers,
     _root,
-    _row_is_stale,
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent

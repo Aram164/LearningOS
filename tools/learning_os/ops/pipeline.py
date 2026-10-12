@@ -47,16 +47,9 @@ from learning_os.domain.failures import (
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.ops import handlers  # noqa: F401  (registration side effect)
 from learning_os.ops._legacy_plumbing import (
-    _current_session_id,
     _json_layout,
-    _load_session_paths,
     _operator_lock,
-    _row_proven_state,
-    _session_ledger,
-    _session_path_state,
-    _stamp_session_row,
     _take_gateway_refusal,
-    _write_session_ledger,
 )
 from learning_os.ops.check import check_proposal
 from learning_os.ops.commit import commit_proposal
@@ -72,6 +65,15 @@ from learning_os.ops.legacy import (
 from learning_os.ops.outcomes import classify, error_object, resolve
 from learning_os.ops.registry import REGISTRY
 from learning_os.ops.render import call_renderer
+from learning_os.store.session_ledger import (
+    _current_session_id,
+    _load_session_paths,
+    _row_proven_state,
+    _session_ledger,
+    _session_path_state,
+    _stamp_session_row,
+    _write_session_ledger,
+)
 from learning_os.transactions import (
     TransactionResult,
     TransactionSnapshotConflict,

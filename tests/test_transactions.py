@@ -18,6 +18,7 @@ import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
 import learning_os.ops._legacy_plumbing as plumbing_support
 import learning_os.ops.commit as ops_commit
+import learning_os.store.session_ledger as session_support
 import learning_os.transactions as transaction_module
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
@@ -467,9 +468,9 @@ def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Pa
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     canvas = mini_repo / "Untitled 37.canvas"
     regular = mini_repo / "work/inbox/kept.md"
-    plumbing_support._record_touched(mini_repo, [canvas, regular])
+    session_support._record_touched(mini_repo, [canvas, regular])
     recorded = json.loads(
-        command_support._session_ledger(mini_repo).read_text(encoding="utf-8")
+        session_support._session_ledger(mini_repo).read_text(encoding="utf-8")
     )
     assert "Untitled 37.canvas" not in recorded["paths"]
     row = recorded["paths"]["work/inbox/kept.md"]

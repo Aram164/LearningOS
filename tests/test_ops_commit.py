@@ -42,6 +42,7 @@ from learning_os.ops import _legacy_plumbing as plumbing
 from learning_os.ops import commit as ops_commit
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
+from learning_os.store import session_ledger as session_support
 from learning_os.transactions import (
     TransactionConflict,
     TransactionSnapshotConflict,
@@ -593,7 +594,7 @@ def test_standard_hooks_wire_validation_publish_and_touched(mini_repo: Path, mon
     touched_path = mini_repo / "work/inbox/touched-by-hook.md"
     touched_path.write_text("hooked\n", encoding="utf-8")
     captured["touched"]([touched_path])
-    rows = plumbing._load_session_paths(mini_repo)
+    rows = session_support._load_session_paths(mini_repo)
     assert rows["work/inbox/touched-by-hook.md"]["state"] == "file"
 
 

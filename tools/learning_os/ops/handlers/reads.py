@@ -43,12 +43,10 @@ from learning_os.materials_resolution import (
 )
 from learning_os.observations import today as observed_today
 from learning_os.ops._legacy_plumbing import (
-    SESSION_ID_ENV,
     _evidence_label,
     _fresh_manifest,
     _inbox_search_rows,
     _json_layout,
-    _resolve_session_identity,
     _snapshot,
     _use_evidence,
     _window_values,
@@ -76,6 +74,10 @@ from learning_os.semantics.predicates import (
 )
 from learning_os.semantics.recipes import RecipeError, recipes_for
 from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
+from learning_os.store.session_ledger import (
+    SESSION_ID_ENV,
+    _resolve_session_identity,
+)
 from learning_os.validation_cache import observe_pins, status_issues
 
 #: Operator-contract version hashed into every dossier key. There is no

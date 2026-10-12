@@ -14,18 +14,18 @@ from learning_os import observations
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.ops._legacy_plumbing import (
-    _current_session_id,
-    _load_session_paths,
-    _record_touched,
-    _session_ledger,
-)
 from learning_os.ops.context import OpContext
 from learning_os.ops.legacy import gesture_allowed
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
 from learning_os.semantics.scan import intelligence_scan
+from learning_os.store.session_ledger import (
+    _current_session_id,
+    _load_session_paths,
+    _record_touched,
+    _session_ledger,
+)
 
 GOAL_CAPABILITY = "goal.decision.record"
 

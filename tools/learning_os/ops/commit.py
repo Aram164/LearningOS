@@ -24,12 +24,12 @@ from learning_os.ops._legacy_plumbing import (
     _publish,
     _publish_repo,
     _record_gateway_refusal,
-    _record_touched,
     _refusal_from_failure,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.rules import validate
+from learning_os.store.session_ledger import _record_touched
 from learning_os.transactions import (
     PostCommitFailure,
     ProjectionFailure,

@@ -431,7 +431,7 @@ def test_crash_at_named_point(ctx: _RecoveryContext, wrapper: Path, point: str):
     # After the receipt: the commit is irrevocable. Recovery keeps the tree
     # and only cleans the stale journal; a replay then fails closed, because
     # this first write in the session left no ledger row to repair from.
-    from learning_os.commands.support import _session_ledger
+    from learning_os.store.session_ledger import _session_ledger
 
     assert not _session_ledger(ctx.root).is_file()
     committed_tree = arch_effects.capture_tree(ctx.root)

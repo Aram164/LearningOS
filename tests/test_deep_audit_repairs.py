@@ -16,8 +16,8 @@ from learning_os.genout.projection.stages import project_stages
 from learning_os.loader import load_repo
 from learning_os.loading.model import Repo, Unit
 from learning_os.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
-from learning_os.ops import _legacy_plumbing as plumbing_support
 from learning_os.rules import validate
+from learning_os.store import session_ledger as plumbing_support
 from learning_os.transactions import TransactionFailure, load_revisions
 
 

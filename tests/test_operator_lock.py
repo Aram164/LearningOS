@@ -348,13 +348,14 @@ def test_staging_debris_alone_keeps_a_shared_section_shared(mini_repo):
 def test_git_environment_cannot_redirect_the_checkout_lock(mini_repo, tmp_path, monkeypatch):
     """An inherited GIT_DIR must not let a child bypass this checkout's lock."""
     from learning_os.ops import _legacy_plumbing as plumbing_support
+    from learning_os.store import session_ledger as session_support
 
     _git_init(mini_repo)
     foreign = tmp_path / "foreign"
     foreign.mkdir()
     (foreign / "fixture.txt").write_text("foreign git directory")
     _git_init(foreign)
-    plumbing_support._GIT_DIR_CACHE.clear()
+    session_support._GIT_DIR_CACHE.clear()
     monkeypatch.setenv("GIT_DIR", str(foreign / ".git"))
     monkeypatch.setenv("GIT_WORK_TREE", str(foreign))
     assert plumbing_support._operator_lock_path(mini_repo) == (

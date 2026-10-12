@@ -233,7 +233,7 @@ def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_pat
     from repo_builders import add_curriculum
 
     from learning_os.contracts.gateway import intent_sha256
-    from learning_os.ops import _legacy_plumbing as plumbing_support
+    from learning_os.store import session_ledger as plumbing_support
 
     add_curriculum(mini_repo)
     out = tmp_path / "sealed.json"

@@ -162,7 +162,7 @@ def _capture_journal(root: Path, normalizer: _Normalizer) -> dict:
 
 
 def _capture_ledger(root: Path, normalizer: _Normalizer):
-    import learning_os.ops._legacy_plumbing as plumbing
+    import learning_os.store.session_ledger as plumbing
 
     path = plumbing._session_ledger(root)
     if not path.is_file() or path.is_symlink():
