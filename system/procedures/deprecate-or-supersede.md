@@ -51,7 +51,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:769f80f6c70a597f704a2f3f374c5c0067de7679f45e3855e6e8d4e0516c2bee",
+  "snapshot_after": "sha256:aad60f63a02b653f3f104a2477e095b9cbe8f24876f7cfc0b3d043f64a08ea13",
   "result": {
     "ok": true,
     "note_id": "note-worked-variance-v2",
@@ -65,7 +65,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
       "note-demo": 1,
       "note-worked-variance-v2": 1
     },
-    "snapshot_after": "sha256:769f80f6c70a597f704a2f3f374c5c0067de7679f45e3855e6e8d4e0516c2bee",
+    "snapshot_after": "sha256:aad60f63a02b653f3f104a2477e095b9cbe8f24876f7cfc0b3d043f64a08ea13",
     "replayed": false
   },
   "error": null

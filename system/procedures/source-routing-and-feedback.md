@@ -81,7 +81,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:7e1635f1e9d6d298791aeb4902cfb26de3679b528783d254b668db42d3f4d7c4",
+  "snapshot_after": "sha256:210aec3c3d0ec203add8e68379caebecef3510e5f331e51ce028b94fd011b94d",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -116,7 +116,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:7e1635f1e9d6d298791aeb4902cfb26de3679b528783d254b668db42d3f4d7c4",
+    "snapshot_after": "sha256:210aec3c3d0ec203add8e68379caebecef3510e5f331e51ce028b94fd011b94d",
     "replayed": false
   },
   "error": null
@@ -154,7 +154,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:f7f7e9b890c793976d3b436fbfea3b221d59cfd09bb2fa69059054047219850c",
+  "snapshot_after": "sha256:feb5b07cd9d5b6e7d8c142d9805370fad88e18e667b4c9ba245b0baea5e347b7",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -170,7 +170,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:f7f7e9b890c793976d3b436fbfea3b221d59cfd09bb2fa69059054047219850c",
+    "snapshot_after": "sha256:feb5b07cd9d5b6e7d8c142d9805370fad88e18e667b4c9ba245b0baea5e347b7",
     "replayed": false
   },
   "error": null
@@ -201,7 +201,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:e095a72eda79d7f4b6bec13da347a30fa5ae91df71c0fc78404d2bc458bec76e",
+  "snapshot_after": "sha256:55453797992a1a8b6b9911d6b0043154b8a5308bb4abc028a8b32202988d3062",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -219,7 +219,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
       "study-map-demo-l01": 3,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:e095a72eda79d7f4b6bec13da347a30fa5ae91df71c0fc78404d2bc458bec76e",
+    "snapshot_after": "sha256:55453797992a1a8b6b9911d6b0043154b8a5308bb4abc028a8b32202988d3062",
     "replayed": false
   },
   "error": null
