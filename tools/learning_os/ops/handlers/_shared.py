@@ -112,6 +112,17 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
     """
     import importlib
 
+    # D1 RECORDED DEVIATION (closed, not deferred; T81 review disposition +
+    # T82 review): this transport import stays dynamic (import_module) by
+    # decision. Proven unlandable static in every form: module-level breaks
+    # entry via the capability-pipeline-handlers-plan load cycle (T81 proof), and any
+    # static edge — module-level or function-local — trips
+    # code_reachability's pinned no-cycle rule, which counts
+    # function-level imports (ast.walk) and offers no cycle exemption
+    # (T82 proof; attempt + layers-KEPT + reachability-2-fail reproduced
+    # by conductor). The behavior is correct, all suites green, and the
+    # probe covers check/apply/replay. Changing the reachability guard
+    # or restructuring the pipeline needs Aram's direct authorization.
     _capability_transport = importlib.import_module(
         "learning_os.adapters.capability")
     build_parser = importlib.import_module(
