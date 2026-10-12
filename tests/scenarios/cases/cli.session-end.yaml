@@ -11,17 +11,17 @@ cases:
     kind: refusal
     transport: cli
     argv: [session-end, --commit-message, "nothing staged"]
-    expect: {site: null}
+    expect: {site: cli.session-end.nothing-touched}
   - id: close-with-commit
     kind: refusal
     transport: cli
     argv: [session-end, --close, --commit-message, "contradiction"]
-    expect: {site: null}
+    expect: {site: cli.session-end.close-with-commit}
   - id: bad-channel
     kind: refusal
     transport: cli
     argv: [session-end, --channel, nope]
-    expect: {site: null}
+    expect: {site: cli.session-end.unknown-channel}
   - id: review-write-commit
     kind: sequence
     steps:
@@ -32,6 +32,7 @@ cases:
         request: {text: "A session's worth of thought."}
       - transport: cli
         argv: [session-end, --commit-message, "scenario commit"]
+    expect: {site: cli.session-end.review-invalidated}
   - id: direct-commit
     kind: sequence
     steps:

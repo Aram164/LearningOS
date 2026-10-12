@@ -13,4 +13,5 @@ from learning_os.ops.handlers import (
     plan,  # noqa: F401  (registration side effect)
     platform,  # noqa: F401  (registration side effect)
     reads,  # noqa: F401  (registration side effect)
+    session,  # noqa: F401  (registration side effect)
 )
