@@ -257,6 +257,10 @@ def goal(ctx: OpContext, req: dict) -> Result:
         "expected_revisions": expected_revisions,
         "payload": reviewed,
     })
+    # The explicit session travels sealed on the gesture, exactly as a
+    # gateway envelope seals it, so the commit path resolves this write's
+    # owner the same way the custom touched callback claims it below.
+    # Nothing else reads the sealed identity during the commit.
     context = GatewayRequestContext(
         request_id=f"goal-{key}",
         idempotency_key=f"goal-{key}",
@@ -266,6 +270,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         approval_kind="direct-user-gesture",
         approval_subject_sha256=subject,
         expected_snapshot=snapshot,
+        session_id=explicit_session,
     )
 
     def finish(confirmation: dict) -> dict:

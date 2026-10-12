@@ -22,7 +22,7 @@ import pytest
 from arch_audit_hook import SITE_WITNESS_ENV
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 
-from learning_os.contracts.gateway import request_artifact_id
+from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.store import session_ledger as session_store
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
@@ -57,6 +57,49 @@ def _session_end(root: Path, *args: str, env: dict | None = None):
         [sys.executable, str(LOS), "--root", str(root), "session-end", *args],
         capture_output=True, text=True, timeout=120, env=run_env,
     )
+
+
+def _los(root: Path, *args: str):
+    """Any `los` subcommand in a child with no ambient session (T73-2)."""
+    run_env = dict(os.environ)
+    run_env.pop("LOS_SESSION_ID", None)
+    return subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root), *args],
+        capture_output=True, text=True, timeout=120, env=run_env,
+    )
+
+
+def _canonical_tree(root: Path) -> dict[str, str]:
+    """sha256 per file, excluding .git and the diagnostics trace (T73-2).
+
+    The append-only trace grows on every gateway attempt by design
+    ((cx) D-11); everything else is canonical data a refused write must
+    leave byte-identical.
+    """
+    out = {}
+    for path in sorted(root.rglob("*")):
+        if ".git" in path.parts or not path.is_file():
+            continue
+        rel = path.relative_to(root).as_posix()
+        if rel.startswith("operations/diagnostics/"):
+            continue
+        out[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return out
+
+
+def _sealed_capture(root: Path, *, key: str, text: str,
+                    session_id: str) -> str:
+    """A capture whose session travels in the sealed envelope (T73-2)."""
+    envelope = approved_v2_envelope(
+        root, capability="capture.create", payload={"text": text},
+        artifact_ids=[request_artifact_id("capture.create", key)],
+        idempotency_key=key,
+    )
+    envelope["session_id"] = session_id
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    result = run_v2_capability(root, envelope)
+    assert result.returncode == 0, result.stderr or result.stdout
+    return json.loads(result.stdout)["result"]["captured"]
 
 
 def _read_witness_lines(path: Path) -> list[dict]:
@@ -591,3 +634,150 @@ def test_malformed_foreign_contract_is_skipped(mini_repo, monkeypatch, bad):
     payload = json.loads(review.stdout)
     assert "foreign-session" not in payload["other_sessions"]
     assert "other-session" in payload["other_sessions"]
+
+
+def test_write_while_committed_unpushed_refuses_before_any_mutation(
+        mini_repo, monkeypatch, tmp_path):
+    """A new write after a failed push refuses; tree/receipts/ledger kept."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    remote = tmp_path / "trap-remote.git"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    subprocess.run(["git", "remote", "add", "origin", str(remote)],
+                   cwd=mini_repo, check=True)
+    subprocess.run(["git", "push", "-q", "--set-upstream", "origin", "main"],
+                   cwd=mini_repo, check=True)
+    _capture(mini_repo, key="trap-001", text="first thought")
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    subprocess.run(["git", "remote", "set-url", "origin",
+                    str(tmp_path / "no-such-remote")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "trap commit",
+                          "--push")
+    assert failed.returncode == 128, failed.stderr
+    sha = _own_envelope(mini_repo)["commit_sha"]
+    assert sha == _head(mini_repo)
+    before_tree = _canonical_tree(mini_repo)
+    before_ledger = session_store._session_ledger(
+        mini_repo, "channel:operator").read_bytes()
+    before_receipts = sorted(
+        (mini_repo / "operations" / "transactions").glob(
+            "transaction-*.yaml"))
+
+    envelope = approved_v2_envelope(
+        mini_repo, capability="capture.create",
+        payload={"text": "trapped thought"},
+        artifact_ids=[request_artifact_id("capture.create", "trap-002")],
+        idempotency_key="trap-002",
+    )
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode == 2, refused.stdout
+    doc = json.loads(refused.stdout)
+    assert doc["error"]["code"] == "INVALID_REQUEST"
+    assert doc["error"]["retryable"] is False
+    assert doc["error"]["message"] == (
+        f"already committed as {sha}; use --push or --close")
+    assert doc["transaction_id"] is None
+    assert doc["receipt_path"] is None
+    assert _canonical_tree(mini_repo) == before_tree
+    assert session_store._session_ledger(
+        mini_repo, "channel:operator").read_bytes() == before_ledger
+    assert sorted((mini_repo / "operations" / "transactions").glob(
+        "transaction-*.yaml")) == before_receipts
+
+    # The refused write left no claim behind: the exact-SHA retry lands.
+    subprocess.run(["git", "remote", "set-url", "origin", str(remote)],
+                   cwd=mini_repo, check=True)
+    retried = _session_end(mini_repo, "--push")
+    assert retried.returncode == 0, retried.stderr
+    payload = json.loads(retried.stdout)
+    assert payload["pushed"] is True
+    assert payload["session_closed"] is True
+    landed = subprocess.run(
+        ["git", "--git-dir", str(remote), "rev-parse", "refs/heads/main"],
+        capture_output=True, text=True, check=True).stdout.strip()
+    assert landed == sha
+
+
+def test_write_in_another_sealed_session_while_unpushed_succeeds(
+        mini_repo, monkeypatch, tmp_path):
+    """Another session's write proceeds while this one is unpushed (T73-2)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="other-001", text="mine")
+    subprocess.run(["git", "remote", "add", "origin",
+                    str(tmp_path / "no-such-remote")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "mine", "--push")
+    assert failed.returncode == 128, failed.stderr
+    own_before = session_store._session_ledger(
+        mini_repo, "channel:operator").read_bytes()
+
+    captured = _sealed_capture(mini_repo, key="other-002", text="theirs",
+                               session_id="other-session")
+    other = session_store._load_session_ledger(mini_repo, "other-session")
+    assert captured in other["paths"]
+    assert session_store._session_ledger(
+        mini_repo, "channel:operator").read_bytes() == own_before
+
+
+def test_query_while_committed_unpushed_succeeds(
+        mini_repo, monkeypatch, tmp_path):
+    """Queries never reach the commit gate, even unpushed (T73-2)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="query-001", text="queried")
+    subprocess.run(["git", "remote", "add", "origin",
+                    str(tmp_path / "no-such-remote")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "queried", "--push")
+    assert failed.returncode == 128, failed.stderr
+
+    status = _los(mini_repo, "status")
+    assert status.returncode == 0, status.stderr
+
+
+def test_exact_replay_while_unpushed_repairs_without_discarding(
+        mini_repo, monkeypatch, tmp_path):
+    """Exact replay in unpushed answers committed and keeps every row."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    envelope = approved_v2_envelope(
+        mini_repo, capability="capture.create", payload={"text": "replayed"},
+        artifact_ids=[request_artifact_id("capture.create", "replay-001")],
+        idempotency_key="replay-001",
+    )
+    first = run_v2_capability(mini_repo, envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    transaction_id = json.loads(first.stdout)["transaction_id"]
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    subprocess.run(["git", "remote", "add", "origin",
+                    str(tmp_path / "no-such-remote")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "replayed", "--push")
+    assert failed.returncode == 128, failed.stderr
+    before = _own_envelope(mini_repo)
+    assert before["state"] == "committed_unpushed"
+
+    # The identical envelope resubmitted: a replay, not a new write.
+    again = run_v2_capability(mini_repo, envelope)
+    assert again.returncode == 0, again.stdout
+    doc = json.loads(again.stdout)
+    assert doc["ok"] is True
+    assert doc["replayed"] is True
+    assert doc["transaction_id"] == transaction_id
+    after = _own_envelope(mini_repo)
+    assert after["version"] == before["version"]
+    assert after["state"] == "committed_unpushed"
+    assert after["commit_sha"] == before["commit_sha"]
+    assert after["review"] == before["review"]
+    assert set(after["paths"]) == set(before["paths"])
+    # Carried-forward aggregate rows keep their proven stamps: the
+    # repair re-proves the recorded bytes, never re-observes the live
+    # files into a replacement claim.
+    for rel in ("operations/transactions/revisions.yaml",
+                "operations/transactions/idempotency.yaml"):
+        if rel in before["paths"]:
+            assert after["paths"][rel] == before["paths"][rel]

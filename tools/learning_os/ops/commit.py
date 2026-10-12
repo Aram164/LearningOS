@@ -29,7 +29,10 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.rules import validate
-from learning_os.store.session_ledger import _record_touched
+from learning_os.store.session_ledger import (
+    _record_touched,
+    _unpushed_commit_sha,
+)
 from learning_os.transactions import (
     PostCommitFailure,
     ProjectionFailure,
@@ -68,6 +71,16 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> tuple[int,
             f"--payload-file ENVELOPE.json` (payload schema: `los capabilities "
             f"{proposal.capability} --json`; envelope: WORKFLOWS §25c)"
         ], {}
+    # PLAN D7: after a failed push only the stored-SHA retry or close may
+    # follow, so a new canonical write owned by that session refuses here,
+    # before any canonical mutation or receipt. Identity resolves exactly
+    # as the touched callback claims it (explicit, then the sealed
+    # envelope, then the environment, then the channel — including the
+    # goal handler's sealed override); another session's write proceeds.
+    # The message reuses the session machine's §13 row-8 refusal verbatim.
+    unpushed = _unpushed_commit_sha(root)
+    if unpushed is not None:
+        return 2, [f"already committed as {unpushed}; use --push or --close"], {}
     if proposal.clock is None:
         service = TransactionService(root)
     else:

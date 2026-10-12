@@ -286,6 +286,61 @@ def test_goal_session_id_flag_overrides_the_environment(mini_repo, monkeypatch):
         mini_repo, "env-session").exists()
 
 
+def _unpushed_session(mini_repo: Path, tmp_path: Path, session: str) -> str:
+    """Capture, review, commit and fail the push in one ambient session."""
+    _git_init(mini_repo)
+    _capture(mini_repo, key=f"{session}-001", text="ambient thought")
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    subprocess.run(["git", "remote", "add", "origin",
+                    str(tmp_path / "no-such-remote")],
+                   cwd=mini_repo, check=True)
+    failed = _session_end(mini_repo, "--commit-message", "ambient", "--push")
+    assert failed.returncode == 128, failed.stderr
+    envelope = session_store._load_session_ledger(mini_repo, session)
+    assert envelope["state"] == "committed_unpushed"
+    return envelope["commit_sha"]
+
+
+def test_goal_write_while_own_session_unpushed_refuses(
+        mini_repo, monkeypatch, tmp_path):
+    """A goal decision in the unpushed session refuses pre-commit (T73-2)."""
+    monkeypatch.setenv("LOS_SESSION_ID", "goal-session")
+    sha = _unpushed_session(mini_repo, tmp_path, "goal-session")
+    (goal_id,) = seed_live_goal_ids(mini_repo, "goal-trap")
+    ledger_file = mini_repo / "operations" / "goal-ledger.yaml"
+    before_goal = ledger_file.read_bytes() if ledger_file.exists() else None
+    before_ledger = session_store._session_ledger(
+        mini_repo, "goal-session").read_bytes()
+
+    refused = run_los(mini_repo, "goal", goal_id, "--reject")
+    assert refused.returncode == 2, refused.stdout
+    assert refused.stderr == (
+        f"already committed as {sha}; use --push or --close\n")
+    assert (ledger_file.read_bytes() if ledger_file.exists() else None) \
+        == before_goal
+    assert session_store._session_ledger(
+        mini_repo, "goal-session").read_bytes() == before_ledger
+
+
+def test_goal_write_in_another_explicit_session_while_ambient_unpushed(
+        mini_repo, monkeypatch, tmp_path):
+    """--session-id routes the goal gate past an unpushed ambient (T73-2)."""
+    monkeypatch.setenv("LOS_SESSION_ID", "goal-session")
+    _unpushed_session(mini_repo, tmp_path, "goal-session")
+    (goal_id,) = seed_live_goal_ids(mini_repo, "goal-elsewhere")
+    before_ledger = session_store._session_ledger(
+        mini_repo, "goal-session").read_bytes()
+
+    decided = run_los(mini_repo, "goal", goal_id, "--reject",
+                      "--session-id", "goal-other")
+    assert decided.returncode == 0, decided.stderr
+    other = session_store._load_session_paths(mini_repo, "goal-other")
+    assert "operations/goal-ledger.yaml" in other
+    assert session_store._session_ledger(
+        mini_repo, "goal-session").read_bytes() == before_ledger
+
+
 def _age_own_ledger(mini_repo: Path, session: str, hours: int = 25) -> None:
     ledger = session_store._session_ledger(mini_repo, session)
     data = json.loads(ledger.read_text(encoding="utf-8"))
