@@ -260,7 +260,7 @@ def test_a_contract_mismatch_reaches_the_cli_as_one_line(mini_repo):
         proc = run_los(mini_repo, command)
         assert proc.returncode == 2, f"{command}: {proc.stdout}{proc.stderr}"
         assert "Traceback" not in proc.stderr, f"{command} raised instead of reporting"
-        assert proc.stderr.startswith("los: the published manifest no longer matches")
+        assert proc.stderr.startswith("los: INVALID_REQUEST: the published manifest no longer matches")
 
 
 def test_supersedes_and_mention_edges_stay_projectable(mini_repo):
