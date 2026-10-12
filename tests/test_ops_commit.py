@@ -21,9 +21,9 @@ from learning_os.ai_actions.errors import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
-from learning_os.commands import support as command_support
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
+    current_gateway_request,
     gateway_request_context,
 )
 from learning_os.domain.codes import (
@@ -43,6 +43,7 @@ from learning_os.ops import commit as ops_commit
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.store import session_ledger as session_support
+from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 from learning_os.transactions import (
     TransactionConflict,
     TransactionSnapshotConflict,
@@ -81,6 +82,22 @@ def _ctx(root: Path, capability: str, gateway=None) -> OpContext:
     )
 
 
+def _legacy_write_transaction(root, writes, *, capability="legacy.write",
+                              expected_revisions=None, artifact_ids=(),
+                              deletes=(), metadata=None, validate_extra=None):
+    """The dissolved support._write_transaction construction, inlined."""
+    request = current_gateway_request()
+    ctx = OpContext(
+        root=root, operation=capability,
+        channel=request.channel if request is not None else DEFAULT_SESSION_CHANNEL,
+        invocation="command", gateway=request)
+    proposal = TransactionProposal(
+        capability=capability, writes=writes, artifact_ids=artifact_ids,
+        deletes=deletes, expected_revisions=expected_revisions or {},
+        metadata=metadata, validate_extra=validate_extra)
+    return ops_commit.commit_proposal(ctx, proposal)
+
+
 def _stub_result():
     return types.SimpleNamespace(
         receipt_path=Path("operations/transactions/transaction-20260101-000000-001.yaml"),
@@ -115,7 +132,7 @@ def test_legacy_wrapper_forwards_context_and_proposal(mini_repo: Path, monkeypat
         seen["proposal"] = proposal
         return 0, [], {"ok": True}
 
-    monkeypatch.setattr(command_support, "commit_proposal", capture)
+    monkeypatch.setattr(ops_commit, "commit_proposal", capture)
     writes = {mini_repo / "work/inbox/x.md": "x\n"}
     artifacts = ["a:1"]
     deletes: list = []
@@ -127,7 +144,7 @@ def test_legacy_wrapper_forwards_context_and_proposal(mini_repo: Path, monkeypat
 
     context = _gateway_context("capture.create", "wrap")
     with gateway_request_context(context):
-        assert command_support._write_transaction(
+        assert _legacy_write_transaction(
             mini_repo, writes, capability="capture.create",
             expected_revisions=revisions, artifact_ids=artifacts,
             deletes=deletes, metadata=metadata,
@@ -163,9 +180,9 @@ def test_legacy_wrapper_without_gateway_names_operator_channel(
         seen["ctx"] = ctx
         return 2, ["refused"], {}
 
-    monkeypatch.setattr(command_support, "commit_proposal", capture)
+    monkeypatch.setattr(ops_commit, "commit_proposal", capture)
     assert plumbing.current_gateway_request() is None
-    code, errors, _ = command_support._write_transaction(
+    code, errors, _ = _legacy_write_transaction(
         mini_repo, {}, capability="capture.create")
     assert (code, errors) == (2, ["refused"])
     assert seen["ctx"].channel == "operator"

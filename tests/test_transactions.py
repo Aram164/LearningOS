@@ -14,14 +14,15 @@ from gateway_helpers import approved_v2_envelope
 from repo_builders import add_curriculum
 
 import learning_os.ai_actions.projection as ai_projection
-import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
 import learning_os.ops._legacy_plumbing as plumbing_support
 import learning_os.ops.commit as ops_commit
+import learning_os.ops.context as context_module
 import learning_os.store.session_ledger as session_support
 import learning_os.transactions as transaction_module
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
+    current_gateway_request,
     gateway_request_context,
     intent_sha256,
     verified_gateway_snapshot,
@@ -30,8 +31,11 @@ from learning_os.contracts.json_schema import (
     ContractValidationError,
     validate_contract,
 )
+from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.fingerprint import source_fingerprint
 from learning_os.loader import load_repo
+from learning_os.ops.context import OpContext
+from learning_os.ops.proposal import TransactionProposal
 from learning_os.rules.common import Issue
 from learning_os.transactions import (
     PostCommitFailure,
@@ -46,6 +50,34 @@ from learning_os.transactions import (
 )
 
 TOOLS = Path(__file__).resolve().parent.parent / "tools"
+
+
+def _write_transaction(root, writes, *, capability="legacy.write",
+                       expected_revisions=None, artifact_ids=(),
+                       deletes=(), metadata=None, validate_extra=None):
+    """The dissolved support._write_transaction construction, inlined."""
+    request = current_gateway_request()
+    ctx = OpContext(
+        root=root, operation=capability,
+        channel=request.channel if request is not None else session_support.DEFAULT_SESSION_CHANNEL,
+        invocation="command", gateway=request)
+    proposal = TransactionProposal(
+        capability=capability, writes=writes, artifact_ids=artifact_ids,
+        deletes=deletes, expected_revisions=expected_revisions or {},
+        metadata=metadata, validate_extra=validate_extra)
+    return ops_commit.commit_proposal(ctx, proposal)
+
+
+def _snapshot_ok(root, expected) -> bool:
+    """OpContext.require_snapshot as the dissolved _expected_ok boolean."""
+    ctx = OpContext(
+        root=root, operation="test.probe", channel="operator",
+        invocation="command", gateway=current_gateway_request())
+    try:
+        ctx.require_snapshot(expected)
+    except (StaleSnapshot, WriteRefused):
+        return False
+    return True
 
 
 def _gateway_context(capability: str, suffix: str) -> GatewayRequestContext:
@@ -194,7 +226,7 @@ def test_transaction_walks_twice_but_reads_each_file_once(
         with gateway_request_context(context), verified_gateway_snapshot(
             mini_repo, expected
         ):
-            code, errors, confirmation = command_support._write_transaction(
+            code, errors, confirmation = _write_transaction(
                 mini_repo,
                 {target: "two walks\n"},
                 capability="capture.create",
@@ -227,7 +259,7 @@ def test_a_transaction_refuses_an_already_invalid_repository(
     with gateway_request_context(
         _gateway_context("capture.create", "strict-validation")
     ):
-        code, errors, confirmation = command_support._write_transaction(
+        code, errors, confirmation = _write_transaction(
             mini_repo,
             {target: "must roll back\n"},
             capability="capture.create",
@@ -245,7 +277,7 @@ def test_validation_and_publication_share_one_loaded_repository(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
     target = mini_repo / "work/inbox/one-load.md"
     loads = 0
-    original = command_support.load_repo
+    original = load_repo
 
     def counted(root: Path):
         nonlocal loads
@@ -262,7 +294,7 @@ def test_validation_and_publication_share_one_loaded_repository(
     monkeypatch.setattr(ai_projection, "load_repo", unexpected_projection_load)
     artifact = "capture-test:one-load"
     with gateway_request_context(_gateway_context("capture.create", "one-load")):
-        code, errors, confirmation = command_support._write_transaction(
+        code, errors, confirmation = _write_transaction(
             mini_repo,
             {target: "one load\n"},
             capability="capture.create",
@@ -305,7 +337,7 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
         return original_combined(root)
 
     monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
-    monkeypatch.setattr(command_support, "canonical_fingerprint", counted)
+    monkeypatch.setattr(context_module, "canonical_fingerprint", counted)
     monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted)
     monkeypatch.setattr(
         fingerprint_module, "canonical_data_and_stat_fingerprints",
@@ -322,8 +354,8 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
         ):
             # cmd_capability owns the locked entry comparison. This assertion
             # represents the named handler's former duplicate and must not scan.
-            assert command_support._expected_ok(mini_repo, expected) is True
-            code, errors, confirmation = command_support._write_transaction(
+            assert _snapshot_ok(mini_repo, expected) is True
+            code, errors, confirmation = _write_transaction(
                 mini_repo,
                 {target: "bounded\n"},
                 capability="capture.create",
@@ -374,7 +406,7 @@ def test_projection_publication_refuses_a_changed_canonical_snapshot(
         _gateway_context("capture.create", "projection-race")
     ):
         with pytest.raises(ProjectionFailure) as caught:
-            command_support._write_transaction(
+            _write_transaction(
                 mini_repo,
                 {target: "transaction content\n"},
                 capability="capture.create",
@@ -443,9 +475,9 @@ def test_snapshot_check_does_not_parse_the_repository(
     def unexpected_load(_root: Path):
         raise AssertionError("a content digest must not require a domain parse")
 
-    monkeypatch.setattr(command_support, "load_repo", unexpected_load)
+    monkeypatch.setattr(context_module, "load_repo", unexpected_load)
 
-    assert command_support._expected_ok(mini_repo, expected) is True
+    assert _snapshot_ok(mini_repo, expected) is True
 
 
 def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Path, capsys):
@@ -457,12 +489,18 @@ def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Pa
     retry. No snapshot makes a direct CLI write succeed, so that advice sends a
     script into a loop against a door closed for another reason.
     """
-    assert command_support.current_gateway_request() is None
-    assert command_support._expected_ok(mini_repo, "sha256:" + "0" * 64) is False
-    err = capsys.readouterr().err
+    assert current_gateway_request() is None
+    assert _snapshot_ok(mini_repo, "sha256:" + "0" * 64) is False
+    ctx = OpContext(
+        root=mini_repo, operation="test.probe", channel="operator",
+        invocation="command", gateway=None)
+    with pytest.raises(StaleSnapshot) as caught:
+        ctx.require_snapshot("sha256:" + "0" * 64)
+    err = caught.value.gateway_message
     assert "direct CLI application is disabled" in err
     assert "reloading will not change this" in err
     assert "projection conflict" not in err
+    assert capsys.readouterr().err == ""
 
 
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):

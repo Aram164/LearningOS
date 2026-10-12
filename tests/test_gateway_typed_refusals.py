@@ -27,11 +27,9 @@ from learning_os.ai_actions import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
-from learning_os.commands.support import (
-    _write_transaction,
-)
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
+    current_gateway_request,
     gateway_request_context,
 )
 from learning_os.contracts.write_scopes import WriteScopeError
@@ -57,6 +55,7 @@ from learning_os.ops.pipeline import _classify_failure, _v2_exit_code, run_cli
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.pathing import PathBoundaryError
 from learning_os.rules.common import Issue
+from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 from learning_os.transactions import (
     ReplayEvidenceError,
     TransactionConflict,
@@ -68,6 +67,22 @@ from learning_os.transactions import (
     TransactionSnapshotConflict,
     TransactionValidationFailure,
 )
+
+
+def _write_transaction(root, writes, *, capability="legacy.write",
+                       expected_revisions=None, artifact_ids=(),
+                       deletes=(), metadata=None, validate_extra=None):
+    """The dissolved support._write_transaction construction, inlined."""
+    request = current_gateway_request()
+    ctx = OpContext(
+        root=root, operation=capability,
+        channel=request.channel if request is not None else DEFAULT_SESSION_CHANNEL,
+        invocation="command", gateway=request)
+    proposal = TransactionProposal(
+        capability=capability, writes=writes, artifact_ids=artifact_ids,
+        deletes=deletes, expected_revisions=expected_revisions or {},
+        metadata=metadata, validate_extra=validate_extra)
+    return ops_commit.commit_proposal(ctx, proposal)
 
 FORMER_TOKENS = [
     "snapshot",

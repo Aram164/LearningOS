@@ -23,7 +23,6 @@ from scenario_harness import check_render_purity_error, render_violations
 from learning_os import observations as observations_module
 from learning_os.adapters import cli as cli_adapter
 from learning_os.adapters.cli_parser import _repository_root
-from learning_os.commands import support as command_support
 from learning_os.domain.failures import (
     StaleSnapshot,
     TransactionFailure,
@@ -777,11 +776,11 @@ def test_invoke_writes_exact_bytes_and_exit(pipe, mini_repo, capsys):
 
 
 def test_invoke_root_resolution_matches_support_root(pipe, mini_repo, monkeypatch):
-    # S13 candidate J8: adapter root spelling must equal support._root.
+    # S13 candidate J8: adapter root spelling must equal the TOOLS-parent root.
     calls = pipe("query")
     cli_adapter.invoke(_ns(mini_repo))
     assert calls[0]["ctx"].root == mini_repo.resolve()
-    assert _repository_root() == Path(command_support.__file__).resolve().parent.parent.parent.parent
+    assert _repository_root() == Path(cli_adapter.__file__).resolve().parents[3]
 
     recorded = {}
 

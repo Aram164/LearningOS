@@ -845,8 +845,6 @@ def test_stage_attachment_idempotent_and_non_destructive_under_name_collisions(m
             @classmethod
             def now(cls, tz=None):
                 return dt.datetime(2026, 9, 6, 12, 0, 0, tzinfo=tz)
-        import learning_os.commands.support
-        learning_os.commands.support._dt.datetime = MockDateTime
         import runpy
         sys.argv[0] = {str(los_py)!r}
         runpy.run_path(sys.argv[0], run_name="__main__")

@@ -1,11 +1,10 @@
-"""OpContext parity with _expected_ok, member freeze and caching (PLAN D4, A17)."""
+"""OpContext require_snapshot, member freeze and caching (PLAN D4, A17)."""
 
 from __future__ import annotations
 
 import contextlib
 import dataclasses
 
-from learning_os.commands.support import _expected_ok
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
@@ -43,9 +42,8 @@ def _gateway(expected):
 
 
 def _run_expected_ok(root, expected):
-    _take_gateway_refusal()
-    ok = _expected_ok(root, expected)
-    return ok, _take_gateway_refusal()
+    """Boolean form of require_snapshot (the dissolved _expected_ok twin)."""
+    return _run_require_snapshot(_ctx(root), expected) is None, None
 
 
 def _run_require_snapshot(ctx, expected):
@@ -62,7 +60,7 @@ def _run_require_snapshot(ctx, expected):
 
 def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
                     exc_type, code):
-    """_expected_ok and require_snapshot agree: text, code and exit 3."""
+    """require_snapshot refuses: text, code and exit 3, never printed."""
     ctx = _ctx(root, gateway=gateway)
     managers = []
     if gateway is not None:
@@ -78,10 +76,9 @@ def _assert_refusal(root, capsys, *, expected, gateway=None, verified=False,
         out2, err2 = capsys.readouterr()
     assert ok is False
     assert exc is not None and type(exc) is exc_type
-    assert (out, out2, err2) == ("", "", "")
-    lines = err.splitlines()
+    assert (out, err, out2, err2) == ("", "", "", "")
+    lines = exc.gateway_message.splitlines()
     assert lines and lines[0].startswith("los: ")
-    assert exc.gateway_message == err.strip()
     assert str(exc) == lines[0][len("los: "):] + (
         "" if len(lines) == 1 else "\n" + "\n".join(lines[1:]))
     assert exit_for(exc, "cli") == 3
@@ -160,7 +157,6 @@ def test_empty_token_carries_an_explicit_exit_3(mini_repo):
 
 
 def test_verified_gateway_shortcut_never_walks(mini_repo, capsys, monkeypatch):
-    import learning_os.commands.support as support_module
     import learning_os.ops.context as context_module
 
     def no_walk(root):
@@ -169,7 +165,6 @@ def test_verified_gateway_shortcut_never_walks(mini_repo, capsys, monkeypatch):
     live = f"sha256:{canonical_fingerprint(mini_repo)}"
     gateway = _gateway(live)
     monkeypatch.setattr(context_module, "canonical_fingerprint", no_walk)
-    monkeypatch.setattr(support_module, "canonical_fingerprint", no_walk)
     with gateway_request_context(gateway), verified_gateway_snapshot(mini_repo, live):
         ok, recorded = _run_expected_ok(mini_repo, live)
         out, err = capsys.readouterr()
@@ -215,7 +210,7 @@ def test_stale_with_gateway_is_a_stale_snapshot(mini_repo, capsys):
     recorded = _assert_refusal(
         mini_repo, capsys, expected=STALE, gateway=_gateway(STALE),
         exc_type=StaleSnapshot, code=(STALE_SNAPSHOT, True))
-    assert recorded == (STALE_SNAPSHOT, True)
+    assert recorded is None
 
 
 def test_handler_token_mismatch_is_a_stale_snapshot(mini_repo, capsys):
@@ -224,7 +219,7 @@ def test_handler_token_mismatch_is_a_stale_snapshot(mini_repo, capsys):
     recorded = _assert_refusal(
         mini_repo, capsys, expected=STALE, gateway=_gateway(live),
         exc_type=StaleSnapshot, code=(STALE_SNAPSHOT, True))
-    assert recorded == (STALE_SNAPSHOT, True)
+    assert recorded is None
 
 
 def test_stale_branches_resolve_exit_3_by_default(mini_repo):

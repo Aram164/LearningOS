@@ -6,7 +6,6 @@ exclusion covers it; the forwarded ``None``/``"STANDARD"`` values
 and the hookless call never count.
 """
 
-from learning_os.commands.support import _write_transaction
 from learning_os.ops.proposal import TransactionProposal
 
 
@@ -15,8 +14,9 @@ def _hook(root, writes):
 
 
 def commit_proposal(ctx, proposal):
-    return _write_transaction(
+    return TransactionProposal(
         capability="fixture.wiring",
+        writes={},
         validate_extra=_hook,
     )
 
@@ -30,4 +30,4 @@ _FORWARDED = TransactionProposal(
     touched=None,
 )
 
-_HOOKLESS = _write_transaction(capability="fixture.neg")
+_HOOKLESS = TransactionProposal(capability="fixture.neg", writes={})

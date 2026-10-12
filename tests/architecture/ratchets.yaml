@@ -311,42 +311,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_generate::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_generate::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/query.py::cmd_generate::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_expected_ok::print
-    count: 6
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_print_rows::print
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_print_rows::return
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_unit_map_or_error::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_unit_map_or_error::print
-    count: 2
-    since: baseline
-    approved_by: null
   A4-plumbing-2: []
   A8-transcripts:
   - signature: system/WORKFLOWS.md::## 1. Start a workspace
@@ -726,10 +690,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::validate_extra
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/support.py::_write_transaction::validate_extra
     count: 1
     since: baseline
     approved_by: null
