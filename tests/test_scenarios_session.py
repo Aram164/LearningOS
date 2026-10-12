@@ -540,3 +540,54 @@ def test_unwritable_state_dir_refuses(mini_repo, monkeypatch):
     assert refused.returncode == 2, refused.stdout
     assert "cannot write" in refused.stderr
     assert ledger.read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "field,bad",
+    [("schema_version", []), ("schema_version", {}),
+     ("state", []), ("state", {})],
+    ids=["version-list", "version-object", "state-list", "state-object"])
+def test_malformed_own_contract_fields_refuse_unsupported(
+        mini_repo, monkeypatch, tmp_path, field, bad):
+    """Unhashable own schema_version/state refuse; never a TypeError (T73-1)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    doc = {"schema_version": 3, "session_id": "channel:operator",
+           "version": 0, "state": "recording", "paths": {},
+           "review": None, "commit_sha": None}
+    doc[field] = bad
+    ledger.write_text(json.dumps(doc), encoding="utf-8")
+
+    refused, lines = _witnessed_session_end(mini_repo, tmp_path)
+    assert refused.returncode == 2, refused.stdout
+    assert refused.stdout == ""
+    assert refused.stderr == (
+        "los: INVALID_REQUEST: "
+        "session ownership ledger has an unsupported contract\n")
+    assert lines == [{"operation": "cli.session-end",
+                      "kind": "failure",
+                      "site": "cli.session-end.unreadable-ledger",
+                      "class": "WriteRefused", "exit_code": 2}]
+
+
+@pytest.mark.parametrize("bad", [[], {}], ids=["list", "object"])
+def test_malformed_foreign_contract_is_skipped(mini_repo, monkeypatch, bad):
+    """An unhashable foreign schema_version is skipped, not fatal (T73-1)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    session_store._record_touched(
+        mini_repo, [mini_repo / "operations" / "goal-ledger.yaml"],
+        session_id="other-session")
+    foreign = session_store._session_ledger(mini_repo, "foreign-session")
+    foreign.parent.mkdir(parents=True, exist_ok=True)
+    foreign.write_text(json.dumps(
+        {"schema_version": bad, "session_id": "foreign-session",
+         "paths": {}}), encoding="utf-8")
+
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    payload = json.loads(review.stdout)
+    assert "foreign-session" not in payload["other_sessions"]
+    assert "other-session" in payload["other_sessions"]

@@ -136,6 +136,20 @@ _READABLE_SESSION_LEDGER_VERSIONS = frozenset({2, 3})
 _SESSION_STATES = frozenset({"recording", "reviewed", "committed_unpushed"})
 
 
+def _is_member(value: object, choices: frozenset) -> bool:
+    """Set membership that treats unhashable JSON as absent (SPEC §13).
+
+    A malformed contract field (an array or object where a scalar
+    belongs) is an unsupported contract, not a lookup key: a bare `in`
+    would raise TypeError instead of refusing. Hashable values compare
+    exactly as before.
+    """
+    try:
+        return value in choices
+    except TypeError:
+        return False
+
+
 def _resolve_session_identity(*, channel: str | None = None,
                               explicit: str | None = None
                               ) -> tuple[str, str]:
@@ -280,7 +294,8 @@ def _load_session_ledger(root: Path, session_id: str | None = None) -> dict | No
     except (json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(f"session ownership ledger is unreadable: {exc}") from exc
     if not isinstance(data, dict) \
-            or data.get("schema_version") not in _READABLE_SESSION_LEDGER_VERSIONS \
+            or not _is_member(data.get("schema_version"),
+                              _READABLE_SESSION_LEDGER_VERSIONS) \
             or not isinstance(data.get("paths"), dict):
         raise WriteRefused("session ownership ledger has an unsupported contract")
     if data.get("session_id") != identity:
@@ -297,7 +312,7 @@ def _load_session_ledger(root: Path, session_id: str | None = None) -> dict | No
     state = data.get("state")
     commit_sha = data.get("commit_sha")
     if not isinstance(version, int) or isinstance(version, bool) \
-            or state not in _SESSION_STATES \
+            or not _is_member(state, _SESSION_STATES) \
             or (commit_sha is not None and not isinstance(commit_sha, str)):
         raise WriteRefused("session ownership ledger has an unsupported contract")
     return {"schema_version": 3, "session_id": identity, "version": version,
@@ -434,7 +449,8 @@ def _read_sibling_session_ledger(path: Path) -> tuple[str, dict[str, dict]] | No
     if not isinstance(data, dict) or not isinstance(data.get("paths"), dict):
         return None
     identity = data.get("session_id")
-    if data.get("schema_version") not in _READABLE_SESSION_LEDGER_VERSIONS \
+    if not _is_member(data.get("schema_version"),
+                       _READABLE_SESSION_LEDGER_VERSIONS) \
             or not isinstance(identity, str) or not identity:
         return None
     rows: dict[str, dict] = {}
