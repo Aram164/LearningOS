@@ -10,6 +10,7 @@ from learning_os.ops.handlers import (
     goals,  # noqa: F401  (registration side effect)
     learner,  # noqa: F401  (registration side effect)
     notes,  # noqa: F401  (registration side effect)
+    passthrough,  # noqa: F401  (registration side effect)
     plan,  # noqa: F401  (registration side effect)
     platform,  # noqa: F401  (registration side effect)
     reads,  # noqa: F401  (registration side effect)
