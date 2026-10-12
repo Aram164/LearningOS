@@ -64,10 +64,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_session_end::unlink
-    count: 2
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/contracts/data_contract.py::write_contract::write_text
     count: 1
     since: baseline
@@ -325,18 +321,6 @@ checks:
     approved_by: null
   - signature: tools/learning_os/commands/query.py::cmd_generate::return
     count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_session_end::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_session_end::print
-    count: 13
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/review.py::cmd_session_end::return
-    count: 7
     since: baseline
     approved_by: null
   - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
@@ -654,10 +638,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.session-end::*
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.validate::*
     count: 1
     since: baseline
@@ -700,10 +680,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.generate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.session-end::*
     count: 1
     since: baseline
     approved_by: null

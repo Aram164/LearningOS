@@ -68,5 +68,6 @@ cases:
       - transport: cli
         argv: [session-end, --close]
 untriggered:
-  - {where: "tools/learning_os/commands/review.py:283", reason: "unreadable session ledger: needs a damaged ledger file no step can author"}
-  - {where: "tools/learning_os/commands/review.py:369", reason: "ownership conflict: needs an off-ledger canonical change between the write and the commit"}
+  - {site: cli.session-end.unreadable-ledger, where: "tools/learning_os/ops/handlers/session.py:55", reason: fixture-inexpressible, proof: _prove_session_unreadable_ledger}
+  - {site: cli.session-end.ownership-conflict, where: "tools/learning_os/ops/handlers/session.py:63", reason: fixture-inexpressible, proof: _prove_session_ownership_conflict}
+  - {site: cli.session-end.head-changed, where: "tools/learning_os/ops/handlers/session.py:75", reason: fixture-inexpressible, proof: _prove_session_head_changed}

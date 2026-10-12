@@ -2919,6 +2919,146 @@ _PROOF_FNS.update({
 })
 
 
+def _prove_session_unreadable_ledger(mini_repo: Path, tmp_path: Path,
+                                     monkeypatch) -> None:
+    """Drive session-end with a damaged own ledger (A9 proof)."""
+    import subprocess
+
+    import arch_audit_hook
+
+    import los
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.store.session_ledger import _session_ledger
+
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.email", "tests@example.invalid"],
+                    ["git", "config", "user.name", "Tests"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-qm", "fixture baseline"]):
+        subprocess.run(command, cwd=mini_repo, check=True)
+    _session_ledger(mini_repo, "channel:operator").write_text(
+        "{nope", encoding="utf-8")
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        args = los.build_parser().parse_args(["session-end"])
+        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+    finally:
+        arch_audit_hook.uninstall()
+    assert outcome.exit_code == 2
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1, lines
+    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+                        "site": "cli.session-end.unreadable-ledger",
+                        "class": "WriteRefused", "exit_code": 2}
+
+
+def _prove_session_ownership_conflict(mini_repo: Path, tmp_path: Path,
+                                      monkeypatch) -> None:
+    """Drive session-end with an off-ledger change (A9 proof)."""
+    import subprocess
+
+    import arch_audit_hook
+
+    import los
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.store.session_ledger import _record_touched
+
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.email", "tests@example.invalid"],
+                    ["git", "config", "user.name", "Tests"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-qm", "fixture baseline"]):
+        subprocess.run(command, cwd=mini_repo, check=True)
+    target = mini_repo / "work" / "notes.md"
+    target.write_text("claimed\n", encoding="utf-8")
+    _record_touched(mini_repo, [target])
+    target.write_text("changed off-ledger\n", encoding="utf-8")
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        args = los.build_parser().parse_args(
+            ["session-end", "--commit-message", "conflict"])
+        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+    finally:
+        arch_audit_hook.uninstall()
+    assert outcome.exit_code == 2
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1, lines
+    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+                        "site": "cli.session-end.ownership-conflict",
+                        "class": "WriteRefused", "exit_code": 2}
+
+
+def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
+                                monkeypatch) -> None:
+    """Drive a push retry after HEAD moved (A9 proof).
+
+    The failed push runs unwitnessed (no witness file in the
+    environment yet); only the retry's refusal line is witnessed.
+    """
+    import subprocess
+
+    import arch_audit_hook
+
+    import los
+    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.store.session_ledger import _record_touched
+
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.email", "tests@example.invalid"],
+                    ["git", "config", "user.name", "Tests"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-qm", "fixture baseline"]):
+        subprocess.run(command, cwd=mini_repo, check=True)
+    target = mini_repo / "work" / "notes.md"
+    target.write_text("pushed\n", encoding="utf-8")
+    _record_touched(mini_repo, [target])
+    subprocess.run(["git", "remote", "add", "origin", "/nonexistent"],
+                   cwd=mini_repo, check=True)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    try:
+        args = los.build_parser().parse_args(
+            ["session-end", "--commit-message", "push me", "--push"])
+        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+        assert outcome.exit_code == 128
+        extra = mini_repo / "work" / "diverged.md"
+        extra.write_text("diverge\n", encoding="utf-8")
+        subprocess.run(["git", "add", "--", "work/diverged.md"],
+                       cwd=mini_repo, check=True)
+        subprocess.run(["git", "commit", "-qm", "diverge"], cwd=mini_repo,
+                       check=True)
+        monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+        retry_args = los.build_parser().parse_args(
+            ["session-end", "--push"])
+        retry = pipeline_module.run_cli(mini_repo, "cli.session-end",
+                                        retry_args)
+    finally:
+        arch_audit_hook.uninstall()
+    assert retry.exit_code == 2
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1, lines
+    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+                        "site": "cli.session-end.head-changed",
+                        "class": "WriteRefused", "exit_code": 2}
+
+
+_PROOF_FNS.update({
+    "cli.session-end.unreadable-ledger": _prove_session_unreadable_ledger,
+    "cli.session-end.ownership-conflict": _prove_session_ownership_conflict,
+    "cli.session-end.head-changed": _prove_session_head_changed,
+})
+
+
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
     _PROOF_FNS[site](mini_repo, tmp_path, monkeypatch)
