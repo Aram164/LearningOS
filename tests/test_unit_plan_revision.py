@@ -854,7 +854,7 @@ def test_reviewed_request_refuses_intervening_changes(mini_repo, tmp_path, struc
 
 def test_reviewed_apply_uses_only_the_verified_read(mini_repo, tmp_path, monkeypatch):
     import los
-    from learning_os.commands import module
+    from learning_os.ops.handlers import plan as module
 
     _, _, revision_file, args = _reviewed_fixture(mini_repo, tmp_path)
     original = module._read_content_bound_file

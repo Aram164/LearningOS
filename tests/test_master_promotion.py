@@ -14,7 +14,6 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, write_yaml
 
-from learning_os.commands.module import cmd_module_plan_import
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
@@ -32,6 +31,16 @@ from learning_os.masters_planning import (
 from learning_os.transactions import TransactionFailure
 
 NOW = dt.datetime.now(dt.UTC).replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+def cmd_module_plan_import(args) -> int:
+    """Drive the converted handler through the real CLI pipeline (T82)."""
+    from learning_os.ops.pipeline import run_cli
+
+    outcome = run_cli(Path(args.root), "module.plan.import", args)
+    sys.stdout.write(outcome.stdout)
+    sys.stderr.write(outcome.stderr)
+    return outcome.exit_code
 
 
 def _fact_state(*, days_old: int = 0) -> dict:

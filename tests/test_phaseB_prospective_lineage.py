@@ -9,16 +9,17 @@ as the canonical mutation.
 
 from __future__ import annotations
 
+import sys
 import types
 from pathlib import Path
 
 import yaml
 
-from learning_os.commands.module import _phaseB_ledger_text, _phaseB_validate
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
 )
+from learning_os.ops.handlers.plan import _phaseB_ledger_text, _phaseB_validate
 from learning_os.revisions import dump_revisions
 from learning_os.semantics.lineage import load_ledger
 
@@ -428,7 +429,6 @@ def _apply_in_process(mini_repo, package, key, request_id):
     from gateway_helpers import file_sha256
 
     import los
-    from learning_os.commands.module import cmd_module_plan_import
     from learning_os.fingerprint import canonical_fingerprint
     from learning_os.revisions import load_revisions
 
@@ -455,7 +455,12 @@ def _apply_in_process(mini_repo, package, key, request_id):
         expected_snapshot=snapshot,
     )
     with gateway_request_context(request):
-        return cmd_module_plan_import(args)
+        from learning_os.ops.pipeline import run_cli
+
+        outcome = run_cli(mini_repo, "module.plan.import", args)
+        sys.stdout.write(outcome.stdout)
+        sys.stderr.write(outcome.stderr)
+        return outcome.exit_code
 
 
 def test_mid_commit_failure_rolls_back_lineage_and_canonical(

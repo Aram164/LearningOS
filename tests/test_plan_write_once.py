@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -23,13 +24,23 @@ from test_compact_module_plan_revision import _revision, _two_units
 
 import los
 from learning_os.adapters.capability import cmd_capability
-from learning_os.commands.module import cmd_module_plan_import
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import unit_routes
 from learning_os.ops import pipeline as ops_pipeline
 from learning_os.ops.handlers.plan import route_patch_plan
 from learning_os.rules.core import Validator
+
+
+def cmd_module_plan_import(args) -> int:
+    """Drive the converted handler through the real CLI pipeline (T82)."""
+    from learning_os.ops.pipeline import run_cli
+
+    outcome = run_cli(Path(args.root), "module.plan.import", args)
+    sys.stdout.write(outcome.stdout)
+    sys.stderr.write(outcome.stderr)
+    return outcome.exit_code
+
 
 FUSED_LOCATOR = ("Lecture 2 — this tail is a very long sentence with many "
                  "words and no digits whatsoever in it")
@@ -305,7 +316,10 @@ def test_module_plan_error_refusal_matches_check(mini_repo: Path, tmp_path: Path
     assert body["ok"] is False
     # The preflight path never carried a typed code; the gate keeps it so.
     assert body["error"]["code"] == "INVALID_REQUEST"
-    assert body["error"]["message"] == check_err.strip()
+    # Converted CLI refusals carry the typed code after "los:" (SPEC 9.4);
+    # the gateway message is the same text without that prefix.
+    assert body["error"]["message"] == check_err.strip().replace(
+        "los: INVALID_REQUEST: ", "los: ", 1)
     assert canonical_fingerprint(mini_repo) == before
 
 

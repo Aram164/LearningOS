@@ -285,7 +285,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.module.cmd_unit_plan_revise",
+    "handler": "learning_os.adapters.cli.invoke:unit.plan.revise",
     "parser_factory": true
   }
 }

@@ -40,6 +40,7 @@ from learning_os.domain.failures import (
 from learning_os.domain.plan_import import (
     _INVENTORY_ROW_DISPOSITIONS,
     _ack_shape_problems,
+    _apply_unit_route_changes,
     _assemble_compact_module_revision,
     _inventory_block,
     _inventory_view,
@@ -5595,6 +5596,15 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
     assembled = _dump_yaml(package).encode("utf-8")
     reviewed_sha = f"sha256:{hashlib.sha256(revision_bytes).hexdigest()}"
     assembled_package = yaml.safe_load(assembled.decode("utf-8"))
+    assembled_contract_problems = _module_plan_contract_problems(
+        root, assembled_package)
+    if assembled_contract_problems:
+        _plan_refuse(
+            ctx,
+            "module plan contract failed; no canonical files were written",
+            "assembled-contract-failed",
+            extra=tuple(f"- {problem}" for problem in assembled_contract_problems),
+        )
     return _execute_plan_import(
         ctx, req,
         module_id=req["module_id"],
@@ -5690,4 +5700,172 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
         source=_source,
         package_bytes=package_bytes,
         package=package,
+    )
+
+
+@register("unit.plan.revise", kind="command")
+def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
+    """Revise one existing lecture: compact patch in, one governed transaction out.
+
+    The compact revision names only what changes — route ops, the reviewed
+    final study map, and an optional replacement dossier. Unrelated source-map
+    routes are carried forward internally, and the assembled full package runs
+    the same validation, receipt and rollback path as `module.plan.import`,
+    with artifact IDs for exactly the semantic owners the revision touches.
+    """
+    root = ctx.root
+    revision = req.get("record")
+    revision_bytes = b""
+    if revision is None:
+        if not req.get("file"):
+            _plan_refuse(ctx, "unit-plan-revise needs --file or --record",
+                         "needs-file-or-record")
+        try:
+            _source, revision_bytes = _read_content_bound_file(
+                req.get("file"),
+                req.get("file_sha256"),
+                label="unit revision file",
+            )
+        except WriteRefused as exc:
+            exc.site = f"{ctx.operation}.bad-file"
+            exc.gateway_message = f"los: {exc}"
+            exc.exit_code = 2
+            raise
+        try:
+            revision = yaml.safe_load(revision_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, yaml.YAMLError) as exc:
+            _plan_refuse(ctx, f"invalid unit-revision YAML: {exc}", "bad-yaml")
+    contract_problems = _unit_revision_contract_problems(
+        root, req["unit_id"], revision)
+    if contract_problems:
+        _plan_refuse(
+            ctx,
+            "unit revision contract failed; no canonical files were written",
+            "contract-failed",
+            extra=tuple(f"- {problem}" for problem in contract_problems),
+        )
+    report_out = req.get("report_out")
+    if report_out:
+        if req.get("apply_reviewed_sha256"):
+            _plan_refuse(
+                ctx,
+                "--report-out is only for --check; it cannot be combined with reviewed apply",
+                "report-out-with-reviewed",
+            )
+        if req.get("staged_basis"):
+            _plan_refuse(
+                ctx,
+                "--report-out is only for ordinary final --check; it cannot be combined with --staged-basis",
+                "report-out-with-staged",
+            )
+        if not req.get("check"):
+            _plan_refuse(
+                ctx,
+                "--report-out needs --check; run the ordinary final preflight first",
+                "report-out-needs-check",
+            )
+        target_problem = _report_out_target_problem(
+            root, report_out, draft=req.get("file"))
+        if target_problem:
+            _plan_refuse(ctx, target_problem, "report-out-target")
+    apply_flag = req.get("apply_reviewed_sha256")
+    if apply_flag:
+        if req.get("check") or req.get("record") is not None:
+            _plan_refuse(
+                ctx,
+                "reviewed apply needs --file and cannot use --check or --record",
+                "reviewed-needs-file",
+            )
+        stale_material = _verify_observed_material(
+            root, revision.get("plan_contract") or {}, req.get("review_report"))
+        if stale_material:
+            _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
+        return Result(
+            {},
+            command_output=apply_reviewed_envelope(
+                ctx,
+                capability_name="unit.plan.revise",
+                payload={"unit_id": req["unit_id"], "record": revision},
+                reviewed_content=revision_bytes,
+                reviewed_sha256=apply_flag,
+                review_report=req.get("review_report"),
+            ),
+        )
+    if not req.get("check") and not req.get("expected_snapshot") and not apply_flag:
+        _plan_refuse(
+            ctx,
+            "unit plan revise requires --expected-snapshot; run --check first, "
+            "then copy the expected_snapshot from the check report",
+            "needs-snapshot",
+        )
+    repo = ctx.repo()
+    unit = repo.units.get(req["unit_id"])
+    if unit is None:
+        message = not_found("unit", req["unit_id"], repo.units)
+        raise NotFound(
+            "unit", req["unit_id"], repo.units,
+            message=message,
+            site=f"{ctx.operation}.unknown-unit",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    module_id = unit.module_id
+    live_map = copy.deepcopy(repo.module_source_maps.get(module_id) or {})
+    changes = revision.get("route_changes", {}) or {}
+    new_map, _route_summary, route_problems = _apply_unit_route_changes(
+        live_map, module_id, req["unit_id"], changes)
+    if route_problems:
+        _plan_refuse(
+            ctx,
+            "unit revision route changes failed; no canonical files were written",
+            "route-changes-failed",
+            extra=tuple(f"- {problem}" for problem in route_problems),
+        )
+    contract = revision["plan_contract"]
+    unit_data = copy.deepcopy(unit.data)
+    map_data = copy.deepcopy(revision.get("study_map"))
+    dossier = copy.deepcopy(revision.get("material_synthesis"))
+    package = {
+        "module_id": module_id,
+        "plan_contract": {
+            "version": 2,
+            "plan_template_version": contract.get("plan_template_version"),
+            "coverage_audit": contract.get("coverage_audit"),
+            "checks": copy.deepcopy(contract.get("checks")),
+            "intentional_reorders": [],
+        },
+        "module_patch": {},
+        "source_map": new_map,
+        "units": [{"unit": unit_data, "study_map": map_data}],
+        "claim_evidence": copy.deepcopy(revision.get("claim_evidence", []) or []),
+        "acknowledgments": copy.deepcopy(revision.get("acknowledgments", []) or []),
+    }
+    if isinstance(dossier, dict):
+        package["material_syntheses"] = [
+            {"unit_id": req["unit_id"], "dossier": dossier}]
+    package_bytes = _dump_yaml(package).encode("utf-8")
+    assembled_package = yaml.safe_load(package_bytes.decode("utf-8"))
+    assembled_contract_problems = _module_plan_contract_problems(
+        root, assembled_package)
+    if assembled_contract_problems:
+        _plan_refuse(
+            ctx,
+            "module plan contract failed; no canonical files were written",
+            "assembled-contract-failed",
+            extra=tuple(f"- {problem}" for problem in assembled_contract_problems),
+        )
+    return _execute_plan_import(
+        ctx, req,
+        module_id=module_id,
+        source=None,
+        package_bytes=package_bytes,
+        package=assembled_package,
+        minimal_writes=True,
+        review_input=(
+            "sha256:" + hashlib.sha256(revision_bytes).hexdigest()
+            if req.get("record") is None else None,
+            {"unit_id": req["unit_id"], "record": revision}),
+        capability_override="unit.plan.revise",
+        report_out=report_out,
+        report_out_draft=(str(req["file"]) if req.get("file") else None),
     )
