@@ -6,22 +6,27 @@ semantic dossier in its own per-artifact node. Every case here runs cold,
 mutates exactly one input, runs warm, and asserts the warm result equals a
 fresh ``LOS_NO_CACHE=1`` run.
 
-Scope: ``cache.validation-static``, ``cache.receipt:<rel>``, and
-``cache.dossier:<unit>``. A10 is NOT claimed here for material text,
-summaries, derived-state self-consistency, manifest, or search postings.
+Scope: ``cache.validation-static``, ``cache.receipt:<rel>``,
+``cache.dossier:<unit>``, and default-path ``cache.text:<sha256>``. A10
+is NOT claimed here for summaries, custom text-cache dirs,
+derived-state self-consistency, manifest, or search postings.
 
 The input inventories below are independent: validation + receipt were
 written from ``scratch/validation-receipt-input-inventory.md`` (read from
 ``validation_cache.cache_pins`` and ``receipt_cache._current_pins`` before
-editing), and dossiers from
+editing), dossiers from
 ``scratch/material-dossier-input-inventory.md`` (read from
-``semantics/dossiers.py`` before editing). They are hardcoded here, never
-generated from NodeSpec declarations or the code under test; the
-spec-coverage tests verify the code against them, not the reverse.
+``semantics/dossiers.py`` before editing), and material text from the
+pre-existing cache-format facts (digest-keyed entries, the EXTRACTOR
+constant, the index page count) read from ``tools/material_text.py``
+before editing. They are hardcoded here, never generated from NodeSpec
+declarations or the code under test; the spec-coverage tests verify the
+code against them, not the reverse.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import time
@@ -29,6 +34,15 @@ from pathlib import Path
 
 import pytest
 from test_compute_once import _commit_capture
+from test_material_text_cache import (
+    _manifest_yaml,
+    _tiny_pdf,
+    _tree,
+    needs_pdftotext,
+)
+from test_material_text_cache import (
+    _material_text as _load_material_text,
+)
 
 import learning_os.rules.receipt_cache as rc
 import learning_os.semantics.dossiers as dz
@@ -70,6 +84,15 @@ DOSSIER_INPUTS = (
     "evidence",
     "semantic-contract",
     "operator-contract",
+)
+
+#: The three per-digest text freshness facts: the live source-bytes
+#: digest, the effective extractor identity, and the live page count.
+#: Producer and runtime identity ride in the key via the engine session.
+TEXT_INPUTS = (
+    "source",
+    "extractor",
+    "pages",
 )
 
 
@@ -832,3 +855,369 @@ def test_dossier_poison_matches_fresh_by_raising(tmp_path: Path, monkeypatch):
             dz.load_dossier(path)
     finally:
         monkeypatch.delenv("LOS_NO_CACHE", raising=False)
+
+
+# ---------------------------------------------------------------------------
+# Material-text default-path warm transitions: source, extractor, pages,
+# producer, runtime, corruption, isolation. Custom dirs stay file-only.
+# ---------------------------------------------------------------------------
+
+def _stage_text_producers(root: Path, mt) -> None:
+    for rel in dict.fromkeys(mt.TEXT_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((REPO_ROOT / rel).read_bytes())
+
+
+def _text_world(tmp_path: Path, mt, monkeypatch, spec: dict):
+    """A fake repo + materials + manifest wired as the tool's default.
+
+    Returns (fake_root, materials_base, manifest). The module's own
+    REPO/CACHE_DIR anchors point at the fake root, so the true default
+    path (no --cache-dir flag) exercises derived nodes without
+    touching the real repository.
+    """
+    work = tmp_path / "textworld"
+    work.mkdir()
+    fake = work / "repo"
+    fake.mkdir()
+    _stage_text_producers(fake, mt)
+    monkeypatch.setattr(mt, "REPO", fake)
+    monkeypatch.setattr(mt, "CACHE_DIR", fake / "generated" / "text-cache")
+    base = work / "materials"
+    _tree(base, spec)
+    manifest = work / "manifest.yaml"
+    manifest.write_text(_manifest_yaml(spec), encoding="utf-8")
+    return fake, base, manifest
+
+
+def _run_text_default(mt, base: Path, manifest: Path, capsys, *flags):
+    """Run the tool on its true default cache (no --cache-dir flag)."""
+    code = mt.main(["--manifest", str(manifest), "--materials-root", str(base),
+                    *flags])
+    out, _ = capsys.readouterr()
+    return code, json.loads(out)
+
+
+def _fresh_text_default(mt, base: Path, manifest: Path, capsys, monkeypatch, *flags):
+    """A fresh default-cache run under the bypass flag (always extracts)."""
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    try:
+        return _run_text_default(mt, base, manifest, capsys, *flags)
+    finally:
+        monkeypatch.delenv("LOS_NO_CACHE", raising=False)
+
+
+def _text_views(cache: Path, digest: str):
+    page = (cache / digest / "pp-0001.txt").read_bytes()
+    index = json.loads((cache / digest / "index.json").read_text(encoding="utf-8"))
+    return page, index
+
+
+def _index_semantics(index: dict) -> dict:
+    """An index record minus its built stamp (one-day clock, not cache)."""
+    assert "built" in index
+    return {key: value for key, value in index.items() if key != "built"}
+
+
+def _text_nodes(root: Path) -> dict:
+    return {node_id: state for node_id, state in read_state(root).items()
+            if node_id.startswith("cache.text:")}
+
+
+def _digest_of(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def test_text_spec_covers_the_independent_inventory():
+    mt = _load_material_text()
+    assert mt.TEXT_NODE_VERSION == 1
+    assert "tools/material_text.py" in mt.TEXT_PRODUCER_FILES
+    assert tuple(mt.TEXT_INPUT_KINDS) == TEXT_INPUTS
+    digest = "ab" * 32
+    spec = mt._text_spec(digest)
+    assert spec.id == f"cache.text:{digest}" and spec.version == 1
+    assert len(spec.direct_inputs) == len(TEXT_INPUTS) == 3
+    assert set(spec.direct_inputs) == {
+        f"cache.text.{kind}:{digest}" for kind in TEXT_INPUTS}
+    inputs = mt._text_inputs(digest, 2)
+    assert set(inputs) == set(spec.direct_inputs)
+    assert inputs[f"cache.text.source:{digest}"] == digest
+    assert inputs[f"cache.text.extractor:{digest}"] == mt.EXTRACTOR
+    assert inputs[f"cache.text.pages:{digest}"] == "2"
+    # The default anchor is the module's own verified root, never inferred.
+    assert mt.CACHE_DIR == mt.REPO / "generated" / "text-cache"
+    assert mt.REPO == Path(mt.__file__).resolve().parents[1]
+
+
+@needs_pdftotext
+def test_text_source_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    first = _tiny_pdf("First edition text")
+    spec = {"deck-a.pdf": first, "deck-b.pdf": _tiny_pdf("Steady text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, cold = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0 and cold["extracted"] == 2
+    assert len(_text_nodes(fake)) == 2
+    (base / "deck-a.pdf").write_bytes(_tiny_pdf("Second edition text"))
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0
+    assert (warm["cached"], warm["extracted"], warm["pruned"]) == (1, 1, 1)
+    assert warm["stale"] == ["deck-a.pdf"]
+    new_digest = _digest_of((base / "deck-a.pdf").read_bytes())
+    assert f"cache.text:{new_digest}" in _text_nodes(fake)
+    warm_views = {}
+    for rel in ("deck-a.pdf", "deck-b.pdf"):
+        warm_views[rel] = _text_views(
+            mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    for rel in ("deck-a.pdf", "deck-b.pdf"):
+        page, index = _text_views(mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
+        old_page, old_index = warm_views[rel]
+        assert page == old_page
+        assert _index_semantics(index) == _index_semantics(old_index)
+
+
+@needs_pdftotext
+def test_text_extractor_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Extractor text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    assert mt._default_text_lookup(digest, 1) is not None
+    monkeypatch.setattr(mt, "EXTRACTOR", "other-extractor")
+    assert mt._default_text_lookup(digest, 1) is None
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    page, index = _text_views(mt.CACHE_DIR, digest)
+    assert index["extractor"] == "other-extractor"
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    fresh_page, fresh_index = _text_views(mt.CACHE_DIR, digest)
+    assert (page, _index_semantics(index)) == (fresh_page, _index_semantics(fresh_index))
+    # Re-hit under the new identity: files and node agree again.
+    code, warm2 = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm2["cached"], warm2["extracted"]) == (1, 0)
+
+
+@needs_pdftotext
+def test_text_pages_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Paging text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    assert mt._default_text_lookup(digest, 1) is not None
+    monkeypatch.setattr(mt, "_page_count", lambda path: 2)
+    assert mt._default_text_lookup(digest, 2) is None
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0
+    code, fresh = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    # pdftotext refuses the out-of-range page on both sides alike.
+    assert warm == fresh
+    assert warm["skipped"] == [{"material": "deck-a.pdf", "reason": "extract-failed"}]
+
+
+@needs_pdftotext
+def test_text_producer_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Producer text A"),
+            "deck-b.pdf": _tiny_pdf("Producer text B")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    staged = fake / "tools" / "material_text.py"
+    staged.write_text(staged.read_text(encoding="utf-8") + "\n# a10 producer touch\n",
+                      encoding="utf-8")
+    digest_a = _digest_of(spec["deck-a.pdf"])
+    assert mt._default_text_lookup(digest_a, 1) is None
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 2)
+    warm_views = {}
+    for rel in ("deck-a.pdf", "deck-b.pdf"):
+        warm_views[rel] = _text_views(
+            mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    for rel in ("deck-a.pdf", "deck-b.pdf"):
+        page, index = _text_views(mt.CACHE_DIR, _digest_of((base / rel).read_bytes()))
+        old_page, old_index = warm_views[rel]
+        assert page == old_page
+        assert _index_semantics(index) == _index_semantics(old_index)
+    code, warm2 = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm2["cached"], warm2["extracted"]) == (2, 0)
+
+
+@needs_pdftotext
+def test_text_runtime_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    import learning_os.derived.engine as engine_module
+
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Runtime text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    monkeypatch.setattr(engine_module, "runtime_digest", lambda: "e" * 64)
+    digest = _digest_of(spec["deck-a.pdf"])
+    assert mt._default_text_lookup(digest, 1) is None
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    page, index = _text_views(mt.CACHE_DIR, digest)
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    fresh_page, fresh_index = _text_views(mt.CACHE_DIR, digest)
+    assert (page, _index_semantics(index)) == (fresh_page, _index_semantics(fresh_index))
+    code, warm2 = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm2["cached"], warm2["extracted"]) == (1, 0)
+
+
+@needs_pdftotext
+def test_text_corrupt_page_reprojects_and_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Original page text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    page_path = mt.CACHE_DIR / digest / "pp-0001.txt"
+    good = page_path.read_bytes()
+    page_path.write_text("Altered content\n", encoding="utf-8")
+    calls = []
+    real_page_text = mt._page_text
+
+    def counted(path, page):
+        calls.append((str(path), page))
+        return real_page_text(path, page)
+
+    monkeypatch.setattr(mt, "_page_text", counted)
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (1, 0)
+    assert calls == []
+    assert page_path.read_bytes() == good
+    warm_page, warm_index = _text_views(mt.CACHE_DIR, digest)
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    fresh_page, fresh_index = _text_views(mt.CACHE_DIR, digest)
+    assert (warm_page, _index_semantics(warm_index)) == (fresh_page, _index_semantics(fresh_index))
+
+
+@needs_pdftotext
+def test_text_corrupt_blob_matches_fresh(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Blob text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    digest = _digest_of(spec["deck-a.pdf"])
+    node_id = f"cache.text:{digest}"
+    state = read_state(fake)[node_id]
+    blob = fake / "generated" / "derived-state" / state.blob
+    blob.write_bytes(b"\x00\xff not json {{{")
+    assert mt._default_text_lookup(digest, 1) is None
+    # Valid files but no node: rebuild from source, never adopt.
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (0, 1)
+    assert mt._default_text_lookup(digest, 1) is not None
+    warm_page, warm_index = _text_views(mt.CACHE_DIR, digest)
+    code, _ = _fresh_text_default(mt, base, manifest, capsys, monkeypatch, "--refresh")
+    assert code == 0
+    fresh_page, fresh_index = _text_views(mt.CACHE_DIR, digest)
+    assert (warm_page, _index_semantics(warm_index)) == (fresh_page, _index_semantics(fresh_index))
+
+
+@needs_pdftotext
+def test_two_unrelated_texts_invalidate_independently(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Text A one"),
+            "deck-b.pdf": _tiny_pdf("Text B one")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    (base / "deck-b.pdf").write_bytes(_tiny_pdf("Text B two"))
+    calls = []
+    real_page_text = mt._page_text
+
+    def counted(path, page):
+        calls.append(Path(path).name)
+        return real_page_text(path, page)
+
+    monkeypatch.setattr(mt, "_page_text", counted)
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (1, 1)
+    assert calls == ["deck-b.pdf"]
+
+
+@needs_pdftotext
+def test_text_custom_cache_stays_file_only(tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    data = _tiny_pdf("Custom path text")
+    spec = {"deck-a.pdf": data}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    custom = tmp_path / "textworld" / "custom"
+    digest = _digest_of(data)
+
+    def run_custom(*flags):
+        code = mt.main(["--manifest", str(manifest), "--materials-root", str(base),
+                        "--cache-dir", str(custom), *flags])
+        out, _ = capsys.readouterr()
+        return code, json.loads(out)
+
+    code, summary = run_custom("--build")
+    assert code == 0 and summary["extracted"] == 1
+    assert _text_nodes(fake) == {}
+    assert not (fake / "generated" / "derived-state").exists()
+    assert mt.cache_index(custom, digest)["sha256"] == digest
+    # Corruption on a custom path re-extracts (legacy: no node to project).
+    (custom / digest / "pp-0001.txt").write_text("Altered\n", encoding="utf-8")
+    calls = []
+    real_page_text = mt._page_text
+    monkeypatch.setattr(
+        mt, "_page_text",
+        lambda path, page: (calls.append(page), real_page_text(path, page))[1])
+    code, summary = run_custom("--refresh")
+    assert code == 0 and (summary["cached"], summary["extracted"]) == (0, 1)
+    assert calls == [1]
+    assert _text_nodes(fake) == {}
+    assert not (fake / "generated" / "derived-state").exists()
+
+
+@needs_pdftotext
+def test_text_explicit_default_dir_uses_derived_nodes(tmp_path: Path, capsys, monkeypatch):
+    """Passing --cache-dir equal to the default selects the same path:
+    behavior keys on the selected location, never on flag presence."""
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Explicit default text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    code = mt.main(["--manifest", str(manifest), "--materials-root", str(base),
+                    "--cache-dir", str(mt.CACHE_DIR), "--build"])
+    out, _ = capsys.readouterr()
+    assert code == 0 and json.loads(out)["extracted"] == 1
+    digest = _digest_of(spec["deck-a.pdf"])
+    assert mt._default_text_lookup(digest, 1) is not None
+    code, warm = _run_text_default(mt, base, manifest, capsys, "--refresh")
+    assert code == 0 and (warm["cached"], warm["extracted"]) == (1, 0)
+
+
+@needs_pdftotext
+def test_text_default_writes_stay_in_default_cache_and_repo(
+        tmp_path: Path, capsys, monkeypatch):
+    mt = _load_material_text()
+    spec = {"deck-a.pdf": _tiny_pdf("Scoped text")}
+    fake, base, manifest = _text_world(tmp_path, mt, monkeypatch, spec)
+    before = {path for path in base.rglob("*")}
+    code, _ = _run_text_default(mt, base, manifest, capsys, "--build")
+    assert code == 0
+    assert {path for path in base.rglob("*")} == before
+    digest = _digest_of(spec["deck-a.pdf"])
+    assert (mt.CACHE_DIR / digest / "index.json").is_file()
+    assert _text_nodes(fake) != {}
+    # The real repository is untouched: no text node beside this root.
+    from learning_os.derived.store import read_state as real_read_state
+
+    assert [name for name in real_read_state(REPO_ROOT)
+            if name.startswith("cache.text:")] == []
