@@ -11,6 +11,7 @@ installs it — see BAKEOFF.md).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -350,3 +351,91 @@ def test_program_position_dash_i_still_needs_a_witness():
     inline = [_popen_record(
         ["/repo/.venv/bin/python", "-c", "print('-I')"], "t3")]
     assert witness_failures(inline, allow_isolated=True) != []
+
+
+ANCHORED_COPY = ROOT / "tests" / "procedure_helpers" / "los-anchored-copy"
+
+
+def _run_anchored_copy(stem: str, dest: Path, tmpdir: Path) -> subprocess.CompletedProcess:
+    """Run los-anchored-copy as a bare child (no audit env needed)."""
+    env = dict(os.environ, LOS_REPO=str(ROOT), TMPDIR=str(tmpdir))
+    return subprocess.run(
+        [sys.executable, str(ANCHORED_COPY), stem, str(dest)],
+        capture_output=True, text=True, timeout=120, env=env, cwd=tmpdir)
+
+
+def _assert_bundle_hashes(proc: subprocess.CompletedProcess, dest: Path) -> None:
+    """Stdout hash lines match the repo files' bytes, sorted by path."""
+    assert proc.returncode == 0, proc.stderr[-2000:]
+    lines = proc.stdout.splitlines()
+    assert len(lines) == len({line.split(" ", 1)[1] for line in lines}) > 0
+    assert lines == sorted(lines, key=lambda line: line.split(" ", 1)[1])
+    for line in lines:
+        digest, _, rel = line.partition(" ")
+        assert digest.startswith("sha256:"), line
+        source = (ROOT / rel).read_bytes()
+        assert (dest / rel).read_bytes() == source
+        assert digest == f"sha256:{hashlib.sha256(source).hexdigest()}", line
+
+
+def test_anchored_copy_materials_manifest_roundtrip(tmp_path):
+    """The inventory bundle lands byte-identical with printed hashes."""
+    dest = tmp_path / "pair" / "repo"
+    dest.mkdir(parents=True)
+    proc = _run_anchored_copy("materials_manifest", dest, tmp_path)
+    _assert_bundle_hashes(proc, dest)
+    assert proc.stdout.count("\n") == 5
+
+
+def test_anchored_copy_plan_write_audit_roundtrip(tmp_path):
+    """The audit bundle is the one entrypoint, byte-identical."""
+    dest = tmp_path / "pair" / "repo"
+    dest.mkdir(parents=True)
+    proc = _run_anchored_copy("plan_write_audit", dest, tmp_path)
+    _assert_bundle_hashes(proc, dest)
+    assert proc.stdout.count("\n") == 1
+
+
+def test_anchored_copy_refuses_destination_outside_tmpdir(tmp_path):
+    """A destination outside TMPDIR is refused and left untouched."""
+    jail = tmp_path / "jail"
+    jail.mkdir()
+    dest = tmp_path / "elsewhere" / "repo"
+    dest.mkdir(parents=True)
+    proc = _run_anchored_copy("plan_write_audit", dest, jail)
+    assert proc.returncode == 2
+    assert "outside TMPDIR" in proc.stderr
+    assert list(dest.iterdir()) == []
+
+
+def test_anchored_copy_refuses_unknown_stem(tmp_path):
+    """Only the two allowlisted bundles copy; anything else exits 2."""
+    dest = tmp_path / "pair" / "repo"
+    dest.mkdir(parents=True)
+    proc = _run_anchored_copy("los", dest, tmp_path)
+    assert proc.returncode == 2
+    assert "unknown bundle" in proc.stderr
+    assert list(dest.iterdir()) == []
+
+
+def test_anchored_copy_refuses_repo_interior(tmp_path):
+    """A destination inside LOS_REPO is refused before anything is made."""
+    dest = ROOT / "scratch-probe-anchored"
+    assert not dest.exists()
+    # TMPDIR at the repo so the interior rule, not the TMPDIR rule, fires.
+    proc = _run_anchored_copy("plan_write_audit", dest, ROOT)
+    assert proc.returncode == 2
+    assert "inside LOS_REPO" in proc.stderr
+    assert not dest.exists()
+
+
+def test_anchored_copy_refuses_symlink_destination(tmp_path):
+    """A symlink destination is refused even when its target is inside."""
+    target = tmp_path / "real"
+    target.mkdir()
+    dest = tmp_path / "linked"
+    dest.symlink_to(target, target_is_directory=True)
+    proc = _run_anchored_copy("plan_write_audit", dest, tmp_path)
+    assert proc.returncode == 2
+    assert "symlink" in proc.stderr
+    assert list(target.iterdir()) == []
