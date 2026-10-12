@@ -239,6 +239,17 @@ def test_second_fingerprint_walk_reads_no_bytes_from_disk(
 
 
 # ------------------------------------------------- status-cache pins
+def _stage_validation_producers(root: Path) -> None:
+    """Copy the real validation-node producer bytes under a mini root."""
+    import learning_os.validation_cache as vc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
 def _text_cache_index(root: Path, entry: str = "ab" * 32) -> Path:
     path = root / "generated" / "text-cache" / entry / "index.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -257,6 +268,7 @@ def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
     import learning_os.validation_cache as vc
     from learning_os.loader import load_repo
 
+    _stage_validation_producers(mini_repo)
     _text_cache_index(mini_repo)
     vc.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
@@ -271,6 +283,7 @@ def test_new_text_cache_entry_misses(mini_repo: Path):
     import learning_os.validation_cache as vc
     from learning_os.loader import load_repo
 
+    _stage_validation_producers(mini_repo)
     vc.status_issues(load_repo(mini_repo))  # warm, no text cache
     assert vc.read_cached_static_issues(mini_repo) is not None
     _text_cache_index(mini_repo)
@@ -284,6 +297,7 @@ def test_rewritten_scan_misses_and_revalidates(mini_repo: Path):
     import learning_os.validation_cache as vc
     from learning_os.loader import load_repo
 
+    _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
     assert vc.status_issues(load_repo(mini_repo)) is not None
     assert vc.read_cached_static_issues(mini_repo) is not None
@@ -300,6 +314,7 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
     import learning_os.validation_cache as vc
     from learning_os.loader import load_repo
 
+    _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
     (mini_repo / SCAN_REL).unlink()
     vc.status_issues(load_repo(mini_repo))  # warm, scan absent

@@ -15,6 +15,7 @@ import pytest
 from repo_builders import run_los
 
 import learning_os.validation_cache as vc
+from learning_os.derived.store import read_state
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
 from learning_os.rules import validate
@@ -22,6 +23,19 @@ from learning_os.rules.advisories import NEGLECT_GIT_HISTORY_PREFIX
 from learning_os.rules.common import Issue
 
 CACHE = vc.CACHE_RELATIVE
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _stage_validation_producers(root: Path) -> None:
+    """Copy the real validation-node producer bytes under a mini root."""
+    for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((REPO_ROOT / rel).read_bytes())
+
+
+def _validation_node_cached(root: Path) -> bool:
+    return vc.VALIDATION_NODE_ID in read_state(root)
 
 
 def _validation(proc):
@@ -31,9 +45,11 @@ def _validation(proc):
 
 # ------------------------------------------------- warm/cold transparency
 def test_status_memoizes_and_reuses_cache_byte_identical(mini_repo):
+    _stage_validation_producers(mini_repo)
     cold = run_los(mini_repo, "status", "--json")
     assert cold.returncode == 0, cold.stderr
-    assert (mini_repo / CACHE).is_file()
+    assert _validation_node_cached(mini_repo)
+    assert not (mini_repo / CACHE).exists()
     warm = run_los(mini_repo, "status", "--json")
     assert warm.returncode == 0, warm.stderr
     assert warm.stdout == cold.stdout
@@ -43,6 +59,7 @@ def test_status_issues_serves_static_from_cache_without_validating(
     mini_repo, monkeypatch,
 ):
     """The hit path never calls the validator (it would raise here)."""
+    _stage_validation_producers(mini_repo)
     live = validate(load_repo(mini_repo), online=False)
     vc.write_static_cache(mini_repo, live)
 
@@ -56,6 +73,7 @@ def test_status_issues_serves_static_from_cache_without_validating(
 
 
 def test_rename_note_invalidates_cache(mini_repo):
+    _stage_validation_producers(mini_repo)
     first = run_los(mini_repo, "status", "--json")
     assert _validation(first)["errors"] == 0
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
@@ -73,6 +91,7 @@ def test_rename_note_invalidates_cache(mini_repo):
 def test_mtime_only_inbox_aging_is_served_live_on_a_hit(mini_repo):
     """Pins hash bytes, not mtimes: aging is invisible to the pins, so the
     read hits — and the fresh INBOX-STALE on it proves advisories recompute."""
+    _stage_validation_producers(mini_repo)
     drop = mini_repo / "work/inbox/drop.md"
     drop.write_text("unrouted capture\n", encoding="utf-8")
     vc.status_issues(load_repo(mini_repo))  # warm
@@ -89,6 +108,7 @@ def test_mtime_only_inbox_aging_is_served_live_on_a_hit(mini_repo):
 def test_writer_filters_live_advisories_and_splice_keeps_hygiene(mini_repo):
     """The writer is the one choke point: live advisories never persist,
     while hygiene's unrelated GIT-HISTORY (no neglect prefix) is static."""
+    _stage_validation_producers(mini_repo)
     issues = [
         Issue("E", "FILE-NAME", "note file mismatch", "knowledge/notes/x.md"),
         Issue("W", "WS-COUNT", "too many workspaces", ""),
@@ -109,6 +129,7 @@ def test_writer_filters_live_advisories_and_splice_keeps_hygiene(mini_repo):
 
 # ------------------------------------------------------------------ misses
 def test_materials_addition_misses(mini_repo):
+    _stage_validation_producers(mini_repo)
     vc.write_static_cache(mini_repo, validate(load_repo(mini_repo), online=False))
     assert vc.read_cached_static_issues(mini_repo) is not None
     materials = mini_repo.parent / "materials"
@@ -117,14 +138,24 @@ def test_materials_addition_misses(mini_repo):
 
 
 def test_garbage_cache_misses_discards_and_leaves_no_phantom(mini_repo):
+    _stage_validation_producers(mini_repo)
+    # A corrupt pre-migration leftover is discarded on read, never served.
     cache = mini_repo / CACHE
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_bytes(b"\x00\xff not json {{{")
     assert vc.read_cached_static_issues(mini_repo) is None
     assert not cache.exists()
+    # A corrupt derived blob misses the same way: no phantom GEN-JSON
+    # about the cache itself (blobs are extensionless, never scanned),
+    # and the miss rewrites a valid entry.
+    vc.status_issues(load_repo(mini_repo))
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    state = read_state(mini_repo)[vc.VALIDATION_NODE_ID]
+    blob = mini_repo / "generated" / "derived-state" / state.blob
+    blob.write_bytes(b"\x00\xff not json {{{")
+    assert vc.read_cached_static_issues(mini_repo) is None
     # End to end: garbage never surfaces as a GEN-JSON error about the
     # cache itself, and the miss rewrites a valid cache.
-    cache.write_bytes(b"\x00\xff not json {{{")
     proc = run_los(mini_repo, "status", "--json")
     assert proc.returncode == 0, proc.stderr
     assert _validation(proc)["errors"] == 0
@@ -151,6 +182,7 @@ def _republish_views(root: Path) -> None:
      "TRANSACTION-RECEIPT"),
 ], ids=["generated-stray", "unparseable-receipt"])
 def test_non_canonical_validator_input_misses(mini_repo, mutation, code):
+    _stage_validation_producers(mini_repo)
     vc.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
     mutation(mini_repo)
@@ -163,6 +195,7 @@ def test_make_views_clears_a_cached_stale_views_warning(mini_repo):
     """The reported case: a hand edit makes the published views stale
     (HYGIENE-VIEWS), `make views` republishes them with no canonical
     change, and status must drop the warning instead of serving it."""
+    _stage_validation_producers(mini_repo)
     _republish_views(mini_repo)
     baseline = _validation(run_los(mini_repo, "status", "--json"))
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
@@ -180,6 +213,7 @@ def test_make_views_clears_a_cached_stale_views_warning(mini_repo):
 def test_stale_index_lock_is_served_live_on_a_hit(mini_repo):
     """HYGIENE-LOCK is clock-derived: a lock that ages past the threshold
     with no other change must appear on a cache hit."""
+    _stage_validation_producers(mini_repo)
     subprocess.run(["git", "init", "-q", str(mini_repo)], check=True)
     lock = mini_repo / ".git" / "index.lock"
     lock.write_text("", encoding="utf-8")
@@ -198,6 +232,7 @@ def test_pins_are_observed_before_validation(mini_repo, monkeypatch):
     """status holds no lock: a write landing while the validator runs must
     leave a cache that misses, never one vouching for the post-write state
     with the pre-write issues."""
+    _stage_validation_producers(mini_repo)
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
     real = vc.validate
 
@@ -246,24 +281,24 @@ def _run_validate(repo_root: Path, mini_repo: Path, *args: str):
 
 
 def test_validate_offline_writes_cache_with_header_and_pins(mini_repo, repo_root):
-    cache = mini_repo / CACHE
-    assert not cache.exists()
+    _stage_validation_producers(mini_repo)
+    assert not _validation_node_cached(mini_repo)
     proc = _run_validate(repo_root, mini_repo)
     assert proc.returncode == 0, proc.stderr
-    data = json.loads(cache.read_text(encoding="utf-8"))
-    assert isinstance(data["_generated"], dict)  # GEN-HEADER
-    assert data["format"] == 4
-    assert set(data["pins"]) == {
+    assert _validation_node_cached(mini_repo)
+    assert not (mini_repo / CACHE).exists()
+    # The six pins are the node key: a live read hits, proving they match.
+    assert set(vc.cache_pins(mini_repo)) == {
         "canonical_fingerprint", "code_identity", "runtime_digest",
         "materials_digest", "operations_digest", "validator_inputs",
     }
-    assert isinstance(data["issues"], list)
     assert vc.read_cached_static_issues(mini_repo) is not None
 
 
 def test_validate_online_never_writes_cache(mini_repo, repo_root):
-    cache = mini_repo / CACHE
-    assert not cache.exists()
+    _stage_validation_producers(mini_repo)
+    assert not _validation_node_cached(mini_repo)
     proc = _run_validate(repo_root, mini_repo, "--online")
     assert proc.returncode == 0, proc.stderr
-    assert not cache.exists()
+    assert not _validation_node_cached(mini_repo)
+    assert not (mini_repo / CACHE).exists()

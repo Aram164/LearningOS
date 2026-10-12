@@ -143,6 +143,17 @@ def test_unsupported_definition_cannot_settle_contract_drift(mini_repo: Path, de
     assert contract_only_drift_receipt(mini_repo, [receipt], "sha256:new") is None
 
 
+def _stage_validation_producers(root: Path) -> None:
+    """Copy the real validation-node producer bytes under a mini root."""
+    import learning_os.validation_cache as vc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
 @pytest.mark.parametrize("suffix, initial, changed, code", [
     ("json", '{"_generated": {}}', "{broken", "GEN-JSON"),
     ("md", "<!-- GENERATED -->\n", "no warning header\n", "GEN-HEADER"),
@@ -151,6 +162,7 @@ def test_nested_text_cache_input_edit_misses_status(
         mini_repo: Path, suffix, initial, changed, code):
     import learning_os.validation_cache as cache
 
+    _stage_validation_producers(mini_repo)
     target = mini_repo / f"generated/text-cache/demo/pages/unexpected.{suffix}"
     target.parent.mkdir(parents=True)
     target.write_text(initial)
@@ -164,6 +176,7 @@ def test_nested_text_cache_input_edit_misses_status(
 def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
     import learning_os.validation_cache as cache
 
+    _stage_validation_producers(mini_repo)
     directory = mini_repo / "generated/text-cache/demo"
     directory.mkdir(parents=True)
     blob = directory / "blob.txt"

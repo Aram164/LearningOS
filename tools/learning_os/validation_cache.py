@@ -4,8 +4,8 @@
 output splits two ways: static issues, which change only when validation
 inputs change, and the two clock-derived advisories (`WS-NEGLECT`,
 `INBOX-STALE`), which can appear with no authored change at all simply
-because time passed. This module caches the static issues at
-``generated/reports/validation-report.cache.json`` under content pins and
+because time passed. This module caches the static issues in the
+derived node ``cache.validation-static`` under content pins and
 recomputes the advisories live on every read, so a cache hit answers
 without re-validating while clock-derived warnings stay current.
 
@@ -44,13 +44,13 @@ moves ledger/fingerprint pins, so post-write reads correctly miss once,
 while refreshing from mid-commit results would miss receipt/idempotency
 errors (including the deliberate JF-13/L4 duplicate-key check).
 
-A structurally unreadable cache (unparseable, wrong shape, wrong format)
-is discarded best-effort before its caller falls back to a full run: the
-validator scans ``generated/**/*.json`` itself, so a corrupt cache file
-would otherwise surface as a GEN-JSON error about the cache and get
-memoized as a phantom that no cleanup invalidates (``generated/`` is not
-fingerprinted). A pin mismatch leaves the file in place — a later offline
-validate overwrites it.
+A structurally unreadable cache (corrupt state, hash-mismatched blob,
+wrong shape) is an ordinary miss before its caller falls back to a full
+run: blobs are content-addressed and hash-verified, so a corrupt value
+can never be served, and a malformed one is invalidated. The pre-4.3
+sidecar at ``generated/reports/validation-report.cache.json`` is obsolete
+and never written; leftovers are discarded by
+``discard_unreadable_cache`` and reclaimed by derived-state GC.
 """
 
 from __future__ import annotations
@@ -63,9 +63,12 @@ import stat
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from . import __version__
 from .contracts.local_attachments import local_paths
+from .derived.engine import BuildContext, evaluate
 from .derived.identity import digest_code_identity, runtime_digest
+from .derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
+from .derived.store import invalidate
+from .domain.failures import TransactionFailure
 from .fingerprint import CANONICAL_ROOTS, canonical_fingerprint
 from .manifest_identity import materials_digest, operations_digest
 from .rules import validate
@@ -73,18 +76,39 @@ from .rules.advisories import advisory_issues, is_live_advisory
 from .rules.common import Issue
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from .loader import Repo
 
-#: Cache location inside generated/. The ``validation-report`` prefix keeps
-#: it under both the reports GC keep-rule (genout/outputs) and the
-#: validator's own GENERATED_REPORT_PREFIXES allowlist.
+#: Obsolete sidecar location (pre-4.3). Active reads/writes go through the
+#: derived node below; this path survives only so pre-migration leftovers
+#: are still discarded by `discard_unreadable_cache` and reclaimed by
+#: `diagnostics_prune --derived-state` and the reports GC. Never written.
 CACHE_RELATIVE = Path("generated/reports/validation-report.cache.json")
 
-#: Cache contract. A reader meeting another format discards and misses.
-#: 2: the validator-inputs pin, and pins observed before validation.
-#: 4: every checked text-cache JSON/Markdown file and symlink target is
-#: pinned, including unexpected nested files.
+#: Obsolete sidecar contract, kept for the leftover discard above.
 CACHE_FORMAT = 4
+
+#: Derived node holding the cached static validation issues (SPEC §14, D-12).
+#: One named node: every validation input is global, so per-artifact splits
+#: would only multiply keys over identical pins.
+VALIDATION_NODE_ID = "cache.validation-static"
+VALIDATION_NODE_VERSION = 1
+VALIDATION_PRODUCER_FILES = (
+    "tools/learning_os/validation_cache.py",
+    *DERIVED_SUBSTRATE_FILES,
+)
+
+#: `cache_pins` key -> derived direct-input id. Namespaced so this node's
+#: inputs cannot collide with another node's in a shared evaluation.
+_VALIDATION_INPUT_IDS = {
+    "canonical_fingerprint": "cache.validation.canonical_fingerprint",
+    "code_identity": "cache.validation.code_identity",
+    "runtime_digest": "cache.validation.runtime_digest",
+    "materials_digest": "cache.validation.materials_digest",
+    "operations_digest": "cache.validation.operations_digest",
+    "validator_inputs": "cache.validation.validator_inputs",
+}
 
 #: Directory names never descended into: version control, environments and
 #: interpreter/tool caches. No rule reads inside them, and several change on
@@ -99,6 +123,13 @@ _WALK_PRUNE = frozenset({".git", ".venv", "node_modules", "__pycache__",
 #: ``validator_inputs_digest`` lists that tree separately and stats only
 #: those checked files, leaving page blobs unstatted.
 _WALK_NAME_ONLY = frozenset({"generated/text-cache", "operations/diagnostics"})
+
+#: Subtrees skipped entirely: the derived-state cache this module now
+#: writes through. Statting it would self-invalidate every write — pins
+#: observed pre-run could never match the post-write state. Blobs are
+#: never read by any rule; a corrupt state index still misses through the
+#: store's own empty-on-corrupt read, which rebuilds and heals.
+_WALK_SKIP = frozenset({"generated/derived-state"})
 
 
 def cache_pins(root: Path) -> dict[str, str]:
@@ -120,6 +151,59 @@ def observe_pins(root: Path) -> dict[str, str] | None:
         return cache_pins(root)
     except OSError:
         return None
+
+
+def _validation_spec() -> NodeSpec:
+    """The derived node holding the static issues (SPEC §14: version 1)."""
+    return NodeSpec(
+        id=VALIDATION_NODE_ID,
+        version=VALIDATION_NODE_VERSION,
+        producer_files=VALIDATION_PRODUCER_FILES,
+        direct_inputs=tuple(sorted(_VALIDATION_INPUT_IDS.values())),
+    )
+
+
+def _validation_inputs(pins: dict[str, str]) -> dict[str, str]:
+    """Map the six frozen pins onto derived direct-input digests.
+
+    Strict: exactly the six `cache_pins` keys, no more and no fewer.
+    Anything else is a miss (DerivedError), never a partial key.
+    """
+    if set(pins) != set(_VALIDATION_INPUT_IDS):
+        raise DerivedError(
+            f"validation-cache pins must be exactly {sorted(_VALIDATION_INPUT_IDS)}")
+    return {_VALIDATION_INPUT_IDS[key]: pins[key] for key in _VALIDATION_INPUT_IDS}
+
+
+def _freeze_static(issues: list[Issue]) -> list[dict]:
+    """Frozen static issues: live advisories filtered at this one choke
+    point, so no caller can persist clock-derived issues by accident."""
+    return [
+        {"severity": issue.severity, "code": issue.code,
+         "message": issue.message, "path": issue.path}
+        for issue in issues if not is_live_advisory(issue)
+    ]
+
+
+def _valid_static_value(value: Any) -> bool:
+    """Whether a derived hit has exactly the frozen-static shape we write."""
+    if not isinstance(value, list):
+        return False
+    return all(
+        isinstance(entry, dict)
+        and entry.get("severity") in ("E", "W")
+        and isinstance(entry.get("code"), str)
+        and isinstance(entry.get("message"), str)
+        and isinstance(entry.get("path"), str)
+        for entry in value
+    )
+
+
+def _restore_static(value: list[dict]) -> list[Issue]:
+    return [Issue(
+        severity=entry["severity"], code=entry["code"],
+        message=entry["message"], path=entry["path"],
+    ) for entry in value]
 
 
 def _inside(relative: str, roots) -> bool:
@@ -150,6 +234,11 @@ def validator_inputs_digest(root: Path) -> str:
     the pre-rewrite issues from the cache). An absent path contributes
     no line: its add/delete already moves the pin by the line's
     absence or presence.
+
+    ``generated/derived-state`` is skipped entirely: it holds this
+    module's own cache entries, and statting it would self-invalidate
+    every write. Corruption there still misses via the store's own
+    empty-on-corrupt read.
     """
     root = root.resolve()
     digest = hashlib.sha256()
@@ -248,6 +337,8 @@ def validator_inputs_digest(root: Path) -> str:
                 continue
             if entry.name in _WALK_PRUNE:
                 continue
+            if _inside(rel, _WALK_SKIP):
+                continue
             if rel_dir == "generated/reports" and entry.name.lstrip(".").startswith(
                     "validation-report"):
                 continue
@@ -325,113 +416,128 @@ def read_cached_static_issues(
 ) -> list[Issue] | None:
     """Cached static issues, or None on any miss.
 
-    A miss covers: absent file, unreadable file, structural unread
-    (discarded, see above), pin mismatch (left in place), and malformed
-    entries (discarded). Never raises on environmental failures. ``pins``
-    are the live pins when the caller already observed them.
+    A miss covers: absent state, unreadable state, key mismatch, corrupt
+    blob (hash-verified by the store), and malformed values (invalidated).
+    Never raises on environmental failures. ``pins`` are the live pins
+    when the caller already observed them.
     """
-    try:
-        raw = (root / CACHE_RELATIVE).read_text(encoding="utf-8")
-        data = json.loads(raw)
-    except OSError:
-        return None
-    except ValueError:
-        _unlink_quietly(root)
-        return None
-    if not isinstance(data, dict) or data.get("format") != CACHE_FORMAT:
-        _unlink_quietly(root)
-        return None
+    # Pre-migration leftovers must never phantom: a corrupt obsolete
+    # sidecar is discarded here (best-effort, never raises) as well as
+    # by validate.py's pre-run discard, exactly as the old read path did.
+    discard_unreadable_cache(root)
     if pins is None:
         pins = observe_pins(root)
         if pins is None:
             return None
-    if not isinstance(data.get("pins"), dict) or data["pins"] != pins:
+    try:
+        inputs = _validation_inputs(pins)
+    except DerivedError:
         return None
-    entries = data.get("issues")
-    if not isinstance(entries, list):
-        _unlink_quietly(root)
+
+    def _no_rebuild(_ctx: BuildContext) -> Any:
+        raise DerivedError("validation-cache lookup miss (no rebuild)")
+
+    try:
+        evaluation = evaluate(
+            root, VALIDATION_NODE_ID,
+            registry={VALIDATION_NODE_ID: (_validation_spec(), _no_rebuild)},
+            inputs=inputs)
+    except (OSError, DerivedError, TransactionFailure, ValueError):
         return None
-    issues: list[Issue] = []
-    for entry in entries:
-        if (
-            not isinstance(entry, dict)
-            or entry.get("severity") not in ("E", "W")
-            or not isinstance(entry.get("code"), str)
-            or not isinstance(entry.get("message"), str)
-            or not isinstance(entry.get("path", ""), str)
-        ):
-            _unlink_quietly(root)
-            return None
-        issues.append(Issue(
-            severity=entry["severity"],
-            code=entry["code"],
-            message=entry["message"],
-            path=entry.get("path", ""),
-        ))
-    return issues
+    if not _valid_static_value(evaluation.value):
+        try:
+            invalidate(root, VALIDATION_NODE_ID)
+        except (OSError, TransactionFailure):
+            pass
+        return None
+    return _restore_static(evaluation.value)
 
 
 def write_static_cache(
     root: Path, issues: list[Issue], pins: dict[str, str] | None = None,
 ) -> None:
-    """Persist the static issues, keyed on ``pins`` (atomic write).
+    """Persist the static issues, keyed on ``pins`` (derived store).
 
     A caller that just validated passes the pins it observed *before*
     validating (see the module docstring); None observes them now, which
     is only sound when ``issues`` cannot be older than this call.
 
-    Live advisories are filtered here — the one choke point — so no
-    caller can persist clock-derived issues by accident. Raises OSError
-    on write failure; both callers treat the cache as auxiliary and
-    catch it.
+    Live advisories are filtered at the one choke point
+    (``_freeze_static``), so no caller can persist clock-derived issues
+    by accident. Raises OSError on write failure; both callers treat the
+    cache as auxiliary and catch it. Under ``LOS_NO_CACHE=1`` the engine
+    bypasses persistence, so this is a no-op that still filters.
     """
-    static = [issue for issue in issues if not is_live_advisory(issue)]
-    payload = {
-        "_generated": {
-            "warning": "GENERATED file - do not edit; rebuilt by python tools/validate.py",
-            "generator": f"learning_os v{__version__}",
-        },
-        "format": CACHE_FORMAT,
-        "pins": pins if pins is not None else cache_pins(root),
-        "issues": [
-            {"severity": issue.severity, "code": issue.code,
-             "message": issue.message, "path": issue.path}
-            for issue in static
-        ],
-    }
-    target = root / CACHE_RELATIVE
-    target.parent.mkdir(parents=True, exist_ok=True)
-    tmp = target.with_name(f".{target.name}.tmp-{os.getpid()}")
+    if pins is None:
+        pins = cache_pins(root)
     try:
-        tmp.write_text(json.dumps(payload, sort_keys=True, ensure_ascii=False),
-                       encoding="utf-8")
-        os.replace(tmp, target)
-    finally:
-        try:
-            tmp.unlink(missing_ok=True)
-        except OSError:
-            pass
+        inputs = _validation_inputs(pins)
+    except DerivedError as exc:
+        raise OSError(f"validation-cache pins are incomplete: {exc}") from exc
+    frozen = _freeze_static(issues)
+
+    def _fixed(_ctx: BuildContext) -> Any:
+        return frozen
+
+    try:
+        evaluate(
+            root, VALIDATION_NODE_ID,
+            registry={VALIDATION_NODE_ID: (_validation_spec(), _fixed)},
+            inputs=inputs)
+    except (DerivedError, TransactionFailure, ValueError) as exc:
+        raise OSError(f"validation-cache store failed: {exc}") from exc
 
 
 def status_issues(repo: Repo, pins: dict[str, str] | None = None) -> list[Issue]:
     """Validation issues for `status`: cached static plus live advisories.
 
-    On a pin match the static issues are served from the cache and only
-    the clock-derived advisories are recomputed; on any miss the full
-    validator runs and its static issues memoize the cache best-effort,
-    under pins observed before it ran. Pass ``pins`` observed before
-    ``repo`` was loaded; None observes them now.
+    On a key match the static issues are served from the derived node and
+    only the clock-derived advisories are recomputed; on any miss the full
+    validator runs (once) and its static issues memoize the node
+    best-effort, under pins observed before it ran. Pass ``pins`` observed
+    before ``repo`` was loaded; None observes them now. Unobservable pins
+    or any cache-layer failure validates uncached, exactly as today: a
+    cache problem never becomes stale data or a new refusal.
     """
     if pins is None:
         pins = observe_pins(repo.root)
-    if pins is not None:
-        cached = read_cached_static_issues(repo.root, pins)
-        if cached is not None:
-            return cached + advisory_issues(repo)
-    issues = validate(repo, online=False)
-    if pins is not None:
+    if pins is None:
+        return validate(repo, online=False)
+    try:
+        inputs = _validation_inputs(pins)
+    except DerivedError:
+        return validate(repo, online=False)
+    captured: list[Any] = []
+
+    def _build(_ctx: BuildContext) -> Any:
+        frozen = _freeze_static(validate(repo, online=False))
+        captured.append(frozen)
+        return frozen
+
+    try:
+        evaluation = evaluate(
+            repo.root, VALIDATION_NODE_ID,
+            registry={VALIDATION_NODE_ID: (_validation_spec(), _build)},
+            inputs=inputs)
+    except OSError:
+        # The build may have succeeded before the store failed: serve its
+        # result (one validation, best-effort memoize, as before) rather
+        # than validating twice. Nothing captured means the failure came
+        # before or inside the build itself, so validate uncached.
+        if captured and _valid_static_value(captured[0]):
+            return _restore_static(captured[0]) + advisory_issues(repo)
+        return validate(repo, online=False)
+    except (DerivedError, TransactionFailure, ValueError):
+        return validate(repo, online=False)
+    if not _valid_static_value(evaluation.value):
+        try:
+            invalidate(repo.root, VALIDATION_NODE_ID)
+        except (OSError, TransactionFailure):
+            pass
+        issues = validate(repo, online=False)
         try:
             write_static_cache(repo.root, issues, pins)
         except OSError:
             pass
-    return issues
+        return issues
+    return _restore_static(evaluation.value) + advisory_issues(repo)
