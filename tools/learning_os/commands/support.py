@@ -128,14 +128,6 @@ def _print_rows(rows: list[dict]) -> int:
 
 # --------------------------------------------------------- curriculum writes
 
-#: Environment variable naming the Core client and its build, stamped by the
-#: interface on every Core child it spawns (`obsidian-ui/<build>`). An
-#: unmarked call stays valid: terminal agents send nothing, and `session-end`
-#: never refuses one. Informational only — staleness is proven by comparing
-#: the installed build against the built one (see `health._ui_plugin_check`),
-#: never by trusting this marker.
-CLIENT_ENV = "LOS_CLIENT"
-
 
 def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, capability: str = "legacy.write",

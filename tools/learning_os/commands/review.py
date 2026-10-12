@@ -16,6 +16,7 @@ from learning_os.ops._legacy_plumbing import (
     _operator_lock,
     _publish,
 )
+from learning_os.ops.session import CLIENT_ENV
 from learning_os.store.session_ledger import (
     SESSION_LEDGER_STALE_HOURS,
     _current_session_id,
@@ -28,10 +29,7 @@ from learning_os.store.session_ledger import (
     _session_path_state,
 )
 
-from .support import (
-    CLIENT_ENV,
-    _root,
-)
+from .support import _root
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 

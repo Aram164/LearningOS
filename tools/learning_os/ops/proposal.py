@@ -38,6 +38,22 @@ class TransactionProposal:
 
 
 @dataclass(frozen=True)
+class CommandOutput:
+    """A raw child-process result for the CLI to pass through (SPEC (cx) D-9).
+
+    Frozen: the stdout, stderr and exit code travel verbatim from the
+    process to the adapter. Consumed only by the CLI pipeline through
+    ``Result.command_output``; never composed with a proposal, a
+    finish/render callback, a gesture or a diagnostic-failed result,
+    and refused on the gateway path.
+    """
+
+    stdout: str
+    stderr: str
+    exit_code: int
+
+
+@dataclass(frozen=True)
 class Result:
     """What a registered handler returns (SPEC §11.1)."""
 

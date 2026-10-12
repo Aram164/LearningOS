@@ -123,8 +123,17 @@ DEFAULT_SESSION_CHANNEL = "operator"
 
 #: Ephemeral ledger contract. Version 1 was the single shared file with bare
 #: `{state, sha256}` rows; version 2 keys the file per session and stamps
-#: every row with its channel and recording time.
-SESSION_LEDGER_SCHEMA_VERSION = 2
+#: every row with its channel and recording time; version 3 adds the D7
+#: machine envelope (`version`, `state`, `review`, `commit_sha`).
+SESSION_LEDGER_SCHEMA_VERSION = 3
+
+#: Ledger contracts the reader accepts. A version 2 file reads as
+#: recording/version 0/null witness and is rewritten as v3 on the next
+#: write (SPEC §13, M-06).
+_READABLE_SESSION_LEDGER_VERSIONS = frozenset({2, 3})
+
+#: D7 machine states (PLAN D7, SPEC §13).
+_SESSION_STATES = frozenset({"recording", "reviewed", "committed_unpushed"})
 
 
 def _resolve_session_identity(*, channel: str | None = None,
@@ -230,25 +239,79 @@ def _validate_session_row(relative: str, state: object) -> dict[str, str]:
     return row
 
 
-def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
+def _validate_session_review(review: object) -> dict | None:
+    """The v3 `review` member, validated, or None when absent.
+
+    A present witness carries the ledger version it was taken at plus the
+    exact per-path sha256 (None when the path was no readable file then).
+    Anything else is a contract violation, refused with today's message.
+    """
+    if review is None:
+        return None
+    if not isinstance(review, dict) \
+            or not isinstance(review.get("version"), int) \
+            or isinstance(review.get("version"), bool) \
+            or not isinstance(review.get("states"), dict):
+        raise WriteRefused("session ownership ledger has an unsupported contract")
+    states = {}
+    for relative, state in review["states"].items():
+        if not isinstance(relative, str) or not isinstance(state, dict):
+            raise WriteRefused("session ownership ledger has an unsupported contract")
+        digest = state.get("sha256")
+        if digest is not None and not isinstance(digest, str):
+            raise WriteRefused("session ownership ledger has an unsupported contract")
+        states[relative] = {"sha256": digest}
+    return {"version": review["version"], "states": states}
+
+
+def _load_session_ledger(root: Path, session_id: str | None = None) -> dict | None:
+    """The own ledger as a v3 envelope, or None when no ledger file exists.
+
+    A version 2 file reads as recording/version 0/null witness/null SHA and
+    is rewritten as v3 on the next write. Every refusal keeps today's
+    message: unreadable, unsupported contract, or a different session.
+    """
     identity = _current_session_id(explicit=session_id)
     ledger = _session_ledger(root, identity)
     if not ledger.is_file():
-        return {}
+        return None
     try:
         data = json.loads(ledger.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(f"session ownership ledger is unreadable: {exc}") from exc
     if not isinstance(data, dict) \
-            or data.get("schema_version") != SESSION_LEDGER_SCHEMA_VERSION \
+            or data.get("schema_version") not in _READABLE_SESSION_LEDGER_VERSIONS \
             or not isinstance(data.get("paths"), dict):
         raise WriteRefused("session ownership ledger has an unsupported contract")
     if data.get("session_id") != identity:
         raise WriteRefused("session ownership ledger names a different session")
-    return {
+    paths = {
         relative: _validate_session_row(relative, state)
         for relative, state in data["paths"].items()
     }
+    if data.get("schema_version") == 2:
+        return {"schema_version": 3, "session_id": identity, "version": 0,
+                "state": "recording", "paths": paths, "review": None,
+                "commit_sha": None}
+    version = data.get("version")
+    state = data.get("state")
+    commit_sha = data.get("commit_sha")
+    if not isinstance(version, int) or isinstance(version, bool) \
+            or state not in _SESSION_STATES \
+            or (commit_sha is not None and not isinstance(commit_sha, str)):
+        raise WriteRefused("session ownership ledger has an unsupported contract")
+    return {"schema_version": 3, "session_id": identity, "version": version,
+            "state": state, "paths": paths,
+            "review": _validate_session_review(data.get("review")),
+            "commit_sha": commit_sha}
+
+
+def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
+    """The own ledger's validated path rows, or {} when no ledger exists."""
+    envelope = _load_session_ledger(root, session_id)
+    if envelope is None:
+        return {}
+    return envelope["paths"]
 
 
 def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
@@ -262,10 +325,10 @@ def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str
 def _atomic_text(path: Path, content: str) -> None:
     """Temp file + os.replace, cleaning up after any failure.
 
-    Every mutating command funnels through here, so an ordinary filesystem
-    problem — target replaced by a directory, permission denied, full disk —
-    must surface as an actionable refusal instead of a traceback that leaves a
-    stray `.tmp` sibling behind.
+    The ledger sink's own I/O: an ordinary filesystem problem — target
+    replaced by a directory, permission denied, full disk — surfaces as an
+    actionable refusal instead of a traceback that leaves a stray `.tmp`
+    sibling behind.
     """
     tmp = path.with_name(f".{path.name}.tmp")
     try:
@@ -279,12 +342,23 @@ def _atomic_text(path: Path, content: str) -> None:
 
 
 def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
-                          session_id: str | None = None) -> None:
+                          session_id: str | None = None, *,
+                          version: int, state: str,
+                          review: dict | None, commit_sha: str | None) -> None:
+    """Write the own ledger as one v3 envelope (SPEC §13, M-06).
+
+    The whole envelope is explicit: no caller may silently reset the
+    version, the state, the witness or the recorded SHA.
+    """
     identity = _current_session_id(explicit=session_id)
     _atomic_text(_session_ledger(root, identity), json.dumps({
         "schema_version": SESSION_LEDGER_SCHEMA_VERSION,
         "session_id": identity,
+        "version": version,
+        "state": state,
         "paths": dict(sorted(paths.items())),
+        "review": review,
+        "commit_sha": commit_sha,
     }, indent=2, sort_keys=True) + "\n")
 
 
@@ -296,10 +370,15 @@ def _record_touched(root: Path, paths, channel: str | None = None, *,
     environment, and the channel, exactly as `session-end` resolves it,
     so a direct command (like `los goal`, which seals no envelope) can
     still claim its write for the caller's session.
+
+    Every call increments the envelope version and keeps the state, the
+    witness and the recorded SHA: a later recording invalidates a review
+    by version, never by erasing the witness.
     """
     identity = _current_session_id(channel=channel, explicit=session_id)
-    ledger = _session_ledger(root, identity)
-    current = _load_session_paths(root, identity) if ledger.is_file() else {}
+    envelope = (_load_session_ledger(root, identity)
+                if _session_ledger(root, identity).is_file() else None)
+    current = dict(envelope["paths"]) if envelope is not None else {}
     request = current_gateway_request()
     actor = channel or (request.channel if request is not None else DEFAULT_SESSION_CHANNEL)
     for path in paths:
@@ -313,7 +392,12 @@ def _record_touched(root: Path, paths, channel: str | None = None, *,
         # three default names Obsidian happened to generate.
         if p.suffix.lower() != ".canvas":
             current[rel] = _stamp_session_row(root, rel, actor)
-    _write_session_ledger(root, current, identity)
+    _write_session_ledger(
+        root, current, identity,
+        version=(envelope["version"] if envelope is not None else 0) + 1,
+        state=envelope["state"] if envelope is not None else "recording",
+        review=envelope["review"] if envelope is not None else None,
+        commit_sha=envelope["commit_sha"] if envelope is not None else None)
 
 
 #: A ledger row older than this is reported as stale and is no longer staged
@@ -350,7 +434,7 @@ def _read_sibling_session_ledger(path: Path) -> tuple[str, dict[str, dict]] | No
     if not isinstance(data, dict) or not isinstance(data.get("paths"), dict):
         return None
     identity = data.get("session_id")
-    if data.get("schema_version") != SESSION_LEDGER_SCHEMA_VERSION \
+    if data.get("schema_version") not in _READABLE_SESSION_LEDGER_VERSIONS \
             or not isinstance(identity, str) or not identity:
         return None
     rows: dict[str, dict] = {}

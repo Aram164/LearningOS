@@ -67,7 +67,7 @@ from learning_os.ops.registry import REGISTRY
 from learning_os.ops.render import call_renderer
 from learning_os.store.session_ledger import (
     _current_session_id,
-    _load_session_paths,
+    _load_session_ledger,
     _row_proven_state,
     _session_ledger,
     _session_path_state,
@@ -719,11 +719,13 @@ def _repair_replayed_session_ownership(root: Path,
             "ledgers — reconcile this transaction by hand"
         )
     try:
-        existing = _load_session_paths(root, session)
+        envelope = _load_session_ledger(root, session)
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair session ownership: {exc}"
         ) from exc
+    assert envelope is not None  # the missing ledger failed closed above
+    existing = envelope["paths"]
 
     for ledger_relative in _UNPROVABLE_AGGREGATE_LEDGERS:
         proven = existing.get(ledger_relative)
@@ -759,7 +761,13 @@ def _repair_replayed_session_ownership(root: Path,
         state["recorded_at"] = _stamp_session_row(
             root, relative, actor)["recorded_at"]
     try:
-        _write_session_ledger(root, merged, session)
+        # The repair keeps the envelope it found: a replay re-proves the
+        # recorded bytes, so it neither bumps the version nor disturbs the
+        # state, the witness or the recorded SHA.
+        _write_session_ledger(
+            root, merged, session, version=envelope["version"],
+            state=envelope["state"], review=envelope["review"],
+            commit_sha=envelope["commit_sha"])
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair replayed session ownership: {exc}"
