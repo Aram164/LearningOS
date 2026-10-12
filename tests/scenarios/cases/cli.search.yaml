@@ -31,7 +31,7 @@ cases:
   - id: page-continued
     kind: success
     transport: cli
-    argv: [search, demo, --page, --offset, 1, --limit, 1, --expected-snapshot, "sha256:d503571f734be06095c3f966efef73a7c9da5b6ff410f934c6c56a8c5fa7b478"]
+    argv: [search, demo, --page, --offset, 1, --limit, 1, --expected-snapshot, "sha256:b07b115733a085155a731a6688e66419a8b8581d7d96b721ea8f6b2cc1849420"]
     expect: {site: null}
   - id: content
     kind: success
