@@ -1,22 +1,23 @@
-"""A10 cache correctness, validation + receipt families only (4.3).
+"""A10 cache correctness, validation + receipt + dossier families (4.3).
 
 SPEC §14 + D-12: the validation static issues live in one named derived
-node and each receipt verdict in its own per-artifact node. Every case
-here runs cold, mutates exactly one input, runs warm, and asserts the
-warm result equals a fresh ``LOS_NO_CACHE=1`` run.
+node, each receipt verdict in its own per-artifact node, and each unit's
+semantic dossier in its own per-artifact node. Every case here runs cold,
+mutates exactly one input, runs warm, and asserts the warm result equals a
+fresh ``LOS_NO_CACHE=1`` run.
 
-Scope: ONLY ``cache.validation-static`` and ``cache.receipt:<rel>``.
-A10 is NOT claimed here for material text, summaries, dossiers,
-derived-state self-consistency, manifest, or search postings — those
-families are unassigned to this task and remain uncovered.
+Scope: ``cache.validation-static``, ``cache.receipt:<rel>``, and
+``cache.dossier:<unit>``. A10 is NOT claimed here for material text,
+summaries, derived-state self-consistency, manifest, or search postings.
 
-The input inventory below is independent: it was written from the
-scratch inventory (``scratch/validation-receipt-input-inventory.md``,
-read from ``validation_cache.cache_pins`` and
-``receipt_cache._current_pins`` before editing) and is hardcoded here.
-It is never generated from NodeSpec declarations or the code under
-test; the spec-coverage test verifies the code against it, not the
-reverse.
+The input inventories below are independent: validation + receipt were
+written from ``scratch/validation-receipt-input-inventory.md`` (read from
+``validation_cache.cache_pins`` and ``receipt_cache._current_pins`` before
+editing), and dossiers from
+``scratch/material-dossier-input-inventory.md`` (read from
+``semantics/dossiers.py`` before editing). They are hardcoded here, never
+generated from NodeSpec declarations or the code under test; the
+spec-coverage tests verify the code against them, not the reverse.
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ import pytest
 from test_compute_once import _commit_capture
 
 import learning_os.rules.receipt_cache as rc
+import learning_os.semantics.dossiers as dz
 import learning_os.validation_cache as vc
 from learning_os import digests
 from learning_os.derived.store import read_state
@@ -58,6 +60,16 @@ RECEIPT_GLOBAL_INPUTS = (
     "runtime_digest",
     "validator_runtime_digest",
     "receipt_schema",
+)
+
+#: The six dossier dependency hashes from `dossiers.DEPENDENCIES`.
+DOSSIER_INPUTS = (
+    "knowledge-map",
+    "source-map",
+    "routes",
+    "evidence",
+    "semantic-contract",
+    "operator-contract",
 )
 
 
@@ -589,3 +601,147 @@ def test_two_unrelated_receipts_invalidate_independently(mini_repo: Path, monkey
     assert len(calls) == 1 and calls[0].endswith(".yaml")
     assert any("transaction-receipt" in message for _, _, message, _ in warm)
     assert warm == _fresh_receipt(mini_repo, monkeypatch)
+
+
+# ---------------------------------------------------------------------------
+# Dossier warm transitions: one dependency at a time, plus robustness.
+# ---------------------------------------------------------------------------
+
+def _stage_dossier_producers(root: Path) -> None:
+    for rel in dict.fromkeys(dz.DOSSIER_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((REPO_ROOT / rel).read_bytes())
+
+
+_DOSSIER_VERSIONS = {"semantic-contract": "2", "operator-contract": "operator-v1"}
+_DOSSIER_MENU = {"routes": ["route-a", "route-b"]}
+_DOSSIER_NODES = {"nodes": ["knowledge-a"]}
+_DOSSIER_ROUTES = [
+    {"id": "route-a", "locator": "ch 1"},
+    {"id": "route-b", "locator": "ch 2"},
+]
+_DOSSIER_EVIDENCE = {"material://demo/deck.pdf": "sha256:abc"}
+
+
+def _dossier_kwargs(unit_id: str = "unit-aml-l01", **overrides):
+    kwargs = {
+        "unit_id": unit_id,
+        "knowledge_map": dict(_DOSSIER_NODES),
+        "source_map": dict(_DOSSIER_MENU),
+        "routes": [dict(route) for route in _DOSSIER_ROUTES],
+        "evidence": dict(_DOSSIER_EVIDENCE),
+        "contract_versions": dict(_DOSSIER_VERSIONS),
+    }
+    kwargs.update(overrides)
+    return kwargs
+
+
+def _fresh_dossier(monkeypatch: pytest.MonkeyPatch, **kwargs):
+    """A fresh dossier build under the bypass flag (builds ignore the store)."""
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    try:
+        return dz.build_dossier(**kwargs)
+    finally:
+        monkeypatch.delenv("LOS_NO_CACHE", raising=False)
+
+
+def test_dossier_spec_covers_the_independent_inventory():
+    assert dz.DOSSIER_NODE_VERSION == 1
+    assert "tools/learning_os/semantics/dossiers.py" in dz.DOSSIER_PRODUCER_FILES
+    assert tuple(dz.DEPENDENCIES) == DOSSIER_INPUTS
+    spec = dz._dossier_spec("unit-x")
+    assert spec.id == "cache.dossier:unit-x" and spec.version == 1
+    assert len(spec.direct_inputs) == len(DOSSIER_INPUTS) == 6
+
+
+@pytest.mark.parametrize("dependency", DOSSIER_INPUTS)
+def test_dossier_dependency_mutation_matches_fresh(
+        tmp_path: Path, monkeypatch, dependency: str):
+    _stage_dossier_producers(tmp_path)
+    base = _dossier_kwargs()
+    first = dz.build_dossier(**base)
+    first_path = dz.store_dossier(tmp_path, first)
+    assert dz.load_dossier(first_path) == first
+    mutated = _dossier_kwargs()
+    if dependency == "knowledge-map":
+        mutated["knowledge_map"] = {"nodes": ["knowledge-b"]}
+    elif dependency == "source-map":
+        mutated["source_map"] = {"routes": ["route-c"]}
+    elif dependency == "routes":
+        mutated["routes"] = [dict(_DOSSIER_ROUTES[0], locator="ch 9"),
+                             _DOSSIER_ROUTES[1]]
+    elif dependency == "evidence":
+        mutated["evidence"] = {"material://demo/deck.pdf": "sha256:def"}
+    elif dependency == "semantic-contract":
+        mutated["contract_versions"] = {**_DOSSIER_VERSIONS,
+                                        "semantic-contract": "3"}
+    else:
+        mutated["contract_versions"] = {**_DOSSIER_VERSIONS,
+                                        "operator-contract": "operator-v2"}
+    second = dz.build_dossier(**mutated)
+    assert second.key != first.key
+    changed = {name for name, digest in second.hashes
+               if dict(first.hashes)[name] != digest}
+    assert changed == {dependency}
+    second_path = dz.store_dossier(tmp_path, second)
+    with pytest.raises(dz.DossierError):
+        dz.load_dossier(first_path)
+    warm = dz.load_dossier(second_path)
+    assert warm == _fresh_dossier(monkeypatch, **mutated)
+
+
+def test_dossier_corrupt_blob_matches_fresh(tmp_path: Path, monkeypatch):
+    _stage_dossier_producers(tmp_path)
+    kwargs = _dossier_kwargs()
+    dossier = dz.build_dossier(**kwargs)
+    path = dz.store_dossier(tmp_path, dossier)
+    assert dz.load_dossier(path) == dossier
+    node_id = f"cache.dossier:{dossier.unit_id}"
+    state = read_state(tmp_path)[node_id]
+    blob = tmp_path / "generated" / "derived-state" / state.blob
+    blob.write_bytes(b"\x00\xff not json {{{")
+    with pytest.raises(dz.DossierError):
+        dz.load_dossier(path)
+    healed = dz.store_dossier(tmp_path, dz.build_dossier(**kwargs))
+    assert dz.load_dossier(healed) == _fresh_dossier(monkeypatch, **kwargs)
+
+
+def test_two_unrelated_dossiers_invalidate_independently(tmp_path: Path, monkeypatch):
+    _stage_dossier_producers(tmp_path)
+    kwargs_a = _dossier_kwargs("unit-a")
+    kwargs_b = _dossier_kwargs("unit-b")
+    dossier_a = dz.build_dossier(**kwargs_a)
+    dossier_b = dz.build_dossier(**kwargs_b)
+    path_a = dz.store_dossier(tmp_path, dossier_a)
+    path_b = dz.store_dossier(tmp_path, dossier_b)
+    assert dz.load_dossier(path_a) == dossier_a
+    assert dz.load_dossier(path_b) == dossier_b
+    moved_b = _dossier_kwargs("unit-b", evidence={"material://demo/deck.pdf": "sha256:zzz"})
+    dossier_b2 = dz.build_dossier(**moved_b)
+    path_b2 = dz.store_dossier(tmp_path, dossier_b2)
+    assert dz.load_dossier(path_a) == dossier_a
+    assert dz.load_dossier(path_a) == _fresh_dossier(monkeypatch, **kwargs_a)
+    assert dz.load_dossier(path_b2) == _fresh_dossier(monkeypatch, **moved_b)
+    with pytest.raises(dz.DossierError):
+        dz.load_dossier(path_b)
+
+
+def test_dossier_poison_matches_fresh_by_raising(tmp_path: Path, monkeypatch):
+    """Tampered views refuse under warm and fresh alike (the poisoning check
+    runs before the derived lookup, so the bypass cannot skip it)."""
+    _stage_dossier_producers(tmp_path)
+    kwargs = _dossier_kwargs()
+    dossier = dz.build_dossier(**kwargs)
+    path = dz.store_dossier(tmp_path, dossier)
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    raw["content"]["routes"][0]["locator"] = "ch 9"
+    path.write_text(json.dumps(raw), encoding="utf-8")
+    with pytest.raises(dz.DossierError, match="poison"):
+        dz.load_dossier(path)
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    try:
+        with pytest.raises(dz.DossierError, match="poison"):
+            dz.load_dossier(path)
+    finally:
+        monkeypatch.delenv("LOS_NO_CACHE", raising=False)

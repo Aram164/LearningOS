@@ -19,6 +19,12 @@ hand-edited, covered by the existing no-hand-edit path: no canonical file
 may reference them, and the builder plus the store take explicit paths and
 never walk the repository. Freshness itself delegates to the
 ``DossierFresh`` predicate, so the system holds one definition of fresh.
+
+Since 4.3 the files are views of the per-unit derived nodes
+``cache.dossier:<unit>`` (SPEC §14, D-12): `store_dossier` persists the
+value under its six dependency hashes before writing the view, and
+`load_dossier` requires the node to hit on the stored hashes (a miss
+rebuilds, exactly like a poison refusal does at the caller).
 """
 
 from __future__ import annotations
@@ -29,6 +35,10 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..derived.engine import BuildContext, evaluate
+from ..derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
+from ..derived.store import invalidate
+from ..domain.failures import TransactionFailure
 from .predicates import CONTRACT_VERSION, dossier_fresh
 
 
@@ -49,6 +59,14 @@ DEPENDENCIES = (
 
 #: Cache root, relative to the repository. Gitignored, rebuildable.
 DOSSIERS_RELATIVE = "generated/dossiers"
+
+#: Per-unit derived nodes (SPEC §14, D-12): one node per artifact, so an
+#: expensive dossier never invalidates an unrelated unit's.
+DOSSIER_NODE_VERSION = 1
+DOSSIER_PRODUCER_FILES = (
+    "tools/learning_os/semantics/dossiers.py",
+    *DERIVED_SUBSTRATE_FILES,
+)
 
 
 @dataclass(frozen=True)
@@ -183,6 +201,71 @@ def is_fresh(dossier: Dossier, current_hashes: Mapping[str, str]) -> bool:
 # ---- content-addressed cache --------------------------------------------------
 
 
+def _dossier_node_id(unit_id: str) -> str:
+    """Logical derived node holding one unit's dossier."""
+    return f"cache.dossier:{unit_id}"
+
+
+def _dossier_input_id(dependency: str, unit_id: str) -> str:
+    """Direct-input id carrying one dependency hash for one unit."""
+    return f"cache.dossier.{dependency}:{unit_id}"
+
+
+def _dossier_spec(unit_id: str) -> NodeSpec:
+    """One unit's node: the six dependency hashes as direct inputs."""
+    return NodeSpec(
+        id=_dossier_node_id(unit_id),
+        version=DOSSIER_NODE_VERSION,
+        producer_files=DOSSIER_PRODUCER_FILES,
+        direct_inputs=tuple(
+            _dossier_input_id(dependency, unit_id) for dependency in DEPENDENCIES),
+    )
+
+
+def _dossier_inputs(unit_id: str, hashes: dict[str, str]) -> dict[str, str]:
+    """Map the six live hashes onto derived direct-input digests."""
+    return {_dossier_input_id(dependency, unit_id): hashes[dependency]
+            for dependency in DEPENDENCIES}
+
+
+def _dossier_value(dossier: Dossier) -> dict:
+    """Frozen dossier for the derived blob (view metadata excluded)."""
+    return {
+        "key": dossier.key,
+        "unit_id": dossier.unit_id,
+        "hashes": dict(dossier.hashes),
+        "content": {section: value for section, value in dossier.content},
+        "contract_version": dossier.contract_version,
+    }
+
+
+def _valid_dossier_value(value: object) -> bool:
+    """Whether a derived hit has exactly the dossier shape we write."""
+    if not isinstance(value, dict):
+        return False
+    if not isinstance(value.get("key"), str) \
+            or not isinstance(value.get("unit_id"), str):
+        return False
+    hashes = value.get("hashes")
+    if not isinstance(hashes, dict) or set(hashes) != set(DEPENDENCIES):
+        return False
+    if not all(isinstance(item, str) for item in hashes.values()):
+        return False
+    if not isinstance(value.get("content"), dict):
+        return False
+    return isinstance(value.get("contract_version"), int)
+
+
+def _producers_present(root: Path) -> bool:
+    """Whether every dossier-node producer file exists under ``root``.
+
+    Bare scratch dirs (unit tests driving `tmp_path` directly, CLI fixtures
+    that never staged producers) have no producer bytes to key on; store
+    and load then use the file alone, exactly as before migration.
+    """
+    return all((root / rel).is_file() for rel in DOSSIER_PRODUCER_FILES)
+
+
 def cache_path(root: Path, dossier: Dossier) -> Path:
     """Where a dossier lives: by overall digest, never by bare unit id.
 
@@ -219,7 +302,30 @@ def store_dossier(root: Path, dossier: Dossier) -> Path:
 
     Takes the root explicitly and writes beneath the cache root only —
     canonical inputs are read by the caller, never walked here.
+
+    The dossier value also lives in the derived node
+    ``cache.dossier:<unit>`` (SPEC §14, D-12), keyed on its six
+    dependency hashes; the file is a generated view of that node. A
+    derived failure raises `DossierError`, like a file failure — the
+    caller treats the cache as best-effort. Roots without producer bytes
+    (bare unit-test dirs) keep the file-only behavior.
     """
+    if _producers_present(root):
+        node_id = _dossier_node_id(dossier.unit_id)
+        inputs = _dossier_inputs(dossier.unit_id, dict(dossier.hashes))
+        value = _dossier_value(dossier)
+
+        def _fixed(_ctx: BuildContext) -> object:
+            return value
+
+        try:
+            evaluate(
+                root, node_id,
+                registry={node_id: (_dossier_spec(dossier.unit_id), _fixed)},
+                inputs=inputs)
+        except (OSError, DerivedError, TransactionFailure, ValueError) as exc:
+            raise DossierError(
+                f"cannot store dossier {dossier.key!r}: {exc}") from exc
     path = cache_path(root, dossier)
     path.parent.mkdir(parents=True, exist_ok=True)
     try:
@@ -238,6 +344,11 @@ def load_dossier(path: Path) -> Dossier:
 
     A file whose content no longer matches its hashes is refused — serving
     it would be cache poisoning, and a loud refusal beats a stale context.
+
+    Files under ``generated/dossiers/`` are views of the derived node
+    ``cache.dossier:<unit>``: after the poisoning check, the node must hit
+    on the stored hashes, else this raises `DossierError` (a miss, not
+    poison) and the caller rebuilds. Files elsewhere are read as before.
     """
     try:
         raw = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -262,4 +373,38 @@ def load_dossier(path: Path) -> Dossier:
     if dict(rebuilt.hashes) != stored_hashes or rebuilt.key != raw.get("key"):
         raise DossierError(
             f"dossier cache {path} fails its hashes: refusing poison")
+    parts = Path(path).parts
+    if len(parts) < 3 or parts[-2] != "dossiers" or parts[-3] != "generated":
+        return rebuilt
+    root = Path(path).parents[2]
+    if not _producers_present(root):
+        return rebuilt
+    unit_id = rebuilt.unit_id
+    node_id = _dossier_node_id(unit_id)
+    try:
+        inputs = _dossier_inputs(unit_id, stored_hashes)
+    except KeyError:
+        raise DossierError(
+            f"dossier cache {path} misses its derived node: rebuilding") from None
+
+    def _no_rebuild(_ctx: BuildContext) -> object:
+        raise DerivedError("dossier-cache lookup miss (no rebuild)")
+
+    try:
+        evaluation = evaluate(
+            root, node_id,
+            registry={node_id: (_dossier_spec(unit_id), _no_rebuild)},
+            inputs=inputs)
+    except (OSError, DerivedError, TransactionFailure, ValueError):
+        raise DossierError(
+            f"dossier cache {path} misses its derived node: rebuilding") from None
+    value = evaluation.value
+    if not _valid_dossier_value(value) or value.get("hashes") != stored_hashes \
+            or value.get("key") != raw.get("key"):
+        try:
+            invalidate(root, node_id)
+        except (OSError, TransactionFailure):
+            pass
+        raise DossierError(
+            f"dossier cache {path} misses its derived node: rebuilding") from None
     return rebuilt
