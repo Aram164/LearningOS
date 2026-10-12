@@ -164,8 +164,9 @@ los: INVALID_REQUEST: source-scenario-eval: field 'evaluations' is outside the i
 
 The essay PDF was pulled into the materials topic tree; the fixture
 supplies it at `source-scenario-bare/attached.pdf` with its generated
-manifest (the inventory tool itself is bound to the live materials
-tree, outside any fixture).
+manifest. The inventory entrypoint anchors to its own file location,
+so the sections below run a byte-identical copy against copied
+fixture materials in a disposable pair.
 
 ```scrut
 $ MAT_SHA=$(sha256sum "$(dirname "$LOS_FX")/materials/source-scenario-bare/attached.pdf" | cut -d' ' -f1) && echo "$MAT_SHA"
@@ -182,6 +183,82 @@ $ $H/los-assert-file records/materials-manifest.yaml --exists
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/build_materials_tree.py --materials-root "$(dirname "$LOS_FX")/materials" | grep -E "moves \(|to \(re\)write"
   moves (0)
   SOURCES.md files to (re)write: 0
+```
+
+## Copy the inventory entrypoint into a disposable pair
+
+`tools/materials_manifest.py --build` anchors the materials tree and
+the manifest to its own file location, so a byte-identical copy binds
+to wherever it is placed. The helper copies only the entrypoint, its
+one leaf dependency, and the two repo files they read, and refuses
+any destination outside the transcript `TMPDIR`.
+
+```scrut
+$ mkdir -p "$TMPDIR/inv-pair/repo" && export INV_PAIR="$(realpath "$TMPDIR/inv-pair")" INV_REPO="$(realpath "$TMPDIR/inv-pair/repo")" && $H/los-anchored-copy materials_manifest "$INV_REPO"
+sha256:f4a3cca7504957fa56643b5c212dcefc1ef86d2a2845955f097075d031cc5751 Makefile
+sha256:c59f5cb7d4220a4a8583ebb93864901d48511b1de16c854777d91db86dcccde6 pyproject.toml
+sha256:0c84a5cae52dc8aa786e0009eaaa38e9e2f202b5f140e8cb07d1b188bc338ba8 tools/learning_os/__init__.py
+sha256:9f4511b38e35ff56efa15bc8b486a589d9dc42eed38ab331da85c7e7f6503c41 tools/learning_os/material_inventory.py
+sha256:bf4823ad6666f31727b6b611a5330b2d8ea1da187a6e948a5a5a77562be7f72d tools/materials_manifest.py
+```
+
+## Stage the copied sibling materials
+
+```scrut
+$ mkdir -p "$INV_REPO/records" && cp -R "$(dirname "$LOS_FX")/materials" "$INV_PAIR/materials" && export LIVE_SHA=$(sha256sum "$LOS_REPO/records/materials-manifest.yaml" | cut -d' ' -f1) && find "$INV_PAIR/materials" -type f | sed "s|$INV_PAIR|<PAIR>|" | sort
+<PAIR>/materials/source-demo-book/book.pdf
+<PAIR>/materials/source-demo-book/lecture-01.pdf
+<PAIR>/materials/source-scenario-bare/attached.pdf
+```
+
+## Rebuild the inventory from the copied materials
+
+```scrut
+$ (cd "$INV_REPO" && make --silent inventory PY="$LOS_REPO/.venv/bin/python")
+wrote records/materials-manifest.yaml: 3 files, 0.00 GB
+```
+
+## Verify the copied tree against the rebuilt manifest
+
+The date and the pair path are redacted; both vary per run.
+
+```scrut
+$ (cd "$INV_REPO" && make --silent verify-materials PY="$LOS_REPO/.venv/bin/python") | sed -e "s|$INV_PAIR|<PAIR>|g" -e "s/captured [0-9-]*/captured <today>/"
+manifest captured <today> — 3 files
+OK — <PAIR>/materials matches the manifest (sha256 verified)
+```
+
+## The isolated rebuild matches the fixture manifest
+
+Only the `captured` day differs, so it is excluded from the compare.
+
+```scrut
+$ [ "$(grep -v '^captured:' records/materials-manifest.yaml | sha256sum)" = "$(grep -v '^captured:' "$INV_REPO/records/materials-manifest.yaml" | sha256sum)" ] && echo "isolated rebuild matches the fixture manifest"
+isolated rebuild matches the fixture manifest
+```
+
+```scrut
+$ grep -A2 'source-scenario-bare/attached.pdf' "$INV_REPO/records/materials-manifest.yaml"
+  source-scenario-bare/attached.pdf:
+    size: 608
+    sha256: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6
+```
+
+## The copy anchors to the pair, not the live tree
+
+The tool path stays in a variable: quoting it would break the
+doc-command lint, which requires tool mentions to parse as commands.
+
+```scrut
+$ [ "$(sha256sum "$LOS_REPO/records/materials-manifest.yaml" | cut -d' ' -f1)" = "$LIVE_SHA" ] && echo "live manifest untouched"
+live manifest untouched
+```
+
+```scrut
+$ ENTRY=$INV_REPO/tools/materials_manifest.py && $LOS_REPO/.venv/bin/python -c "import importlib.util,sys; sys.path.insert(0, '$INV_REPO/tools'); spec = importlib.util.spec_from_file_location('mm', '$ENTRY'); mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print(mod.ROOT); print(mod.MANIFEST); print(mod.materials_root())" | sed -e "s|$INV_REPO|<REPO>|g" -e "s|$INV_PAIR|<PAIR>|g"
+<REPO>
+<REPO>/records/materials-manifest.yaml
+<PAIR>/materials
 ```
 
 ## Review the attach
