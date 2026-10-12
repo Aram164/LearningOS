@@ -94,6 +94,14 @@ _KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
 
 _KEEP_REPORT_PREFIX = "validation-report"
 
+#: Pre-4.3 cache sidecars, retired from active use (their families now live
+#: in derived-state). Excluded from the reports keep-rule so projection GC
+#: reclaims them; `diagnostics_prune --derived-state` reclaims them too.
+_OBSOLETE_REPORT_CACHES = frozenset({
+    "validation-report.cache.json",
+    "validation-report-receipts.cache.json",
+})
+
 
 def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
     """Write all outputs AND delete stale generated files, so that generated/
@@ -239,7 +247,8 @@ def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
             continue
         rel = PurePosixPath(f.relative_to(gen).as_posix())
         if rel.parts and rel.parts[0] == "reports" \
-                and f.name.startswith(_KEEP_REPORT_PREFIX):
+                and f.name.startswith(_KEEP_REPORT_PREFIX) \
+                and f.name not in _OBSOLETE_REPORT_CACHES:
             continue
         if rel.parts and rel.parts[0] in _KEEP_TOP_DIRS:
             continue

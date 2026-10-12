@@ -17,6 +17,17 @@ def _receipt_errors(root: Path):
             if i.severity == "E" and "transaction-receipt" in i.message]
 
 
+def _stage_receipt_producers(root: Path) -> None:
+    """Copy the real receipt-node producer bytes under a mini root."""
+    import learning_os.rules.receipt_cache as rc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(rc.RECEIPT_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
 def _corrupt_status(path: Path):
     content = path.read_bytes()
     assert b"status: committed" in content
@@ -24,6 +35,7 @@ def _corrupt_status(path: Path):
 
 
 def test_preserved_mtime_receipt_tampering_cannot_reuse_verdict(mini_repo: Path):
+    _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "tamper-stat", "request-tamper-stat")
     assert not _receipt_errors(mini_repo)
     path = mini_repo / result.receipt_path
@@ -39,6 +51,7 @@ def test_preserved_mtime_receipt_tampering_cannot_reuse_verdict(mini_repo: Path)
 def test_receipt_rewrite_after_parse_cannot_bless_new_bytes(mini_repo: Path, monkeypatch):
     import learning_os.rules.receipt_cache as cache
 
+    _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "parse-race", "request-parse-race")
     path = mini_repo / result.receipt_path
     original = cache._validate_fresh
@@ -58,15 +71,21 @@ def test_receipt_rewrite_after_parse_cannot_bless_new_bytes(mini_repo: Path, mon
 
 def test_changed_sidecar_verdict_is_discarded(mini_repo: Path):
     import learning_os.rules.receipt_cache as cache
+    from learning_os.derived.store import read_state
 
+    _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "cache-corrupt", "request-cache-corrupt")
     _corrupt_status(mini_repo / result.receipt_path)
     assert _receipt_errors(mini_repo)
-    sidecar = mini_repo / cache.SIDECAR_RELATIVE
-    data = json.loads(sidecar.read_text())
-    rel = result.receipt_path.relative_to(mini_repo).as_posix()
-    data["entries"][rel]["issues"] = []
-    sidecar.write_text(json.dumps(data))
+    assert not (mini_repo / cache.SIDECAR_RELATIVE).exists()
+    # Tamper with the stored verdict bytes in place: the blob hash no
+    # longer matches, so the verdict is discarded and the errors return.
+    node_id = next(node for node in read_state(mini_repo)
+                   if node.startswith("cache.receipt:"))
+    blob = mini_repo / "generated" / "derived-state" / read_state(mini_repo)[node_id].blob
+    data = json.loads(blob.read_text(encoding="utf-8"))
+    data["issues"] = []
+    blob.write_text(json.dumps(data), encoding="utf-8")
     digests.clear()
     assert _receipt_errors(mini_repo)
 
@@ -74,6 +93,7 @@ def test_changed_sidecar_verdict_is_discarded(mini_repo: Path):
 def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
     from learning_os.rules.core import Validator
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "schema-race", "request-schema-race")
     old_validator = Validator(load_repo(mini_repo))
     schema = mini_repo / "system/schema/transaction-receipt.schema.json"
@@ -91,6 +111,7 @@ def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
 def test_receipt_cache_invalidates_changed_external_schema_ref(mini_repo: Path):
     from learning_os.rules.core import Validator
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "schema-ref", "request-schema-ref")
     schema_dir = mini_repo / "system/schema"
     receipt_path = schema_dir / "transaction-receipt.schema.json"

@@ -68,13 +68,33 @@ def main() -> int:
             _operator_lock,
         )
 
+        # Pre-4.3 cache sidecars, retired from active use (SPEC §14 step 3).
+        # Their families now live in derived-state; reclaim the files here
+        # as well as through projection GC. Best-effort, never failing.
+        obsolete = (
+            root / "generated" / "reports" / "validation-report.cache.json",
+            root / "generated" / "reports" / "validation-report-receipts.cache.json",
+        )
         with _operator_lock(root):
             result = sweep_unreferenced_blobs(root, dry_run=args.dry_run)
+            removed = 0
+            for sidecar in obsolete:
+                try:
+                    if sidecar.is_file() and not sidecar.is_symlink():
+                        if not args.dry_run:
+                            sidecar.unlink()
+                        removed += 1
+                except OSError:
+                    pass
         action = "would delete" if args.dry_run else "deleted"
-        print(f"{action} {result['deleted']} unreferenced blob(s); kept "
-              f"{result['kept']} referenced blob(s) "
-              f"({result['referenced']} state entries, "
-              f"{result['skipped']} skipped)")
+        message = (f"{action} {result['deleted']} unreferenced blob(s); kept "
+                   f"{result['kept']} referenced blob(s) "
+                   f"({result['referenced']} state entries, "
+                   f"{result['skipped']} skipped)")
+        if removed:
+            verb = "would remove" if args.dry_run else "removed"
+            message += f"; {verb} {removed} obsolete cache file(s)"
+        print(message)
         return 0
     if not traces_path(root).is_file():
         print(f"no trace store at {traces_path(root)}; nothing to prune")

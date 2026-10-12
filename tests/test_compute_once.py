@@ -250,6 +250,23 @@ def _stage_validation_producers(root: Path) -> None:
         target.write_bytes((repo_root / rel).read_bytes())
 
 
+def _stage_receipt_producers(root: Path) -> None:
+    """Copy the real receipt-node producer bytes under a mini root."""
+    import learning_os.rules.receipt_cache as rc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(rc.RECEIPT_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
+def _receipt_node_count(root: Path) -> int:
+    from learning_os.derived.store import read_state
+
+    return sum(1 for node_id in read_state(root) if node_id.startswith("cache.receipt:"))
+
+
 def _text_cache_index(root: Path, entry: str = "ab" * 32) -> Path:
     path = root / "generated" / "text-cache" / entry / "index.json"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -454,16 +471,13 @@ def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "warm-a", "request-warm-a")
     _commit_capture(mini_repo, "warm-b", "request-warm-b")
-    sidecar = mini_repo / rc.SIDECAR_RELATIVE
-    assert not sidecar.exists()
+    assert _receipt_node_count(mini_repo) == 0
     cold = _frozen(validate(load_repo(mini_repo), online=False))
-    assert sidecar.is_file()
-    payload = json.loads(sidecar.read_text(encoding="utf-8"))
-    assert payload["format"] == 2
-    assert isinstance(payload["_generated"], dict)
-    assert len(payload["entries"]) == 2
+    assert _receipt_node_count(mini_repo) == 2
+    assert not (mini_repo / rc.SIDECAR_RELATIVE).exists()
     warm = _frozen(validate(load_repo(mini_repo), online=False))
     assert warm == cold
 
@@ -474,6 +488,7 @@ def test_receipt_sidecar_validates_only_new_receipts_when_warm(
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "fresh-a", "request-fresh-a")
     validate(load_repo(mini_repo), online=False)
     original = rc._validate_fresh
@@ -498,6 +513,7 @@ def test_receipt_sidecar_revalidates_a_changed_receipt(mini_repo: Path):
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "changed-a", "request-changed-a")
     first = _frozen(validate(load_repo(mini_repo), online=False))
     assert not [i for i in first if i[1] == "TRANSACTION-RECEIPT"]
@@ -511,7 +527,8 @@ def test_receipt_sidecar_revalidates_a_changed_receipt(mini_repo: Path):
                for _, code, message, _ in second)
     third = _frozen(validate(load_repo(mini_repo), online=False))
     assert third == second
-    assert (mini_repo / rc.SIDECAR_RELATIVE).is_file()
+    assert _receipt_node_count(mini_repo) == 1
+    assert not (mini_repo / rc.SIDECAR_RELATIVE).exists()
 
 
 def test_receipt_sidecar_duplicate_key_matches_cold_and_warm(mini_repo: Path):
@@ -520,6 +537,7 @@ def test_receipt_sidecar_duplicate_key_matches_cold_and_warm(mini_repo: Path):
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "dup-a", "request-dup-a")
     result_b = _commit_capture(mini_repo, "dup-b", "request-dup-b")
     receipt_path = mini_repo / result_b.receipt_path
@@ -540,6 +558,7 @@ def test_receipt_sidecar_duplicate_id_matches_cold_and_warm(mini_repo: Path):
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     result_a = _commit_capture(mini_repo, "idt-a", "request-idt-a")
     receipt_a = yaml.safe_load(
         (mini_repo / result_a.receipt_path).read_text(encoding="utf-8"))
@@ -558,20 +577,24 @@ def test_receipt_sidecar_duplicate_id_matches_cold_and_warm(mini_repo: Path):
 
 def test_corrupt_receipt_sidecar_falls_back_to_the_full_pass(mini_repo: Path):
     import learning_os.rules.receipt_cache as rc
+    from learning_os.derived.store import read_state
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "corrupt-a", "request-corrupt-a")
     cold = _frozen(validate(load_repo(mini_repo), online=False))
-    sidecar = mini_repo / rc.SIDECAR_RELATIVE
-    assert sidecar.is_file()
-    sidecar.write_bytes(b"\x00\xff not json {{{")
+    assert _receipt_node_count(mini_repo) == 1
+    assert not (mini_repo / rc.SIDECAR_RELATIVE).exists()
+    node_id = next(iter(read_state(mini_repo)))
+    blob = mini_repo / "generated" / "derived-state" / read_state(mini_repo)[node_id].blob
+    blob.write_bytes(b"\x00\xff not json {{{")
     recovered = _frozen(validate(load_repo(mini_repo), online=False))
     assert recovered == cold
     # No phantom: the corrupt cache never surfaces as a GEN-JSON error
-    # about itself, and the run rewrote a valid sidecar.
+    # about itself, and the run rewrote a valid entry.
     assert not [i for i in recovered if i[1] == "GEN-JSON"]
-    assert json.loads(sidecar.read_text(encoding="utf-8"))["format"] == 2
+    assert _receipt_node_count(mini_repo) == 1
 
 
 def test_receipt_sidecar_hash_settles_mtime_only_changes(
@@ -583,6 +606,7 @@ def test_receipt_sidecar_hash_settles_mtime_only_changes(
     from learning_os.loader import load_repo
     from learning_os.rules import validate
 
+    _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "mtime-a", "request-mtime-a")
     cold = _frozen(validate(load_repo(mini_repo), online=False))
     original = rc._validate_fresh

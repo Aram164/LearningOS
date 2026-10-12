@@ -1,41 +1,42 @@
-"""Memoized transaction-receipt checks (#112).
+"""Memoized transaction-receipt checks (#112, 4.3 derived).
 
 Committed receipts are immutable, but ``check_transaction_receipts``
 re-read, re-parsed and schema-checked every one of them on every
 validation (244 ms at 328 receipts, growing with each write). This
 module memoizes the per-receipt result — parse/schema issues plus the
-receipt id and idempotency key — in a ``generated/`` sidecar keyed on
-the live content hash, recomputed in each process through the shared
+receipt id and idempotency key — in one derived node per receipt, keyed
+on the live content hash, recomputed in each process through the shared
 digest layer. Stat equality across processes never proves receipt
 immutability. Only new or changed receipts pay the full check; the
 cross-receipt duplicate-id and duplicate-idempotency-key checks run
 over the cached ids and keys every run, in the same order.
 
-A cold sidecar (absent, unparseable, wrongly shaped, or pinned to
-different code, runtime, format providers, or receipt-schema bytes)
-falls back to today's full pass and rewrites the sidecar. A corrupt
-sidecar is discarded on load, before GEN-JSON can report it as a
-phantom. Issues — and the unhashable-id crash the run contains as
-SCHEMA-DEPENDENT — are byte-identical warm or cold.
+A cold node (absent state, corrupt blob, or pinned to different code,
+runtime, format providers, or receipt-schema bytes) falls back to
+today's full per-receipt pass. Blobs are hash-verified, so a corrupt
+value is never served. Issues — and the unhashable-id crash the run
+contains as SCHEMA-DEPENDENT — are byte-identical warm or cold.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
-import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
 import yaml
 
-from .. import __version__
+from ..derived.engine import BuildContext, evaluate, evaluate_many
 from ..derived.identity import (
     digest_code_identity,
     runtime_digest,
     validator_runtime_digest,
 )
+from ..derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
+from ..derived.store import invalidate
 from ..digests import file_content, file_sha256
+from ..domain.failures import TransactionFailure
 from ..loading.yamlio import UniqueKeySafeLoader
 from .common import Issue
 
@@ -57,14 +58,52 @@ class ReceiptValidator(Protocol):
 
     def _schema_check(self, name: str, instance: Any, where: str) -> None: ...
 
-#: Sidecar location inside generated/. The ``validation-report`` prefix
-#: keeps it under the reports GC keep-rule and the validator's own
-#: GENERATED_REPORT_PREFIXES allowlist, and ``validator_inputs_digest``
-#: skips it, so refreshing it never invalidates the status cache.
+#: Obsolete sidecar location (pre-4.3). Active verdicts live in per-receipt
+#: derived nodes; this path survives only so leftovers are reclaimed by
+#: `diagnostics_prune --derived-state` and the reports GC. Never written.
 SIDECAR_RELATIVE = Path("generated/reports/validation-report-receipts.cache.json")
 
-#: Sidecar contract. A reader meeting another format revalidates fully.
+#: Obsolete sidecar contract, kept for the leftover reclaim above.
 RECEIPT_CACHE_FORMAT = 2
+
+#: Per-receipt derived nodes (SPEC §14, D-12): one node per artifact, so an
+#: expensive receipt never invalidates an unrelated one.
+RECEIPT_NODE_VERSION = 1
+RECEIPT_PRODUCER_FILES = (
+    "tools/learning_os/rules/receipt_cache.py",
+    *DERIVED_SUBSTRATE_FILES,
+)
+
+#: `_current_pins` key -> derived direct-input id for the four globals.
+_RECEIPT_GLOBAL_INPUT_IDS = {
+    "code_identity": "cache.receipt.code_identity",
+    "runtime_digest": "cache.receipt.runtime_digest",
+    "validator_runtime_digest": "cache.receipt.validator_runtime_digest",
+    "receipt_schema": "cache.receipt.schema",
+}
+
+
+def _receipt_node_id(rel: str) -> str:
+    """Logical derived node holding one receipt's verdict."""
+    return f"cache.receipt:{rel}"
+
+
+def _receipt_content_input_id(rel: str) -> str:
+    """Direct-input id carrying one receipt's live content hash."""
+    return f"cache.receipt.content:{rel}"
+
+
+def _receipt_spec(rel: str) -> NodeSpec:
+    """One receipt's node: four globals plus its own content hash."""
+    return NodeSpec(
+        id=_receipt_node_id(rel),
+        version=RECEIPT_NODE_VERSION,
+        producer_files=RECEIPT_PRODUCER_FILES,
+        direct_inputs=(
+            *_RECEIPT_GLOBAL_INPUT_IDS.values(),
+            _receipt_content_input_id(rel),
+        ),
+    )
 
 
 def _current_pins(validator: ReceiptValidator) -> dict[str, str]:
@@ -88,87 +127,14 @@ def _current_pins(validator: ReceiptValidator) -> dict[str, str]:
     }
 
 
-def _unlink_quietly(path: Path) -> None:
-    try:
-        path.unlink()
-    except OSError:
-        pass
-
-
-def _load_entries(validator: ReceiptValidator) -> tuple[dict[str, Any], dict[str, str]]:
-    """Cached per-receipt entries plus the pins they were read under.
-
-    The pins describe the loaded schema this run uses, reused by the
-    save so one run computes them once. A structurally unreadable
-    sidecar (unparseable, wrong shape, wrong format) is discarded
-    best-effort, exactly like the status cache: the validator scans
-    ``generated/**/*.json`` itself, so a corrupt sidecar would otherwise
-    surface as a GEN-JSON error about the cache. A pin mismatch leaves
-    the file in place — this run overwrites it.
-    """
-    root = validator.repo.root
-    pins = _current_pins(validator)
-    sidecar = root / SIDECAR_RELATIVE
-    try:
-        data = json.loads(sidecar.read_text(encoding="utf-8"))
-    except OSError:
-        return {}, pins
-    except ValueError:
-        _unlink_quietly(sidecar)
-        return {}, pins
-    if not isinstance(data, dict) or data.get("format") != RECEIPT_CACHE_FORMAT:
-        _unlink_quietly(sidecar)
-        return {}, pins
-    if not isinstance(data.get("pins"), dict) or data["pins"] != pins:
-        return {}, pins
-    entries = data.get("entries")
-    if not isinstance(entries, dict):
-        _unlink_quietly(sidecar)
-        return {}, pins
-    return entries, pins
-
-
-def _save_entries(
-    root: Path, entries: dict[str, Any], pins: dict[str, str],
-) -> None:
-    """Persist per-receipt entries under ``pins`` (atomic write).
-
-    Best-effort in both directions: an unserializable entry is dropped
-    (that receipt revalidates fresh every run), and a write failure is
-    swallowed — the cache is auxiliary and must never fail validation.
-    """
-    safe = {rel: entry for rel, entry in entries.items() if _json_safe(entry)}
-    try:
-        text = json.dumps({
-            "_generated": {
-                "warning": "GENERATED file - do not edit; "
-                           "rebuilt by python tools/validate.py",
-                "generator": f"learning_os v{__version__}",
-            },
-            "format": RECEIPT_CACHE_FORMAT,
-            "pins": pins,
-            "entries": safe,
-        }, sort_keys=True, ensure_ascii=False)
-    except (TypeError, ValueError):
-        return
-    target = root / SIDECAR_RELATIVE
-    try:
-        target.parent.mkdir(parents=True, exist_ok=True)
-        tmp = target.with_name(f".{target.name}.tmp-{os.getpid()}")
-        try:
-            tmp.write_text(text, encoding="utf-8")
-            os.replace(tmp, target)
-        finally:
-            try:
-                tmp.unlink(missing_ok=True)
-            except OSError:
-                pass
-    except OSError:
-        pass
+def _receipt_global_inputs(pins: dict[str, str]) -> dict[str, str]:
+    """Map the four frozen global pins onto derived direct-input digests."""
+    return {_RECEIPT_GLOBAL_INPUT_IDS[key]: pins[key]
+            for key in _RECEIPT_GLOBAL_INPUT_IDS}
 
 
 def _json_safe(value: Any) -> bool:
-    """Whether ``value`` round-trips through the sidecar's JSON.
+    """Whether ``value`` round-trips through the derived blob's JSON.
 
     Receipt ids are usually strings, but a schema-invalid receipt may
     carry anything YAML parses — including datetimes, which ``json``
@@ -184,25 +150,14 @@ def _json_safe(value: Any) -> bool:
     return False
 
 
-def _receipt_stat(path: Path) -> tuple[int, int] | None:
-    """The ``(size, mtime_ns)`` cache key, or None when unstatable."""
-    try:
-        stat = path.stat()
-    except OSError:
-        return None
-    return (stat.st_size, stat.st_mtime_ns)
-
-
-def _entry_shape_ok(entry: Any) -> bool:
-    if not isinstance(entry, dict):
+def _valid_verdict(value: Any) -> bool:
+    """Whether a derived hit has exactly the verdict shape we write."""
+    if not isinstance(value, dict):
         return False
-    if not isinstance(entry.get("size"), int) \
-            or not isinstance(entry.get("mtime_ns"), int):
+    if not isinstance(value.get("sha256"), str) \
+            or not isinstance(value.get("parse_failed"), bool):
         return False
-    if not isinstance(entry.get("sha256"), str) \
-            or not isinstance(entry.get("parse_failed"), bool):
-        return False
-    issues = entry.get("issues")
+    issues = value.get("issues")
     if not isinstance(issues, list):
         return False
     for issue in issues:
@@ -212,25 +167,8 @@ def _entry_shape_ok(entry: Any) -> bool:
                 or not isinstance(issue.get("message"), str) \
                 or not isinstance(issue.get("path"), str):
             return False
-    if "id" not in entry or "idempotency_key" not in entry \
-            or not _json_safe(entry["id"]) or not _json_safe(entry["idempotency_key"]):
-        return False
-    proof = entry.get("proof_sha256")
-    return isinstance(proof, str) and proof == _proof_digest(entry)
-
-
-def _proof_digest(entry: dict) -> str | None:
-    """Detect structural cache corruption beyond JSON syntax.
-
-    This is an integrity checksum, not authority or authentication: the
-    generated sidecar remains disposable local cache state.
-    """
-    body = {key: value for key, value in entry.items() if key != "proof_sha256"}
-    try:
-        raw = json.dumps(body, sort_keys=True, ensure_ascii=False, allow_nan=False)
-    except (TypeError, ValueError):
-        return None
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    return "id" in value and "idempotency_key" in value \
+        and _json_safe(value["id"]) and _json_safe(value["idempotency_key"])
 
 
 def _validate_fresh(
@@ -292,62 +230,128 @@ def _content_hash(root: Path, path: Path) -> str | None:
         return None
 
 
+def _producers_present(root: Path) -> bool:
+    """Whether every receipt-node producer file exists under ``root``."""
+    return all((root / rel).is_file() for rel in RECEIPT_PRODUCER_FILES)
+
+
+def _make_pure_build(validator: ReceiptValidator, path: Path, rel: str):
+    """A derived build that freezes one receipt's verdict without appending.
+
+    `_validate_fresh` appends as it always has; the append is contained
+    here so the caller replays exactly once from the returned value —
+    a stored miss never duplicates, and a store failure never loses.
+    Looks up `_validate_fresh` at call time so tests can count calls.
+    """
+    def build(_ctx: BuildContext) -> Any:
+        mark = len(validator.issues)
+        try:
+            issues, transaction_id, key, parse_failed, content_hash = _validate_fresh(
+                validator, path, rel)
+        finally:
+            del validator.issues[mark:]
+        return {
+            "sha256": content_hash,
+            "parse_failed": parse_failed,
+            "id": transaction_id,
+            "idempotency_key": key,
+            "issues": _freeze(issues),
+        }
+    return build
+
+
 def receipt_file_issues(validator: ReceiptValidator) -> None:
     """Per-receipt parse/schema issues plus cross-receipt duplicates.
 
     Only new or changed receipts pay the full check; everything else is
-    replayed from the sidecar. The duplicate checks always run over the
-    live (cached or fresh) ids and keys, in sorted-path order, so their
-    issues — including which path each names as the first occurrence —
-    match the full pass exactly.
+    replayed from its derived node. The duplicate checks always run over
+    the live (cached or fresh) ids and keys, in sorted-path order, so
+    their issues — including which path each names as the first
+    occurrence — match the full pass exactly.
     """
     root = validator.repo.root
     directory = root / "operations" / "transactions"
-    cached, pins = _load_entries(validator)
-    fresh: dict[str, Any] = {}
-    seen: set = set()
-    seen_keys: dict[str, str] = {}
+    pins = _current_pins(validator)
+    global_inputs = _receipt_global_inputs(pins)
+    # Persisted stat equality is not content proof: a same-size edit can
+    # restore mtime. Hash live receipt bytes in each process; the shared
+    # digest layer makes repeated checks within it inexpensive. Unreadable
+    # files stay uncached: the fresh check below reports them, as today.
+    rows: list[tuple[Path, str, str | None]] = []
     for path in sorted(directory.glob("transaction-*.yaml")):
         rel = validator._rel(path)
-        entry = cached.get(rel)
-        if not _entry_shape_ok(entry):
-            entry = None
-        stat = _receipt_stat(path)
-        reused = False
-        # Persisted stat equality is not content proof: a same-size edit
-        # can restore mtime. Hash live receipt bytes in each process; the
-        # shared digest layer makes repeated checks within it inexpensive.
-        if entry is not None and stat is not None \
-                and _content_hash(root, path) == entry["sha256"]:
-            entry = {**entry, "size": stat[0], "mtime_ns": stat[1]}
-            entry["proof_sha256"] = _proof_digest(entry)
-            reused = True
-        if reused:
-            assert entry is not None
-            issues = _restore(entry["issues"])
-            transaction_id = entry["id"]
-            key = entry["idempotency_key"]
-            parse_failed = entry["parse_failed"]
+        rows.append((path, rel, _content_hash(root, path)))
+    cacheable = [(path, rel, digest) for path, rel, digest in rows
+                 if digest is not None]
+    verdicts: dict[str, dict] = {}
+    if cacheable:
+        registry = {
+            _receipt_node_id(rel): (_receipt_spec(rel), _make_pure_build(validator, path, rel))
+            for path, rel, _digest in cacheable
+        }
+        inputs = dict(global_inputs)
+        for _path, rel, digest in cacheable:
+            assert digest is not None
+            inputs[_receipt_content_input_id(rel)] = digest
+        node_ids = [_receipt_node_id(rel) for _path, rel, _digest in cacheable]
+        try:
+            evaluations = evaluate_many(root, node_ids, registry=registry, inputs=inputs)
+        except (OSError, TransactionFailure, ValueError):
+            evaluations = None
+        except DerivedError:
+            if not _producers_present(root):
+                evaluations = None
+            else:
+                # One unserializable verdict (e.g. a datetime id) aborts
+                # the shared session; isolate per receipt so unrelated
+                # receipts still reuse. Each failure below falls through
+                # to a fresh check in the replay loop.
+                evaluations = {}
+                for path, rel, digest in cacheable:
+                    node_id = _receipt_node_id(rel)
+                    single = dict(global_inputs)
+                    assert digest is not None
+                    single[_receipt_content_input_id(rel)] = digest
+                    try:
+                        evaluations[node_id] = evaluate(
+                            root, node_id,
+                            registry={node_id: (
+                                _receipt_spec(rel),
+                                _make_pure_build(validator, path, rel))},
+                            inputs=single)
+                    except (OSError, DerivedError, TransactionFailure, ValueError):
+                        continue
+        if evaluations is not None:
+            live = {rel: digest for _path, rel, digest in cacheable}
+            for _path, rel, _digest in cacheable:
+                evaluation = evaluations.get(_receipt_node_id(rel))
+                if evaluation is None:
+                    continue
+                value = evaluation.value
+                # The key already required the live hash; the stored proof
+                # must agree too, or a torn build (bytes replaced between
+                # the input hash and the parse) would be served. Either
+                # failure invalidates and falls through to fresh below.
+                if not _valid_verdict(value) or value.get("sha256") != live[rel]:
+                    try:
+                        invalidate(root, _receipt_node_id(rel))
+                    except (OSError, TransactionFailure):
+                        pass
+                    continue
+                verdicts[rel] = value
+    seen: set = set()
+    seen_keys: dict[str, str] = {}
+    for path, rel, _digest in rows:
+        verdict = verdicts.get(rel)
+        if verdict is not None:
+            issues = _restore(verdict["issues"])
+            transaction_id = verdict["id"]
+            key = verdict["idempotency_key"]
+            parse_failed = verdict["parse_failed"]
             validator.issues.extend(issues)
-            if _json_safe(entry):
-                fresh[rel] = entry
         else:
-            issues, transaction_id, key, parse_failed, content_hash = _validate_fresh(
+            _issues, transaction_id, key, parse_failed, _content = _validate_fresh(
                 validator, path, rel)
-            if stat is not None:
-                if content_hash is not None:
-                    candidate = {
-                        "size": stat[0],
-                        "mtime_ns": stat[1],
-                        "sha256": content_hash,
-                        "parse_failed": parse_failed,
-                        "id": transaction_id,
-                        "idempotency_key": key,
-                        "issues": _freeze(issues),
-                    }
-                    candidate["proof_sha256"] = _proof_digest(candidate)
-                    if _json_safe(candidate):
-                        fresh[rel] = candidate
         if parse_failed:
             continue
         # Two committed receipts sharing one idempotency key is genuinely
@@ -363,4 +367,3 @@ def receipt_file_issues(validator: ReceiptValidator) -> None:
                 validator.err("TRANSACTION-RECEIPT",
                               f"duplicate idempotency key '{key}' also committed "
                               f"in {first}", rel)
-    _save_entries(root, fresh, pins)
