@@ -66,6 +66,15 @@ def _under(path: str, root: str) -> bool:
     return path == root or path.startswith(root + os.sep)
 
 
+def _has_symlink_component(path: Path, root: Path) -> bool:
+    current = root
+    for part in path.relative_to(root).parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="los-anchored-copy")
     parser.add_argument("stem")
@@ -94,16 +103,18 @@ def main(argv: list[str] | None = None) -> int:
     if not dest.is_dir():
         return _fail(f"destination is not a directory: {args.dest}")
 
-    repo_path = Path(repo)
+    repo_path = Path(repo).resolve()
+    dest_path = Path(dest_real)
     copied: list[tuple[str, str]] = []
     for rel in BUNDLES[args.stem]:
         src = repo_path / rel
-        if src.is_symlink() or not src.is_file():
+        if _has_symlink_component(src, repo_path) or not src.is_file():
             print(f"los-anchored-copy: source is not a regular file: "
                   f"{src}", file=sys.stderr)
             return 1
-        dst = dest / rel
-        if dst.is_symlink():
+        dst = dest_path / rel
+        if _has_symlink_component(dst, dest_path) \
+                or not _under(os.path.realpath(dst), dest_real):
             print(f"los-anchored-copy: refuses symlink destination: "
                   f"{dst}", file=sys.stderr)
             return 1

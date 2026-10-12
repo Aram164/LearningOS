@@ -439,3 +439,37 @@ def test_anchored_copy_refuses_symlink_destination(tmp_path):
     assert proc.returncode == 2
     assert "symlink" in proc.stderr
     assert list(target.iterdir()) == []
+
+
+def test_anchored_copy_refuses_destination_parent_symlink(tmp_path):
+    jail = tmp_path / "jail"
+    jail.mkdir()
+    dest = jail / "repo"
+    dest.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = outside / "plan_write_audit.py"
+    target.write_text("untouched sentinel\n")
+    (dest / "tools").symlink_to(outside, target_is_directory=True)
+    proc = _run_anchored_copy("plan_write_audit", dest, jail)
+    assert proc.returncode == 1
+    assert "symlink destination" in proc.stderr
+    assert target.read_text() == "untouched sentinel\n"
+
+
+def test_anchored_copy_refuses_source_parent_symlink(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "plan_write_audit.py").write_text("outside source\n")
+    (source / "tools").symlink_to(outside, target_is_directory=True)
+    dest = tmp_path / "dest"
+    dest.mkdir()
+    env = dict(os.environ, LOS_REPO=str(source), TMPDIR=str(tmp_path))
+    proc = subprocess.run(
+        [sys.executable, str(ANCHORED_COPY), "plan_write_audit", str(dest)],
+        capture_output=True, text=True, timeout=120, env=env, cwd=tmp_path)
+    assert proc.returncode == 1
+    assert "source is not a regular file" in proc.stderr
+    assert list(dest.iterdir()) == []
