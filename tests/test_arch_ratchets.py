@@ -1051,10 +1051,13 @@ def _strip_bf_then_bu4(operation: str, old: dict, new: dict
     return _strip_bu4_filter_flip(operation, mid_old, mid_new)
 
 
-def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
+def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
     rel = "system/schema/requests/cli.module-list.schema.json"
-    old = json.loads(_git_show(base_ref, rel))
     new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
+    # The historical transition is a unit fixture, independent of whether
+    # the ratchet base already contains the approved lookup flip.
+    old = copy.deepcopy(new)
+    old["properties"]["program_id"]["x-los-lookup"] = True
     _, stripped = _strip_bf_then_bu4("cli.module-list", old, new)
     assert stripped["properties"] == old["properties"]
 
@@ -1111,8 +1114,10 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change(base_ref):
     # cli.plan-template generation seeds (plan.template inherits
     # through its alias and its file never changes).
     seed_rel = "system/schema/requests/cli.plan-template.schema.json"
-    seed_old = json.loads(_git_show(base_ref, seed_rel))
     seed_new = json.loads((ROOT / seed_rel).read_text(encoding="utf-8"))
+    seed_old = copy.deepcopy(seed_new)
+    for field in ("unit_id", "module_id"):
+        seed_old["properties"][field]["x-los-lookup"] = True
     _, seed_stripped = _strip_bf_then_bu4(
         "cli.plan-template", seed_old, seed_new)
     assert seed_stripped["properties"] == seed_old["properties"]
