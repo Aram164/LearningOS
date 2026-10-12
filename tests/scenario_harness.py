@@ -63,6 +63,17 @@ _TX_KEY_SUFFIX = "_transaction_id"
 _KEY_NAMES = frozenset({"request_id", "idempotency_key", "request_key"})
 _STALE_SNAPSHOT = "STALE_SNAPSHOT"
 _SHA256_RE = re.compile(r"sha256:[a-f0-9]{64}")
+# D7 commit-SHA family (Task 77 kickoff): the v3 ledger records the real git
+# commit SHA on failed push, covering real-time commit dates no fixture
+# pins (production behavior, never forced for the recorder). A commit_sha
+# qualifies only as the stored value of a recorded v3 envelope in
+# committed_unpushed state that git proves names a commit in this
+# fixture; numbering mirrors C5 (SHA<n> by first appearance), but
+# application is deliberately narrower than C2's wherever-occurs: only
+# qualifying ledger positions and the refusal template naming the same
+# SHA. Every other 40-hex string is preserved byte-exact.
+_SHA40_RE = re.compile(r"[0-9a-f]{40}")
+_COMMITTED_REFUSAL_TEMPLATE = "already committed as "
 # D16 stderr rule (SPEC §5.3.4): present from S05, a no-op until S14 adds
 # the `los: CODE: message` prefix.
 _D16_RE = re.compile(r"^los: ([A-Z][A-Z0-9_]{2,}): ", re.MULTILINE)
@@ -821,6 +832,87 @@ def _single_steps(recording: dict) -> list:
     return [recording]
 
 
+def _git_commit_exists(root: str, sha: str) -> bool:
+    """Whether git proves sha names a commit in the fixture (D7 binding)."""
+    try:
+        proc = subprocess.run(
+            ["git", "-C", root, "rev-parse", "--verify", "--quiet",
+             f"{sha}^{{commit}}"],
+            capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0
+
+
+def _qualifying_commit_sha(envelope) -> str | None:
+    """The stored SHA iff the envelope is a v3 committed_unpushed identity.
+
+    Anything else — another state, another version, a missing, null or
+    malformed SHA — is not the declared D7 identity and never seeds the
+    SHA family.
+    """
+    if not isinstance(envelope, dict):
+        return None
+    if envelope.get("schema_version") != 3:
+        return None
+    if envelope.get("state") != "committed_unpushed":
+        return None
+    sha = envelope.get("commit_sha")
+    if not isinstance(sha, str) or _SHA40_RE.fullmatch(sha) is None:
+        return None
+    return sha
+
+
+def _discover_commit_shas(steps: list, root: str) -> dict[str, str]:
+    """Evidence-bound commit_sha value -> SHA<n> token (D7).
+
+    Candidates come only from commit_sha keys of recorded v3
+    committed_unpushed envelopes (before then after, in step order);
+    each must then identify an existing commit in the fixture.
+    Unbacked or malformed values never map; distinct commits number
+    distinctly.
+    """
+    ordered: list[str] = []
+    for step in steps:
+        changed = step.get("session_ledger_changed")
+        if not isinstance(changed, dict):
+            continue
+        for side in ("before", "after"):
+            sha = _qualifying_commit_sha(changed.get(side))
+            if sha is not None and sha not in ordered:
+                ordered.append(sha)
+    mapping: dict[str, str] = {}
+    for sha in ordered:
+        if _git_commit_exists(root, sha):
+            mapping[sha] = f"SHA{len(mapping) + 1}"
+    return mapping
+
+
+def _apply_commit_shas(recording: dict, mapping: dict[str, str]) -> dict:
+    """Normalize only the bound ledger positions and refusal stream (D7).
+
+    Qualifying commit_sha values map in place; stderr maps only inside
+    the exact `already committed as <sha>;` refusal naming a bound SHA.
+    stdout, other keys, other streams and other hex are untouched.
+    """
+    for step in _single_steps(recording):
+        changed = step.get("session_ledger_changed")
+        if isinstance(changed, dict):
+            for side in ("before", "after"):
+                envelope = changed.get(side)
+                sha = _qualifying_commit_sha(envelope)
+                if sha in mapping:
+                    envelope["commit_sha"] = mapping[sha]
+        stderr = step.get("stderr", "")
+        if _COMMITTED_REFUSAL_TEMPLATE in stderr:
+            for sha, token in mapping.items():
+                stderr = stderr.replace(
+                    f"{_COMMITTED_REFUSAL_TEMPLATE}{sha};",
+                    f"{_COMMITTED_REFUSAL_TEMPLATE}{token};")
+            step["stderr"] = stderr
+    return recording
+
+
 def normalize(recording: dict, root: str | Path) -> dict:
     """Apply the SPEC §5.3 rules; returns a new recording.
 
@@ -860,6 +952,11 @@ def normalize(recording: dict, root: str | Path) -> dict:
         return text
 
     recording = _walk_strings(recording, _map)
+    # D7 SHA family, after the TX/KEY/SNAP map (disjoint values) and
+    # before the stream-agnostic elapsed redaction.
+    sha_mapping = _discover_commit_shas(_single_steps(recording), root)
+    if sha_mapping:
+        recording = _apply_commit_shas(recording, sha_mapping)
     recording = _walk_strings(
         recording, lambda text: _ELAPSED_RE.sub(r"\1(Xs)", text))
     # D16 stderr rule, last. A no-op until S14 introduces the prefix.

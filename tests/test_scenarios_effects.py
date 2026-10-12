@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -223,6 +224,192 @@ def test_normalize_replaces_learningos_container(tmp_path):
         "root <ROOT> sibling <LEARNINGOS>/obsidian-ui/x")
     assert normalized["stderr"] == (
         "materials <MATERIALS> sibling <LEARNINGOS>/obsidian-ui/x")
+
+
+def _git_repo_with_commits(path: Path, count: int) -> list[str]:
+    """A git repo with count real commits; returns their SHAs (D7)."""
+    subprocess.run(["git", "init", "-q"], cwd=path, check=True)
+    subprocess.run(["git", "config", "user.email", "tests@example.invalid"],
+                   cwd=path, check=True)
+    subprocess.run(["git", "config", "user.name", "Tests"],
+                   cwd=path, check=True)
+    shas = []
+    for index in range(count):
+        (path / f"file-{index}.txt").write_text(
+            f"commit {index}\n", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=path, check=True)
+        subprocess.run(["git", "commit", "-qm", f"commit {index}"],
+                       cwd=path, check=True)
+        shas.append(subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=path, check=True,
+            capture_output=True, text=True).stdout.strip())
+    return shas
+
+
+def _v3_unpushed(sha, **overrides):
+    """A recorded v3 committed_unpushed envelope (D7 controls)."""
+    envelope = {"schema_version": 3, "session_id": "channel:operator",
+                "version": 1, "state": "committed_unpushed", "paths": {},
+                "review": None, "commit_sha": sha}
+    envelope.update(overrides)
+    return envelope
+
+
+def test_normalize_maps_evidence_bound_commit_sha(tmp_path):
+    """D7 positive: a git-backed v3 SHA maps in ledger and stderr."""
+    (sha,) = _git_repo_with_commits(tmp_path, 1)
+    recording = _bare_recording(
+        {"ok": True},
+        stderr=(f"los: INVALID_REQUEST: already committed as {sha}; "
+                "use --push or --close\n"),
+        session_ledger_changed={"before": None,
+                                "after": _v3_unpushed(sha)})
+    first = scenario_harness.normalize(recording, tmp_path)
+    assert (first["session_ledger_changed"]["after"]["commit_sha"]
+            == "SHA1")
+    assert first["stderr"] == (
+        "los: already committed as SHA1; use --push or --close\n")
+    again = scenario_harness.normalize(recording, tmp_path)
+    assert again == first
+
+
+def test_normalize_rejects_unbacked_commit_sha(tmp_path):
+    """D7: a 40-hex naming no fixture commit never maps, ledger or stream."""
+    ghost = "ab" * 20
+    _git_repo_with_commits(tmp_path, 1)
+    recording = _bare_recording(
+        {"ok": True},
+        stderr=(f"los: already committed as {ghost}; use --push or "
+                "--close\n"),
+        session_ledger_changed={"before": None,
+                                "after": _v3_unpushed(ghost)})
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    assert (normalized["session_ledger_changed"]["after"]["commit_sha"]
+            == ghost)
+    assert ghost in normalized["stderr"]
+    assert "SHA1" not in json.dumps(normalized)
+
+
+def test_normalize_rejects_malformed_commit_sha(tmp_path):
+    """D7: null, mistyped, misshapen or mis-stated SHAs never map."""
+    (sha,) = _git_repo_with_commits(tmp_path, 1)
+    bad_values = ["not-a-sha", sha[:39], sha + "0", sha.upper(), None,
+                  12345]
+    for bad in bad_values:
+        recording = _bare_recording(
+            {"ok": True},
+            session_ledger_changed={"before": None,
+                                    "after": _v3_unpushed(bad)})
+        normalized = scenario_harness.normalize(recording, tmp_path)
+        assert (normalized["session_ledger_changed"]["after"]["commit_sha"]
+                == bad), bad
+        assert "SHA1" not in json.dumps(normalized), bad
+    for envelope in (_v3_unpushed(sha, state="recording"),
+                     _v3_unpushed(sha, schema_version=2),
+                     {"schema_version": 3, "session_id": "channel:operator",
+                      "version": 1, "state": "committed_unpushed",
+                      "paths": {}, "review": None}):
+        recording = _bare_recording(
+            {"ok": True},
+            session_ledger_changed={"before": None, "after": envelope})
+        normalized = scenario_harness.normalize(recording, tmp_path)
+        assert (normalized["session_ledger_changed"]["after"].get(
+            "commit_sha") == envelope.get("commit_sha"))
+        assert "SHA1" not in json.dumps(normalized)
+
+
+def test_normalize_preserves_unrelated_hex(tmp_path):
+    """D7: only the bound ledger value and refusal template map."""
+    (sha,) = _git_repo_with_commits(tmp_path, 1)
+    other = "cd" * 20
+    row_digest = "ef" * 32
+    recording = _bare_recording(
+        {"ok": True, "note_body": f"mentions {sha} in prose",
+         "custom_field": other},
+        stdout=f"op returned {sha}\n",
+        stderr=f"saved note {sha}\n",
+        session_ledger_changed={
+            "before": None,
+            "after": _v3_unpushed(
+                sha, paths={"work/x.md": {"channel": "operator",
+                                          "recorded_at":
+                                          "2026-10-01T07:00:00+00:00",
+                                          "sha256": row_digest,
+                                          "state": "file"}})})
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    assert (normalized["session_ledger_changed"]["after"]["commit_sha"]
+            == "SHA1")
+    assert sha in normalized["stdout_json"]["note_body"]
+    assert normalized["stdout_json"]["custom_field"] == other
+    assert sha in normalized["stdout"]
+    assert normalized["stderr"] == f"saved note {sha}\n"
+    row = normalized["session_ledger_changed"]["after"]["paths"][
+        "work/x.md"]
+    assert row["sha256"] == row_digest
+
+
+def test_normalize_numbers_distinct_commits_distinctly(tmp_path):
+    """D7: two backed commits keep distinct stable tokens across steps."""
+    sha_a, sha_b = _git_repo_with_commits(tmp_path, 2)
+    assert sha_a != sha_b
+    recording = {
+        "steps": [
+            _bare_recording(
+                {"ok": True},
+                session_ledger_changed={
+                    "before": None, "after": _v3_unpushed(sha_a)}),
+            _bare_recording(
+                {"ok": True},
+                stderr=(f"los: already committed as {sha_b}; use --push "
+                        "or --close\n"),
+                session_ledger_changed={
+                    "before": _v3_unpushed(sha_a),
+                    "after": _v3_unpushed(sha_b)}),
+        ]
+    }
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    first, second = normalized["steps"]
+    assert first["session_ledger_changed"]["after"]["commit_sha"] == "SHA1"
+    assert second["session_ledger_changed"]["before"]["commit_sha"] == "SHA1"
+    assert second["session_ledger_changed"]["after"]["commit_sha"] == "SHA2"
+    assert "already committed as SHA2;" in second["stderr"]
+    assert sha_a not in json.dumps(normalized)
+    assert sha_b not in json.dumps(normalized)
+
+
+def test_normalize_rejects_incorrect_stream_binding(tmp_path):
+    """D7: a refusal naming an unbound SHA stays raw; the ledger maps."""
+    (sha,) = _git_repo_with_commits(tmp_path, 1)
+    stranger = "ab" * 20
+    recording = _bare_recording(
+        {"ok": True},
+        stderr=(f"los: already committed as {stranger}; use --push or "
+                "--close\n"),
+        session_ledger_changed={"before": None,
+                                "after": _v3_unpushed(sha)})
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    assert (normalized["session_ledger_changed"]["after"]["commit_sha"]
+            == "SHA1")
+    assert stranger in normalized["stderr"]
+    assert "SHA1" not in normalized["stderr"]
+
+
+def test_failed_push_live_runs_compare_equal(tmp_path):
+    """D7 end to end: two live failed-push runs normalize identically."""
+    doc = scenario_harness.load_case_file(
+        scenario_harness.CASES_DIR / "cli.session-end.yaml")
+    bare = next(item for item in doc["cases"] if item["id"] == "failed-push")
+    case = {"fixture": doc.get("fixture", "rich_world"),
+            "observations": doc["observations"],
+            "fixture_mtime": doc.get(
+                "fixture_mtime", scenario_harness.FIXTURE_MTIME_DEFAULT),
+            **bare}
+    first = scenario_harness.run_sequence(case, doc["operation"],
+                                          tmp_path / "a")
+    second = scenario_harness.run_sequence(case, doc["operation"],
+                                           tmp_path / "b")
+    assert "SHA1" in json.dumps(first)
+    assert first == second
 
 
 def _subparser(command: str):
