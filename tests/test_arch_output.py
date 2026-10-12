@@ -484,18 +484,88 @@ def _subcommand_for(operation: str) -> str:
     return doc["x-los-cli-command"]["name"]
 
 
+def _rendered_request_argv(operation: str, request: dict,
+                           subcommand: str) -> list[str] | None:
+    """One CLI request-form input as argv, or None (never partial).
+
+    The actual request through the real ``request_to_argv`` and the
+    capability catalogue, exactly as ``step_argv`` builds the child
+    argv. A request with no CLI rendering (unknown command, keys with
+    no flag) or a rendered command that is not the subcommand
+    supplies no probe; the caller reads on.
+    """
+    import scenario_harness as harness
+
+    try:
+        command = harness._cli_command_for(operation, ROOT)
+        rendered = harness.request_to_argv(operation, request, ROOT)
+    except (KeyError, ValueError):
+        return None
+    argv = [command, *rendered]
+    if argv[:1] != [subcommand]:
+        return None
+    return [str(word) for word in argv]
+
+
+def _cli_argv_from_cases(operation: str, cases: list[dict],
+                         subcommand: str) -> list[str] | None:
+    """The probe argv from actual cases, or None (no invented argv).
+
+    First the prior top-level literal, unchanged: the first
+    non-sequence CLI case whose argv opens with the subcommand.
+    Otherwise the first fallback source in original file order: an
+    own-operation CLI sequence step (effective operation equal;
+    foreign steps never supply a probe) as its literal argv, or a
+    CLI request-form input rendered whole through
+    ``_rendered_request_argv``. A literal whose command differs, an
+    unrenderable request, and every gateway input supply nothing.
+    """
+    for case in cases:
+        if case.get("kind") == "sequence":
+            continue
+        if case.get("transport") == "cli" \
+                and case.get("argv", [])[:1] == [subcommand]:
+            return [str(word) for word in case["argv"]]
+    for case in cases:
+        if case.get("kind") == "sequence":
+            for step in case.get("steps", []):
+                if step.get("operation", operation) != operation:
+                    continue
+                if step.get("transport") != "cli":
+                    continue
+                if "argv" in step:
+                    if step.get("argv", [])[:1] == [subcommand]:
+                        return [str(word) for word in step["argv"]]
+                elif "request" in step:
+                    rendered = _rendered_request_argv(
+                        operation, step["request"], subcommand)
+                    if rendered is not None:
+                        return rendered
+            continue
+        if case.get("transport") != "cli":
+            continue
+        if "argv" in case:
+            continue
+        if "request" in case:
+            rendered = _rendered_request_argv(
+                operation, case["request"], subcommand)
+            if rendered is not None:
+                return rendered
+    return None
+
+
 def _cli_argv_for(operation: str) -> list[str]:
-    """The operation's first CLI case argv (no invented argv)."""
+    """The operation's probe argv from its actual cases (no invented argv)."""
     import scenario_harness as harness
 
     subcommand = _subcommand_for(operation)
     doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
-    for case in doc.get("cases", []):
-        if case.get("transport") == "cli" and case.get("argv", [])[:1] == [
-                subcommand]:
-            return [str(word) for word in case["argv"]]
-    raise AssertionError(
-        f"A7 {operation}: no CLI case argv for {subcommand} — {FIX}")
+    argv = _cli_argv_from_cases(operation, doc.get("cases", []),
+                               subcommand)
+    if argv is None:
+        raise AssertionError(
+            f"A7 {operation}: no CLI case argv for {subcommand} — {FIX}")
+    return argv
 
 
 def _check_json_accepted(operation: str) -> None:
@@ -525,6 +595,175 @@ def _check_json_accepted(operation: str) -> None:
 @pytest.mark.parametrize("operation", sorted(REGISTRY))
 def test_json_accepted_for_every_registered_subcommand(operation):
     _check_json_accepted(operation)
+
+
+# --- probe-selection controls ---------------------------------------------------
+
+def _top_level_literals(cases: list[dict], subcommand: str) -> list[str]:
+    """Ids of top-level CLI cases whose argv opens with the subcommand."""
+    return [case["id"] for case in cases
+            if case.get("kind") != "sequence"
+            and case.get("transport") == "cli"
+            and case.get("argv", [])[:1] == [subcommand]]
+
+
+def test_control_argv_uses_first_sequence_own_step():
+    """Without a top-level literal the probe is the first own-op step."""
+    import scenario_harness as harness
+
+    operation = "masters-planning.comparison.publish"
+    subcommand = _subcommand_for(operation)
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    cases = doc.get("cases", [])
+    assert _top_level_literals(cases, subcommand) == []
+    first = None
+    for case in cases:
+        if case.get("kind") != "sequence":
+            continue
+        for index, step in enumerate(case.get("steps", [])):
+            if step.get("operation", operation) == operation \
+                    and step.get("transport") == "cli" \
+                    and step.get("argv", [])[:1] == [subcommand]:
+                first = (case["id"], index,
+                         [str(word) for word in step["argv"]])
+                break
+        if first is not None:
+            break
+    assert first is not None, (
+        f"A7 {operation} has no own-op CLI step — {FIX}")
+    assert (first[0], first[1]) == ("direct-cli-refused", 1)
+    assert _cli_argv_for(operation) == first[2]
+
+
+@pytest.mark.parametrize(
+    ("operation", "case_id"),
+    [("note.analysis.save", "unknown-analysis-field"),
+     ("note.analysis.save_batch", "bundle-unknown-field"),
+     ("review.apply", "apply-needs-approve")])
+def test_control_argv_renders_first_request_form(operation, case_id):
+    """Without a literal the probe renders the first request-form case."""
+    import scenario_harness as harness
+
+    subcommand = _subcommand_for(operation)
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    cases = doc.get("cases", [])
+    assert _top_level_literals(cases, subcommand) == []
+    first_request = next(case["id"] for case in cases
+                         if case.get("kind") != "sequence"
+                         and case.get("transport") == "cli"
+                         and "request" in case and "argv" not in case)
+    assert first_request == case_id
+    request = next(case for case in cases
+                   if case["id"] == case_id)["request"]
+    command = harness._cli_command_for(operation, ROOT)
+    assert command == subcommand, (
+        f"A7 {operation}: catalogue command {command!r} is not "
+        f"{subcommand!r} — {FIX}")
+    assert _cli_argv_for(operation) == [
+        command, *harness.request_to_argv(operation, request, ROOT)]
+
+
+def test_control_argv_fallback_follows_original_order():
+    """review.apply's earlier request-form wins over its later step."""
+    import scenario_harness as harness
+
+    operation = "review.apply"
+    subcommand = _subcommand_for(operation)
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    cases = doc.get("cases", [])
+    positions = {case["id"]: index for index, case in enumerate(cases)}
+    assert positions["apply-needs-approve"] < positions["direct-cli-refused"]
+    later = next(case for case in cases
+                 if case["id"] == "direct-cli-refused")
+    step = later["steps"][1]
+    assert step.get("operation", operation) == operation
+    assert step.get("transport") == "cli"
+    assert step["argv"][:1] == [subcommand]
+    request = next(case for case in cases
+                   if case["id"] == "apply-needs-approve")["request"]
+    assert _cli_argv_for(operation) == [
+        subcommand, *harness.request_to_argv(operation, request, ROOT)]
+
+
+@pytest.mark.parametrize(
+    "operation",
+    ["cli.ai-action-import-delivery", "cli.ai-action-validate-delivery",
+     "note.create"])
+def test_control_argv_prefers_original_top_level_literal(operation):
+    """An earlier fallback source never shadows the top-level literal."""
+    import scenario_harness as harness
+
+    subcommand = _subcommand_for(operation)
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    cases = doc.get("cases", [])
+    at = next(index for index, case in enumerate(cases)
+              if case.get("kind") != "sequence"
+              and case.get("transport") == "cli"
+              and case.get("argv", [])[:1] == [subcommand])
+    assert _cli_argv_from_cases(
+        operation, cases[:at], subcommand) is not None, (
+        f"A7 {operation} has no earlier fallback source — {FIX}")
+    assert _cli_argv_for(operation) == [
+        str(word) for word in cases[at]["argv"]]
+
+
+def test_control_argv_rejects_foreign_operation_step():
+    """A foreign-operation step never supplies the probe (own-op only).
+
+    No case file carries a foreign-operation CLI step (verified by
+    scan), so the branch is exercised with the real shelving-apply
+    step argv placed in synthetic own/foreign steps.
+    """
+    subcommand = "shelving-apply"
+    words = [subcommand, "unit-demo-l01", "--selected", "proposal-keep",
+             "--approve"]
+    foreign = {"id": "foreign-first", "kind": "sequence", "steps": [
+        {"operation": "review.prepare", "transport": "cli",
+         "argv": list(words)}]}
+    own = {"id": "own-second", "kind": "sequence", "steps": [
+        {"transport": "cli", "argv": list(words)}]}
+    assert _cli_argv_from_cases(
+        "review.apply", [foreign, own], subcommand) == words
+    assert _cli_argv_from_cases(
+        "review.apply", [foreign], subcommand) is None
+
+
+def test_control_argv_without_source_fails_closed(monkeypatch):
+    """With no CLI source the probe refuses instead of inventing argv."""
+    import scenario_harness as harness
+
+    operation = "review.apply"
+    doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+    gateway_only = {"cases": [case for case in doc["cases"]
+                              if case.get("kind") != "sequence"
+                              and case.get("transport") == "gateway"]}
+    assert gateway_only["cases"], (
+        f"A7 {operation} has no gateway case for the control — {FIX}")
+    monkeypatch.setattr(harness, "load_case_file",
+                        lambda path: gateway_only)
+    with pytest.raises(AssertionError, match="no CLI case argv"):
+        _cli_argv_for(operation)
+
+
+def test_control_argv_unsupported_request_supplies_no_probe():
+    """An unrenderable request yields no probe, never a partial argv."""
+    import scenario_harness as harness
+
+    operation = "review.apply"
+    subcommand = _subcommand_for(operation)
+    bogus = {"id": "bogus-keys", "transport": "cli",
+             "request": {"unit_id": "unit-demo-l01", "no_such_flag": 1}}
+    with pytest.raises(ValueError, match="no CLI flag"):
+        harness.request_to_argv(operation, bogus["request"], ROOT)
+    assert _cli_argv_from_cases(operation, [bogus], subcommand) is None
+
+
+def test_control_argv_probe_targets_own_subcommand():
+    """Every probe opens with its own operation's subcommand."""
+    for operation in sorted(REGISTRY):
+        assert _cli_argv_for(operation)[:1] == [
+            _subcommand_for(operation)], (
+            f"A7 {operation}: probe targets another subcommand — {FIX}")
 
 
 # --- the exception census -------------------------------------------------------
