@@ -397,6 +397,18 @@ def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
     }, indent=2, sort_keys=True) + "\n")
 
 
+def _delete_session_ledger(root: Path, session_id: str | None = None) -> None:
+    """Delete this session's own ledger file, if present (SPEC §13).
+
+    Close and the successful commit/push-retry paths end the ownership
+    window here. The store owns the ledger sink, so deletion lives with
+    the writer: only this session's own anchored file is ever removed,
+    and a missing file is fine (a window that never claimed anything
+    closes the same way).
+    """
+    _session_ledger(root, session_id).unlink(missing_ok=True)
+
+
 def _record_touched(root: Path, paths, channel: str | None = None, *,
                     session_id: str | None = None) -> None:
     """Stamp post-write rows into the caller's session ledger.

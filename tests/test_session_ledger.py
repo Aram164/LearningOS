@@ -651,6 +651,22 @@ def test_replay_recovers_the_sealed_session_without_a_named_session(
     assert session_store._load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
 
 
+def test_atomic_ledger_write_cleans_its_temp_file_on_failure(tmp_path):
+    """A failed ledger write refuses and leaves no .tmp sibling (T73-3)."""
+    parent = tmp_path / "state"
+    parent.mkdir()
+    blocker = parent / "blocker"
+    blocker.write_text("not a dir", encoding="utf-8")
+    doomed = blocker / "learningos-x-touched.json"
+    with pytest.raises(WriteRefused, match="cannot write"):
+        session_store._atomic_text(doomed, "{}")
+    assert list(parent.rglob("*.tmp")) == []
+    target = parent / "learningos-ok-touched.json"
+    session_store._atomic_text(target, "{}")
+    assert target.read_text(encoding="utf-8") == "{}"
+    assert list(parent.rglob("*.tmp")) == []
+
+
 def test_session_ledgers_survive_differing_tmpdirs(mini_repo, tmp_path, monkeypatch):
     """Writes and closes under different TMPDIRs share one anchored ledger."""
     tmp_a = tmp_path / "tmp-a"

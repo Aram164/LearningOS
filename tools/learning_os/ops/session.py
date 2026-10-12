@@ -23,12 +23,12 @@ from learning_os.ops.proposal import CommandOutput
 from learning_os.store.session_ledger import (
     SESSION_LEDGER_STALE_HOURS,
     _current_session_id,
+    _delete_session_ledger,
     _load_other_session_ledgers,
     _load_session_ledger,
     _row_is_stale,
     _row_proven_state,
     _row_recorded_at,
-    _session_ledger,
     _session_path_state,
     _write_session_ledger,
 )
@@ -165,7 +165,6 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
             f"unknown session channel {channel!r} "
             f"(one of: {', '.join(sorted(GATEWAY_CHANNELS))})")
     own_session = _current_session_id(channel=channel, explicit=session_id)
-    ledger = _session_ledger(root, own_session)
     try:
         envelope = _load_session_ledger(root, own_session)
     except WriteRefused as exc:
@@ -248,7 +247,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 stdout=pushed.stdout, stderr=pushed.stderr,
                 exit_code=pushed.returncode)
         payload["pushed"] = True
-        ledger.unlink(missing_ok=True)
+        _delete_session_ledger(root, own_session)
         payload["session_closed"] = True
         return payload
     if not commit_message:
@@ -260,7 +259,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         # either way, so closing here never wipes another session's (or the
         # UI's) unclaimed rows. Running a review twice shows the same list.
         if close:
-            ledger.unlink(missing_ok=True)
+            _delete_session_ledger(root, own_session)
             payload["session_closed"] = True
         else:
             if not unpushed:
@@ -306,6 +305,6 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 stdout=pushed.stdout, stderr=pushed.stderr,
                 exit_code=pushed.returncode)
         payload["pushed"] = True
-    ledger.unlink(missing_ok=True)
+    _delete_session_ledger(root, own_session)
     payload["session_closed"] = True
     return payload
