@@ -137,6 +137,36 @@ def _audit_diagnostic_failed(operation: str | None) -> None:
               None, None, 1)
 
 
+def _audit_command_failure(operation: str | None, code: int) -> None:
+    """Witness a raw child-process failure's actual exit (SPEC (cx) D-9)."""
+    sys.audit("learningos.refusal", operation, "command-failure",
+              None, None, code)
+
+
+def _check_command_output_alone(operation: str, result) -> None:
+    """The D-9 composition guard: a carrier composes with nothing.
+
+    Any proposal, render callback, gesture, notice or diagnostic-failed
+    flag beside `command_output` is a programming error: the adapter
+    must print the child's exact streams and exit, nothing else.
+    """
+    offenders = []
+    if result.proposal is not None:
+        offenders.append("proposal")
+    for name in ("finish", "on_commit_refused", "refused_stdout",
+                 "human_view", "json_dumps", "after_commit", "gesture"):
+        if getattr(result, name) is not None:
+            offenders.append(name)
+    if result.notices:
+        offenders.append("notices")
+    if result.diagnostic_failed:
+        offenders.append("diagnostic_failed")
+    if offenders:
+        raise TypeError(
+            f"{operation}: command_output composes with nothing, "
+            f"got {', '.join(offenders)}")
+
+
 def _standard_after_commit(code: int, errors: list, confirmation: dict) -> None:
     """Recipe R8: the legacy raise-on-commit-error, shared (SPEC (bp) 1).
 
@@ -213,6 +243,16 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
     commit, receipt, replayed = "none", None, False
     try:
         result = entry.handler(ctx, req)
+        if result.command_output is not None:
+            _check_command_output_alone(operation, result)
+            carrier = result.command_output
+            if carrier.exit_code != 0:
+                _audit_command_failure(operation, carrier.exit_code)
+            return Outcome(
+                commit="none", ok=carrier.exit_code == 0,
+                payload=result.payload, error=None,
+                exit_code=carrier.exit_code, receipt=None, replayed=False,
+                stdout=carrier.stdout, stderr=carrier.stderr)
         if checking and result.proposal is not None:
             record = check_proposal(ctx, result.proposal)
             payload = (call_renderer(
@@ -910,6 +950,12 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     )
     _take_gateway_refusal()
     res = entry.handler(ctx, req)
+    if res.command_output is not None:
+        raise WriteRefused(
+            f"{operation}: a command-output result is CLI-only",
+            gateway_message=(
+                f"los: {operation}: a command-output result is CLI-only"),
+            exit_code=2)
     if checking and res.proposal is not None:
         record = check_proposal(ctx, res.proposal)
         if entry.render_check is not None:

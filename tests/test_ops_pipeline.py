@@ -31,7 +31,7 @@ from learning_os.domain.failures import (
 )
 from learning_os.ops import _legacy_plumbing as plumbing
 from learning_os.ops import pipeline as pipeline_module
-from learning_os.ops.proposal import Result, TransactionProposal
+from learning_os.ops.proposal import CommandOutput, Result, TransactionProposal
 from learning_os.ops.registry import REGISTRY, register
 from learning_os.ops.render import RenderPurityError, call_renderer, current_render
 
@@ -2023,3 +2023,187 @@ def test_cu_gateway_diagnostic_serialization_failure_with_commit_writes_no_diagn
     assert len(lines) == 1
     assert lines[0]["kind"] == "failure"
     assert lines[0]["class"] == "TypeError"
+
+
+# ---------------------------------------------------------------------------
+# SPEC (cx) D-9: the shared CLI output carrier.
+# ---------------------------------------------------------------------------
+
+def _carrier_handler(payload_extra=None, **result_kwargs):
+    def handler(ctx, req):
+        return Result(
+            {"carrier": True, **(payload_extra or {})},
+            command_output=CommandOutput(
+                stdout="out-bytes\n", stderr="err-bytes\n", exit_code=128),
+            **result_kwargs)
+    return handler
+
+
+def test_cx_carrier_passes_exact_streams_and_exit(pipe, mini_repo):
+    """A lone carrier reaches the adapter byte-identical (D-9)."""
+    pipe("porcelain", handler=_carrier_handler())
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 128
+    assert outcome.ok is False
+    assert outcome.stdout == "out-bytes\n"
+    assert outcome.stderr == "err-bytes\n"
+    assert outcome.commit == "none"
+    assert outcome.receipt is None
+    assert outcome.replayed is False
+
+
+def test_cx_carrier_emits_one_strict_command_failure_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """A nonzero carrier witnesses exactly one null-site/class line (D-9)."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    pipe("porcelain", handler=_carrier_handler())
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 128
+    assert _read_witness_lines(witness) == [
+        {"operation": TEST_OP, "kind": "command-failure",
+         "site": None, "code": 128}]
+
+
+def test_cx_zero_exit_carrier_witnesses_nothing(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """A zero-exit carrier prints its streams with no witness line (D-9)."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    def handler(ctx, req):
+        return Result({"carrier": True}, command_output=CommandOutput(
+            stdout="ok\n", stderr="", exit_code=0))
+
+    pipe("porcelain", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 0
+    assert outcome.ok is True
+    assert outcome.stdout == "ok\n"
+    assert _read_witness_lines(witness) == []
+
+
+@pytest.mark.parametrize("extra", [
+    {"proposal": TransactionProposal(
+        capability="test-only.pipe", writes={}, artifact_ids=())},
+    {"finish": lambda confirmation: {}},
+    {"on_commit_refused": lambda errors: []},
+    {"refused_stdout": lambda errors: ""},
+    {"human_view": {}},
+    {"json_dumps": lambda payload: "{}"},
+    {"after_commit": lambda code, errors, confirmation: None},
+    {"notices": ("note",)},
+    {"diagnostic_failed": True},
+])
+def test_cx_carrier_composition_is_a_programming_error(
+        pipe, mini_repo, extra):
+    """A carrier beside any proposal/render/gesture/diagnostic fails (D-9)."""
+    pipe("porcelain", handler=_carrier_handler(**extra))
+    with pytest.raises(TypeError, match="composes with nothing"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+
+
+def test_cx_carrier_with_gesture_is_a_programming_error(
+        pipe, mini_repo):
+    """A carrier beside a gesture fails without committing (D-9)."""
+    from learning_os.contracts.gateway import GatewayRequestContext
+
+    gesture = GatewayRequestContext(
+        request_id="request-carrier-gesture",
+        idempotency_key="carrier-gesture",
+        capability=TEST_OP, channel="operator",
+        intent_sha256="sha256:" + "0" * 64,
+        approval_kind="direct-user-gesture",
+        approval_subject_sha256="sha256:" + "0" * 64,
+        expected_snapshot="sha256:" + "0" * 64,
+    )
+    pipe("porcelain", handler=_carrier_handler(gesture=gesture))
+    with pytest.raises(TypeError, match="composes with nothing"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+
+
+def test_cx_carrier_on_gateway_is_refused(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Gateway execution refuses the internal CLI-only carrier (D-9)."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    _write_gateway_wiring(mini_repo)
+    pipe("command", handler=_carrier_handler())
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = _run_test_gateway(
+            mini_repo, None, key="k1-cx-carrier-gateway-001")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 2
+    body = json.loads(outcome.stdout)
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert "CLI-only" in body["error"]["message"]
+    lines = _read_witness_lines(witness)
+    assert len(lines) == 1
+    assert lines[0]["kind"] == "failure"
+    assert lines[0]["site"] is None
+
+
+@pytest.mark.parametrize("code", [True, False, 1.0, "128", None])
+def test_cx_command_tuple_non_integer_code_writes_no_line(code):
+    """A non-integer code in a command raw tuple writes no line (D-9)."""
+    assert arch_audit_hook._refusal_line(
+        ("command-edge", "command-failure", None, None, code)) is None
+
+
+def test_cx_command_tuple_zero_code_writes_no_line():
+    """A zero code in a command raw tuple writes no line (D-9)."""
+    assert arch_audit_hook._refusal_line(
+        ("command-edge", "command-failure", None, None, 0)) is None
+
+
+def test_cx_command_tuple_fictional_site_writes_no_line():
+    """A non-null site in a command raw tuple writes no line (D-9)."""
+    assert arch_audit_hook._refusal_line(
+        ("command-edge", "command-failure", "invented.site", None, 128)
+    ) is None
+
+
+def test_cx_command_tuple_fictional_class_writes_no_line():
+    """A non-null class in a command raw tuple writes no line (D-9)."""
+    assert arch_audit_hook._refusal_line(
+        ("command-edge", "command-failure", None, "WriteRefused", 128)
+    ) is None
+
+
+def test_cx_command_tuple_clean_writes_the_strict_line():
+    """A clean command raw tuple writes the exact strict line (D-9)."""
+    assert arch_audit_hook._refusal_line(
+        ("command-edge", "command-failure", None, None, 128)) == {
+        "operation": "command-edge", "kind": "command-failure",
+        "site": None, "code": 128}
+
+
+def test_cx_command_malformed_tuple_is_not_a_line():
+    """A short raw tuple is not a refusal line (D-9)."""
+    with pytest.raises(ValueError):
+        arch_audit_hook._refusal_line(("command-edge", "command-failure"))

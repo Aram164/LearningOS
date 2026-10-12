@@ -68,3 +68,4 @@ class Result:
     human_view: dict | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it
     notices: tuple[str, ...] = ()  # SPEC (bx) 2: success-path stderr lines; the CLI writes them verbatim, the gateway ignores them
     gesture: GatewayRequestContext | None = None  # SPEC (br) R7: a terminal direct-user-gesture write; the pipeline commits inside this context
+    command_output: CommandOutput | None = None  # SPEC (cx) D-9: a raw child-process result; CLI-only, composes with nothing
