@@ -22,11 +22,13 @@ from collections import Counter
 from pathlib import Path
 
 import arch_audit_hook
+import pytest
 import yaml
 from arch_writes_fixtures import witness_failures
 from scenario_harness import (
     ARCH_SITE,
     check_render_purity_error,
+    prepare_transcript_fixture,
     render_violations,
 )
 
@@ -473,3 +475,100 @@ def test_anchored_copy_refuses_source_parent_symlink(tmp_path):
     assert proc.returncode == 1
     assert "source is not a regular file" in proc.stderr
     assert list(dest.iterdir()) == []
+
+
+#: Expected-mismatch arms (SPEC (ak)): M-id to (transcript file, case
+#: title, documented claim verbatim from tests/architecture/mismatches.yaml).
+#: Each check below holds the DOCUMENTED claim and xfails while the observed
+#: behavior from its transcript differs. M-01..M-08 predate this module's
+#: arms and are owned outside Task 69; only the M-ids this task pinned get
+#: rows here.
+MISMATCH_CHECKS = {
+    "M-09": (
+        "start-a-workspace.md",
+        "An unspecified deadline fails validation (M-09)",
+        "Unspecified workspace deadline validates clean",
+    ),
+    "M-10": (
+        "carry-work-across-semesters.md",
+        "A supersedes frontmatter field is refused (M-10)",
+        "Successor workspace carries supersedes frontmatter",
+    ),
+}
+
+
+def _mismatch_world(tmp_path: Path, tag: str) -> tuple[Path, Path]:
+    """A fresh disposable rich_world plus its observations path."""
+    container = tmp_path / tag
+    container.mkdir(parents=True, exist_ok=False)
+    built = prepare_transcript_fixture("rich_world", container, seed=tag)
+    return Path(built["root"]), Path(built["observations"])
+
+
+def _run_los_validate(root: Path, observations: Path) -> subprocess.CompletedProcess:
+    env = dict(os.environ, LOS_OBSERVATIONS=str(observations),
+               TZ="Europe/Berlin")
+    return subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root",
+         str(root), "validate"],
+        capture_output=True, text=True, timeout=300, env=env, cwd=root)
+
+
+def _workspace_skeleton(ws_id: str, title: str, extra_frontmatter: str) -> str:
+    return (
+        "---\n"
+        f"id: {ws_id}\n"
+        "type: workspace\n"
+        f"title: {title}\n"
+        "created: 2026-10-12\n"
+        "status: active\n"
+        "standing: false\n"
+        "concepts: []\n"
+        "notes: []\n"
+        "sources: []\n"
+        f"{extra_frontmatter}"
+        "---\n"
+        "## Objective\n\nProbe.\n\n"
+        "## Current Scope\n\nSmall.\n\n"
+        "## Open Questions\n\nNone.\n\n"
+        "## Next Action\n\nProbe.\n"
+    )
+
+
+def test_mismatch_M09_null_deadline_validates(tmp_path):
+    """M-09 | start-a-workspace.md | An unspecified deadline fails validation (M-09) | Unspecified workspace deadline validates clean."""
+    root, observations = _mismatch_world(tmp_path, "mismatch-m09")
+    ws = root / "work" / "active" / "workspace-m09"
+    for sub in ("scratch", "inputs", "outputs"):
+        (ws / sub).mkdir(parents=True)
+    (ws / "CONTEXT.md").write_text(
+        _workspace_skeleton("workspace-m09", "M09 probe", "deadline:\n"),
+        encoding="utf-8")
+    proc = _run_los_validate(root, observations)
+    try:
+        assert proc.returncode == 0, (
+            "documented: unspecified workspace deadline validates clean; "
+            f"got exit {proc.returncode}: {(proc.stdout + proc.stderr)[-500:]}")
+    except AssertionError as err:
+        pytest.xfail(f"M-09 expected mismatch: {err}")
+    pytest.fail("M-09 documented claim now holds; remove the xfail arm per (ak)")
+
+
+def test_mismatch_M10_workspace_supersedes_accepted(tmp_path):
+    """M-10 | carry-work-across-semesters.md | A supersedes frontmatter field is refused (M-10) | Successor workspace carries supersedes frontmatter."""
+    root, observations = _mismatch_world(tmp_path, "mismatch-m10")
+    ws = root / "work" / "active" / "workspace-m10"
+    for sub in ("scratch", "inputs", "outputs"):
+        (ws / sub).mkdir(parents=True)
+    (ws / "CONTEXT.md").write_text(
+        _workspace_skeleton("workspace-m10", "M10 probe",
+                            "supersedes:\n- workspace-demo\n"),
+        encoding="utf-8")
+    proc = _run_los_validate(root, observations)
+    try:
+        assert proc.returncode == 0, (
+            "documented: successor workspace carries supersedes frontmatter; "
+            f"got exit {proc.returncode}: {(proc.stdout + proc.stderr)[-500:]}")
+    except AssertionError as err:
+        pytest.xfail(f"M-10 expected mismatch: {err}")
+    pytest.fail("M-10 documented claim now holds; remove the xfail arm per (ak)")
