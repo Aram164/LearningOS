@@ -275,8 +275,8 @@ The warning gate sees both reviews going stale in the shadow state and
 refuses the seal; the fingerprints are never merely refreshed.
 
 ```scrut
-$ (set -o pipefail; $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Derives the weighted sum, reworded after review."}}' --key s29-stale --request-id request-s29-stale --guards auto --out "$TMPDIR/s29-stale.json" 2>&1 | cut -d'(' -f1)
-seal_envelope: W NEW-OR-GROWN-WARNING: ANGLE-REVIEW-STALE at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 2 
+$ (set -o pipefail; $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Derives the weighted sum, reworded after review."}}' --key s29-stale --request-id request-s29-stale --guards auto --out "$TMPDIR/s29-stale.json" 2>&1 | cut -d'(' -f1 | sed 's/ $//')
+seal_envelope: W NEW-OR-GROWN-WARNING: ANGLE-REVIEW-STALE at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 2
 [2]
 ```
 
