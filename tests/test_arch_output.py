@@ -48,8 +48,8 @@ def _recorded(operation: str, case_id: str) -> dict:
 
 
 def _refusal_units(operation: str) -> list[tuple[str, int | None, str,
-                                                str | None, int, str]]:
-    """``(case, step, transport, site, exit, stdout)`` per own-operation refusal.
+                                                str | None, int, str, str]]:
+    """``(case, step, transport, site, exit, stdout, stderr)`` per refusal.
 
     A refusal unit is an own-operation run whose recorded exit is not 0:
     a single case, or a sequence step whose effective operation is the
@@ -68,16 +68,18 @@ def _refusal_units(operation: str) -> list[tuple[str, int | None, str,
                 result = recorded["steps"][index]
                 if result["exit"] != 0:
                     units.append((case["id"], index, step["transport"], None,
-                                  result["exit"], result["stdout"]))
+                                  result["exit"], result["stdout"],
+                                  result["stderr"]))
         elif recorded["exit"] != 0:
             units.append((case["id"], None, case["transport"],
                           (case.get("expect") or {}).get("site"),
-                          recorded["exit"], recorded["stdout"]))
+                          recorded["exit"], recorded["stdout"],
+                          recorded["stderr"]))
     return units
 
 
 def _all_refusal_units() -> list[tuple[str, str, int | None, str,
-                                       str | None, int, str]]:
+                                       str | None, int, str, str]]:
     units = []
     for operation in sorted(REGISTRY):
         units.extend((operation, *unit)
@@ -106,10 +108,10 @@ def _merged_case(operation: str, case_id: str) -> dict:
             **bare}
 
 
-#: ``unit id -> (live exit, witness lines, live stdout)`` for the
-#: target step, shared by the exit and CLI clauses over the same
-#: live evidence.
-_LIVE: dict[str, tuple[int, list[dict], str]] = {}
+#: ``unit id -> (live exit, witness lines, live stdout, live stderr)``
+#: for the target step, shared by the exit and CLI clauses over the
+#: same live evidence.
+_LIVE: dict[str, tuple[int, list[dict], str, str]] = {}
 
 
 @pytest.fixture(scope="module")
@@ -119,14 +121,15 @@ def _witness_dir(tmp_path_factory):
 
 
 def _live_target(unit, tmp_path: Path, witness_dir: Path):
-    """``(live exit, lines, live stdout)`` for the unit's target step.
+    """``(live exit, lines, live stdout, live stderr)`` for the target.
 
-    Item 8.2 plus SPEC (ct) item 2: a fresh fixture with its
-    prerequisites through the unchanged harness; prerequisites run
-    unwitnessed and their live exits must match recorded, then the
-    target step runs with the per-unit witness file in the harness
-    environment. The cached live stdout lets the diagnostic CLI
-    clause require byte-identical recorded output.
+    Item 8.2 plus SPEC (ct) item 2 and SPEC (cx) D-9: a fresh fixture
+    with its prerequisites through the unchanged harness;
+    prerequisites run unwitnessed and their live exits must match
+    recorded, then the target step runs with the per-unit witness file
+    in the harness environment. The cached live streams let the
+    diagnostic and command-failure CLI clauses require byte-identical
+    recorded output.
     """
     import scenario_harness as harness
     from arch_audit_hook import SITE_WITNESS_ENV
@@ -134,7 +137,7 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
     key = _unit_id(unit)
     if key in _LIVE:
         return _LIVE[key]
-    operation, case_id, step, _transport, _site, _exit, _stdout = unit
+    operation, case_id, step, _transport, _site, _exit, _stdout, _stderr = unit
     case = _merged_case(operation, case_id)
     target_index = step if step is not None else 0
     steps = (case.get("steps", []) if case.get("kind") == "sequence"
@@ -174,7 +177,8 @@ def _live_target(unit, tmp_path: Path, witness_dir: Path):
              for line in witness_file.read_text(
                  encoding="utf-8").splitlines()
              if line.strip()]
-    _LIVE[key] = (result["exit"], lines, result["stdout"])
+    _LIVE[key] = (result["exit"], lines, result["stdout"],
+                    result["stderr"])
     return _LIVE[key]
 
 
@@ -293,6 +297,9 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
     nonzero integer code; a ``diagnostic-failure`` line gives the
     witnessed integer 1 with its exact shape, target operation and
     null site, and recorded/live/witnessed exits are all 1 with no
+    ``exit_for`` class; a ``command-failure`` line gives the witnessed
+    nonzero integer exit with its exact shape, target operation and
+    null site, and recorded/live/witnessed exits all agree, with no
     ``exit_for`` class. No line, or more than one, fails.
     """
     from learning_os.ops.outcomes import exit_for
@@ -356,6 +363,23 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
             f"live {live_exit}, want 1 — {FIX}")
         assert recorded_exit == line["code"], (
             f"A7 {label}: witnessed diagnostic code {line['code']}, "
+            f"recorded {recorded_exit} — {FIX}")
+        return
+    if line.get("kind") == "command-failure":
+        assert set(line) == {"operation", "kind", "site", "code"}, (
+            f"A7 {label}: command line has shape "
+            f"{sorted(line)} — {FIX}")
+        assert line["operation"] == operation, (
+            f"A7 {label}: command line names "
+            f"{line['operation']!r}, unit {operation!r} — {FIX}")
+        assert line["site"] is None, (
+            f"A7 {label}: command line names site "
+            f"{line['site']!r} — {FIX}")
+        assert type(line["code"]) is int and line["code"] != 0, (
+            f"A7 {label}: command code {line['code']!r} is not a "
+            f"nonzero integer — {FIX}")
+        assert recorded_exit == line["code"], (
+            f"A7 {label}: witnessed command code {line['code']}, "
             f"recorded {recorded_exit} — {FIX}")
         return
     raise AssertionError(
@@ -436,6 +460,36 @@ def _check_cli_refusal_stdout(label: str, operation: str,
         f"{operation} passes no refused_stdout — {FIX}")
 
 
+def _check_command_failure_streams(label: str, operation: str,
+                                   recorded_stdout: str,
+                                   recorded_stderr: str,
+                                   line: dict | None,
+                                   live_stdout: str | None,
+                                   live_stderr: str | None) -> None:
+    """SPEC (cx) D-9: a command unit's raw streams, byte-identical.
+
+    A ``command-failure`` unit's stdout and stderr are the failed
+    child's raw streams, byte-identical live and recorded. The line
+    names the unit's operation and no site; the exit clause pins the
+    strict shape and the nonzero integer code.
+    """
+    assert line is not None and line.get("kind") == "command-failure", (
+        f"A7 {label}: command streams without a command-failure "
+        f"line — {FIX}")
+    assert line["operation"] == operation, (
+        f"A7 {label}: command line names {line['operation']!r}, "
+        f"unit {operation!r} — {FIX}")
+    assert line["site"] is None, (
+        f"A7 {label}: command line names site "
+        f"{line['site']!r} — {FIX}")
+    assert live_stdout is not None and live_stderr is not None, (
+        f"A7 {label}: command live streams are missing — {FIX}")
+    assert live_stdout == recorded_stdout, (
+        f"A7 {label}: command live stdout differs from recorded — {FIX}")
+    assert live_stderr == recorded_stderr, (
+        f"A7 {label}: command live stderr differs from recorded — {FIX}")
+
+
 # --- the sweep ---------------------------------------------------------------------
 
 def _gateway_units():
@@ -448,25 +502,30 @@ def _cli_units():
 
 @pytest.mark.parametrize("unit", _gateway_units(), ids=_unit_id)
 def test_gateway_refusal_stdout_validates(unit):
-    operation, case_id, step, _, _site, _exit, stdout = unit
+    operation, case_id, step, _, _site, _exit, stdout, _stderr = unit
     rel = f"tests/scenarios/recorded/{operation}/{case_id}.json"
     _check_gateway_stdout(_unit_id(unit), rel, stdout)
 
 
 @pytest.mark.parametrize("unit", _cli_units(), ids=_unit_id)
 def test_cli_refusal_stdout_shape(unit, tmp_path, _witness_dir):
-    operation, case_id, step, _, _site, _exit, stdout = unit
-    _live_exit, lines, live_stdout = _live_target(
+    operation, case_id, step, _, _site, _exit, stdout, stderr = unit
+    _live_exit, lines, live_stdout, live_stderr = _live_target(
         unit, tmp_path, _witness_dir)
     line = lines[0] if len(lines) == 1 else None
+    if line is not None and line.get("kind") == "command-failure":
+        _check_command_failure_streams(
+            _unit_id(unit), operation, stdout, stderr, line,
+            live_stdout, live_stderr)
+        return
     _check_cli_refusal_stdout(
         _unit_id(unit), operation, stdout, line, live_stdout)
 
 
 @pytest.mark.parametrize("unit", _all_refusal_units(), ids=_unit_id)
 def test_refusal_exit_matches_outcomes_live(unit, tmp_path, _witness_dir):
-    operation, case_id, step, transport, _site, exit, _stdout = unit
-    live_exit, lines, _live_stdout = _live_target(
+    operation, case_id, step, transport, _site, exit, _stdout, _stderr = unit
+    live_exit, lines, _live_stdout, _live_stderr = _live_target(
         unit, tmp_path, _witness_dir)
     _check_live_exit(_unit_id(unit), transport, exit, live_exit, lines,
                      operation)
@@ -1157,3 +1216,117 @@ def test_control_diagnostic_changed_stdout_fails():
         _check_cli_refusal_stdout("a7-control::diag-changed",
                                   "cli.backup-verify", stdout,
                                   _a_diagnostic_line(), stdout + " ")
+
+
+# --- SPEC (cx) D-9 command-failure controls ------------------------------------
+
+def _a_command_line() -> dict:
+    return {"operation": "cli.session-end",
+            "kind": "command-failure", "site": None, "code": 128}
+
+
+def _a_command_streams() -> tuple[str, str]:
+    """The recorded failed-push raw streams (real child output)."""
+    step = json.loads((RECORDED_DIR / "cli.session-end"
+                       / "failed-push.json").read_text(
+                           encoding="utf-8"))["steps"][1]
+    assert step["exit"] == 128
+    return step["stdout"], step["stderr"]
+
+
+def test_control_command_clean_passes():
+    """The recorded failed-push streams pass both command clauses."""
+    stdout, stderr = _a_command_streams()
+    _check_live_exit("a7-control::cmd-clean", "cli", 128, 128,
+                     [_a_command_line()], "cli.session-end")
+    _check_command_failure_streams(
+        "a7-control::cmd-clean", "cli.session-end", stdout, stderr,
+        _a_command_line(), stdout, stderr)
+
+
+def test_control_command_duplicate_lines_fail():
+    with pytest.raises(AssertionError, match="2 witness lines"):
+        _check_live_exit("a7-control::cmd-two", "cli", 128, 128,
+                         [_a_command_line(), _a_command_line()],
+                         "cli.session-end")
+
+
+def test_control_command_wrong_operation_fails():
+    line = _a_command_line()
+    line["operation"] = "route.patch"
+    with pytest.raises(AssertionError, match="unit 'cli.session-end'"):
+        _check_live_exit("a7-control::cmd-op", "cli", 128, 128,
+                         [line], "cli.session-end")
+
+
+def test_control_command_non_null_site_fails():
+    line = _a_command_line()
+    line["site"] = "cli.session-end.nothing-touched"
+    with pytest.raises(AssertionError, match="command line names site"):
+        _check_live_exit("a7-control::cmd-site", "cli", 128, 128,
+                         [line], "cli.session-end")
+
+
+def test_control_command_malformed_shape_fails():
+    extra = _a_command_line()
+    extra["class"] = "WriteRefused"
+    with pytest.raises(AssertionError, match="command line has shape"):
+        _check_live_exit("a7-control::cmd-shape", "cli", 128, 128,
+                         [extra], "cli.session-end")
+
+
+def test_control_command_missing_code_fails():
+    line = _a_command_line()
+    del line["code"]
+    with pytest.raises(AssertionError, match="command line has shape"):
+        _check_live_exit("a7-control::cmd-nocode", "cli", 128, 128,
+                         [line], "cli.session-end")
+
+
+@pytest.mark.parametrize("code", [0, True, False, 128.0, "128", None])
+def test_control_command_bad_code_fails(code):
+    line = _a_command_line()
+    line["code"] = code
+    with pytest.raises(AssertionError, match="not a nonzero integer"):
+        _check_live_exit("a7-control::cmd-code", "cli", 128, 128,
+                         [line], "cli.session-end")
+
+
+def test_control_command_wrong_exit_fails():
+    with pytest.raises(AssertionError, match="witnessed command code 1"):
+        _check_live_exit("a7-control::cmd-exit", "cli", 128, 128,
+                         [{"operation": "cli.session-end",
+                           "kind": "command-failure", "site": None,
+                           "code": 1}], "cli.session-end")
+
+
+def test_control_command_changed_stdout_fails():
+    stdout, stderr = _a_command_streams()
+    with pytest.raises(AssertionError, match="live stdout differs"):
+        _check_command_failure_streams(
+            "a7-control::cmd-stdout", "cli.session-end", stdout, stderr,
+            _a_command_line(), stdout + " ", stderr)
+
+
+def test_control_command_changed_stderr_fails():
+    stdout, stderr = _a_command_streams()
+    with pytest.raises(AssertionError, match="live stderr differs"):
+        _check_command_failure_streams(
+            "a7-control::cmd-stderr", "cli.session-end", stdout, stderr,
+            _a_command_line(), stdout, stderr + " ")
+
+
+def test_control_command_missing_live_streams_fails():
+    stdout, stderr = _a_command_streams()
+    with pytest.raises(AssertionError, match="live streams are missing"):
+        _check_command_failure_streams(
+            "a7-control::cmd-nolive", "cli.session-end", stdout, stderr,
+            _a_command_line(), stdout, None)
+
+
+def test_control_command_streams_without_line_fails():
+    stdout, stderr = _a_command_streams()
+    with pytest.raises(AssertionError, match="without a command-failure"):
+        _check_command_failure_streams(
+            "a7-control::cmd-noline", "cli.session-end", stdout, stderr,
+            None, stdout, stderr)

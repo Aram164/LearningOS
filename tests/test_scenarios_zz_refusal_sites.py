@@ -454,6 +454,11 @@ def _is_refusal_line(record) -> bool:
                 and record["site"] is None
                 and type(record["code"]) is int
                 and record["code"] == 1)
+    if kind == "command-failure":
+        return (set(record) == {"operation", "kind", "site", "code"}
+                and record["site"] is None
+                and type(record["code"]) is int
+                and record["code"] != 0)
     return False
 
 
@@ -3671,6 +3676,51 @@ def test_control_malformed_diagnostic_line_fails(tmp_path, monkeypatch,
     witness = tmp_path / "sites.jsonl"
     record = {"operation": "cli.backup-verify", "kind": "diagnostic-failure",
               "site": None, "code": 1, **mutation}
+    witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):
+        _session_witnesses()
+
+
+def test_control_command_line_never_supplies_a_site(tmp_path, monkeypatch):
+    """A command-failure line witnesses no business refusal site (D-9)."""
+    witness = tmp_path / "sites.jsonl"
+    command = {"operation": "cli.session-end",
+               "kind": "command-failure", "site": None, "code": 128}
+    witness.write_text(json.dumps(command) + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    assert _session_witnesses() == set()
+    genuine = {"operation": "cli.session-end", "kind": "failure",
+               "site": "cli.session-end.nothing-touched",
+               "class": "WriteRefused", "exit_code": 2}
+    with witness.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(genuine) + "\n")
+    assert _session_witnesses() == {
+        ("cli.session-end", "cli.session-end.nothing-touched")}
+
+
+@pytest.mark.parametrize("mutation", [
+    {"code": True}, {"code": 128.0}, {"code": "128"}, {"code": 0},
+    {"code": None}, {"site": "invented.site"},
+    {"site": "cli.session-end.nothing-touched"}, {"class": None},
+    {"class": "WriteRefused"}, {"kind": "unknown-command-kind"},
+])
+def test_control_malformed_command_line_fails(tmp_path, monkeypatch,
+                                              mutation):
+    witness = tmp_path / "sites.jsonl"
+    record = {"operation": "cli.session-end", "kind": "command-failure",
+              "site": None, "code": 128, **mutation}
+    witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):
+        _session_witnesses()
+
+
+def test_control_command_line_without_code_fails(tmp_path, monkeypatch):
+    """A command line without a code is not an item 8.1 line (D-9)."""
+    witness = tmp_path / "sites.jsonl"
+    record = {"operation": "cli.session-end", "kind": "command-failure",
+              "site": None}
     witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):

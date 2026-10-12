@@ -268,9 +268,9 @@ def _refusal_line(args) -> dict | None:
 
     ``(operation, kind, site, class_name, code)`` from
     ``ops/pipeline.py``; anything else is not a refusal line. The
-    commit-refused, direct-refused and diagnostic-failure lines carry
-    a null site, exactly as item 8.1, SPEC (bg) item 1 and SPEC (ct)
-    item 1 fix them.
+    commit-refused, direct-refused, diagnostic-failure and
+    command-failure lines carry a null site, exactly as item 8.1,
+    SPEC (bg) item 1, SPEC (ct) item 1 and SPEC (cx) D-9 fix them.
     """
     operation, kind, site, class_name, code = args
     if kind == "failure":
@@ -286,6 +286,13 @@ def _refusal_line(args) -> dict | None:
         if site is not None or class_name is not None:
             return None
         if type(code) is not int or code != 1:
+            return None
+        return {"operation": operation, "kind": kind, "site": None,
+                "code": code}
+    if kind == "command-failure":
+        if site is not None or class_name is not None:
+            return None
+        if type(code) is not int or code == 0:
             return None
         return {"operation": operation, "kind": kind, "site": None,
                 "code": code}
