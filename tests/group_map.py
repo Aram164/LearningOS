@@ -180,6 +180,7 @@ GROUPS: dict[str, list[str]] = {
     # Validation, hygiene, perimeter, audits, and architecture guards.
     "validation": [
         "test_affected_tests.py",
+        "test_arch_caches.py",
         "test_arch_doc_commands.py",
         "test_arch_engine_neutrality.py",
         "test_arch_error_vocabulary.py",

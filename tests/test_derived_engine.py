@@ -344,3 +344,75 @@ def test_one_session_reads_the_state_index_once(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(engine_module, "read_state", counted)
     assert evaluate(tmp_path, "root", registry=registry, inputs={}).status == "hit"
     assert len(calls) == 1
+
+
+# ---------------------------------------------------------------------------
+# LOS_NO_CACHE=1 fresh-run bypass (SPEC §14, 4.3).
+# ---------------------------------------------------------------------------
+
+def test_no_cache_rebuilds_without_reading_or_persisting(tmp_path: Path, monkeypatch):
+    producer = _producer(tmp_path)
+    calls: list[str] = []
+
+    def build(ctx):
+        calls.append(ctx.spec.id)
+        return {"value": len(calls)}
+
+    registry = {"a": (_spec("a", producer), build)}
+    first = evaluate(tmp_path, "a", registry=registry, inputs={})
+    assert (first.status, first.value) == ("rebuilt", {"value": 1})
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "hit"
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    fresh = evaluate(tmp_path, "a", registry=registry, inputs={})
+    assert fresh.status == "rebuilt"
+    assert calls == ["a", "a"]
+    # Nothing persisted: the bypassed value (2) never reached the store,
+    # so unsetting the bypass hits the original value (1) again.
+    monkeypatch.delenv("LOS_NO_CACHE")
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).value == {"value": 1}
+
+
+def test_no_cache_evaluates_dependencies_and_skips_staging(tmp_path: Path, monkeypatch):
+    producer = _producer(tmp_path)
+    seen: list[str] = []
+    calls: list[str] = []
+
+    def build_dep(ctx):
+        seen.append("dep")
+        return {"d": 1}
+
+    def build_root(ctx):
+        seen.append("root")
+        calls.append("root")
+        assert ctx.dependencies["dep"].value == {"d": 1}
+        return {"r": len(calls)}
+
+    registry = {
+        "dep": (_spec("dep", producer), build_dep),
+        "root": (_spec("root", producer, dependencies=("dep",)), build_root),
+    }
+    assert evaluate(tmp_path, "root", registry=registry, inputs={}).value == {"r": 1}
+    assert seen == ["dep", "root"]
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    staging = Staging()
+    fresh = evaluate(tmp_path, "root", registry=registry, inputs={}, staging=staging)
+    assert fresh.status == "rebuilt"
+    assert fresh.value == {"r": 2}
+    assert seen == ["dep", "root", "dep", "root"]
+    assert staging.pending == {}
+    # The bypassed rebuild neither stored nor staged: committing stages
+    # nothing, and unsetting the bypass hits the original value again.
+    commit_staging(tmp_path, staging)
+    assert staging.pending == {}
+    monkeypatch.delenv("LOS_NO_CACHE")
+    assert evaluate(tmp_path, "root", registry=registry, inputs={}).value == {"r": 1}
+
+
+def test_no_cache_other_values_still_hit(tmp_path: Path, monkeypatch):
+    producer = _producer(tmp_path)
+    registry = {"a": (_spec("a", producer), lambda ctx: {"v": 1})}
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "rebuilt"
+    monkeypatch.setenv("LOS_NO_CACHE", "0")
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "hit"
+    monkeypatch.setenv("LOS_NO_CACHE", "")
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "hit"

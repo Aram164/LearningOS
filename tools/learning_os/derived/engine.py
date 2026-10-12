@@ -17,10 +17,17 @@ memory and reach the store only through commit_staging(), after the
 caller has proven its inputs stayed stable across the evaluation.
 Without a staging, rebuilt values store immediately (the historical
 behavior, kept for callers that own no snapshot).
+
+``LOS_NO_CACHE=1`` forces a fresh run (SPEC §14): every visited node
+rebuilds from its build function without reading the store, and nothing
+is persisted (neither immediate stores nor staging). Dependencies still
+evaluate normally through the same bypass. With the variable unset (or
+any other value) behavior is byte-identical to before.
 """
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -162,6 +169,15 @@ class _Session:
                 InputRef(id=name, digest=resolved[name]) for name in spec.direct_inputs),
             dependency_outputs={dep: item.output_sha256 for dep, item in dependencies.items()},
         )
+        if os.environ.get("LOS_NO_CACHE") == "1":
+            # Fresh-run bypass (SPEC §14): rebuild without reading the
+            # store and without persisting (neither immediate nor staged).
+            # Dependencies above already evaluated through the same bypass.
+            value = build(BuildContext(
+                root=self.root, spec=spec, inputs=resolved, dependencies=dependencies))
+            output = digest_bytes(canonical_bytes(value))
+            return self._finish(
+                node_id, value, output, "rebuilt", "cache-miss", key, None)
         previous: NodeState | None = None
         cached = self._lookup(node_id)
         if cached is not None:
