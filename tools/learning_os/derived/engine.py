@@ -16,7 +16,10 @@ A snapshot-bound caller passes a Staging: rebuilt values accumulate in
 memory and reach the store only through commit_staging(), after the
 caller has proven its inputs stayed stable across the evaluation.
 Without a staging, rebuilt values store immediately (the historical
-behavior, kept for callers that own no snapshot).
+behavior, kept for callers that own no snapshot); `evaluate_many`
+batches the immediate path, publishing its state entries with one
+index write after all nodes evaluate (same entries, same keys and
+values — write batching only).
 
 ``LOS_NO_CACHE=1`` forces a fresh run (SPEC §14): every visited node
 rebuilds from its build function without reading the store, and nothing
@@ -35,7 +38,15 @@ from typing import Any
 
 from .identity import digest_bytes, digest_code_identity, digest_producer_files, runtime_digest
 from .model import DerivedError, InputRef, NodeSpec, NodeState, node_key
-from .store import canonical_bytes, lookup, read_state, store_node, sweep_unreferenced_blobs
+from .store import (
+    canonical_bytes,
+    lookup,
+    publish_staged_states,
+    read_state,
+    stage_node_blob,
+    store_node,
+    sweep_unreferenced_blobs,
+)
 
 
 @dataclass(frozen=True)
@@ -134,11 +145,32 @@ class _Session:
     #: would return; external writers are excluded by the operator
     #: lock, the same assumption the memo already makes.
     states: dict[str, NodeState] | None = None
+    #: Producer-file digests by canonical file tuple, memoized for this
+    #: session only. Per-artifact families evaluate N nodes over one
+    #: shared producer list; re-hashing the same bytes per node made
+    #: every N-node evaluation pay N identical digests. The memoized
+    #: value feeds the key exactly as a fresh hash would, and a new
+    #: session re-hashes, so a changed producer still invalidates.
+    producer_memo: dict[tuple[str, ...], str] = field(default_factory=dict)
+    #: Immediate-store batch for `evaluate_many` without a staging:
+    #: rebuilt blobs land per node, while their state entries collect
+    #: here for one index publication at the end. None means immediate
+    #: per-node stores (single `evaluate`, or an explicit staging,
+    #: which keeps its own pending map and commit path).
+    deferred_index: dict[str, NodeState] | None = None
 
     def _lookup(self, node_id: str) -> tuple[NodeState, Any] | None:
         if self.states is None:
             self.states = read_state(self.root)
         return lookup(self.root, node_id, states=self.states)
+
+    def _producer_digest(self, producer_files: tuple[str, ...]) -> str:
+        key = tuple(sorted(producer_files))
+        digest = self.producer_memo.get(key)
+        if digest is None:
+            digest = digest_producer_files(self.root, producer_files)
+            self.producer_memo[key] = digest
+        return digest
 
     def evaluate(self, node_id: str, stack: tuple[str, ...] = ()) -> Evaluation:
         if node_id in self.memo:
@@ -162,7 +194,7 @@ class _Session:
         key = node_key(
             node_id=spec.id,
             node_version=spec.version,
-            producer_digest=digest_producer_files(self.root, spec.producer_files),
+            producer_digest=self._producer_digest(spec.producer_files),
             code_digest=self.code_digest,
             runtime_digest=self.runtime_digest,
             direct_inputs=tuple(
@@ -191,6 +223,15 @@ class _Session:
         output = digest_bytes(canonical_bytes(value))
         if self.staging is not None:
             self.staging.pending[node_id] = (key, value)
+        elif self.deferred_index is not None:
+            # Batched immediate store: the blob lands now (content
+            # addressed, idempotent), while the entry joins one index
+            # publication at the end of `evaluate_many`. The in-memory
+            # states update keeps in-session lookups exact, as before.
+            persisted = stage_node_blob(self.root, node_id, node_key=key, value=value)
+            self.deferred_index[node_id] = persisted
+            assert self.states is not None  # _lookup above always loads it
+            self.states[node_id] = persisted
         else:
             persisted = store_node(self.root, node_id, node_key=key, value=value)
             assert self.states is not None  # _lookup above always loads it
@@ -272,7 +313,16 @@ def evaluate_many(
     Shared dependencies evaluate once across all roots, and the trace
     holds exactly one event per visited node — the shape node-execution
     assertions want. With a staging, rebuilt values accumulate in memory
-    until the caller commits them.
+    until the caller commits them. Without one, rebuilt blobs land per
+    node while their state entries publish once at the end (one index
+    read-modify-write over the current index, merging any entry
+    committed meanwhile); a failure publishes nothing new, leaving at
+    most unreferenced blobs, never an entry without its bytes.
     """
     session = _session(root, registry, inputs, trace, staging)
-    return {node_id: session.evaluate(node_id) for node_id in node_ids}
+    if staging is None:
+        session.deferred_index = {}
+    results = {node_id: session.evaluate(node_id) for node_id in node_ids}
+    if session.deferred_index:
+        publish_staged_states(root, session.deferred_index)
+    return results

@@ -542,3 +542,50 @@ def test_sweep_skips_symlinks_and_non_blob_names(tmp_path: Path):
     assert result["skipped"] == 2
     assert (blobs / "not-a-blob").exists()
     assert link.is_symlink()
+
+
+# ---------------------------------------------------------------------------
+# Staged batch publication (4.3 repair): blobs first, one index write.
+# ---------------------------------------------------------------------------
+
+def test_stage_then_publish_round_trip(tmp_path: Path):
+    from learning_os.derived.store import publish_staged_states, stage_node_blob
+
+    first = stage_node_blob(tmp_path, "a", node_key="k1", value={"v": 1})
+    second = stage_node_blob(tmp_path, "b", node_key="k2", value={"v": 2})
+    # Staged blobs are orphans: no entry serves them yet.
+    assert read_state(tmp_path) == {}
+    assert lookup(tmp_path, "a") is None
+    publish_staged_states(tmp_path, {"a": first, "b": second})
+    assert lookup(tmp_path, "a")[1] == {"v": 1}
+    assert lookup(tmp_path, "b")[1] == {"v": 2}
+
+
+def test_publish_merges_without_clobbering_unrelated(tmp_path: Path):
+    from learning_os.derived.store import publish_staged_states, stage_node_blob
+
+    store_node(tmp_path, "keep", node_key="k", value={"v": "keep"})
+    staged = stage_node_blob(tmp_path, "new", node_key="k2", value={"v": "new"})
+    # Committed after the staging, before the publication: still merged.
+    store_node(tmp_path, "other", node_key="k3", value={"v": "other"})
+    publish_staged_states(tmp_path, {"new": staged})
+    assert lookup(tmp_path, "keep")[1] == {"v": "keep"}
+    assert lookup(tmp_path, "other")[1] == {"v": "other"}
+    assert lookup(tmp_path, "new")[1] == {"v": "new"}
+
+
+def test_publish_empty_creates_nothing(tmp_path: Path):
+    from learning_os.derived.store import publish_staged_states
+
+    publish_staged_states(tmp_path, {})
+    assert not derived_dir(tmp_path).exists()
+
+
+def test_unpublished_stage_is_a_collectable_orphan(tmp_path: Path):
+    from learning_os.derived.store import stage_node_blob
+
+    stage_node_blob(tmp_path, "n", node_key="k", value={"v": 1})
+    assert lookup(tmp_path, "n") is None
+    result = sweep_unreferenced_blobs(tmp_path)
+    assert result["deleted"] == 1
+    assert list((derived_dir(tmp_path) / "blobs").iterdir()) == []

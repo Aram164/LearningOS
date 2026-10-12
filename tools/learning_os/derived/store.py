@@ -215,11 +215,14 @@ def _atomic_write(target: Path, content: bytes) -> None:
     os.replace(tmp, target)
 
 
-def store_node(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeState:
-    """Publish one node's value: blob first, state index last, atomically.
+def stage_node_blob(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeState:
+    """Write one node's blob without publishing its state entry.
 
-    Returns the persisted state. Overwrites any previous entry for the
-    node. A corrupt existing state file is replaced, not merged.
+    The blob-first half of `store_node`, for callers that publish many
+    entries with one index write (`engine.evaluate_many`). The staged
+    blob is an unreferenced orphan until `publish_staged_states` runs —
+    safe under crash (collected later, never served) — and the entry
+    reaches the index only through that call, never by hand.
     """
     if not node_id:
         raise DerivedError("derived node id must be nonempty")
@@ -227,12 +230,35 @@ def store_node(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeSt
     digest = hashlib.sha256(data).hexdigest()
     blobs = _checked_store_dir(root, DERIVED_TOP_DIR, BLOBS_DIRNAME)
     _atomic_write(blobs / digest, data)
+    return NodeState(node_key=node_key, output_sha256=digest, blob=f"{BLOBS_DIRNAME}/{digest}")
+
+
+def publish_staged_states(root: Path, staged: dict[str, NodeState]) -> None:
+    """Publish staged entries with one state-index read-modify-write.
+
+    Merges into the CURRENT index (read here, not at staging time), so
+    an entry another evaluation committed meanwhile survives; staged
+    entries overwrite only their own node ids. Empty publishes nothing
+    and creates nothing (all-hit evaluations stay read-only). Blobs
+    must already be staged: the index never references missing bytes.
+    """
+    if not staged:
+        return
     states = read_state(root)
-    state = NodeState(node_key=node_key, output_sha256=digest, blob=f"{BLOBS_DIRNAME}/{digest}")
-    states[node_id] = state
+    states.update(staged)
     _atomic_write(
         _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
         canonical_bytes(_state_payload(states)))
+
+
+def store_node(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeState:
+    """Publish one node's value: blob first, state index last, atomically.
+
+    Returns the persisted state. Overwrites any previous entry for the
+    node. A corrupt existing state file is replaced, not merged.
+    """
+    state = stage_node_blob(root, node_id, node_key=node_key, value=value)
+    publish_staged_states(root, {node_id: state})
     return state
 
 

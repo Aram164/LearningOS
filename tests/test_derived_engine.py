@@ -416,3 +416,179 @@ def test_no_cache_other_values_still_hit(tmp_path: Path, monkeypatch):
     assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "hit"
     monkeypatch.setenv("LOS_NO_CACHE", "")
     assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "hit"
+
+
+# ---------------------------------------------------------------------------
+# Session producer memo and evaluate_many batch publication (4.3 repair).
+# ---------------------------------------------------------------------------
+
+def test_session_memoizes_identical_producer_hashes(tmp_path: Path, monkeypatch):
+    import learning_os.derived.engine as engine_module
+
+    first = _producer(tmp_path, "one.py")
+    second = _producer(tmp_path, "two.py")
+    registry = {
+        "a": (_spec("a", first, producer_files=(first, second)),
+              lambda ctx: {"id": "a"}),
+        "b": (_spec("b", first, producer_files=(second, first)),
+              lambda ctx: {"id": "b"}),
+        "c": (_spec("c", first), lambda ctx: {"id": "c"}),
+    }
+    calls: list[tuple] = []
+    real_digest = engine_module.digest_producer_files
+
+    def counted(root: Path, paths) -> str:
+        calls.append(tuple(paths))
+        return real_digest(root, paths)
+
+    monkeypatch.setattr(engine_module, "digest_producer_files", counted)
+    results = evaluate_many(tmp_path, ["a", "b", "c"], registry=registry, inputs={})
+    assert [results[name].status for name in ("a", "b", "c")] == ["rebuilt"] * 3
+    # One hash for the shared pair (either declaration order), one more
+    # for the single; the memoized values still key and hit exactly.
+    assert len(calls) == 2
+    warm = evaluate_many(tmp_path, ["a", "b", "c"], registry=registry, inputs={})
+    assert [warm[name].status for name in ("a", "b", "c")] == ["hit"] * 3
+    assert len(calls) == 4
+
+
+def test_distinct_producers_invalidate_independently(tmp_path: Path):
+    producer_a = _producer(tmp_path, "pa.py")
+    producer_b = _producer(tmp_path, "pb.py")
+    calls: list[str] = []
+
+    def build(ctx):
+        calls.append(ctx.spec.id)
+        return {"id": ctx.spec.id}
+
+    registry = {
+        "a": (_spec("a", producer_a), build),
+        "b": (_spec("b", producer_b), build),
+    }
+    first = evaluate_many(tmp_path, ["a", "b"], registry=registry, inputs={})
+    assert (first["a"].status, first["b"].status) == ("rebuilt", "rebuilt")
+    assert sorted(calls) == ["a", "b"]
+    (tmp_path / producer_b).write_text("# v2\n", encoding="utf-8")
+    second = evaluate_many(tmp_path, ["a", "b"], registry=registry, inputs={})
+    assert (second["a"].status, second["b"].status) == ("hit", "rebuilt")
+    assert sorted(calls) == ["a", "b", "b"]
+
+
+def test_evaluate_many_publishes_one_index_write(tmp_path: Path, monkeypatch):
+    import learning_os.derived.store as store_module
+
+    producer = _producer(tmp_path)
+    registry = {
+        f"n-{i}": (_spec(f"n-{i}", producer), lambda ctx: {"id": ctx.spec.id})
+        for i in range(4)
+    }
+    writes: list[str] = []
+    real_atomic_write = store_module._atomic_write
+
+    def counted(target: Path, content: bytes) -> None:
+        writes.append(target.name)
+        real_atomic_write(target, content)
+
+    monkeypatch.setattr(store_module, "_atomic_write", counted)
+    results = evaluate_many(
+        tmp_path, [f"n-{i}" for i in range(4)], registry=registry, inputs={})
+    assert all(item.status == "rebuilt" for item in results.values())
+    assert writes.count("state-v1.json") == 1
+    assert len(read_state(tmp_path)) == 4
+    # The single-node path still publishes per store, unchanged.
+    writes.clear()
+    solo_registry = {"solo": (_spec("solo", producer), lambda ctx: {"id": "solo"})}
+    evaluate(tmp_path, "solo", registry=solo_registry, inputs={})
+    assert writes.count("state-v1.json") == 1
+
+
+def test_evaluate_many_all_hits_writes_nothing(tmp_path: Path):
+    producer = _producer(tmp_path)
+    registry = {
+        f"n-{i}": (_spec(f"n-{i}", producer), lambda ctx: {"id": ctx.spec.id})
+        for i in range(3)
+    }
+    evaluate_many(tmp_path, [f"n-{i}" for i in range(3)], registry=registry, inputs={})
+    state_file = tmp_path / "generated" / "derived-state" / "state-v1.json"
+    before = state_file.read_bytes()
+    blobs_before = sorted(path.name for path in (state_file.parent / "blobs").iterdir())
+    results = evaluate_many(
+        tmp_path, [f"n-{i}" for i in range(3)], registry=registry, inputs={})
+    assert all(item.status == "hit" for item in results.values())
+    assert state_file.read_bytes() == before
+    assert sorted(path.name for path in (state_file.parent / "blobs").iterdir()) == blobs_before
+
+
+def test_evaluate_many_batch_merges_concurrent_entries(tmp_path: Path):
+    from learning_os.derived import store_node
+
+    producer = _producer(tmp_path)
+
+    def build_first(ctx):
+        # Another evaluation commits while this session runs: the batch
+        # publishes over the current index, so the entry survives.
+        store_node(tmp_path, "external", node_key="k-ext", value={"v": "ext"})
+        return {"id": "first"}
+
+    registry = {
+        "first": (_spec("first", producer), build_first),
+        "second": (_spec("second", producer), lambda ctx: {"id": "second"}),
+    }
+    results = evaluate_many(tmp_path, ["first", "second"], registry=registry, inputs={})
+    assert [results[name].status for name in ("first", "second")] == ["rebuilt"] * 2
+    assert set(read_state(tmp_path)) == {"external", "first", "second"}
+
+
+def test_evaluate_many_failure_publishes_nothing_new(tmp_path: Path):
+    from learning_os.derived import lookup
+
+    producer = _producer(tmp_path)
+
+    def fail(ctx):
+        raise DerivedError("boom")
+
+    registry = {
+        "first": (_spec("first", producer), lambda ctx: {"id": "first"}),
+        "second": (_spec("second", producer), fail),
+    }
+    with pytest.raises(DerivedError, match="boom"):
+        evaluate_many(tmp_path, ["first", "second"], registry=registry, inputs={})
+    assert read_state(tmp_path) == {}
+    # Every staged blob is an unreferenced orphan: no entry, no service.
+    assert lookup(tmp_path, "first") is None
+    # And the next session rebuilds cleanly from scratch.
+    registry["second"] = (_spec("second", producer), lambda ctx: {"id": "second"})
+    results = evaluate_many(tmp_path, ["first", "second"], registry=registry, inputs={})
+    assert [results[name].status for name in ("first", "second")] == ["rebuilt"] * 2
+    assert set(read_state(tmp_path)) == {"first", "second"}
+
+
+def test_evaluate_many_no_cache_publishes_nothing(tmp_path: Path, monkeypatch):
+    producer = _producer(tmp_path)
+    registry = {
+        f"n-{i}": (_spec(f"n-{i}", producer), lambda ctx: {"id": ctx.spec.id})
+        for i in range(2)
+    }
+    evaluate_many(tmp_path, ["n-0", "n-1"], registry=registry, inputs={})
+    state_file = tmp_path / "generated" / "derived-state" / "state-v1.json"
+    before = state_file.read_bytes()
+    monkeypatch.setenv("LOS_NO_CACHE", "1")
+    results = evaluate_many(tmp_path, ["n-0", "n-1"], registry=registry, inputs={})
+    assert [results[name].status for name in ("n-0", "n-1")] == ["rebuilt"] * 2
+    assert state_file.read_bytes() == before
+
+
+def test_evaluate_many_staging_still_defers_until_commit(tmp_path: Path):
+    producer = _producer(tmp_path)
+    registry = {
+        f"n-{i}": (_spec(f"n-{i}", producer), lambda ctx: {"id": ctx.spec.id})
+        for i in range(2)
+    }
+    staging = Staging()
+    results = evaluate_many(
+        tmp_path, ["n-0", "n-1"], registry=registry, inputs={}, staging=staging)
+    assert [results[name].status for name in ("n-0", "n-1")] == ["rebuilt"] * 2
+    assert read_state(tmp_path) == {}
+    assert set(staging.pending) == {"n-0", "n-1"}
+    commit_staging(tmp_path, staging)
+    assert set(read_state(tmp_path)) == {"n-0", "n-1"}
