@@ -309,14 +309,25 @@ def test_stale_rows_are_reported_and_not_staged(mini_repo, monkeypatch):
     assert captured in payload["stale_paths"]
     assert captured not in payload["touched"]
 
-    # The review-only close ended that window; a second aged window proves
-    # the commit path refuses stale rows by default but stages them with
-    # the explicit opt-in (after the same ownership check).
+    # A second aged window proves the commit path refuses stale rows by
+    # default. D7 (M-07): the second capture landed after the review, so the
+    # witness is invalidated and the commit refuses even with the stale
+    # opt-in; a fresh review re-binds the window and the commit then stages
+    # it with the explicit opt-in (after the same ownership check).
     captured = _capture(mini_repo, key="stale-002", text="old note two")
     _age_own_ledger(mini_repo, "stale-session")
     refused = _session_end(mini_repo, "--commit-message", "should not land")
     assert refused.returncode == 2
     assert "no files were touched" in refused.stderr
+
+    included = _session_end(mini_repo, "--commit-message", "stale, reviewed",
+                            "--include-stale")
+    assert included.returncode == 2, included.stdout
+    assert "the session changed after review" in included.stderr
+
+    rereviewed = _session_end(mini_repo, "--include-stale")
+    assert rereviewed.returncode == 0, rereviewed.stderr
+    assert captured in json.loads(rereviewed.stdout)["touched"]
 
     included = _session_end(mini_repo, "--commit-message", "stale, reviewed",
                             "--include-stale")
@@ -624,8 +635,10 @@ def test_previous_location_ledger_surfaces_as_foreign(mini_repo, monkeypatch):
     slug = _hashlib.sha256(b"channel:operator").hexdigest()[:16]
     previous = Path(_tempfile.gettempdir()) / f"learningos-{token}-{slug}-touched.json"
     recorded_at = _dt.datetime.now(_dt.UTC).replace(microsecond=0).isoformat()
+    # A ledger left behind by the old writer is v2 bytes, whatever the
+    # current contract is; old-location discovery must keep reading it.
     previous.write_text(json.dumps({
-        "schema_version": session_store.SESSION_LEDGER_SCHEMA_VERSION,
+        "schema_version": 2,
         "session_id": "channel:operator",
         "paths": {"work/inbox/previous.md": {
             "state": "absent", "channel": "operator", "recorded_at": recorded_at,
@@ -745,3 +758,72 @@ def test_v2_writer_fixture_matches_the_writer_and_reads(mini_repo):
             session_store._load_session_paths(mini_repo, "fixture-session")
     finally:
         ledger.unlink(missing_ok=True)
+
+
+def test_v2_ledger_reads_as_recording_and_migrates_on_write(mini_repo):
+    """A v2 file reads as recording/version 0 and rewrites as v3 (M-06)."""
+    ledger = session_store._session_ledger(mini_repo, "fixture-session")
+    ledger.write_text(V2_WRITER_BYTES, encoding="utf-8")
+    try:
+        envelope = session_store._load_session_ledger(
+            mini_repo, "fixture-session")
+        assert envelope["schema_version"] == 3
+        assert envelope["version"] == 0
+        assert envelope["state"] == "recording"
+        assert envelope["review"] is None
+        assert envelope["commit_sha"] is None
+        assert set(envelope["paths"]) == {
+            "work/inbox/note-alpha.md", "work/notes.md"}
+        extra = mini_repo / "work" / "migrated.md"
+        extra.write_text("migrated\n", encoding="utf-8")
+        session_store._record_touched(
+            mini_repo, [extra], session_id="fixture-session")
+        migrated = json.loads(ledger.read_text(encoding="utf-8"))
+        assert migrated["schema_version"] == 3
+        assert migrated["version"] == 1
+        assert migrated["state"] == "recording"
+        assert migrated["review"] is None
+        assert set(migrated["paths"]) == {
+            "work/inbox/note-alpha.md", "work/notes.md", "work/migrated.md"}
+    finally:
+        ledger.unlink(missing_ok=True)
+
+
+def test_v2_ledger_review_then_commit_through_the_cli(mini_repo, monkeypatch):
+    """A v2 window reviews, witnesses and commits through the CLI (M-06)."""
+    monkeypatch.setenv("LOS_SESSION_ID", "fixture-session")
+    _git_init(mini_repo)
+    (mini_repo / "work" / "inbox").mkdir(parents=True, exist_ok=True)
+    (mini_repo / "work" / "inbox" / "note-alpha.md").write_text(
+        "alpha\n", encoding="utf-8")
+    (mini_repo / "work" / "notes.md").write_text("bravo\n", encoding="utf-8")
+    ledger = session_store._session_ledger(mini_repo, "fixture-session")
+    # The literal's recorded_at is frozen; freshen it so the rows are
+    # selectable whatever day the suite runs (the shape stays v2).
+    planted = json.loads(V2_WRITER_BYTES)
+    now = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
+    for row in planted["paths"].values():
+        row["recorded_at"] = now
+    ledger.write_text(json.dumps(planted, indent=2, sort_keys=True) + "\n",
+                      encoding="utf-8")
+
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    assert sorted(json.loads(review.stdout)["touched"]) == [
+        "work/inbox/note-alpha.md", "work/notes.md"]
+    envelope = session_store._load_session_ledger(
+        mini_repo, "fixture-session")
+    assert envelope["state"] == "reviewed"
+    assert envelope["review"] == {
+        "version": 0,
+        "states": {
+            "work/inbox/note-alpha.md": {
+                "sha256": "b6a98d9ce9a2d9149288fa3df42d377c3e42737afdcdaf714e33c0a100b51060"},
+            "work/notes.md": {
+                "sha256": "5da8f23decf397b13f4f55b6fb8a61936238bfe08ed9d901132974f1beccc45c"},
+        },
+    }
+    committed = _session_end(mini_repo, "--commit-message", "v2 window")
+    assert committed.returncode == 0, committed.stderr
+    assert json.loads(committed.stdout)["committed"] is True
+    assert not ledger.exists()
