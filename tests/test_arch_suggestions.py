@@ -1107,12 +1107,16 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("cli.plan-edit-context.unknown-route", "unknown-route"),
     ("cli.plan-edit-context", "/properties/route_ids/items"):
         ("cli.plan-edit-context.unknown-route", "batch-unknown"),
+    ("cli.plan-edit-context", "/properties/stage_id"):
+        ("cli.plan-edit-context.unknown-stage", "unknown-stage"),
     ("plan.edit-context", "/properties/unit_id"):
         ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
     ("plan.edit-context", "/properties/route_id"):
         ("cli.plan-edit-context.unknown-route", "unknown-route"),
     ("plan.edit-context", "/properties/route_ids/items"):
         ("cli.plan-edit-context.unknown-route", "batch-unknown"),
+    ("plan.edit-context", "/properties/stage_id"):
+        ("cli.plan-edit-context.unknown-stage", "stage-unknown"),
     ("material.span", "/properties/unit_id"):
         ("material.span.unknown-unit", "unknown-unit"),
     ("material.span", "/properties/route_id"):
@@ -1240,6 +1244,9 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("cli.plan-edit-context", "/properties/route_ids/items"):
         ("legacy",
          "route {miss} is missing or ambiguous in this unit"),
+    ("cli.plan-edit-context", "/properties/stage_id"):
+        ("legacy-verbatim",
+         "stage {miss} is missing or ambiguous in this unit"),
     ("plan.edit-context", "/properties/unit_id"): ("template", "unit"),
     ("plan.edit-context", "/properties/route_id"):
         ("legacy",
@@ -1247,6 +1254,9 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("plan.edit-context", "/properties/route_ids/items"):
         ("legacy",
          "route {miss} is missing or ambiguous in this unit"),
+    ("plan.edit-context", "/properties/stage_id"):
+        ("legacy-verbatim",
+         "stage {miss} is missing or ambiguous in this unit"),
     ("material.span", "/properties/unit_id"):
         ("legacy", "unknown unit {miss}"),
     ("material.span", "/properties/route_id"):
@@ -1304,9 +1314,11 @@ _CLI_REFUSED_POINTERS = frozenset({
     ("cli.plan-edit-context", "/properties/unit_id"),
     ("cli.plan-edit-context", "/properties/route_id"),
     ("cli.plan-edit-context", "/properties/route_ids/items"),
+    ("cli.plan-edit-context", "/properties/stage_id"),
     ("plan.edit-context", "/properties/unit_id"),
     ("plan.edit-context", "/properties/route_id"),
     ("plan.edit-context", "/properties/route_ids/items"),
+    ("plan.edit-context", "/properties/stage_id"),
     ("material.span", "/properties/unit_id"),
     ("material.span", "/properties/route_id"),
     ("atlas.context", "/properties/concept_id"),

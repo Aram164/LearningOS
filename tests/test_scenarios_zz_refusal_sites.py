@@ -449,6 +449,11 @@ def _is_refusal_line(record) -> bool:
         return (set(record) == {"operation", "kind", "site", "code"}
                 and record["site"] is None
                 and isinstance(record["code"], int))
+    if kind == "diagnostic-failure":
+        return (set(record) == {"operation", "kind", "site", "code"}
+                and record["site"] is None
+                and type(record["code"]) is int
+                and record["code"] == 1)
     return False
 
 
@@ -3638,3 +3643,35 @@ def test_control_failed_append_is_reported_unwitnessed(mini_repo, tmp_path,
         _assert_matched("cli.inspect", "cli.inspect.unknown-id",
                         "a9-control:1", set(),
                         {"cli.inspect.unknown-id": "cli.inspect:unknown-id"})
+
+
+def test_control_diagnostic_line_never_supplies_a_site(tmp_path, monkeypatch):
+    witness = tmp_path / "sites.jsonl"
+    diagnostic = {"operation": "cli.backup-verify",
+                  "kind": "diagnostic-failure", "site": None, "code": 1}
+    witness.write_text(json.dumps(diagnostic) + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    assert _session_witnesses() == set()
+    genuine = {"operation": "ability.context", "kind": "failure",
+               "site": "ability.context.bad-limit", "class": "WriteRefused",
+               "exit_code": 2}
+    with witness.open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(genuine) + "\n")
+    assert _session_witnesses() == {
+        ("ability.context", "ability.context.bad-limit")}
+
+
+@pytest.mark.parametrize("mutation", [
+    {"code": True}, {"code": 1.0}, {"code": 0}, {"code": 2},
+    {"code": None}, {"site": "invented.site"}, {"class": None},
+    {"kind": "unknown-diagnostic-kind"},
+])
+def test_control_malformed_diagnostic_line_fails(tmp_path, monkeypatch,
+                                                mutation):
+    witness = tmp_path / "sites.jsonl"
+    record = {"operation": "cli.backup-verify", "kind": "diagnostic-failure",
+              "site": None, "code": 1, **mutation}
+    witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):
+        _session_witnesses()
