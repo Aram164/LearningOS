@@ -44,3 +44,24 @@
   observed: "exit 1, E PATH-NOTE-OWNER on the unchanged move; repaired pointer fails schema ^work/active/.+\\.md$"
   proposed_fix: code
   decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc correction; complete path-owning workspaces in place. Path-free archival needs a separately reviewed migration. Defer an archive capability and data-format expansion rather than weakening ownership guards."
+- id: M-09
+  doc: system/WORKFLOWS.md
+  heading: '## 1. Start a workspace'
+  step: workspace template with unspecified deadline
+  documented: The shown workspace skeleton is valid when no non-exam deadline is supplied.
+  observed: 'deadline: parses as null; validator refuses SCHEMA None is not of type
+    string.'
+  proposed_fix: doc
+  decision: '2026-10-12 Codex conductor, authority delegated through the next-session
+    brief: omit an unspecified deadline; document correction in Phase 5.2. Phase 4
+    journey pins observed refusal, not a schema expansion.'
+- id: M-10
+  doc: system/WORKFLOWS.md
+  heading: '## 20. Carry work across semesters'
+  step: successor workspace supersedes frontmatter
+  documented: Record workspace predecessor lineage with supersedes on the successor.
+  observed: workspace.schema.json refuses supersedes as an additional property.
+  proposed_fix: doc
+  decision: '2026-10-12 Codex conductor, authority delegated through the next-session
+    brief: link the predecessor in the successor body, without a new workspace field;
+    document correction in Phase 5.2. Journey keeps observed refusal.'
