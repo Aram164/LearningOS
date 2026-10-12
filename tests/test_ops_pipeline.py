@@ -1920,3 +1920,106 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
     assert _read_witness_lines(witness) == [
         {"operation": "cli.backup-verify",
          "kind": "diagnostic-failure", "site": None, "code": 1}]
+
+
+# ---------------------------------------------------------------------------
+# SPEC (cu): exact diagnostic terminal evidence.
+# ---------------------------------------------------------------------------
+
+def test_cu_diagnostic_malformed_site_returns_no_line():
+    """A non-null site in a diagnostic raw tuple writes no line."""
+    assert arch_audit_hook._refusal_line(
+        ("diagnostic-edge", "diagnostic-failure", "unexpected", None, 1)
+    ) is None
+
+
+def test_cu_diagnostic_malformed_class_returns_no_line():
+    """A non-null class in a diagnostic raw tuple writes no line."""
+    assert arch_audit_hook._refusal_line(
+        ("diagnostic-edge", "diagnostic-failure", None, "WriteRefused", 1)
+    ) is None
+
+
+def test_cu_diagnostic_bool_code_returns_no_line():
+    """A bool code in a diagnostic raw tuple writes no line."""
+    assert arch_audit_hook._refusal_line(
+        ("diagnostic-edge", "diagnostic-failure", None, None, True)
+    ) is None
+
+
+def test_cu_diagnostic_float_code_returns_no_line():
+    """A float code in a diagnostic raw tuple writes no line."""
+    assert arch_audit_hook._refusal_line(
+        ("diagnostic-edge", "diagnostic-failure", None, None, 1.0)
+    ) is None
+
+
+def test_cu_gateway_diagnostic_serialization_failure_without_proposal_writes_no_diagnostic_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Unserializable no-proposal diagnostic: TypeError, no success marker."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result({"bad": {1, 2}}, diagnostic_failed=True)
+
+    pipe("command", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = _run_test_gateway(
+            mini_repo, None, key="k1-cu-diag-serial-noproposal-001")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 2
+    body = json.loads(outcome.stdout)
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INTERNAL_FAILURE"
+    lines = _read_witness_lines(witness)
+    assert all(line.get("kind") != "diagnostic-failure" for line in lines)
+    assert len(lines) == 1
+    assert lines[0]["kind"] == "failure"
+    assert lines[0]["class"] == "TypeError"
+
+
+def test_cu_gateway_diagnostic_serialization_failure_with_commit_writes_no_diagnostic_line(
+        pipe, mini_repo, tmp_path, monkeypatch):
+    """Unserializable committed diagnostic: commit kept, no success marker."""
+    from arch_audit_hook import SITE_WITNESS_ENV
+
+    _write_gateway_wiring(mini_repo)
+
+    def handler(ctx, req):
+        return Result(
+            {"bad": {1, 2}},
+            proposal=_pipe_proposal(mini_repo, "cu-diag"),
+            diagnostic_failed=True)
+
+    pipe("command", handler=handler)
+    log = tmp_path / "audit.jsonl"
+    witness = tmp_path / "sites.jsonl"
+    witness.touch()
+    arch_audit_hook.install(str(log))
+    monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
+    try:
+        outcome = _run_test_gateway(
+            mini_repo, None, key="k1-cu-diag-serial-commit-001")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert outcome.exit_code == 2
+    body = json.loads(outcome.stdout)
+    assert body["ok"] is False
+    assert body["error"]["code"] == "INTERNAL_FAILURE"
+    assert (mini_repo / "work/inbox/cu-diag.md").read_text(
+        encoding="utf-8") == "pipe\n"
+    lines = _read_witness_lines(witness)
+    assert all(line.get("kind") != "diagnostic-failure" for line in lines)
+    assert len(lines) == 1
+    assert lines[0]["kind"] == "failure"
+    assert lines[0]["class"] == "TypeError"

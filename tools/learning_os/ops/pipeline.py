@@ -917,8 +917,9 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
             final = res.payload
         _take_gateway_refusal()
         if res.diagnostic_failed:
+            error_text = json.dumps(final, separators=(",", ":"))
             _audit_diagnostic_failed(operation)
-            return 1, {"error": json.dumps(final, separators=(",", ":"))}
+            return 1, {"error": error_text}
         return 0, final
     captured, errors = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
@@ -952,8 +953,9 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     else:
         final = {**res.payload, **confirmation}
     if res.diagnostic_failed:
+        error_text = json.dumps(final, separators=(",", ":"))
         _audit_diagnostic_failed(operation)
-        return 1, {"error": json.dumps(final, separators=(",", ":"))}
+        return 1, {"error": error_text}
     return 0, final
 
 

@@ -283,6 +283,10 @@ def _refusal_line(args) -> dict | None:
         return {"operation": operation, "kind": kind, "site": None,
                 "code": code}
     if kind == "diagnostic-failure":
+        if site is not None or class_name is not None:
+            return None
+        if type(code) is not int or code != 1:
+            return None
         return {"operation": operation, "kind": kind, "site": None,
                 "code": code}
     return None
