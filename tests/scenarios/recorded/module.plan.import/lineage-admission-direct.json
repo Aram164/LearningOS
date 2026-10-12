@@ -1,12 +1,12 @@
 {
   "canonical_changed": {},
-  "exit": 2,
+  "exit": 3,
   "idempotency_changed": {},
   "outcome": "refused",
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: module plan lineage admission failed; no canonical files were written\n- prospective lineage needs gateway admission context\n",
+  "stderr": "los: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — reloading will not change this. The supplied snapshot is also out of date. Submit the write with `los capability NAME --payload-file ENVELOPE.json` (envelope: WORKFLOWS §25c).\n{\"expected\": \"sha256:d503571f734be06095c3f966efef73a7c9da5b6ff410f934c6c56a8c5fa7b478\", \"actual\": \"sha256:b07b115733a085155a731a6688e66419a8b8581d7d96b721ea8f6b2cc1849420\"}\n",
   "stdout": "",
   "stdout_json": null
 }

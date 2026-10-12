@@ -7,7 +7,7 @@
         "KEY2": {
           "capability": "lineage.restamp",
           "channel": "operator",
-          "intent_sha256": "sha256:8ed2d9e79495107c666404fd2d5e470c8f5e67a9c4e64b5caa3e32150e98abb4",
+          "intent_sha256": "sha256:49963e7d8cdb616639b2c786ebc9c422a7c9f87a14446e4434489937e87ea74a",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,11 +59,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:8ed2d9e79495107c666404fd2d5e470c8f5e67a9c4e64b5caa3e32150e98abb4"
+          "subject_sha256": "sha256:49963e7d8cdb616639b2c786ebc9c422a7c9f87a14446e4434489937e87ea74a"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:8ed2d9e79495107c666404fd2d5e470c8f5e67a9c4e64b5caa3e32150e98abb4",
+        "intent_sha256": "sha256:49963e7d8cdb616639b2c786ebc9c422a7c9f87a14446e4434489937e87ea74a",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -100,17 +100,18 @@
   },
   "session_ledger_changed": {
     "after": {
+      "commit_sha": null,
       "paths": {
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "e762d6432717e451c829f52a9f58f9ab86838b0050b6ddbe0cfa8dbd7ec45ceb",
+          "sha256": "8f04b00dcab624582b04bd8cfe5355d67d5e4b567549c49b6a8b5c7b5ac3d722",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "fc31f8cd157c76f5211a67418ef3b0530fd790ce719551d2a9af90eed9bd9525",
+          "sha256": "204ccb63eaf9f9fc6324c61bacd732b189433b9f4646220c727867d6e1decf41",
           "state": "file"
         },
         "operations/transactions/lineage.yaml": {
@@ -126,13 +127,16 @@
           "state": "file"
         }
       },
-      "schema_version": 2,
-      "session_id": "channel:operator"
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
     },
     "before": null
   },
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"lineage.restamp\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1\n    },\n    \"capability\": \"lineage.restamp\",\n    \"claim_ids\": [\n      \"covers:route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"claims_sha256\": \"sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef\",\n    \"mode\": \"apply\",\n    \"ok\": true,\n    \"plan_sha256\": \"sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"replayed\": false,\n    \"snapshot_after\": \"SNAP1\",\n    \"transaction_id\": \"TX1\"\n  },\n  \"error\": null\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"lineage.restamp\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"capability\": \"lineage.restamp\",\n    \"claim_ids\": [\n      \"covers:route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"claims_sha256\": \"sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef\",\n    \"plan_sha256\": \"sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
   "stdout_json": {
     "capability": "lineage.restamp",
     "error": null,
