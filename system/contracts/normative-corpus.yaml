@@ -387,6 +387,136 @@ documents:
       coverage): the unchanged archive move fails validation and the
       repaired pointer fails the schema.
 
+  - path: system/procedures/start-a-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §1: create the skeleton,
+      observe the M-09 null-deadline refusal, trip the eight-workspace
+      warning, and update Next Action through its envelope.
+
+  - path: system/procedures/add-a-concept.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §4: search both
+      languages, confirm no equivalent, add the readable ID with a
+      short disambiguation, and rebuild.
+
+  - path: system/procedures/add-or-evaluate-a-source.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §6: registry search,
+      metadata-only intake with its evaluation refusal, attach,
+      evaluation revise, collection creation and entry revise.
+
+  - path: system/procedures/complete-and-archive-a-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §11: complete the
+      path-owning workspace in place, rebuild and validate, and leave
+      it unmoved per the M-05 decision.
+
+  - path: system/procedures/move-or-rename-a-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §14: move one note to a
+      new bucket with its ID preserved, ID references unchanged, and
+      generated artifacts rebuilt and validated.
+
+  - path: system/procedures/deprecate-or-supersede.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §15: supersede one note
+      atomically with its unknown-predecessor refusal, deprecate one
+      concept, and verify the generated marks.
+
+  - path: system/procedures/ingest-a-handwritten-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §17: move two synthetic
+      scans to their attachment paths, transcribe through the note
+      gateway, and set metadata and evidence.
+
+  - path: system/procedures/start-a-module.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §18: verify the single
+      module record and its registration, refuse a second one, open a
+      workspace, wire coordination, and rebuild.
+
+  - path: system/procedures/close-a-module.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §19: settle the final
+      attempt with grade and completed status, complete the workspace,
+      clear the dead deferral, and rebuild.
+
+  - path: system/procedures/carry-work-across-semesters.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §20: continue one
+      workspace, complete-and-successor with the M-10 refusal pinned,
+      split scratch, and record the dependency.
+
+  - path: system/procedures/revise-an-existing-plan.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25a: bounded patch with
+      its identity refusal, compaction, and the structural path via
+      module import, unit revise, and unit map import.
+
+  - path: system/procedures/source-routing-and-feedback.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §26: show the identity,
+      join and selection, place the page-grammar locator, and record
+      two feedback rows with the unknown-source refusal.
+
+  - path: system/procedures/review-a-stage-material-angle.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §29: bind the route to
+      its exact file, import a replacement map with refinement and
+      correction reviews, and prove the staleness gate.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

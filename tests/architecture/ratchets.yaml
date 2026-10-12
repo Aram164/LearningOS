@@ -313,46 +313,6 @@ checks:
     approved_by: null
   A4-plumbing-2: []
   A8-transcripts:
-  - signature: system/WORKFLOWS.md::## 1. Start a workspace
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 4. Add a concept
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 6. Add or evaluate a source
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 11. Complete and archive a workspace
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 14. Move or rename a note
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 15. Deprecate or supersede
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 17. Ingest a handwritten note
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 18. Start a module
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 19. Close a module
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 20. Carry work across semesters
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: system/WORKFLOWS.md::## 23. Process a lecture
     count: 1
     since: baseline
@@ -361,19 +321,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: system/WORKFLOWS.md::## 25a. Revise an existing plan
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 26. Source routing and feedback
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: system/WORKFLOWS.md::## 27. Promote a future Master's module
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: system/WORKFLOWS.md::## 29. Review a stage's material angle
     count: 1
     since: baseline
     approved_by: null
