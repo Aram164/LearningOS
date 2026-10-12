@@ -21,6 +21,7 @@ from learning_os.semantics import (
     load_dossier,
     store_dossier,
 )
+from learning_os.semantics.dossiers import DOSSIER_PRODUCER_FILES
 
 VERSIONS = {"semantic-contract": "2", "operator-contract": "operator-v1"}
 
@@ -176,3 +177,24 @@ def test_cache_filenames_carry_the_digest_not_just_the_unit(tmp_path):
     assert first.name != second.name
     assert first.name.startswith("unit-aml-l01-")
     assert cache_path(tmp_path, load_dossier(first)) == first
+
+
+def test_store_persists_derived_node_when_producers_present(tmp_path):
+    """4.3 integration: with producer bytes staged, the file view sits above
+    a derived node holding the same six hashes; without them (all tests
+    above) the file alone serves, exactly as before migration."""
+    from pathlib import Path
+
+    from learning_os.derived.store import read_state
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(DOSSIER_PRODUCER_FILES):
+        target = tmp_path / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+    dossier = _dossier()
+    path = store_dossier(tmp_path, dossier)
+    node_id = f"cache.dossier:{dossier.unit_id}"
+    assert node_id in read_state(tmp_path)
+    assert load_dossier(path) == dossier
+    assert json.loads(path.read_text(encoding="utf-8"))["type"] == "semantic-dossier-v1"
