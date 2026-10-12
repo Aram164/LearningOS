@@ -31,7 +31,7 @@ cases:
   - id: page-one
     kind: success
     transport: cli
-    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:b07b115733a085155a731a6688e66419a8b8581d7d96b721ea8f6b2cc1849420", --expected-observations, "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6"]
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:9578da6071c49258a28817adeabd2f40d29945448a6fe97c38316b8b10cf4b1c", --expected-observations, "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6"]
     expect: {site: null}
   - id: empty-need
     kind: refusal
@@ -76,7 +76,7 @@ cases:
   - id: observations-mismatch
     kind: refusal
     transport: cli
-    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:b07b115733a085155a731a6688e66419a8b8581d7d96b721ea8f6b2cc1849420", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:9578da6071c49258a28817adeabd2f40d29945448a6fe97c38316b8b10cf4b1c", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.context.stale-snapshot}
   - id: stale-snapshot
     kind: refusal
@@ -88,4 +88,4 @@ untriggered:
   - {where: "tools/learning_os/commands/reads.py:1456", reason: "symlink escape in --material: the fixture materials tree has no symlinks, and no step can create one outside the fixture root"}
   - {where: "tools/learning_os/commands/reads.py:1722", reason: "unreadable analysis notes: the fixture parses cleanly, and no step can break it"}
   - {where: "tools/learning_os/commands/reads.py:1728", reason: "unreadable syntheses: the fixture parses cleanly, and no step can break it"}
-  - {site: material.context.read-failed, where: "tools/learning_os/ops/handlers/plan.py:2255", reason: os-error-only}
+  - {site: material.context.read-failed, where: "tools/learning_os/ops/handlers/plan.py:2197", reason: os-error-only}
