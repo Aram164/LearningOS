@@ -170,7 +170,7 @@
     "epilog": null,
     "mutually_exclusive": [],
     "defaults": {},
-    "handler": "learning_os.commands.lineage_restamp.cmd_lineage_restamp",
+    "handler": "learning_os.adapters.cli.invoke:lineage.restamp",
     "parser_factory": true
   }
 }

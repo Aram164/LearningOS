@@ -24,7 +24,8 @@ from learning_os.ops.registry import REGISTRY
 SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
 # Default text-in/JSON-out probe for seal-path tests. Phase3 registered
 # garden.seed.create; the unregistered rejection control explicitly selects
-# the still-deferred lineage.restamp and verifies that premise below.
+# cli.capability — the transport entrypoint, which never registers — and
+# verifies that premise below.
 CAPABILITY = "garden.seed.create"
 
 
@@ -58,11 +59,11 @@ def test_no_leaked_test_registrations():
 
 
 def test_check_out_unregistered_refuses_before_output(mini_repo: Path, tmp_path: Path):
-    assert "lineage.restamp" not in REGISTRY
+    assert "cli.capability" not in REGISTRY
     out = tmp_path / "check.json"
     sealed = _seal(mini_repo, tmp_path / "sealed.json",
                    payload={"text": "check-out probe"}, key="check-out-001",
-                   capability="lineage.restamp", extra=["--guards", "auto", "--check-out", str(out)])
+                   capability="cli.capability", extra=["--guards", "auto", "--check-out", str(out)])
     assert sealed.returncode == 2
     assert sealed.stderr == "seal_envelope: --check-out requires a registered operation\n"
     assert sealed.stdout == ""

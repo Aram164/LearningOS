@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import datetime as _dt
 import hashlib
 import json
 import re
@@ -14,6 +15,7 @@ from urllib.parse import urlsplit
 
 import yaml
 
+from learning_os import githistory, observations
 from learning_os.contracts import (
     PLAN_TEMPLATE_VERSION,
     ContractValidationError,
@@ -93,6 +95,7 @@ from learning_os.ops._legacy_plumbing import (
     _unit_note_scope,
     _use_evidence,
     _window_values,
+    prepare_review_envelope,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -101,13 +104,25 @@ from learning_os.ops._plan_gate import (
     _real_perimeter_errors,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.handlers._shared import apply_reviewed_envelope
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
-from learning_os.revisions import artifact_revision
+from learning_os.revisions import artifact_revision, load_revisions
 from learning_os.rules.common import CANONICAL_TREES
-from learning_os.semantics.lineage import LEDGER_RELATIVE, dump_ledger, load_ledger
-from learning_os.transactions import parse_expected_revisions
+from learning_os.semantics.lineage import (
+    LEDGER_RELATIVE,
+    LineageError,
+    dump_ledger,
+    load_ledger,
+    restamp_claim,
+)
+from learning_os.semantics.restamp import (
+    ELIGIBLE,
+    analyze,
+    claims_list_sha256,
+)
+from learning_os.transactions import parse_expected_revisions, transaction_artifacts
 from learning_os.warning_baseline import signatures_from_issues
 
 
@@ -3830,4 +3845,240 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         finish=finish_unit_material_synthesis_publish,
         refused_stdout=refused_stdout_unit_material_synthesis_publish,
         json_dumps=_dumps_indented,
+    )
+
+
+# ------------------------------------------- lineage.restamp (PLAN 4.1,
+# Task 75). Helpers moved verbatim from commands/lineage_restamp.py; the
+# handler converts cmd_lineage_restamp by SPEC 12.
+
+
+def _dumps_sorted(payload: dict) -> str:
+    """The exact lineage encoder: sorted, spaced, unescaped."""
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True)
+
+
+def _canonical_list_bytes(claim_ids) -> bytes:
+    return "".join(cid + "\n" for cid in sorted(claim_ids)).encode("utf-8")
+
+
+def _plan_sha256(plan: dict[str, dict[str, str]]) -> str:
+    body = json.dumps(plan, sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(body).hexdigest()
+
+
+def _verify_named(analysis: dict, claim_ids: list[str],
+                  claims_sha256: str) -> tuple[list[str], dict]:
+    """The reviewed ids, verified against fresh analysis.
+
+    Returns the sorted ids and their verified plan rows. Refuses unknown
+    ids, a hash that does not bind the exact list, and every listed
+    claim that is not stampable — a listed claim whose judged state
+    moved refuses exactly like an unlisted one.
+    """
+    if claims_list_sha256(claim_ids) != claims_sha256:
+        raise WriteRefused(
+            "claims_sha256 does not bind these claim ids; re-hash the "
+            "exact reviewed list (sorted ids, one per line)")
+    rows = analysis["claims"]
+    unknown = [cid for cid in claim_ids if cid not in rows]
+    if unknown:
+        raise WriteRefused(
+            "claims outside the supported old-shape set: "
+            + ", ".join(sorted(unknown)))
+    refused = {
+        cid: rows[cid] for cid in claim_ids
+        if rows[cid]["verdict"] != ELIGIBLE
+    }
+    if refused:
+        detail = "; ".join(
+            f"{cid} is {rows[cid]['verdict']}"
+            f" ({', '.join(rows[cid]['reasons']) or rows[cid]['basis']})"
+            for cid in sorted(refused))
+        raise WriteRefused(f"the re-stamp refuses: {detail}")
+    ordered = sorted(claim_ids)
+    return ordered, {cid: rows[cid] for cid in ordered}
+
+
+def _ledger_guards(root: Path) -> tuple[list[str], dict[str, int]]:
+    """The transaction artifacts and their current revisions.
+
+    The re-stamp writes only the sidecar ledger, so the transaction
+    guards the ledger path itself — the same file-artifact derivation
+    the seal-time dry run uses, by construction rather than by a
+    second spelling of the path.
+    """
+    artifacts = transaction_artifacts(root, (), [root / LEDGER_RELATIVE])
+    current = load_revisions(root)
+    return artifacts, {artifact: current.get(artifact, 0)
+                       for artifact in artifacts}
+
+
+def _lineage_restamp_commit_lines(commit_errors: list) -> list[str]:
+    return ["los: lineage re-stamp failed", *commit_errors[:12]]
+
+
+@register("lineage.restamp", kind="command")
+def lineage_restamp(ctx: OpContext, req: dict) -> Result:
+    """Narrow old coarse reads, never re-judge (#94)."""
+    root = ctx.root
+    check = req.get("check", False)
+    review_report = req.get("review_report")
+    if check and review_report:
+        raise WriteRefused(
+            "--check and --review-report are mutually exclusive",
+            site=f"{ctx.operation}.check-and-review",
+            gateway_message="los: --check and --review-report are mutually exclusive",
+            exit_code=2,
+        )
+    claim_ids = list(req.get("claim_ids") or [])
+    claims_sha256 = req.get("claims_sha256")
+    if review_report:
+        if not claim_ids or not claims_sha256:
+            raise WriteRefused(
+                "reviewed apply needs --claim-ids and --claims-sha256 with --review-report",
+                site=f"{ctx.operation}.reviewed-needs-ids",
+                gateway_message=(
+                    "los: reviewed apply needs --claim-ids and --claims-sha256 "
+                    "with --review-report"),
+                exit_code=2,
+            )
+        try:
+            if claims_list_sha256(claim_ids) != claims_sha256:
+                raise WriteRefused(
+                    "claims_sha256 does not bind these claim ids",
+                    site=f"{ctx.operation}.reviewed-sha-mismatch",
+                    gateway_message="los: claims_sha256 does not bind these claim ids",
+                    exit_code=2,
+                )
+        except LineageError as exc:
+            raise WriteRefused(
+                str(exc),
+                site=f"{ctx.operation}.reviewed-sha-invalid",
+                gateway_message=f"los: {exc}",
+                exit_code=2,
+            ) from exc
+        return Result(
+            {},
+            command_output=apply_reviewed_envelope(
+                ctx,
+                capability_name="lineage.restamp",
+                payload={"claim_ids": sorted(claim_ids),
+                         "claims_sha256": claims_sha256},
+                reviewed_content=_canonical_list_bytes(claim_ids),
+                reviewed_sha256=claims_sha256,
+                review_report=review_report,
+            ),
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        analysis = analyze(root)
+    except (LineageError, githistory.GitHistoryError, OSError,
+            ValueError) as exc:
+        raise WriteRefused(
+            f"re-stamp analysis failed: {exc}",
+            site=f"{ctx.operation}.analysis-failed",
+            gateway_message=f"los: re-stamp analysis failed: {exc}",
+            exit_code=2,
+        ) from exc
+    snapshot = ctx.snapshot_id()
+    if check and not claim_ids:
+        return Result(
+            {"ok": True, "mode": "check", "capability": "lineage.restamp",
+             "expected_snapshot": snapshot, **analysis},
+            json_dumps=_dumps_sorted,
+        )
+    if not claim_ids or not claims_sha256:
+        raise WriteRefused(
+            "lineage-restamp needs --claim-ids with --claims-sha256 (the reviewed list); "
+            "--check alone recomputes eligibility",
+            site=f"{ctx.operation}.needs-claim-ids",
+            gateway_message=(
+                "los: lineage-restamp needs --claim-ids with --claims-sha256 "
+                "(the reviewed list); --check alone recomputes eligibility"),
+            exit_code=2,
+        )
+    try:
+        ordered, planned = _verify_named(analysis, claim_ids, claims_sha256)
+    except (WriteRefused, LineageError) as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.unverified-claims",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    plan = {cid: dict(planned[cid]["new_reads"]) for cid in ordered}
+    plan_sha = _plan_sha256(plan)
+    if check:
+        _artifacts, revisions = _ledger_guards(root)
+        payload = {"claim_ids": ordered, "claims_sha256": claims_sha256}
+        return Result(
+            {"ok": True, "mode": "check", "capability": "lineage.restamp",
+             "claim_ids": ordered, "claims_sha256": claims_sha256,
+             "plan": plan, "plan_sha256": plan_sha,
+             "expected_snapshot": snapshot,
+             "expected_revisions": revisions,
+             "reviewed_file_sha256": claims_sha256,
+             "gateway_envelope": prepare_review_envelope(
+                 "lineage.restamp", payload, snapshot, revisions)},
+            json_dumps=_dumps_sorted,
+        )
+    request = current_gateway_request()
+    if request is None:
+        raise WriteRefused(
+            "lineage-restamp applies only through its reviewed report (--review-report) "
+            "or a sealed GatewayEnvelopeV2 (`los capability lineage.restamp --payload-file "
+            "ENVELOPE.json`); direct CLI application is disabled",
+            site=f"{ctx.operation}.direct-apply-disabled",
+            gateway_message=(
+                "los: lineage-restamp applies only through its reviewed report "
+                "(--review-report) or a sealed GatewayEnvelopeV2 (`los capability "
+                "lineage.restamp --payload-file ENVELOPE.json`); direct CLI "
+                "application is disabled"),
+            exit_code=2,
+        )
+    try:
+        records = load_ledger(root)
+        stamped = dict(records)
+        restamped_by = f"{request.channel}/{request.approval_kind}"
+        restamped_on = observations.now().astimezone(_dt.UTC).date().isoformat()
+        for cid in ordered:
+            prior = records.get(cid)
+            if prior is None:
+                raise LineageError(f"claim {cid!r} left the ledger")
+            stamped[cid] = restamp_claim(
+                prior, source_hashes=plan[cid],
+                restamped_by=restamped_by, restamped_on=restamped_on)
+        text = dump_ledger(stamped)
+    except LineageError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.restamp-failed",
+            gateway_message=f"los: {exc}",
+            exit_code=2,
+        ) from exc
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc), site=f"{ctx.operation}.bad-expected-revision",
+        ) from exc
+    return Result(
+        {"ok": True, "mode": "apply", "capability": "lineage.restamp",
+         "claim_ids": ordered, "claims_sha256": claims_sha256,
+         "plan_sha256": plan_sha},
+        proposal=TransactionProposal(
+            capability="lineage.restamp",
+            writes={root / LEDGER_RELATIVE: text},
+            artifact_ids=(),
+            expected_revisions=expected_revisions,
+            # The envelope's intent hash already binds the claim list;
+            # echoing the hash and the count here keeps the receipt
+            # directly auditable without reopening the envelope.
+            metadata={"claims_sha256": claims_sha256,
+                      "claims_count": len(ordered)},
+        ),
+        on_commit_refused=_lineage_restamp_commit_lines,
+        json_dumps=_dumps_sorted,
     )

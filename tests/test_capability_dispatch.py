@@ -29,7 +29,7 @@ def _definitions(repo_root: Path):
 
 def test_no_capability_still_refuses_generic_dispatch(repo_root: Path):
     """The stub the plan's Stage 3 gate greps for must be gone."""
-    gateway = (repo_root / "tools/learning_os/commands/capability.py").read_text(encoding="utf-8")
+    gateway = (repo_root / "tools/learning_os/adapters/capability.py").read_text(encoding="utf-8")
     assert "generic envelope dispatch is not yet defined" not in gateway
 
 
@@ -215,7 +215,7 @@ def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
 @pytest.mark.parametrize("printed", ["plain success", "[]", ""])
 def test_non_object_handler_output_is_a_hard_gateway_failure(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch, printed: str):
-    import learning_os.commands.lineage_restamp as lineage_module
+    import learning_os.adapters.cli as cli_adapter
     import los
 
     def malformed_success(_args):
@@ -225,10 +225,9 @@ def test_non_object_handler_output_is_a_hard_gateway_failure(
 
     # The generated parser resolves funcs from their source modules
     # (SPEC 10.5), not via the los namespace, so patch the source.
-    # lineage.restamp is an unconverted text-in/JSON-out command with
-    # the same legacy-dispatch shape garden.seed.create had before
-    # SC-capture.
-    monkeypatch.setattr(lineage_module, "cmd_lineage_restamp", malformed_success)
+    # lineage.restamp is converted, so its parser entry binds the shared
+    # invoke adapter; patch that binding for the legacy-dispatch shape.
+    monkeypatch.setattr(cli_adapter, "invoke", malformed_success)
     definition = command_definitions(mini_repo)["lineage.restamp"]
     with pytest.raises(WriteRefused, match="reported success"):
         _dispatch(
@@ -267,7 +266,7 @@ def test_every_capability_dispatches_rather_than_refusing(repo_root: Path, tmp_p
 # --------------------------------------------------------------------------
 
 def test_the_gateway_has_no_capability_special_cases(repo_root: Path):
-    gateway = (repo_root / "tools/learning_os/commands/capability.py").read_text(encoding="utf-8")
+    gateway = (repo_root / "tools/learning_os/adapters/capability.py").read_text(encoding="utf-8")
     assert 'args.name in {"project.create", "project.update"}' not in gateway
     assert "_project_write" not in gateway, "the gateway must not reach past the handler"
 
