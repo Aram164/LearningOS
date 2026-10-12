@@ -17,6 +17,7 @@ from pathlib import Path
 
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.codes import REVISION_CONFLICT
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import (
@@ -30,8 +31,8 @@ from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.rules import validate
 from learning_os.store.session_ledger import (
+    _load_session_ledger,
     _record_touched,
-    _unpushed_commit_sha,
 )
 from learning_os.transactions import (
     PostCommitFailure,
@@ -77,10 +78,20 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> tuple[int,
     # as the touched callback claims it (explicit, then the sealed
     # envelope, then the environment, then the channel — including the
     # goal handler's sealed override); another session's write proceeds.
-    # The message reuses the session machine's §13 row-8 refusal verbatim.
-    unpushed = _unpushed_commit_sha(root)
-    if unpushed is not None:
-        return 2, [f"already committed as {unpushed}; use --push or --close"], {}
+    # The read fails closed: a missing ledger is a session with no window
+    # yet (allowed), but unreadable/unsupported own metadata cannot
+    # authorize the write, so the loader's complaint refuses it. The
+    # committed_unpushed refusal keys on the state, never on the SHA
+    # being non-null. The message reuses the session machine's §13 row-8
+    # refusal verbatim, naming the stored SHA exactly as that machine
+    # does for the same bytes.
+    try:
+        own = _load_session_ledger(root)
+    except WriteRefused as exc:
+        return 2, [str(exc)], {}
+    if own is not None and own["state"] == "committed_unpushed":
+        return 2, [f"already committed as {own['commit_sha']}; "
+                   "use --push or --close"], {}
     if proposal.clock is None:
         service = TransactionService(root)
     else:

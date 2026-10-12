@@ -781,3 +781,118 @@ def test_exact_replay_while_unpushed_repairs_without_discarding(
                 "operations/transactions/idempotency.yaml"):
         if rel in before["paths"]:
             assert after["paths"][rel] == before["paths"][rel]
+
+
+def _refused_write_kept_everything(root: Path, refused, before_tree,
+                                   ledger: Path, before_ledger: bytes,
+                                   before_receipts: list) -> dict:
+    """The shared no-mutation proof for a refused gateway write (T77)."""
+    assert refused.returncode == 2, refused.stdout
+    doc = json.loads(refused.stdout)
+    assert doc["error"]["code"] == "INVALID_REQUEST"
+    assert doc["error"]["retryable"] is False
+    assert doc["transaction_id"] is None
+    assert doc["receipt_path"] is None
+    assert _canonical_tree(root) == before_tree
+    assert ledger.read_bytes() == before_ledger
+    assert sorted((root / "operations" / "transactions").glob(
+        "transaction-*.yaml")) == before_receipts
+    return doc
+
+
+def _snapshots(root: Path, ledger: Path):
+    return (
+        _canonical_tree(root),
+        ledger.read_bytes(),
+        sorted((root / "operations" / "transactions").glob(
+            "transaction-*.yaml")),
+    )
+
+
+def test_gateway_write_with_corrupt_own_ledger_refuses_before_any_mutation(
+        mini_repo, monkeypatch):
+    """Corrupt own bytes cannot authorize a new write (T77 admission)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="admit-001", text="claimed")
+    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger.write_text('{"paths": {"work/x.md": {', encoding="utf-8")
+    before_tree, before_ledger, before_receipts = _snapshots(
+        mini_repo, ledger)
+
+    envelope = approved_v2_envelope(
+        mini_repo, capability="capture.create",
+        payload={"text": "unclaimable thought"},
+        artifact_ids=[request_artifact_id("capture.create", "admit-002")],
+        idempotency_key="admit-002",
+    )
+    refused = run_v2_capability(mini_repo, envelope)
+    doc = _refused_write_kept_everything(
+        mini_repo, refused, before_tree, ledger, before_ledger,
+        before_receipts)
+    assert doc["error"]["message"].startswith(
+        "session ownership ledger is unreadable: ")
+
+
+def test_gateway_write_with_unsupported_own_ledger_refuses_before_any_mutation(
+        mini_repo, monkeypatch):
+    """An unsupported own contract cannot authorize a new write (T77)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="admit-011", text="claimed")
+    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger.write_text(json.dumps(
+        {"schema_version": 99, "session_id": "channel:operator",
+         "paths": {}}), encoding="utf-8")
+    before_tree, before_ledger, before_receipts = _snapshots(
+        mini_repo, ledger)
+
+    envelope = approved_v2_envelope(
+        mini_repo, capability="capture.create",
+        payload={"text": "unclaimable thought"},
+        artifact_ids=[request_artifact_id("capture.create", "admit-012")],
+        idempotency_key="admit-012",
+    )
+    refused = run_v2_capability(mini_repo, envelope)
+    doc = _refused_write_kept_everything(
+        mini_repo, refused, before_tree, ledger, before_ledger,
+        before_receipts)
+    assert doc["error"]["message"] == (
+        "session ownership ledger has an unsupported contract")
+
+
+def test_gateway_write_with_null_sha_unpushed_refuses_before_any_mutation(
+        mini_repo, monkeypatch):
+    """committed_unpushed refuses keyed on state, not on the SHA (T77)."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="admit-021", text="claimed")
+    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger.write_text(json.dumps(
+        {"schema_version": 3, "session_id": "channel:operator",
+         "version": 1, "state": "committed_unpushed", "paths": {},
+         "review": None, "commit_sha": None}), encoding="utf-8")
+    before_tree, before_ledger, before_receipts = _snapshots(
+        mini_repo, ledger)
+
+    envelope = approved_v2_envelope(
+        mini_repo, capability="capture.create",
+        payload={"text": "unclaimable thought"},
+        artifact_ids=[request_artifact_id("capture.create", "admit-022")],
+        idempotency_key="admit-022",
+    )
+    refused = run_v2_capability(mini_repo, envelope)
+    doc = _refused_write_kept_everything(
+        mini_repo, refused, before_tree, ledger, before_ledger,
+        before_receipts)
+    assert doc["error"]["message"] == (
+        "already committed as None; use --push or --close")
+
+    # The gateway gate agrees with the session machine for the same bytes.
+    commit = _session_end(mini_repo, "--commit-message", "nope")
+    assert commit.returncode == 2, commit.stdout
+    assert commit.stdout == ""
+    assert commit.stderr == (
+        "los: INVALID_REQUEST: "
+        "already committed as None; use --push or --close\n")
+    assert ledger.read_bytes() == before_ledger

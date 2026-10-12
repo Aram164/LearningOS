@@ -329,26 +329,6 @@ def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, 
     return envelope["paths"]
 
 
-def _unpushed_commit_sha(root: Path, session_id: str | None = None) -> str | None:
-    """The stored SHA when the session is committed-unpushed, else None.
-
-    The commit path's pre-write gate (PLAN D7: only a push retry of the
-    stored SHA or close may follow a failed push). A missing ledger is a
-    session with no window yet, and an unreadable one stays owned by
-    today's post-commit behavior — only a proven committed_unpushed
-    state refuses the new write.
-    """
-    if not _session_ledger(root, session_id).is_file():
-        return None
-    try:
-        envelope = _load_session_ledger(root, session_id)
-    except WriteRefused:
-        return None
-    if envelope is None or envelope["state"] != "committed_unpushed":
-        return None
-    return envelope["commit_sha"]
-
-
 def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
     row = _session_path_state(root, relative)
     row["channel"] = channel
