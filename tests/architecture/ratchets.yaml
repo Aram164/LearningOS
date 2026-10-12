@@ -576,10 +576,6 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.session-end::/properties/session_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   - signature: lineage.restamp::/properties/claim_ids/items::review
     count: 1
     since: approved

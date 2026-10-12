@@ -72,6 +72,7 @@
     "session_id": {
       "type": "string",
       "description": "close this session id (default: LOS_SESSION_ID, else this channel's ledger)",
+      "x-los-lookup": false,
       "x-los-cli": {
         "flags": [
           "--session-id"

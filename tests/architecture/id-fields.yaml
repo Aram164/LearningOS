@@ -153,8 +153,9 @@ fields:
 - operation: cli.session-end
   pointer: /properties/session_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'session'
+  lookup: false
+  decision: 'Task 73 conductor 2026-10-12: session-end session_id selects/creates
+    the ownership window; never a known-ID lookup ((cx) D-6 analogue)'
 - operation: cli.unit-list
   pointer: /properties/component_id
   kind: component

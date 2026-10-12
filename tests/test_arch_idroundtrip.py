@@ -381,7 +381,7 @@ def test_id_scan_changes_no_production_file():
     before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in watched}
     assert len(list(_stdout_strings())) > 0
-    assert sum(_review_signatures().values()) == 12
+    assert sum(_review_signatures().values()) == 11
     after = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
              for p in watched}
     assert after == before
@@ -676,6 +676,41 @@ def test_owner_table_matches_the_inventory_exactly():
             f"A6 {key} lacks dated conductor provenance — {FIX}")
 
 
+#: Task 73 decision 4: ownership-identity rows that select or create a
+#: window instead of looking up a known-ID inventory. (operation, pointer)
+#: -> the decided reason. Only these exact rows may carry null kind with
+#: lookup false, the schema marker and dated provenance, and no review;
+#: every other null kind without a supported owner keeps its review.
+NONLOOKUP_IDENTITY_ROWS: dict[tuple[str, str], str] = {
+    ("cli.session-end", "/properties/session_id"):
+        "selects/creates the ownership window; never a known-ID lookup",
+}
+
+
+def _assert_decided_nonlookup_identity(row: dict) -> None:
+    """The exact decided nonlookup shape, row and schema marker (T73-4)."""
+    from learning_os.contracts.requests import request_schema
+
+    key = (row["operation"], row["pointer"])
+    reason = NONLOOKUP_IDENTITY_ROWS[key]
+    assert row.get("kind") is None, f"A6 {key}: nonlookup keeps null kind — {FIX}"
+    assert row.get("lookup") is False, (
+        f"A6 {key}: nonlookup sits at lookup false — {FIX}")
+    assert "review" not in row, (
+        f"A6 {key}: decided nonlookup carries no review — {FIX}")
+    decision = row.get("decision")
+    assert isinstance(decision, str) and reason in decision \
+        and "2026-10-12" in decision, (
+            f"A6 {key}: nonlookup lacks the dated decided reason — {FIX}")
+    node = _navigate(request_schema(ROOT, row["operation"]), row["pointer"])
+    assert isinstance(node, dict), (
+        f"A6 {key}: inventory pointer missing from the schema — {FIX}")
+    assert node.get("x-los-lookup") is False, (
+        f"A6 {key}: schema marker is not lookup false — {FIX}")
+    assert "x-los-id-kind" not in node and "x-los-id-owner" not in node, (
+        f"A6 {key}: null kind carries no kind/owner marker — {FIX}")
+
+
 def test_unresolved_null_kinds_keep_review_and_skip():
     """Null kinds without a supported owner stay failing/skipped, never pass."""
     rows = yaml.safe_load(
@@ -685,9 +720,46 @@ def test_unresolved_null_kinds_keep_review_and_skip():
         key = (row["operation"], row["pointer"])
         if row.get("kind") is not None or key in SUPPORTED_OWNER_ROWS:
             continue
+        if key in NONLOOKUP_IDENTITY_ROWS:
+            _assert_decided_nonlookup_identity(row)
+            continue
         assert "review" in row, (
             f"A6 {key}: null kind without an owner or review would pass "
             f"silently — {FIX}")
+
+
+def test_nonlookup_allowance_covers_only_the_decided_row():
+    """Any other unresolved row still fails; the decided shape is exact."""
+    live = yaml.safe_load(
+        (ROOT / "tests/architecture/id-fields.yaml").read_text(
+            encoding="utf-8"))["fields"]
+    decided = next(row for row in live
+                   if (row["operation"], row["pointer"])
+                   in NONLOOKUP_IDENTITY_ROWS)
+    _assert_decided_nonlookup_identity(dict(decided))
+
+    def rejects(mutator):
+        mutant = dict(decided)
+        mutator(mutant)
+        with pytest.raises(AssertionError):
+            _assert_decided_nonlookup_identity(mutant)
+
+    rejects(lambda row: row.update(lookup=True))
+    rejects(lambda row: row.update(lookup=None))
+    rejects(lambda row: row.update(kind="session"))
+    rejects(lambda row: row.update(review="unknown id prefix 'session'"))
+    rejects(lambda row: row.update(decision="undated reason"))
+    rejects(lambda row: row.pop("decision"))
+    # An undecided row cannot borrow the allowance: it is not tabled.
+    other = next(row for row in live
+                 if row.get("kind") is None
+                 and (row["operation"], row["pointer"])
+                 not in NONLOOKUP_IDENTITY_ROWS
+                 and (row["operation"], row["pointer"])
+                 not in SUPPORTED_OWNER_ROWS)
+    assert "review" in other
+    assert (other["operation"], other["pointer"]) \
+        not in NONLOOKUP_IDENTITY_ROWS
 
 
 def test_owner_selection_covers_scalar_items_and_mapping_values():
@@ -1025,10 +1097,10 @@ def test_digest_owner_negatives_keep_class_message_and_exit(tmp_path):
     assert _tree_inventory(tmp_path) == before
 
 
-def test_six_owner_rows_resolved_and_twelve_reviews_retained():
+def test_six_owner_rows_resolved_and_eleven_reviews_retained():
     current = _review_signatures()
-    assert sum(current.values()) == 12, (
-        f"A6 want exactly the 12 retained reviews: {sorted(current)} — {FIX}")
+    assert sum(current.values()) == 11, (
+        f"A6 want exactly the 11 retained reviews: {sorted(current)} — {FIX}")
     removed = {
         "ai-action.delivery.apply::/properties/artifact_sha256::review",
         "ai-action.delivery.apply::/properties/delivery_id::review",
@@ -1036,6 +1108,8 @@ def test_six_owner_rows_resolved_and_twelve_reviews_retained():
         "cli.inspect::/properties/more_ids/items::review",
         "project.inspect::/properties/id::review",
         "project.inspect::/properties/more_ids/items::review",
+        # Task 73 decision 4: decided nonlookup, not under review.
+        "cli.session-end::/properties/session_id::review",
     }
     assert not (removed & set(current)), (
         f"A6 resolved rows still under review: {sorted(removed & set(current))} — {FIX}")
