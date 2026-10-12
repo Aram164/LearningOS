@@ -308,7 +308,7 @@
       }
     ],
     "defaults": {},
-    "handler": "learning_os.commands.module.cmd_module_plan_import",
+    "handler": "learning_os.adapters.cli.invoke:module.plan.import",
     "parser_factory": true
   }
 }
