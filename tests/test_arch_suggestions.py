@@ -309,6 +309,42 @@ def _mutated_step(step, transport, prop, position, miss):
     return mutant
 
 
+def _coordinate_plan_owner(ctx, operation: str, mutant: dict, base: str,
+                           miss: str) -> dict:
+    """Mutate only the consumed owner binding, before its genuine lookup.
+
+    These two declarations bind the request owner to the submitted package.
+    Guards and every other payload value stay unchanged. File-backed module
+    packages keep every byte except their root owner scalar, with a digest
+    rederived from those actual bytes; inline unit records change only unit_id.
+    """
+    import hashlib
+
+    import yaml
+
+    request = mutant["request"]
+    if operation == "unit.plan.revise":
+        assert request["record"]["unit_id"] == base
+        request["record"]["unit_id"] = miss
+        return mutant
+    assert operation == "module.plan.import"
+    original = request["file"]
+    assert original.startswith("<CASEDATA>/")
+    source = ctx.workdir / "casedata" / original[len("<CASEDATA>/"):]
+    raw = source.read_text(encoding="utf-8")
+    node = yaml.compose(raw)
+    value = next(value for key, value in node.value if key.value == "module_id")
+    assert value.value == base
+    span = raw[value.start_mark.index:value.end_mark.index]
+    assert span.count(base) == 1
+    changed = raw[:value.start_mark.index] + span.replace(base, miss) + raw[value.end_mark.index:]
+    dest = ctx.workdir / "casedata" / "a5-owner-module.yaml"
+    dest.write_text(changed, encoding="utf-8")
+    request["file"] = "<CASEDATA>/a5-owner-module.yaml"
+    request["file_sha256"] = "sha256:" + hashlib.sha256(dest.read_bytes()).hexdigest()
+    return mutant
+
+
 #: The one owner-coordinated probe pointer (SPEC (cq) 5): the dossier's
 #: own unit binding must travel with the request's, or the probe stops
 #: at the binding guard instead of the repository lookup.
@@ -1238,6 +1274,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
 #:   (SPEC (bz) item 1).
 #: No branch on an operation name remains in ``_canonical_message``.
 MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
+    ("module.plan.import", "/properties/module_id"): ("prefixed", "module"),
+    ("unit.plan.revise", "/properties/unit_id"): ("prefixed", "unit"),
     ("route.patch", "/properties/unit_id"): ("template", "unit"),
     ("route.patch", "/properties/route_id"):
         ("legacy", "route {miss} is missing or ambiguous in this unit"),
@@ -2127,6 +2165,8 @@ def test_pointer_misses(tmp_path, operation, pointer):
                 f"A5 route.patch unit probe uses {miss!r}, want the (af) "
                 f"collision candidate unit-demo-l03 — {FIX}")
         mutant = _mutated_step(base_step, transport, prop, position, miss)
+        if (operation, pointer) in {("module.plan.import", "/properties/module_id"), ("unit.plan.revise", "/properties/unit_id")}:
+            mutant = _coordinate_plan_owner(ctx, operation, mutant, base_value, miss)
         if (operation, pointer) == _SYNTHESIS_UNIT_POINTER:
             mutant = _coordinate_synthesis_unit(mutant, transport, miss)
         if case.get("kind") == "sequence":

@@ -324,7 +324,11 @@ checks:
     since: baseline
     approved_by: null
   A14-vocabulary: []
-  A6-idroundtrip: []
+  A6-idroundtrip:
+  - signature: lineage.restamp::/properties/claim_ids/items::review
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   A13-request-schemas:
   - signature: cli.capability::name::description
     count: 1
@@ -383,6 +387,10 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: lineage.restamp::/properties/claim_ids/items::review
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex narrows the inherited lineage star to its existing unresolved claim-owner pointer"
   A7-output:
   - signature: cli.capability::*
     count: 1
