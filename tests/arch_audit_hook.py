@@ -198,6 +198,52 @@ def _resolve_relative(event: str, args, path: str) -> str:
     return os.path.normpath(os.path.join(cwd, path))
 
 
+def _operational_paths(event: str, args, paths: list, mode=None) -> list:
+    """Supplemental resolved destinations for A19; original A2 paths stay exact.
+
+    Python's open audit omits os.open's dir_fd. A relative descriptor-open
+    therefore remains unresolved. Other pinned events expose dir_fd, which
+    can be resolved live through F_GETPATH on Darwin or /proc on Linux.
+    """
+    resolved = []
+    indexes = _DIR_FD_INDEX.get(event, ())
+    for index, path in enumerate(paths):
+        if isinstance(path, int):
+            fd = path
+            path = ""
+        elif not isinstance(path, str):
+            resolved.append(None)
+            continue
+        elif os.path.isabs(path):
+            resolved.append(path)
+            continue
+        elif event == "open" and mode is None:
+            resolved.append(None)
+            continue
+        else:
+            fd_index = indexes[index] if index < len(indexes) else None
+            if event == "os.symlink":
+                fd_index = 2 if index == 1 else None
+            fd = args[fd_index] if fd_index is not None and fd_index < len(args) else None
+        try:
+            if fd is None or fd == -1:
+                base = os.getcwd()
+            elif sys.platform == "darwin":
+                import fcntl
+
+                raw = fcntl.fcntl(fd, fcntl.F_GETPATH, b"\0" * 1024)
+                base = os.fsdecode(raw.split(b"\0", 1)[0])
+            elif sys.platform.startswith("linux"):
+                base = os.readlink(f"/proc/self/fd/{fd}")
+            else:
+                resolved.append(None)
+                continue
+            resolved.append(os.path.normpath(os.path.join(base, path)))
+        except (OSError, ValueError, TypeError):
+            resolved.append(None)
+    return resolved
+
+
 def _is_write_open(mode, flags) -> bool:
     if isinstance(mode, str) and any(mark in mode for mark in "wax+"):
         return True
@@ -445,6 +491,8 @@ def _hook(event: str, args) -> None:
                 "writer_line": writer_line,
             }
         if record is not None:
+            if "paths" in record:
+                record["resolved_paths"] = _operational_paths(event, args, record["paths"], record.get("mode"))
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record) + "\n")
     except Exception as exc:

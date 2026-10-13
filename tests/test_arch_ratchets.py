@@ -108,7 +108,7 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
         "exhaustive": True,
         "unmatched_ignore_imports_alerting": "error",
         "layers": [
-            "adapters : commands",
+            "adapters",
             "ops : ai_actions : masters_planning : material_synthesis",
             "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
             "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
@@ -475,7 +475,7 @@ containers = ["learning_os"]
 exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
-  "adapters : commands",
+  "adapters",
   "ops : ai_actions : masters_planning : material_synthesis",
   "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
   "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
@@ -510,7 +510,7 @@ containers = ["learning_os"]
 exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
-  "adapters : commands",
+  "adapters",
   "ops : ai_actions : masters_planning : material_synthesis",
   "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
   "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",

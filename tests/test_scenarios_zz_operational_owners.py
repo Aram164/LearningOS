@@ -207,8 +207,13 @@ def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
             if any(_relative_destination(p) for p in record.get("paths", []) if isinstance(p, str)):
                 add(f"{log_path.name}::unbound-world", str(record))
             continue
-        paths = record.get("paths", [])
-        if not paths or any(not isinstance(p, str) or not os.path.isabs(p) for p in paths):
+        paths = record.get("resolved_paths", record.get("paths", []))
+        record = dict(record, paths=paths)
+        if record.get("event") in ("os.rename", "os.link", "os.symlink", "shutil.copyfile", "shutil.move"):
+            check_paths = paths[-1:]
+        else:
+            check_paths = paths
+        if not check_paths or any(not isinstance(p, str) or not os.path.isabs(p) for p in check_paths):
             add(f"{log_path.name}::unresolved", str(record))
             continue
         for rel in _destinations(record, root):

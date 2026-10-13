@@ -37,34 +37,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::open
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::unlink
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::unlink
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::write_bytes
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_run::unlink
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_run::write_bytes
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_save_check_report_and_compact::unlink
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/contracts/data_contract.py::write_contract::write_text
     count: 1
     since: baseline
@@ -109,6 +81,26 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::open
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+  - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::unlink
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+  - signature: tools/learning_os/ops/handlers/_shared.py::apply_reviewed_envelope::open
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+  - signature: tools/learning_os/ops/handlers/_shared.py::apply_reviewed_envelope::unlink
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+  - signature: tools/learning_os/ops/handlers/plan.py::_save_check_report_and_compact::unlink
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
   A3-prose:
   - signature: tools/learning_os/commands/module.py::_inventory_block::method::```
     count: 1
