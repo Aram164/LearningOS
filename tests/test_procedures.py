@@ -210,13 +210,13 @@ def _persist_procedure_audit(stem: str, log_path: Path) -> None:
     dest_dir = Path(audit_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
     name = f"procedure__{stem}"
-    dest = dest_dir / f"{name}.jsonl"
-    header = {"event": "case", "operation": "procedure",
-              "case": stem, "root": str(ROOT)}
-    with open(dest, "w", encoding="utf-8") as out:
+    dest = dest_dir / f"{name}--{uuid.uuid4().hex}.jsonl"
+    # Each installed child supplies its actual world and same-command
+    # receipt proof; a transcript can use more than one disposable world.
+    header = {"event": "case", "operation": "procedure", "case": stem}
+    with open(dest, "x", encoding="utf-8") as out:
         out.write(_json.dumps(header) + "\n")
-        if log_path.is_file():
-            out.write(log_path.read_text(encoding="utf-8"))
+        out.write(log_path.read_text(encoding="utf-8"))
     with open(dest_dir / "cases.txt", "a", encoding="utf-8") as cases:
         cases.write(name + "\n")
 

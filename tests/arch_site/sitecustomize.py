@@ -34,6 +34,17 @@ if _log:
         except Exception:
             pass
     else:
+        # Bind operational evidence to the world this child actually uses.
+        # los-fixture has no world yet; its construction I/O is scaffolding.
+        _root_arg = os.environ.get("LOS_FX")
+        if "--root" in sys.argv:
+            _root_index = sys.argv.index("--root") + 1
+            if _root_index < len(sys.argv):
+                _root_arg = sys.argv[_root_index]
+        _world_root = str(Path(_root_arg).resolve()) if _root_arg else None
+        _tx_dir = Path(_world_root) / "operations/transactions" if _world_root else None
+        _receipts_before = sorted(p.name for p in _tx_dir.glob("transaction-*.yaml")) if _tx_dir else []
+
         # Step 3: the witness, only after install succeeded.
         _witness = {
             "event": "installed",
@@ -41,6 +52,8 @@ if _log:
             "ppid": os.getppid(),
             "token": _token,
             "argv": list(sys.argv),
+            "root": _world_root,
+            "receipts_before": _receipts_before,
         }
         with open(_log, "a", encoding="utf-8") as _handle:
             _handle.write(json.dumps(_witness) + "\n")
@@ -60,6 +73,8 @@ if _log:
             _pid=_me,
             _launch_token=_token,
             _capture_ok=_done,
+            _root=_world_root,
+            _before=tuple(_receipts_before),
         ):
             _record = {
                 "event": "completed",
@@ -68,6 +83,20 @@ if _log:
                 "capture_ok": _capture_ok(),
             }
             try:
+                # Retain real same-command receipt bytes before Scrut removes
+                # its fixture. Existing receipts never establish ownership.
+                _record["root"] = _root
+                _record["new_receipts"] = []
+                if _root:
+                    import hashlib
+                    for _path in sorted((Path(_root) / "operations/transactions").glob("transaction-*.yaml")):
+                        if _path.name not in _before:
+                            _raw = _path.read_bytes()
+                            _record["new_receipts"].append({
+                                "path": _path.name,
+                                "sha256": hashlib.sha256(_raw).hexdigest(),
+                                "text": _raw.decode("utf-8"),
+                            })
                 with open(_log_path, "a", encoding="utf-8") as _handle:
                     _handle.write(json.dumps(_record) + "\n")
             except Exception:

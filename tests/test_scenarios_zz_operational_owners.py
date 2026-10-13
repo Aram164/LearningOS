@@ -12,6 +12,7 @@ unknown destinations and missing or corrupt witnesses fail closed.
 from __future__ import annotations
 
 import fnmatch
+import hashlib
 import json
 import os
 import re
@@ -31,7 +32,8 @@ FIX = "Write durable operational state only through its declared owner (PLAN A19
 _TEMP_BASENAME = re.compile(r"^\.(.+)\.tmp(-\d+)?$")
 _WRITE_EVENTS = frozenset({
     "open", "os.rename", "os.remove", "os.unlink", "os.rmdir",
-    "os.link", "os.symlink", "os.write", "io.open",
+    "os.link", "os.symlink", "os.write", "io.open", "os.truncate",
+    "shutil.copyfile", "shutil.move", "shutil.rmtree",
 })
 
 
@@ -45,9 +47,20 @@ def _recorded_signatures() -> set[str]:
             for entry in data["checks"].get(CHECK_ID, [])}
 
 
-def _relative_destination(raw: str) -> str | None:
+def _relative_destination(raw: str, root: str | None = None) -> str | None:
     """The operational-relative path for one audited path, or None."""
     path = raw.replace(os.sep, "/")
+    if root is not None:
+        bound = Path(root).resolve()
+        lexical = Path(raw).resolve()
+        try:
+            rel = lexical.relative_to(bound).as_posix()
+        except ValueError:
+            token = hashlib.sha256(str(bound).encode("utf-8")).hexdigest()[:16]
+            if lexical.name.startswith(f"learningos-{token}-") and lexical.name.endswith("-touched.json"):
+                return f"<STATE>/{lexical.name}"
+            return None
+        return rel if rel.startswith("operations/") else None
     if "/operations/" in path:
         return "operations/" + path.split("/operations/", 1)[1]
     name = path.rsplit("/", 1)[-1]
@@ -58,17 +71,17 @@ def _relative_destination(raw: str) -> str | None:
     return None
 
 
-def _destinations(record: dict) -> list[str]:
+def _destinations(record: dict, root: str | None = None) -> list[str]:
     """Normalized destinations for one record (SPEC §3.6 rules)."""
     event = record.get("event")
     if event == "os.mkdir" or event not in _WRITE_EVENTS:
         return []
     paths = [p for p in record.get("paths", []) if isinstance(p, str)]
-    if event == "os.rename" and len(paths) >= 2:
+    if event in ("os.rename", "os.link", "os.symlink", "shutil.copyfile", "shutil.move") and len(paths) >= 2:
         paths = paths[1:]
     destinations = []
     for raw in paths:
-        rel = _relative_destination(raw)
+        rel = _relative_destination(raw, root)
         if rel is None:
             continue
         head, _, name = rel.rpartition("/")
@@ -118,60 +131,101 @@ def _owner_satisfied(entry: dict, record: dict, rel: str,
 
 
 def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
-    """Signature -> evidence lines for one audit log (fail closed)."""
+    """Check retained, root-bound evidence; unknown evidence fails closed."""
+    from arch_writes_fixtures import witness_failures
+
     violations: dict[str, list[str]] = {}
 
     def add(signature: str, evidence: str) -> None:
         violations.setdefault(signature, []).append(evidence)
 
     try:
-        lines = log_path.read_text(encoding="utf-8").splitlines()
-    except OSError as exc:
-        add(f"{log_path.name}::unreadable", f"{log_path}: {exc}")
+        records = [json.loads(line) for line in
+                   log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if not records or not all(isinstance(row, dict) for row in records):
+            raise ValueError("empty or non-object audit")
+        header = records[0]
+        if header.get("event") != "case" or not header.get("operation") or not header.get("case"):
+            raise ValueError("missing case identity")
+    except (OSError, ValueError) as exc:
+        add(f"{log_path.name}::corrupt", f"{log_path}: {exc}")
         return violations
-    records = []
-    for line in lines:
-        if not line.strip():
+    if not any(r.get("event") == "installed" for r in records):
+        add(f"{log_path.name}::missing-witness", str(log_path))
+        return violations
+    for problem in witness_failures(records, allow_isolated=True):
+        add(f"{log_path.name}::bad-witness", problem)
+
+    # Proof is read at child completion from newly created receipt bytes.
+    # It remains available after Scrut removes its temporary fixture.
+    receipts: dict[tuple[int, str], list[tuple[str, set[str]]]] = {}
+    for row in records:
+        if row.get("event") != "completed" or not row.get("root"):
             continue
+        key = (row.get("pid"), row["root"])
+        proofs = receipts.setdefault(key, [])
         try:
-            records.append(json.loads(line))
-        except ValueError:
-            add(f"{log_path.name}::corrupt",
-                f"{log_path}: unreadable audit line — {FIX}")
-            return violations
-    header = next((r for r in records if r.get("event") == "case"), {})
-    receipts = _receipts_for_run(header.get("root"))
+            for proof in row.get("new_receipts", []):
+                text = proof["text"]
+                if hashlib.sha256(text.encode("utf-8")).hexdigest() != proof["sha256"]:
+                    raise ValueError("receipt bytes do not match their digest")
+                data = yaml.safe_load(text)
+                if not isinstance(data, dict) or not isinstance(data.get("writes"), list):
+                    raise ValueError("malformed receipt proof")
+                proofs.append((str(data.get("capability")),
+                               {str(w["path"]) for w in data["writes"] if isinstance(w, dict) and w.get("path")}))
+        except (KeyError, TypeError, ValueError, yaml.YAMLError) as exc:
+            add(f"{log_path.name}::bad-receipt", str(exc))
+
+    worlds = {}
     excluded = [row["glob"] for row in owners.get("excluded", [])]
     entries = owners.get("entries", [])
-    helpers = set(owners.get("io_helpers", []))
     for record in records:
-        if record.get("event") in (None, "case", "installed",
-                                   "subprocess.Popen"):
+        event = record.get("event")
+        pid = record.get("pid")
+        if event == "installed":
+            worlds[pid] = record
             continue
-        writer = record.get("writer")
-        if isinstance(writer, str) and writer in helpers:
+        if event not in _WRITE_EVENTS:
             continue
-        for rel in _destinations(record):
+        if event == "open" and record.get("mode") == "r":
+            continue
+        binding = worlds.get(pid)
+        if binding is None:
+            # The hook's own append-open precedes the installed witness.
+            raw_paths = record.get("paths", [])
+            if raw_paths and all(isinstance(p, str) and os.path.isabs(p) and _relative_destination(p) is None for p in raw_paths):
+                continue
+            add(f"{log_path.name}::unbound-writer", str(record))
+            continue
+        root = binding.get("root")
+        if root is None:
+            argv = binding.get("argv", [])
+            if argv and Path(argv[0]).name == "los-fixture":
+                continue  # explicitly identified fixture construction
+            # A read-only helper can have no world; an unresolved write cannot.
+            if any(_relative_destination(p) for p in record.get("paths", []) if isinstance(p, str)):
+                add(f"{log_path.name}::unbound-world", str(record))
+            continue
+        paths = record.get("paths", [])
+        if not paths or any(not isinstance(p, str) or not os.path.isabs(p) for p in paths):
+            add(f"{log_path.name}::unresolved", str(record))
+            continue
+        for rel in _destinations(record, root):
             if any(fnmatch.fnmatch(rel, glob) for glob in excluded):
                 continue
-            matched = [e for e in entries
-                       if fnmatch.fnmatch(rel, e["glob"])]
-            if any(_owner_satisfied(e, record, rel, receipts)
-                   for e in matched):
+            matched = [e for e in entries if fnmatch.fnmatch(rel, e["glob"])]
+            same_run = receipts.get((pid, root), [])
+            if any(_owner_satisfied(e, record, rel, same_run) for e in matched):
                 continue
+            writer = record.get("writer") or "unknown"
             evidence = (f"{log_path.name}: {rel} writer={writer} "
-                        f"at {record.get('writer_file')}:"
-                        f"{record.get('writer_line')} phase="
-                        f"{record.get('phase')}")
+                        f"at {record.get('writer_file')}:{record.get('writer_line')} "
+                        f"phase={record.get('phase')}")
             if matched:
-                who = writer if isinstance(writer, str) and writer \
-                    else "unknown"
                 for entry in matched:
-                    if entry["sink"] == "engine:apply":
-                        caps = "+".join(entry.get("capabilities", []))
-                        add(f"{entry['glob']}::{caps}", evidence)
-                    else:
-                        add(f"{entry['glob']}::{who}", evidence)
+                    who = "+".join(entry.get("capabilities", [])) if entry["sink"] == "engine:apply" else writer
+                    add(f"{entry['glob']}::{who}", evidence)
             else:
                 add(f"{rel}::undeclared", evidence)
     return violations
@@ -213,12 +267,16 @@ def test_operational_owners_population():
             for case in doc.get("cases", []):
                 expected.add(f"{path.stem}__{case['id']}")
         index = yaml.safe_load(
-            (ROOT / "system/procedures/INDEX.yaml").read_text(
-                encoding="utf-8"))
-        for row in index.get("procedures", []):
-            stem = Path(row["file"]).stem \
-                if isinstance(row, dict) else Path(str(row)).stem
-            expected.add(f"procedure__{stem}")
+            (ROOT / "system/procedures/INDEX.yaml").read_text(encoding="utf-8"))
+        for row in index.get("sections", []):
+            if row.get("class") == "procedure" and row.get("transcript"):
+                expected.add(f"procedure__{Path(row['transcript']).stem}")
+        # cases.txt is an index, never proof that the corresponding log exists.
+        captured = set()
+        for log in logs:
+            header = json.loads(log.read_text(encoding="utf-8").splitlines()[0])
+            captured.add(f"{header.get('operation')}__{header.get('case')}")
+        witnessed &= captured
         missing = expected - witnessed
         assert not missing, (
             f"A19: CI population misses witnesses: "
@@ -241,11 +299,29 @@ def test_operational_owners_population():
 def _write_log(tmp_path: Path, name: str, records: list[dict],
                root: Path) -> Path:
     log = tmp_path / f"{name}.jsonl"
+    import hashlib
+
     header = {"event": "case", "operation": "control", "case": name,
               "root": str(root)}
-    log.write_text("\n".join(
-        json.dumps(row) for row in [header, *records]) + "\n",
-        encoding="utf-8")
+    installed = {"event": "installed", "pid": 1, "ppid": 0,
+                 "token": "control", "argv": ["control", "--root", str(root)],
+                 "root": str(root)}
+    proofs = []
+    for path in (root / "operations/transactions").glob("transaction-*.yaml"):
+        raw = path.read_bytes()
+        proofs.append({"path": path.name, "text": raw.decode(),
+                       "sha256": hashlib.sha256(raw).hexdigest()})
+    completed = {"event": "completed", "pid": 1, "token": "control",
+                 "root": str(root), "capture_ok": True, "new_receipts": proofs}
+    bound = []
+    for row in records:
+        item = dict(row, pid=1)
+        if "paths" in item:
+            item["paths"] = [str(root) + p[2:] if isinstance(p, str) and p.startswith("/w/") else p for p in item["paths"]]
+        bound.append(item)
+    log.write_text("\n".join(json.dumps(row) for row in
+                             [header, installed, *bound, completed]) + "\n",
+                   encoding="utf-8")
     return log
 
 
@@ -337,3 +413,99 @@ def test_corrupt_log_fails_closed(tmp_path):
         '{"event": "case", "root": "' + str(world) + '"}\nnot json\n',
         encoding="utf-8")
     assert _violations_in_log(log, _load_owners()) != {}
+
+
+def test_shadow_world_writes_do_not_become_durable_owners(tmp_path):
+    assert _signatures(tmp_path, [_write_record(
+        "/disposable/shadow/operations/new-state.yaml", "learning_os.ops.check")]) == set()
+
+
+def test_truncate_and_copy_destinations_are_checked(tmp_path):
+    assert _signatures(tmp_path, [{"event": "os.truncate", "paths": ["/w/operations/new-state.yaml"],
+                                  "writer": "learning_os.rogue"}]) == {"operations/new-state.yaml::undeclared"}
+    assert _signatures(tmp_path, [{"event": "shutil.copyfile", "paths": ["/other/read.yaml", "/w/operations/new-state.yaml"],
+                                  "writer": "learning_os.rogue"}]) == {"operations/new-state.yaml::undeclared"}
+
+
+def test_header_only_and_non_object_audits_fail_closed(tmp_path):
+    for text in ('{"event":"case","operation":"x","case":"y"}\n', '[]\n'):
+        log = tmp_path / "bad.jsonl"
+        log.write_text(text)
+        assert _violations_in_log(log, _load_owners())
+
+
+def test_preexisting_receipt_cannot_claim_an_engine_write(tmp_path):
+    root = tmp_path / "world"
+    root.mkdir()
+    log = _write_log(tmp_path, "baseline", [_write_record(
+        "/w/operations/transactions/lineage.yaml", "learning_os.transactions", phase="apply")], root)
+    assert _violations_in_log(log, _load_owners())
+
+
+def test_unresolved_write_fails_closed(tmp_path):
+    assert _signatures(tmp_path, [{"event": "open", "paths": [9], "mode": "w", "writer": "learning_os.transactions"}])
+
+
+def test_child_captures_only_new_receipt_bytes(tmp_path):
+    import subprocess
+    import sys
+
+    root = tmp_path / "world"
+    tx = root / "operations/transactions"
+    tx.mkdir(parents=True)
+    baseline = tx / "transaction-20260101-000000-001.yaml"
+    baseline.write_text("capability: lineage.restamp\nwrites: []\n")
+    log = tmp_path / "child.jsonl"
+    env = dict(os.environ)
+    env.update(LOS_FX=str(root), LOS_ARCH_AUDIT_LOG=str(log),
+               LOS_ARCH_LAUNCH_TOKEN="receipt-control",
+               PYTHONPATH=str(Path(__file__).parent / "arch_site") + os.pathsep
+               + str(Path(__file__).parent) + os.pathsep + env.get("PYTHONPATH", ""))
+    created = tx / "transaction-20260101-000000-002.yaml"
+    script = "from pathlib import Path; import sys; Path(sys.argv[1]).write_text('capability: lineage.restamp\\nwrites: []\\n')"
+    child = subprocess.run([sys.executable, "-c", script, str(created)], env=env,
+                           capture_output=True, text=True)
+    assert child.returncode == 0, child.stderr
+    records = [json.loads(line) for line in log.read_text().splitlines()]
+    installed = next(row for row in records if row.get("event") == "installed")
+    completed = next(row for row in records if row.get("event") == "completed")
+    assert installed["root"] == str(root.resolve())
+    assert installed["receipts_before"] == [baseline.name]
+    assert [proof["path"] for proof in completed["new_receipts"]] == [created.name]
+    proof = completed["new_receipts"][0]
+    assert proof["text"].encode() == created.read_bytes()
+    assert proof["sha256"] == hashlib.sha256(created.read_bytes()).hexdigest()
+
+
+def test_repeated_case_audits_are_preserved(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    from scenario_harness import persist_case_audit
+    from test_procedures import _persist_procedure_audit
+
+    audit = tmp_path / "audits"
+    monkeypatch.setenv("LOS_ARCH_AUDIT_DIR", str(audit))
+    log = tmp_path / "source.jsonl"
+    log.write_text('{"event":"installed"}\n')
+    ctx = SimpleNamespace(operation="same", case_id="case", root=tmp_path,
+                          log_path=log)
+    persist_case_audit(ctx)
+    persist_case_audit(ctx)
+    _persist_procedure_audit("same", log)
+    _persist_procedure_audit("same", log)
+    assert len(list(audit.glob("*.jsonl"))) == 4
+    log.unlink()
+    with pytest.raises(FileNotFoundError):
+        persist_case_audit(ctx)
+
+
+def test_bad_receipt_digest_fails_closed(tmp_path):
+    root = tmp_path / "world"
+    (root / "operations/transactions").mkdir(parents=True)
+    (root / "operations/transactions/transaction-20260101-000000-001.yaml").write_text(
+        "capability: lineage.restamp\nwrites: [{path: operations/transactions/lineage.yaml}]\n")
+    log = _write_log(tmp_path, "wrong-digest", [], root)
+    rows = [json.loads(line) for line in log.read_text().splitlines()]
+    rows[-1]["new_receipts"][0]["sha256"] = "0" * 64
+    log.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+    assert any("bad-receipt" in sig for sig in _violations_in_log(log, _load_owners()))

@@ -1084,13 +1084,15 @@ def persist_case_audit(ctx: _CaseContext) -> None:
     dest_dir = Path(audit_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
     name = f"{ctx.operation}__{ctx.case_id}"
-    dest = dest_dir / f"{name}.jsonl"
+    import uuid
+
+    dest = dest_dir / f"{name}--{uuid.uuid4().hex}.jsonl"
     header = {"event": "case", "operation": ctx.operation,
               "case": ctx.case_id, "root": str(ctx.root)}
-    with open(dest, "w", encoding="utf-8") as out:
+    with open(dest, "x", encoding="utf-8") as out:
         out.write(json.dumps(header) + "\n")
-        if ctx.log_path.is_file():
-            out.write(ctx.log_path.read_text(encoding="utf-8"))
+        # Missing evidence must raise rather than create a header-only log.
+        out.write(ctx.log_path.read_text(encoding="utf-8"))
     with open(dest_dir / "cases.txt", "a", encoding="utf-8") as cases:
         cases.write(name + "\n")
 
