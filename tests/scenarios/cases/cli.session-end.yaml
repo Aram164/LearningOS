@@ -67,6 +67,28 @@ cases:
         request: {text: "A session's worth of thought."}
       - transport: cli
         argv: [session-end, --close]
+  - id: a9-already-committed
+    kind: sequence
+    git:
+      origin: /nonexistent
+    steps:
+    - transport: gateway
+      operation: capture.create
+      request:
+        text: A session's worth of thought.
+    - transport: cli
+      argv:
+      - session-end
+      - --commit-message
+      - scenario commit
+      - --push
+    - transport: cli
+      argv:
+      - session-end
+      - --commit-message
+      - another commit
+    expect:
+      site: cli.session-end.already-committed
 untriggered:
   - {site: cli.session-end.unreadable-ledger, where: "tools/learning_os/ops/handlers/session.py:55", reason: fixture-inexpressible, proof: _prove_session_unreadable_ledger}
   - {site: cli.session-end.ownership-conflict, where: "tools/learning_os/ops/handlers/session.py:63", reason: fixture-inexpressible, proof: _prove_session_ownership_conflict}

@@ -20,6 +20,7 @@ import json
 import os
 import sys
 from functools import lru_cache
+from functools import partial as _phase4_partial
 from pathlib import Path
 
 import pytest
@@ -3057,6 +3058,92 @@ _PROOF_FNS.update({
     "cli.session-end.ownership-conflict": _prove_session_ownership_conflict,
     "cli.session-end.head-changed": _prove_session_head_changed,
 })
+
+
+
+def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
+    """Fault-inject the actual pipeline backstop, preserving its typed witness.
+
+    These branches require I/O faults, a torn internal owner handoff, or a
+    malformed internal revision value. Reviewed lineage's bytes/report
+    branches are algebraically guarded by the public handler; inject only
+    after proving that guard, rather than inventing an input that reaches it.
+    """
+    import copy
+    import hashlib
+
+    import scenario_harness as harness
+
+    import learning_os.ops.handlers.plan as plan
+    from learning_os.semantics.lineage import LineageError
+
+    operation, slug = site.rsplit(".", 1)
+    if operation == "lineage.restamp":
+        ctx = _a9_world(operation, "apply-success", tmp_path)
+        doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+        payload = copy.deepcopy(next(c for c in doc["cases"] if c["id"] == "apply-success")["request"])
+        if slug in ("reviewed-bytes-changed", "reviewed-needs-report"):
+            claims = ["claim-a"]
+            raw = plan._canonical_list_bytes(claims)
+            digest = plan.claims_list_sha256(claims)
+            assert digest == "sha256:" + hashlib.sha256(raw).hexdigest()
+            argv = ["lineage-restamp", "--claim-ids", *claims,
+                    "--claims-sha256", digest, "--review-report", "not-used.json"]
+            if slug == "reviewed-bytes-changed":
+                monkeypatch.setattr(plan, "_canonical_list_bytes", lambda ids: b"changed\n")
+            else:
+                original = plan.apply_reviewed_envelope
+                def without_report(*args, **kwargs):
+                    assert kwargs["review_report"]
+                    kwargs["review_report"] = None
+                    return original(*args, **kwargs)
+                monkeypatch.setattr(plan, "apply_reviewed_envelope", without_report)
+            outcome, lines = _a9_run_cli(ctx.root, operation, argv, tmp_path, monkeypatch)
+        elif slug == "analysis-failed":
+            def bad_analysis(root):
+                raise OSError("a9 analysis read fault")
+            monkeypatch.setattr(plan, "analyze", bad_analysis)
+            outcome, lines = _a9_run_cli(ctx.root, operation, ["lineage-restamp", "--check"], tmp_path, monkeypatch)
+        else:
+            if slug == "restamp-failed":
+                def failed_claim(*args, **kwargs):
+                    raise LineageError("a9 claim changed after analysis")
+                monkeypatch.setattr(plan, "restamp_claim", failed_claim)
+            else:
+                def bad_revision(value):
+                    raise ValueError("a9 malformed internal revision")
+                monkeypatch.setattr(plan, "parse_expected_revisions", bad_revision)
+            outcome, lines = _a9_run_gateway(ctx.root, operation, payload,
+                ["file:operations/transactions/lineage.yaml"], "a9-"+slug, tmp_path, monkeypatch)
+    else:
+        case_id = "import-success" if operation == "module.plan.import" else "revise-success"
+        ctx = _a9_world(operation, case_id, tmp_path)
+        doc = harness.load_case_file(CASES_DIR / f"{operation}.yaml")
+        original_case = next(c for c in doc["cases"] if c["id"] == case_id)
+        payload = harness._substitute(copy.deepcopy(original_case["request"]), ctx)
+        if payload.get("file"):
+            payload["file"] = str((ctx.root / payload["file"]).resolve())
+        if slug == "unknown-module":
+            original = plan._execute_plan_import
+            def changed_owner(context, request, **kwargs):
+                assert context.repo().modules.get(kwargs["module_id"]) is not None
+                kwargs["module_id"] = "module-nope"
+                return original(context, request, **kwargs)
+            monkeypatch.setattr(plan, "_execute_plan_import", changed_owner)
+        else:
+            def bad_revision(value):
+                raise ValueError("a9 malformed internal revision")
+            monkeypatch.setattr(plan, "parse_expected_revisions", bad_revision)
+        outcome, lines = _a9_run_gateway(ctx.root, operation, payload,
+            original_case.get("artifact_ids", []), "a9-"+slug, tmp_path, monkeypatch)
+    assert outcome.exit_code == 2
+    witness_exit = None if site == "lineage.restamp.bad-expected-revision" else 2
+    assert lines == [{"operation": operation, "kind": "failure", "site": site,
+                      "class": "NotFound" if slug == "unknown-module" else "WriteRefused", "exit_code": witness_exit}]
+
+
+for _phase4_site in ('lineage.restamp.analysis-failed', 'lineage.restamp.restamp-failed', 'lineage.restamp.bad-expected-revision', 'lineage.restamp.reviewed-bytes-changed', 'lineage.restamp.reviewed-needs-report', 'module.plan.import.bad-expected-revision', 'unit.plan.revise.bad-expected-revision', 'unit.plan.revise.unknown-module'):
+    _PROOF_FNS[_phase4_site] = _phase4_partial(_prove_phase4_plan_backstop, site=_phase4_site)
 
 
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
