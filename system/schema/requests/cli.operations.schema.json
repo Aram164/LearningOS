@@ -46,7 +46,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "operations-trace-request",
+      "x-los-lookup": true
     },
     "limit": {
       "type": "integer",

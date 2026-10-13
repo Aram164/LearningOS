@@ -25,7 +25,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "masters-candidate-module",
+      "x-los-lookup": true
     },
     "file": {
       "type": "string",

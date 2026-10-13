@@ -488,47 +488,7 @@ checks:
     approved_by: null
   A14-vocabulary: []
   A6-idroundtrip:
-  - signature: cli.ai-action-append-slices::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.ai-action-prepare::/properties/action_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.ai-action-prepare::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.ai-action-prepare::/properties/target_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.ai-action-status::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.ai-action-validate-delivery::/properties/delivery_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.goal::/properties/session_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.operations::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: cli.related::/properties/id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
   - signature: lineage.restamp::/properties/claim_ids/items::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
-  - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
@@ -570,30 +530,6 @@ checks:
     since: baseline
     approved_by: null
   A5-suggestions:
-  - signature: cli.ai-action-append-slices::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/action_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-prepare::/properties/target_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-status::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.ai-action-validate-delivery::/properties/delivery_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
   - signature: cli.capability::*
     count: 1
     since: baseline
@@ -618,23 +554,22 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.operations::/properties/request_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.related::/properties/id::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+  # Retained: rich_world declares no component, so no successful
+  # --component-id base can exist without fixture writes outside
+  # Task 78's allowed scope; the refusal already suggests correctly.
   - signature: cli.unit-list::/properties/component_id::no-base
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: cli.goal::/properties/session_id::review
+  # Reclassified from ::review by Task 78 (net-zero): the product
+  # lookup and A6 owner execute, but no deterministic A5 case base
+  # exists — gateway envelope ids are harness-generated (operations
+  # traces) and the masters anchor recording is sequence-shaped.
+  - signature: cli.operations::/properties/request_id::no-base
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: masters-planning.comparison.publish::/properties/candidate_module_id::no-base
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"

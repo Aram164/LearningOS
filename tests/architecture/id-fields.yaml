@@ -40,8 +40,10 @@ fields:
 - operation: cli.ai-action-append-slices
   pointer: /properties/request_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'request'
+  lookup: true
+  owner: ai-request-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory; owner executed in test_arch_idroundtrip'
 - operation: cli.ai-action-append-slices
   pointer: /properties/route_id
   kind: route
@@ -49,28 +51,36 @@ fields:
 - operation: cli.ai-action-prepare
   pointer: /properties/action_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'action'
+  lookup: true
+  owner: ai-action-registry
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded registry ids; owner executed in test_arch_idroundtrip'
 - operation: cli.ai-action-prepare
   pointer: /properties/request_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'request'
+  lookup: false
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: prepare request_id is a caller-supplied creation identity; never a known-ID lookup'
 - operation: cli.ai-action-prepare
   pointer: /properties/target_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'target'
+  lookup: true
+  owner: ai-action-target
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded garden/unit ids; owner executed in test_arch_idroundtrip'
 - operation: cli.ai-action-status
   pointer: /properties/request_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'request'
+  lookup: true
+  owner: ai-request-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory; owner executed in test_arch_idroundtrip'
 - operation: cli.ai-action-validate-delivery
   pointer: /properties/delivery_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'delivery'
+  lookup: true
+  owner: ai-delivery-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store delivery inventory; owner executed in test_arch_idroundtrip'
 - operation: cli.atlas-context
   pointer: /properties/concept_id
   kind: concept
@@ -92,8 +102,8 @@ fields:
 - operation: cli.goal
   pointer: /properties/session_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'session'
+  lookup: false
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: goal session_id is an ownership-window identity; never a known-ID lookup'
 - operation: cli.inspect
   pointer: /properties/id
   kind: null
@@ -119,8 +129,10 @@ fields:
 - operation: cli.operations
   pointer: /properties/request_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'request'
+  lookup: true
+  owner: operations-trace-request
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: lookup over distinct already-loaded trace request ids; owner executed in test_arch_idroundtrip'
 - operation: cli.plan-edit-context
   pointer: /properties/route_id
   kind: route
@@ -148,8 +160,10 @@ fields:
 - operation: cli.related
   pointer: /properties/id
   kind: null
-  lookup: null
-  review: heterogeneous id (any record kind)
+  lookup: true
+  owner: related-record
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-7 2026-10-12: heterogeneous record owner probe over manifest record ids; owner executed in test_arch_idroundtrip'
 - operation: cli.session-end
   pointer: /properties/session_id
   kind: null
@@ -212,8 +226,10 @@ fields:
 - operation: masters-planning.comparison.publish
   pointer: /properties/candidate_module_id
   kind: null
-  lookup: null
-  review: unknown id prefix 'candidate_module'
+  lookup: true
+  owner: masters-candidate-module
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map; owner executed in test_arch_idroundtrip'
 - operation: material.span
   pointer: /properties/route_id
   kind: route

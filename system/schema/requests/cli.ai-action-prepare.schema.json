@@ -29,7 +29,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "ai-action-registry",
+      "x-los-lookup": true
     },
     "target_kind": {
       "type": "string",
@@ -71,7 +73,9 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-id-owner": "ai-action-target",
+      "x-los-lookup": true
     },
     "provider": {
       "type": "string",
@@ -118,6 +122,7 @@
     "request_id": {
       "type": "string",
       "description": "optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ (refused before anything is persisted)",
+      "x-los-lookup": false,
       "x-los-cli": {
         "flags": [
           "--request-id"
