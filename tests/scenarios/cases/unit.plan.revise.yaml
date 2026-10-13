@@ -171,5 +171,5 @@ cases:
       site: unit.plan.revise.reviewed-report-invalid
 untriggered:
   - {where: "tools/learning_os/commands/module.py:3043", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {"site": "unit.plan.revise.bad-expected-revision", "where": "tools/learning_os/ops/handlers/plan.py:5523", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
-  - {"site": "unit.plan.revise.unknown-module", "where": "tools/learning_os/ops/handlers/plan.py:5255", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "unit.plan.revise.bad-expected-revision", "where": "tools/learning_os/ops/handlers/plan.py:5103", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "unit.plan.revise.unknown-module", "where": "tools/learning_os/ops/handlers/plan.py:4835", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
