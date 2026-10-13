@@ -214,3 +214,5 @@ approvals:
   - {key: "catalog.internal_commands.goal.decision.record", change: added, plan_ref: "PLAN D8 (goals: cli.goal becomes a transaction)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.validate.schema.json", change: changed, plan_ref: "PLAN D4 (T84: cli.validate converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
   - {key: "request_schemas.cli.generate.schema.json", change: changed, plan_ref: "PLAN D4 (T84: cli.generate converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.module.plan.import.schema.json", change: changed, plan_ref: "PLAN D4 (T82: module.plan.import converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.unit.plan.revise.schema.json", change: changed, plan_ref: "PLAN D4 (T82: unit.plan.revise converted)", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
