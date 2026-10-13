@@ -14,8 +14,9 @@ import yaml
 from .errors import (
     MAX_DELIVERY_BYTES,
     MAX_DELIVERY_ENTRIES,
+    DeliveryNotFound,
     DeliveryValidationError,
-    TargetNotFoundError,
+    RequestNotFound,
 )
 from .support import _atomic_text, _dump_yaml, _inside, _read_yaml
 from .types import AIActionRequest, DeliveryRecord, RequestStatus
@@ -69,7 +70,13 @@ class FilesystemAIActionRepository:
         path = self.request_path(request_id)
         value = _read_yaml(path)
         if not isinstance(value, dict):
-            raise TargetNotFoundError(f"AI action request not found: {request_id}")
+            # Miss-only inventory ((cx) D-8): the happy path above keeps
+            # its single-file read; only a miss enumerates the same store.
+            candidates = [str(row["id"]) for row in self.request_projections()
+                          if row.get("id")]
+            raise RequestNotFound(
+                "request", request_id, candidates,
+                message=f"AI action request not found: {request_id}")
         return cast(AIActionRequest, value)
 
     def update_request(self, request: AIActionRequest) -> None:
@@ -195,11 +202,21 @@ class FilesystemAIActionRepository:
         shutil.rmtree(staged.parent, ignore_errors=True)
         return destination
 
+    def delivery_ids(self) -> list[str]:
+        """Every imported delivery id, from directory names only."""
+        if not self.deliveries.is_dir():
+            return []
+        return sorted(path.name for path in self.deliveries.iterdir()
+                      if path.is_dir())
+
     def get_delivery(self, delivery_id: str) -> tuple[DeliveryRecord, Path]:
         directory = self.delivery_dir(delivery_id)
         delivery = _read_yaml(directory / "delivery.yaml")
         if not isinstance(delivery, dict):
-            raise TargetNotFoundError(f"AI delivery not found: {delivery_id}")
+            # Miss-only inventory ((cx) D-8), as in get_request above.
+            raise DeliveryNotFound(
+                "delivery", delivery_id, self.delivery_ids(),
+                message=f"AI delivery not found: {delivery_id}")
         return cast(DeliveryRecord, delivery), directory
 
     def request_projections(self) -> list[RequestStatus]:

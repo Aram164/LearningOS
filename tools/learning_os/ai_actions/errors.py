@@ -77,3 +77,36 @@ class ConceptNotFound(NotFound, ContinuationRefusedError):
     The ``NotFound`` leg carries the concept domain as structured
     suggestions; the ``ContinuationRefusedError`` leg keeps the legacy
     ``(INVALID_REQUEST, retryable=False, exit=1)`` outcome."""
+
+
+class RequestNotFound(NotFound, TargetNotFoundError):
+    """A prepared-request miss in the AI store ((cx) D-8).
+
+    The ``NotFound`` leg carries the miss-only request inventory as
+    structured suggestions; the ``TargetNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class DeliveryNotFound(NotFound, TargetNotFoundError):
+    """An imported-delivery miss in the AI store ((cx) D-8).
+
+    The ``NotFound`` leg carries the miss-only delivery inventory as
+    structured suggestions; the ``TargetNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class ActionNotFound(NotFound, ActionNotFoundError):
+    """A prepared-action miss over the loaded registry ((cx) D-8).
+
+    The ``NotFound`` leg carries the already-loaded action ids as
+    structured suggestions; the ``ActionNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class TargetNotFound(NotFound, TargetNotFoundError):
+    """A prepare-target miss over its loaded domain ((cx) D-8).
+
+    The ``NotFound`` leg carries the garden or unit ids the lookup
+    already loaded as structured suggestions; the
+    ``TargetNotFoundError`` leg keeps the legacy class, message and
+    exit for every existing caller."""
