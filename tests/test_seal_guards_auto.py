@@ -423,17 +423,15 @@ def test_public_selector_routes_converted_stage_note_write(
     assert body["replayed"] is False
 
 
-def test_legacy_guards_auto_reads_the_live_tree_once(
-        mini_repo: Path, tmp_path: Path, monkeypatch):
-    """F4 (legacy branch): an unregistered seal loads once and walks once.
+def test_public_module_plan_guards_auto_preserves_guard_derivation(
+        mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
+    """The Phase 4 module-plan seal uses the registered public selector.
 
-    module.plan.import is a permanent Phase3 deferral (SPEC (bs) item 5:
-    it converts with the transport adapter in PLAN 4.1, unlike
-    workspace.next-action.update, which the final wave converts), so it
-    takes the legacy dry-run path: the seal's bare snapshot walk plus
-    the handler's single load, with no validation (interception stops at
-    the transaction boundary before any check). Preserves the original
-    zero-validation invariant on a real capability and fixture.
+    The proposal check walks once and validates its shadow once. The
+    live planner load and synthesis-destination resolution stay bounded,
+    and guard derivation changes no canonical file.
+    Calling the retired legacy derivation for this converted operation
+    would test an unreachable Phase 3 route instead of current behavior.
     """
     import functools
     import sys
@@ -480,12 +478,16 @@ def test_legacy_guards_auto_reads_the_live_tree_once(
     )
     before = canonical_fingerprint(mini_repo)
     tree_before = {path for path in mini_repo.rglob("*")}
-    counts = {"load_repo": 0, "walks": 0, "validate": 0}
+    counts = {"load_repo": 0, "live_loads": 0, "shadow_loads": 0, "walks": 0, "validate": 0}
 
     def counted(key, function):
         @functools.wraps(function)
         def wrapper(*args, **kwargs):
             counts[key] += 1
+            if key == "load_repo":
+                side = ("live_loads" if Path(args[0]).resolve() == mini_repo.resolve()
+                        else "shadow_loads")
+                counts[side] += 1
             return function(*args, **kwargs)
 
         return wrapper
@@ -507,19 +509,29 @@ def test_legacy_guards_auto_reads_the_live_tree_once(
                 current, "__wrapped__", None) is original_load:
             monkeypatch.setattr(module, "load_repo", load_counter)
 
-    snapshot, derived = seal_envelope._derive_guards_auto(
-        mini_repo, capability="module.plan.import",
-        payload={"module_id": "module-demo", "file": str(package),
-                 "file_sha256": file_sha256(package)},
-        key="guards-auto-legacy-once-001",
-        request_id="request-guards-auto-legacy-once-001",
-        channel="operator", approval_kind="operator-approval", snapshot=None)
+    def legacy_must_not_run(*args, **kwargs):
+        raise AssertionError("converted module.plan.import reached legacy sealing")
 
-    assert snapshot == f"sha256:{before}"
-    assert derived == {"module-demo": 0}
-    assert counts["load_repo"] == 1, counts
+    monkeypatch.setattr(seal_envelope, "_derive_guards_auto", legacy_must_not_run)
+    out = tmp_path / "sealed.json"
+    code = seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "module.plan.import",
+        "--payload", json.dumps({"module_id": "module-demo", "file": str(package),
+                                 "file_sha256": file_sha256(package)}),
+        "--key", "guards-auto-module-plan-once-001", "--guards", "auto",
+        "--out", str(out)])
+    captured = capsys.readouterr()
+    assert code == 0, captured.err
+    assert "guards auto:" in captured.err
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["expected_snapshot"] == f"sha256:{before}"
+    assert envelope["expected_revisions"] == {"module-demo": 0}
+    # The second live load resolves the synthesis destination of the unit.
+    assert counts["live_loads"] == 2, counts
+    assert counts["shadow_loads"] == 1, counts
+    assert counts["load_repo"] == 3, counts
     assert counts["walks"] == 1, counts
-    assert counts["validate"] == 0, counts
+    assert counts["validate"] == 1, counts
     assert canonical_fingerprint(mini_repo) == before
     assert {path for path in mini_repo.rglob("*")} == tree_before
 
