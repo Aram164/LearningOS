@@ -1,20 +1,56 @@
-# Pinned audit-event inventory per supported Python version (SPEC §3.2c).
-"3.14":
-  open: {path: 0, mode: 1, flags: 2}
-  os.rename: {paths: [0, 1]}
-  os.remove: {path: 0}
-  os.rmdir: {path: 0}
-  os.mkdir: {path: 0}
-  os.truncate: {path: 0}
-  os.link: {paths: [0, 1]}
-  os.symlink: {paths: [0, 1]}
-  shutil.copyfile: {paths: [0, 1]}
-  shutil.move: {paths: [0, 1]}
-  shutil.rmtree: {path: 0}
-  subprocess.Popen: {argv: 1}
-  os.listdir: {path: 0}
-  os.scandir: {path: 0}
-  glob.glob: {path: 0}
-  socket.connect: {paths: [1], resolve: false}
-  socket.getaddrinfo: {paths: [0, 1], resolve: false}
-  learningos.observation: {path: 0, resolve: false}
+'3.12': &id001
+  glob.glob:
+    path: 0
+  learningos.observation:
+    path: 0
+    resolve: false
+  open:
+    flags: 2
+    mode: 1
+    path: 0
+  os.link:
+    paths:
+    - 0
+    - 1
+  os.listdir:
+    path: 0
+  os.mkdir:
+    path: 0
+  os.remove:
+    path: 0
+  os.rename:
+    paths:
+    - 0
+    - 1
+  os.rmdir:
+    path: 0
+  os.scandir:
+    path: 0
+  os.symlink:
+    paths:
+    - 0
+    - 1
+  os.truncate:
+    path: 0
+  shutil.copyfile:
+    paths:
+    - 0
+    - 1
+  shutil.move:
+    paths:
+    - 0
+    - 1
+  shutil.rmtree:
+    path: 0
+  socket.connect:
+    paths:
+    - 1
+    resolve: false
+  socket.getaddrinfo:
+    paths:
+    - 0
+    - 1
+    resolve: false
+  subprocess.Popen:
+    argv: 1
+'3.14': *id001

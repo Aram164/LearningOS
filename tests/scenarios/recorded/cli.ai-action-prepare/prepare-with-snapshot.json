@@ -1,29 +1,12 @@
 {
   "canonical_changed": {},
-  "exit": 0,
+  "exit": 3,
   "idempotency_changed": {},
-  "outcome": "ok",
+  "outcome": "refused",
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-prepare-snap\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-prepare-snap\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/ai-request-prepare-snap\"\n}\n",
-  "stdout_json": {
-    "bundle_path": "operations/ai-actions/requests/ai-request-prepare-snap",
-    "ok": true,
-    "request": {
-      "action_id": "garden.shelve",
-      "bundle_path": "operations/ai-actions/requests/ai-request-prepare-snap",
-      "created_at": "2026-10-01T07:00:00+00:00",
-      "delivery_id": null,
-      "id": "ai-request-prepare-snap",
-      "provider": "manual-bundle",
-      "receipt_id": null,
-      "status": "prepared",
-      "target": {
-        "id": "garden-note-seed",
-        "kind": "garden-note"
-      }
-    }
-  }
+  "stderr": "los: expected snapshot sha256:d503571f734be06095c3f966efef73a7c9da5b6ff410f934c6c56a8c5fa7b478, current snapshot is sha256:18fb6362fec97d13c9333cb14ef6b09e505a6bc3d3605bfb328bec113448168e\n",
+  "stdout": "",
+  "stdout_json": null
 }
