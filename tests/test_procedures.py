@@ -203,7 +203,6 @@ def _persist_procedure_audit(stem: str, log_path: Path) -> None:
     """Append one transcript's audit log to the A19 population (§3.6)."""
     import json as _json
     import os as _os
-    import shutil as _shutil
 
     audit_dir = _os.environ.get("LOS_ARCH_AUDIT_DIR")
     if not audit_dir:

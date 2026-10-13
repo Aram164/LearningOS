@@ -333,6 +333,7 @@ def test_corrupt_log_fails_closed(tmp_path):
     world = tmp_path / "world"
     world.mkdir()
     log = tmp_path / "bad.jsonl"
-    log.write_text('{"event": "case", "root": "%s"}\nnot json\n'
-                   % world, encoding="utf-8")
+    log.write_text(
+        '{"event": "case", "root": "' + str(world) + '"}\nnot json\n',
+        encoding="utf-8")
     assert _violations_in_log(log, _load_owners()) != {}

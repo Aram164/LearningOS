@@ -1078,8 +1078,6 @@ def persist_case_audit(ctx: _CaseContext) -> None:
     directory (runs outside pytest) is a no-op; a failed copy leaves
     the population incomplete and the zz test fails closed.
     """
-    import shutil
-
     audit_dir = os.environ.get("LOS_ARCH_AUDIT_DIR")
     if not audit_dir:
         return
