@@ -32,7 +32,7 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut
 $ los coordination-section-revise Commitments --text "Ship the demo module plan." --check
-{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:d7550c97dc4d4c2a4e03fe5ace42f379a4b7bfd7e42730dfdbb7d7b67ec2a305", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
+{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:71b1bfce85eaf7139b6c831d11349afb9f9fc764c6a4239b6346e9119bb1f32e", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
 ```
 
 ## Capture the pre-refusal state
@@ -77,7 +77,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:8a5db57785ed7a9691756814e099f32e79993a9bd6ade8e22bfe818ae9a554cc",
+  "snapshot_after": "sha256:d3eff7a41f8b4e9294efb66e0447d72693e15292f1e27a24093cc856e2dc1572",
   "result": {
     "ok": true,
     "section": "Commitments",
@@ -86,7 +86,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:8a5db57785ed7a9691756814e099f32e79993a9bd6ade8e22bfe818ae9a554cc",
+    "snapshot_after": "sha256:d3eff7a41f8b4e9294efb66e0447d72693e15292f1e27a24093cc856e2dc1572",
     "replayed": false
   },
   "error": null

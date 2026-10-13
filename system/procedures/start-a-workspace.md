@@ -166,7 +166,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:bd364da549e53abbd12b000f572e28000ae3b96d9d249040ad075fdd5d7a060c",
+  "snapshot_after": "sha256:4302deac7337877e85808cbce463dbf3bbbe9f79590b223fcc701db2a812599f",
   "result": {
     "ok": true,
     "workspace_id": "workspace-probe",
@@ -176,7 +176,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
     "artifact_revisions": {
       "workspace-probe": 1
     },
-    "snapshot_after": "sha256:bd364da549e53abbd12b000f572e28000ae3b96d9d249040ad075fdd5d7a060c",
+    "snapshot_after": "sha256:4302deac7337877e85808cbce463dbf3bbbe9f79590b223fcc701db2a812599f",
     "replayed": false
   },
   "error": null
