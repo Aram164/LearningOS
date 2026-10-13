@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import copy
 from pathlib import Path
+from typing import Any
 
 import yaml  # type: ignore[import-untyped]
 
@@ -39,8 +40,8 @@ _INVENTORY_FENCE = "```inventory-v1"
 _INVENTORY_ROW_DISPOSITIONS = ("routed", "linked", "out-of-scope", "duplicate")
 
 
-def _source_map_routes(source_map) -> dict:
-    routes = {}
+def _source_map_routes(source_map: Any) -> dict[str, dict[str, Any]]:
+    routes: dict[str, dict[str, Any]] = {}
     if not isinstance(source_map, dict):
         return routes
     for source in source_map.get("sources", []) or []:
@@ -52,9 +53,10 @@ def _source_map_routes(source_map) -> dict:
     return routes
 
 
-def _source_map_routes_with_source(source_map) -> dict:
+def _source_map_routes_with_source(
+        source_map: Any) -> dict[str, tuple[str, dict[str, Any]]]:
     """Route id to (owning source id, row), for content-digest reads."""
-    routes = {}
+    routes: dict[str, tuple[str, dict[str, Any]]] = {}
     if not isinstance(source_map, dict):
         return routes
     for source in source_map.get("sources", []) or []:
@@ -67,7 +69,7 @@ def _source_map_routes_with_source(source_map) -> dict:
     return routes
 
 
-def _knowledge_node_rows(unit_data) -> dict:
+def _knowledge_node_rows(unit_data: Any) -> dict[str, dict[str, Any]]:
     """Knowledge node id to row for one unit mapping, or {} when absent."""
     if not isinstance(unit_data, dict):
         return {}
@@ -82,7 +84,7 @@ def _knowledge_node_rows(unit_data) -> dict:
     return rows
 
 
-def _inventory_block(audit_text: str) -> tuple[dict | None, list[str]]:
+def _inventory_block(audit_text: str) -> tuple[dict[str, Any] | None, list[str]]:
     """Parse the structured inventory block, or (None, []) when absent."""
     opens = [i for i in range(len(audit_text))
              if audit_text.startswith(_INVENTORY_FENCE, i)]
@@ -103,7 +105,7 @@ def _inventory_block(audit_text: str) -> tuple[dict | None, list[str]]:
     return block, []
 
 
-def _inventory_view(block: dict) -> dict:
+def _inventory_view(block: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     """The human audit view, generated from the structured rows."""
     local, linked = [], []
     for row in block.get("rows") or []:
@@ -123,7 +125,7 @@ def _inventory_view(block: dict) -> dict:
     return {"local": local, "linked": linked}
 
 
-def _ack_shape_problems(acknowledgments) -> list[str]:
+def _ack_shape_problems(acknowledgments: Any) -> list[str]:
     problems: list[str] = []
     if acknowledgments is None:
         return problems
@@ -135,7 +137,8 @@ def _ack_shape_problems(acknowledgments) -> list[str]:
             problems.append(f"{where} must be a mapping")
             continue
         for key in ("kind", "target", "reason"):
-            if not isinstance(ack.get(key), str) or not ack.get(key).strip():
+            value = ack.get(key)
+            if not isinstance(value, str) or not value.strip():
                 problems.append(f"{where}.{key} must be a nonempty string")
     return problems
 
@@ -154,7 +157,7 @@ def _relative_order_changed(before: list[str], after: list[str]) -> bool:
     )
 
 
-def _declared_reorders(package: dict) -> set[tuple[str, str]]:
+def _declared_reorders(package: dict[str, Any]) -> set[tuple[str, str]]:
     contract = package.get("plan_contract") or {}
     declarations = contract.get("intentional_reorders", []) or []
     return {
@@ -164,7 +167,8 @@ def _declared_reorders(package: dict) -> set[tuple[str, str]]:
     }
 
 
-def _module_plan_ordering_problems(repo, module_id: str, package: dict) -> list[str]:
+def _module_plan_ordering_problems(repo: Any, module_id: str,
+                                   package: dict[str, Any]) -> list[str]:
     """Reject silent reordering while allowing explicit reviewed changes."""
     declared = _declared_reorders(package)
     actual_changes: set[tuple[str, str]] = set()
@@ -228,7 +232,8 @@ def _module_plan_ordering_problems(repo, module_id: str, package: dict) -> list[
     return problems
 
 
-def _unit_source_refs(unit_data: dict, map_data: dict | None) -> set[str]:
+def _unit_source_refs(unit_data: dict[str, Any],
+                      map_data: dict[str, Any] | None) -> set[str]:
     refs: set[str] = set()
     for field in ("scope_sources", "source_selections"):
         for entry in unit_data.get(field, []) or []:
@@ -247,15 +252,18 @@ def _unit_source_refs(unit_data: dict, map_data: dict | None) -> set[str]:
     return refs
 
 
-def _route_unit_id(route) -> str | None:
+def _route_unit_id(route: object) -> str | None:
     if isinstance(route, str):
         return route
-    if isinstance(route, dict) and isinstance(route.get("unit_id"), str):
-        return route["unit_id"]
+    if isinstance(route, dict):
+        unit_id = route.get("unit_id")
+        if isinstance(unit_id, str):
+            return unit_id
     return None
 
 
-def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[str]:
+def _module_plan_routing_problems(repo: Any, module_id: str,
+                                  package: dict[str, Any]) -> list[str]:
     """Catch source omissions that ordinary referential validation cannot see."""
     source_map = package.get("source_map")
     if source_map is None:
@@ -271,7 +279,7 @@ def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[s
         }
         routes.setdefault(entry["source_id"], set()).update(routed_units)
 
-    units: dict[str, tuple[dict, dict | None]] = {}
+    units: dict[str, tuple[dict[str, Any], dict[str, Any] | None]] = {}
     for uid, unit in repo.units.items():
         if unit.module_id != module_id:
             continue
@@ -311,7 +319,8 @@ def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[s
     return problems
 
 
-def _synthesis_entries(module_id: str, package: dict) -> tuple[list[tuple[str, dict]], list[str]]:
+def _synthesis_entries(module_id: str,
+                       package: dict[str, Any]) -> tuple[list[tuple[str, dict[str, Any]]], list[str]]:
     """Split the optional atomic synthesis replacements from the package.
 
     Returns ``([(unit_id, dossier)], [problems])``. Shape problems are
@@ -323,7 +332,7 @@ def _synthesis_entries(module_id: str, package: dict) -> tuple[list[tuple[str, d
         return [], []
     if not isinstance(raw, list):
         return [], ["material_syntheses must be a list"]
-    entries: list[tuple[str, dict]] = []
+    entries: list[tuple[str, dict[str, Any]]] = []
     problems: list[str] = []
     seen: set[str] = set()
     for index, row in enumerate(raw):
@@ -350,8 +359,8 @@ def _synthesis_entries(module_id: str, package: dict) -> tuple[list[tuple[str, d
     return entries, problems
 
 
-def _assemble_compact_module_revision(repo, module_id: str,
-                                      revision: dict) -> tuple[dict | None, list[str]]:
+def _assemble_compact_module_revision(repo: Any, module_id: str,
+                                      revision: dict[str, Any]) -> tuple[dict[str, Any] | None, list[str]]:
     """Expand reviewed unit deltas against one live snapshot for the existing import gate."""
     problems: list[str] = []
     allowed = {"module_id", "plan_contract", "unit_revisions", "source_joins",
@@ -414,15 +423,15 @@ def _assemble_compact_module_revision(repo, module_id: str,
             problems.append(f"{where} 'when' must be a string")
             continue
         seen_joins.add(sid)
-        entry: dict = {"source_id": sid, "role": role, "why": why,
+        entry: dict[str, Any] = {"source_id": sid, "role": role, "why": why,
                        "priority": priority, "unit_routes": []}
         if when is not None:
             entry["when"] = when
         source_map.setdefault("sources", []).append(entry)
     if problems:
         return None, problems
-    entries: list[dict] = []
-    syntheses: list[dict] = []
+    entries: list[dict[str, Any]] = []
+    syntheses: list[dict[str, Any]] = []
     seen_units: set[str] = set()
     for index, item in enumerate(revisions):
         where = f"unit_revisions[{index}]"
@@ -550,8 +559,8 @@ def _assemble_compact_module_revision(repo, module_id: str,
     return package, []
 
 
-def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
-                              changes: dict) -> tuple[dict, dict, list[str]]:
+def _apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_id: str,
+                              changes: dict[str, Any]) -> tuple[dict[str, Any], dict[str, list[str]], list[str]]:
     """Apply add/update/remove ops to one unit's routes, fail closed.
 
     Returns ``(new_source_map, summary, problems)``. Unrelated routes are
@@ -560,7 +569,7 @@ def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
     problems: list[str] = []
     new_map = copy.deepcopy(source_map)
     sources = new_map.get("sources", []) or []
-    by_id: dict[str, tuple[dict, dict]] = {}
+    by_id: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
     for source in sources:
         if not isinstance(source, dict):
             continue
@@ -568,7 +577,7 @@ def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
             if isinstance(route, dict) and route.get("id"):
                 by_id.setdefault(str(route["id"]), (source, route))
 
-    def unit_of(route) -> str | None:
+    def unit_of(route: dict[str, Any]) -> str | None:
         return route.get("unit_id") if isinstance(route, dict) else None
 
     summary: dict[str, list[str]] = {"added": [], "updated": [], "removed": []}
@@ -679,7 +688,7 @@ def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
 
 
 def _minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
-                          entries: list[tuple[str, dict]]) -> list[str]:
+                          entries: list[tuple[str, dict[str, Any]]]) -> list[str]:
     """Semantic owners for exactly the files a unit revision changes."""
     ids: list[str] = []
     dossier_by_unit = {unit_id: dossier for unit_id, dossier in entries}
