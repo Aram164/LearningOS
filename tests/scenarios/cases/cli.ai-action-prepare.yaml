@@ -3,6 +3,7 @@ fixture: rich_world
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
   - id: prepare-garden
+    a5_base: true
     kind: success
     transport: cli
     argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-prepare-ok]

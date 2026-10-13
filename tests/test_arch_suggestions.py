@@ -730,7 +730,8 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = list(repo.notes)
         return ordered, set(ordered)
     if kind == "module" and operation in ("module.attempt.record",
-                                          "module.sitting.update"):
+                                          "module.sitting.update",
+                                          "module.plan.import"):
         # SPEC (bv) item 1: the ordered list the converted handler
         # passes to its NotFound: repo.modules (admin.py).
         repo = load_repo(ctx.root)
@@ -1070,6 +1071,10 @@ def _check_tolerant_success(result: dict, *, real_value: str) -> None:
 #: operation with such a case, including the two append-slices misses
 #: whose (bi) item 8 cases are now recorded (SPEC (bv) item 3).
 POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
+    ("module.plan.import", "/properties/module_id"):
+        ("module.plan.import.unknown-module", "unknown-module"),
+    ("unit.plan.revise", "/properties/unit_id"):
+        ("unit.plan.revise.unknown-unit", "unknown-unit"),
     ("route.patch", "/properties/unit_id"):
         ("route.patch.unknown-unit", "unknown-unit"),
     ("route.patch", "/properties/route_id"):

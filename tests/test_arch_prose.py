@@ -402,9 +402,9 @@ def test_negative_fixtures_are_clean():
 
 
 def test_classify_failure_is_not_flagged():
-    rel = "tools/learning_os/commands/capability.py"
+    rel = "tools/learning_os/ops/outcomes.py"
     hits = [hit for hit in scan_file(ROOT / rel, rel)
-            if "::_classify_failure::" in hit.signature]
+            if "::classify::" in hit.signature]
     assert hits == [], (
         "A3 _classify_failure regressed to prose matching: "
         + ", ".join(hit.signature for hit in hits) + f" — {FIX}")

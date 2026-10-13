@@ -638,6 +638,11 @@ def _check_json_accepted(operation: str) -> None:
         raise AssertionError(
             f"A7 {operation}: the real parser rejects {argv!r} — {FIX}"
         ) from exc
+    if operation in {"cli.generate", "cli.validate"}:
+        # SPEC (cx) D9 / (cy) R6 preserves the raw tool interface.
+        with pytest.raises(SystemExit):
+            parser.parse_args([argv[0], "--json", *argv[1:]])
+        return
     flagged = list(argv)
     flagged.insert(1, "--json")
     try:
@@ -872,6 +877,8 @@ def test_star_census_rejects_extra_and_missing():
 #: registered operation owns a refusal unit or exactly one table row,
 #: never both.
 NO_REFUSAL_UNIT = {
+    "cli.generate": "raw tool carrier; input-independent environment failures are command-failure witnesses, not typed refusal units (SPEC cy R6)",
+    "cli.validate": "raw tool carrier; canonical validation errors are command-failure witnesses, not typed refusal units (SPEC cy R6)",
     "cli.ai-action-list": ("no refusal raise in the handler closure: list_actions "
                            "only projects the action registry"),
     "cli.program-list": "no refusal raise in the handler closure",

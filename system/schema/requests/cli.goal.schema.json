@@ -201,7 +201,8 @@
         "stdin": false,
         "transport_only": false,
         "envelope_owned": false
-      }
+      },
+      "x-los-lookup": false
     },
     "json": {
       "type": "boolean",

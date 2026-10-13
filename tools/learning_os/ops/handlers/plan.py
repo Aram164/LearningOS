@@ -38,7 +38,6 @@ from learning_os.domain.failures import (
     unreadable_refusal,
 )
 from learning_os.domain.plan_import import (
-    _INVENTORY_ROW_DISPOSITIONS,
     _ack_shape_problems,
     _apply_unit_route_changes,
     _assemble_compact_module_revision,
@@ -59,20 +58,16 @@ from learning_os.domain.suggest import (
     suggest,
     with_suggestions,
 )
-from learning_os.fingerprint import canonical_fingerprint
 from learning_os.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
     stage_results_for,
 )
-from learning_os.loader import load_repo
 from learning_os.loading import FRONTMATTER_RE
 from learning_os.masters_planning import (
-    MasterPromotionPlan,
     MastersPlanningError,
     prepare_master_promotion,
 )
-from learning_os.material_analysis import observe_local_material
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
@@ -128,14 +123,16 @@ from learning_os.ops._legacy_plumbing import (
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
-    _evidential_diff,
+    _coverage_audit_problems,
+    _enumerate_inventory_roots,
+    _inventory_row_problems,
+    _master_promotion_check_result,
+    _master_promotion_preflight,
+    _module_plan_check_report,
+    _module_plan_contract_problems,
     _module_plan_validation_errors,
     _plan_apply_gate,
     _real_perimeter_errors,
-    _route_changed_units,
-    _semantic_ack_problems,
-    _unit_route_rows,
-    _unit_semantic_diff,
 )
 from learning_os.ops.check import _staged_shadow
 from learning_os.ops.context import OpContext
@@ -4133,14 +4130,6 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
 # entries by SPEC 12 (R1 promotion/compact branches, R4 shared tail).
 
 
-_PLAN_COMPLETENESS_CHECKS = (
-    "local_inventory_complete",
-    "linked_inventory_complete",
-    "materials_opened_and_content_checked",
-    "current_and_prior_scope_reconciled",
-    "duplicates_and_numbering_checked",
-    "exclusions_and_unresolved_gaps_recorded",
-)
 
 _LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")
 
@@ -4417,201 +4406,9 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
             root, unit_id, dossier, content, request, prior=records.get(claim_id))
     return dump_ledger(records)
 
-def _coverage_audit_problems(root: Path, contract: dict) -> list[str]:
-    """The audit-evidence rules shared by the module (v2) and unit (v1) contracts."""
-    problems: list[str] = []
-    if contract.get("plan_template_version") != PLAN_TEMPLATE_VERSION:
-        problems.append(
-            f"plan_contract.plan_template_version must be {PLAN_TEMPLATE_VERSION}"
-        )
-    audit_ref = contract.get("coverage_audit")
-    if not isinstance(audit_ref, str) or not audit_ref.strip():
-        problems.append("plan_contract.coverage_audit must name the completed audit")
-    else:
-        audit = (root / audit_ref).resolve()
-        try:
-            audit_relative = audit.relative_to(root.resolve())
-        except ValueError:
-            problems.append("plan_contract.coverage_audit must stay inside the repository")
-        else:
-            if audit_relative.parts[:2] != ("work", "active"):
-                problems.append(
-                    "plan_contract.coverage_audit must stay under snapshot-bound work/active/"
-                )
-            elif not audit.is_file():
-                problems.append(f"coverage audit does not exist: {audit_ref}")
-            else:
-                audit_text = audit.read_text(encoding="utf-8")
-                for marker in ("## Local", "## Linked", "## Completeness"):
-                    if marker not in audit_text:
-                        problems.append(
-                            f"coverage audit lacks required section marker: {marker}"
-                        )
-    checks = contract.get("checks")
-    if not isinstance(checks, dict):
-        problems.append("plan_contract.checks must be a mapping")
-    else:
-        for key in _PLAN_COMPLETENESS_CHECKS:
-            if checks.get(key) is not True:
-                problems.append(f"plan_contract.checks.{key} must be true")
-    if isinstance(audit_ref, str) and audit_ref.strip():
-        problems.extend(_structured_inventory_problems(root, audit_ref))
-    return problems
 
-def _enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, str], list[str]]:
-    """Live file set under explicitly scoped material roots: relpath -> sha256.
 
-    Only the declared roots are walked; dotfiles and symlinks are skipped.
-    A root that is not an observable directory fails the preflight instead
-    of silently narrowing the scope the audit claims to cover.
-    """
-    observed: dict[str, str] = {}
-    problems: list[str] = []
-    try:
-        boundary = materials.resolve()
-    except OSError as exc:
-        return {}, [f"material inventory cannot resolve the materials tree: {exc}"]
-    cache: dict[Path, str] = {}
-    for entry in roots:
-        if not isinstance(entry, str) or not entry.strip():
-            problems.append("material inventory roots must be nonempty strings")
-            continue
-        try:
-            target = (materials / entry).resolve()
-            target.relative_to(boundary)
-        except (OSError, ValueError):
-            problems.append(f"material inventory root escapes the materials tree: {entry}")
-            continue
-        if not target.is_dir():
-            problems.append(f"material inventory root is not observable: {entry}")
-            continue
-        for path in sorted(target.rglob("*")):
-            if not path.is_file() or path.is_symlink():
-                continue
-            if any(part.startswith(".") for part in path.relative_to(target).parts):
-                continue
-            rel = path.relative_to(boundary).as_posix()
-            try:
-                observed[rel] = sha256_file(path, cache).removeprefix("sha256:")
-            except OSError:
-                problems.append(f"material inventory cannot read observed file: {rel}")
-    return observed, problems
 
-def _inventory_row_problems(block: dict, observed: dict[str, str],
-                            materials: Path) -> list[str]:
-    """Row shape, scope, digest, and duplicate-bytes rules for one inventory."""
-    problems: list[str] = []
-    rows = block.get("rows")
-    if not isinstance(rows, list):
-        return ["coverage audit inventory-v1 block needs a rows list"]
-    roots = [r for r in (block.get("roots") or []) if isinstance(r, str)]
-    seen: dict[str, dict] = {}
-    local_rows: dict[str, dict] = {}
-    for index, row in enumerate(rows):
-        label = f"inventory row {index}"
-        if not isinstance(row, dict):
-            problems.append(f"{label} must be a mapping")
-            continue
-        kind = row.get("kind", "local")
-        if kind not in ("local", "linked"):
-            problems.append(f"{label} kind must be local or linked")
-            continue
-        disposition = row.get("disposition")
-        if disposition not in _INVENTORY_ROW_DISPOSITIONS:
-            problems.append(
-                f"{label} disposition must be one of "
-                f"{', '.join(_INVENTORY_ROW_DISPOSITIONS)}")
-            continue
-        if kind == "linked":
-            for field in ("path", "sha256", "duplicate_of"):
-                if row.get(field) is not None:
-                    problems.append(
-                        f"{label} is linked: {field} would impersonate observed bytes")
-            if disposition not in ("linked", "out-of-scope"):
-                problems.append(f"{label} is linked but disposed as {disposition}")
-            if not isinstance(row.get("reference"), str) or not row["reference"].strip():
-                problems.append(f"{label} is linked but names no reference")
-            continue
-        if disposition == "linked":
-            problems.append(f"{label} observes local bytes but is disposed as linked")
-            continue
-        path = row.get("path")
-        observation = observe_local_material(materials, path, "")
-        if observation["status"] == "outside-boundary":
-            problems.append(f"{label} path escapes the materials tree: {path}")
-            continue
-        if not any(path == root or path.startswith(root.rstrip("/") + "/")
-                   for root in roots):
-            problems.append(f"{label} path is outside the declared roots: {path}")
-            continue
-        if path in seen:
-            problems.append(f"inventory row repeats path: {path}")
-            continue
-        seen[path] = row
-        local_rows[path] = row
-        recorded = row.get("sha256")
-        if not isinstance(recorded, str) or len(recorded) != 64:
-            problems.append(f"{label} needs the observed 64-hex sha256 for {path}")
-            continue
-        live = observed.get(path)
-        if live is None:
-            problems.append(f"inventory row names an unobserved file: {path}")
-        elif live.lower() != recorded.lower():
-            problems.append(f"inventory digest differs from observed bytes: {path}")
-    for rel in sorted(observed):
-        if rel not in seen:
-            problems.append(f"material inventory lacks a row for observed file: {rel}")
-    by_digest: dict[str, list[str]] = {}
-    for path, row in local_rows.items():
-        recorded = row.get("sha256")
-        if isinstance(recorded, str) and len(recorded) == 64:
-            by_digest.setdefault(recorded.lower(), []).append(path)
-    for _digest, paths in sorted(by_digest.items()):
-        if len(paths) < 2:
-            continue
-        canonical = [p for p in paths
-                     if local_rows[p].get("disposition") != "duplicate"]
-        if len(canonical) != 1:
-            problems.append(
-                "duplicate bytes need exactly one canonical row and "
-                f"duplicate dispositions: {', '.join(sorted(paths))}")
-            continue
-        for path in sorted(paths):
-            row = local_rows[path]
-            if row.get("disposition") != "duplicate":
-                continue
-            target = row.get("duplicate_of")
-            if target not in paths:
-                problems.append(
-                    f"inventory row {path} duplicate_of must name a row "
-                    f"with equal bytes: {target}")
-    return problems
-
-def _structured_inventory_problems(root: Path, audit_ref: str) -> list[str]:
-    """Reconcile the audit's structured inventory against observed bytes.
-
-    Returns [] for a legacy audit without an inventory-v1 block. A present
-    block must enumerate exactly the observed local set: missing rows,
-    unobserved rows, digest drift, and undeclared duplicate bytes all fail.
-    """
-    audit = (root / audit_ref).resolve()
-    try:
-        audit.relative_to(root.resolve())
-    except ValueError:
-        return []
-    if not audit.is_file():
-        return []
-    block, problems = _inventory_block(audit.read_text(encoding="utf-8"))
-    if problems or block is None:
-        return problems
-    roots = block.get("roots")
-    if not isinstance(roots, list) or not roots:
-        return ["coverage audit inventory-v1 block needs a nonempty roots list"]
-    materials = root.parent / "materials"
-    observed, problems = _enumerate_inventory_roots(materials, roots)
-    if problems:
-        return problems
-    return _inventory_row_problems(block, observed, materials)
 
 def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
     """Bind the observed material set to the preflight report.
@@ -4684,226 +4481,9 @@ def _verify_observed_material(root: Path, contract: dict,
                 "review the new report, then apply that report")
     return None
 
-def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
-    """Verify the human review evidence required before a plan is executable."""
-    problems: list[str] = []
-    contract = package.get("plan_contract")
-    if not isinstance(contract, dict) or contract.get("version") != 2:
-        return ["plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)"]
-    problems.extend(_coverage_audit_problems(root, contract))
-    problems.extend(_ack_shape_problems(package.get("acknowledgments", [])))
-    intentional_reorders = contract.get("intentional_reorders", [])
-    if not isinstance(intentional_reorders, list):
-        problems.append("plan_contract.intentional_reorders must be a list")
-    else:
-        seen: set[tuple[str, str]] = set()
-        for index, declaration in enumerate(intentional_reorders):
-            if not isinstance(declaration, dict):
-                problems.append(
-                    f"plan_contract.intentional_reorders[{index}] must be a mapping"
-                )
-                continue
-            target = declaration.get("target")
-            record_id = declaration.get("id")
-            reason = declaration.get("reason")
-            if target not in {"module-unit-order", "study-map-stage-order"}:
-                problems.append(
-                    f"plan_contract.intentional_reorders[{index}].target must be "
-                    "module-unit-order or study-map-stage-order"
-                )
-            if not isinstance(record_id, str) or not record_id.strip():
-                problems.append(
-                    f"plan_contract.intentional_reorders[{index}].id must name the reordered record"
-                )
-            if not isinstance(reason, str) or not reason.strip():
-                problems.append(
-                    f"plan_contract.intentional_reorders[{index}].reason must explain the pedagogical change"
-                )
-            key = (str(target), str(record_id))
-            if key in seen:
-                problems.append(
-                    f"plan_contract.intentional_reorders repeats {key[0]} for {key[1]}"
-                )
-            seen.add(key)
-    for unit_index, entry in enumerate(package.get("units", []) or []):
-        if not isinstance(entry, dict) or entry.get("study_map") is None:
-            continue
-        for problem in current_template_problems(entry.get("study_map"), "curriculum"):
-            problems.append(f"units[{unit_index}].study_map: {problem}")
-    _, synthesis_problems = _synthesis_entries(
-        package.get("module_id", ""), package)
-    problems.extend(synthesis_problems)
-    return problems
 
-def _module_plan_check_report(root: Path, module_id: str, package: dict,
-                              writes: dict[Path, str],
-                              entries: list[tuple[str, dict]],
-                              package_sha: str,
-                              seen_units: set[str]) -> dict:
-    """The review artifact for a plan preflight: stable schema, no writes.
 
-    Counts, diffs, freshness and learner-state preservation for exactly the
-    touched units, computed from the live repository and one staged shadow.
-    """
-    from learning_os.material_synthesis import validate_unit_material_synthesis as _validate_dossier
 
-    live_repo = load_repo(root)
-    live_map = (live_repo.module_source_maps or {}).get(module_id) or {}
-    acknowledgments = package.get("acknowledgments", []) or []
-    supplied = {unit_id for unit_id, _ in entries}
-    with _staged_shadow(root, writes) as shadow:
-        staged_repo = load_repo(shadow)
-        staged_map = (staged_repo.module_source_maps or {}).get(module_id) or {}
-
-        def rows(source_map):
-            out: dict[str, dict] = {}
-            for source in source_map.get("sources", []) or []:
-                if not isinstance(source, dict):
-                    continue
-                for route in source.get("unit_routes", []) or []:
-                    if isinstance(route, dict) and route.get("id"):
-                        out.setdefault(str(route["id"]), route)
-            return out
-
-        live_rows, staged_rows = rows(live_map), rows(staged_map)
-        units: dict[str, dict] = {}
-        for uid in sorted(seen_units):
-            live_study = next((sm.data for sm in live_repo.study_maps.values()
-                               if sm.unit_id == uid), None)
-            staged_study = next((sm.data for sm in staged_repo.study_maps.values()
-                                 if sm.unit_id == uid), None)
-            units[uid] = _unit_semantic_diff(live_map, staged_map, live_study, staged_study, uid)
-        synthesis: dict[str, dict] = {}
-        for uid in sorted(seen_units):
-            try:
-                destination = synthesis_destination(root, uid)
-            except MaterialSynthesisError:
-                continue
-            exists = destination.exists()
-            before: dict = {"present": exists, "fresh": False, "detail": None}
-            if exists:
-                try:
-                    current = yaml.safe_load(destination.read_text(encoding="utf-8"))
-                    validate_unit_material_synthesis(root, uid, current)
-                    before["fresh"] = True
-                except (MaterialSynthesisError, OSError, ValueError) as exc:
-                    before["detail"] = str(exc)
-            after: dict = {"replaced": uid in supplied, "fresh": False, "detail": None}
-            if uid in supplied:
-                dossier = dict(next(d for u, d in entries if u == uid))
-                try:
-                    _validate_dossier(shadow, uid, dossier, repo=staged_repo)
-                    after["fresh"] = True
-                except MaterialSynthesisError as exc:
-                    after["detail"] = str(exc)
-            elif exists and not before["fresh"]:
-                after["detail"] = "live dossier already stale"
-            elif exists:
-                rows_live = _unit_route_rows(live_map, uid)
-                rows_staged = _unit_route_rows(staged_map, uid)
-                a, r, c = _evidential_diff(rows_live, rows_staged)
-                if not (a or r or c):
-                    after["fresh"] = True
-                else:
-                    after["detail"] = f"routes change without replacement: added={a} removed={r} changed={c}"
-            synthesis[uid] = {"before": before, "after": after}
-        ack_problems = _semantic_ack_problems(
-            module_id, live_repo, staged_repo,
-            sorted(set(seen_units)
-                   | _route_changed_units(live_repo, staged_repo, module_id)),
-            acknowledgments if isinstance(acknowledgments, list) else [])
-    affected = sorted(str(p.resolve().relative_to(root.resolve())) for p in writes)
-    changing: list[str] = []
-    for path in writes:
-        try:
-            if (not path.exists()
-                    or path.read_bytes() != writes[path].encode("utf-8")):
-                changing.append(str(path.resolve().relative_to(root.resolve())))
-        except OSError:
-            changing.append(str(path.resolve().relative_to(root.resolve())))
-    artifact_ids = [module_id, *sorted(seen_units),
-                    *[d.get("id") for _, d in entries
-                      if isinstance(d.get("id"), str)]]
-    changing_writes = {}
-    for path in writes:
-        try:
-            rel = str(path.resolve().relative_to(root.resolve()))
-        except ValueError:
-            continue
-        if rel in changing:
-            changing_writes[path] = writes[path]
-    commit_artifact_ids = _minimal_artifact_ids(root, module_id, changing_writes, entries)
-    revisions = load_revisions(root)
-    live_sources = live_map.get("sources", []) or []
-    staged_sources = staged_map.get("sources", []) or []
-    return {
-        "ok": True,
-        "mode": "check",
-        "module_id": module_id,
-        "package_sha256": package_sha,
-        "expected_snapshot": f"sha256:{canonical_fingerprint(root)}",
-        "expected_revisions": {aid: revisions.get(aid, 0) for aid in artifact_ids},
-        "artifact_ids": artifact_ids,
-        "affected_files": affected,
-        "byte_changing_files": sorted(changing),
-        "route_counts": {"before": len(live_rows), "after": len(staged_rows)},
-        "source_records": {"before": len(live_sources), "after": len(staged_sources)},
-        "units": units,
-        "routes_added": sorted(set(staged_rows) - set(live_rows)),
-        "routes_removed": sorted(set(live_rows) - set(staged_rows)),
-        "routes_updated": sorted(rid for rid in set(live_rows) & set(staged_rows)
-                                 if live_rows[rid] != staged_rows[rid]),
-        "synthesis": synthesis,
-        "semantic_ack_required": ack_problems,
-        "commit_artifact_ids": commit_artifact_ids,
-        "canonical_files_written": 0,
-    }
-
-def _master_promotion_preflight(
-    root: Path,
-    module_id: str,
-    plan: MasterPromotionPlan,
-    package: dict,
-    *,
-    skip_validation: bool = False,
-) -> list[str]:
-    problems = _module_plan_contract_problems(root, package)
-    if problems:
-        return [f"contract: {problem}" for problem in problems]
-    repo = load_repo(root)
-    problems = _module_plan_routing_problems(repo, module_id, package)
-    if problems:
-        return [f"routing: {problem}" for problem in problems]
-    if skip_validation:
-        # A gateway apply enforces the validation layer inside its
-        # transaction instead; the package layers above still refuse here.
-        return []
-    try:
-        errors = _module_plan_validation_errors(root, plan.writes)
-    except ValueError as exc:
-        return [str(exc)]
-    return [str(issue) for issue in errors]
-
-def _master_promotion_check_result(
-    root: Path,
-    module_id: str,
-    plan: MasterPromotionPlan,
-) -> dict:
-    return {
-        "ok": True,
-        "mode": "check",
-        "module_id": module_id,
-        "candidate_module_id": plan.provenance["candidate_module_id"],
-        "promotion_id": plan.provenance["id"],
-        "package_sha256": plan.package_sha256,
-        "expected_snapshot": f"sha256:{canonical_fingerprint(root)}",
-        "expected_revisions": dict(plan.expected_revisions),
-        "artifact_ids": list(plan.artifact_ids),
-        "affected_files": list(plan.affected_paths),
-        "provenance": plan.provenance,
-        "diff": plan.diff,
-        "canonical_files_written": 0,
-    }
 
 def _drop_unchanged_writes(writes: dict[Path, str]) -> dict[Path, str]:
     """Keep only writes that change bytes: new files or different content."""

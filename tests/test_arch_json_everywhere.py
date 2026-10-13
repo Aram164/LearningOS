@@ -221,6 +221,9 @@ def _assert_cli_command_only_handler_rebound(key: str, fname: str,
     import learning_os.ops.handlers  # noqa: F401  (registration side effect)
     from learning_os.ops.registry import REGISTRY
 
+    if operation == "cli.capability":
+        assert new_cmd["handler"] == "learning_os.adapters.capability.cmd_capability", (key, new_cmd)
+        return  # SPEC (cx) D9: the transport facade belongs to its adapter.
     assert operation in REGISTRY, (key, operation)
     assert new_cmd["handler"] == f"learning_os.adapters.cli.invoke:{operation}", (
         key, new_cmd["handler"])

@@ -82,6 +82,19 @@ def _strip_approved_owner_metadata(operation: str, old: dict, new: dict
         for doc_node in (old_node, new_node):
             doc_node.pop("x-los-id-owner", None)
             doc_node.pop("x-los-lookup", None)
+    for parts, (before, after, _was_present) in PHASE4_METADATA_CHANGES.get(operation, {}).items():
+        old_node, new_node = old_copy, new_copy
+        for part in parts[:-1]:
+            old_node, new_node = old_node[part], new_node[part]
+        key = parts[-1]
+        if key not in old_node and key not in new_node:
+            continue  # the earlier exact owner strip already removed this pair
+        assert new_node.get(key) == after and type(new_node.get(key)) is type(after), (operation, parts)
+        assert key not in old_node or old_node[key] in (before, after), (operation, parts)
+        if key in old_node:
+            new_node[key] = old_node[key]
+        else:
+            new_node.pop(key, None)
     return old_copy, new_copy
 
 
@@ -483,3 +496,7 @@ def _strip_bf_description_updates(operation: str, old: dict, new: dict
                 and _PLACEHOLDER_MARK not in updated):
             new_node["description"] = base
     return old_copy, new_copy
+
+
+# Exact SPEC (cx) D6-D9 metadata transitions; every other delta remains visible.
+PHASE4_METADATA_CHANGES = {'cli.ai-action-append-slices': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-prepare': {('properties', 'action_id', 'x-los-id-owner'): (None, 'ai-action-registry', False), ('properties', 'action_id', 'x-los-lookup'): (None, True, False), ('properties', 'request_id', 'x-los-lookup'): (None, False, False), ('properties', 'target_id', 'x-los-id-owner'): (None, 'ai-action-target', False), ('properties', 'target_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-status': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-validate-delivery': {('properties', 'delivery_id', 'x-los-id-owner'): (None, 'ai-delivery-store', False), ('properties', 'delivery_id', 'x-los-lookup'): (None, True, False)}, 'cli.operations': {('properties', 'request_id', 'x-los-id-owner'): (None, 'operations-trace-request', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.related': {('properties', 'id', 'x-los-id-owner'): (None, 'related-record', False), ('properties', 'id', 'x-los-lookup'): (None, True, False)}, 'masters-planning.comparison.publish': {('properties', 'candidate_module_id', 'x-los-id-owner'): (None, 'masters-candidate-module', False), ('properties', 'candidate_module_id', 'x-los-lookup'): (None, True, False)}, 'cli.session-end': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}, 'cli.goal': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}}

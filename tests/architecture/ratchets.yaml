@@ -102,10 +102,10 @@ checks:
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
   A3-prose:
-  - signature: tools/learning_os/commands/module.py::_inventory_block::method::```
+  - signature: tools/learning_os/domain/plan_import.py::_inventory_block::method::```
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
   - signature: tools/learning_os/contracts/perimeter.py::_block_bounds::method::-->
     count: 1
     since: baseline
@@ -199,111 +199,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  A4-plumbing:
-  - signature: tools/learning_os/commands/capability.py::cmd_capability::print
-    count: 22
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::print
-    count: 5
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::return
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::print
-    count: 13
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::return
-    count: 12
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::print
-    count: 4
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::return
-    count: 3
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::print
-    count: 19
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::return
-    count: 14
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_master_promotion_check_result::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_master_promotion_preflight::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_module_plan_check_report::canonical_fingerprint
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_module_plan_check_report::load_repo
-    count: 2
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::print
-    count: 15
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::return
-    count: 13
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::load_repo
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::print
-    count: 48
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::return
-    count: 38
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_unit_plan_revise::_operator_lock
-    count: 1
-    since: baseline
-    approved_by: null
+  A4-plumbing: []
   A4-plumbing-2: []
   A8-transcripts:
   - signature: system/WORKFLOWS.md::## 23. Process a lecture
@@ -428,11 +324,7 @@ checks:
     since: baseline
     approved_by: null
   A14-vocabulary: []
-  A6-idroundtrip:
-  - signature: lineage.restamp::/properties/claim_ids/items::review
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
+  A6-idroundtrip: []
   A13-request-schemas:
   - signature: cli.capability::name::description
     count: 1
@@ -475,29 +367,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.generate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.validate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: lineage.restamp::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.plan.revise::*
-    count: 1
-    since: baseline
-    approved_by: null
-  # Retained: rich_world declares no component, so no successful
-  # --component-id base can exist without fixture writes outside
-  # Task 78's allowed scope; the refusal already suggests correctly.
   - signature: cli.unit-list::/properties/component_id::no-base
     count: 1
     since: approved
@@ -516,26 +385,6 @@ checks:
     approved_by: "Aram 2026-10-10: you take open desicions"
   A7-output:
   - signature: cli.capability::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.generate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.validate::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: lineage.restamp::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::*
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.plan.revise::*
     count: 1
     since: baseline
     approved_by: null
@@ -566,10 +415,10 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::validate_extra
+  - signature: tools/learning_os/ops/handlers/plan.py::_execute_plan_import::validate_extra
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
   - signature: tools/learning_os/ops/handlers/ai.py::ai_action_apply_delivery::after_commit
     count: 1
     since: baseline
@@ -594,3 +443,11 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
+  - signature: tools/learning_os/ops/handlers/plan.py::_execute_plan_import::after_commit
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
+  - signature: tools/learning_os/ops/handlers/plan.py::_master_promotion_import::after_commit
+    count: 1
+    since: approved
+    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
