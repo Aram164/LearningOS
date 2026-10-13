@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .errors import ActionNotFoundError, ActionPolicyError
+from .errors import ActionNotFound, ActionPolicyError
 from .support import _read_yaml
 
 
@@ -148,7 +148,11 @@ class ActionRegistry:
         return actions
 
     def get(self, action_id: str) -> ActionDefinition:
-        for action in self.list():
+        actions = self.list()
+        for action in actions:
             if action.id == action_id:
                 return action
-        raise ActionNotFoundError(f"unknown AI action: {action_id}")
+        # Already loaded above ((cx) D-8): no second read for the miss.
+        raise ActionNotFound(
+            "action", action_id, [action.id for action in actions],
+            message=f"unknown AI action: {action_id}")

@@ -23,12 +23,21 @@ import yaml
 
 from learning_os import observations
 from learning_os.contracts.json_schema import validate_contract
+from learning_os.domain.failures import NotFound
 from learning_os.loader import load_repo
 from learning_os.transactions import artifact_revision
 
 
 class MastersPlanningError(ValueError):
     pass
+
+
+class UnknownCandidateModule(NotFound, MastersPlanningError):
+    """A comparison miss over the loaded catalog map ((cx) D-8).
+
+    The ``NotFound`` leg carries the catalog's candidate ids as
+    structured suggestions; the ``MastersPlanningError`` leg keeps
+    the legacy class, message and exit for every existing caller."""
 
 
 _FORBIDDEN_KEYS = frozenset({
@@ -1030,7 +1039,10 @@ def validate_candidate_comparison(
     sources = {row["id"]: row for row in catalog["candidate_sources"]}
     module_id = value["candidate_module_id"]
     if module_id not in modules:
-        raise MastersPlanningError(f"comparison targets unknown candidate module: {module_id}")
+        # Already loaded above ((cx) D-8): the catalog map just built.
+        raise UnknownCandidateModule(
+            "candidate module", module_id, list(modules),
+            message=f"comparison targets unknown candidate module: {module_id}")
     allowed_sources = set(modules[module_id]["source_ids"])
     assessed = [row["candidate_source_id"] for row in value["source_assessments"]]
     if len(assessed) != len(set(assessed)):

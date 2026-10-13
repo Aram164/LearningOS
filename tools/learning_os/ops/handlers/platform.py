@@ -878,9 +878,29 @@ def _note_request_id_reuse(records: list[dict], authority, diagnosis) -> None:
         f"explanation covers {covered} only — also: {', '.join(others)}")
 
 
+def _describe_operation(root: Path, request_id: str) -> tuple[dict | None, list[str]]:
+    """Diagnosis plus the distinct traced request ids, from one load.
+
+    The domain is every distinct ``request_id`` in the records just
+    loaded ((cx) D-6): request ids are caller-chosen and not unique,
+    so the miss suggests from distinct values, never from operations.
+    """
+    everything = read_records(root)
+    domain = sorted({str((record.get("attrs") or {}).get("request_id"))
+                     for record in everything
+                     if isinstance((record.get("attrs") or {}).get("request_id"), str)
+                     and (record.get("attrs") or {}).get("request_id")})
+    detail = _describe_from_records(root, request_id, everything)
+    return detail, domain
+
+
 def describe_operation(root: Path, request_id: str) -> dict | None:
     """Full diagnosis plus timeline for one request id, or None."""
-    everything = read_records(root)
+    return _describe_operation(root, request_id)[0]
+
+
+def _describe_from_records(root: Path, request_id: str,
+                           everything: list[dict]) -> dict | None:
     ops = {record["op"] for record in everything
            if (record.get("attrs") or {}).get("request_id") == request_id
            and record.get("op")}
@@ -922,11 +942,12 @@ def operations(ctx: OpContext, req: dict) -> Result:
     """List recent causal operations or explain one request id."""
     root = ctx.root
     if req.get("request_id"):
-        detail = describe_operation(root, req["request_id"])
+        detail, domain = _describe_operation(root, req["request_id"])
         if detail is None:
             message = "unknown request_id"
-            raise WriteRefused(
-                message,
+            raise NotFound(
+                "request", req["request_id"], domain,
+                message=message,
                 site=f"{ctx.operation}.unknown-request",
                 gateway_message=json.dumps(
                     {"error": message, "request_id": req["request_id"]}),

@@ -69,6 +69,7 @@ from .errors import (
     DeliveryValidationError,
     RouteNotFound,
     StaleDeliveryError,
+    TargetNotFound,
     TargetNotFoundError,
     UnresolvedMaterialError,
 )
@@ -271,7 +272,10 @@ class AIActionService:
             repo = load_repo(self.root)
             unit = repo.units.get(target_id)
             if unit is None:
-                raise TargetNotFoundError(f"Unit target not found: {target_id}")
+                # Already loaded above ((cx) D-8).
+                raise TargetNotFound(
+                    "target", target_id, list(repo.units),
+                    message=f"Unit target not found: {target_id}")
             return cast(GardenTarget, {
                 "id": unit.id,
                 "type": "unit",
@@ -281,11 +285,15 @@ class AIActionService:
                 "tags": [],
                 "revision": artifact_revision(self.root, unit.id),
             }), unit.path
-        for row in self.list_garden_targets():
+        rows = self.list_garden_targets()
+        for row in rows:
             if row["id"] == target_id:
                 target = cast(GardenTarget, row)
                 return target, self.root / target["path"]
-        raise TargetNotFoundError(f"Garden target not found: {target_id}")
+        # Already loaded above ((cx) D-8).
+        raise TargetNotFound(
+            "target", target_id, [str(row["id"]) for row in rows],
+            message=f"Garden target not found: {target_id}")
 
     def prepare(
         self,
