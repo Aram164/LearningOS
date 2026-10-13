@@ -8,6 +8,7 @@ operator ran first (`validate`).
 
 from __future__ import annotations
 
+import datetime as _dt
 import re
 from pathlib import Path
 
@@ -78,9 +79,13 @@ def _read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
 def _normalize(value):
     """YAML 1.1 auto-parses ISO dates; the schemas expect strings. Normalize
     recursively so the logical model is representation-independent."""
-    import datetime as _dt
     if isinstance(value, (_dt.date, _dt.datetime)):
         return value.isoformat()
+    # Performance optimization: Fast-path for scalar primitives
+    # Using exact type checks avoids the overhead of isinstance subclass checking
+    # for the most common leaf nodes in YAML structures.
+    if type(value) is str or type(value) is int or type(value) is float or type(value) is bool or value is None:
+        return value
     if isinstance(value, dict):
         return {k: _normalize(v) for k, v in value.items()}
     if isinstance(value, list):

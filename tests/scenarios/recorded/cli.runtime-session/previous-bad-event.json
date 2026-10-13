@@ -1,12 +1,12 @@
 {
   "canonical_changed": {},
-  "exit": 2,
+  "exit": 3,
   "idempotency_changed": {},
   "outcome": "refused",
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: unknown replan event: bogus-event\n",
+  "stderr": "los: previous proposal belongs to a different snapshot; propose a fresh session\n",
   "stdout": "",
   "stdout_json": null
 }

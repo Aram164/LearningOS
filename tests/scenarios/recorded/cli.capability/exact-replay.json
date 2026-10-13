@@ -7,162 +7,35 @@
         "--payload-file",
         "<CASEDATA>/valid-capture.json"
       ],
-      "canonical_changed": {
-        "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md": "fc8edd27f03494db6337bade393202fcd4f0e958b5edcb00ccb395f9e1236449"
-      },
-      "exit": 0,
-      "idempotency_changed": {
-        "after": {
-          "entries": {
-            "KEY2": {
-              "capability": "capture.create",
-              "channel": "operator",
-              "intent_sha256": "sha256:38c2f91f763c1a580ff6057ce6e2076e455c4cfc00b41d55e615148140730889",
-              "receipt_path": "operations/transactions/TX1.yaml",
-              "request_id": "KEY1",
-              "revisions": {
-                "capture-request:KEY2": 1
-              },
-              "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
-              "transaction_id": "TX1"
-            }
-          },
-          "schema_version": 1,
-          "type": "transaction-idempotency-ledger"
-        },
-        "before": null
-      },
-      "outcome": "ok",
-      "receipts": [
-        {
-          "artifact_revisions": {
-            "capture-request:KEY2": {
-              "after": 1,
-              "before": 0
-            }
-          },
-          "authority": {
-            "capability_contract_version": 2,
-            "enforced": true,
-            "grants": [
-              {
-                "capability": "capture.create",
-                "declared_writes": [
-                  "work/inbox/**"
-                ]
-              }
-            ]
-          },
-          "capability": "capture.create",
-          "committed_at": "2026-10-01T09:00:00+02:00",
-          "expected_revisions": {
-            "capture-request:KEY2": 0
-          },
-          "id": "TX1",
-          "metadata": {
-            "data_roots_sha256": "sha256:f0201ec15fb0f92e2b74426101a7d312aab03b012203cb7e9c3171665160fdcf",
-            "fingerprint_definition": 2
-          },
-          "request": {
-            "approval": {
-              "kind": "operator-approval",
-              "subject_sha256": "sha256:38c2f91f763c1a580ff6057ce6e2076e455c4cfc00b41d55e615148140730889"
-            },
-            "channel": "operator",
-            "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:38c2f91f763c1a580ff6057ce6e2076e455c4cfc00b41d55e615148140730889",
-            "request_id": "KEY1"
-          },
-          "schema_version": 2,
-          "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP2",
-          "status": "committed",
-          "type": "transaction-receipt",
-          "writes": [
-            {
-              "created": true,
-              "path": "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md",
-              "sha256_after": "fc8edd27f03494db6337bade393202fcd4f0e958b5edcb00ccb395f9e1236449",
-              "sha256_before": null
-            }
-          ]
-        }
-      ],
-      "revisions_changed": {
-        "after": {
-          "revisions": {
-            "capture-request:KEY2": 1,
-            "unit-demo-l01": 3
-          },
-          "schema_version": 1,
-          "type": "artifact-revision-ledger"
-        },
-        "before": {
-          "revisions": {
-            "unit-demo-l01": 3
-          },
-          "schema_version": 1,
-          "type": "artifact-revision-ledger"
-        }
-      },
-      "session_ledger_changed": {
-        "after": {
-          "paths": {
-            "operations/transactions/TX1.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b597ad6f5117ef650398575736c7e92a1cb56eead08b1126945b87cf89014d96",
-              "state": "file"
-            },
-            "operations/transactions/idempotency.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2cc8e45bcfd9cfd5b469e07d888e37dc951744be527fbd418b8b3c391f580944",
-              "state": "file"
-            },
-            "operations/transactions/revisions.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65b79cacd9bb077ea553d699b4f33f05c446294ca91ffbb58e85a3fb105ff32c",
-              "state": "file"
-            },
-            "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fc8edd27f03494db6337bade393202fcd4f0e958b5edcb00ccb395f9e1236449",
-              "state": "file"
-            }
-          },
-          "schema_version": 2,
-          "session_id": "channel:operator"
-        },
-        "before": null
-      },
+      "canonical_changed": {},
+      "exit": 3,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"STALE_SNAPSHOT\",\n    \"message\": \"canonical state changed since this request was approved\",\n    \"retryable\": true,\n    \"details\": {\n      \"expected\": \"SNAP1\",\n      \"actual\": \"SNAP2\"\n    }\n  }\n}\n",
       "stdout_json": {
         "capability": "capture.create",
-        "error": null,
+        "error": {
+          "code": "STALE_SNAPSHOT",
+          "details": {
+            "actual": "SNAP2",
+            "expected": "SNAP1"
+          },
+          "message": "canonical state changed since this request was approved",
+          "retryable": true
+        },
         "idempotency_key": "KEY2",
-        "ok": true,
-        "receipt_path": "operations/transactions/TX1.yaml",
+        "ok": false,
+        "receipt_path": null,
         "replayed": false,
         "request_id": "KEY1",
-        "result": {
-          "artifact_revisions": {
-            "capture-request:KEY2": 1
-          },
-          "captured": "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md",
-          "ok": true,
-          "receipt_path": "operations/transactions/TX1.yaml",
-          "replayed": false,
-          "snapshot_after": "SNAP1",
-          "transaction_id": "TX1"
-        },
+        "result": {},
         "schema_version": 2,
-        "snapshot_after": "SNAP1",
-        "transaction_id": "TX1"
+        "snapshot_after": null,
+        "transaction_id": null
       },
       "step": 0,
       "transport": "cli"
@@ -175,96 +48,34 @@
         "<CASEDATA>/valid-capture.json"
       ],
       "canonical_changed": {},
-      "exit": 0,
+      "exit": 3,
       "idempotency_changed": {},
-      "outcome": "ok",
+      "outcome": "refused",
       "receipts": [],
       "revisions_changed": {},
-      "session_ledger_changed": {
-        "after": {
-          "paths": {
-            "operations/transactions/TX1.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b597ad6f5117ef650398575736c7e92a1cb56eead08b1126945b87cf89014d96",
-              "state": "file"
-            },
-            "operations/transactions/idempotency.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2cc8e45bcfd9cfd5b469e07d888e37dc951744be527fbd418b8b3c391f580944",
-              "state": "file"
-            },
-            "operations/transactions/revisions.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65b79cacd9bb077ea553d699b4f33f05c446294ca91ffbb58e85a3fb105ff32c",
-              "state": "file"
-            },
-            "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fc8edd27f03494db6337bade393202fcd4f0e958b5edcb00ccb395f9e1236449",
-              "state": "file"
-            }
-          },
-          "schema_version": 2,
-          "session_id": "channel:operator"
-        },
-        "before": {
-          "paths": {
-            "operations/transactions/TX1.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b597ad6f5117ef650398575736c7e92a1cb56eead08b1126945b87cf89014d96",
-              "state": "file"
-            },
-            "operations/transactions/idempotency.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2cc8e45bcfd9cfd5b469e07d888e37dc951744be527fbd418b8b3c391f580944",
-              "state": "file"
-            },
-            "operations/transactions/revisions.yaml": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "65b79cacd9bb077ea553d699b4f33f05c446294ca91ffbb58e85a3fb105ff32c",
-              "state": "file"
-            },
-            "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md": {
-              "channel": "operator",
-              "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "fc8edd27f03494db6337bade393202fcd4f0e958b5edcb00ccb395f9e1236449",
-              "state": "file"
-            }
-          },
-          "schema_version": 2,
-          "session_id": "channel:operator"
-        }
-      },
+      "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md\"\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"STALE_SNAPSHOT\",\n    \"message\": \"canonical state changed since this request was approved\",\n    \"retryable\": true,\n    \"details\": {\n      \"expected\": \"SNAP1\",\n      \"actual\": \"SNAP2\"\n    }\n  }\n}\n",
       "stdout_json": {
         "capability": "capture.create",
-        "error": null,
-        "idempotency_key": "KEY2",
-        "ok": true,
-        "receipt_path": "operations/transactions/TX1.yaml",
-        "replayed": true,
-        "request_id": "KEY1",
-        "result": {
-          "artifact_revisions": {
-            "capture-request:KEY2": 1
+        "error": {
+          "code": "STALE_SNAPSHOT",
+          "details": {
+            "actual": "SNAP2",
+            "expected": "SNAP1"
           },
-          "captured": "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md",
-          "receipt_path": "operations/transactions/TX1.yaml",
-          "replayed": true,
-          "snapshot_after": "SNAP1",
-          "transaction_id": "TX1"
+          "message": "canonical state changed since this request was approved",
+          "retryable": true
         },
+        "idempotency_key": "KEY2",
+        "ok": false,
+        "receipt_path": null,
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {},
         "schema_version": 2,
-        "snapshot_after": "SNAP1",
-        "transaction_id": "TX1"
+        "snapshot_after": null,
+        "transaction_id": null
       },
       "step": 1,
       "transport": "cli"

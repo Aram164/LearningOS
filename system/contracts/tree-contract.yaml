@@ -205,6 +205,8 @@ hidden:
       must_be_ignored: false
     - path: .venv
       purpose: local Python environment, created by `make setup`
+    - path: .jules
+      purpose: jules bolt journal
     - path: .pytest_cache
       purpose: >-
         pytest cache. Ignored by a nested .gitignore that pytest writes itself,
