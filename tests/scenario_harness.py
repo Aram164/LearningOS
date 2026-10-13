@@ -1069,6 +1069,34 @@ def _case_site_witnesses(operation: str, case_id: str):
                     sites.add((record.get("operation"), record["site"]))
 
 
+def persist_case_audit(ctx: _CaseContext) -> None:
+    """Append one case's audit log to the A19 population (SPEC §3.6).
+
+    Copies ``ctx.log_path`` to ``<audit-dir>/<operation>__<case>.jsonl``
+    with a leading case header (world root for same-run receipt lookup)
+    and appends the case name to ``cases.txt``. A missing audit
+    directory (runs outside pytest) is a no-op; a failed copy leaves
+    the population incomplete and the zz test fails closed.
+    """
+    import shutil
+
+    audit_dir = os.environ.get("LOS_ARCH_AUDIT_DIR")
+    if not audit_dir:
+        return
+    dest_dir = Path(audit_dir)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    name = f"{ctx.operation}__{ctx.case_id}"
+    dest = dest_dir / f"{name}.jsonl"
+    header = {"event": "case", "operation": ctx.operation,
+              "case": ctx.case_id, "root": str(ctx.root)}
+    with open(dest, "w", encoding="utf-8") as out:
+        out.write(json.dumps(header) + "\n")
+        if ctx.log_path.is_file():
+            out.write(ctx.log_path.read_text(encoding="utf-8"))
+    with open(dest_dir / "cases.txt", "a", encoding="utf-8") as cases:
+        cases.write(name + "\n")
+
+
 def run_case(case: dict, operation: str, workdir: str | Path) -> dict:
     """Run one non-sequence case; returns the normalized §5.3 recording."""
     if case.get("kind") == "sequence":
@@ -1077,6 +1105,7 @@ def run_case(case: dict, operation: str, workdir: str | Path) -> dict:
         ctx = _prepare_world(case, operation, Path(workdir))
         recording = _run_step(ctx, operation, case, 0)
         check_witnesses(ctx)
+        persist_case_audit(ctx)
     return normalize(recording, ctx.root)
 
 
@@ -1102,4 +1131,5 @@ def run_sequence(case: dict, operation: str, workdir: str | Path) -> dict:
                     *request_to_argv(full["operation"], request, ctx.root)]
             steps.append(result)
         check_witnesses(ctx)
+        persist_case_audit(ctx)
     return normalize({"steps": steps}, ctx.root)

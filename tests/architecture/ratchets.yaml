@@ -14,6 +14,7 @@ baselined:
 - A7-output
 - A9-refusal-sites
 - A18-callbacks
+- A19-owners
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -547,6 +548,7 @@ checks:
     since: baseline
     approved_by: null
   A9-refusal-sites: []
+  A19-owners: []
   A18-callbacks:
   - signature: ai-action.delivery.apply::publish
     count: 1

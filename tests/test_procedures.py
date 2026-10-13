@@ -199,6 +199,29 @@ def _check_procedure_audit(transcript: str, log_path: Path) -> None:
         f"{transcript}: audit witness failure:\n" + "\n".join(problems))
 
 
+def _persist_procedure_audit(stem: str, log_path: Path) -> None:
+    """Append one transcript's audit log to the A19 population (§3.6)."""
+    import json as _json
+    import os as _os
+    import shutil as _shutil
+
+    audit_dir = _os.environ.get("LOS_ARCH_AUDIT_DIR")
+    if not audit_dir:
+        return
+    dest_dir = Path(audit_dir)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    name = f"procedure__{stem}"
+    dest = dest_dir / f"{name}.jsonl"
+    header = {"event": "case", "operation": "procedure",
+              "case": stem, "root": str(ROOT)}
+    with open(dest, "w", encoding="utf-8") as out:
+        out.write(_json.dumps(header) + "\n")
+        if log_path.is_file():
+            out.write(log_path.read_text(encoding="utf-8"))
+    with open(dest_dir / "cases.txt", "a", encoding="utf-8") as cases:
+        cases.write(name + "\n")
+
+
 def test_every_transcript_passes(tmp_path):
     transcripts = sorted(
         path for path in PROCEDURES.glob("*.md") if path.is_file())
@@ -218,6 +241,7 @@ def test_every_transcript_passes(tmp_path):
         assert proc.returncode == 0, (
             f"{transcript.name} failed:\n{proc.stdout}\n{proc.stderr}")
         _check_procedure_audit(transcript.name, log_path)
+        _persist_procedure_audit(transcript.stem, log_path)
 
 
 #: A child driver that runs one renderer through the real run_cli path.

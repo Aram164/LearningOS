@@ -1,0 +1,22 @@
+schema: 1
+roots: ["operations/", "<STATE>/"]
+io_helpers: []
+excluded:
+  - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
+  - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}
+entries:
+  - {glob: "operations/transactions/transaction-*.yaml", sink: module, owner: learning_os.transactions}
+  - {glob: "operations/transactions/revisions.yaml", sink: module, owner: learning_os.transactions}
+  - {glob: "operations/transactions/idempotency.yaml", sink: module, owner: learning_os.transactions}
+  - {glob: "operations/transactions/.inflight/**", sink: module, owner: learning_os.transactions}
+  - {glob: "operations/transactions/.authority-check", sink: module, owner: learning_os.transactions}
+  # Corrected by Builder Task 79 (conductor decision): P4-PREP section 4
+  # measures four engine writers of lineage.yaml, not the two the SPEC
+  # table assumed. The SPEC table row is amended by this declaration.
+  - {glob: "operations/transactions/lineage.yaml", sink: "engine:apply", capabilities: [unit.material-synthesis.publish, lineage.restamp, module.plan.import, unit.plan.revise]}
+  - {glob: "operations/legacy/**", sink: "engine:apply", capabilities: [legacy.archive.lock.publish]}
+  - {glob: "operations/ai-actions/**", sink: module, owner: learning_os.ai_actions}
+  - {glob: "operations/ai-actions/**", sink: "engine:apply", capabilities: [ai-action.delivery.apply]}
+  - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
+  - {glob: "operations/migrations/**", sink: module, owner: migrations}
+  - {glob: "<STATE>/learningos-*-touched.json", sink: module, owner: learning_os.store.session_ledger}

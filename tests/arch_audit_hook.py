@@ -215,6 +215,37 @@ def _current_phase():
         return None
 
 
+def _current_writer() -> tuple[str | None, str | None, int | None]:
+    """The innermost writing module under tools/ (SPEC §3.6, A19).
+
+    Walks the live stack outward from the hook frame and returns
+    ``(module, file, line)`` for the first frame whose file lies under
+    ``tools/learning_os/`` or ``tools/migrations/``. A shared sink frame
+    is only the first such frame; ownership still requires the sink
+    rules in the A19 test, never this value alone. Returns
+    ``(None, None, None)`` when no such frame exists (fail closed).
+    """
+    try:
+        import traceback
+
+        frames = traceback.extract_stack()
+    except Exception:
+        return None, None, None
+    for frame in reversed(frames):
+        filename = frame.filename.replace(os.sep, "/")
+        for marker, prefix in (("/tools/learning_os/", "learning_os."),
+                               ("/tools/migrations/", "migrations.")):
+            index = filename.rfind(marker)
+            if index < 0:
+                continue
+            relative = filename[index + len(marker):]
+            if relative.endswith(".py"):
+                relative = relative[:-3]
+            module = prefix + relative.replace("/", ".")
+            return module, frame.filename, frame.lineno
+    return None, None, None
+
+
 def _current_render():
     """The running renderer as [operation, callback], or None (SPEC §3.5b).
 
@@ -354,6 +385,7 @@ def _hook(event: str, args) -> None:
                 return
             path = _coerce_path(raw_path)
             mode_text = mode if isinstance(mode, str) else None
+            writer, writer_file, writer_line = _current_writer()
             record = {
                 "event": event,
                 "paths": [path],
@@ -361,6 +393,9 @@ def _hook(event: str, args) -> None:
                 "phase": _current_phase(),
                 "pid": os.getpid(),
                 "render": render,
+                "writer": writer,
+                "writer_file": writer_file,
+                "writer_line": writer_line,
             }
         elif event == "subprocess.Popen":
             argv_index = layout.get("argv", 1)
@@ -397,6 +432,7 @@ def _hook(event: str, args) -> None:
                 if resolve and isinstance(coerced, str):
                     coerced = _resolve_relative(event, args, coerced)
                 paths.append(coerced)
+            writer, writer_file, writer_line = _current_writer()
             record = {
                 "event": event,
                 "paths": paths,
@@ -404,6 +440,9 @@ def _hook(event: str, args) -> None:
                 "phase": _current_phase(),
                 "pid": os.getpid(),
                 "render": render,
+                "writer": writer,
+                "writer_file": writer_file,
+                "writer_line": writer_line,
             }
         if record is not None:
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:

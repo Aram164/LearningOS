@@ -172,6 +172,7 @@ GROUPS: dict[str, list[str]] = {
         "test_scenarios_health_shim.py",
         "test_scenarios_recovery.py",
         "test_scenarios_session.py",
+        "test_scenarios_zz_operational_owners.py",
         "test_scenarios_zz_refusal_sites.py",
         "test_seal_guards_auto.py",
         "test_write_payload_clarity.py",

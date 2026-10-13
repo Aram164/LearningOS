@@ -85,6 +85,24 @@ def _site_witness_file(tmp_path_factory):
         os.environ[SITE_WITNESS_ENV] = previous
 
 
+#: The A19 audit directory (SPEC §3.6): every scenario and procedure
+#: case appends its audit log here for the zz ownership population.
+AUDIT_DIR_ENV = "LOS_ARCH_AUDIT_DIR"
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _operational_audit_dir(tmp_path_factory):
+    """The session-scoped A19 audit directory, outside the repository."""
+    path = tmp_path_factory.mktemp("operational-audit")
+    previous = os.environ.get(AUDIT_DIR_ENV)
+    os.environ[AUDIT_DIR_ENV] = str(path)
+    yield path
+    if previous is None:
+        os.environ.pop(AUDIT_DIR_ENV, None)
+    else:
+        os.environ[AUDIT_DIR_ENV] = previous
+
+
 def pytest_collection_modifyitems(items):
     """Apply the area-group marker from tests/group_map.py; fail on drift."""
     errors = group_map.check_map(Path(__file__).resolve().parent)
