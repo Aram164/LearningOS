@@ -477,6 +477,13 @@ def _parses_for_row(row: dict):
         return digest_grammar
     if owner == "inspect-reference":
         return lambda candidate: True
+    if owner in ("ai-request-store", "ai-delivery-store",
+                 "ai-action-registry", "ai-action-target",
+                 "operations-trace-request", "masters-candidate-module",
+                 "related-record"):
+        # Builder Task 78 ((cx) D-6/D-7/D-8): free-form caller ids;
+        # the near-miss differs from the base value by construction.
+        return lambda candidate: True
     raise AssertionError(
         f"A5 {row['operation']}::{row['pointer']}: no grammar — {FIX}")
 
@@ -782,6 +789,54 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = [request["delivery_sha256"],
                    *request["artifact_sha256"].values()]
         return ordered, set(ordered)
+    if owner in ("ai-request-store", "ai-delivery-store",
+                 "ai-action-registry", "ai-action-target"):
+        # Builder Task 78 ((cx) D-8): the same loaders each handler
+        # reaches; AI-store domains enumerate only on this miss path.
+        from learning_os.ai_actions.service import AIActionService
+
+        service = AIActionService(ctx.root)
+        if owner == "ai-request-store":
+            ordered = [str(row["id"])
+                       for row in service.repository.request_projections()
+                       if row.get("id")]
+        elif owner == "ai-delivery-store":
+            ordered = service.repository.delivery_ids()
+        elif owner == "ai-action-registry":
+            ordered = [action.id for action in service.registry.list()]
+        elif request.get("target_kind") == "unit":
+            ordered = list(load_repo(ctx.root).units)
+        else:
+            ordered = [str(row["id"])
+                       for row in service.list_garden_targets()]
+        return ordered, set(ordered)
+    if owner == "operations-trace-request":
+        # Builder Task 78 ((cx) D-6): distinct ids in loaded traces.
+        from learning_os.ops.handlers import platform as platform_handlers
+
+        _detail, ordered = platform_handlers._describe_operation(
+            ctx.root, str(request.get("request_id", "")))
+        return ordered, set(ordered)
+    if owner == "masters-candidate-module":
+        # Builder Task 78 ((cx) D-8): the loaded catalog module map.
+        from learning_os import masters_planning
+
+        catalog = masters_planning.load_master_catalog(ctx.root)
+        assert catalog is not None, (
+            f"A5 {operation}::{row['pointer']}: no catalog — {FIX}")
+        ordered = [str(row["id"]) for row in catalog["candidate_modules"]]
+        return ordered, set(ordered)
+    if owner == "related-record":
+        # Builder Task 78 ((cx) D-7): manifest record ids, as the
+        # handler's heterogeneous owner probe enumerates them.
+        from learning_os.ops._legacy_plumbing import (
+            _fresh_manifest_and_repo,
+        )
+
+        manifest, _repo = _fresh_manifest_and_repo(ctx.root)
+        ordered = [str(row["id"]) for row in manifest["records"]
+                   if isinstance(row, dict) and row.get("id")]
+        return ordered, set(ordered)
     raise AssertionError(
         f"A5 {operation}::{row['pointer']}: no lookup domain — {FIX}")
 
@@ -1075,6 +1130,22 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("cli.ai-action-append-slices.unknown-route", "unknown-route"),
     ("cli.ai-action-append-slices", "/properties/concept_id/items"):
         ("cli.ai-action-append-slices.unknown-concept", "unknown-concept"),
+    # Builder Task 78 ((cx) D-6/D-7/D-8): the AI/operations/related
+    # anchors; AI refusal cases carry no A9 site (site None).
+    ("cli.ai-action-append-slices", "/properties/request_id"):
+        (None, "unknown-request"),
+    ("cli.ai-action-status", "/properties/request_id"):
+        (None, "unknown-request"),
+    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+        (None, "unknown-delivery"),
+    ("cli.ai-action-prepare", "/properties/action_id"):
+        (None, "unknown-action"),
+    ("cli.ai-action-prepare", "/properties/target_id"):
+        (None, "unknown-garden-target"),
+    ("cli.operations", "/properties/request_id"):
+        ("cli.operations.unknown-request", "unknown-request"),
+    ("cli.related", "/properties/id"):
+        ("cli.related.unknown-id", "unknown-id"),
     ("module.attempt.record", "/properties/module_id"):
         ("module.attempt.record.unknown-module", "unknown-module"),
     ("module.sitting.update", "/properties/module_id"):
@@ -1217,6 +1288,22 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("legacy-verbatim",
          "route route-b2f1f80014860a929a3af0bc continuation refused: "
          "unknown concept ids: ['{miss}']"),
+    # Builder Task 78 ((cx) D-6/D-7/D-8): each handler keeps its
+    # legacy complaint as the NotFound message; the CLI pipeline
+    # adds the bounded suggestion lines (the (cd) rendering).
+    ("cli.ai-action-append-slices", "/properties/request_id"):
+        ("legacy-verbatim", "AI action request not found: {miss}"),
+    ("cli.ai-action-status", "/properties/request_id"):
+        ("legacy-verbatim", "AI action request not found: {miss}"),
+    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+        ("legacy-verbatim", "AI delivery not found: {miss}"),
+    ("cli.ai-action-prepare", "/properties/action_id"):
+        ("legacy-verbatim", "unknown AI action: {miss}"),
+    ("cli.ai-action-prepare", "/properties/target_id"):
+        ("legacy-verbatim", "Garden target not found: {miss}"),
+    ("cli.operations", "/properties/request_id"):
+        ("legacy-verbatim", "unknown request_id"),
+    ("cli.related", "/properties/id"): ("template", "record"),
     ("module.attempt.record", "/properties/module_id"):
         ("prefixed", "module"),
     ("module.sitting.update", "/properties/module_id"):
@@ -1300,6 +1387,9 @@ INSPECT_REFUSAL_CASE: dict[tuple[str, str], str] = {
 _CLI_SEQUENCE_POINTERS = frozenset({
     ("cli.ai-action-append-slices", "/properties/route_id"),
     ("cli.ai-action-append-slices", "/properties/concept_id/items"),
+    # Builder Task 78 ((cx) D-8): sequence bases, single refusals.
+    ("cli.ai-action-append-slices", "/properties/request_id"),
+    ("cli.ai-action-validate-delivery", "/properties/delivery_id"),
 })
 
 #: The refused CLI anchors (SPEC (cn) item 1): single CLI refusal
@@ -1326,6 +1416,12 @@ _CLI_REFUSED_POINTERS = frozenset({
     # SPEC (cq) items 3 and 6: the repaired CLI lookup anchors.
     ("cli.goal", "/properties/goal_id/items"),
     ("material.span", "/properties/stage_id"),
+    # Builder Task 78 ((cx) D-6/D-7/D-8): single-case CLI anchors.
+    ("cli.ai-action-status", "/properties/request_id"),
+    ("cli.ai-action-prepare", "/properties/action_id"),
+    ("cli.ai-action-prepare", "/properties/target_id"),
+    ("cli.operations", "/properties/request_id"),
+    ("cli.related", "/properties/id"),
 })
 
 #: Every CLI-anchored pointer: sequence plus refused anchors.

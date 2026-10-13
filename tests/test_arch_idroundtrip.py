@@ -381,7 +381,9 @@ def test_id_scan_changes_no_production_file():
     before = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in watched}
     assert len(list(_stdout_strings())) > 0
-    assert sum(_review_signatures().values()) == 11
+    # Builder Task 78 resolved the ten ::review rows below; only the
+    # unrelated lineage claim review remains undecided.
+    assert sum(_review_signatures().values()) == 1
     after = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
              for p in watched}
     assert after == before
@@ -481,9 +483,12 @@ def test_current_exceptions_are_recorded():
 # ops/handlers/platform.py in S15 B1 (cd6b5571). The checks below execute
 # those real owners; the dispatch is shared by A6/A13/A5 (test-only).
 
-#: The exact six approved owner rows: (operation, pointer) -> (owner, shape).
-#: SPEC (ay) items 1-2; human receipt
-#: control/S15-Aram-six-field-approval-20261008.json.
+#: The exact approved owner rows: (operation, pointer) -> (owner, shape).
+#: The first six are SPEC (ay) items 1-2; human receipt
+#: control/S15-Aram-six-field-approval-20261008.json. The remaining
+#: eight are Builder Task 78 under SPEC (cx) D-6/D-7/D-8: each miss
+#: suggests from the domain its handler already loads (or, for the
+#: AI store, a bounded miss-only enumeration of that same store).
 SUPPORTED_OWNER_ROWS: dict[tuple[str, str], tuple[str, str]] = {
     ("cli.inspect", "/properties/id"): ("inspect-reference", "scalar"),
     ("cli.inspect", "/properties/more_ids/items"): ("inspect-reference", "scalar"),
@@ -493,6 +498,21 @@ SUPPORTED_OWNER_ROWS: dict[tuple[str, str], tuple[str, str]] = {
         ("ai-delivery-exchange", "scalar"),
     ("ai-action.delivery.apply", "/properties/artifact_sha256"):
         ("ai-delivery-artifact-digests", "mapping-values"),
+    ("cli.ai-action-append-slices", "/properties/request_id"):
+        ("ai-request-store", "scalar"),
+    ("cli.ai-action-status", "/properties/request_id"):
+        ("ai-request-store", "scalar"),
+    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+        ("ai-delivery-store", "scalar"),
+    ("cli.ai-action-prepare", "/properties/action_id"):
+        ("ai-action-registry", "scalar"),
+    ("cli.ai-action-prepare", "/properties/target_id"):
+        ("ai-action-target", "scalar"),
+    ("cli.operations", "/properties/request_id"):
+        ("operations-trace-request", "scalar"),
+    ("masters-planning.comparison.publish", "/properties/candidate_module_id"):
+        ("masters-candidate-module", "scalar"),
+    ("cli.related", "/properties/id"): ("related-record", "scalar"),
 }
 
 
@@ -565,7 +585,8 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
                       manifest=None, repo=None, candidates=(),
                       repository=None, delivery_dir=None,
                       delivery_sha256=None, artifact_map=None,
-                      executed=None):
+                      executed=None, service=None, registry=None,
+                      root=None, target_kind="garden-note"):
     """Execute the real owner for one governed scalar (SPEC (ay)).
 
     Appends ``sub_pointer`` to ``executed`` (proving no governed scalar is
@@ -599,6 +620,48 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
             delivery_dir, delivery_sha256=delivery_sha256,
             artifact_sha256=artifact_map)
         return ("bound-value", validated)
+    # Builder Task 78 ((cx) D-6/D-7/D-8): each branch executes the
+    # same getter its handler reaches; misses propagate with their
+    # original class and message, carrying the loaded domain.
+    if owner == "ai-request-store":
+        return ("resolved", repository.get_request(value))
+    if owner == "ai-delivery-store":
+        delivery, _directory = repository.get_delivery(value)
+        return ("resolved", delivery)
+    if owner == "ai-action-registry":
+        return ("resolved", registry.get(value))
+    if owner == "ai-action-target":
+        target, _path = service._target(value, target_kind)
+        return ("resolved", target)
+    if owner == "operations-trace-request":
+        from learning_os.domain.failures import NotFound
+
+        detail, domain = platform_handlers._describe_operation(root, value)
+        if detail is None:
+            raise NotFound("request", value, domain,
+                           message="unknown request_id")
+        return ("resolved", detail)
+    if owner == "masters-candidate-module":
+        from learning_os import masters_planning
+
+        catalog = masters_planning.load_master_catalog(root)
+        assert catalog is not None, (
+            f"A6 {owner}: no catalog at the fixture root — {FIX}")
+        modules = {row["id"]: row for row in catalog["candidate_modules"]}
+        if value not in modules:
+            raise masters_planning.UnknownCandidateModule(
+                "candidate module", value, list(modules),
+                message=(f"comparison targets unknown candidate module: "
+                         f"{value}"))
+        return ("resolved", modules[value])
+    if owner == "related-record":
+        from learning_os.domain.suggest import not_found
+
+        by_id = {row.get("id"): row for row in manifest["records"]}
+        resolved_id = (manifest.get("project_aliases") or {}).get(value, value)
+        if resolved_id not in by_id:
+            return ("miss", not_found("record", value, by_id))
+        return ("resolved", by_id[resolved_id])
     raise AssertionError(f"A6 unknown validation owner {owner!r} — {FIX}")
 
 
@@ -655,7 +718,7 @@ def test_owner_table_matches_the_inventory_exactly():
     rows = yaml.safe_load(
         (ROOT / "tests/architecture/id-fields.yaml").read_text(
             encoding="utf-8"))["fields"]
-    assert len(SUPPORTED_OWNER_ROWS) == 6
+    assert len(SUPPORTED_OWNER_ROWS) == 14
     tabled = set(SUPPORTED_OWNER_ROWS)
     inventory = {}
     for row in rows:
@@ -684,6 +747,13 @@ def test_owner_table_matches_the_inventory_exactly():
 NONLOOKUP_IDENTITY_ROWS: dict[tuple[str, str], str] = {
     ("cli.session-end", "/properties/session_id"):
         "selects/creates the ownership window; never a known-ID lookup",
+    # Builder Task 78 ((cx) D-6): the two further decided identities.
+    # Creation and ownership ids have no typo lookup domain, so no
+    # candidate inventory is ever enumerated for them.
+    ("cli.ai-action-prepare", "/properties/request_id"):
+        "caller-supplied creation identity; never a known-ID lookup",
+    ("cli.goal", "/properties/session_id"):
+        "ownership-window identity; never a known-ID lookup",
 }
 
 
@@ -1099,8 +1169,10 @@ def test_digest_owner_negatives_keep_class_message_and_exit(tmp_path):
 
 def test_six_owner_rows_resolved_and_eleven_reviews_retained():
     current = _review_signatures()
-    assert sum(current.values()) == 11, (
-        f"A6 want exactly the 11 retained reviews: {sorted(current)} — {FIX}")
+    # Builder Task 78 resolved ten further ::review rows; only the
+    # unrelated lineage claim review remains undecided.
+    assert sum(current.values()) == 1, (
+        f"A6 want exactly the 1 retained review: {sorted(current)} — {FIX}")
     removed = {
         "ai-action.delivery.apply::/properties/artifact_sha256::review",
         "ai-action.delivery.apply::/properties/delivery_id::review",
@@ -1110,6 +1182,18 @@ def test_six_owner_rows_resolved_and_eleven_reviews_retained():
         "project.inspect::/properties/more_ids/items::review",
         # Task 73 decision 4: decided nonlookup, not under review.
         "cli.session-end::/properties/session_id::review",
+        # Builder Task 78 ((cx) D-6/D-7/D-8): decided lookups and
+        # nonlookup identities, no longer under review.
+        "cli.ai-action-append-slices::/properties/request_id::review",
+        "cli.ai-action-prepare::/properties/action_id::review",
+        "cli.ai-action-prepare::/properties/request_id::review",
+        "cli.ai-action-prepare::/properties/target_id::review",
+        "cli.ai-action-status::/properties/request_id::review",
+        "cli.ai-action-validate-delivery::/properties/delivery_id::review",
+        "cli.dual::/properties/session_id::review",
+        "cli.operations::/properties/request_id::review",
+        "cli.related::/properties/id::review",
+        "masters-planning.comparison.publish::/properties/candidate_module_id::review",
     }
     assert not (removed & set(current)), (
         f"A6 resolved rows still under review: {sorted(removed & set(current))} — {FIX}")
