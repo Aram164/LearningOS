@@ -42,6 +42,27 @@ if _log:
             if _root_index < len(sys.argv):
                 _root_arg = sys.argv[_root_index]
         _world_root = str(Path(_root_arg).resolve()) if _root_arg else None
+        _state_dir = None
+        _state_anchored = False
+        if _world_root:
+            import tempfile
+
+            _anchor = Path(_world_root) / ".git"
+            _git_dir = _anchor if _anchor.is_dir() else None
+            if _anchor.is_file():
+                try:
+                    _git_text = _anchor.read_text().strip()
+                    if _git_text.startswith("gitdir:"):
+                        _candidate = Path(_git_text[7:].strip())
+                        _git_dir = (_candidate if _candidate.is_absolute()
+                                    else Path(_world_root) / _candidate)
+                except OSError:
+                    pass
+            if _git_dir is not None and _git_dir.is_dir():
+                _state_dir = str((_git_dir / "learningos").resolve())
+                _state_anchored = True
+            else:
+                _state_dir = str(Path(tempfile.gettempdir()).resolve())
         _tx_dir = Path(_world_root) / "operations/transactions" if _world_root else None
         _receipts_before = sorted(p.name for p in _tx_dir.glob("transaction-*.yaml")) if _tx_dir else []
 
@@ -53,6 +74,8 @@ if _log:
             "token": _token,
             "argv": list(sys.argv),
             "root": _world_root,
+            "state_dir": _state_dir,
+            "state_anchored": _state_anchored,
             "receipts_before": _receipts_before,
         }
         with open(_log, "a", encoding="utf-8") as _handle:

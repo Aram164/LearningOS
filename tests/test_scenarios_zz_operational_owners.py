@@ -47,12 +47,22 @@ def _recorded_signatures() -> set[str]:
             for entry in data["checks"].get(CHECK_ID, [])}
 
 
-def _relative_destination(raw: str, root: str | None = None) -> str | None:
+def _relative_destination(raw: str, root: str | None = None,
+                          state_dir: str | None = None, anchored: bool = False) -> str | None:
     """The operational-relative path for one audited path, or None."""
     path = raw.replace(os.sep, "/")
     if root is not None:
         bound = Path(root).resolve()
         lexical = Path(raw).resolve()
+        if state_dir:
+            try:
+                state_rel = lexical.relative_to(Path(state_dir).resolve()).as_posix()
+            except ValueError:
+                pass
+            else:
+                token = hashlib.sha256(str(bound).encode("utf-8")).hexdigest()[:16]
+                if anchored or lexical.name.lstrip(".").startswith(f"learningos-{token}"):
+                    return f"<STATE>/{state_rel}"
         try:
             rel = lexical.relative_to(bound).as_posix()
         except ValueError:
@@ -71,7 +81,8 @@ def _relative_destination(raw: str, root: str | None = None) -> str | None:
     return None
 
 
-def _destinations(record: dict, root: str | None = None) -> list[str]:
+def _destinations(record: dict, root: str | None = None,
+                  state_dir: str | None = None, anchored: bool = False) -> list[str]:
     """Normalized destinations for one record (SPEC §3.6 rules)."""
     event = record.get("event")
     if event == "os.mkdir" or event not in _WRITE_EVENTS:
@@ -81,7 +92,7 @@ def _destinations(record: dict, root: str | None = None) -> list[str]:
         paths = paths[1:]
     destinations = []
     for raw in paths:
-        rel = _relative_destination(raw, root)
+        rel = _relative_destination(raw, root, state_dir, anchored)
         if rel is None:
             continue
         head, _, name = rel.rpartition("/")
@@ -203,6 +214,11 @@ def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
             argv = binding.get("argv", [])
             if argv and Path(argv[0]).name == "los-fixture":
                 continue  # explicitly identified fixture construction
+            # No world can establish ownership of an unresolved descriptor.
+            resolved = record.get("resolved_paths", record.get("paths", []))
+            if not resolved or any(not isinstance(p, str) or not os.path.isabs(p) for p in resolved):
+                add(f"{log_path.name}::unbound-world", str(record))
+                continue
             # A read-only helper can have no world; an unresolved write cannot.
             if any(_relative_destination(p) for p in record.get("paths", []) if isinstance(p, str)):
                 add(f"{log_path.name}::unbound-world", str(record))
@@ -216,7 +232,7 @@ def _violations_in_log(log_path: Path, owners: dict) -> dict[str, list[str]]:
         if not check_paths or any(not isinstance(p, str) or not os.path.isabs(p) for p in check_paths):
             add(f"{log_path.name}::unresolved", str(record))
             continue
-        for rel in _destinations(record, root):
+        for rel in _destinations(record, root, binding.get("state_dir"), binding.get("state_anchored", False)):
             if any(fnmatch.fnmatch(rel, glob) for glob in excluded):
                 continue
             matched = [e for e in entries if fnmatch.fnmatch(rel, e["glob"])]
@@ -310,7 +326,8 @@ def _write_log(tmp_path: Path, name: str, records: list[dict],
               "root": str(root)}
     installed = {"event": "installed", "pid": 1, "ppid": 0,
                  "token": "control", "argv": ["control", "--root", str(root)],
-                 "root": str(root)}
+                 "root": str(root), "state_dir": str(root / ".git/learningos"),
+                 "state_anchored": True}
     proofs = []
     for path in (root / "operations/transactions").glob("transaction-*.yaml"):
         raw = path.read_bytes()
@@ -514,3 +531,21 @@ def test_bad_receipt_digest_fails_closed(tmp_path):
     rows[-1]["new_receipts"][0]["sha256"] = "0" * 64
     log.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
     assert any("bad-receipt" in sig for sig in _violations_in_log(log, _load_owners()))
+
+
+
+def test_unknown_state_destination_fails_closed(tmp_path):
+    assert _signatures(tmp_path, [_write_record(
+        "/w/.git/learningos/new-state.yaml", "learning_os.store.session_ledger")]) == {"<STATE>/new-state.yaml::undeclared"}
+
+
+def test_unbound_world_cannot_credit_an_unresolved_descriptor(tmp_path):
+    root = tmp_path / "world"
+    root.mkdir()
+    log = _write_log(tmp_path, "unbound", [{"event": "open", "paths": [9],
+                     "resolved_paths": [None], "mode": "w", "writer": "learning_os.transactions"}], root)
+    rows = [json.loads(line) for line in log.read_text().splitlines()]
+    rows[1]["root"] = None
+    rows[1]["argv"] = ["-c"]
+    log.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
+    assert _violations_in_log(log, _load_owners())
