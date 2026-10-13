@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"already_stamped\": [], \"capability\": \"lineage.restamp\", \"claims\": {\"covers:route-b2f1f80014860a929a3af0bc\": {\"basis\": \"exact\", \"bundled_rewriters\": [], \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\", \"judgment_commit\": \"7666677e82ecc32093f486bc5dac9de568f3329d\", \"module_id\": \"module-demo\", \"new_reads\": {\"node-content:knowledge-demo-expectation\": \"sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d\", \"node-content:knowledge-demo-outcomes\": \"sha256:474df21ce2189e4a94c4b6b6a26221fb99aaa91e773a3c65cf3bea55bbd38ad7\", \"route-content:route-b2f1f80014860a929a3af0bc\": \"sha256:28afdd9ac02bf323e243457332f678dd4054757e0388327c9c044feb301f43b3\"}, \"nodes\": [\"knowledge-demo-expectation\", \"knowledge-demo-outcomes\"], \"reasons\": [], \"route_id\": \"route-b2f1f80014860a929a3af0bc\", \"stampable\": \"exact\", \"verdict\": \"eligible\"}}, \"expected_snapshot\": \"SNAP1\", \"mode\": \"check\", \"ok\": true, \"totals\": {\"eligible\": 1, \"needs-rejudgment\": 0, \"needs-review\": 0}}\n",
+  "stdout": "{\"already_stamped\": [], \"capability\": \"lineage.restamp\", \"claims\": {\"covers:route-b2f1f80014860a929a3af0bc\": {\"basis\": \"exact\", \"bundled_rewriters\": [], \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\", \"judgment_commit\": \"ada3d8b87f7eafc1bf9a36d851e5f38ad5068717\", \"module_id\": \"module-demo\", \"new_reads\": {\"node-content:knowledge-demo-expectation\": \"sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d\", \"node-content:knowledge-demo-outcomes\": \"sha256:474df21ce2189e4a94c4b6b6a26221fb99aaa91e773a3c65cf3bea55bbd38ad7\", \"route-content:route-b2f1f80014860a929a3af0bc\": \"sha256:28afdd9ac02bf323e243457332f678dd4054757e0388327c9c044feb301f43b3\"}, \"nodes\": [\"knowledge-demo-expectation\", \"knowledge-demo-outcomes\"], \"reasons\": [], \"route_id\": \"route-b2f1f80014860a929a3af0bc\", \"stampable\": \"exact\", \"verdict\": \"eligible\"}}, \"expected_snapshot\": \"SNAP1\", \"mode\": \"check\", \"ok\": true, \"totals\": {\"eligible\": 1, \"needs-rejudgment\": 0, \"needs-review\": 0}}\n",
   "stdout_json": {
     "already_stamped": [],
     "capability": "lineage.restamp",
@@ -16,7 +16,7 @@
         "basis": "exact",
         "bundled_rewriters": [],
         "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
-        "judgment_commit": "7666677e82ecc32093f486bc5dac9de568f3329d",
+        "judgment_commit": "ada3d8b87f7eafc1bf9a36d851e5f38ad5068717",
         "module_id": "module-demo",
         "new_reads": {
           "node-content:knowledge-demo-expectation": "sha256:1b3c2ba6f5c9cf1961dbc8b0ae7240b32f2cbe72a690b39ee35f69192be4013d",

@@ -73,7 +73,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:5dc8b2ec3ee224524f098b72eabf8bbbadb28c5745b16c96ebee43ba7bbc2ef9",
+  "snapshot_after": "sha256:fee6c80acfaf89fd864b02494e2aae59d956c58c7cdf3d9f6b0f86d917529c54",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -83,7 +83,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:5dc8b2ec3ee224524f098b72eabf8bbbadb28c5745b16c96ebee43ba7bbc2ef9",
+    "snapshot_after": "sha256:fee6c80acfaf89fd864b02494e2aae59d956c58c7cdf3d9f6b0f86d917529c54",
     "replayed": false
   },
   "error": null
@@ -139,7 +139,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:31d061e7b6dfe190766d64996e1e175d1ada8cb8c3b9826e48f364a8393b732e",
+  "snapshot_after": "sha256:3c10f663c2a1c34e9bfd04694d4350f10c379cb65f787f0c683ddd33c13073ba",
   "result": {
     "ok": true,
     "note_id": "note-triangulation-memo",
@@ -150,7 +150,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
     "artifact_revisions": {
       "note-triangulation-memo": 1
     },
-    "snapshot_after": "sha256:31d061e7b6dfe190766d64996e1e175d1ada8cb8c3b9826e48f364a8393b732e",
+    "snapshot_after": "sha256:3c10f663c2a1c34e9bfd04694d4350f10c379cb65f787f0c683ddd33c13073ba",
     "replayed": false
   },
   "error": null
@@ -218,7 +218,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:aa24658d914da1e11cc68e2e77407bf7157db372bc72fc2eb497ee86552cacbc",
+  "snapshot_after": "sha256:aaf9818392d51ce21e58aff577127970488bb42928cb3b6411fc7171b8af7963",
   "result": {
     "ok": true,
     "note_id": "note-variance-order",
@@ -228,7 +228,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
     "artifact_revisions": {
       "note-variance-order": 1
     },
-    "snapshot_after": "sha256:aa24658d914da1e11cc68e2e77407bf7157db372bc72fc2eb497ee86552cacbc",
+    "snapshot_after": "sha256:aaf9818392d51ce21e58aff577127970488bb42928cb3b6411fc7171b8af7963",
     "replayed": false
   },
   "error": null
@@ -284,7 +284,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:a24290da1807ac36d49dbdb844d3482862c719c8a1bad1579cfca637023e6113",
+  "snapshot_after": "sha256:80aa61c6073cbfd628e3b4ada8878e70f547894d027846d707c6d03ccd3a6d68",
   "result": {
     "ok": true,
     "replayed": false,
@@ -295,7 +295,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
     "artifact_revisions": {
       "note-deck-analysis": 1
     },
-    "snapshot_after": "sha256:a24290da1807ac36d49dbdb844d3482862c719c8a1bad1579cfca637023e6113"
+    "snapshot_after": "sha256:80aa61c6073cbfd628e3b4ada8878e70f547894d027846d707c6d03ccd3a6d68"
   },
   "error": null
 }

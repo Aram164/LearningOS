@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: AI action request not found: ai-request-nope\n",
+  "stderr": "los: AI action request not found: ai-request-nope\n  did you mean: ai-request-demo\n",
   "stdout": "",
   "stdout_json": null
 }
