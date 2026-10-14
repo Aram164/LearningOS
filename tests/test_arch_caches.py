@@ -1270,6 +1270,7 @@ def test_text_skipped_order_matches_manifest_order(tmp_path: Path, capsys, monke
         "boundary", "extract-failed", "missing"]
 
 
+@needs_pdftotext
 def test_text_explicit_default_dir_uses_derived_nodes(tmp_path: Path, capsys, monkeypatch):
     """Passing --cache-dir equal to the default selects the same path:
     behavior keys on the selected location, never on flag presence."""

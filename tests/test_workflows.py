@@ -250,11 +250,11 @@ def test_ci_installs_core_dependencies_into_the_project_venv():
                     assert ".venv/bin/python" in line, (workflow.name, line)
 
 
-def test_paired_gate_jobs_carry_the_90_minute_bound():
-    """Every job running the paired gate allows it exactly 90 minutes.
+def test_paired_gate_jobs_carry_the_180_minute_bound():
+    """Every job running the paired gate allows it exactly 180 minutes.
 
-    The observed landing gate took 42:51; an unbounded job hides a hang and
-    a shorter cap cancels the suite mid-run.
+    Phase 4 Linux pytest alone took 86 minutes and exact-pair CI exhausted
+    the former 90-minute limit. Keep complete coverage and a finite bound.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
         found = False
@@ -262,5 +262,5 @@ def test_paired_gate_jobs_carry_the_90_minute_bound():
             if any("make system-check" in step.get("run", "")
                    for step in job.get("steps", [])):
                 found = True
-                assert job.get("timeout-minutes") == 90, (workflow.name, name)
+                assert job.get("timeout-minutes") == 180, (workflow.name, name)
         assert found, workflow.name

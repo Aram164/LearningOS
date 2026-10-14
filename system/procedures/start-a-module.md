@@ -51,8 +51,7 @@ seal_envelope: E MOD-REGISTERED: module 'module-demo' attempt[1] is 'registered'
 ## No quarantined menu awaits promotion
 
 ```scrut
-$ ls curriculum/quarantine 2>&1 || echo "no quarantine to promote"
-ls: curriculum/quarantine: No such file or directory
+$ test ! -e curriculum/quarantine && echo "no quarantine to promote"
 no quarantine to promote
 ```
 

@@ -21,10 +21,10 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    # The paired gate is Core's complete suite: the observed landing gate took
-    # 42:51 (2026-10-10), so 90 minutes supplies measured headroom without an
-    # unbounded job.
-    timeout-minutes: 90
+    # Phase 4 Linux pytest alone took 86 minutes; the complete local
+    # source gate took 130 minutes. Keep complete paired coverage with
+    # a bounded allowance for extraction tests and the UI checks.
+    timeout-minutes: 180
     defaults:
       run:
         working-directory: repository
@@ -98,6 +98,12 @@ jobs:
       # Scrut v0.5.0. The release archive is pinned by GitHub's published
       # SHA-256 and checked before use; the binary stays outside the checkout,
       # clear of the tree-contract test, and reaches the gate as LOS_SCRUT_BIN.
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftotext -v
+
       - name: Install Scrut v0.5.0 (pinned digest)
         run: |
           set -eu

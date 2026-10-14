@@ -30,7 +30,7 @@ ARCH_SITE = Path(__file__).resolve().parent / "arch_site"
 
 
 def _git_init(root: Path) -> None:
-    for command in (["git", "init", "-q"],
+    for command in (["git", "init", "-q", "--initial-branch=main"],
                     ["git", "config", "user.email", "tests@example.invalid"],
                     ["git", "config", "user.name", "Tests"],
                     ["git", "add", "."],
