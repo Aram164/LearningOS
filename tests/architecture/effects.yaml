@@ -6,6 +6,7 @@
 "tools/learning_os/rules/receipt_cache.py": cache
 "tools/learning_os/diagnostics/**": cache
 "tools/learning_os/genout/**": projection
+"tools/learning_os/contracts/doc_blocks.py": projection
 "tools/learning_os/ai_actions/storage.py": operational
 "tools/learning_os/backup_manifest.py": operational
 "tools/learning_os/store/session_ledger.py": operational
