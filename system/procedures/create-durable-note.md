@@ -24,7 +24,19 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ## Search for an existing note with the same purpose
 
 1. search for an existing note with the same purpose;
-
+2. update it when appropriate, through `note.revise` after explicit approval —
+   identity, path, and role stay stable;
+3. otherwise assign a stable note ID (no gratuitous numeric suffix);
+4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`,
+   `crosswalk`, …); `reference` and `question` keep their dedicated
+   capabilities and are refused by `note.create`;
+5. stage the exact body bytes and apply them with a `note.create` envelope
+   (§25c): the handler writes `knowledge/notes/<bucket>/<note-id>.md` —
+   filename is always the ID, bucket is the nearest reasonable domain;
+6. attach relevant concept and source IDs (each must already be registered);
+7. preserve uncertainty and unfinished reasoning;
+8. add the workspace ID as context when useful;
+9. validate, then rebuild generated outputs.
 
 ```scrut
 $ los search demo --type note | $LOS_REPO/.venv/bin/python -c 'import json,sys; print(sorted(r["id"] for r in json.load(sys.stdin)))'
@@ -324,9 +336,6 @@ owns transaction-20261001-090000-004
 ```
 
 ## Validate, then rebuild generated outputs
-
-9. validate, then rebuild generated outputs.
-
 
 ```scrut
 $ los validate | tail -n 1

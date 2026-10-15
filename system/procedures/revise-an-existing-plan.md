@@ -220,6 +220,84 @@ $ $H/los-assert-receipt --last --capability module.materials.compact
 
 ## Draft the module package outside the repository
 
+When confirmed lecture scope requires a module-wide batch (new units, knowledge
+maps, complete rich source routing, optional study maps, and workspace joins), follow
+[`PLAN-CREATION-SOP.md`](../PLAN-CREATION-SOP.md). Complete its material-coverage
+audit, build from the canonical template, and require the no-write gate
+`.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
+--check` to pass before applying the same package through the
+`module.plan.import` capability (WORKFLOWS §25a).
+For several existing units, the same command accepts the compact
+`unit_revisions[]` shape in `system/templates/module-plan-revise.template.yaml`;
+it assembles unchanged records internally and keeps the same guarded import.
+`module-plan-import` never deletes units and never creates durable notes; the
+capabilities that do create durable notes are `note.create` (one general
+durable note, with atomic succession), `note.analysis.save` (one source
+analysis), `note.analysis.save_batch` (up to 20 source analyses atomically),
+and `atlas.question.save` (learner questions).
+
+Reference: [plan-creation SOP](../PLAN-CREATION-SOP.md).
+
+1. **Draft.** Regenerate the affected maps with
+   `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
+   module source map, or edit a copy of the map when it is not. The assembler
+   writes only to its out-directory and refuses the whole batch if any unit
+   fails the template or the schema, so the draft is already checked before
+   anyone reads it.
+2. **Review** the draft as a diff against what is live. This is the step the
+   gateway cannot do for you.
+3. **Preflight from the CLI.** `module-plan-import MODULE_ID --file … --check`
+   when the change touches a module's `source-map.yaml` or several units
+   together; `unit-map-import UNIT_ID --file …` when it is one unit's
+   `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
+   `--check` runs the contract, ordering, routing and shadow-repository
+   validation and reports `"canonical_files_written": 0`.
+   When a replacement material dossier needs the post-change basis, run the
+   same package with `--check --staged-basis UNIT_ID` (also available on
+   `unit-plan-revise`). This prints the staged basis and package SHA without
+   writing canonical files. Its `validated: false` means it is preparation,
+   not an approval: insert the basis into the reviewed dossier, then run an
+   ordinary `--check` on the final package. For several existing units, the
+   compact `unit_revisions[]` shape (SOP Gate 4) also accepts an append-only
+   `resources_append` list on a stage patch: reviewed new placements with
+   fresh resource ids go after the existing authored rows without copying
+   them. Full-array `fields.resources` stays for intentional replacement.
+   Applying a changed replacement dossier records its prospective freshness
+   lineage alongside any route-covers lineage in the same transaction.
+4. **Apply through the gateway**, never by writing the canonical file directly
+   — either through the saved-preflight shortcut above or an explicit envelope:
+
+   ```bash
+   .venv/bin/python tools/los.py capability module.plan.import --payload-file envelope.json
+   ```
+
+   `module-plan-import … --expected-snapshot` does **not** write. Every
+   canonical write refuses when no gateway request is in context
+   (`commands/support.py`: *"canonical writes must use GatewayEnvelopeV2;
+   direct CLI application is disabled"*), so the bare CLI can preflight and
+   nothing more. The envelope carries `schema_version: 2`, `request_id`,
+   `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
+   the entry read: the focused `plan-edit-context` response or `bootstrap`),
+   `expected_revisions` covering **exactly** every
+   artifact the transaction touches — the module plus each unit in the
+   package, no more and no fewer — an `approval` whose `subject_sha256` is
+   `intent_sha256(envelope)`, and the payload. `approve` never appears in the
+   payload; a `file` payload always carries its `file_sha256`. The complete
+   envelope construction (intent hash, revision guards, approval kinds,
+   refusal shape) is §25c; this step states only what plan revision adds.
+
+   `module.plan.import` additionally requires a coverage audit under
+   `work/active/` carrying the literal headings `## Local`, `## Linked` and
+   `## Completeness`, with all six `plan_contract.checks` true. Start from
+   `system/templates/plan-coverage-audit.template.md`. The audit may carry a
+   fenced `inventory-v1` block of scoped roots and disposition rows; the
+   preflight then reconciles rows against observed bytes and binds the set
+   to the saved report (PLAN-CREATION-SOP.md Gate 1).
+
+   For work *inside* a stage — `stage-progress`, `stage-note`,
+   `source-feedback`, `detour-create` — this section does not apply; that is
+   not a plan revision.
+
 ```scrut
 $ cat > "$TMPDIR/package.yaml" <<'EOF'
 > module_id: module-demo
@@ -251,11 +329,6 @@ sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
 ```
 
 ## Seal the module import with derived guards
-
-   ```bash
-   .venv/bin/python tools/los.py capability module.plan.import --payload-file envelope.json
-   ```
-
 
 ```scrut {output_stream: stderr}
 $ PKG_SHA=$(sha256sum "$TMPDIR/package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s25a-imp --request-id request-s25a-imp --guards auto --out "$TMPDIR/s25a-imp.json"

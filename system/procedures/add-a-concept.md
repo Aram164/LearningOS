@@ -24,7 +24,10 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ## Search the English label
 
 1. search labels and aliases (both languages);
-
+2. reuse an existing concept if semantically equivalent;
+3. create a readable stable ID; label in English; add German terms as aliases;
+4. add only short disambiguation if necessary — never a full explanation;
+5. rebuild generated outputs.
 
 ```scrut
 $ los search "sample mean"
@@ -73,9 +76,6 @@ $ (set -o pipefail; los validate | tail -n 1)
 ```
 
 ## Rebuild the generated outputs
-
-5. rebuild generated outputs.
-
 
 ```scrut
 $ los generate

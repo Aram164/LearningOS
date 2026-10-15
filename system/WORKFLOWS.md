@@ -47,8 +47,6 @@ When no workspace is obvious, drop anything into `work/inbox/` — no naming, no
 
 ## 3. Create or evolve a durable note
 
-Procedure: [transcript](procedures/create-durable-note.md).
-
 Durable notes are created only through a gateway capability (§25c) — never by
 saving the file directly. Pick the capability by what the note is:
 
@@ -59,18 +57,7 @@ saving the file directly. Pick the capability by what the note is:
   then `review.apply` on explicitly approved items only;
 - anything else durable → `note.create` below.
 
-2. update it when appropriate, through `note.revise` after explicit approval —
-   identity, path, and role stay stable;
-3. otherwise assign a stable note ID (no gratuitous numeric suffix);
-4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`,
-   `crosswalk`, …); `reference` and `question` keep their dedicated
-   capabilities and are refused by `note.create`;
-5. stage the exact body bytes and apply them with a `note.create` envelope
-   (§25c): the handler writes `knowledge/notes/<bucket>/<note-id>.md` —
-   filename is always the ID, bucket is the nearest reasonable domain;
-6. attach relevant concept and source IDs (each must already be registered);
-7. preserve uncertainty and unfinished reasoning;
-8. add the workspace ID as context when useful;
+Procedure: [transcript](procedures/create-durable-note.md).
 
 Do not require polish or completeness. A successor that replaces an earlier
 note declares `supersedes` in the same `note.create` call, which deprecates
@@ -80,27 +67,13 @@ the predecessor atomically (workflow 15).
 
 Procedure: [transcript](procedures/add-a-concept.md).
 
-2. reuse an existing concept if semantically equivalent;
-3. create a readable stable ID; label in English; add German terms as aliases;
-4. add only short disambiguation if necessary — never a full explanation;
-
 ## 5. Add a concept relation
 
 Procedure: [transcript](procedures/add-concept-relation.md).
 
-2. choose the narrowest supported type — if none fits, the relationship belongs in note prose;
-3. add optional context if the relationship is conditional;
-4. optionally cite a supporting note or source;
-5. avoid duplicate edges;
-
 ## 6. Add or evaluate a source
 
 Procedure: [transcript](procedures/add-or-evaluate-a-source.md).
-
-2. reuse the existing record when found;
-3. add identity metadata and `material://` or URL location;
-4. record evaluation globally or per concept: strengths, weaknesses, level, audience, prerequisites, useful sections;
-5. avoid universal quality scores;
 
 Source evaluations are the canonical home of pedagogical judgments — including those narrated in crosswalk notes.
 
@@ -110,49 +83,7 @@ The single path for EVERY new find — course, video, book, blog, paper, tool.
 This replaces the legacy LEARNING-RESOURCES intake protocol; there is no other
 list to also update.
 
-<!-- los:reference {"kind": "command", "text": "los source-intake"} -->
-<!-- los:reference {"kind": "command", "text": "los source-revise --check"} -->
-<!-- los:reference {"kind": "command", "text": "los collection-entry-revise --check"} -->
-1. **Register** the source (steps 1–5 above) through its gateway, never by
-   editing the registry file directly. One record per teaching object; the
-   one-line "why it earns its place" goes into the evaluation, never into a
-   note or plan file. A find shelved from a list or page before anything is
-   examined registers metadata-only through `source.intake.record`
-   (`los source-intake`), which requires `discovery` provenance and refuses
-   evaluations; an examination that overturns the shelf corrects the record
-   through the same capability.
-2. **Place the material:**
-   - web-native (ALL videos, courses, blogs, interactive): `url` on the record
-     — videos are never downloaded;
-   - free downloadable file that is exam- or thesis-critical: pull into the
-     materials topic tree via the PLACEMENT map + `tools/build_materials_tree.py`,
-     record `material://<source-id>/…`;
-   - campus-license or paid: leave URL-only until Aram pulls/decides.
-   - already registered but URL-only: once verified local bytes exist, attach
-     them with `source.record.revise` (`los source-revise --check`, then the
-     reviewed apply) — exact `material://` URI plus the live byte hash, after
-     `make inventory`. The same call may replace a stale evaluation with its
-     explicit final form. It never changes identity or intake-owned fields,
-     never replaces a held different material, and never rewrites a curated
-     collection's `why` (workflow 6b stays a separate edit). When the attach
-     moves an approved dossier's material basis, the check names the affected
-     units and the apply must carry their reviewed replacement dossiers —
-     or, when every moved route is screened, evidence-free, analysis-free
-     and outside every comparison, a reviewed `dossier_rebases` shortcut
-     naming exactly the moved routes. Both the shortcut and a full
-     replacement stamp the new basis with their own fresh
-     request_id/delivery_id — reusing the live dossier's provenance
-     unchanged is refused, since it would attest the old material.
-     Both paths also record prospective freshness lineage in the same
-     transaction, bound to the new dossier bytes and validated staged basis.
-     Anything else (deep-reviewed routes, evidence, comparisons, an
-     already-stale dossier) keeps the full replacement. The check also lists referring collection entries; when a
-     listed `why` is now false, correct it afterwards with
-     `collection.entry.revise` (`los collection-entry-revise --check`, then
-     the reviewed apply), which revises one entry's one-line `why` and
-     preserves source, group, order and all other entries.
-3. **List it (optional):** if it belongs in a curated per-domain list, add an
-   entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
+Procedure: [intake transcript](procedures/add-or-evaluate-a-source.md#review-the-metadata-only-intake).
 
 **Video intake and examination.** At intake, use only the title, publisher,
 description and known course or playlist structure to place a provisional
@@ -384,19 +315,9 @@ No evidence registry.
 
 ## 9. Update coordination
 
-Procedure: [transcript](procedures/update-coordination.md).
-
 When a commitment, explicit priority decision, cross-workspace dependency, or deferral changes:
 
-1. prepare the replacement text for one existing section of
-   `work/COORDINATION.md` — facts only, stated plainly — and review the
-   `coordination-section-revise --check` before/after diff (`--check`
-   needs no digest; it prints the diff with the current one);
-2. never copy exam dates, workspace statuses, or workspace lists into it;
-3. apply through `coordination.section.revise` with the reviewed text inline,
-   the previous file SHA-256 from `inspect coordination`
-   (`content_sha256`), snapshot and coordination revision. The
-   transaction records a receipt and reconciles the coordination projection.
+Procedure: [transcript](procedures/update-coordination.md).
 
 If the user states an operational fact in conversation ("I'm skipping M2,
 writing the 2. Termin"), route it: the deferral to `COORDINATION.md`, the
@@ -404,38 +325,15 @@ attempt change to that academic module's partitioned `module.yaml`.
 
 ## 10. Record a module event
 
-Procedure: [transcript](procedures/record-module-event.md).
-
 On registration, withdrawal (Rücktritt), sitting, or grade:
 
-1. append or update the attempt in the owning academic module's `module.yaml`
-   through `module.attempt.record` (CLI `module-attempt`: `termin`, `date`,
-   `result`, optional `grade` and `notes`) — never by hand edit;
-2. record known available sitting dates/ranges, Rücktritt deadlines and
-   Anmeldung windows as structured `examination.sittings`
-   (with `withdrawal_deadline`) / `examination.registration_windows`
-   facts in that same module; attempts still record what Aram actually chose;
-   set a known withdrawal deadline on an existing sitting through
-   `module.sitting.update` (CLI `module-sitting`, envelope recipe §25c);
-3. update module `status` when warranted;
+Procedure: [transcript](procedures/record-module-event.md).
 
 Never record these facts anywhere else.
 
 ## 11. Complete and archive a workspace
 
 Procedure: [transcript](procedures/complete-and-archive-a-workspace.md).
-
-2. update or create notes;
-3. add warranted source evaluations and concept relations;
-4. ensure the workspace links to final durable notes;
-5. clear dependencies referencing this workspace from `COORDINATION.md`;
-6. set `status: complete`;
-8. a workspace without learning paths may move whole to
-   `archive/workspaces/<year>/<workspace-id>/`, after checking explicit path
-   links. A workspace that owns learning paths stays at its existing location
-   with `status: complete`: the path schema and ownership validator do not
-   support relocating its notes, attachments and shelving references to the
-   archive. Never attempt an unchanged move or hand-repair those pointers.
 
 No gateway capability currently archives a workspace. Archival requires a
 separately reviewed migration; completion in place preserves its evidence.
@@ -493,22 +391,11 @@ Concepts: `deprecated: true` + `replaced_by`. Generated indexes mark deprecated 
 
 Procedure: [transcript](procedures/maintain-crosswalk.md).
 
-1. narrative changes (why a source suits a lecture, sequencing advice) → edit the crosswalk note;
-2. judgment changes (strengths, weaknesses, level, per-concept usefulness) → edit the source records;
-4. the validator warns if a crosswalk note accumulates judgment tables — that content belongs in source records.
-
 ## 17. Ingest a handwritten note
-
-Procedure: [transcript](procedures/ingest-a-handwritten-note.md).
 
 The user drops photos/scans into `work/inbox/` (or a workspace `inputs/`) and says what they are. The operator does everything else:
 
-1. determine the owning note: extend an existing note or mint a new ID;
-2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval; a scan too large or private to publish is instead pinned in `system/contracts/local-attachments.yaml` and gitignored at the same path (local-only, still backed up);
-3. transcribe faithfully into the note body — preserve the user's reasoning, uncertainty, wrong turns, and notation; never substitute a generic textbook explanation;
-4. set `transcription: ai-assisted`, `authorship: user`, `semantic_review: unreviewed`;
-5. list the attachment paths in the note's `attachments` frontmatter;
-6. link concepts and sources; add workspace context;
+Procedure: [transcript](procedures/ingest-a-handwritten-note.md).
 
 **Worked example** — three photographed pages deriving cross-entropy from maximum likelihood, taken during workspace `workspace-aml-l05`:
 
@@ -551,40 +438,19 @@ A year later, "cross-entropy" retrieves this note through either concept, shows 
 
 ## 18. Start a module
 
-Procedure: [transcript](procedures/start-a-module.md).
-
 Modules and workspaces are deliberately decoupled: one module may spawn several workspaces (the Kombimodul M2 = SaD + Analysis under one grade; a course with a separate exam-prep effort and project effort). When a course begins, or a previously prospective module is actually chosen:
 
-1. **Module record first.** Ensure the module has one partition at
-   `curriculum/modules/<module-id>/module.yaml` and record registration
-   (workflow 10). A merely prospective Master's choice stays quarantined; it is
-   not an active `planned` module.
-2. **Promote only adopted sources.** If a quarantined menu exists, register only
-   resources selected for the confirmed active module. Build its module source
-   map with roles, reasons, priority and unit routes; do not promote the whole
-   prospective sea.
-3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
-4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
+Procedure: [transcript](procedures/start-a-module.md).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
 
 ## 19. Close a module
 
-Procedure: [transcript](procedures/close-a-module.md).
-
 A module ending is larger than archiving one workspace (workflow 11): it settles the administrative record, may retire several workspaces, and confirms the durable knowledge survived. Use this only when the module is truly done; if a later attempt is still ahead, it is carrying, not closing — use workflow 20.
 
 When a module is finished — its final attempt sat, or abandoned:
 
-1. **Settle the record** in the owning partitioned academic `module.yaml` only
-   (workflow 10). Record the final sitting or submission on the attempt
-   (`result: passed`/`failed`). When the grade posts, record it and set
-   `status: completed` (or `dropped` if abandoned); while a grade is pending,
-   preserve that administrative state explicitly.
-2. **Confirm durable knowledge landed — before archiving.** For each of the module's workspaces, verify the understanding worth keeping is already a note under `knowledge/`; extend or create as needed (workflow 3; workflow 17 for handwritten pages). An archived workspace is frozen, so promotion happens first, never after.
-3. **Complete each workspace** (workflow 11 for every workspace the module owns): durable links confirmed and `status: complete`. Path-owning workspaces stay in place; only path-free workspaces may enter the separately reviewed archive migration. Completion waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
-4. **Clear operational state.** Remove the module's now-dead entries from `COORDINATION.md` — resolved dependencies, satisfied deferrals, stale priorities and commitments (workflow 9). Coordination should not mention a closed module.
-5. **Carry-over check.** If anything outlives the module — a second attempt not yet sat, thesis groundwork, an unfinished thread — route it through workflow 20 instead of archiving it away.
+Procedure: [transcript](procedures/close-a-module.md).
 
 Do not archive before knowledge is promoted (step 2); doing so strands it.
 
@@ -604,17 +470,9 @@ Worked case: AML's 1. Termin was withdrawn and the 2. Termin (2026-09-30) is sti
 
 ## 21. Process the inbox
 
-Procedure: [transcript](procedures/process-inbox.md).
-
 Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the loop that applies them, not a new routing policy. It invents no destinations — each item is pointed at the workflow that already owns it. `work/inbox/` is the zero-friction capture point and should trend toward empty. Process it by taking each item in turn and routing it to its single deterministic destination:
 
-1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` through the workflow-3 capability (`note.create` envelope — never a direct save); handwritten photos or scans → workflow 17.
-2. **Temporary material** tied to an active effort (fragments, a rough source list, lecture-specific checklists) → that workspace's `scratch/` or `inputs/` (workflow 2).
-3. **A new learning resource** (course, video, book, blog, paper, tool) → register it (workflow 6a); add to a curated list if it belongs on one (workflow 6b).
-4. **An operational fact** (commitment, priority, dependency, deferral) → `COORDINATION.md` (workflow 9).
-5. **An exam, registration, or grade fact** → the owning academic module's
-   `module.yaml` (workflow 10) — never anywhere else.
-6. **A concept or relation worth registering** → workflow 4 or workflow 5.
+Procedure: [transcript](procedures/process-inbox.md).
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
 
@@ -640,16 +498,9 @@ captures.
 
 ## 22. End a session
 
-Procedure: [transcript](procedures/end-a-session.md).
-
 Any learning session that used guarded mutation commands ends deliberately:
 
-2. run `los session-end` without a commit message; it validates, regenerates,
-   and shows session-owned files separately from unrelated changes;
-4. optionally rerun with `--commit-message` to commit exactly the files
-   recorded in this session's ledger, and every `*.canvas` file is
-   unconditionally excluded;
-5. use `--push` only through the approved repository workflow.
+Procedure: [transcript](procedures/end-a-session.md).
 
 A bare review never closes the session: the ledger survives, so step 4 stages
 exactly the reviewed list, and running the review twice shows the same list.
@@ -784,8 +635,6 @@ single versioned lock; do not put the current version in import paths.
 
 ## 25a. Revise an existing plan
 
-Procedure: [transcript](procedures/revise-an-existing-plan.md).
-
 This section owns the revision procedure; [PLAN-CREATION-SOP.md](PLAN-CREATION-SOP.md)
 Gates 0–6 own the acceptance gates. §23 covers a lecture arriving. This covers
 the far more common case: a plan that already exists and needs changing — a
@@ -825,6 +674,8 @@ remain inline. It does not replace the material-coverage audit for new plans.
 
 For structural plan revisions, use the creation/import path:
 
+Procedure: [transcript](procedures/revise-an-existing-plan.md).
+
 For one existing lecture, `unit-plan-revise` accepts compact route operations
 and the final study map; it uses this same governed import path internally.
 The saved-preflight shortcut for both commands is specified in
@@ -837,63 +688,6 @@ apply, and recovery — and prints a compact summary without the sealed
 envelope. Bare `--check` output is unchanged; `--report-out` is refused
 with apply, `--staged-basis`, in-repository targets, and existing files.
 
-1. **Draft.** Regenerate the affected maps with
-   `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
-   module source map, or edit a copy of the map when it is not. The assembler
-   writes only to its out-directory and refuses the whole batch if any unit
-   fails the template or the schema, so the draft is already checked before
-   anyone reads it.
-2. **Review** the draft as a diff against what is live. This is the step the
-   gateway cannot do for you.
-3. **Preflight from the CLI.** `module-plan-import MODULE_ID --file … --check`
-   when the change touches a module's `source-map.yaml` or several units
-   together; `unit-map-import UNIT_ID --file …` when it is one unit's
-   `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
-   `--check` runs the contract, ordering, routing and shadow-repository
-   validation and reports `"canonical_files_written": 0`.
-   When a replacement material dossier needs the post-change basis, run the
-   same package with `--check --staged-basis UNIT_ID` (also available on
-   `unit-plan-revise`). This prints the staged basis and package SHA without
-   writing canonical files. Its `validated: false` means it is preparation,
-   not an approval: insert the basis into the reviewed dossier, then run an
-   ordinary `--check` on the final package. For several existing units, the
-   compact `unit_revisions[]` shape (SOP Gate 4) also accepts an append-only
-   `resources_append` list on a stage patch: reviewed new placements with
-   fresh resource ids go after the existing authored rows without copying
-   them. Full-array `fields.resources` stays for intentional replacement.
-   Applying a changed replacement dossier records its prospective freshness
-   lineage alongside any route-covers lineage in the same transaction.
-4. **Apply through the gateway**, never by writing the canonical file directly
-   — either through the saved-preflight shortcut above or an explicit envelope:
-
-
-   `module-plan-import … --expected-snapshot` does **not** write. Every
-   canonical write refuses when no gateway request is in context
-   (`commands/support.py`: *"canonical writes must use GatewayEnvelopeV2;
-   direct CLI application is disabled"*), so the bare CLI can preflight and
-   nothing more. The envelope carries `schema_version: 2`, `request_id`,
-   `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
-   the entry read: the focused `plan-edit-context` response or `bootstrap`),
-   `expected_revisions` covering **exactly** every
-   artifact the transaction touches — the module plus each unit in the
-   package, no more and no fewer — an `approval` whose `subject_sha256` is
-   `intent_sha256(envelope)`, and the payload. `approve` never appears in the
-   payload; a `file` payload always carries its `file_sha256`. The complete
-   envelope construction (intent hash, revision guards, approval kinds,
-   refusal shape) is §25c; this step states only what plan revision adds.
-
-   `module.plan.import` additionally requires a coverage audit under
-   `work/active/` carrying the literal headings `## Local`, `## Linked` and
-   `## Completeness`, with all six `plan_contract.checks` true. Start from
-   `system/templates/plan-coverage-audit.template.md`. The audit may carry a
-   fenced `inventory-v1` block of scoped roots and disposition rows; the
-   preflight then reconciles rows against observed bytes and binds the set
-   to the saved report (PLAN-CREATION-SOP.md Gate 1).
-
-   For work *inside* a stage — `stage-progress`, `stage-note`,
-   `source-feedback`, `detour-create` — this section does not apply; that is
-   not a plan revision.
-
 Hand-editing a `study-map.yaml` or a `source-map.yaml` produces a file the
 validator accepts and the pre-commit hook passes, so nothing will object — but
 it skips the snapshot guard, the artifact-revision check, and the append-only
@@ -904,72 +698,12 @@ and it is legitimate because it is recorded.
 
 ## 25b. Save a batch of source analyses
 
-Procedure: [transcript](procedures/save-a-batch-of-source-analyses.md).
-
 One drafts file produces one reviewable staging dir plus the exact
 gateway envelope; review both, then submit the envelope unchanged.
 
-1. **Draft.** Write UTF-8 JSON:
-   `{"notes": [{"id", "title", "path", "binding", "body"}]}` with bodies
-   inline — 1 to 20 notes, no `frozen_input_*` fields (prep derives every
-   hash from the body bytes). Body bytes are exactly the UTF-8 encoding of
-   each body string: leading whitespace and CRLF survive verbatim.
-   For a resolved local source, `binding.material` is a path relative to the
-   `materials/` tree, without a `material://` scheme or a leading `materials/`.
-   The drafter supplies `live_source_digest` equal to
-   `recorded_source_digest` as bare 64-character hex for the observed bytes;
-   prep derives only `frozen_input_*`. One note uses the same batch format.
-   The boundary also accepts the read surface's own spellings and normalizes
-   them before any check, always storing the canonical form: a
-   `material://SOURCE_ID/REL` URI whose authority equals `binding.source_id`
-   (resolved through the source's registered material folder), a leading
-   `materials/` prefix, and `sha256:`-prefixed digests. Each `material-span`
-   span already carries a ready `binding` block with exactly these canonical
-   values; the draft adds only `inspected_range`.
-
-   ```json
-   {"notes": [{"id": "note-example-analysis", "title": "Example analysis",
-     "path": "knowledge/notes/data-systems/note-example-analysis.md",
-     "binding": {"resolution": "resolved", "source_id": "source-example-course",
-       "material": "course/deck.pdf",
-       "recorded_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-       "live_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-       "inspected_range": {"start": 1, "end": 3}},
-     "body": "Analysis of the inspected pages.\n"}]}
-   ```
-
-   Replace the example source, path, range and digest with the source's
-   registered material and the bytes actually observed before preparing.
-   `inspected_range` is inclusive physical PDF pages (cover = page 1) for
-   PDFs, or inclusive one-based physical file lines for Markdown and plain
-   text. A heading such as "Section 1" is a locator, not line 1. For local
-   text, `material-span UNIT_ID ROUTE_ID --extract` reports the line range
-   actually displayed in its bounded excerpt. Cite only the lines inspected;
-   a truncated excerpt does not attest to later lines.
-   For a stage placement that narrows its parent route, add
-   `--stage STAGE_ID --resource-index N` using the zero-based resource position
-   from that stage's plan context. Core resolves the canonical placement under
-   the same snapshot guard; callers never submit an arbitrary path or locator.
-2. **Prepare.**
-   `note-analysis-prepare --drafts drafts.json --out <dir>` with the
-   staging dir outside the repository. Prep validates every draft,
-   derives the hashes, dry-checks each note against current state (new
-   vs replay, collisions, resolved-source observability), then stages
-   `bodies/<note-id>.bin` plus `envelope.json` and prints the per-note
-   report. It writes nothing canonical; `bodies/` is rebuilt every run.
-3. **Review** the staged bodies and the envelope. This is the step the
-   gateway cannot do for you.
-4. **Submit** the exact envelope:
-
-
-   Any canonical change between prep and submit surfaces as
-   `STALE_SNAPSHOT` — re-run prep. Tampered or moved staging files are
-   refused by the content hashes and intent binding, never silently
-   accepted.
+Procedure: [transcript](procedures/save-a-batch-of-source-analyses.md).
 
 ## 25c. Build a write envelope (GatewayEnvelopeV2)
-
-Procedure: [transcript](procedures/build-write-envelope.md).
 
 Every canonical write is submitted as an explicit envelope; the bare
 mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
@@ -979,78 +713,7 @@ inbox resolve); the common transaction refusal starts with "canonical writes
 must use GatewayEnvelopeV2". This is by design, never by accident. This section is the complete
 construction recipe — nothing else is needed.
 
-1. **Payload schema.** `.venv/bin/python tools/los.py capabilities <name> --json`
-   is the payload contract for capability `<name>`.
-2. **Snapshot.** `.venv/bin/python tools/los.py bootstrap --compact` prints
-   `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
-   Any canonical change between reading it and submitting refuses the
-   write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
-3. **Revision guards.** `expected_revisions` maps every artifact the
-   transaction touches to its current revision. The default path is the
-   sealing helper's `--guards auto` (below): it derives the exact set
-   with a gateway dry run that stops before any write, and reads the
-   revisions under the same lock as the snapshot, so the sealed envelope
-   commits on the first submission. The manual path — read
-   `operations/transactions/revisions.yaml` (an artifact absent from the
-   ledger has revision 0 — the legitimate no-recorded-revision baseline,
-   backstopped by the snapshot guard; the ledger file itself does not
-   exist until the first write commits, before that guard every touched
-   artifact at 0), guess the set from the common shapes, and fix it from
-   the refusal's `artifacts=[...]` — stays for envelopes built by hand.
-   Two capabilities name their write
-   target only inside the handler, so the caller cannot guard a path and
-   guards the request instead: `capture.create` takes
-   `capture-request:<idempotency-key>`, `garden.seed.create` takes
-   `garden-request:<idempotency-key>`, both at revision 0 for a fresh
-   key (`--guards auto` derives these from the sealing key). Common
-   shapes: `stage.note.write` guards its unit;
-   `stage.progress.update` and `stage.attachment.add` guard the unit and
-   that unit's study map. A refusal names the exact expected set
-   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal. That
-   refusal committed nothing and the corrected envelope is a new intent,
-   so seal it under a fresh idempotency key (a request-scoped guard
-   follows its key); reusing the refused key leaves the refusal flagged
-   for reconciliation in `los operations`.
-4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
-   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). An exact retry of the
-   *same* approved intent resubmits the saved sealed envelope unchanged —
-   same key **and** same `request_id` — and replays the receipt instead of
-   writing twice. Never re-seal a retry: the ledger binds each key to the
-   request that committed it, so a re-sealed envelope under a used key is
-   refused, as `IDEMPOTENCY_CONFLICT` when its intent differs (a live
-   snapshot read after the commit already differs) or fail-closed naming
-   the recorded request id when only the id differs. Mint a fresh
-   `request_id` together with a fresh key for every new attempt (step 3's
-   corrected envelope is one): reused ids merge their explanations in
-   `los operations`.
-
-   Name the session every write in one agent session shares **before the
-   first write**: seal `session_id` in each envelope (`seal_envelope.py
-   --session-id <id>`) when the harness runs every command in a fresh
-   shell where an export never persists, or export `LOS_SESSION_ID=<id>`
-   once when the shell persists. Resolution is explicit `--session-id`
-   flag, then the sealed envelope, then `LOS_SESSION_ID`, then the
-   channel default — `bootstrap --brief` prints the identity in effect
-   as `session_identity`. `session-end` closes exactly that identity's
-   ledger (§22).
-5. **Approval.** `channel` is `operator` and `approval.kind` is
-   `operator-approval` on the operator path; the review preparers
-   (`module-plan-import --check`, `unit-plan-revise --check`,
-   `note-analysis-prepare`) seal `channel: codex` with the same approval
-   kind, which is admitted too (`direct-user-gesture` is
-   admitted only for a closed UI-originated allowlist).
-   `approval.subject_sha256` must equal `intent_sha256(envelope)`,
-   computed as below **after** every other field is final — any later
-   edit invalidates it and the write is refused as `UNCONFIRMED`.
-   The approval subject is the operator's assertion that the learner
-   approved this exact intent, guarded by the snapshot/revision checks —
-   not cryptographic proof that a human was present.
-6. **Submit.** `.venv/bin/python tools/los.py capability <name> --payload-file
-   envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
-   is an optimistic-concurrency conflict, and the status alone does not say
-   which: the V2 `code` field names it (`STALE_SNAPSHOT` when the snapshot
-   moved, `REVISION_CONFLICT` when a revision guard or the reviewed package
-   hash mismatches). Re-read the named state and re-seal.
+Procedure: [transcript](procedures/build-write-envelope.md).
 
 **Intent hash.** The approval subject covers exactly six fields —
 `schema_version`, `capability`, `channel`, `expected_snapshot`,
@@ -1062,6 +725,7 @@ form: `json.dumps(subject, sort_keys=True, separators=(",", ":"),
 ensure_ascii=False)` encoded UTF-8, SHA-256 hex, prefixed `sha256:`.
 In Python:
 
+Procedure: [intent-hash example](procedures/build-write-envelope.md#step-5-the-approval-subject-is-the-intent-hash).
 
 **Refusal shape.** A refusal answers `ok: false` with
 `error: {code, message, retryable, details}`. The code comes from the
@@ -1075,6 +739,7 @@ missing diagnosis: the `message` names the defect.
 
 **Worked capture.** Inbox capture (`§2`) via the envelope route:
 
+Procedure: [capture transcript](procedures/build-write-envelope.md#step-6-submit-the-envelope).
 
 **Sealing helper.** `.venv/bin/python tools/seal_envelope.py --capability NAME
 --payload JSON-or-@FILE --key KEY --guards auto` reads the snapshot live,
@@ -1250,23 +915,5 @@ protection. A backup carries three roots in full, exactly as
   vault config, and the shipped plugin assets `plugin-assets.json`
   declares);
 - the materials tree in full.
-
-Take the backup:
-
-1. run `los backup-manifest --out /path/outside/every/root/manifest.json`
-   (`--ui-root` / `--materials-root` override the sibling defaults). The
-   command refuses a path inside any backed-up root, writes atomically,
-   and prints a short summary (roots, entry count, aggregate digest,
-   path) instead of the megabyte of JSON — the full manifest stays
-   available behind the explicit `--stdout` flag;
-2. copy the three roots beside the manifest (`cp -a` each authority);
-   recovery pairs the restored data with a Core checkout at the commit
-   the manifest's `provenance` records;
-3. after any restore — and as a drill before relying on one — run
-   `los backup-verify --manifest manifest.json --restored-core … --restored-ui …
-   --restored-materials …`. `--checksums-only` checks integrity without
-   executing restored code; the full form additionally runs the restored
-   installer in dry-run mode with projection, validation, and restored UI
-   bundle smoke checks.
 
 Cadence: back up before each exam period and after each materials import.

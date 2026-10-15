@@ -32,6 +32,14 @@ page-02.jpg
 
 ## No note yet owns this derivation
 
+1. determine the owning note: extend an existing note or mint a new ID;
+2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval; a scan too large or private to publish is instead pinned in `system/contracts/local-attachments.yaml` and gitignored at the same path (local-only, still backed up);
+3. transcribe faithfully into the note body — preserve the user's reasoning, uncertainty, wrong turns, and notation; never substitute a generic textbook explanation;
+4. set `transcription: ai-assisted`, `authorship: user`, `semantic_review: unreviewed`;
+5. list the attachment paths in the note's `attachments` frontmatter;
+6. link concepts and sources; add workspace context;
+7. rebuild generated outputs.
+
 ```scrut
 $ los search probe-derivation --type note
 []
@@ -234,9 +242,6 @@ $ (set -o pipefail; los validate | tail -n 1)
 ```
 
 ## Rebuild the generated outputs
-
-7. rebuild generated outputs.
-
 
 ```scrut
 $ los generate

@@ -26,7 +26,18 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ## The durable knowledge already landed as a linked note
 
 1. identify durable knowledge created or changed;
-
+2. update or create notes;
+3. add warranted source evaluations and concept relations;
+4. ensure the workspace links to final durable notes;
+5. clear dependencies referencing this workspace from `COORDINATION.md`;
+6. set `status: complete`;
+7. rebuild and validate generated files;
+8. a workspace without learning paths may move whole to
+   `archive/workspaces/<year>/<workspace-id>/`, after checking explicit path
+   links. A workspace that owns learning paths stays at its existing location
+   with `status: complete`: the path schema and ownership validator do not
+   support relocating its notes, attachments and shelving references to the
+   archive. Never attempt an unchanged move or hand-repair those pointers.
 
 ```scrut
 $ los inspect note-demo | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["id"], d["title"])'
@@ -66,9 +77,6 @@ $ grep -n "status: complete" work/active/workspace-demo/CONTEXT.md
 ```
 
 ## Rebuild and validate the generated files
-
-7. rebuild and validate generated files;
-
 
 ```scrut
 $ los generate

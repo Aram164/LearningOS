@@ -26,7 +26,11 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ## Search the registry by title: the paper is new
 
 1. search the registry by title, author, identifier, and URL;
-
+2. reuse the existing record when found;
+3. add identity metadata and `material://` or URL location;
+4. record evaluation globally or per concept: strengths, weaknesses, level, audience, prerequisites, useful sections;
+5. avoid universal quality scores;
+6. rebuild the source index.
 
 ```scrut
 $ los search "Bare Essay"
@@ -60,6 +64,51 @@ registered Demo Book, so a new record is registered instead of reusing
 one.
 
 ## Review the metadata-only intake
+
+<!-- los:reference {"kind": "command", "text": "los source-intake"} -->
+<!-- los:reference {"kind": "command", "text": "los source-revise --check"} -->
+<!-- los:reference {"kind": "command", "text": "los collection-entry-revise --check"} -->
+1. **Register** the source (steps 1–5 above) through its gateway, never by
+   editing the registry file directly. One record per teaching object; the
+   one-line "why it earns its place" goes into the evaluation, never into a
+   note or plan file. A find shelved from a list or page before anything is
+   examined registers metadata-only through `source.intake.record`
+   (`los source-intake`), which requires `discovery` provenance and refuses
+   evaluations; an examination that overturns the shelf corrects the record
+   through the same capability.
+2. **Place the material:**
+   - web-native (ALL videos, courses, blogs, interactive): `url` on the record
+     — videos are never downloaded;
+   - free downloadable file that is exam- or thesis-critical: pull into the
+     materials topic tree via the PLACEMENT map + `tools/build_materials_tree.py`,
+     record `material://<source-id>/…`;
+   - campus-license or paid: leave URL-only until Aram pulls/decides.
+   - already registered but URL-only: once verified local bytes exist, attach
+     them with `source.record.revise` (`los source-revise --check`, then the
+     reviewed apply) — exact `material://` URI plus the live byte hash, after
+     `make inventory`. The same call may replace a stale evaluation with its
+     explicit final form. It never changes identity or intake-owned fields,
+     never replaces a held different material, and never rewrites a curated
+     collection's `why` (workflow 6b stays a separate edit). When the attach
+     moves an approved dossier's material basis, the check names the affected
+     units and the apply must carry their reviewed replacement dossiers —
+     or, when every moved route is screened, evidence-free, analysis-free
+     and outside every comparison, a reviewed `dossier_rebases` shortcut
+     naming exactly the moved routes. Both the shortcut and a full
+     replacement stamp the new basis with their own fresh
+     request_id/delivery_id — reusing the live dossier's provenance
+     unchanged is refused, since it would attest the old material.
+     Both paths also record prospective freshness lineage in the same
+     transaction, bound to the new dossier bytes and validated staged basis.
+     Anything else (deep-reviewed routes, evidence, comparisons, an
+     already-stale dossier) keeps the full replacement. The check also lists referring collection entries; when a
+     listed `why` is now false, correct it afterwards with
+     `collection.entry.revise` (`los collection-entry-revise --check`, then
+     the reviewed apply), which revises one entry's one-line `why` and
+     preserves source, group, order and all other entries.
+3. **List it (optional):** if it belongs in a curated per-domain list, add an
+   entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
+4. **Verify:** `.venv/bin/python tools/validate.py --compact` then `.venv/bin/python tools/generate.py`.
 
 ```scrut
 $ los source-intake --record '{"records": [{"action": "create", "id": "source-scenario-bare", "partition": "sources.yaml", "title": "Bare Essay", "type": "paper", "discovery": {"observed": "2026-10-01", "basis": [{"kind": "list-entry", "ref": "shelf/probe.md#L3"}], "possible_use": "Probe shelf."}}]}' --check
@@ -378,9 +427,6 @@ $ cat > sources/collections/probe-essays.yaml <<'EOF'
 
 ## The collection validates clean
 
-4. **Verify:** `.venv/bin/python tools/validate.py --compact` then `.venv/bin/python tools/generate.py`.
-
-
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
 0 error(s), 10 warning(s) — OK
@@ -431,9 +477,6 @@ $ $H/los-assert-receipt --last --capability collection.entry.revise
 ```
 
 ## Rebuild the source index
-
-6. rebuild the source index.
-
 
 ```scrut
 $ los generate

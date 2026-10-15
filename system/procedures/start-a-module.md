@@ -23,6 +23,18 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## The module record exists as one partition
 
+1. **Module record first.** Ensure the module has one partition at
+   `curriculum/modules/<module-id>/module.yaml` and record registration
+   (workflow 10). A merely prospective Master's choice stays quarantined; it is
+   not an active `planned` module.
+2. **Promote only adopted sources.** If a quarantined menu exists, register only
+   resources selected for the confirmed active module. Build its module source
+   map with roles, reasons, priority and unit routes; do not promote the whole
+   prospective sea.
+3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
+4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
+5. **Rebuild and validate** (`.venv/bin/python tools/generate.py`, then `.venv/bin/python tools/validate.py --compact`).
+
 ```scrut
 $ los inspect module-demo | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["id"], d["title"])'
 module-demo Demo Module
@@ -136,9 +148,6 @@ $ $H/los-assert-receipt --last --capability coordination.section.revise
 ```
 
 ## Rebuild and validate with the documented commands
-
-5. **Rebuild and validate** (`.venv/bin/python tools/generate.py`, then `.venv/bin/python tools/validate.py --compact`).
-
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/generate.py --root "$LOS_FX" | grep -c "^wrote"

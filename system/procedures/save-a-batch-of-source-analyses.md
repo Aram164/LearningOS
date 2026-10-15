@@ -30,6 +30,67 @@ $ MAT_SHA=$(sha256sum "$(dirname "$LOS_FX")/materials/source-demo-book/book.pdf"
 
 ## Draft the first batch: two notes, one drafts file
 
+1. **Draft.** Write UTF-8 JSON:
+   `{"notes": [{"id", "title", "path", "binding", "body"}]}` with bodies
+   inline — 1 to 20 notes, no `frozen_input_*` fields (prep derives every
+   hash from the body bytes). Body bytes are exactly the UTF-8 encoding of
+   each body string: leading whitespace and CRLF survive verbatim.
+   For a resolved local source, `binding.material` is a path relative to the
+   `materials/` tree, without a `material://` scheme or a leading `materials/`.
+   The drafter supplies `live_source_digest` equal to
+   `recorded_source_digest` as bare 64-character hex for the observed bytes;
+   prep derives only `frozen_input_*`. One note uses the same batch format.
+   The boundary also accepts the read surface's own spellings and normalizes
+   them before any check, always storing the canonical form: a
+   `material://SOURCE_ID/REL` URI whose authority equals `binding.source_id`
+   (resolved through the source's registered material folder), a leading
+   `materials/` prefix, and `sha256:`-prefixed digests. Each `material-span`
+   span already carries a ready `binding` block with exactly these canonical
+   values; the draft adds only `inspected_range`.
+
+   ```json
+   {"notes": [{"id": "note-example-analysis", "title": "Example analysis",
+     "path": "knowledge/notes/data-systems/note-example-analysis.md",
+     "binding": {"resolution": "resolved", "source_id": "source-example-course",
+       "material": "course/deck.pdf",
+       "recorded_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "live_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "inspected_range": {"start": 1, "end": 3}},
+     "body": "Analysis of the inspected pages.\n"}]}
+   ```
+
+   Replace the example source, path, range and digest with the source's
+   registered material and the bytes actually observed before preparing.
+   `inspected_range` is inclusive physical PDF pages (cover = page 1) for
+   PDFs, or inclusive one-based physical file lines for Markdown and plain
+   text. A heading such as "Section 1" is a locator, not line 1. For local
+   text, `material-span UNIT_ID ROUTE_ID --extract` reports the line range
+   actually displayed in its bounded excerpt. Cite only the lines inspected;
+   a truncated excerpt does not attest to later lines.
+   For a stage placement that narrows its parent route, add
+   `--stage STAGE_ID --resource-index N` using the zero-based resource position
+   from that stage's plan context. Core resolves the canonical placement under
+   the same snapshot guard; callers never submit an arbitrary path or locator.
+2. **Prepare.**
+   `note-analysis-prepare --drafts drafts.json --out <dir>` with the
+   staging dir outside the repository. Prep validates every draft,
+   derives the hashes, dry-checks each note against current state (new
+   vs replay, collisions, resolved-source observability), then stages
+   `bodies/<note-id>.bin` plus `envelope.json` and prints the per-note
+   report. It writes nothing canonical; `bodies/` is rebuilt every run.
+3. **Review** the staged bodies and the envelope. This is the step the
+   gateway cannot do for you.
+4. **Submit** the exact envelope:
+
+   ```bash
+   .venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
+   ```
+
+   Any canonical change between prep and submit surfaces as
+   `STALE_SNAPSHOT` — re-run prep. Tampered or moved staging files are
+   refused by the content hashes and intent binding, never silently
+   accepted.
+
 ```scrut
 $ cat > "$TMPDIR/batch1.json" <<EOF
 > {"notes": [
@@ -112,11 +173,6 @@ note-batch-gamma True
 ```
 
 ## Submit the first batch unchanged
-
-   ```bash
-   .venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
-   ```
-
 
 ```scrut
 $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'

@@ -24,6 +24,17 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Record the final sitting on the attempt
 
+1. **Settle the record** in the owning partitioned academic `module.yaml` only
+   (workflow 10). Record the final sitting or submission on the attempt
+   (`result: passed`/`failed`). When the grade posts, record it and set
+   `status: completed` (or `dropped` if abandoned); while a grade is pending,
+   preserve that administrative state explicitly.
+2. **Confirm durable knowledge landed — before archiving.** For each of the module's workspaces, verify the understanding worth keeping is already a note under `knowledge/`; extend or create as needed (workflow 3; workflow 17 for handwritten pages). An archived workspace is frozen, so promotion happens first, never after.
+3. **Complete each workspace** (workflow 11 for every workspace the module owns): durable links confirmed and `status: complete`. Path-owning workspaces stay in place; only path-free workspaces may enter the separately reviewed archive migration. Completion waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
+4. **Clear operational state.** Remove the module's now-dead entries from `COORDINATION.md` — resolved dependencies, satisfied deferrals, stale priorities and commitments (workflow 9). Coordination should not mention a closed module.
+5. **Carry-over check.** If anything outlives the module — a second attempt not yet sat, thesis groundwork, an unfinished thread — route it through workflow 20 instead of archiving it away.
+6. **Rebuild and validate.**
+
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 2, "date": "2026-10-09", "result": "passed"}' --key s19-pass --request-id request-s19-pass --guards auto --out "$TMPDIR/s19-pass.json"
 seal_envelope: guards auto: module-demo=0
@@ -205,9 +216,6 @@ The final attempt is sat and passed with no further attempt ahead, so
 nothing routes through the carry workflow.
 
 ## Rebuild and validate
-
-6. **Rebuild and validate.**
-
 
 ```scrut
 $ los generate

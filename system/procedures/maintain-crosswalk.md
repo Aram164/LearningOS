@@ -22,6 +22,11 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Stage the crosswalk narrative
 
+1. narrative changes (why a source suits a lecture, sequencing advice) → edit the crosswalk note;
+2. judgment changes (strengths, weaknesses, level, per-concept usefulness) → edit the source records;
+3. rebuild the source index; confirm the generated selector view reflects the change;
+4. the validator warns if a crosswalk note accumulates judgment tables — that content belongs in source records.
+
 ```scrut
 $ cat > "$TMPDIR/crosswalk-body.md" <<'EOF'
 > # Demo crosswalk
@@ -226,9 +231,6 @@ owns transaction-20261001-090000-003
 ```
 
 ## Rebuild the source index
-
-3. rebuild the source index; confirm the generated selector view reflects the change;
-
 
 ```scrut
 $ los generate

@@ -44,6 +44,18 @@ unchanged
 
 ## Seal the attempt with derived guards
 
+1. append or update the attempt in the owning academic module's `module.yaml`
+   through `module.attempt.record` (CLI `module-attempt`: `termin`, `date`,
+   `result`, optional `grade` and `notes`) — never by hand edit;
+2. record known available sitting dates/ranges, Rücktritt deadlines and
+   Anmeldung windows as structured `examination.sittings`
+   (with `withdrawal_deadline`) / `examination.registration_windows`
+   facts in that same module; attempts still record what Aram actually chose;
+   set a known withdrawal deadline on an existing sitting through
+   `module.sitting.update` (CLI `module-sitting`, envelope recipe §25c);
+3. update module `status` when warranted;
+4. rebuild module and coordination views.
+
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 2, "date": "2026-10-09", "result": "sat"}' --key module-attempt-sat --request-id request-module-attempt-sat --guards auto --out "$TMPDIR/module-attempt-sat.json"
 seal_envelope: guards auto: module-demo=0
@@ -167,9 +179,6 @@ status: enrolled
 ```
 
 ## Rebuild the module and coordination views
-
-4. rebuild module and coordination views.
-
 
 ```scrut
 $ los generate

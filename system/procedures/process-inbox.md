@@ -22,6 +22,14 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Read the inbox through the product, never by catting files
 
+1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` through the workflow-3 capability (`note.create` envelope — never a direct save); handwritten photos or scans → workflow 17.
+2. **Temporary material** tied to an active effort (fragments, a rough source list, lecture-specific checklists) → that workspace's `scratch/` or `inputs/` (workflow 2).
+3. **A new learning resource** (course, video, book, blog, paper, tool) → register it (workflow 6a); add to a curated list if it belongs on one (workflow 6b).
+4. **An operational fact** (commitment, priority, dependency, deferral) → `COORDINATION.md` (workflow 9).
+5. **An exam, registration, or grade fact** → the owning academic module's
+   `module.yaml` (workflow 10) — never anywhere else.
+6. **A concept or relation worth registering** → workflow 4 or workflow 5.
+
 ```scrut
 $ los inbox-list
 [{"age_days":3,"deprecated":null,"id":"note-drop.md","path":"work/inbox/note-drop.md","state":null,"status":null,"title":"note-drop.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/one.md","path":"work/inbox/pack/one.md","state":null,"status":null,"title":"one.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/two.md","path":"work/inbox/pack/two.md","state":null,"status":null,"title":"two.md","type":"inbox-item"}]

@@ -22,6 +22,79 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Step 1: the payload schema is the capability contract
 
+1. **Payload schema.** `.venv/bin/python tools/los.py capabilities <name> --json`
+   is the payload contract for capability `<name>`.
+2. **Snapshot.** `.venv/bin/python tools/los.py bootstrap --compact` prints
+   `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
+   Any canonical change between reading it and submitting refuses the
+   write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
+3. **Revision guards.** `expected_revisions` maps every artifact the
+   transaction touches to its current revision. The default path is the
+   sealing helper's `--guards auto` (below): it derives the exact set
+   with a gateway dry run that stops before any write, and reads the
+   revisions under the same lock as the snapshot, so the sealed envelope
+   commits on the first submission. The manual path — read
+   `operations/transactions/revisions.yaml` (an artifact absent from the
+   ledger has revision 0 — the legitimate no-recorded-revision baseline,
+   backstopped by the snapshot guard; the ledger file itself does not
+   exist until the first write commits, before that guard every touched
+   artifact at 0), guess the set from the common shapes, and fix it from
+   the refusal's `artifacts=[...]` — stays for envelopes built by hand.
+   Two capabilities name their write
+   target only inside the handler, so the caller cannot guard a path and
+   guards the request instead: `capture.create` takes
+   `capture-request:<idempotency-key>`, `garden.seed.create` takes
+   `garden-request:<idempotency-key>`, both at revision 0 for a fresh
+   key (`--guards auto` derives these from the sealing key). Common
+   shapes: `stage.note.write` guards its unit;
+   `stage.progress.update` and `stage.attachment.add` guard the unit and
+   that unit's study map. A refusal names the exact expected set
+   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal. That
+   refusal committed nothing and the corrected envelope is a new intent,
+   so seal it under a fresh idempotency key (a request-scoped guard
+   follows its key); reusing the refused key leaves the refusal flagged
+   for reconciliation in `los operations`.
+4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
+   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). An exact retry of the
+   *same* approved intent resubmits the saved sealed envelope unchanged —
+   same key **and** same `request_id` — and replays the receipt instead of
+   writing twice. Never re-seal a retry: the ledger binds each key to the
+   request that committed it, so a re-sealed envelope under a used key is
+   refused, as `IDEMPOTENCY_CONFLICT` when its intent differs (a live
+   snapshot read after the commit already differs) or fail-closed naming
+   the recorded request id when only the id differs. Mint a fresh
+   `request_id` together with a fresh key for every new attempt (step 3's
+   corrected envelope is one): reused ids merge their explanations in
+   `los operations`.
+
+   Name the session every write in one agent session shares **before the
+   first write**: seal `session_id` in each envelope (`seal_envelope.py
+   --session-id <id>`) when the harness runs every command in a fresh
+   shell where an export never persists, or export `LOS_SESSION_ID=<id>`
+   once when the shell persists. Resolution is explicit `--session-id`
+   flag, then the sealed envelope, then `LOS_SESSION_ID`, then the
+   channel default — `bootstrap --brief` prints the identity in effect
+   as `session_identity`. `session-end` closes exactly that identity's
+   ledger (§22).
+5. **Approval.** `channel` is `operator` and `approval.kind` is
+   `operator-approval` on the operator path; the review preparers
+   (`module-plan-import --check`, `unit-plan-revise --check`,
+   `note-analysis-prepare`) seal `channel: codex` with the same approval
+   kind, which is admitted too (`direct-user-gesture` is
+   admitted only for a closed UI-originated allowlist).
+   `approval.subject_sha256` must equal `intent_sha256(envelope)`,
+   computed as below **after** every other field is final — any later
+   edit invalidates it and the write is refused as `UNCONFIRMED`.
+   The approval subject is the operator's assertion that the learner
+   approved this exact intent, guarded by the snapshot/revision checks —
+   not cryptographic proof that a human was present.
+6. **Submit.** `.venv/bin/python tools/los.py capability <name> --payload-file
+   envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
+   is an optimistic-concurrency conflict, and the status alone does not say
+   which: the V2 `code` field names it (`STALE_SNAPSHOT` when the snapshot
+   moved, `REVISION_CONFLICT` when a revision guard or the reviewed package
+   hash mismatches). Re-read the named state and re-seal.
+
 ```scrut
 $ los capabilities capture.create --json | $H/los-bind PAYLOAD_SCHEMA '$.payload_schema'
 export PAYLOAD_SCHEMA='{"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "capabilities/capture.create.schema.json", "title": "payload for capability capture.create", "description": "Derived from the los CLI parser for this capability'"'"'s named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.", "type": "object", "additionalProperties": false, "required": [], "properties": {"file": {"type": "string", "description": "copy this file into the inbox"}, "file_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "description": "SHA-256 of the exact file bytes approved for this capture"}, "text": {"type": "string", "description": "capture this text (else stdin)"}, "title": {"type": "string", "description": "optional title for text captures"}}, "oneOf": [{"required": ["file"], "not": {"required": ["text"]}}, {"required": ["text"], "not": {"required": ["file"]}}], "dependentRequired": {"file": ["file_sha256"], "file_sha256": ["file"]}}'
@@ -87,7 +160,6 @@ SNAP=$(.venv/bin/python tools/los.py bootstrap --compact \
 # payload {"text": "…"}
 .venv/bin/python tools/los.py capability capture.create --payload-file envelope.json
 ```
-
 
 Section 25c defines the subject hash over the six intent fields (plus the
 sealed session, when one is carried). The recipe, run against the sealed

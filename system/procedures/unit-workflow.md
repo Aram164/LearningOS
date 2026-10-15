@@ -24,6 +24,12 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Run bare, a named command never writes
 
+Choose a module and unit. First inspect its knowledge map and complete material
+menu, grouped by format and annotated with angle, depth, scope, and coverage.
+Record actual choices in `source_selections`. If ordered tracking would help,
+the unit may then have at most one current study map using only those choices.
+Work in its stages while preserving independent state for every other unit.
+
 ```scrut {output_stream: stderr}
 $ los unit-source-selection unit-demo-l02 source-demo-book lecture-02.pdf remove
 canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability unit.source-selection.set --payload-file ENVELOPE.json` (payload schema: `los capabilities unit.source-selection.set --json`; envelope: WORKFLOWS §25c)

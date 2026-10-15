@@ -202,21 +202,6 @@ Skills and projects use modules and units without false academic metadata.
 
 ### Unit workflow
 
-Choose a module and unit. First inspect its knowledge map and complete material
-menu, grouped by format and annotated with angle, depth, scope, and coverage.
-Record actual choices in `source_selections`. If ordered tracking would help,
-the unit may then have at most one current study map using only those choices.
-Work in its stages while preserving independent state for every other unit.
-
-These are gateway capabilities: `unit.source-selection.set`, `unit.note.append`,
-`stage.progress.update`, `source.feedback.record`, `detour.create` (named
-commands `unit-source-selection`, `unit-note`, `stage-progress`,
-`source-feedback`, `detour-create`). Run bare, a named command never writes:
-every canonical write refuses without a GatewayEnvelopeV2. Read the payload
-schema, seal one envelope with `tools/seal_envelope.py --capability NAME
---payload @PAYLOAD.json --key UNIQUE-KEY --guards auto` — guard derivation
-is the default path, WORKFLOWS §25c — then submit it:
-
 Procedure: [the governed stage write](procedures/end-a-session.md#read-the-stage-progress-payload-contract).
 
 `unit-source-selection` accepts only a rich material route already exposed on
@@ -227,22 +212,6 @@ complete menu. Removing a choice already wired into a study path is refused.
 relevant stages. `stage-note` remains a compatibility command for existing
 stage-owned scratch files.
 
-When confirmed lecture scope requires a module-wide batch (new units, knowledge
-maps, complete rich source routing, optional study maps, and workspace joins), follow
-[`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md). Complete its material-coverage
-audit, build from the canonical template, and require the no-write gate
-`.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
---check` to pass before applying the same package through the
-`module.plan.import` capability (WORKFLOWS §25a).
-For several existing units, the same command accepts the compact
-`unit_revisions[]` shape in `system/templates/module-plan-revise.template.yaml`;
-it assembles unchanged records internally and keeps the same guarded import.
-`module-plan-import` never deletes units and never creates durable notes; the
-capabilities that do create durable notes are `note.create` (one general
-durable note, with atomic succession), `note.analysis.save` (one source
-analysis), `note.analysis.save_batch` (up to 20 source analyses atomically),
-and `atlas.question.save` (learner questions).
-
 An explicitly reviewed semantic replacement of one existing durable note uses
 the `note.revise` capability (named command `note-revise NOTE_ID --file
 REVISED.md`). It preserves the note's ID, path, and role; moves, merges, splits,
@@ -252,24 +221,9 @@ A stage owns its working note, attachments, exact resources, source-use
 feedback, and optional detour relationship. A detour records its originating
 stage and return stage; there is no canonical session entity.
 
-
 Procedure: [unit workflow](procedures/unit-workflow.md).
 
 ### Shelving and session closure
-
-Shelving reads selected stage notes and attachments, preserves uncertainty and
-wrong turns, proposes durable notes/Garden items and diffs, and waits for
-explicit selected-item approval. After application, validate and regenerate.
-
-End a learning session deliberately with `los session-end`. First run it with
-no commit message to review session-owned and unrelated changes; the review
-never closes the session, so the ledger survives for the commit run. Only the
-files recorded in this session's ledger may be staged — the ledger itself
-lives in the git dir and is never staged. The protected Canvas files are
-always excluded. Commit and optional push occur only after explicit
-confirmation. To end the ownership window without committing, rerun with
-`--close`: it deletes only this session's ledger.
-
 
 Procedure: [shelving and session closure](procedures/shelving-session-closure.md).
 

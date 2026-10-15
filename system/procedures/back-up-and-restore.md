@@ -33,12 +33,30 @@ $ mkdir -p "$TMPDIR/backup" && cp -a "$LOS_REPO/../obsidian-ui" "$TMPDIR/backup/
 
 ## Manifest the three roots outside every root
 
+Take the backup:
+
+1. run `los backup-manifest --out /path/outside/every/root/manifest.json`
+   (`--ui-root` / `--materials-root` override the sibling defaults). The
+   command refuses a path inside any backed-up root, writes atomically,
+   and prints a short summary (roots, entry count, aggregate digest,
+   path) instead of the megabyte of JSON — the full manifest stays
+   available behind the explicit `--stdout` flag;
+2. copy the three roots beside the manifest (`cp -a` each authority);
+   recovery pairs the restored data with a Core checkout at the commit
+   the manifest's `provenance` records;
+3. after any restore — and as a drill before relying on one — run
+   `los backup-verify --manifest manifest.json --restored-core … --restored-ui …
+   --restored-materials …`. `--checksums-only` checks integrity without
+   executing restored code; the full form additionally runs the restored
+   installer in dry-run mode with projection, validation, and restored UI
+   bundle smoke checks.
+
 ```scrut
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
 True
 ['core', 'materials', 'ui']
 494
-sha256:1fa11186400386536f4a5a3c41ec0d8fee4a184b913b02da1b1159f7e285a7e3
+sha256:b54a55488e5a4a673941b26bb246d5aa7fddb5ef66157b341069d5732a5c59f1
 ```
 
 ## The manifest binds data to Core's commit
@@ -46,7 +64,7 @@ sha256:1fa11186400386536f4a5a3c41ec0d8fee4a184b913b02da1b1159f7e285a7e3
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
 494
-sha256:1fa11186400386536f4a5a3c41ec0d8fee4a184b913b02da1b1159f7e285a7e3
+sha256:b54a55488e5a4a673941b26bb246d5aa7fddb5ef66157b341069d5732a5c59f1
 54
 True None
 ```
@@ -57,7 +75,7 @@ True None
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
 494
 ['core', 'materials', 'ui']
-sha256:1fa11186400386536f4a5a3c41ec0d8fee4a184b913b02da1b1159f7e285a7e3
+sha256:b54a55488e5a4a673941b26bb246d5aa7fddb5ef66157b341069d5732a5c59f1
 ```
 
 ## Capture the pre-refusal state

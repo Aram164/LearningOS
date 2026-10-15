@@ -329,10 +329,16 @@ def _shell_parts(text):
     yield start, skeleton[start:]
 
 
-def _target(tokens):
+def _without_assignments(tokens):
     index = 0
     while index < len(tokens) and re.match(r"[A-Za-z_][A-Za-z0-9_]*=", tokens[index]):
         index += 1
+    return tokens[index:]
+
+
+def _target(tokens):
+    tokens = _without_assignments(tokens)
+    index = 0
     if index < len(tokens) and tokens[index] in {"env", "command"}:
         index += 1
         while index < len(tokens) and re.match(r"[A-Za-z_][A-Za-z0-9_]*=", tokens[index]):
@@ -370,12 +376,14 @@ def _shell_rows(text, first):
             tokens = shlex.split(source, comments=True)
             target = _target(tokens)
             if target is None:
-                if tokens and (tokens[0].startswith("(") or tokens[0] in {"{", "if", "then", "do", "while", "for", "case", "!", "sudo", "time", "nohup", "eval", "exec", "env", "command"}) and MENTION_RE.search(source):
+                head = _without_assignments(tokens)
+                if head and (head[0].startswith("(") or head[0] in {"{", "if", "then", "do", "while", "for", "case", "!", "sudo", "time", "nohup", "eval", "exec", "env", "command"}) and MENTION_RE.search(source):
                     raise ValueError("unsupported target-bearing shell construct")
                 # Static shell scripts are executable arguments, unlike Python -c data.
-                if len(tokens) >= 3 and tokens[0] in {"sh", "bash"} and tokens[1] == "-c":
-                    nested = _shell_rows(tokens[2], first + text[:offset].count("\n"))
-                    rows.extend(row for row in nested if row["category"] == "invocation")
+                if len(head) >= 3 and head[0] in {"sh", "bash"} and head[1] == "-c":
+                    nested = _shell_rows(head[2], first + text[:offset].count("\n"))
+                    rows.extend(row for row in nested
+                                if row["category"] in {"invocation", "extraction-error"})
                 continue
             kind, name, argv = target
             match = next((m for m in MENTION_RE.finditer(source)

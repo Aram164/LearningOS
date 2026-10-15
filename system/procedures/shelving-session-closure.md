@@ -31,6 +31,10 @@ canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled 
 
 ## Record the reasoning to shelve
 
+Shelving reads selected stage notes and attachments, preserves uncertainty and
+wrong turns, proposes durable notes/Garden items and diffs, and waits for
+explicit selected-item approval. After application, validate and regenerate.
+
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key shelve-note-001 --request-id request-shelve-note-001 --guards auto --out "$TMPDIR/shelve-note.json"
 seal_envelope: guards auto: unit-demo-l01=3

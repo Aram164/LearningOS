@@ -224,3 +224,28 @@ def test_macro_transcript_must_be_in_actual_runner_population(products, tmp_path
         'transcript': 'system/procedures/' + relative,
     }) + ' -->\n`python tools/los.py <expansion>`'
     assert scan(annotation, products)[0]
+
+
+@pytest.mark.parametrize('command', [
+    'X=1 exec los unknown-command', 'X=1 sudo los unknown-command',
+    'X=1 env -S "los unknown-command"', 'X=1 command -p los unknown-command',
+])
+def test_assignment_prefix_cannot_hide_unsupported_execution_wrappers(command, products):
+    failures, _ = scan('```bash\n' + command + '\n```', products)
+    assert any('unsupported target-bearing' in row['reason'] for row in failures)
+
+
+@pytest.mark.parametrize('command', [
+    'X=1 los status', 'X=1 Y=2 command los status', 'X=1 env Y=2 los status',
+])
+def test_assignment_prefix_preserves_recognized_regular_invocations(command, products):
+    failures, rows = scan('```bash\n' + command + '\n```', products)
+    assert not failures
+    assert any(row['category'] == 'invocation' for row in rows)
+
+
+@pytest.mark.parametrize('prefix', ['', 'X=1 '])
+@pytest.mark.parametrize('nested', ['los unknown-command', 'exec los unknown-command'])
+def test_static_shell_script_preserves_nested_failures(prefix, nested, products):
+    failures, _ = scan('```bash\n' + prefix + "bash -c '" + nested + "'\n```", products)
+    assert failures

@@ -19,6 +19,15 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Read the stage-progress payload contract
 
+These are gateway capabilities: `unit.source-selection.set`, `unit.note.append`,
+`stage.progress.update`, `source.feedback.record`, `detour.create` (named
+commands `unit-source-selection`, `unit-note`, `stage-progress`,
+`source-feedback`, `detour-create`). Run bare, a named command never writes:
+every canonical write refuses without a GatewayEnvelopeV2. Read the payload
+schema, seal one envelope with `tools/seal_envelope.py --capability NAME
+--payload @PAYLOAD.json --key UNIQUE-KEY --guards auto` — guard derivation
+is the default path, WORKFLOWS §25c — then submit it:
+
 ```bash
 .venv/bin/python tools/los.py capabilities stage.progress.update --json
 .venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
@@ -46,6 +55,15 @@ $ $H/los-seal --capability unit.note.append --payload '{"unit_id": "unit-demo-l0
 
 ## Step 1: seal the stage-progress envelope
 
+1. save pending stage work;
+2. run `los session-end` without a commit message; it validates, regenerates,
+   and shows session-owned files separately from unrelated changes;
+3. review that exact list;
+4. optionally rerun with `--commit-message` to commit exactly the files
+   recorded in this session's ledger, and every `*.canvas` file is
+   unconditionally excluded;
+5. use `--push` only through the approved repository workflow.
+
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability stage.progress.update --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "status": "complete"}' --key end-a-session-stage-001 --request-id request-end-a-session-stage-001 --guards auto --out "$TMPDIR/stage-progress.json"
 seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3
@@ -58,9 +76,6 @@ $ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 bd68f1ffdf104dc1c39e
 ```
 
 ## Step 1: submit the stage-progress envelope
-
-1. save pending stage work;
-
 
 ```scrut
 $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.json"
@@ -142,8 +157,14 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
 
 ## Step 3: review the session
 
-3. review that exact list;
-
+End a learning session deliberately with `los session-end`. First run it with
+no commit message to review session-owned and unrelated changes; the review
+never closes the session, so the ledger survives for the commit run. Only the
+files recorded in this session's ledger may be staged — the ledger itself
+lives in the git dir and is never staged. The protected Canvas files are
+always excluded. Commit and optional push occur only after explicit
+confirmation. To end the ownership window without committing, rerun with
+`--close`: it deletes only this session's ledger.
 
 ```scrut
 $ los session-end

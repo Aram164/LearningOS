@@ -23,6 +23,16 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Read the current content digest
 
+1. prepare the replacement text for one existing section of
+   `work/COORDINATION.md` — facts only, stated plainly — and review the
+   `coordination-section-revise --check` before/after diff (`--check`
+   needs no digest; it prints the diff with the current one);
+2. never copy exam dates, workspace statuses, or workspace lists into it;
+3. apply through `coordination.section.revise` with the reviewed text inline,
+   the previous file SHA-256 from `inspect coordination`
+   (`content_sha256`), snapshot and coordination revision. The
+   transaction records a receipt and reconciles the coordination projection.
+
 ```scrut
 $ eval "$(los inspect coordination | $H/los-bind COORD_SHA '$.content_sha256')" && echo "$COORD_SHA"
 sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655

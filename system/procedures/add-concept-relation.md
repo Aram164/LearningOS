@@ -21,7 +21,11 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ## Confirm both concept ids exist
 
 1. confirm both concept IDs exist;
-
+2. choose the narrowest supported type — if none fits, the relationship belongs in note prose;
+3. add optional context if the relationship is conditional;
+4. optionally cite a supporting note or source;
+5. avoid duplicate edges;
+6. rebuild generated outputs.
 
 ```scrut
 $ los inspect concept-variance concept-expected-value | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print([(r["id"], r["title"]) for r in d["records"]])'
@@ -121,9 +125,6 @@ unchanged
 ```
 
 ## Rebuild generated outputs
-
-6. rebuild generated outputs.
-
 
 ```scrut
 $ los generate
