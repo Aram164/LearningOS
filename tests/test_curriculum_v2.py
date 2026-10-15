@@ -1063,10 +1063,10 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
                         str(package))
     assert unguarded.returncode == 2
     snapshot = f"sha256:{source_fingerprint(load_repo(mini_repo))}"
-    # Execute the literal gateway example in WORKFLOWS §25a against this
-    # reviewed disposable package, so the agent-facing syntax cannot drift.
-    workflows = (ROOT / "system/WORKFLOWS.md").read_text(encoding="utf-8")
-    section = workflows.split("## 25a. Revise an existing plan", 1)[1].split("## 26.", 1)[0]
+    # Execute the literal gateway example of WORKFLOWS §25a (owned by its
+    # binding transcript since S32) against this reviewed disposable
+    # package, so the agent-facing syntax cannot drift.
+    section = (ROOT / "system/procedures/revise-an-existing-plan.md").read_text(encoding="utf-8")
     example = re.search(r"```bash\n\s*([^\n]+)\n\s*```", section)
     assert example is not None
     words = shlex.split(example.group(1))
