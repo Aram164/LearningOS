@@ -211,6 +211,8 @@ hidden:
         not by the repository's — so the check probes inside the directory.
     - path: .ruff_cache
       purpose: ruff cache, self-ignoring in the same way
+    - path: .jules
+      purpose: jules memory and cache logs
     - path: .obsidian
       purpose: Obsidian workspace state — interface layer, never core (ADR-006)
 
