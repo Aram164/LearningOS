@@ -18,6 +18,55 @@ from the fixture, so those conditional branches stop pinned.
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
 the `LOS_REPO` environment variable the test sets.
 
+## Shared operating rules
+
+
+Retrieve through OPERATOR's task-shaped reads — `inspect`, `related`,
+`search`, `material-context`, `note-read`, and `bootstrap --brief` — never by
+opening generated views first. The generated views
+(`generated/concept-index.md`, `generated/domain-atlas.md`,
+`generated/coordination-view.md`) are the human or bulk fallback: open one
+only when the targeted reads are insufficient.
+
+When asked about a **concept**:
+
+1. resolve the id with `search` (aliases, including German ones, match as values);
+2. read it with `inspect CONCEPT_ID`, then `related CONCEPT_ID` for the units
+   whose stages tag it and for prerequisites and related concepts (each edge
+   reasoned in `via`);
+3. read what explains it with `material-context --concept CONCEPT_ID` — notes
+   join by their own tags or as route-direct evidence, never through a shared
+   source alone — then open the note bodies with `note-read`;
+4. read contextual source evaluations with `inspect SOURCE_ID`;
+5. include active workspace context only when relevant;
+6. exclude archived workspaces unless history is requested.
+
+When asked for **exam artifacts** ("mock exams for AML"): search notes by
+`role` + concept (`search --type note`).
+
+When asked **"have I actually worked through this?"**: read the relevant notes
+with `note-read` and answer with the evidence attached to them (derivations,
+exercises, implementations) — or its documented absence. Never declare mastery;
+show trails.
+
+When asked about **exams, registrations, or grades**: answer from the owning
+partitioned academic module (`inspect MODULE_ID` carries its attempts and
+sittings) — never from `records/modules.yaml` or prose copies.
+
+When a topic **explodes into prerequisites** (scope explosion): propose a triage — *required now / helpful now / defer / reference only* — sized to the workspace objective, record accepted deferrals in the workspace `Deferred` section, and recommend the smallest useful next source or prerequisite. Preserve the wider graph in concept relations without forcing it into the current scope.
+
+When asked "what should I do next" or about **operational state**: start with
+`bootstrap --brief`, then the named workspace plus `inspect`; use `inspect
+coordination` when priorities matter. Recommendations are computed fresh, not
+read from stored plans.
+
+**Cross-domain reach (ADR-005).** When asked where or how to learn something, for source recommendations, or when no concept alias matches the query: search and relate across ALL domains — not just the active workspace's — before concluding the repository has nothing, orienting with the `domain_atlas` glance on `bootstrap --brief`. Name relevant shelves and crosswalks from other domains whenever they exist; a question standing in one module may be answered by another domain's shelf. Open the full generated domain atlas only when the targeted reads are insufficient. If the atlas has no hit either, `materials/FILES.txt` (rebuilt by `make materials`) lists every unregistered file by name — offer a grep there before answering "we don't have this". Visibility debt (sources no concept, shelf, or note points to) is reported in `generated/reports/health.md`; it is repaid on use (WORKFLOWS §6a), never as a bulk project.
+
+Never rely solely on folder names.
+
+---
+
+
 ## Build the fixture
 
 ```scrut

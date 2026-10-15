@@ -137,6 +137,9 @@ $ $H/los-assert-receipt --last --capability coordination.section.revise
 
 ## Rebuild and validate with the documented commands
 
+5. **Rebuild and validate** (`.venv/bin/python tools/generate.py`, then `.venv/bin/python tools/validate.py --compact`).
+
+
 ```scrut
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/generate.py --root "$LOS_FX" | grep -c "^wrote"
 21

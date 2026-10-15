@@ -25,6 +25,9 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Search the registry by title: the paper is new
 
+1. search the registry by title, author, identifier, and URL;
+
+
 ```scrut
 $ los search "Bare Essay"
 []
@@ -375,6 +378,9 @@ $ cat > sources/collections/probe-essays.yaml <<'EOF'
 
 ## The collection validates clean
 
+4. **Verify:** `.venv/bin/python tools/validate.py --compact` then `.venv/bin/python tools/generate.py`.
+
+
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
 0 error(s), 10 warning(s) — OK
@@ -425,6 +431,9 @@ $ $H/los-assert-receipt --last --capability collection.entry.revise
 ```
 
 ## Rebuild the source index
+
+6. rebuild the source index.
+
 
 ```scrut
 $ los generate

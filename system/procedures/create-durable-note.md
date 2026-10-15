@@ -23,6 +23,9 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Search for an existing note with the same purpose
 
+1. search for an existing note with the same purpose;
+
+
 ```scrut
 $ los search demo --type note | $LOS_REPO/.venv/bin/python -c 'import json,sys; print(sorted(r["id"] for r in json.load(sys.stdin)))'
 ['note-demo', 'note-demo-analysis']
@@ -321,6 +324,9 @@ owns transaction-20261001-090000-004
 ```
 
 ## Validate, then rebuild generated outputs
+
+9. validate, then rebuild generated outputs.
+
 
 ```scrut
 $ los validate | tail -n 1

@@ -113,6 +113,11 @@ note-batch-gamma True
 
 ## Submit the first batch unchanged
 
+   ```bash
+   .venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
+   ```
+
+
 ```scrut
 $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'
 {

@@ -16,6 +16,7 @@ only shrinks.
 
 ## Decision
 
+<!-- los:reference {"kind": "command", "text": "los goal"} -->
 - **D1** (PLAN §4 D1): replace gradually, moving each operation only once proven equivalent; never a rewrite.
 - **D2** (PLAN §4 D2): one operation boundary with authoritative request schemas; the CLI parser is generated with lossless transport metadata.
 - **D3** (PLAN §4 D3): typed failure kinds map to public codes, retryability, and exits by invocation context; fine reasons live in `details`.

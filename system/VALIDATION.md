@@ -62,6 +62,17 @@ regression.
 Errors rather than warnings: the failure mode is an agent reading a retired
 rule as current, which is indistinguishable from the rule being wrong.
 
+## Generated documentation
+
+- **E** `DOC-BLOCK-STALE` — a generated documentation block is stale, missing,
+  malformed or has an unreadable metadata owner. Capability counts come from
+  the capability catalogue, predicate names from the semantic registry, CLI
+  names from generated-parser request metadata and procedures from their index.
+  Regenerate with `.venv/bin/python tools/doc_blocks.py --write`; the tool also
+  compares schema command names with the actual generated parser. Checking is
+  read-only. Unmarked synthetic learner-data roots without the documentation
+  spine are outside this documentation check; any declared block activates it.
+
 ## Identity
 
 - **E** IDs unique within each family (note, concept, source, workspace,

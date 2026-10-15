@@ -235,6 +235,9 @@ $ (set -o pipefail; los validate | tail -n 1)
 
 ## Rebuild the generated outputs
 
+7. rebuild generated outputs.
+
+
 ```scrut
 $ los generate
 published generated/manifest.json (atomic contract snapshot)

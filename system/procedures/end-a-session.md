@@ -17,6 +17,21 @@ sets.
 $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
 ```
 
+## Read the stage-progress payload contract
+
+```bash
+.venv/bin/python tools/los.py capabilities stage.progress.update --json
+.venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
+```
+
+Read the exact capability definition before sealing the stage write below.
+The later submission checks its receipt and the changed canonical study map.
+
+```scrut
+$ los capabilities stage.progress.update --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(next(iter(d["commands"])), ",".join(d["payload_schema"]["properties"]["status"]["enum"]))'
+stage.progress.update active,paused,complete,skipped,revisit
+```
+
 ## Bind the snapshot for the stale write
 
 ```scrut
@@ -43,6 +58,9 @@ $ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 bd68f1ffdf104dc1c39e
 ```
 
 ## Step 1: submit the stage-progress envelope
+
+1. save pending stage work;
+
 
 ```scrut
 $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.json"
@@ -123,6 +141,9 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
 ```
 
 ## Step 3: review the session
+
+3. review that exact list;
+
 
 ```scrut
 $ los session-end

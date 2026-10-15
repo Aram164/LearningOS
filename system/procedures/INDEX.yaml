@@ -13,8 +13,7 @@ sections:
   - {doc: system/OPERATOR.md, heading: "## Start here", class: procedure, transcript: system/procedures/start-here.md}
   - {doc: system/OPERATOR.md, heading: "## Product hierarchy", class: rule}
   - {doc: system/OPERATOR.md, heading: "## Hard boundaries", class: rule}
-  - {doc: system/OPERATOR.md, heading: "## Unit workflow", class: procedure, transcript: system/procedures/unit-workflow.md}
-  - {doc: system/OPERATOR.md, heading: "## Shelving and session closure", class: procedure, transcript: system/procedures/shelving-session-closure.md}
+  - {doc: system/OPERATOR.md, heading: "## Procedures", class: procedure, transcript: system/procedures/unit-workflow.md}
   - {doc: system/OPERATOR.md, heading: "## Capture routing", class: procedure, transcript: system/procedures/capture-routing.md}
   - {doc: system/WORKFLOWS.md, heading: "## 1. Start a workspace", class: procedure, transcript: system/procedures/start-a-workspace.md}
   - {doc: system/WORKFLOWS.md, heading: "## 2. Capture temporary material", class: procedure, transcript: system/procedures/capture-temporary-material.md}

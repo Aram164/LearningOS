@@ -118,6 +118,10 @@ operations:
 | `system/contracts/ai-adapters.yaml` | which providers have an available adapter, and which modes it serves |
 | `system/contracts/capabilities.yaml` | the write scope each domain capability may touch |
 
+<!-- los:generated name=capability-count -->
+47 write capabilities, 19 queries
+<!-- /los:generated -->
+
 All three are read by the core. The interface renders a projection of them and
 enforces nothing on its own: `ai-action-prepare` refuses an unbuilt action
 (`status: planned`) and a provider whose adapter is unavailable, whether the

@@ -206,6 +206,9 @@ nothing routes through the carry workflow.
 
 ## Rebuild and validate
 
+6. **Rebuild and validate.**
+
+
 ```scrut
 $ los generate
 published generated/manifest.json (atomic contract snapshot)

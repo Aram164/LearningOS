@@ -16,6 +16,58 @@ reads; nothing here writes. The fixture ships no repository-root
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
 the `LOS_REPO` environment variable the test sets.
 
+## Shared operating rules
+
+
+Start with `system/OPERATOR.md` and its task-shaped entry (`capabilities
+--compact --json` for discovery, then the one entry read the task needs).
+Consult `system/contracts/normative-corpus.yaml` before treating a document
+as binding. `CLAUDE.md` at the repository root links to this file; do not
+read both copies. The complete catalogue and full bootstrap remain available
+for bulk work, but are not the default context for an agent task. Start
+with one of `bootstrap --brief` and `bootstrap --compact`, not both as
+routine startup; expand to the other later only when the task needs it.
+For material maintenance, start from `plan-edit-context UNIT_ID --route-id
+ROUTE_ID` (or the `--route-ids` batch) for a named route, `--stage-id` for
+a named stage, and follow the reviewed `route.patch` preflight/apply
+workflow in WORKFLOWS §25a. Reach for the unit `--brief` only for unit
+coverage, source-completeness, or unknown ids. Core expands shared
+material references for the app; the agent should not reproduce those copies.
+
+Read the applicable contracts before acting, according to the task:
+
+- **Lookup or study support:** for a named record use `inspect`, `search`,
+  `related`, or `note-read` directly; discover units with exact filters
+  through `unit-list --compact`, then `inspect` the chosen ID; for an
+  open "what should I work on?"
+  use `bootstrap --brief` first. Batch known record IDs in one `inspect`
+  call. Return to interrupted study with `los resume` (one screen: stage,
+  requirement, observations, open items, exam sittings) instead of
+  re-deriving state. Read the relevant workspace and coordination facts
+  when they bear on the question. For cross-domain discovery, orient with
+  the `domain_atlas` glance on `bootstrap --brief` before narrowing (the
+  generated domain atlas is the fallback when it is not enough).
+- **An authorized mutation:** fetch `capabilities NAME --json`, then read the
+  owning sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md`, the
+  relevant schema and its referenced definitions, and the relevant rules in
+  `system/VALIDATION.md`. Plan creation/revision also follows
+  `system/PLAN-CREATION-SOP.md`. This changes reading scope, never approval,
+  snapshot, receipt, validation, or source-completeness requirements.
+- **Architecture, validation, or a system-wide audit:** read the relevant
+  architectural and validation contracts broadly enough to cover every
+  affected owner. Check relevant open points in `system/CRITIQUE-POINTS.md`
+  before proposing changes; open points remain deferred judgments, not tasks.
+
+Use `system/PHILOSOPHY.md` to resolve intent and `system/WHY-REDESIGN.md` for
+historical rationale when needed. Do not preload all schemas or unrelated
+workflows for every task. Follow referenced dependencies and expand the
+reading scope whenever the task crosses a boundary; all binding rules apply.
+
+Generated files are never authoritative over canonical artifacts.
+
+---
+
+
 ## Build the fixture
 
 ```scrut

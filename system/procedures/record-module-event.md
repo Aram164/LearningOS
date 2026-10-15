@@ -168,6 +168,9 @@ status: enrolled
 
 ## Rebuild the module and coordination views
 
+4. rebuild module and coordination views.
+
+
 ```scrut
 $ los generate
 published generated/manifest.json (atomic contract snapshot)

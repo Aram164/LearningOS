@@ -252,6 +252,11 @@ sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
 
 ## Seal the module import with derived guards
 
+   ```bash
+   .venv/bin/python tools/los.py capability module.plan.import --payload-file envelope.json
+   ```
+
+
 ```scrut {output_stream: stderr}
 $ PKG_SHA=$(sha256sum "$TMPDIR/package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s25a-imp --request-id request-s25a-imp --guards auto --out "$TMPDIR/s25a-imp.json"
 seal_envelope: guards auto: module-demo=2

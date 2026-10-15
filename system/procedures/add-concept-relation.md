@@ -20,6 +20,9 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## Confirm both concept ids exist
 
+1. confirm both concept IDs exist;
+
+
 ```scrut
 $ los inspect concept-variance concept-expected-value | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print([(r["id"], r["title"]) for r in d["records"]])'
 [('concept-variance', 'Variance'), ('concept-expected-value', 'Expected value')]
@@ -118,6 +121,9 @@ unchanged
 ```
 
 ## Rebuild generated outputs
+
+6. rebuild generated outputs.
+
 
 ```scrut
 $ los generate

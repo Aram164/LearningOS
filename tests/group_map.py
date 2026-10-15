@@ -183,6 +183,8 @@ GROUPS: dict[str, list[str]] = {
         "test_affected_tests.py",
         "test_arch_caches.py",
         "test_arch_doc_commands.py",
+        "test_arch_doc_command_controls.py",
+        "test_arch_doc_blocks.py",
         "test_arch_engine_neutrality.py",
         "test_arch_error_vocabulary.py",
         "test_arch_idroundtrip.py",

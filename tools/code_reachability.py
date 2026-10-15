@@ -34,6 +34,7 @@ ENTRYPOINTS = (
     "compare_world.py",
     "contract_bundle.py",
     "diagnostics_prune.py",
+    "doc_blocks.py",
     "evaluate_operator_questions.py",
     "generate.py",
     "generate_capability_schemas.py",

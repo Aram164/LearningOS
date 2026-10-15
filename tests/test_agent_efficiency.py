@@ -4,9 +4,8 @@ from __future__ import annotations
 
 import json
 import re
-import shlex
 import subprocess
-import sys
+import uuid
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -20,73 +19,71 @@ from learning_os.loader import load_repo
 from learning_os.ops._legacy_plumbing import _json_layout
 
 
-def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_path):
-    """Run the entry docs' concrete commands, including one governed write."""
-    from gateway_helpers import approved_v2_envelope
-    from repo_builders import add_curriculum
-
-    from learning_os.warning_baseline import collect, write_baseline
+def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
+    """Run the linked Scrut inputs, including their write/effect witnesses."""
+    from test_procedures import (
+        _check_procedure_audit,
+        _procedure_child_env,
+        _scrut_bin,
+    )
 
     root = Path(__file__).resolve().parents[1]
     operator = (root / "system/OPERATOR.md").read_text(encoding="utf-8")
     claude = (root / "system/CLAUDE.md").read_text(encoding="utf-8")
     agents = (root / "AGENTS.md").read_text(encoding="utf-8")
     readme = " ".join((root / "README.md").read_text(encoding="utf-8").split())
-    blocks = re.findall(r"```bash\n(.*?)\n```", operator, flags=re.DOTALL)
-    commands = [line for block in blocks for line in block.splitlines() if line.strip()]
-    assert commands == [
-        ".venv/bin/python tools/warning_baseline.py --check",
-        ".venv/bin/python tools/los.py capabilities --compact --json",
-        ".venv/bin/python tools/los.py capabilities stage.progress.update --json",
-        ".venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
+    procedures = root / "system/procedures"
+    start_here = (procedures / "start-here.md").read_text(encoding="utf-8")
+    session_end = (procedures / "end-a-session.md").read_text(encoding="utf-8")
+    bootstrap_order = (procedures / "bootstrap-order.md").read_text(encoding="utf-8")
+    headings = re.findall(r"^## .+$", operator, flags=re.MULTILINE)
+    assert headings == [
+        "## What binds, and what does not", "## What \"clean\" means",
+        "## Start here", "## Product hierarchy", "## Hard boundaries",
+        "## Procedures", "## Capture routing",
     ]
-    # Task-shaped entry: the unconditional startup read is documented in
-    # every entry doc, the open-question bootstrap likewise, while the
-    # stage.progress pair below is the governed-write example executed
-    # further down.
-    assert commands[1] in agents
-    assert commands[1] in readme
+    assert "### Unit workflow" in operator
+    assert "### Shelving and session closure" in operator
+    entry_map = operator.split("## Start here", 1)[1].split("## Product hierarchy", 1)[0]
+    assert "```" not in entry_map
+    assert "procedures/start-here.md" in entry_map
+    assert "procedures/revise-an-existing-plan.md" in entry_map
+    discovery = ".venv/bin/python tools/los.py capabilities --compact --json"
+    assert discovery in agents
+    assert discovery in readme
+    # Check the actual runner inputs, not inert bash examples retained only
+    # to preserve original rule text. The full transcripts execute below.
+    assert "$ los capabilities --compact --json" in start_here
+    assert "$ los capabilities stage.progress.update --json" in session_end
+    assert "$ los capability stage.progress.update --payload-file" in session_end
+    assert "tools/warning_baseline.py --root \"$LOS_FX\" --check" in start_here
+    assert "$ $H/los-assert-receipt --last --capability stage.progress.update" in session_end
+    assert "$ $H/los-assert-file curriculum/modules/module-demo/units/" in session_end
+    assert '\"validation\": \"0 error(s)' in session_end
+
     assert "bootstrap --brief" in agents
     assert "bootstrap --brief" in readme
     bootstrap_section = claude.split("## 2. Bootstrap order", 1)[1].split("## 3.", 1)[0]
-    assert "capabilities --compact --json" in " ".join(bootstrap_section.split())
-    assert "bootstrap --brief" in " ".join(bootstrap_section.split())
+    assert "procedures/bootstrap-order.md" in bootstrap_section
+    assert "capabilities --compact --json" in " ".join(bootstrap_order.split())
+    assert "bootstrap --brief" in " ".join(bootstrap_order.split())
     assert ".venv/bin/python tools/validate.py --compact" in claude
     assert ".venv/bin/python tools/warning_baseline.py --check" in claude
 
-    add_curriculum(mini_repo)
-    write_baseline(mini_repo, collect(mini_repo)[0], "entry-doc fixture")
-    envelope = approved_v2_envelope(
-        mini_repo, capability="stage.progress.update",
-        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
-                 "status": "complete"},
-        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
-        idempotency_key="entry-doc-stage-progress",
-    )
-    envelope_path = tmp_path / "ENVELOPE.json"
-    envelope_path.write_text(json.dumps(envelope), encoding="utf-8")
-    for command in commands:
-        executable, script, *args = shlex.split(command)
-        assert executable == ".venv/bin/python"
-        args = [str(envelope_path) if arg == "ENVELOPE.json" else arg
-                for arg in args]
+    scrut = _scrut_bin()
+    assert scrut.is_file(), f"Scrut binary missing: {scrut}"
+    for stem in ("start-here", "end-a-session"):
+        transcript = procedures / f"{stem}.md"
+        log_path = tmp_path / f"entry-{stem}.audit.jsonl"
+        token = f"entry-procedure-{uuid.uuid4().hex}"
         proc = subprocess.run(
-            [sys.executable, str(root / script), "--root", str(mini_repo), *args],
-            capture_output=True, text=True, timeout=120,
+            [str(scrut), "test", str(transcript)],
+            capture_output=True, text=True, timeout=600, cwd=root,
+            env=_procedure_child_env(log_path=log_path, token=token),
         )
-        assert proc.returncode == 0, (command, proc.stdout, proc.stderr)
-        if script.endswith("los.py"):
-            body = json.loads(proc.stdout)
-            if args[0] == "capability":
-                assert body["ok"] is True
-                assert body["receipt_path"]
-    validation = subprocess.run(
-        [sys.executable, str(root / "tools/validate.py"), "--compact",
-         "--root", str(mini_repo)],
-        capture_output=True, text=True, timeout=120,
-    )
-    assert validation.returncode == 0, validation.stdout + validation.stderr
-    assert "0 error" in validation.stdout
+        assert proc.returncode == 0, (
+            f"{transcript.name} failed:\n{proc.stdout}\n{proc.stderr}")
+        _check_procedure_audit(transcript.name, log_path)
 
 
 def test_compact_catalogue_preserves_all_public_names_and_rules(mini_repo):
@@ -99,6 +96,30 @@ def test_compact_catalogue_preserves_all_public_names_and_rules(mini_repo):
     assert actual["rules"] == expected["rules"]
     assert actual["operator_contract"] == expected["operator_contract"]
     assert len(compact.stdout) < len(full.stdout) / 3
+
+
+def test_operator_entry_map_links_resolve_to_executable_cases():
+    """The map stays useful after procedures replace embedded command lists."""
+    root = Path(__file__).resolve().parents[1]
+    operator = (root / "system/OPERATOR.md").read_text(encoding="utf-8")
+    entry_map = operator.split("## Start here", 1)[1].split(
+        "## Product hierarchy", 1)[0]
+    links = re.findall(r"\]\((procedures/[^)#]+)#([^)]+)\)", entry_map)
+    assert len(links) >= 12
+    for relative, fragment in links:
+        path = root / "system" / relative
+        assert path.is_file(), relative
+        text = path.read_text(encoding="utf-8")
+        headings = re.findall(r"^## (.+)$", text, flags=re.MULTILINE)
+        slugs = {
+            re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-"):
+            heading
+            for heading in headings
+        }
+        assert fragment in slugs, (relative, fragment)
+        section = text.split("## " + slugs[fragment] + "\n", 1)[1].split(
+            "\n## ", 1)[0]
+        assert "```scrut" in section, (relative, fragment)
 
 
 def test_named_capability_includes_exact_definition_and_schema(mini_repo):

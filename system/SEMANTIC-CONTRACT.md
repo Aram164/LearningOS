@@ -17,7 +17,7 @@ This layer is **interpretation, not stored truth**:
   (`genout.projection`) keeps answering derivations per row; the contract
   owns their meaning so agents read one declared layer.
 
-## Predicates (Phase 1: 26)
+## Predicates (Phase 1)
 
 Each predicate names its authoritative inputs — the only facts it may read —
 and its fallback rule for incomplete or unknown input. The fallback direction
@@ -112,6 +112,7 @@ identify the actual review and its limits.
 
 ## Candidate goals (Phase 3)
 
+<!-- los:reference {"kind": "command", "text": "los goal"} -->
 The engine surfaces what is worth investigating and never mutates meaning
 itself. Six read-only detectors — covering routes gone stale, sources
 changed under claims, repeated question classes with no VOQ, inspections
@@ -215,6 +216,7 @@ is preflight, and the snapshot guard stays the final word. Readers:
 `tools/learning_os/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
 
+<!-- los:reference {"kind": "command", "text": "los observe"} -->
 Asymmetric admission: proof-carrying assumes an *untrusted* producer, so
 the envelope ceremony binds agent-authored writes uniformly — except
 where the producer is the ground truth. Aram recording his own results
@@ -318,7 +320,11 @@ with updated predicates, fixtures, and lineage.
 
 ## Status
 
-Phase 1 (contract + VOQs): 26 predicates end-to-end with registry plus
+<!-- los:generated name=predicate-count -->
+26 predicates
+<!-- /los:generated -->
+
+Phase 1 (contract + VOQs): predicates end-to-end with registry plus
 `evaluate()` entry point, proven by `tests/test_semantic_contract.py` and
 the VOQ suite. Phase 1.5 adds the policy-query envelope; Phase 2 adds
 lineage above. Full vision and work plan:

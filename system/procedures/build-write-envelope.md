@@ -64,6 +64,31 @@ export EXPECTED=sha256:71b1bfce85eaf7139b6c831d11349afb9f9fc764c6a4239b6346e9119
 
 ## Step 5: the approval subject is the intent hash
 
+```python
+import hashlib, json
+subject = {k: envelope[k] for k in (
+    "schema_version", "capability", "channel",
+    "expected_snapshot", "expected_revisions", "payload")}
+if "session_id" in envelope:
+    subject["session_id"] = envelope["session_id"]
+approval = "sha256:" + hashlib.sha256(json.dumps(
+    subject, sort_keys=True, separators=(",", ":"),
+    ensure_ascii=False).encode("utf-8")).hexdigest()
+```
+
+```bash
+SNAP=$(.venv/bin/python tools/los.py bootstrap --compact \
+  | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
+# envelope.json: schema_version 2, request_id "request-<key>",
+# idempotency_key "<key>", capability "capture.create", channel "operator",
+# expected_snapshot "$SNAP",
+# expected_revisions {"capture-request:<key>": 0},
+# approval {"kind": "operator-approval", "subject_sha256": <intent hash>},
+# payload {"text": "…"}
+.venv/bin/python tools/los.py capability capture.create --payload-file envelope.json
+```
+
+
 Section 25c defines the subject hash over the six intent fields (plus the
 sealed session, when one is carried). The recipe, run against the sealed
 envelope above:

@@ -35,6 +35,7 @@ routes connect materials to those nodes carrying format, angle, covered nodes,
 depth, scope status and exact locator. Priority in the source map is not an
 order of study.
 
+<!-- los:reference {"kind": "command", "text": "los unit-source-selection"} -->
 **Choose before sequencing.** Record only Aram's actual choices in
 `source_selections` (`los unit-source-selection`). Whether this unit owes a
 study map is not a preference: OPERATOR rule 6 obliges every unit of an active

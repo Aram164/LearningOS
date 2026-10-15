@@ -139,6 +139,7 @@ Inventory all of these, even when they will not be selected:
 - materials already registered in the module/workspace plus materials named in
   the authoritative artifacts but not yet registered.
 
+<!-- los:reference {"kind": "command", "text": "tools/material_toc.py --toc"} -->
 `rg --files` is the first file inventory tool. If the materials tree is
 gitignored and therefore invisible to it, use a narrowly scoped `find` on the
 exact material root. Start from the checked-in rails before scanning:
@@ -340,6 +341,7 @@ where to start and nothing can check it later. A locator is exact when a reader
 who has never seen the material can open it at the right place without
 searching.
 
+<!-- los:reference {"kind": "command", "text": "tools/material_toc.py --toc"} -->
 - **Books and papers** need the numbered division **and** a page range —
   `Ch 9 §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393`. Naming
   the specific pages of the sub-parts that matter is better still.
@@ -553,6 +555,8 @@ snapshot moved underneath, the gateway answers
 `STALE_SNAPSHOT`: reload, review the intervening changes, regenerate the
 package if necessary, and preflight again. Never bypass the guard.
 
+<!-- los:reference {"kind": "command", "text": "los capability"} -->
+<!-- los:reference {"kind": "option", "text": "--replay-only", "target": "los capability"} -->
 If the response is lost, retry the same command with the same saved report:
 the original request identity makes this an exact replay, not another commit.
 The report's `gateway_envelope` can also be passed to `los capability` with

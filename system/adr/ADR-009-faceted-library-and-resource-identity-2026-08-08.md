@@ -296,6 +296,7 @@ the residue ADR-008 spent a night removing. What genuinely remains:
 The Core owning richer state is not the same as the system using it. Tracked
 honestly rather than implied:
 
+<!-- los:reference {"kind": "option", "text": "los source-feedback --resource-id"} -->
 | | state |
 |---|---|
 | resource ids in records | ✅ 95 AMLS resources |

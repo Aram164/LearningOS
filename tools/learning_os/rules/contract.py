@@ -200,3 +200,19 @@ class ChecksContract:
                 "documentation cannot lag the executable declaration",
                 relative,
             )
+
+    def check_doc_blocks(self):
+        """Generated counts/lists are checked from their metadata owners."""
+        from ..contracts import doc_blocks
+
+        try:
+            if not doc_blocks.applies(self.repo.root):
+                return
+            from ..semantics import PREDICATES
+
+            values = doc_blocks.collect(self.repo.root, predicate_names=PREDICATES)
+        except doc_blocks.DocBlockError as exc:
+            self.err("DOC-BLOCK-STALE", exc.message, exc.path)
+            return
+        for issue in doc_blocks.check(self.repo.root, values):
+            self.err("DOC-BLOCK-STALE", issue.message, issue.path)

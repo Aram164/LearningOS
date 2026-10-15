@@ -28,6 +28,7 @@ project, not here.
 
 **The contract surface** — everything an interface may touch:
 
+<!-- los:reference {"kind": "entrypoint", "text": "python tools/los.py"} -->
 1. `python tools/los.py` — `status --json` · `validate` · `generate` ·
    `capture`. The CLI *delegates* to the canonical tools; there is exactly one
    implementation of every rule. `capture` is the single write command because

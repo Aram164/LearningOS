@@ -227,6 +227,9 @@ owns transaction-20261001-090000-003
 
 ## Rebuild the source index
 
+3. rebuild the source index; confirm the generated selector view reflects the change;
+
+
 ```scrut
 $ los generate
 published generated/manifest.json (atomic contract snapshot)
