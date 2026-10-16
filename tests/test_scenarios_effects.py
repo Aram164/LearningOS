@@ -397,7 +397,7 @@ def test_normalize_rejects_incorrect_stream_binding(tmp_path):
 def test_failed_push_live_runs_compare_equal(tmp_path):
     """D7 end to end: two live failed-push runs normalize identically."""
     doc = scenario_harness.load_case_file(
-        scenario_harness.CASES_DIR / "cli.session-end.yaml")
+        scenario_harness.CASES_DIR / "session.end.yaml")
     bare = next(item for item in doc["cases"] if item["id"] == "failed-push")
     case = {"fixture": doc.get("fixture", "rich_world"),
             "observations": doc["observations"],

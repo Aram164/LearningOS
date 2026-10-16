@@ -1,14 +1,14 @@
 {
   "approval": {
     "kind": "operator-approval",
-    "subject_sha256": "sha256:f77580f8fd8f59fb0ce261b17f71427bceff690654ebcb3c05d1e28240f76bff"
+    "subject_sha256": "sha256:5ad63eb10de5e14690b876287c5cdd76af69b057797919ee9829cddf426b14c7"
   },
   "capability": "capture.create",
   "channel": "operator",
   "expected_revisions": {
     "capture-request:scenario-capability-dispatch": 0
   },
-  "expected_snapshot": "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c",
+  "expected_snapshot": "sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e",
   "idempotency_key": "scenario-capability-dispatch",
   "payload": {
     "text": "A scenario capture for the gateway admission surface."

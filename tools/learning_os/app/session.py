@@ -198,15 +198,14 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         path for path in touched
         if _session_path_state(root, path) != _row_proven_state(recorded[path])
     ]
-    # `validate.py` resolves its repository from its own location unless told
-    # otherwise, so a bare `cwd=root` would validate the repository the tools
-    # live in — not the one this session touched. Pass the root explicitly.
-    # --compact: a failed close prints its errors and the summary line, not
-    # every baselined warning; the full list is in the validation report.
+    # Validate the repository this session touched, in process. A failed
+    # close prints its issues; a clean one names where the baselined
+    # warnings are listed, as `validate.py --compact` does.
     validation = validation_run(root)
     if validation["errors"]:
         raise ToolFailure("", "\n".join(validation["issues"]), 1)
-    validation_line = f"0 error(s), {validation['warnings']} warning(s) — OK"
+    validation_line = (f"0 error(s), {validation['warnings']} warning(s) — OK"
+                       "; warning list: generated/reports/validation-report.md")
     _publish(root)
     all_changed = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],

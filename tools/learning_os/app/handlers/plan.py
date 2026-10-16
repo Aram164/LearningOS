@@ -724,8 +724,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
     validate_extra, gate_errors = _plan_apply_gate(root)
 
     refusal = (gate_errors, WriteRefused('Master Planning promotion preflight failed; no canonical files were written',
-        site=f"{ctx.operation}.promotion-preflight-failed", reason='promotion-preflight-failed',
-        prefixed=True, exit_code=1))
+        site=f"{ctx.operation}.promotion-preflight-failed", prefixed=True, exit_code=1))
 
     def finish_promotion(confirmation):
         return {
@@ -1049,8 +1048,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         ) from exc
 
     refusal = (gate_errors, WriteRefused('module plan validation preflight failed; no canonical files were written',
-        site=f"{ctx.operation}.validation-preflight-failed", reason='validation-preflight-failed',
-        prefixed=True, exit_code=1))
+        site=f"{ctx.operation}.validation-preflight-failed", prefixed=True, exit_code=1))
 
     def finish_plan_import(confirmation):
         return {"ok": True, "mode": "apply", "module_id": module_id,

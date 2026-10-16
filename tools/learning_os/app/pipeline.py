@@ -142,9 +142,11 @@ def _audit_command_failure(operation: str | None, code: int) -> None:
               None, None, code)
 
 
-def _success_payload(data, confirmation: dict) -> dict:
+def _success_payload(data, confirmation: dict) -> dict | list:
     if not isinstance(data, ResponsePayload):
-        return {**data, **confirmation}
+        # A read returns its payload as is, a list included; only a commit
+        # confirmation is merged into a mapping.
+        return {**data, **confirmation} if confirmation else data
     if data.confirmation == "omit":
         return data.success
     if data.confirmation == "prepend":
@@ -181,7 +183,14 @@ def _commit_with_gesture(ctx, operation: str, result):
         if result.proposal.refusal is not None:
             gate_errors, refusal = result.proposal.refusal
             if gate_errors:
-                refusal.extra_stderr = tuple(map(str, gate_errors[:12]))
+                lines = tuple(map(str, gate_errors[:12]))
+                refusal.extra_stderr = lines
+                # The gateway message carries the gate's issues too, as the
+                # refusal's CLI diagnostics do; nothing the learner must fix
+                # is dropped from either surface.
+                base = (refusal.gateway_message
+                        if refusal.gateway_message is not None else str(refusal))
+                refusal.gateway_message = base + "".join(f"\n{line}" for line in lines)
                 raise refusal
         return outcome
     try:

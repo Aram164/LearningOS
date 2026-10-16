@@ -42,7 +42,7 @@ cases:
     "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a",
     "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id":
     "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id":
-    "req-demo-l01-demo"}, "snapshot_id": "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"}'
+    "req-demo-l01-demo"}, "snapshot_id": "sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e"}'
   - --event
   - minor-mistake
   expect:
@@ -167,7 +167,7 @@ cases:
     "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a",
     "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id":
     "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id":
-    "req-demo-l01-demo"}, "snapshot_id": "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"}'
+    "req-demo-l01-demo"}, "snapshot_id": "sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e"}'
   - --event
   - bogus-event
   expect:
@@ -205,7 +205,7 @@ cases:
     "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a",
     "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id":
     "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id":
-    "req-demo-l01-demo"}, "snapshot_id": "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"}'
+    "req-demo-l01-demo"}, "snapshot_id": "sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e"}'
   - --event
   - minor-mistake
   expect:
@@ -330,7 +330,7 @@ cases:
     "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a",
     "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id":
     "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id":
-    "req-demo-l01-demo"}, "snapshot_id": "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"}'
+    "req-demo-l01-demo"}, "snapshot_id": "sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e"}'
   - --event
   - bogus-event
   expect:

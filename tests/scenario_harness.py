@@ -466,7 +466,14 @@ def _cli_command_for(operation: str, root: Path) -> str:
         from learning_os.store.contracts.capability_catalog import command_definitions
     finally:
         del sys.path[0]
-    return command_definitions(root)[operation].cli_command
+    definitions = command_definitions(root)
+    if operation in definitions:
+        return definitions[operation].cli_command
+    # A relocated former ``cli.*`` operation (tests/architecture/
+    # operation-moves.json) names its command in cli-operations.yaml.
+    rows = yaml.safe_load((root / "system/contracts/cli-operations.yaml")
+                          .read_text(encoding="utf-8"))["operations"]
+    return rows[operation]["cli_command"]
 
 
 def request_to_argv(operation: str, request: dict, root: Path) -> list[str]:
