@@ -308,3 +308,43 @@ def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_pat
     assert report["candidate"]["checks"] == {
         "contract_version": True, "schema_sha256": True, "snapshot_id": True}
     assert report["semantic"]["equal"] is True
+
+
+def _comparison_tool():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "phase6_world_comparison", REPO_ROOT / "tools/compare_world.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize("layout", ["legacy", "store"])
+def test_each_revision_uses_its_own_fingerprint_module(tmp_path, layout):
+    """A historical tree need not contain the candidate's package layout."""
+    package = tmp_path / "tools/learning_os"
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("", encoding="utf-8")
+    if layout == "store":
+        package = package / "store"
+        package.mkdir()
+        (package / "__init__.py").write_text("", encoding="utf-8")
+    expected = "1" * 64
+    (package / "fingerprint.py").write_text(
+        f"def canonical_fingerprint(root):\n    return {expected!r}\n", encoding="utf-8")
+    assert _comparison_tool()._side_fingerprint(tmp_path) == expected
+
+
+def test_broken_current_fingerprint_does_not_fall_back_to_a_legacy_owner(tmp_path):
+    """A present broken current owner fails closed even if a legacy one works."""
+    package = tmp_path / "tools/learning_os"
+    store = package / "store"
+    store.mkdir(parents=True)
+    (package / "__init__.py").write_text("", encoding="utf-8")
+    (store / "__init__.py").write_text("", encoding="utf-8")
+    (package / "fingerprint.py").write_text(
+        "def canonical_fingerprint(root):\n    return '1' * 64\n", encoding="utf-8")
+    (store / "fingerprint.py").write_text(
+        "raise ModuleNotFoundError('broken dependency')\n", encoding="utf-8")
+    assert _comparison_tool()._side_fingerprint(tmp_path) is None

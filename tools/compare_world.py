@@ -207,7 +207,11 @@ _FINGERPRINT_SNIPPET = (
     "import sys",
     "sys.path.insert(0, sys.argv[1])",
     "from pathlib import Path",
-    "from learning_os.store.fingerprint import canonical_fingerprint",
+    "from importlib import import_module",
+    "owner = ('learning_os.store.fingerprint' if "
+    "(Path(sys.argv[1]) / 'learning_os/store/fingerprint.py').is_file() "
+    "else 'learning_os.fingerprint')",
+    "canonical_fingerprint = import_module(owner).canonical_fingerprint",
     "print(canonical_fingerprint(Path(sys.argv[2])))",
 )
 
