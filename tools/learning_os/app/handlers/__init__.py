@@ -9,7 +9,6 @@ from learning_os.app.handlers import (
     capture,  # noqa: F401  (registration side effect)
     goals,  # noqa: F401  (registration side effect)
     learner,  # noqa: F401  (registration side effect)
-    learner_observations,  # noqa: F401  (registration side effect)
     maps,  # noqa: F401  (registration side effect)
     materials,  # noqa: F401  (registration side effect)
     note_analysis,  # noqa: F401  (registration side effect)

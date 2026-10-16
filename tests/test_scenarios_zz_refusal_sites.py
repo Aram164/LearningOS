@@ -1965,7 +1965,7 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
     the proof injects the collection failure and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.app.handlers.learner_observations as learner_observations
+    import learning_os.app.handlers.learner as learner
     from learning_os.app.outcomes import exit_for
     from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
@@ -1976,7 +1976,7 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
     def boom(repo):
         raise RuntimeInputError("a9-proof: the target is broken")
 
-    monkeypatch.setattr(learner_observations, "collect_requirements", boom)
+    monkeypatch.setattr(learner, "collect_requirements", boom)
     outcome, lines = _a9_run_cli(
         root, "cli.observe",
         ["observe", "req-demo-l01-demo", "--activity", "exercise",
@@ -1999,13 +1999,13 @@ def _prove_observe_not_admitted(mini_repo: Path, tmp_path: Path,
     closes the gate by direct injection and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.app.handlers.learner_observations as learner_observations
+    import learning_os.app.handlers.learner as learner
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
     ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
     root = ctx.root
-    monkeypatch.setattr(learner_observations, "gesture_allowed",
+    monkeypatch.setattr(learner, "gesture_allowed",
                         lambda capability: False)
     outcome, lines = _a9_run_cli(
         root, "cli.observe",

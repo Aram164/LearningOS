@@ -623,7 +623,7 @@ def test_observation_core_without_a_context_keeps_the_direct_cli_guard(
         mini_repo):
     """SPEC (br) R7: without a gesture the observe core refuses directly."""
     from learning_os.app.context import OpContext
-    from learning_os.app.handlers.learner_observations import observation_append
+    from learning_os.app.handlers.learner import observation_append
     from learning_os.contracts.gateway import current_gateway_request
 
     assert current_gateway_request() is None

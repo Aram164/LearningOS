@@ -21,12 +21,6 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store.revisions import artifact_revision
 
-
-def _on_commit_refused(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
-    return list(errors[:12])
-
-
 NOTES_PREFIX = Path("knowledge/notes")
 
 
