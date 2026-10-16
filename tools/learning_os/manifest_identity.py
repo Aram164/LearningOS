@@ -144,7 +144,7 @@ def materials_digest(root: Path) -> str:
 def operations_digest(root: Path) -> str:
     """Bytes digest of the non-canonical files the projection reads.
 
-    Mirrors the shadow graph's manifest inputs (``manifest_derived``):
+    Covers the projection's non-canonical manifest inputs:
     the artifact-revision ledger (``manifest.revisions``), AI request
     bundles (``manifest.ai_files``), and the garden-state sidecars folded
     into ``manifest.garden`` (walked as a directory here — the per-id

@@ -105,7 +105,6 @@ ignore_imports = [
   "learning_os.evidence -> learning_os.ai_actions.errors",
   "learning_os.evidence -> learning_os.ai_actions.storage",
   "learning_os.genout.manifest -> learning_os.ai_actions.projection",
-  "learning_os.genout.manifest_derived -> learning_os.ai_actions.projection",
   "learning_os.genout.projection.records_curriculum -> learning_os.material_synthesis",
   "learning_os.genout.projection.records_library -> learning_os.material_synthesis",
   "learning_os.health -> learning_os.masters_planning",
