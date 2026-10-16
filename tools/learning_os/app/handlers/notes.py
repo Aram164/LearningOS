@@ -541,7 +541,7 @@ def note_read(ctx: OpContext, req: dict) -> Result:
                 message = not_found("note", req["note_id"], candidates)
                 raise NotFound(
                     "note", req["note_id"], candidates,
-                    site="cli.note-read.unknown-note",
+                    site="note.content.unknown-note",
                     gateway_message=f"los: {message}",
                     exit_code=2,
                 )
@@ -573,21 +573,21 @@ def note_read(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
-            site="cli.note-read.stale-snapshot",
+            site="note.content.stale-snapshot",
             prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.note-read.read-failed",
+            site="note.content.read-failed",
             prefixed=True,
             exit_code=2,
         ) from exc
     except UnicodeError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.note-read.bad-encoding",
+            site="note.content.bad-encoding",
             prefixed=True,
             exit_code=2,
         ) from exc
@@ -698,14 +698,14 @@ def _metadata_search_page(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
-            site="cli.search.stale-snapshot",
+            site="note.search.stale-snapshot",
             prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.search.read-failed",
+            site="note.search.read-failed",
             prefixed=True,
             exit_code=2,
         ) from exc
@@ -959,21 +959,21 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
-            site="cli.search.stale-snapshot",
+            site="note.search.stale-snapshot",
             prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.search.read-failed",
+            site="note.search.read-failed",
             prefixed=True,
             exit_code=2,
         ) from exc
     except UnicodeError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.search.bad-encoding",
+            site="note.search.bad-encoding",
             prefixed=True,
             exit_code=2,
         ) from exc
@@ -988,7 +988,7 @@ def search(ctx: OpContext, req: dict) -> Result:
         if req.get("page"):
             raise WriteRefused(
                 "--page pages metadata search; --content already paginates",
-                site="cli.search.page-content",
+                site="note.search.page-content",
                 prefixed=True,
                 exit_code=2,
             )
@@ -1004,14 +1004,14 @@ def search(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
-            site="cli.search.stale-snapshot",
+            site="note.search.stale-snapshot",
             prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.search.read-failed",
+            site="note.search.read-failed",
             prefixed=True,
             exit_code=2,
         ) from exc

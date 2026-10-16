@@ -35,7 +35,7 @@ $ $H/los-assert-file work/active/workspace-demo/scratch/fragment.md --exists
 
 ```scrut {output_stream: stderr}
 $ los capture --text "hello"
-canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability capture.create --payload-file ENVELOPE.json` (payload schema: `los capabilities capture.create --json`; envelope: WORKFLOWS §25c)
+los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability capture.create --payload-file ENVELOPE.json` (payload schema: `los capabilities capture.create --json`; envelope: WORKFLOWS §25c)
 [2]
 ```
 
@@ -59,7 +59,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:e8e29bdabe6e1c2a764a425ee59ca522f35b4d3ad0622e86529a90e7b95ce7f9",
+  "snapshot_after": "sha256:b7d8512ce7c6e47a7de90f34027979956918ab74c71948646c271f99f92aa9a5",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-unrouted-fragment-for-later-triage.md",
@@ -68,7 +68,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
     "artifact_revisions": {
       "capture-request:temp-capture-001": 1
     },
-    "snapshot_after": "sha256:e8e29bdabe6e1c2a764a425ee59ca522f35b4d3ad0622e86529a90e7b95ce7f9",
+    "snapshot_after": "sha256:b7d8512ce7c6e47a7de90f34027979956918ab74c71948646c271f99f92aa9a5",
     "replayed": false
   },
   "error": null
@@ -91,5 +91,5 @@ $ $H/los-assert-file work/inbox/20261001-090000-unrouted-fragment-for-later-tria
 
 ```scrut
 $ los inbox-list
-[{"age_days":0,"deprecated":null,"id":"20261001-090000-unrouted-fragment-for-later-triage.md","path":"work/inbox/20261001-090000-unrouted-fragment-for-later-triage.md","state":null,"status":null,"title":"20261001-090000-unrouted-fragment-for-later-triage.md","type":"inbox-item"},{"age_days":3,"deprecated":null,"id":"note-drop.md","path":"work/inbox/note-drop.md","state":null,"status":null,"title":"note-drop.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/one.md","path":"work/inbox/pack/one.md","state":null,"status":null,"title":"one.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/two.md","path":"work/inbox/pack/two.md","state":null,"status":null,"title":"two.md","type":"inbox-item"}]
+[{"id":"20261001-090000-unrouted-fragment-for-later-triage.md","type":"inbox-item","title":"20261001-090000-unrouted-fragment-for-later-triage.md","path":"work/inbox/20261001-090000-unrouted-fragment-for-later-triage.md","status":null,"state":null,"deprecated":null,"age_days":0},{"id":"note-drop.md","type":"inbox-item","title":"note-drop.md","path":"work/inbox/note-drop.md","status":null,"state":null,"deprecated":null,"age_days":3},{"id":"pack/one.md","type":"inbox-item","title":"one.md","path":"work/inbox/pack/one.md","status":null,"state":null,"deprecated":null,"age_days":0},{"id":"pack/two.md","type":"inbox-item","title":"two.md","path":"work/inbox/pack/two.md","status":null,"state":null,"deprecated":null,"age_days":0}]
 ```

@@ -192,10 +192,10 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
             expected_snapshot=req.get("expected_snapshot"),
         )
     except RouteNotFound as exc:
-        exc.site = "cli.ai-action-append-slices.unknown-route"
+        exc.site = "ai-action.append-slices.unknown-route"
         raise
     except ConceptNotFound as exc:
-        exc.site = "cli.ai-action-append-slices.unknown-concept"
+        exc.site = "ai-action.append-slices.unknown-concept"
         raise
     _publish(root)
     return Result({"ok": True, "continuation": result})

@@ -96,7 +96,7 @@ def test_adapter_registry_falls_back_without_an_adapters_file(tmp_path: Path):
 def test_read_only_ai_projection_does_not_import_the_write_orchestrator():
     script = (
         "import sys; "
-        "import learning_os.derive.projection.ai_actions; "
+        "import learning_os.derive.ai_actions; "
         "assert 'learning_os.app.ai_actions.service' not in sys.modules; "
         "assert 'learning_os.store.transactions' not in sys.modules; "
         "assert 'learning_os.derive.projection' not in sys.modules"

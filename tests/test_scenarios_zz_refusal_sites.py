@@ -686,7 +686,7 @@ def _prove_cli_read_failed(mini_repo: Path, tmp_path: Path,
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
     assert lines[0] == {"operation": "project.inspect", "kind": "failure",
-                        "site": "cli.inspect.read-failed",
+                        "site": "project.inspect.read-failed",
                         "class": "WriteRefused", "exit_code": 2}
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -736,7 +736,7 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
     assert lines[0] == {"operation": "project.inspect", "kind": "failure",
-                        "site": "cli.inspect.stale-snapshot",
+                        "site": "project.inspect.stale-snapshot",
                         "class": "StaleSnapshot", "exit_code": 3}
     assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
 
@@ -806,8 +806,8 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
 #: so each site's proof node carries the site id and the same-session
 #: `-k` over operation names selects it.
 _PROOF_FNS = {
-    "cli.inspect.read-failed": _prove_cli_read_failed,
-    "cli.inspect.stale-snapshot": _prove_cli_stale_snapshot,
+    "project.inspect.read-failed": _prove_cli_read_failed,
+    "project.inspect.stale-snapshot": _prove_cli_stale_snapshot,
     "stage.progress.update.unknown-status":
         _prove_stage_unknown_status_guarded,
 }
@@ -1461,7 +1461,7 @@ def _prove_inbox_list_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "inbox.list", "kind": "failure",
-                      "site": "cli.inbox-list.list-failed",
+                      "site": "inbox.list.list-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1491,7 +1491,7 @@ def _prove_inbox_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "inbox.content", "kind": "failure",
-                      "site": "cli.inbox-read.read-failed",
+                      "site": "inbox.content.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1737,7 +1737,7 @@ def _prove_note_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "note.content", "kind": "failure",
-                      "site": "cli.note-read.read-failed",
+                      "site": "note.content.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1767,7 +1767,7 @@ def _prove_note_read_bad_encoding(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "note.content", "kind": "failure",
-                      "site": "cli.note-read.bad-encoding",
+                      "site": "note.content.bad-encoding",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1785,7 +1785,7 @@ def _prove_search_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("note.search", "content", tmp_path)
+    ctx = _a9_world("note.search", "content-hit", tmp_path)
     root = ctx.root
 
     def boom(root, note):
@@ -1798,7 +1798,7 @@ def _prove_search_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "note.search", "kind": "failure",
-                      "site": "cli.search.read-failed",
+                      "site": "note.search.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1815,7 +1815,7 @@ def _prove_search_bad_encoding(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("note.search", "content", tmp_path)
+    ctx = _a9_world("note.search", "content-hit", tmp_path)
     root = ctx.root
 
     def boom(root, note):
@@ -1828,7 +1828,7 @@ def _prove_search_bad_encoding(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "note.search", "kind": "failure",
-                      "site": "cli.search.bad-encoding",
+                      "site": "note.search.bad-encoding",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1856,7 +1856,7 @@ def _prove_goal_malformed_ledger(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "goal.decide", "kind": "failure",
-                      "site": "cli.goal.malformed-ledger",
+                      "site": "goal.decide.malformed-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1888,7 +1888,7 @@ def _prove_goal_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "goal.decide", "kind": "failure",
-                      "site": "cli.goal.unreadable-ledger",
+                      "site": "goal.decide.unreadable-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1923,7 +1923,7 @@ def _prove_goal_unreadable_session(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "goal.decide", "kind": "failure",
-                      "site": "cli.goal.unreadable-session",
+                      "site": "goal.decide.unreadable-session",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1951,7 +1951,7 @@ def _prove_goal_not_admitted(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "goal.decide", "kind": "failure",
-                      "site": "cli.goal.not-admitted",
+                      "site": "goal.decide.not-admitted",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -1985,7 +1985,7 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "learner.observe", "kind": "failure",
-                      "site": "cli.observe.invalid-target",
+                      "site": "learner.observe.invalid-target",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
@@ -2015,30 +2015,30 @@ def _prove_observe_not_admitted(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "learner.observe", "kind": "failure",
-                      "site": "cli.observe.not-admitted",
+                      "site": "learner.observe.not-admitted",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
 
 _PROOF_FNS.update({
-    'cli.inbox-list.list-failed': _prove_inbox_list_failed,
-    'cli.inbox-read.read-failed': _prove_inbox_read_failed,
+    'inbox.list.list-failed': _prove_inbox_list_failed,
+    'inbox.content.read-failed': _prove_inbox_read_failed,
     'inbox.resolve.archive-collision': _prove_inbox_archive_collision,
     'inbox.resolve.read-failed': _prove_inbox_resolve_read_failed,
     'note.create.not-an-object': _prove_note_not_an_object_guarded,
     'note.create.destination-exists': _prove_note_destination_exists,
     'note.create.symlink-path': _prove_note_symlink_path,
     'note.create.unreadable-superseded': _prove_note_unreadable_superseded,
-    'cli.note-read.read-failed': _prove_note_read_failed,
-    'cli.note-read.bad-encoding': _prove_note_read_bad_encoding,
-    'cli.search.read-failed': _prove_search_read_failed,
-    'cli.search.bad-encoding': _prove_search_bad_encoding,
-    'cli.goal.malformed-ledger': _prove_goal_malformed_ledger,
-    'cli.goal.unreadable-ledger': _prove_goal_unreadable_ledger,
-    'cli.goal.unreadable-session': _prove_goal_unreadable_session,
-    'cli.goal.not-admitted': _prove_goal_not_admitted,
-    'cli.observe.invalid-target': _prove_observe_invalid_target,
-    'cli.observe.not-admitted': _prove_observe_not_admitted,
+    'note.content.read-failed': _prove_note_read_failed,
+    'note.content.bad-encoding': _prove_note_read_bad_encoding,
+    'note.search.read-failed': _prove_search_read_failed,
+    'note.search.bad-encoding': _prove_search_bad_encoding,
+    'goal.decide.malformed-ledger': _prove_goal_malformed_ledger,
+    'goal.decide.unreadable-ledger': _prove_goal_unreadable_ledger,
+    'goal.decide.unreadable-session': _prove_goal_unreadable_session,
+    'goal.decide.not-admitted': _prove_goal_not_admitted,
+    'learner.observe.invalid-target': _prove_observe_invalid_target,
+    'learner.observe.not-admitted': _prove_observe_not_admitted,
 })
 
 
@@ -2097,7 +2097,7 @@ def _prove_dossier_unreadable_records(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.unreadable-records",
+                      "site": "dossier.read.unreadable-records",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2125,7 +2125,7 @@ def _prove_dossier_no_source_map(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.no-source-map",
+                      "site": "dossier.read.no-source-map",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2159,7 +2159,7 @@ def _prove_dossier_bad_knowledge_map(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.bad-knowledge-map",
+                      "site": "dossier.read.bad-knowledge-map",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2190,7 +2190,7 @@ def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.build-failed",
+                      "site": "dossier.read.build-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2224,7 +2224,7 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 3
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.stale-snapshot",
+                      "site": "dossier.read.stale-snapshot",
                       "class": "StaleSnapshot", "exit_code": 3}]
     assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
 
@@ -2253,7 +2253,7 @@ def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "dossier.read", "kind": "failure",
-                      "site": "cli.dossier.read-failed",
+                      "site": "dossier.read.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2282,7 +2282,7 @@ def _prove_bootstrap_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "operator.bootstrap", "kind": "failure",
-                      "site": "cli.bootstrap.read-failed",
+                      "site": "operator.bootstrap.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2306,7 +2306,7 @@ def _prove_status_unreadable_records(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "status.read", "kind": "failure",
-                      "site": "cli.status.unreadable-records",
+                      "site": "status.read.unreadable-records",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2338,7 +2338,7 @@ def _prove_intelligence_git_history(mini_repo: Path, tmp_path: Path,
     assert outcome.exit_code == 2
     assert lines == [{"operation": "intelligence.scan",
                       "kind": "failure",
-                      "site": "cli.intelligence-scan.git-history",
+                      "site": "intelligence.scan.git-history",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2368,7 +2368,7 @@ def _prove_intelligence_unrankable_queue(mini_repo: Path, tmp_path: Path,
     assert outcome.exit_code == 2
     assert lines == [{"operation": "intelligence.scan",
                       "kind": "failure",
-                      "site": "cli.intelligence-scan.unrankable-queue",
+                      "site": "intelligence.scan.unrankable-queue",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2396,7 +2396,7 @@ def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "resume.read", "kind": "failure",
-                      "site": "cli.resume.no-resumable-stage",
+                      "site": "resume.read.no-resumable-stage",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2426,7 +2426,7 @@ def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "resume.read", "kind": "failure",
-                      "site": "cli.resume.dossier-build-failed",
+                      "site": "resume.read.dossier-build-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2456,7 +2456,7 @@ def _prove_runtime_mid_read_stale(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 3
     assert lines == [{"operation": "runtime.session", "kind": "failure",
-                      "site": "cli.runtime-session.mid-read-stale",
+                      "site": "runtime.session.mid-read-stale",
                       "class": "StaleSnapshot", "exit_code": None}]
     assert exit_for(StaleSnapshot("a9-proof"), "cli") == 3
 
@@ -2484,7 +2484,7 @@ def _prove_capabilities_unreadable_schema(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "capabilities.read", "kind": "failure",
-                      "site": "cli.capabilities.unreadable-payload-schema",
+                      "site": "capabilities.read.unreadable-payload-schema",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2514,7 +2514,7 @@ def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "unit.list", "kind": "failure",
-                      "site": "cli.unit-list.read-failed",
+                      "site": "unit.list.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2602,7 +2602,7 @@ def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "atlas.context", "kind": "failure",
-                      "site": "cli.atlas-context.snapshot-changed",
+                      "site": "atlas.context.snapshot-changed",
                       "class": "WriteRefused", "exit_code": None}]
     assert exit_for(WriteRefused("a9-proof"), "cli") == 2
 
@@ -2611,7 +2611,7 @@ def _prove_edit_empty_batch_guarded(mini_repo: Path, tmp_path: Path,
     """The batch guard refuses zero ids first (R-A9-3)."""
     _prove_cli_guarded(
         tmp_path, monkeypatch,
-        site="cli.plan-edit-context.empty-batch",
+        site="plan.edit-context.empty-batch",
         cli_argv=["plan-edit-context", "unit-demo-l01", "--route-ids"],
         valid_argv=["plan-edit-context", "unit-demo-l01",
                     "--route-ids", "route-b2f1f80014860a929a3af0bc"])
@@ -2621,7 +2621,7 @@ def _prove_edit_one_selector_guarded(mini_repo: Path, tmp_path: Path,
     """The selector guard refuses two selectors first (R-A9-3)."""
     _prove_cli_guarded(
         tmp_path, monkeypatch,
-        site="cli.plan-edit-context.one-selector",
+        site="plan.edit-context.one-selector",
         cli_argv=["plan-edit-context", "unit-demo-l01",
                   "--route-id", "route-b2f1f80014860a929a3af0bc",
                   "--stage-id", "stage-demo"],
@@ -2641,7 +2641,7 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("plan.edit-context", "stage", tmp_path)
+    ctx = _a9_world("plan.edit-context", "stage-entry", tmp_path)
     root = ctx.root
 
     def boom(*args, **kwargs):
@@ -2656,7 +2656,7 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "plan.edit-context", "kind": "failure",
-                      "site": "cli.plan-edit-context.bad-stage-results",
+                      "site": "plan.edit-context.bad-stage-results",
                       "class": "WriteRefused", "exit_code": None}]
     assert exit_for(WriteRefused("a9-proof"), "cli") == 2
 
@@ -2674,7 +2674,7 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     from learning_os.domain.failures import WriteRefused
     from learning_os.store.contracts.json_schema import ContractValidationError
 
-    ctx = _a9_world("plan.template", "yaml", tmp_path)
+    ctx = _a9_world("plan.template", "template-yaml", tmp_path)
     root = ctx.root
     real_validate = maps.validate_contract
     calls = []
@@ -2694,7 +2694,7 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "plan.template", "kind": "failure",
-                      "site": "cli.plan-template.bad-response",
+                      "site": "plan.template.bad-response",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
@@ -2852,28 +2852,28 @@ def _prove_project_create_unknown_project(mini_repo: Path, tmp_path: Path,
                     "gateway.dispatch") == 2
 
 _PROOF_FNS.update({
-    'cli.dossier.unreadable-records': _prove_dossier_unreadable_records,
-    'cli.dossier.no-source-map': _prove_dossier_no_source_map,
-    'cli.dossier.bad-knowledge-map': _prove_dossier_bad_knowledge_map,
-    'cli.dossier.build-failed': _prove_dossier_build_failed,
-    'cli.dossier.stale-snapshot': _prove_dossier_stale_snapshot,
-    'cli.dossier.read-failed': _prove_dossier_read_failed,
-    'cli.bootstrap.read-failed': _prove_bootstrap_read_failed,
-    'cli.status.unreadable-records': _prove_status_unreadable_records,
-    'cli.intelligence-scan.git-history': _prove_intelligence_git_history,
-    'cli.intelligence-scan.unrankable-queue': _prove_intelligence_unrankable_queue,
-    'cli.resume.no-resumable-stage': _prove_resume_no_resumable_stage,
-    'cli.resume.dossier-build-failed': _prove_resume_dossier_build_failed,
-    'cli.runtime-session.mid-read-stale': _prove_runtime_mid_read_stale,
-    'cli.capabilities.unreadable-payload-schema': _prove_capabilities_unreadable_schema,
-    'cli.unit-list.read-failed': _prove_unit_list_read_failed,
+    'dossier.read.unreadable-records': _prove_dossier_unreadable_records,
+    'dossier.read.no-source-map': _prove_dossier_no_source_map,
+    'dossier.read.bad-knowledge-map': _prove_dossier_bad_knowledge_map,
+    'dossier.read.build-failed': _prove_dossier_build_failed,
+    'dossier.read.stale-snapshot': _prove_dossier_stale_snapshot,
+    'dossier.read.read-failed': _prove_dossier_read_failed,
+    'operator.bootstrap.read-failed': _prove_bootstrap_read_failed,
+    'status.read.unreadable-records': _prove_status_unreadable_records,
+    'intelligence.scan.git-history': _prove_intelligence_git_history,
+    'intelligence.scan.unrankable-queue': _prove_intelligence_unrankable_queue,
+    'resume.read.no-resumable-stage': _prove_resume_no_resumable_stage,
+    'resume.read.dossier-build-failed': _prove_resume_dossier_build_failed,
+    'runtime.session.mid-read-stale': _prove_runtime_mid_read_stale,
+    'capabilities.read.unreadable-payload-schema': _prove_capabilities_unreadable_schema,
+    'unit.list.read-failed': _prove_unit_list_read_failed,
     'ability.context.unreadable-records': _prove_ability_unreadable_records,
     'ability.context.reasons-not-parallel': _prove_ability_reasons_not_parallel,
-    'cli.atlas-context.snapshot-changed': _prove_atlas_snapshot_changed,
-    'cli.plan-edit-context.empty-batch': _prove_edit_empty_batch_guarded,
-    'cli.plan-edit-context.one-selector': _prove_edit_one_selector_guarded,
-    'cli.plan-edit-context.bad-stage-results': _prove_edit_bad_stage_results,
-    'cli.plan-template.bad-response': _prove_template_bad_response,
+    'atlas.context.snapshot-changed': _prove_atlas_snapshot_changed,
+    'plan.edit-context.empty-batch': _prove_edit_empty_batch_guarded,
+    'plan.edit-context.one-selector': _prove_edit_one_selector_guarded,
+    'plan.edit-context.bad-stage-results': _prove_edit_bad_stage_results,
+    'plan.template.bad-response': _prove_template_bad_response,
     'material.span.placement-source-mismatch': _prove_span_placement_mismatch,
     'material.span.read-failed': _prove_span_read_failed,
     'material.context.read-failed': _prove_material_context_read_failed,
@@ -2909,13 +2909,13 @@ def _prove_goal_invalid_ledger(mini_repo: Path, tmp_path: Path,
     assert outcome.ok is False
     assert outcome.exit_code == 2
     assert lines == [{"operation": "goal.decide", "kind": "failure",
-                      "site": "cli.goal.invalid-ledger",
+                      "site": "goal.decide.invalid-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
                     "cli") == 2
 
 _PROOF_FNS.update({
-    'cli.goal.invalid-ledger': _prove_goal_invalid_ledger,
+    'goal.decide.invalid-ledger': _prove_goal_invalid_ledger,
 })
 
 
@@ -2952,7 +2952,7 @@ def _prove_session_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
     assert lines[0] == {"operation": "session.end", "kind": "failure",
-                        "site": "cli.session-end.unreadable-ledger",
+                        "site": "session.end.unreadable-ledger",
                         "class": "WriteRefused", "exit_code": 2}
 
 
@@ -2992,7 +2992,7 @@ def _prove_session_ownership_conflict(mini_repo: Path, tmp_path: Path,
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
     assert lines[0] == {"operation": "session.end", "kind": "failure",
-                        "site": "cli.session-end.ownership-conflict",
+                        "site": "session.end.ownership-conflict",
                         "class": "WriteRefused", "exit_code": 2}
 
 
@@ -3048,14 +3048,14 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
     assert lines[0] == {"operation": "session.end", "kind": "failure",
-                        "site": "cli.session-end.head-changed",
+                        "site": "session.end.head-changed",
                         "class": "WriteRefused", "exit_code": 2}
 
 
 _PROOF_FNS.update({
-    "cli.session-end.unreadable-ledger": _prove_session_unreadable_ledger,
-    "cli.session-end.ownership-conflict": _prove_session_ownership_conflict,
-    "cli.session-end.head-changed": _prove_session_head_changed,
+    "session.end.unreadable-ledger": _prove_session_unreadable_ledger,
+    "session.end.ownership-conflict": _prove_session_ownership_conflict,
+    "session.end.head-changed": _prove_session_head_changed,
 })
 
 
@@ -3262,7 +3262,7 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
                           "site": "route.patch.unknown-route",
                           "class": "NotFound", "exit_code": 2})
     inside = json.dumps({"operation": "project.inspect", "kind": "failure",
-                         "site": "cli.inspect.unknown-id",
+                         "site": "project.inspect.unknown-id",
                          "class": "WriteRefused", "exit_code": 2})
     dest.write_text(outside + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
@@ -3276,7 +3276,7 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
     assert dest.read_text(encoding="utf-8").splitlines() == [outside, inside]
     attributed = harness.CASE_SITE_WITNESSES.pop(
         (str(dest), "project.inspect:a9-control"))
-    assert attributed == {("project.inspect", "cli.inspect.unknown-id")}
+    assert attributed == {("project.inspect", "project.inspect.unknown-id")}
     assert not [key for key in harness.CASE_SITE_WITNESSES
                 if key[0] == str(dest)]
 
@@ -3293,7 +3293,7 @@ def test_control_failed_append_leaves_the_case_unattributed(tmp_path,
                   encoding="utf-8") as handle:
             handle.write(json.dumps({
                 "operation": "project.inspect", "kind": "failure",
-                "site": "cli.inspect.unknown-id", "class": "WriteRefused",
+                "site": "project.inspect.unknown-id", "class": "WriteRefused",
                 "exit_code": 2}) + "\n")
     assert os.environ[SITE_WITNESS_ENV] == str(dest)
     assert not dest.exists()
@@ -3334,10 +3334,10 @@ def test_control_site_entry_with_where_fails(tmp_path, monkeypatch):
 
     cases = tmp_path / "cases"
     cases.mkdir()
-    (cases / "cli.inspect.yaml").write_text(yaml.safe_dump({
+    (cases / "project.inspect.yaml").write_text(yaml.safe_dump({
         "operation": "project.inspect",
         "untriggered": [{
-            "site": "cli.inspect.read-failed",
+            "site": "project.inspect.read-failed",
             "where": "tools/learning_os/app/handlers/platform.py:325",
             "reason": "os-error-only",
         }],
@@ -3357,9 +3357,9 @@ def test_control_imported_subtype_sites_are_declared():
     assert getattr(failures, "ConceptNotFound", None) is None
     declared = _declared_sites()
     assert ("ai-action.append-slices",
-            "cli.ai-action-append-slices.unknown-route") in declared
+            "ai-action.append-slices.unknown-route") in declared
     assert ("ai-action.append-slices",
-            "cli.ai-action-append-slices.unknown-concept") in declared
+            "ai-action.append-slices.unknown-concept") in declared
 
 
 def test_control_resolve_failure_accepts_only_write_refused():
@@ -3397,13 +3397,13 @@ def test_control_literal_assigned_site_is_recorded():
         "try:\n"
         "    pass\n"
         "except RouteNotFound as exc:\n"
-        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n'
+        '    exc.site = "ai-action.append-slices.unknown-route"\n'
         "    raise\n")
     assert _except_handler_sites(
         node, stem="ai", serving=_A9_CONTROL_SERVING,
         entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
         ("ai-action.append-slices",
-         "cli.ai-action-append-slices.unknown-route", 4)]
+         "ai-action.append-slices.unknown-route", 4)]
 
 
 def test_control_literal_assigned_site_needs_its_reraise():
@@ -3412,7 +3412,7 @@ def test_control_literal_assigned_site_needs_its_reraise():
         "try:\n"
         "    pass\n"
         "except RouteNotFound as exc:\n"
-        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n')
+        '    exc.site = "ai-action.append-slices.unknown-route"\n')
     with pytest.raises(AssertionError, match="bare re-raise"):
         _except_handler_sites(
             node, stem="ai", serving=_A9_CONTROL_SERVING,
@@ -3425,7 +3425,7 @@ def test_control_non_failure_catch_assigns_no_site():
         "try:\n"
         "    pass\n"
         "except ValueError as exc:\n"
-        '    exc.site = "cli.ai-action-append-slices.unknown-route"\n'
+        '    exc.site = "ai-action.append-slices.unknown-route"\n'
         "    raise\n")
     assert _except_handler_sites(
         node, stem="ai", serving=_A9_CONTROL_SERVING,
@@ -3444,7 +3444,7 @@ def test_control_template_assigned_site_still_resolves():
         node, stem="ai", serving=_A9_CONTROL_SERVING,
         entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
         ("ai-action.append-slices",
-         "cli.ai-action-append-slices.unknown-route", 4)]
+         "ai-action.append-slices.unknown-route", 4)]
 
 
 def test_control_twin_template_keeps_called_operations():
@@ -3483,9 +3483,9 @@ def test_control_twin_template_drops_never_called_operations():
             "note.revise.already-recorded") not in declared
     # The AI phantom .binding expansions.
     assert ("ai-action.list",
-            "cli.ai-action-list.binding") not in declared
+            "ai-action.list.binding") not in declared
     assert ("ai-action.append-slices",
-            "cli.ai-action-append-slices.binding") not in declared
+            "ai-action.append-slices.binding") not in declared
 
 
 def test_control_twin_cache_matches_uncached_analysis():
@@ -3571,7 +3571,7 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
     """
     import scenario_harness as harness
 
-    doc = harness.load_case_file(CASES_DIR / "cli.inspect.yaml")
+    doc = harness.load_case_file(CASES_DIR / "project.inspect.yaml")
     bare_case = next(item for item in doc["cases"]
                      if item["id"] == "unknown-id")
     case = {"fixture": doc.get("fixture", "rich_world"),
@@ -3588,12 +3588,12 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
     assert len(lines) == 1, lines
     assert json.loads(lines[0]) == {
         "operation": "project.inspect", "kind": "failure",
-        "site": "cli.inspect.unknown-id", "class": "WriteRefused",
+        "site": "project.inspect.unknown-id", "class": "WriteRefused",
         "exit_code": 2}
     # SPEC (bh): the real case run is attributed to exactly that case.
     assert harness.CASE_SITE_WITNESSES.pop(
         (str(witness), "project.inspect:unknown-id")) == {
-        ("project.inspect", "cli.inspect.unknown-id")}
+        ("project.inspect", "project.inspect.unknown-id")}
     monkeypatch.delenv(SITE_WITNESS_ENV)
     bare = harness.run_case(case, "project.inspect", tmp_path / "bare")
     assert bare == with_witness
@@ -3824,7 +3824,7 @@ def test_control_failed_witness_write_is_swallowed(tmp_path, monkeypatch):
             SITE_WITNESS_ENV,
             str(tmp_path / "no-such-dir" / "sites.jsonl"))
         sys.audit("learningos.refusal", "project.inspect", "failure",
-                  "cli.inspect.unknown-id", "WriteRefused", 2)
+                  "project.inspect.unknown-id", "WriteRefused", 2)
     finally:
         arch_audit_hook.uninstall()
     assert not (tmp_path / "no-such-dir").exists()
@@ -3875,7 +3875,7 @@ def test_control_malformed_witness_line_fails(tmp_path, monkeypatch):
     witness = tmp_path / "sites.jsonl"
     witness.write_text(
         json.dumps({"operation": "project.inspect",
-                    "site": "cli.inspect.unknown-id"})
+                    "site": "project.inspect.unknown-id"})
         + "\n",
         encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
@@ -3894,9 +3894,9 @@ def test_control_failed_append_is_reported_unwitnessed(mini_repo, tmp_path,
     assert refused.returncode == 2
     assert "record not found: nope-id" in refused.stderr
     with pytest.raises(AssertionError, match="unwitnessed"):
-        _assert_matched("project.inspect", "cli.inspect.unknown-id",
+        _assert_matched("project.inspect", "project.inspect.unknown-id",
                         "a9-control:1", set(),
-                        {"cli.inspect.unknown-id": "project.inspect:unknown-id"})
+                        {"project.inspect.unknown-id": "project.inspect:unknown-id"})
 
 
 def test_control_diagnostic_line_never_supplies_a_site(tmp_path, monkeypatch):
@@ -3940,18 +3940,18 @@ def test_control_command_line_never_supplies_a_site(tmp_path, monkeypatch):
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     assert _session_witnesses() == set()
     genuine = {"operation": "session.end", "kind": "failure",
-               "site": "cli.session-end.nothing-touched",
+               "site": "session.end.nothing-touched",
                "class": "WriteRefused", "exit_code": 2}
     with witness.open("a", encoding="utf-8") as stream:
         stream.write(json.dumps(genuine) + "\n")
     assert _session_witnesses() == {
-        ("session.end", "cli.session-end.nothing-touched")}
+        ("session.end", "session.end.nothing-touched")}
 
 
 @pytest.mark.parametrize("mutation", [
     {"code": True}, {"code": 128.0}, {"code": "128"}, {"code": 0},
     {"code": None}, {"site": "invented.site"},
-    {"site": "cli.session-end.nothing-touched"}, {"class": None},
+    {"site": "session.end.nothing-touched"}, {"class": None},
     {"class": "WriteRefused"}, {"kind": "unknown-command-kind"},
 ])
 def test_control_malformed_command_line_fails(tmp_path, monkeypatch,

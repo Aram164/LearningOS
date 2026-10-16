@@ -25,7 +25,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut {output_stream: stderr}
 $ los shelving-prepare unit-demo-l01
-canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability review.prepare --payload-file ENVELOPE.json` (payload schema: `los capabilities review.prepare --json`; envelope: WORKFLOWS §25c)
+los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability review.prepare --payload-file ENVELOPE.json` (payload schema: `los capabilities review.prepare --json`; envelope: WORKFLOWS §25c)
 [2]
 ```
 
@@ -53,7 +53,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:6b923408af1feb4bb4587330eac002cc4e16673498529b3119e87ea7c1e1d8c8",
+  "snapshot_after": "sha256:4fab1808e6c677b4b436feea02d3812672973bf30164486778eee269fe0c1df9",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -64,7 +64,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:6b923408af1feb4bb4587330eac002cc4e16673498529b3119e87ea7c1e1d8c8",
+    "snapshot_after": "sha256:4fab1808e6c677b4b436feea02d3812672973bf30164486778eee269fe0c1df9",
     "replayed": false
   },
   "error": null
@@ -107,7 +107,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:3764d40da2d4a7f3dcac77a991f1d65ea0db38eff12a0e6c7acbaad32c3a124e",
+  "snapshot_after": "sha256:0fcfcad3d01b5dd600cb2d3ebbd2eb6696794f9b8349ead7ceea43662adc63c9",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -119,7 +119,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:3764d40da2d4a7f3dcac77a991f1d65ea0db38eff12a0e6c7acbaad32c3a124e",
+    "snapshot_after": "sha256:0fcfcad3d01b5dd600cb2d3ebbd2eb6696794f9b8349ead7ceea43662adc63c9",
     "replayed": false
   },
   "error": null
@@ -160,7 +160,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:720bcad2432bb0ff6133532954b032dfea06714449de687e4e6639d7306b031d",
+  "snapshot_after": "sha256:f187438d9d61ce26b0ca5ec9b503571fe6448e4f5bf37a8540bbe1256ccc7028",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -174,7 +174,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:720bcad2432bb0ff6133532954b032dfea06714449de687e4e6639d7306b031d",
+    "snapshot_after": "sha256:f187438d9d61ce26b0ca5ec9b503571fe6448e4f5bf37a8540bbe1256ccc7028",
     "replayed": false
   },
   "error": null
@@ -211,88 +211,14 @@ published generated/manifest.json (atomic contract snapshot)
 
 ```scrut
 $ los session-end
-{
-  "ok": true,
-  "touched": [
-    "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
-    "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-    "knowledge/notes/mathematics/note-shelved-derivation.md",
-    "operations/transactions/idempotency.yaml",
-    "operations/transactions/revisions.yaml",
-    "operations/transactions/transaction-20261001-090000-001.yaml",
-    "operations/transactions/transaction-20261001-090000-002.yaml",
-    "operations/transactions/transaction-20261001-090000-003.yaml"
-  ],
-  "owned_changes": [
-    " M curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    " M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-    " M operations/transactions/revisions.yaml",
-    "?? curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
-    "?? knowledge/notes/mathematics/note-shelved-derivation.md",
-    "?? operations/transactions/idempotency.yaml",
-    "?? operations/transactions/transaction-20261001-090000-001.yaml",
-    "?? operations/transactions/transaction-20261001-090000-002.yaml",
-    "?? operations/transactions/transaction-20261001-090000-003.yaml"
-  ],
-  "unrelated_changes": [
-    "?? operations/diagnostics/traces.jsonl"
-  ],
-  "committed": false,
-  "pushed": false,
-  "validation": "0 error(s), 9 warning(s) * (glob)
-  "ownership_conflicts": [],
-  "session_id": "channel:operator",
-  "client": null,
-  "stale_paths": [],
-  "stale_hours": 24,
-  "other_sessions": {},
-  "session_closed": false
-}
+{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md","curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","knowledge/notes/mathematics/note-shelved-derivation.md","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml","operations/transactions/transaction-20261001-090000-002.yaml","operations/transactions/transaction-20261001-090000-003.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"," M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M operations/transactions/revisions.yaml","?? curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md","?? knowledge/notes/mathematics/note-shelved-derivation.md","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml","?? operations/transactions/transaction-20261001-090000-002.yaml","?? operations/transactions/transaction-20261001-090000-003.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":false}
 ```
 
 ## Close the ownership window without committing
 
 ```scrut
 $ los session-end --close
-{
-  "ok": true,
-  "touched": [
-    "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
-    "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-    "knowledge/notes/mathematics/note-shelved-derivation.md",
-    "operations/transactions/idempotency.yaml",
-    "operations/transactions/revisions.yaml",
-    "operations/transactions/transaction-20261001-090000-001.yaml",
-    "operations/transactions/transaction-20261001-090000-002.yaml",
-    "operations/transactions/transaction-20261001-090000-003.yaml"
-  ],
-  "owned_changes": [
-    " M curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
-    " M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-    " M operations/transactions/revisions.yaml",
-    "?? curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
-    "?? knowledge/notes/mathematics/note-shelved-derivation.md",
-    "?? operations/transactions/idempotency.yaml",
-    "?? operations/transactions/transaction-20261001-090000-001.yaml",
-    "?? operations/transactions/transaction-20261001-090000-002.yaml",
-    "?? operations/transactions/transaction-20261001-090000-003.yaml"
-  ],
-  "unrelated_changes": [
-    "?? operations/diagnostics/traces.jsonl"
-  ],
-  "committed": false,
-  "pushed": false,
-  "validation": "0 error(s), 9 warning(s) * (glob)
-  "ownership_conflicts": [],
-  "session_id": "channel:operator",
-  "client": null,
-  "stale_paths": [],
-  "stale_hours": 24,
-  "other_sessions": {},
-  "session_closed": true
-}
+{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md","curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","knowledge/notes/mathematics/note-shelved-derivation.md","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml","operations/transactions/transaction-20261001-090000-002.yaml","operations/transactions/transaction-20261001-090000-003.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"," M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M operations/transactions/revisions.yaml","?? curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md","?? knowledge/notes/mathematics/note-shelved-derivation.md","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml","?? operations/transactions/transaction-20261001-090000-002.yaml","?? operations/transactions/transaction-20261001-090000-003.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":true}
 ```
 
 ## The session ledger is gone

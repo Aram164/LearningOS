@@ -220,7 +220,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.runtime-session.stale-snapshot
+    site: runtime.session.stale-snapshot
 - id: cli-bad-context
   kind: refusal
   transport: cli
@@ -231,7 +231,7 @@ cases:
   - --context-json
   - not-json
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 - id: cli-unknown-requirement
   kind: refusal
   transport: cli
@@ -240,7 +240,7 @@ cases:
   - --requirement
   - req-nope
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 - id: cli-repair-needs-both
   kind: refusal
   transport: cli
@@ -251,7 +251,7 @@ cases:
   - --previous-json
   - '{}'
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 - id: cli-previous-not-json
   kind: refusal
   transport: cli
@@ -264,7 +264,7 @@ cases:
   - --event
   - minor-mistake
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 - id: cli-previous-bad-shape
   kind: refusal
   transport: cli
@@ -277,7 +277,7 @@ cases:
   - --event
   - minor-mistake
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 - id: cli-previous-stale
   kind: refusal
   transport: cli
@@ -305,7 +305,7 @@ cases:
   - --event
   - minor-mistake
   expect:
-    site: cli.runtime-session.previous-stale
+    site: runtime.session.previous-stale
 - id: cli-previous-bad-event
   kind: refusal
   transport: cli
@@ -334,9 +334,9 @@ cases:
   - --event
   - bogus-event
   expect:
-    site: cli.runtime-session.bad-input
+    site: runtime.session.bad-input
 untriggered:
 - where: tools/learning_os/app/handlers/reads.py:2196
   reason: 'snapshot changed mid-read: a single-threaded read cannot race itself'
-- site: cli.runtime-session.mid-read-stale
+- site: runtime.session.mid-read-stale
   reason: race-only

@@ -41,7 +41,7 @@ cases:
   - dossier
   - unit-nope
   expect:
-    site: cli.dossier.unknown-unit
+    site: dossier.read.unknown-unit
 untriggered:
 - where: tools/learning_os/app/handlers/reads.py:177
   reason: 'unreadable canonical records: the fixture parses cleanly, and no step can
@@ -55,15 +55,15 @@ untriggered:
 - where: tools/learning_os/app/handlers/reads.py:228
   reason: 'dossier build failure: the handler builds its inputs well-shaped, and both
     fixture units build'
-- site: cli.dossier.unreadable-records
+- site: dossier.read.unreadable-records
   reason: fixture-inexpressible
-- site: cli.dossier.no-source-map
+- site: dossier.read.no-source-map
   reason: fixture-inexpressible
-- site: cli.dossier.bad-knowledge-map
+- site: dossier.read.bad-knowledge-map
   reason: fixture-inexpressible
-- site: cli.dossier.build-failed
+- site: dossier.read.build-failed
   reason: fixture-inexpressible
-- site: cli.dossier.stale-snapshot
+- site: dossier.read.stale-snapshot
   reason: race-only
-- site: cli.dossier.read-failed
+- site: dossier.read.read-failed
   reason: os-error-only

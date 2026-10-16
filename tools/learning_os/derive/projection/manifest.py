@@ -244,7 +244,7 @@ def count_inbox_items(root: Path) -> int:
 
 def project_manifest_ai_actions(repo: Repo) -> dict:
     """AI action state remains an optional additive subsystem."""
-    from learning_os.derive.projection.ai_actions import project_ai_actions
+    from learning_os.derive.ai_actions import project_ai_actions
     return project_ai_actions(repo)
 
 

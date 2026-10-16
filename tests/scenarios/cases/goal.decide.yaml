@@ -61,7 +61,7 @@ cases:
   - goal-*
   - --reject
   expect:
-    site: cli.goal.bad-goal-ids
+    site: goal.decide.bad-goal-ids
 - id: blank-id
   kind: refusal
   transport: cli
@@ -70,7 +70,7 @@ cases:
   - with space
   - --reject
   expect:
-    site: cli.goal.bad-goal-ids
+    site: goal.decide.bad-goal-ids
 - id: revisit-needs-defer
   kind: refusal
   transport: cli
@@ -81,7 +81,7 @@ cases:
   - --revisit-on
   - 2026-12-01
   expect:
-    site: cli.goal.revisit-needs-defer
+    site: goal.decide.revisit-needs-defer
 - id: bad-revisit
   kind: refusal
   transport: cli
@@ -92,7 +92,7 @@ cases:
   - --revisit-on
   - someday
   expect:
-    site: cli.goal.bad-revisit
+    site: goal.decide.bad-revisit
 - id: past-revisit
   kind: refusal
   transport: cli
@@ -103,7 +103,7 @@ cases:
   - --revisit-on
   - 2026-01-01
   expect:
-    site: cli.goal.past-revisit
+    site: goal.decide.past-revisit
 - id: unknown-goal
   kind: refusal
   transport: cli
@@ -112,7 +112,7 @@ cases:
   - goal-nope
   - --reject
   expect:
-    site: cli.goal.unknown-goal
+    site: goal.decide.unknown-goal
 - id: batch-needs-sha
   kind: refusal
   transport: cli
@@ -122,7 +122,7 @@ cases:
   - goal-demo-rejected
   - --reject
   expect:
-    site: cli.goal.batch-needs-review
+    site: goal.decide.batch-needs-review
 untriggered:
 - where: tools/learning_os/app/handlers/goals.py:134
   reason: 'unreadable goal ledger: needs permissions no step can set'
@@ -137,13 +137,13 @@ untriggered:
     can corrupt them'
 - where: tools/learning_os/app/handlers/goals.py:298
   reason: 'corrupt own session ledger: needs a pre-existing corrupt session file'
-- site: cli.goal.unreadable-ledger
+- site: goal.decide.unreadable-ledger
   reason: os-error-only
-- site: cli.goal.malformed-ledger
+- site: goal.decide.malformed-ledger
   reason: fixture-inexpressible
-- site: cli.goal.unreadable-session
+- site: goal.decide.unreadable-session
   reason: fixture-inexpressible
-- site: cli.goal.not-admitted
+- site: goal.decide.not-admitted
   reason: fixture-inexpressible
-- site: cli.goal.invalid-ledger
+- site: goal.decide.invalid-ledger
   reason: fixture-inexpressible

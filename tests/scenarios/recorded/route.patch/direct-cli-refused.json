@@ -6,36 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\"schema_version\":1,\"unit_id\":\"unit-demo-l01\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"changes\":{\"angle\":{\"before\":\"Derives the weighted sum and works a discrete example.\",\"after\":\"Scenario characterization angle.\"}},\"plan_sha256\":\"sha256:50a79e3fd996e71f5c562cbdce8dd09613a1789af043da1dfb33ae55d2f04a7a\",\"affected_files\":[\"curriculum/modules/module-demo/source-map.yaml\",\"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"],\"artifact_ids\":[\"module-demo\",\"study-map-demo-l01\",\"unit-demo-l01\"],\"expected_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"ok\":false,\"errors\":[\"canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability route.patch --payload-file ENVELOPE.json` (payload schema: `los capabilities route.patch --json`; envelope: WORKFLOWS §25c)\"]}\n",
-  "stdout_json": {
-    "affected_files": [
-      "curriculum/modules/module-demo/source-map.yaml",
-      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
-    ],
-    "artifact_ids": [
-      "module-demo",
-      "study-map-demo-l01",
-      "unit-demo-l01"
-    ],
-    "changes": {
-      "angle": {
-        "after": "Scenario characterization angle.",
-        "before": "Derives the weighted sum and works a discrete example."
-      }
-    },
-    "errors": [
-      "canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability route.patch --payload-file ENVELOPE.json` (payload schema: `los capabilities route.patch --json`; envelope: WORKFLOWS §25c)"
-    ],
-    "expected_revisions": {
-      "module-demo": 0,
-      "study-map-demo-l01": 0,
-      "unit-demo-l01": 3
-    },
-    "ok": false,
-    "plan_sha256": "sha256:50a79e3fd996e71f5c562cbdce8dd09613a1789af043da1dfb33ae55d2f04a7a",
-    "route_id": "route-b2f1f80014860a929a3af0bc",
-    "schema_version": 1,
-    "unit_id": "unit-demo-l01"
-  }
+  "stderr": "los: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability route.patch --payload-file ENVELOPE.json` (payload schema: `los capabilities route.patch --json`; envelope: WORKFLOWS §25c)\n",
+  "stdout": "",
+  "stdout_json": null
 }

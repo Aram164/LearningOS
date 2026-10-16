@@ -47,7 +47,9 @@ def _operations(mini: Path, *args: str):
     proc = subprocess.run(
         [sys.executable, str(LOS), "--root", str(mini), "operations", *args],
         capture_output=True, text=True, timeout=120)
-    return proc.returncode, json.loads(proc.stdout)
+    if proc.returncode:
+        assert proc.stdout == ""
+    return proc.returncode, json.loads(proc.stderr if proc.returncode else proc.stdout)
 
 
 def test_empty_store_lists_nothing(tmp_path: Path):

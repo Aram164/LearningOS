@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"check\": true,\n  \"records\": 1,\n  \"diff\": [\n    {\n      \"id\": \"source-demo-book\",\n      \"action\": \"correct\",\n      \"partition\": \"sources.yaml\",\n      \"fields\": {\n        \"title\": {\n          \"before\": \"Demo Book\",\n          \"after\": \"Scenario Title\"\n        }\n      }\n    }\n  ],\n  \"diff_sha256\": \"sha256:7adf5d3adb3985bdc47def97ae52ed95b9ad156268a1c47671157f80481b1dc0\",\n  \"expected_revisions\": {\n    \"source-demo-book\": 0\n  },\n  \"artifact_ids\": [\n    \"source-demo-book\"\n  ]\n}\n",
+  "stdout": "{\"ok\":true,\"check\":true,\"records\":1,\"diff\":[{\"id\":\"source-demo-book\",\"action\":\"correct\",\"partition\":\"sources.yaml\",\"fields\":{\"title\":{\"before\":\"Demo Book\",\"after\":\"Scenario Title\"}}}],\"diff_sha256\":\"sha256:7adf5d3adb3985bdc47def97ae52ed95b9ad156268a1c47671157f80481b1dc0\",\"expected_revisions\":{\"source-demo-book\":0},\"artifact_ids\":[\"source-demo-book\"]}\n",
   "stdout_json": {
     "artifact_ids": [
       "source-demo-book"

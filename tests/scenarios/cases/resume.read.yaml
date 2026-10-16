@@ -50,7 +50,7 @@ cases:
   - --unit
   - unit-nope
   expect:
-    site: cli.resume.no-study-option
+    site: resume.read.no-study-option
 - id: unit-without-study
   kind: refusal
   transport: cli
@@ -59,14 +59,14 @@ cases:
   - --unit
   - unit-demo-l01
   expect:
-    site: cli.resume.unit-without-study
+    site: resume.read.unit-without-study
 untriggered:
 - where: tools/learning_os/app/handlers/reads.py:2036
   reason: 'unresolvable stage: the fixture pointer resolves, and no step can break
     it'
 - where: tools/learning_os/app/handlers/reads.py:2124
   reason: 'dossier build failure: needs dossier-breaking data no step can author'
-- site: cli.resume.no-resumable-stage
+- site: resume.read.no-resumable-stage
   reason: fixture-inexpressible
-- site: cli.resume.dossier-build-failed
+- site: resume.read.dossier-build-failed
   reason: fixture-inexpressible

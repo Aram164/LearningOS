@@ -31,7 +31,7 @@ cases:
   - --result
   - partial
   expect:
-    site: cli.observe.unknown-requirement
+    site: learner.observe.unknown-requirement
 - id: untargeted-stage
   kind: refusal
   transport: cli
@@ -43,7 +43,7 @@ cases:
   - --result
   - partial
   expect:
-    site: cli.observe.unknown-requirement
+    site: learner.observe.unknown-requirement
 - id: targeted-stage
   kind: refusal
   transport: cli
@@ -55,7 +55,7 @@ cases:
   - --result
   - partial
   expect:
-    site: cli.observe.unknown-requirement
+    site: learner.observe.unknown-requirement
 - id: workspace-scope
   kind: refusal
   transport: cli
@@ -69,7 +69,7 @@ cases:
   - --result
   - partial
   expect:
-    site: cli.observe.unresolved-workspace
+    site: learner.observe.unresolved-workspace
 - id: condition-both-ways
   kind: refusal
   transport: cli
@@ -106,7 +106,7 @@ untriggered:
 - where: tools/learning_os/app/handlers/learner.py:1410
   reason: 'collect_requirements failure: needs a malformed runtime_target; rich_world
     carries one valid target'
-- site: cli.observe.not-admitted
+- site: learner.observe.not-admitted
   reason: fixture-inexpressible
-- site: cli.observe.invalid-target
+- site: learner.observe.invalid-target
   reason: fixture-inexpressible

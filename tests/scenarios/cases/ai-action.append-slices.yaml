@@ -160,7 +160,7 @@ cases:
     - --reason
     - cover the worked example on pp. 21-24
   expect:
-    site: cli.ai-action-append-slices.unknown-route
+    site: ai-action.append-slices.unknown-route
 - id: unknown-concept
   kind: sequence
   steps:
@@ -195,7 +195,7 @@ cases:
     - --reason
     - cover the worked example on pp. 21-24
   expect:
-    site: cli.ai-action-append-slices.unknown-concept
+    site: ai-action.append-slices.unknown-concept
 - id: append-success-with-concepts
   kind: sequence
   a5_base: true

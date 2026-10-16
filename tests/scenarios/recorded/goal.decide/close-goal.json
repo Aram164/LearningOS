@@ -7,7 +7,7 @@
         "KEY1": {
           "capability": "goal.decision.record",
           "channel": "operator",
-          "intent_sha256": "sha256:54c83007603d70407f86e9e430e17ed13e9bc4caca540c1de072b45ce6534705",
+          "intent_sha256": "sha256:e32e71b1f1ffd86d7f27a19520b27419f87df43368f81dc72fc457e313095229",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -57,11 +57,11 @@
       "request": {
         "approval": {
           "kind": "direct-user-gesture",
-          "subject_sha256": "sha256:54c83007603d70407f86e9e430e17ed13e9bc4caca540c1de072b45ce6534705"
+          "subject_sha256": "sha256:e32e71b1f1ffd86d7f27a19520b27419f87df43368f81dc72fc457e313095229"
         },
         "channel": "operator",
         "idempotency_key": "KEY1",
-        "intent_sha256": "sha256:54c83007603d70407f86e9e430e17ed13e9bc4caca540c1de072b45ce6534705",
+        "intent_sha256": "sha256:e32e71b1f1ffd86d7f27a19520b27419f87df43368f81dc72fc457e313095229",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -109,13 +109,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "886019bad14928a963a63ff5d259a964c77f5bb6356383c1a6de804798edacae",
+          "sha256": "295b5dac2b71905590691b657fb863f7b5c7e4ba7024add6fc72dbc5c20ff5fe",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "2c25bd98ca36a5c0e8880263e229869ba462e9cba105b53c189e21969be78349",
+          "sha256": "55db000399d10a7513d012680810285459b162b0f8755f7726761f30259fb6cd",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -134,7 +134,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\"ok\": true, \"state\": \"closed\", \"goal_id\": \"goal-demo-deferred\"}\n",
+  "stdout": "{\"ok\":true,\"state\":\"closed\",\"goal_id\":\"goal-demo-deferred\"}\n",
   "stdout_json": {
     "goal_id": "goal-demo-deferred",
     "ok": true,

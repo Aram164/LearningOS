@@ -182,6 +182,8 @@ def test_a_refused_query_reports_its_reason_as_json(repo_root: Path):
     result = _plan_template(repo_root, "curriculum", "--title", "Example plan", "--json")
     assert result.returncode == 2
     assert result.stdout == "", result.stdout
-    assert result.stderr.startswith(
-        "los: INVALID_REQUEST: cannot build plan template: "), result.stderr
-    assert "unit_id" in result.stderr
+    error = json.loads(result.stderr)["error"]
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["retryable"] is False
+    assert error["message"].startswith("cannot build plan template: ")
+    assert "unit_id" in error["message"]

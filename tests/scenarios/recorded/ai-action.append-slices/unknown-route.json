@@ -20,7 +20,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-append-unknown-route\",\n    \"action_id\": \"unit.compare-materials\",\n    \"target\": {\n      \"kind\": \"unit\",\n      \"id\": \"unit-demo-l01\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-append-unknown-route\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/ai-request-append-unknown-route\"\n}\n",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"ai-request-append-unknown-route\",\"action_id\":\"unit.compare-materials\",\"target\":{\"kind\":\"unit\",\"id\":\"unit-demo-l01\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/ai-request-append-unknown-route\"},\"bundle_path\":\"operations/ai-actions/requests/ai-request-append-unknown-route\"}\n",
       "stdout_json": {
         "bundle_path": "operations/ai-actions/requests/ai-request-append-unknown-route",
         "ok": true,

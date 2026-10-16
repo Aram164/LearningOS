@@ -370,7 +370,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
     if not gesture_allowed(OBSERVE_CAPABILITY):
         raise WriteRefused(
             "the direct observation path is not admitted",
-            site="cli.observe.not-admitted",
+            site="learner.observe.not-admitted",
             prefixed=True,
             exit_code=2,
         )
@@ -381,7 +381,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
     except RuntimeInputError as exc:
         raise WriteRefused(
             str(exc),
-            site="cli.observe.invalid-target",
+            site="learner.observe.invalid-target",
             prefixed=True,
             exit_code=2,
         ) from exc
@@ -392,7 +392,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
             repo, requirements, req["requirement"])
         raise WriteRefused(
             message,
-            site="cli.observe.unknown-requirement",
+            site="learner.observe.unknown-requirement",
             prefixed=True,
             exit_code=2,
         )
@@ -401,7 +401,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
     if workspace is None:
         raise WriteRefused(
             refusal,
-            site="cli.observe.unresolved-workspace",
+            site="learner.observe.unresolved-workspace",
             prefixed=True,
             exit_code=2,
         )

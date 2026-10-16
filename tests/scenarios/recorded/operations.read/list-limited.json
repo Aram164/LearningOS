@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"operations\": []\n}\n",
+  "stdout": "{\"operations\":[]}\n",
   "stdout_json": {
     "operations": []
   }

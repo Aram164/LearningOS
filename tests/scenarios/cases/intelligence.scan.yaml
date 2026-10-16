@@ -51,7 +51,7 @@ cases:
   - --days
   - -1
   expect:
-    site: cli.intelligence-scan.negative-days
+    site: intelligence.scan.negative-days
 - id: unreadable-feed
   kind: refusal
   transport: cli
@@ -60,7 +60,7 @@ cases:
   - --feed
   - work/inbox/nope.json
   expect:
-    site: cli.intelligence-scan.unreadable-feed
+    site: intelligence.scan.unreadable-feed
 - id: feed-dup-keys
   kind: refusal
   transport: cli
@@ -69,7 +69,7 @@ cases:
   - --feed
   - <CASEDATA>/feed.json
   expect:
-    site: cli.intelligence-scan.malformed-feed
+    site: intelligence.scan.malformed-feed
 - id: feed-not-json
   kind: refusal
   transport: cli
@@ -78,7 +78,7 @@ cases:
   - --feed
   - <CASEDATA>/feed.json
   expect:
-    site: cli.intelligence-scan.feed-not-json
+    site: intelligence.scan.feed-not-json
 - id: feed-bad-shape
   kind: refusal
   transport: cli
@@ -87,7 +87,7 @@ cases:
   - --feed
   - <CASEDATA>/feed.json
   expect:
-    site: cli.intelligence-scan.invalid-feed
+    site: intelligence.scan.invalid-feed
 untriggered:
 - where: tools/learning_os/app/handlers/reads.py:1013
   reason: 'unreadable Git history: the seam supplies an empty history; needs corrupt
@@ -95,7 +95,7 @@ untriggered:
 - where: tools/learning_os/app/handlers/reads.py:1019
   reason: 'rank failure: the fixture scans and ranks cleanly; needs malformed repo
     data'
-- site: cli.intelligence-scan.git-history
+- site: intelligence.scan.git-history
   reason: fixture-inexpressible
-- site: cli.intelligence-scan.unrankable-queue
+- site: intelligence.scan.unrankable-queue
   reason: fixture-inexpressible

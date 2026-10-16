@@ -32,7 +32,7 @@ Work in its stages while preserving independent state for every other unit.
 
 ```scrut {output_stream: stderr}
 $ los unit-source-selection unit-demo-l02 source-demo-book lecture-02.pdf remove
-canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability unit.source-selection.set --payload-file ENVELOPE.json` (payload schema: `los capabilities unit.source-selection.set --json`; envelope: WORKFLOWS §25c)
+los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability unit.source-selection.set --payload-file ENVELOPE.json` (payload schema: `los capabilities unit.source-selection.set --json`; envelope: WORKFLOWS §25c)
 [2]
 ```
 
@@ -56,7 +56,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:4d17f0e43af79be926096478f6403c353d79ad6feaa7dd0677cf98326dfe999c",
+  "snapshot_after": "sha256:ea2d67cb6cfa1366b4df2212ac215d5794a908e1d9eb9c706e38cc1dc911cbc8",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -68,7 +68,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
     "artifact_revisions": {
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:4d17f0e43af79be926096478f6403c353d79ad6feaa7dd0677cf98326dfe999c",
+    "snapshot_after": "sha256:ea2d67cb6cfa1366b4df2212ac215d5794a908e1d9eb9c706e38cc1dc911cbc8",
     "replayed": false
   },
   "error": null
@@ -107,7 +107,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:0d02648b47508833943043c88a574d04c1f49f272c961be0cb128746b2cd77a8",
+  "snapshot_after": "sha256:e5e9a3a48670529195446b077e5ed311b550d72c5cf3a7da7969b6078b2d588c",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -119,7 +119,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
     "artifact_revisions": {
       "unit-demo-l02": 2
     },
-    "snapshot_after": "sha256:0d02648b47508833943043c88a574d04c1f49f272c961be0cb128746b2cd77a8",
+    "snapshot_after": "sha256:e5e9a3a48670529195446b077e5ed311b550d72c5cf3a7da7969b6078b2d588c",
     "replayed": false
   },
   "error": null

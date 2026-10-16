@@ -20,7 +20,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"KEY1\",\n    \"action_id\": \"unit.compare-materials\",\n    \"target\": {\n      \"kind\": \"unit\",\n      \"id\": \"unit-demo-l01\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n}\n",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"unit.compare-materials\",\"target\":{\"kind\":\"unit\",\"id\":\"unit-demo-l01\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
       "stdout_json": {
         "bundle_path": "operations/ai-actions/requests/KEY1",
         "ok": true,
@@ -66,7 +66,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"continuation\": {\n    \"request_id\": \"KEY1\",\n    \"route_id\": \"route-b2f1f80014860a929a3af0bc\",\n    \"pass\": 2,\n    \"bundle_path\": \"attachments/slices/route-b2f1f80014860a929a3af0bc--pass2.md\",\n    \"pages\": [\n      21,\n      22,\n      23,\n      24\n    ],\n    \"page_total\": 24\n  }\n}\n",
+      "stdout": "{\"ok\":true,\"continuation\":{\"request_id\":\"KEY1\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"pass\":2,\"bundle_path\":\"attachments/slices/route-b2f1f80014860a929a3af0bc--pass2.md\",\"pages\":[21,22,23,24],\"page_total\":24}}\n",
       "stdout_json": {
         "continuation": {
           "bundle_path": "attachments/slices/route-b2f1f80014860a929a3af0bc--pass2.md",

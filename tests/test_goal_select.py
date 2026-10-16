@@ -145,7 +145,8 @@ def test_goal_unknown_carries_typed_details(mini_repo: Path):
     typo = goal_id[:-1] + ("X" if not goal_id.endswith("X") else "Y")
     proc = run_los(mini_repo, "goal", typo, "--reject", "--json")
     assert proc.returncode == 2
-    error = json.loads(proc.stdout)["error"]
+    assert proc.stdout == ""
+    error = json.loads(proc.stderr)["error"]
     assert error["code"] == "INVALID_REQUEST"
     assert error["retryable"] is False
     assert error["message"] == not_found(
@@ -178,7 +179,7 @@ def test_goal_scan_failure_degrades_to_ledger_only(mini_repo: Path, monkeypatch)
     first = not_found("goal", "bogus-id", ["g-ledger"])
     assert str(exc) == diag
     assert exc.extra_stderr == (f"los: {first}",)
-    assert exc.site == "cli.goal.unknown-goal"
+    assert exc.site == "goal.decide.unknown-goal"
     assert exc.gateway_message == f"los: {diag}\nlos: {first}"
     assert exc.exit_code == 2
     assert exc.reason == "NOT_FOUND"

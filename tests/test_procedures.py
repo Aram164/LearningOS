@@ -262,13 +262,13 @@ from learning_os.app.registry import REGISTRY, register
 OPERATION = %r
 
 
-def _reading(probe: Path, payload: dict) -> dict:
+def _reading(probe: Path, payload: dict) -> str:
     with open(probe, encoding="utf-8") as handle:
-        return {"saw": handle.read()}
+        return "saw " + handle.read()
 
 
-def _pure(probe: Path, payload: dict) -> dict:
-    return {"saw": "nothing"}
+def _pure(probe: Path, payload: dict) -> str:
+    return "saw nothing"
 
 
 def main() -> int:
@@ -277,13 +277,14 @@ def main() -> int:
     render = _reading if sys.argv[3] == "read" else _pure
 
     def handler(ctx, req):
-        return Result({"echo": "x"},
-                      finish=lambda payload: render(probe, payload))
+        return Result({"echo": "x"})
 
-    register(OPERATION, kind="query")(handler)
+    # The operation's human renderer runs under the render marker (OD4).
+    register(OPERATION, kind="query",
+             human=lambda payload: render(probe, payload))(handler)
     try:
         outcome = run_cli(
-            root, OPERATION, argparse.Namespace(root=str(root), json=True))
+            root, OPERATION, argparse.Namespace(root=str(root), json=False))
     finally:
         REGISTRY.pop(OPERATION, None)
     sys.stdout.write(outcome.stdout)
@@ -343,8 +344,8 @@ def test_procedure_child_audit_marks_render_io(mini_repo, tmp_path):
     _proc, records, token = _run_probe_child(mini_repo, tmp_path, "read")
     _assert_probe_witnesses(records, token)
     assert render_violations(records) == [
-        f"A18 {PROBE_OP}::finish::open: renderer performed audited I/O",
-        f"A18 {PROBE_OP}::finish::open: renderer performed audited I/O",
+        f"A18 {PROBE_OP}::human::open: renderer performed audited I/O",
+        f"A18 {PROBE_OP}::human::open: renderer performed audited I/O",
     ]
 
 

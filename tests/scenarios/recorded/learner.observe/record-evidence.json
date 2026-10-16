@@ -1,6 +1,6 @@
 {
   "canonical_changed": {
-    "work/active/workspace-demo/observations.jsonl": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48"
+    "work/active/workspace-demo/observations.jsonl": "ccf9b6e9c29506470d67873403af9cb531b9e0d34d7fbfeee1fd2e6c8a2ebb62"
   },
   "exit": 0,
   "idempotency_changed": {
@@ -9,7 +9,7 @@
         "KEY1": {
           "capability": "learner.observation.append",
           "channel": "operator",
-          "intent_sha256": "sha256:afe439d6f13ead2c16b137b1e362995d986a0cc4b78fe6695db8dbb667e621ec",
+          "intent_sha256": "sha256:13863216ebc3ecb8e8ee5b30167c3410f444138b2e68abe09026b67f6c087de6",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -53,17 +53,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:07ca0a90f4e8c7ded330df0a3d247e5d34face67137efdba01339ec9d4db6e59",
+        "data_roots_sha256": "sha256:b03eae1e9501f62c4da38882e71d9a8215ff39db227387e7cba1da260054fcf2",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "direct-user-gesture",
-          "subject_sha256": "sha256:afe439d6f13ead2c16b137b1e362995d986a0cc4b78fe6695db8dbb667e621ec"
+          "subject_sha256": "sha256:13863216ebc3ecb8e8ee5b30167c3410f444138b2e68abe09026b67f6c087de6"
         },
         "channel": "operator",
         "idempotency_key": "KEY1",
-        "intent_sha256": "sha256:afe439d6f13ead2c16b137b1e362995d986a0cc4b78fe6695db8dbb667e621ec",
+        "intent_sha256": "sha256:13863216ebc3ecb8e8ee5b30167c3410f444138b2e68abe09026b67f6c087de6",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -75,7 +75,7 @@
         {
           "created": true,
           "path": "work/active/workspace-demo/observations.jsonl",
-          "sha256_after": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48",
+          "sha256_after": "ccf9b6e9c29506470d67873403af9cb531b9e0d34d7fbfeee1fd2e6c8a2ebb62",
           "sha256_before": null
         }
       ]
@@ -105,13 +105,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "59fcb6c85c1ec13a680efc3c4a3b6354de0a7937932437f1925b506e88c888f8",
+          "sha256": "ffd7e7385924702eeab019c91f87222dcf4025f43fb422afadfb0cae2b14c453",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "51188734cf4eacccc3bfa662820e88ee449dc71d17462356bb64f47fe65963f3",
+          "sha256": "645b9ec1e9f2a804b55320ab458af46b4254be5f3c6e8beacc2e2325f42a8739",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -123,7 +123,7 @@
         "work/active/workspace-demo/observations.jsonl": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48",
+          "sha256": "ccf9b6e9c29506470d67873403af9cb531b9e0d34d7fbfeee1fd2e6c8a2ebb62",
           "state": "file"
         }
       },
@@ -136,13 +136,13 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\"ok\": true, \"observation_id\": \"observation-5863954f4fdf490abfebb95ab2365cf5\", \"workspace_id\": \"workspace-demo\", \"unstated_conditions\": [\"unfamiliar-example\"], \"interpretation_notice\": \"this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record \\u2014 los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-5863954f4fdf490abfebb95ab2365cf5 \\u2014 adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.\", \"transaction_id\": \"TX1\", \"receipt_path\": \"operations/transactions/TX1.yaml\", \"artifact_revisions\": {\"workspace-demo\": 1}, \"snapshot_after\": \"SNAP1\", \"replayed\": false}\n",
+  "stdout": "{\"ok\":true,\"observation_id\":\"observation-24ab83f9ee345b673f005eebac9a7bbc\",\"workspace_id\":\"workspace-demo\",\"unstated_conditions\":[\"unfamiliar-example\"],\"interpretation_notice\":\"this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-24ab83f9ee345b673f005eebac9a7bbc — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.\",\"transaction_id\":\"TX1\",\"receipt_path\":\"operations/transactions/TX1.yaml\",\"artifact_revisions\":{\"workspace-demo\":1},\"snapshot_after\":\"SNAP1\",\"replayed\":false}\n",
   "stdout_json": {
     "artifact_revisions": {
       "workspace-demo": 1
     },
-    "interpretation_notice": "this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-5863954f4fdf490abfebb95ab2365cf5 — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.",
-    "observation_id": "observation-5863954f4fdf490abfebb95ab2365cf5",
+    "interpretation_notice": "this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-24ab83f9ee345b673f005eebac9a7bbc — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.",
+    "observation_id": "observation-24ab83f9ee345b673f005eebac9a7bbc",
     "ok": true,
     "receipt_path": "operations/transactions/TX1.yaml",
     "replayed": false,

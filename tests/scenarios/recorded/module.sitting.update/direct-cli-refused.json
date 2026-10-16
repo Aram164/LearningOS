@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability module.sitting.update --payload-file ENVELOPE.json` (payload schema: `los capabilities module.sitting.update --json`; envelope: WORKFLOWS §25c)\n",
+  "stderr": "los: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability module.sitting.update --payload-file ENVELOPE.json` (payload schema: `los capabilities module.sitting.update --json`; envelope: WORKFLOWS §25c)\n",
   "stdout": "",
   "stdout_json": null
 }

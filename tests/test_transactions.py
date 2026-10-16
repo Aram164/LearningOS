@@ -16,7 +16,7 @@ from repo_builders import add_curriculum
 import learning_os.app.commit as ops_commit
 import learning_os.app.context as context_module
 import learning_os.app.lock as plumbing_support
-import learning_os.derive.projection.ai_actions as ai_projection
+import learning_os.derive.ai_actions as ai_projection
 import learning_os.store.fingerprint as fingerprint_module
 import learning_os.store.session_ledger as session_support
 import learning_os.store.transactions as transaction_module

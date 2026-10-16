@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: cannot build plan template: curriculum profile requires unit_id and module_id\n",
+  "stderr": "{\"error\":{\"code\":\"INVALID_REQUEST\",\"message\":\"cannot build plan template: curriculum profile requires unit_id and module_id\",\"retryable\":false,\"details\":{}}}\n",
   "stdout": "",
   "stdout_json": null
 }

@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 1,\n  \"type\": \"legacy-archive-status\",\n  \"available\": false,\n  \"lock\": null\n}\n",
+  "stdout": "{\"schema_version\":1,\"type\":\"legacy-archive-status\",\"available\":false,\"lock\":null}\n",
   "stdout_json": {
     "available": false,
     "lock": null,

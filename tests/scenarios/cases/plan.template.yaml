@@ -46,7 +46,7 @@ cases:
   - --title
   - Variance
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 - id: empty-title
   kind: refusal
   transport: cli
@@ -60,7 +60,7 @@ cases:
   - --module-id
   - module-demo
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 - id: missing-ids-json
   kind: refusal
   transport: cli
@@ -71,7 +71,7 @@ cases:
   - Variance
   - --json
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 - id: cli-yaml
   kind: success
   transport: cli
@@ -114,7 +114,7 @@ cases:
   - --module-id
   - module-demo
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 - id: cli-missing-ids
   kind: refusal
   transport: cli
@@ -124,7 +124,7 @@ cases:
   - --title
   - Scenario Template
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 - id: cli-missing-ids-json
   kind: refusal
   transport: cli
@@ -135,10 +135,10 @@ cases:
   - Scenario Template
   - --json
   expect:
-    site: cli.plan-template.bad-template
+    site: plan.template.bad-template
 untriggered:
 - where: tools/learning_os/app/handlers/plan.py:1543
   reason: 'response violates its own schema: the producer-owned shape validates for
     every fixture input'
-- site: cli.plan-template.bad-response
+- site: plan.template.bad-response
   reason: fixture-inexpressible

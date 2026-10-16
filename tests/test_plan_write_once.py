@@ -190,7 +190,10 @@ def test_route_patch_error_refusal_matches_check(mini_repo: Path, tmp_path: Path
     assert code == 2
     assert body["ok"] is False
     assert body["error"]["code"] == "VALIDATION_FAILED"
-    assert body["error"]["message"] == check_text
+    # B1 renders the same complete diagnostics as lines at apply time.
+    assert body["error"]["message"] == "canonical validation failed\n" + (
+        check_text.removeprefix("canonical validation failed: ")
+        .replace("; E ", "\nE ").replace("; W ", "\nW "))
     assert canonical_fingerprint(mini_repo) == before
 
 
@@ -244,7 +247,10 @@ def test_route_patch_warning_refusal_matches_check(mini_repo: Path, tmp_path: Pa
     assert code == 2
     assert body["ok"] is False
     assert body["error"]["code"] == "VALIDATION_FAILED"
-    assert body["error"]["message"] == check_text
+    # B1 renders the same complete diagnostics as lines at apply time.
+    assert body["error"]["message"] == "canonical validation failed\n" + (
+        check_text.removeprefix("canonical validation failed: ")
+        .replace("; E ", "\nE ").replace("; W ", "\nW "))
     assert canonical_fingerprint(mini_repo) == before
 
 

@@ -1133,6 +1133,6 @@ class AIActionService:
         # Compatibility method for callers that already hold a service. The
         # read model itself lives in the dependency-light projection module so
         # manifest generation never imports this write orchestrator.
-        from learning_os.derive.projection.ai_actions import manifest_ai_projection
+        from learning_os.derive.ai_actions import manifest_ai_projection
 
         return manifest_ai_projection(self.root)

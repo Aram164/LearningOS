@@ -4,9 +4,9 @@ For every registered operation, on its scenario cases: the real
 generated parser accepts ``--json`` for its subcommand; every gateway
 refusal recording's whole stdout validates against the resultV2
 envelope and its error member against that schema's error definition;
-every CLI refusal recording's stdout is empty, an error object, or
-the (bd) legacy stream of a commit-refused unit whose handler module
-passes ``refused_stdout``; and every refusal unit re-run live yields
+every CLI refusal recording's stdout is empty or an error object
+(6.B.1 retired the (bd) refused_stdout stream); and every refusal unit
+re-run live yields
 exactly one witness line deciding the exit (SPEC (bf) item 8).
 Unregistered operations are baselined ``operation::*`` exceptions,
 the same derivation as A5, asserted equal in both directions.
@@ -14,7 +14,6 @@ the same derivation as A5, asserted equal in both directions.
 
 from __future__ import annotations
 
-import ast
 import json
 import os
 from pathlib import Path
@@ -395,33 +394,6 @@ def _is_cli_error_object(stdout: str) -> bool:
     return not list(_cli_error_validator().iter_errors(whole))
 
 
-def _handler_module_has_refused_stdout(operation: str) -> bool:
-    """AST: the handler's module passes ``Result(..., refused_stdout=...)``.
-
-    A ``None`` value passes nothing, as in the A18 population rule.
-    """
-    module = REGISTRY[operation].handler.__module__
-    assert module.startswith("learning_os.app.handlers."), module
-    path = HANDLERS_DIR / (module.rsplit(".", 1)[1] + ".py")
-    tree = ast.parse(path.read_text(encoding="utf-8"))
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call):
-            continue
-        func = node.func
-        last = func.id if isinstance(func, ast.Name) else (
-            func.attr if isinstance(func, ast.Attribute) else None)
-        if last != "Result":
-            continue
-        for keyword in node.keywords:
-            if keyword.arg != "refused_stdout":
-                continue
-            if isinstance(keyword.value, ast.Constant) \
-                    and keyword.value.value is None:
-                continue
-            return True
-    return False
-
-
 def _check_cli_refusal_stdout(label: str, operation: str,
                               recorded_stdout: str,
                               line: dict | None,
@@ -429,11 +401,9 @@ def _check_cli_refusal_stdout(label: str, operation: str,
     """Item 8.3 plus (ct) 2: ordinary shape or the diagnostic report.
 
     A ``diagnostic-failure`` unit's stdout is the rendered JSON report
-    object, byte-identical live and recorded. Every other non-empty
-    non-error-object stdout needs the (bd) legacy stream: allowed only
-    for a ``commit-refused`` unit of an operation whose registered
-    handler module passes ``refused_stdout``. Every other CLI refusal
-    stdout is empty or an error object.
+    object, byte-identical live and recorded. Every other CLI refusal
+    stdout is empty or an error object: 6.B.1 retired the (bd)
+    ``refused_stdout`` legacy stream, so no operation is allowed one.
     """
     if line is not None and line.get("kind") == "diagnostic-failure":
         try:
@@ -450,14 +420,9 @@ def _check_cli_refusal_stdout(label: str, operation: str,
             f"A7 {label}: diagnostic live stdout differs from "
             f"recorded — {FIX}")
         return
-    if not recorded_stdout or _is_cli_error_object(recorded_stdout):
-        return
-    assert line is not None and line.get("kind") == "commit-refused", (
-        f"A7 {label}: CLI stdout is not an error object and the unit "
-        f"is not commit-refused — {FIX}")
-    assert _handler_module_has_refused_stdout(operation), (
-        f"A7 {label}: CLI stdout is not an error object and "
-        f"{operation} passes no refused_stdout — {FIX}")
+    assert not recorded_stdout or _is_cli_error_object(recorded_stdout), (
+        f"A7 {label}: CLI refusal stdout is neither empty nor an error "
+        f"object — {FIX}")
 
 
 def _check_command_failure_streams(label: str, operation: str,
@@ -638,11 +603,6 @@ def _check_json_accepted(operation: str) -> None:
         raise AssertionError(
             f"A7 {operation}: the real parser rejects {argv!r} — {FIX}"
         ) from exc
-    if operation in {"projection.generate", "repository.validate"}:
-        # SPEC (cx) D9 / (cy) R6 preserves the raw tool interface.
-        with pytest.raises(SystemExit):
-            parser.parse_args([argv[0], "--json", *argv[1:]])
-        return
     flagged = list(argv)
     flagged.insert(1, "--json")
     try:
@@ -882,12 +842,12 @@ NO_REFUSAL_UNIT = {
     "ai-action.list": ("no refusal raise in the handler closure: list_actions "
                            "only projects the action registry"),
     "program.list": "no refusal raise in the handler closure",
-    "status.read": ("only refusal is cli.status.unreadable-records, unreachable "
+    "status.read": ("only refusal is status.read.unreadable-records, unreachable "
                    "from inputs: parse failures need corrupt canonical records "
                    "and no status input writes records"),
     "health.report": ("no refusal raise in the handler closure: "
                            "health_report only builds the report"),
-    "inbox.list": ("only refusal is cli.inbox-list.list-failed, unreachable "
+    "inbox.list": ("only refusal is inbox.list.list-failed, unreachable "
                         "from inputs: listing work/inbox fails only on OSError"),
     "legacy.archive.status": ("no refusal raise in the handler closure: "
                                    "legacy_archive_status only loads the "
@@ -1071,32 +1031,29 @@ def test_control_malformed_direct_shape_fails():
                          [sited], "capture.create")
 
 
-def _a_refused_stdout() -> str:
-    return json.loads((RECORDED_DIR / "route.patch"
-                       / "direct-cli-refused.json").read_text(
-                           encoding="utf-8"))["stdout"]
+#: The retired (bd) legacy stream: route.patch's refused stdout before 6.B.1.
+_LEGACY_STREAM = ('{"schema_version":1,"unit_id":"unit-demo-l01","ok":false,'
+                  '"errors":["canonical writes must use GatewayEnvelopeV2"]}\n')
 
 
-def test_control_non_error_stdout_without_refused_stdout_fails():
-    with pytest.raises(AssertionError, match="passes no refused_stdout"):
+def test_control_legacy_stream_on_commit_refused_fails():
+    """Even the operation that once had the allowance is refused now."""
+    with pytest.raises(AssertionError, match="neither empty nor an error"):
         _check_cli_refusal_stdout("a7-control::no-stream",
-                                  "capture.create", _a_refused_stdout(),
+                                  "route.patch", _LEGACY_STREAM,
                                   _a_commit_line())
 
 
 def test_control_non_error_stdout_on_non_commit_refused_fails():
-    with pytest.raises(AssertionError, match="not commit-refused"):
+    with pytest.raises(AssertionError, match="neither empty nor an error"):
         _check_cli_refusal_stdout("a7-control::no-commit",
-                                  "route.patch", _a_refused_stdout(),
+                                  "route.patch", _LEGACY_STREAM,
                                   _a_failure_line())
 
 
-def test_control_refused_stdout_allowance_passes():
-    """The (bd) legacy stream passes for a commit-refused unit of its op."""
-    assert _handler_module_has_refused_stdout("route.patch")
-    assert not _handler_module_has_refused_stdout("capture.create")
-    _check_cli_refusal_stdout("a7-control::stream-ok",
-                              "route.patch", _a_refused_stdout(),
+def test_control_empty_refusal_stdout_passes():
+    """The ordinary shape: an empty stdout passes for any refusal unit."""
+    _check_cli_refusal_stdout("a7-control::empty", "route.patch", "",
                               _a_commit_line())
 
 
@@ -1150,7 +1107,7 @@ def test_control_diagnostic_wrong_operation_fails():
 
 def test_control_diagnostic_non_null_site_fails():
     line = _a_diagnostic_line()
-    line["site"] = "cli.backup-verify.bad-file"
+    line["site"] = "backup.verify.bad-file"
     with pytest.raises(AssertionError, match="diagnostic line names site"):
         _check_live_exit("a7-control::diag-site", "cli", 1, 1,
                          [line], "backup.verify")
@@ -1259,7 +1216,7 @@ def test_control_command_wrong_operation_fails():
 
 def test_control_command_non_null_site_fails():
     line = _a_command_line()
-    line["site"] = "cli.session-end.nothing-touched"
+    line["site"] = "session.end.nothing-touched"
     with pytest.raises(AssertionError, match="command line names site"):
         _check_live_exit("a7-control::cmd-site", "cli", 128, 128,
                          [line], "session.end")

@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"checked\": 0,\n  \"issues\": []\n}\n",
+  "stdout": "{\"ok\":true,\"checked\":0,\"issues\":[]}\n",
   "stdout_json": {
     "checked": 0,
     "issues": [],

@@ -83,7 +83,7 @@ cases:
   - --content
   - --page
   expect:
-    site: cli.search.page-content
+    site: note.search.page-content
 - id: bad-window
   kind: refusal
   transport: cli
@@ -146,7 +146,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.search.stale-snapshot
+    site: note.search.stale-snapshot
 - id: cli-metadata
   kind: success
   transport: cli
@@ -257,7 +257,7 @@ cases:
   - --page
   - --content
   expect:
-    site: cli.search.page-content
+    site: note.search.page-content
 - id: cli-bad-array-window
   kind: refusal
   transport: cli
@@ -299,7 +299,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.search.stale-snapshot
+    site: note.search.stale-snapshot
 - id: cli-content-wrong-type
   kind: refusal
   transport: cli
@@ -323,7 +323,7 @@ cases:
 untriggered:
 - where: tools/learning_os/app/handlers/notes.py:1382
   reason: 'unreadable inbox: needs an OSError no step can arrange'
-- site: cli.search.read-failed
+- site: note.search.read-failed
   reason: os-error-only
-- site: cli.search.bad-encoding
+- site: note.search.bad-encoding
   reason: fixture-inexpressible

@@ -126,6 +126,11 @@ def _command_served_ops(argv0: str) -> set[str]:
                 served.setdefault(op[len("cli."):], set()).add(op)
         for op, path in schemas.items():
             doc = json.loads(path.read_text(encoding="utf-8"))
+            # A relocated former cli.* operation keeps its command name in
+            # its own binding (operation-moves.json): serve it from there.
+            binding = doc.get("x-los-cli-command")
+            if isinstance(binding, dict) and binding.get("name"):
+                served.setdefault(binding["name"], set()).add(op)
             target = doc.get("$ref", "")
             stem = target[: -len(".schema.json")] if target else ""
             if stem in schemas:
@@ -1166,9 +1171,9 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     ("unit.source-selection.set", "/properties/unit_id"):
         ("unit.source-selection.set.unknown-unit", "unknown-unit"),
     ("ai-action.append-slices", "/properties/route_id"):
-        ("cli.ai-action-append-slices.unknown-route", "unknown-route"),
+        ("ai-action.append-slices.unknown-route", "unknown-route"),
     ("ai-action.append-slices", "/properties/concept_id/items"):
-        ("cli.ai-action-append-slices.unknown-concept", "unknown-concept"),
+        ("ai-action.append-slices.unknown-concept", "unknown-concept"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): the AI/operations/related
     # anchors; AI refusal cases carry no A9 site (site None).
     ("ai-action.append-slices", "/properties/request_id"):
@@ -1182,9 +1187,9 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     ("ai-action.prepare", "/properties/target_id"):
         (None, "unknown-garden-target"),
     ("operations.read", "/properties/request_id"):
-        ("cli.operations.unknown-request", "unknown-request"),
+        ("operations.read.unknown-request", "unknown-request"),
     ("related.read", "/properties/id"):
-        ("cli.related.unknown-id", "unknown-id"),
+        ("related.read.unknown-id", "unknown-id"),
     ("module.attempt.record", "/properties/module_id"):
         ("module.attempt.record.unknown-module", "unknown-module"),
     ("module.sitting.update", "/properties/module_id"):
@@ -1204,31 +1209,31 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     # operations served through the same CLI command witness the
     # CLI operation's site, as their cases declare.
     ("dossier.read", "/properties/unit_id"):
-        ("cli.dossier.unknown-unit", "unknown-unit"),
+        ("dossier.read.unknown-unit", "unknown-unit"),
 
     ("note.content", "/properties/note_id"):
-        ("cli.note-read.unknown-note", "unknown-note"),
+        ("note.content.unknown-note", "unknown-note"),
     ("unit.list", "/properties/module_id"):
-        ("cli.unit-list.unknown-module", "unknown-module"),
+        ("unit.list.unknown-module", "unknown-module"),
 
 
 
 
     ("plan.edit-context", "/properties/unit_id"):
-        ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
+        ("plan.edit-context.unknown-unit", "unknown-unit"),
     ("plan.edit-context", "/properties/route_id"):
-        ("cli.plan-edit-context.unknown-route", "unknown-route"),
+        ("plan.edit-context.unknown-route", "unknown-route"),
     ("plan.edit-context", "/properties/route_ids/items"):
-        ("cli.plan-edit-context.unknown-route", "batch-unknown"),
+        ("plan.edit-context.unknown-route", "batch-unknown"),
     ("plan.edit-context", "/properties/stage_id"):
-        ("cli.plan-edit-context.unknown-stage", "stage-unknown"),
+        ("plan.edit-context.unknown-stage", "stage-unknown"),
     ("material.span", "/properties/unit_id"):
         ("material.span.unknown-unit", "unknown-unit"),
     ("material.span", "/properties/route_id"):
         ("material.span.unknown-route", "route-near-miss"),
 
     ("atlas.context", "/properties/concept_id"):
-        ("cli.atlas-context.unknown-concept", "unknown-concept"),
+        ("atlas.context.unknown-concept", "unknown-concept"),
     # SPEC (cn) item 1: the content-binding digest anchors (bf 4).
     ("coordination.section.revise",
      "/properties/expected_content_sha256"):
@@ -1242,7 +1247,7 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("unit.material-synthesis.publish.unknown-unit",
          "unknown-unit-coordinated"),
     ("goal.decide", "/properties/goal_id/items"):
-        ("cli.goal.unknown-goal", "unknown-goal"),
+        ("goal.decide.unknown-goal", "unknown-goal"),
     ("material.span", "/properties/stage_id"):
         ("material.span.unknown-placement", "placement-missing"),
 }
@@ -2319,13 +2324,13 @@ def test_mutually_exclusive_fields_select_separate_bases():
                  "pointer": "/properties/route_ids/items"}
     stage_id = {"operation": operation, "pointer": "/properties/stage_id"}
     unit_id = {"operation": operation, "pointer": "/properties/unit_id"}
-    assert _select_base(operation, route_id)[0]["id"] == "route"
-    assert _select_base(operation, route_ids)[0]["id"] == "batch"
-    assert _select_base(operation, stage_id)[0]["id"] == "stage"
-    assert _select_base(operation, unit_id)[0]["id"] == "full"
+    assert _select_base(operation, route_id)[0]["id"] == "route-entry"
+    assert _select_base(operation, route_ids)[0]["id"] == "batch-entry"
+    assert _select_base(operation, stage_id)[0]["id"] == "stage-entry"
+    assert _select_base(operation, unit_id)[0]["id"] == "full-unit"
     bases = {_select_base(operation, row)[0]["id"]
              for row in (route_id, route_ids, stage_id)}
-    assert bases == {"route", "batch", "stage"}
+    assert bases == {"route-entry", "batch-entry", "stage-entry"}
 
 
 def test_real_parser_rejects_combined_exclusive_argv():

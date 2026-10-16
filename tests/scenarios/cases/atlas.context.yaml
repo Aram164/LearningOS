@@ -24,7 +24,7 @@ cases:
   - atlas-context
   - concept-nope
   expect:
-    site: cli.atlas-context.unknown-concept
+    site: atlas.context.unknown-concept
 - id: cli-editor-read
   kind: success
   transport: cli
@@ -40,11 +40,11 @@ cases:
   - atlas-context
   - concept-nope
   expect:
-    site: cli.atlas-context.unknown-concept
+    site: atlas.context.unknown-concept
 untriggered:
 - where: tools/learning_os/app/handlers/atlas.py:524
   reason: 'snapshot changed mid-read: a single-threaded read cannot race itself'
 - where: tools/learning_os/app/handlers/atlas.py:527
   reason: 'snapshot changed mid-read: a single-threaded read cannot race itself'
-- site: cli.atlas-context.snapshot-changed
+- site: atlas.context.snapshot-changed
   reason: race-only

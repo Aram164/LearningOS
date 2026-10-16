@@ -55,5 +55,5 @@ untriggered:
 - where: tools/learning_os/app/handlers/capture.py:244
   reason: 'unreadable inbox: needs an OSError no step can arrange (the helper raise
     at query.py:352 needs the same)'
-- site: cli.inbox-list.list-failed
+- site: inbox.list.list-failed
   reason: os-error-only

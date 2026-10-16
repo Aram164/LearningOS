@@ -494,7 +494,7 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
         raise NotFound(
             "concept", req["concept_id"], repo.concepts,
             message=complaint,
-            site="cli.atlas-context.unknown-concept",
+            site="atlas.context.unknown-concept",
         )
     # This is a scoped editor read, not another full-manifest endpoint.
     rows = [copy.deepcopy(row) for data in _registries(root).values()
@@ -515,7 +515,7 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
     if _snapshot(root) != snapshot:
         raise WriteRefused(
             "snapshot changed while reading Atlas",
-            site="cli.atlas-context.snapshot-changed",
+            site="atlas.context.snapshot-changed",
         )
     return Result(
         {"schema_version": 1, "snapshot_id": snapshot,

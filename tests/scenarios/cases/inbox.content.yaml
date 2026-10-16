@@ -65,7 +65,7 @@ cases:
     - inbox-read
     - blob.bin
   expect:
-    site: cli.inbox-read.not-utf8
+    site: inbox.content.not-utf8
 - id: unknown-drop
   kind: refusal
   transport: cli
@@ -73,7 +73,7 @@ cases:
   - inbox-read
   - nope.md
   expect:
-    site: cli.inbox-read.unknown-item
+    site: inbox.content.unknown-item
 - id: bad-name
   kind: refusal
   transport: cli
@@ -81,7 +81,7 @@ cases:
   - inbox-read
   - ../escape.md
   expect:
-    site: cli.inbox-read.bad-name
+    site: inbox.content.bad-name
 - id: bad-window
   kind: refusal
   transport: cli
@@ -111,7 +111,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.inbox-read.stale-snapshot
+    site: inbox.content.stale-snapshot
 - id: cli-read-file
   kind: success
   transport: cli
@@ -153,7 +153,7 @@ cases:
     - inbox-read
     - blob.bin
   expect:
-    site: cli.inbox-read.not-utf8
+    site: inbox.content.not-utf8
 - id: cli-unknown-drop
   kind: refusal
   transport: cli
@@ -161,7 +161,7 @@ cases:
   - inbox-read
   - nope.md
   expect:
-    site: cli.inbox-read.unknown-item
+    site: inbox.content.unknown-item
 - id: cli-bad-name
   kind: refusal
   transport: cli
@@ -169,7 +169,7 @@ cases:
   - inbox-read
   - ../escape.md
   expect:
-    site: cli.inbox-read.bad-name
+    site: inbox.content.bad-name
 - id: cli-stale-read
   kind: refusal
   transport: cli
@@ -179,7 +179,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.inbox-read.stale-snapshot
+    site: inbox.content.stale-snapshot
 untriggered:
-- site: cli.inbox-read.read-failed
+- site: inbox.content.read-failed
   reason: os-error-only

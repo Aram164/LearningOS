@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "project.create",
               "channel": "operator",
-              "intent_sha256": "sha256:5fb966489c9e08105ce71e4705cb79d997c56c86833bae922af72378e85a9653",
+              "intent_sha256": "sha256:59af45a4577a36fc029de9e29d9cea8cfa950cd8b4ee2e4d024666546759d33e",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:5fb966489c9e08105ce71e4705cb79d997c56c86833bae922af72378e85a9653"
+              "subject_sha256": "sha256:59af45a4577a36fc029de9e29d9cea8cfa950cd8b4ee2e4d024666546759d33e"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:5fb966489c9e08105ce71e4705cb79d997c56c86833bae922af72378e85a9653",
+            "intent_sha256": "sha256:59af45a4577a36fc029de9e29d9cea8cfa950cd8b4ee2e4d024666546759d33e",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,13 +108,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "eb98ddc21fb7f48199e5c1e23d56bee2298bba8e03af2354a1a9a40aff8ea534",
+              "sha256": "bb23f3bbd67dcaaf1c79330e4246006033e31b82e8affc733072ec2f03396c30",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b57a259a2cd7bd8b06b016655a0ba419d6e81ed7cc8594bf3a310ff2bdc73275",
+              "sha256": "5ff3d6ba4b9d607f19ee1c2429159afe1b57119926dc6825eda8f80263047e10",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -181,13 +181,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "eb98ddc21fb7f48199e5c1e23d56bee2298bba8e03af2354a1a9a40aff8ea534",
+              "sha256": "bb23f3bbd67dcaaf1c79330e4246006033e31b82e8affc733072ec2f03396c30",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b57a259a2cd7bd8b06b016655a0ba419d6e81ed7cc8594bf3a310ff2bdc73275",
+              "sha256": "5ff3d6ba4b9d607f19ee1c2429159afe1b57119926dc6825eda8f80263047e10",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -215,13 +215,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "eb98ddc21fb7f48199e5c1e23d56bee2298bba8e03af2354a1a9a40aff8ea534",
+              "sha256": "bb23f3bbd67dcaaf1c79330e4246006033e31b82e8affc733072ec2f03396c30",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b57a259a2cd7bd8b06b016655a0ba419d6e81ed7cc8594bf3a310ff2bdc73275",
+              "sha256": "5ff3d6ba4b9d607f19ee1c2429159afe1b57119926dc6825eda8f80263047e10",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -282,13 +282,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "eb98ddc21fb7f48199e5c1e23d56bee2298bba8e03af2354a1a9a40aff8ea534",
+              "sha256": "bb23f3bbd67dcaaf1c79330e4246006033e31b82e8affc733072ec2f03396c30",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b57a259a2cd7bd8b06b016655a0ba419d6e81ed7cc8594bf3a310ff2bdc73275",
+              "sha256": "5ff3d6ba4b9d607f19ee1c2429159afe1b57119926dc6825eda8f80263047e10",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -316,13 +316,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "eb98ddc21fb7f48199e5c1e23d56bee2298bba8e03af2354a1a9a40aff8ea534",
+              "sha256": "bb23f3bbd67dcaaf1c79330e4246006033e31b82e8affc733072ec2f03396c30",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "b57a259a2cd7bd8b06b016655a0ba419d6e81ed7cc8594bf3a310ff2bdc73275",
+              "sha256": "5ff3d6ba4b9d607f19ee1c2429159afe1b57119926dc6825eda8f80263047e10",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -346,13 +346,13 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY5\",\n  \"idempotency_key\": \"KEY6\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed: W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY5\",\n  \"idempotency_key\": \"KEY6\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed\\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
       "stdout_json": {
         "capability": "module.materials.compact",
         "error": {
           "code": "VALIDATION_FAILED",
           "details": {},
-          "message": "canonical validation failed: W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
+          "message": "canonical validation failed\nW NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
           "retryable": false
         },
         "idempotency_key": "KEY6",

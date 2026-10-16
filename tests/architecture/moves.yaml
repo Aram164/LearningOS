@@ -513,3 +513,5 @@ moves:
   to: projection.generate
 - from: tools/learning_os/store/ai_actions/support.py::atomic_text
   to: tools/learning_os/store/ai_actions/storage.py::atomic_text
+- from: tools/learning_os/derive/projection/ai_actions.py
+  to: tools/learning_os/derive/ai_actions.py

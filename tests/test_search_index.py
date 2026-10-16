@@ -661,7 +661,7 @@ def _run_search(root: Path, query: str, *,
     except WriteRefused as exc:
         return 2, "", f"los: {exc}\n"
     out = dumps_compact(result.payload)
-    err = "".join(f"{line}\n" for line in result.notices)
+    err = "".join(f"{line}\n" for line in result.human_view.notices)
     return 0, out, err
 
 

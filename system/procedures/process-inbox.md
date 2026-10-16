@@ -32,14 +32,14 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los inbox-list
-[{"age_days":3,"deprecated":null,"id":"note-drop.md","path":"work/inbox/note-drop.md","state":null,"status":null,"title":"note-drop.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/one.md","path":"work/inbox/pack/one.md","state":null,"status":null,"title":"one.md","type":"inbox-item"},{"age_days":0,"deprecated":null,"id":"pack/two.md","path":"work/inbox/pack/two.md","state":null,"status":null,"title":"two.md","type":"inbox-item"}]
+[{"id":"note-drop.md","type":"inbox-item","title":"note-drop.md","path":"work/inbox/note-drop.md","status":null,"state":null,"deprecated":null,"age_days":3},{"id":"pack/one.md","type":"inbox-item","title":"one.md","path":"work/inbox/pack/one.md","status":null,"state":null,"deprecated":null,"age_days":0},{"id":"pack/two.md","type":"inbox-item","title":"two.md","path":"work/inbox/pack/two.md","status":null,"state":null,"deprecated":null,"age_days":0}]
 ```
 
 ## Read the drop for its sha256
 
 ```scrut
 $ los inbox-read note-drop.md
-{"schema_version":1,"snapshot_id":"sha256:71b1bfce85eaf7139b6c831d11349afb9f9fc764c6a4239b6346e9119bb1f32e","contract":"inbox-content","item":"note-drop.md","path":"work/inbox/note-drop.md","content_sha256":"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d","offset":0,"offset_unit":"unicode_characters","total_characters":26,"start_line":1,"content":"# Dropped note\n\nUnrouted.\n","next_offset":null}
+{"schema_version":1,"snapshot_id":"sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e","contract":"inbox-content","item":"note-drop.md","path":"work/inbox/note-drop.md","content_sha256":"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d","offset":0,"offset_unit":"unicode_characters","total_characters":26,"start_line":1,"content":"# Dropped note\n\nUnrouted.\n","next_offset":null}
 ```
 
 ## Bind the drop sha for the envelope
@@ -69,7 +69,7 @@ $ los capability inbox.resolve --payload-file "$TMPDIR/inbox-resolve.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:34006b3b587a308966cc4f60b521d73c37016a05865108f880605b1e6dab0b12",
+  "snapshot_after": "sha256:ed922ba9f28ed96562020a900544e2cf252bbe58648528838cc9fcd86efed53d",
   "result": {
     "ok": true,
     "resolved": "note-drop.md",
@@ -85,7 +85,7 @@ $ los capability inbox.resolve --payload-file "$TMPDIR/inbox-resolve.json"
       "file:archive/inbox/2026/note-drop.md": 1,
       "file:work/inbox/note-drop.md": 1
     },
-    "snapshot_after": "sha256:34006b3b587a308966cc4f60b521d73c37016a05865108f880605b1e6dab0b12",
+    "snapshot_after": "sha256:ed922ba9f28ed96562020a900544e2cf252bbe58648528838cc9fcd86efed53d",
     "replayed": false
   },
   "error": null

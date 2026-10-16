@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "capture.create",
               "channel": "operator",
-              "intent_sha256": "sha256:66a65ce848f512a1cd88d74af335bf407756cba9cc93f5400b0f7a993b1089c8",
+              "intent_sha256": "sha256:2f8fee36ad4f71bb1cdb6d42566ecd7661b78a08b8f7a15621f4e966ea667b22",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:66a65ce848f512a1cd88d74af335bf407756cba9cc93f5400b0f7a993b1089c8"
+              "subject_sha256": "sha256:2f8fee36ad4f71bb1cdb6d42566ecd7661b78a08b8f7a15621f4e966ea667b22"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:66a65ce848f512a1cd88d74af335bf407756cba9cc93f5400b0f7a993b1089c8",
+            "intent_sha256": "sha256:2f8fee36ad4f71bb1cdb6d42566ecd7661b78a08b8f7a15621f4e966ea667b22",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,13 +108,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5eaaa1c091ca757c1e4204e25b9c7cc8bf7b3227e7b1412aa5e0cbdf8f6af86e",
+              "sha256": "e4aa67e1a249628fc78507ba7cf99267e99c8828d7a45ed940650f28126e24f1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "81674b9b988daa14469e3ef5ae593c5687e9821c98a5866d6e74e822a0d67caa",
+              "sha256": "3b385dc3dff6db85c8b2d9ce1bbd038b0cc239dd30ee1fb65c894483c1c3b960",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -186,13 +186,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5eaaa1c091ca757c1e4204e25b9c7cc8bf7b3227e7b1412aa5e0cbdf8f6af86e",
+              "sha256": "e4aa67e1a249628fc78507ba7cf99267e99c8828d7a45ed940650f28126e24f1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "81674b9b988daa14469e3ef5ae593c5687e9821c98a5866d6e74e822a0d67caa",
+              "sha256": "3b385dc3dff6db85c8b2d9ce1bbd038b0cc239dd30ee1fb65c894483c1c3b960",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -220,13 +220,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5eaaa1c091ca757c1e4204e25b9c7cc8bf7b3227e7b1412aa5e0cbdf8f6af86e",
+              "sha256": "e4aa67e1a249628fc78507ba7cf99267e99c8828d7a45ed940650f28126e24f1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "81674b9b988daa14469e3ef5ae593c5687e9821c98a5866d6e74e822a0d67caa",
+              "sha256": "3b385dc3dff6db85c8b2d9ce1bbd038b0cc239dd30ee1fb65c894483c1c3b960",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -249,7 +249,7 @@
           "version": 1
         }
       },
-      "stderr": "fatal: The current branch main has no upstream branch.\nTo push the current branch and set the remote as upstream, use\n\n    git push --set-upstream origin main\n\nTo have this happen automatically for branches without a tracking\nupstream, see 'push.autoSetupRemote' in 'git help config'.\n\n",
+      "stderr": "los: fatal: The current branch main has no upstream branch.\nTo push the current branch and set the remote as upstream, use\n\n    git push --set-upstream origin main\n\nTo have this happen automatically for branches without a tracking\nupstream, see 'push.autoSetupRemote' in 'git help config'.\n",
       "stdout": "",
       "stdout_json": null,
       "step": 1,

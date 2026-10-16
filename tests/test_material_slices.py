@@ -1197,10 +1197,10 @@ def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
              if line.strip()]
     assert lines == [
         {"operation": "ai-action.append-slices", "kind": "failure",
-         "site": "cli.ai-action-append-slices.unknown-route",
+         "site": "ai-action.append-slices.unknown-route",
          "class": "RouteNotFound", "exit_code": None},
         {"operation": "ai-action.append-slices", "kind": "failure",
-         "site": "cli.ai-action-append-slices.unknown-concept",
+         "site": "ai-action.append-slices.unknown-concept",
          "class": "ConceptNotFound", "exit_code": None},
         {"operation": "ai-action.append-slices", "kind": "failure",
          "site": None, "class": "ContinuationRefusedError",

@@ -23,7 +23,7 @@ cases:
   - --commit-message
   - nothing staged
   expect:
-    site: cli.session-end.nothing-touched
+    site: session.end.nothing-touched
 - id: close-with-commit
   kind: refusal
   transport: cli
@@ -33,7 +33,7 @@ cases:
   - --commit-message
   - contradiction
   expect:
-    site: cli.session-end.close-with-commit
+    site: session.end.close-with-commit
 - id: bad-channel
   kind: refusal
   transport: cli
@@ -42,7 +42,7 @@ cases:
   - --channel
   - nope
   expect:
-    site: cli.session-end.unknown-channel
+    site: session.end.unknown-channel
 - id: review-write-commit
   kind: sequence
   steps:
@@ -59,7 +59,7 @@ cases:
     - --commit-message
     - scenario commit
   expect:
-    site: cli.session-end.review-invalidated
+    site: session.end.review-invalidated
 - id: direct-commit
   kind: sequence
   steps:
@@ -133,14 +133,14 @@ cases:
     - --commit-message
     - another commit
   expect:
-    site: cli.session-end.already-committed
+    site: session.end.already-committed
 untriggered:
-- site: cli.session-end.unreadable-ledger
+- site: session.end.unreadable-ledger
   reason: fixture-inexpressible
   proof: _prove_session_unreadable_ledger
-- site: cli.session-end.ownership-conflict
+- site: session.end.ownership-conflict
   reason: fixture-inexpressible
   proof: _prove_session_ownership_conflict
-- site: cli.session-end.head-changed
+- site: session.end.head-changed
   reason: fixture-inexpressible
   proof: _prove_session_head_changed

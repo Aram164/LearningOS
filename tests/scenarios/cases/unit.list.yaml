@@ -60,7 +60,7 @@ cases:
   - --module-id
   - module-nope
   expect:
-    site: cli.unit-list.unknown-module
+    site: unit.list.unknown-module
 - id: unknown-component
   kind: refusal
   transport: cli
@@ -69,7 +69,7 @@ cases:
   - --component-id
   - comp-nope
   expect:
-    site: cli.unit-list.unknown-component
+    site: unit.list.unknown-component
 - id: unknown-status
   kind: refusal
   transport: cli
@@ -78,7 +78,7 @@ cases:
   - --status
   - nope
   expect:
-    site: cli.unit-list.unknown-status
+    site: unit.list.unknown-status
 - id: window-needs-compact
   kind: refusal
   transport: cli
@@ -87,7 +87,7 @@ cases:
   - --offset
   - 1
   expect:
-    site: cli.unit-list.window-needs-compact
+    site: unit.list.window-needs-compact
 - id: compact-bad-limit
   kind: refusal
   transport: cli
@@ -97,7 +97,7 @@ cases:
   - --limit
   - 99
   expect:
-    site: cli.unit-list.bad-window
+    site: unit.list.bad-window
 - id: compact-offset-needs-snapshot
   kind: refusal
   transport: cli
@@ -107,7 +107,7 @@ cases:
   - --offset
   - 2
   expect:
-    site: cli.unit-list.bad-window
+    site: unit.list.bad-window
 - id: compact-stale
   kind: refusal
   transport: cli
@@ -117,7 +117,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.unit-list.stale-snapshot
+    site: unit.list.stale-snapshot
 untriggered:
-- site: cli.unit-list.read-failed
+- site: unit.list.read-failed
   reason: os-error-only

@@ -54,7 +54,7 @@ cases:
   - --brief
   - --compact
   expect:
-    site: cli.bootstrap.brief-and-compact
+    site: operator.bootstrap.brief-and-compact
 - id: brief-with-offset
   kind: refusal
   transport: cli
@@ -64,7 +64,7 @@ cases:
   - --offset
   - 3
   expect:
-    site: cli.bootstrap.brief-with-offset
+    site: operator.bootstrap.brief-with-offset
 - id: compact-bad-limit
   kind: refusal
   transport: cli
@@ -74,7 +74,7 @@ cases:
   - --limit
   - 99
   expect:
-    site: cli.bootstrap.bad-window
+    site: operator.bootstrap.bad-window
 - id: compact-offset-needs-snapshot
   kind: refusal
   transport: cli
@@ -84,7 +84,7 @@ cases:
   - --offset
   - 2
   expect:
-    site: cli.bootstrap.bad-window
+    site: operator.bootstrap.bad-window
 - id: compact-stale
   kind: refusal
   transport: cli
@@ -94,7 +94,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.bootstrap.stale-snapshot
+    site: operator.bootstrap.stale-snapshot
 - id: brief-stale
   kind: refusal
   transport: cli
@@ -104,7 +104,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.bootstrap.stale-snapshot
+    site: operator.bootstrap.stale-snapshot
 - id: cli-full
   kind: success
   transport: cli
@@ -150,7 +150,7 @@ cases:
   - --brief
   - --compact
   expect:
-    site: cli.bootstrap.brief-and-compact
+    site: operator.bootstrap.brief-and-compact
 - id: cli-brief-with-offset
   kind: refusal
   transport: cli
@@ -160,7 +160,7 @@ cases:
   - --offset
   - 3
   expect:
-    site: cli.bootstrap.brief-with-offset
+    site: operator.bootstrap.brief-with-offset
 - id: cli-compact-bad-limit
   kind: refusal
   transport: cli
@@ -170,7 +170,7 @@ cases:
   - --limit
   - 99
   expect:
-    site: cli.bootstrap.bad-window
+    site: operator.bootstrap.bad-window
 - id: cli-compact-offset-needs-snapshot
   kind: refusal
   transport: cli
@@ -180,7 +180,7 @@ cases:
   - --offset
   - 2
   expect:
-    site: cli.bootstrap.bad-window
+    site: operator.bootstrap.bad-window
 - id: cli-compact-stale
   kind: refusal
   transport: cli
@@ -190,7 +190,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.bootstrap.stale-snapshot
+    site: operator.bootstrap.stale-snapshot
 - id: cli-brief-stale
   kind: refusal
   transport: cli
@@ -200,7 +200,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.bootstrap.stale-snapshot
+    site: operator.bootstrap.stale-snapshot
 untriggered:
-- site: cli.bootstrap.read-failed
+- site: operator.bootstrap.read-failed
   reason: os-error-only

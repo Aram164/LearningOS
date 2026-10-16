@@ -44,7 +44,7 @@ cases:
   - note-read
   - note-nope
   expect:
-    site: cli.note-read.unknown-note
+    site: note.content.unknown-note
 - id: bad-window
   kind: refusal
   transport: cli
@@ -74,7 +74,7 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.note-read.stale-snapshot
+    site: note.content.stale-snapshot
 - id: cli-read-note
   kind: success
   transport: cli
@@ -120,7 +120,7 @@ cases:
   - note-read
   - note-nope
   expect:
-    site: cli.note-read.unknown-note
+    site: note.content.unknown-note
 - id: cli-bad-window
   kind: refusal
   transport: cli
@@ -150,9 +150,9 @@ cases:
   - --expected-snapshot
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: cli.note-read.stale-snapshot
+    site: note.content.stale-snapshot
 untriggered:
-- site: cli.note-read.read-failed
+- site: note.content.read-failed
   reason: os-error-only
-- site: cli.note-read.bad-encoding
+- site: note.content.bad-encoding
   reason: fixture-inexpressible

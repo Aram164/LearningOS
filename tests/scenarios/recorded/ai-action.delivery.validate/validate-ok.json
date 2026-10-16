@@ -20,7 +20,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n}\n",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
       "stdout_json": {
         "bundle_path": "operations/ai-actions/requests/KEY1",
         "ok": true,
@@ -55,7 +55,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"delivery\": {\n    \"schema_version\": 1,\n    \"id\": \"ai-delivery-validate-ok\",\n    \"type\": \"ai-action-delivery\",\n    \"request_id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"status\": \"ready\",\n    \"producer\": {\n      \"provider\": \"manual\",\n      \"adapter\": \"manual-bundle\"\n    },\n    \"approval\": {\n      \"user_approved\": true,\n      \"approved_at\": \"2026-10-01T09:00:00+02:00\"\n    },\n    \"operations\": [\n      {\n        \"capability\": \"garden.add-transcription\",\n        \"target_id\": \"garden-note-seed\",\n        \"artifact_ref\": \"artifacts/transcription.md\"\n      },\n      {\n        \"capability\": \"garden.update\",\n        \"target_id\": \"garden-note-seed\",\n        \"patch\": {\n          \"title\": \"Shelved Thought\",\n          \"state\": \"developing\"\n        }\n      },\n      {\n        \"capability\": \"relationship.create\",\n        \"payload\": {\n          \"id\": \"relationship-garden-module-demo\",\n          \"from\": {\n            \"kind\": \"garden-note\",\n            \"id\": \"garden-note-seed\"\n          },\n          \"relation\": \"supports\",\n          \"to\": {\n            \"kind\": \"module\",\n            \"id\": \"module-demo\"\n          }\n        }\n      }\n    ],\n    \"preconditions\": {\n      \"snapshot_id\": \"SNAP1\",\n      \"artifact_revisions\": {\n        \"garden-note-seed\": \"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"\n      }\n    }\n  }\n}\n",
+      "stdout": "{\"ok\":true,\"delivery\":{\"schema_version\":1,\"id\":\"ai-delivery-validate-ok\",\"type\":\"ai-action-delivery\",\"request_id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"status\":\"ready\",\"producer\":{\"provider\":\"manual\",\"adapter\":\"manual-bundle\"},\"approval\":{\"user_approved\":true,\"approved_at\":\"2026-10-01T09:00:00+02:00\"},\"operations\":[{\"capability\":\"garden.add-transcription\",\"target_id\":\"garden-note-seed\",\"artifact_ref\":\"artifacts/transcription.md\"},{\"capability\":\"garden.update\",\"target_id\":\"garden-note-seed\",\"patch\":{\"title\":\"Shelved Thought\",\"state\":\"developing\"}},{\"capability\":\"relationship.create\",\"payload\":{\"id\":\"relationship-garden-module-demo\",\"from\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"relation\":\"supports\",\"to\":{\"kind\":\"module\",\"id\":\"module-demo\"}}}],\"preconditions\":{\"snapshot_id\":\"SNAP1\",\"artifact_revisions\":{\"garden-note-seed\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"}}}}\n",
       "stdout_json": {
         "delivery": {
           "action_id": "garden.shelve",
@@ -127,7 +127,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"delivery_id\": \"ai-delivery-validate-ok\",\n  \"request_id\": \"KEY1\"\n}\n",
+      "stdout": "{\"ok\":true,\"delivery_id\":\"ai-delivery-validate-ok\",\"request_id\":\"KEY1\"}\n",
       "stdout_json": {
         "delivery_id": "ai-delivery-validate-ok",
         "ok": true,

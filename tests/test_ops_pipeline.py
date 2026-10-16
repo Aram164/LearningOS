@@ -1966,7 +1966,7 @@ def test_cx_carrier_passes_exact_streams_and_exit(pipe, mini_repo):
     assert outcome.exit_code == 128
     assert outcome.ok is False
     assert outcome.stdout == ""
-    assert outcome.stderr == "los: INVALID_REQUEST: err-bytes\n"
+    assert outcome.stderr == "los: err-bytes\n"
     assert outcome.commit == "none"
     assert outcome.receipt is None
     assert outcome.replayed is False

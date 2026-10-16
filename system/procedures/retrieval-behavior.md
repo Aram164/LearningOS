@@ -77,21 +77,21 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los search Erwartungswert
-[{"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","state":null,"status":null,"title":"Expected value","type":"concept"}]
+[{"id":"concept-expected-value","type":"concept","title":"Expected value","path":"knowledge/concepts.yaml","status":null,"state":null,"deprecated":false}]
 ```
 
 ## Read the concept
 
 ```scrut
 $ los inspect concept-expected-value
-{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}
+{"id":"concept-expected-value","type":"concept","title":"Expected value","path":"knowledge/concepts.yaml","aliases":["Erwartungswert"],"deprecated":false}
 ```
 
 ## Relate it with reasoned edges
 
 ```scrut
 $ los related concept-expected-value
-[{"id":"concept-variance","path":"knowledge/concepts.yaml","title":"Variance","type":"concept","via":["relation"]},{"id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","title":"Demo note","type":"note","via":["backlink:concept_to_notes"]},{"id":"note-demo-analysis","path":"knowledge/notes/mathematics/note-demo-analysis.md","title":"Expected value — analysis of Demo Book §1","type":"note","via":["backlink:concept_to_notes"]}]
+[{"id":"concept-variance","type":"concept","title":"Variance","path":"knowledge/concepts.yaml","via":["relation"]},{"id":"note-demo","type":"note","title":"Demo note","path":"knowledge/notes/mathematics/note-demo.md","via":["backlink:concept_to_notes"]},{"id":"note-demo-analysis","type":"note","title":"Expected value — analysis of Demo Book §1","path":"knowledge/notes/mathematics/note-demo-analysis.md","via":["backlink:concept_to_notes"]}]
 ```
 
 ## Read what explains it
@@ -123,7 +123,7 @@ introductory ['first-learning'] ['concept-expected-value']
 
 ```scrut
 $ los search --type note "reference expected-value"
-[{"deprecated":null,"id":"note-demo-analysis","path":"knowledge/notes/mathematics/note-demo-analysis.md","state":null,"status":null,"title":"Expected value — analysis of Demo Book §1","type":"note"}]
+[{"id":"note-demo-analysis","type":"note","title":"Expected value — analysis of Demo Book §1","path":"knowledge/notes/mathematics/note-demo-analysis.md","status":null,"state":null,"deprecated":null}]
 ```
 
 ## Show the trails behind worked-through questions
@@ -159,7 +159,7 @@ confirmed unit-demo-l01
 
 ```scrut
 $ los inspect coordination
-{"content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","id":"coordination","path":"work/COORDINATION.md","section_sha256":{"Commitments":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Deferrals":"sha256:c7fd808ba806ad0f53559df2a76f3f3afb32b3cd79e3227ed0d6133abdc962b2","Dependencies":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Priorities":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a"},"sections":{"Commitments":"(none)","Deferrals":"- Demo module deferred to 2. Termin (date lives in records/modules.yaml)","Dependencies":"(none)","Priorities":"(none)"},"type":"coordination"}
+{"id":"coordination","type":"coordination","path":"work/COORDINATION.md","sections":{"Commitments":"(none)","Priorities":"(none)","Dependencies":"(none)","Deferrals":"- Demo module deferred to 2. Termin (date lives in records/modules.yaml)"},"content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","section_sha256":{"Commitments":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Priorities":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Dependencies":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Deferrals":"sha256:c7fd808ba806ad0f53559df2a76f3f3afb32b3cd79e3227ed0d6133abdc962b2"}}
 ```
 
 ## The generated fallbacks are absent from the fixture

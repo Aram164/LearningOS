@@ -361,7 +361,13 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
     diagnostics = tuple(getattr(exc, "extra_stderr", ()) or ())
     if diagnostics:
         error["details"]["diagnostics"] = list(map(str, diagnostics))
-    stderr = _render_cli_error(error, args)
+    if isinstance(exc, ToolFailure) and not getattr(args, "json", False):
+        # A failed external tool is a command failure, not a typed refusal
+        # (SPEC (cy) R6, (cx) D-9): its diagnostic prints once, without a
+        # refusal code, and its exit is the tool's.
+        stderr = f"los: {message}\n"
+    else:
+        stderr = _render_cli_error(error, args)
     stdout = ""
     if isinstance(exc, PostCommitFailure):
         commit = "committed"

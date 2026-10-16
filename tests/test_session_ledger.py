@@ -316,7 +316,7 @@ def test_goal_write_while_own_session_unpushed_refuses(
     refused = run_los(mini_repo, "goal", goal_id, "--reject")
     assert refused.returncode == 2, refused.stdout
     assert refused.stderr == (
-        f"already committed as {sha}; use --push or --close\n")
+        f"los: INVALID_REQUEST: already committed as {sha}; use --push or --close\n")
     assert (ledger_file.read_bytes() if ledger_file.exists() else None) \
         == before_goal
     assert session_store.session_ledger(

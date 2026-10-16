@@ -55,7 +55,7 @@ los: no record matches all 1 term; per-term record hits: stichprobenmittel=0
 
 ```scrut
 $ los inspect concept-expected-value
-{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}
+{"id":"concept-expected-value","type":"concept","title":"Expected value","path":"knowledge/concepts.yaml","aliases":["Erwartungswert"],"deprecated":false}
 ```
 
 A sample mean is not the population expectation, so no existing concept

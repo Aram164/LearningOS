@@ -42,7 +42,7 @@ cases:
   - inspect
   - nope-id
   expect:
-    site: cli.inspect.unknown-id
+    site: project.inspect.unknown-id
 - id: batch-too-many
   kind: refusal
   transport: cli
@@ -70,7 +70,7 @@ cases:
   - x20
   - x21
   expect:
-    site: cli.inspect.too-many-ids
+    site: project.inspect.too-many-ids
 - id: batch-unknown-member
   kind: refusal
   transport: cli
@@ -79,7 +79,7 @@ cases:
   - project-demo
   - nope-id
   expect:
-    site: cli.inspect.unknown-id
+    site: project.inspect.unknown-id
 - id: cli-inspect-record
   kind: success
   transport: cli
@@ -112,7 +112,7 @@ cases:
   - inspect
   - nope-id
   expect:
-    site: cli.inspect.unknown-id
+    site: project.inspect.unknown-id
 - id: cli-batch-too-many
   kind: refusal
   transport: cli
@@ -140,7 +140,7 @@ cases:
   - x20
   - x21
   expect:
-    site: cli.inspect.too-many-ids
+    site: project.inspect.too-many-ids
 - id: cli-batch-unknown-member
   kind: refusal
   transport: cli
@@ -149,9 +149,9 @@ cases:
   - project-demo
   - nope-id
   expect:
-    site: cli.inspect.unknown-id
+    site: project.inspect.unknown-id
 untriggered:
-- site: cli.inspect.read-failed
+- site: project.inspect.read-failed
   reason: os-error-only
-- site: cli.inspect.stale-snapshot
+- site: project.inspect.stale-snapshot
   reason: race-only

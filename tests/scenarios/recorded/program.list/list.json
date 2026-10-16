@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "[{\"default\":true,\"id\":\"program-bachelors\",\"kind\":\"academic\",\"path\":\"curriculum/programs/program-bachelors.yaml\",\"revision\":0,\"semester_bound\":true,\"semesters\":[{\"id\":\"semester-sose-2026\",\"order\":1,\"status\":\"current\",\"title\":\"SoSe 2026\"}],\"status\":\"active\",\"title\":\"Bachelor’s\",\"type\":\"program\"}]\n",
+  "stdout": "[{\"id\":\"program-bachelors\",\"type\":\"program\",\"title\":\"Bachelor’s\",\"kind\":\"academic\",\"status\":\"active\",\"default\":true,\"semester_bound\":true,\"semesters\":[{\"id\":\"semester-sose-2026\",\"title\":\"SoSe 2026\",\"status\":\"current\",\"order\":1}],\"revision\":0,\"path\":\"curriculum/programs/program-bachelors.yaml\"}]\n",
   "stdout_json": [
     {
       "default": true,

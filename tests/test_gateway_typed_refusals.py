@@ -388,8 +388,8 @@ def test_ai_apply_commit_failure_through_the_pipeline_path(
     assert outcome.exit_code == exit_code
     assert outcome.ok is False
     assert outcome.commit == "none"
-    assert outcome.stderr == f"los: {refusal[0]}: {expected}\n"
-    error = json.loads(outcome.stdout)["error"]
+    assert outcome.stdout == ""
+    error = json.loads(outcome.stderr)["error"]
     assert error["code"] == refusal[0]
     assert error["retryable"] is refusal[1]
     assert error["message"] == expected

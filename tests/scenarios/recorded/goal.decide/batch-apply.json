@@ -7,7 +7,7 @@
         "KEY1": {
           "capability": "goal.decision.record",
           "channel": "operator",
-          "intent_sha256": "sha256:1d8ba6e674d3527a3bf422034a6ee9d47fb4cec7af6c632a1ab62d9c3d69a863",
+          "intent_sha256": "sha256:1e56b05e7ee0799ef0531f64ebbe86840bcbc40c4f6609597e86406b41c37866",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -57,11 +57,11 @@
       "request": {
         "approval": {
           "kind": "direct-user-gesture",
-          "subject_sha256": "sha256:1d8ba6e674d3527a3bf422034a6ee9d47fb4cec7af6c632a1ab62d9c3d69a863"
+          "subject_sha256": "sha256:1e56b05e7ee0799ef0531f64ebbe86840bcbc40c4f6609597e86406b41c37866"
         },
         "channel": "operator",
         "idempotency_key": "KEY1",
-        "intent_sha256": "sha256:1d8ba6e674d3527a3bf422034a6ee9d47fb4cec7af6c632a1ab62d9c3d69a863",
+        "intent_sha256": "sha256:1e56b05e7ee0799ef0531f64ebbe86840bcbc40c4f6609597e86406b41c37866",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -109,13 +109,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "6afee688fd2235e1a3d1e841ac554c00f70599af742426f3bd6a846499a3a657",
+          "sha256": "3deadbdc859c0b81480c861d5bded98d1736c0c97babbce6bee376706d065047",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "77eba2054499fa2f9bb28cafd54a160ebe1a752d3c6b1f01ba880e24f9d5b3db",
+          "sha256": "54d3ce18fe5828d65e918eb8656773e5985b576eba0e7ae11e31b59f84f19318",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -134,7 +134,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\"ok\": true, \"state\": \"rejected\", \"goal_ids\": [\"goal-demo-deferred\", \"goal-demo-rejected\"]}\n",
+  "stdout": "{\"ok\":true,\"state\":\"rejected\",\"goal_ids\":[\"goal-demo-deferred\",\"goal-demo-rejected\"]}\n",
   "stdout_json": {
     "goal_ids": [
       "goal-demo-deferred",

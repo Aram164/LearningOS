@@ -12,7 +12,7 @@
             "KEY2": {
               "capability": "review.prepare",
               "channel": "operator",
-              "intent_sha256": "sha256:8910c30487b92aa1c418731d8c3d812b90b76a259bc7f2e6e11ae80d4d6a264b",
+              "intent_sha256": "sha256:7674f6dad0e41cbb50307a13eee25c87b99a0deb84d217a0098daa32e0b1c2f9",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -69,11 +69,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:8910c30487b92aa1c418731d8c3d812b90b76a259bc7f2e6e11ae80d4d6a264b"
+              "subject_sha256": "sha256:7674f6dad0e41cbb50307a13eee25c87b99a0deb84d217a0098daa32e0b1c2f9"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:8910c30487b92aa1c418731d8c3d812b90b76a259bc7f2e6e11ae80d4d6a264b",
+            "intent_sha256": "sha256:7674f6dad0e41cbb50307a13eee25c87b99a0deb84d217a0098daa32e0b1c2f9",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -133,13 +133,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "737b90dd0a43d571200619e8f47f39347c959e595045d3cd11f01771e55e718d",
+              "sha256": "5bf931d2ac2b1a71f1124c7b9acaf01782e70871661932566d9a047c4d29d597",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "44b597215b582e0f7fda4c893db44086f19e871d126ef852257372d0de32855d",
+              "sha256": "2d6305e8779e0f85292bc013995167818832637dab539337b54c589302f90e86",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -221,13 +221,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "737b90dd0a43d571200619e8f47f39347c959e595045d3cd11f01771e55e718d",
+              "sha256": "5bf931d2ac2b1a71f1124c7b9acaf01782e70871661932566d9a047c4d29d597",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "44b597215b582e0f7fda4c893db44086f19e871d126ef852257372d0de32855d",
+              "sha256": "2d6305e8779e0f85292bc013995167818832637dab539337b54c589302f90e86",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -261,13 +261,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "737b90dd0a43d571200619e8f47f39347c959e595045d3cd11f01771e55e718d",
+              "sha256": "5bf931d2ac2b1a71f1124c7b9acaf01782e70871661932566d9a047c4d29d597",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "44b597215b582e0f7fda4c893db44086f19e871d126ef852257372d0de32855d",
+              "sha256": "2d6305e8779e0f85292bc013995167818832637dab539337b54c589302f90e86",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -284,7 +284,7 @@
           "version": 1
         }
       },
-      "stderr": "los: approved shelving changes failed validation and were rolled back\ncanonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability review.apply --payload-file ENVELOPE.json` (payload schema: `los capabilities review.apply --json`; envelope: WORKFLOWS §25c)\n",
+      "stderr": "los: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability review.apply --payload-file ENVELOPE.json` (payload schema: `los capabilities review.apply --json`; envelope: WORKFLOWS §25c)\n",
       "stdout": "",
       "stdout_json": null,
       "step": 1,

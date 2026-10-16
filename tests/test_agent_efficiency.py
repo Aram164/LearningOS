@@ -59,7 +59,7 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
     assert "tools/warning_baseline.py --root \"$LOS_FX\" --check" in start_here
     assert "$ $H/los-assert-receipt --last --capability stage.progress.update" in session_end
     assert "$ $H/los-assert-file curriculum/modules/module-demo/units/" in session_end
-    assert '\"validation\": \"0 error(s)' in session_end
+    assert re.search(r'"validation"\s*:\s*"0 error\(s\)', session_end)
 
     assert "bootstrap --brief" in agents
     assert "bootstrap --brief" in readme

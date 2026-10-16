@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"class\":\"evidence\",\"recipes\":[{\"id\":\"voq-evidence-trails-complete\",\"notes\":\"Phase 1 bar: present, well-formed, append-only. Role-specific bars belong to lineage review.\",\"procedure\":{\"inputs\":{\"entries\":[{\"ref\":\"material://demo/mle-derivation.pdf\",\"type\":\"derivation\"}]},\"predicate\":\"EvidenceComplete\"},\"question\":\"Does one typed trail make a note's evidence complete?\"},{\"id\":\"voq-evidence-untyped-incomplete\",\"notes\":\"A bare path breaks when the file moves; the validator refuses it with the allowed vocabulary.\",\"procedure\":{\"inputs\":{\"entries\":[{\"ref\":\"knowledge/attachments/derivation.md\",\"type\":\"derivation\"}]},\"predicate\":\"EvidenceComplete\"},\"question\":\"Does a bare-path trail without a URI scheme count as evidence?\"}]}\n",
+  "stdout": "{\"class\":\"evidence\",\"recipes\":[{\"id\":\"voq-evidence-trails-complete\",\"question\":\"Does one typed trail make a note's evidence complete?\",\"procedure\":{\"predicate\":\"EvidenceComplete\",\"inputs\":{\"entries\":[{\"type\":\"derivation\",\"ref\":\"material://demo/mle-derivation.pdf\"}]}},\"notes\":\"Phase 1 bar: present, well-formed, append-only. Role-specific bars belong to lineage review.\"},{\"id\":\"voq-evidence-untyped-incomplete\",\"question\":\"Does a bare-path trail without a URI scheme count as evidence?\",\"procedure\":{\"predicate\":\"EvidenceComplete\",\"inputs\":{\"entries\":[{\"type\":\"derivation\",\"ref\":\"knowledge/attachments/derivation.md\"}]}},\"notes\":\"A bare path breaks when the file moves; the validator refuses it with the allowed vocabulary.\"}]}\n",
   "stdout_json": {
     "class": "evidence",
     "recipes": [

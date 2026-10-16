@@ -51,7 +51,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:a66fcf733d91b7b7c174419e96c2f15867977e7e5c66c64915181cdf53f05e4a",
+  "snapshot_after": "sha256:329dd30a7060839be20ad9b510e33169b03d269cafc8b8c7c116b9d6924f0b1e",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -65,7 +65,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:a66fcf733d91b7b7c174419e96c2f15867977e7e5c66c64915181cdf53f05e4a",
+    "snapshot_after": "sha256:329dd30a7060839be20ad9b510e33169b03d269cafc8b8c7c116b9d6924f0b1e",
     "replayed": false
   },
   "error": null
@@ -96,7 +96,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:590926f3360f872b7985474608ab8bae465eb6b6b0c120cf2ec50e06ee2af3e7",
+  "snapshot_after": "sha256:1df8c1f8208fe75fc70284d427bbbecb6db3f4a6cce7ece10fb78ec57df8e37c",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -111,7 +111,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:590926f3360f872b7985474608ab8bae465eb6b6b0c120cf2ec50e06ee2af3e7",
+    "snapshot_after": "sha256:1df8c1f8208fe75fc70284d427bbbecb6db3f4a6cce7ece10fb78ec57df8e37c",
     "replayed": false
   },
   "error": null
@@ -183,7 +183,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.j
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:64eca9d3beeab6ebc04dcd7228b35c541928179a04a0e6f857fbdfaca9e2de37",
+  "snapshot_after": "sha256:4e332b019590672319614ed0afc8b91a1ed2e7e0c1beeef8fef77513e59bd8eb",
   "result": {
     "ok": true,
     "section": "Deferrals",
@@ -192,7 +192,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.j
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:64eca9d3beeab6ebc04dcd7228b35c541928179a04a0e6f857fbdfaca9e2de37",
+    "snapshot_after": "sha256:4e332b019590672319614ed0afc8b91a1ed2e7e0c1beeef8fef77513e59bd8eb",
     "replayed": false
   },
   "error": null

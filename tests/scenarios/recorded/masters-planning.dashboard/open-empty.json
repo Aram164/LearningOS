@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 1,\n  \"type\": \"masters-planning-dashboard\",\n  \"opened_at\": \"2026-10-01T07:00:00+00:00\",\n  \"banner\": \"Prospective—not current LearningOS\",\n  \"catalog\": null,\n  \"comparisons\": [],\n  \"isolation\": {\n    \"normal_manifest\": false,\n    \"search\": false,\n    \"workload\": false,\n    \"recommendations\": false,\n    \"deadlines\": false,\n    \"ordinary_ai_context\": false\n  }\n}\n",
+  "stdout": "{\"schema_version\":1,\"type\":\"masters-planning-dashboard\",\"opened_at\":\"2026-10-01T07:00:00+00:00\",\"banner\":\"Prospective—not current LearningOS\",\"catalog\":null,\"comparisons\":[],\"isolation\":{\"normal_manifest\":false,\"search\":false,\"workload\":false,\"recommendations\":false,\"deadlines\":false,\"ordinary_ai_context\":false}}\n",
   "stdout_json": {
     "banner": "Prospective—not current LearningOS",
     "catalog": null,

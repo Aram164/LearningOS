@@ -32,5 +32,5 @@ cases:
   - related
   - nope-id
   expect:
-    site: cli.related.unknown-id
+    site: related.read.unknown-id
 untriggered: []

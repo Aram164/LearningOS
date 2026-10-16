@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": false,\n  \"checked\": 1,\n  \"issues\": [\n    {\n      \"root\": \"core\",\n      \"path\": \"work/inbox/note-drop.md\",\n      \"issue\": \"missing\"\n    }\n  ]\n}\n",
+  "stdout": "{\"ok\":false,\"checked\":1,\"issues\":[{\"root\":\"core\",\"path\":\"work/inbox/note-drop.md\",\"issue\":\"missing\"}]}\n",
   "stdout_json": {
     "checked": 1,
     "issues": [

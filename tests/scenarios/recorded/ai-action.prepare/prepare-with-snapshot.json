@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-prepare-snap\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-prepare-snap\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/ai-request-prepare-snap\"\n}\n",
+  "stdout": "{\"ok\":true,\"request\":{\"id\":\"ai-request-prepare-snap\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/ai-request-prepare-snap\"},\"bundle_path\":\"operations/ai-actions/requests/ai-request-prepare-snap\"}\n",
   "stdout_json": {
     "bundle_path": "operations/ai-actions/requests/ai-request-prepare-snap",
     "ok": true,

@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-demo\",\n    \"action_id\": \"unit.compare-materials\",\n    \"target\": {\n      \"id\": \"unit-demo-l01\",\n      \"kind\": \"unit\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-09-20T00:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-demo\"\n  }\n}\n",
+  "stdout": "{\"ok\":true,\"request\":{\"id\":\"ai-request-demo\",\"action_id\":\"unit.compare-materials\",\"target\":{\"id\":\"unit-demo-l01\",\"kind\":\"unit\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-09-20T00:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/ai-request-demo\"}}\n",
   "stdout_json": {
     "ok": true,
     "request": {

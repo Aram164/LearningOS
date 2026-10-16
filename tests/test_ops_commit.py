@@ -9,7 +9,6 @@ and the STANDARD hook wirings are pinned against the moved legacy body.
 
 from __future__ import annotations
 
-import json
 import types
 from pathlib import Path
 
@@ -405,12 +404,11 @@ def test_conflict_returns_3_with_legacy_lines_and_refusal(
     with gateway_request_context(_gateway_context("capture.create", "conflict")):
         code, errors, confirmation = ops_commit.commit_proposal(
             _ctx(mini_repo, "capture.create"), proposal)
-    assert (code, errors, confirmation) == (3, [], {})
-    err = capsys.readouterr().err
-    assert err.splitlines()[0] == (
-        "los: artifact revision conflict — reload the affected record before writing")
-    assert json.loads(err.splitlines()[1]) == {
+    assert (code, errors, confirmation) == (3, [
+        "artifact revision conflict — reload the affected record before writing"], {})
+    assert errors.details == {
         "conflicts": {"a:1": {"expected": 0, "actual": 1}}}
+    assert capsys.readouterr().err == ""
     assert plumbing.take_gateway_refusal() == (REVISION_CONFLICT, True)
 
 
@@ -506,8 +504,11 @@ def test_translate_none_re_raises_into_legacy_handling(
             _gateway_context("ai-action.delivery.apply", "translate-none")):
         code, errors, confirmation = ops_commit.commit_proposal(
             _ctx(mini_repo, "ai-action.delivery.apply"), proposal)
-    assert (code, errors, confirmation) == (3, [], {})
-    assert "artifact revision conflict" in capsys.readouterr().err
+    assert (code, errors, confirmation) == (3, [
+        "artifact revision conflict — reload the affected record before writing"], {})
+    assert errors.details == {
+        "conflicts": {"a:1": {"expected": 0, "actual": 1}}}
+    assert capsys.readouterr().err == ""
     assert plumbing.take_gateway_refusal() == (REVISION_CONFLICT, True)
 
 

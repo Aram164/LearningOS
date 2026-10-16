@@ -31,7 +31,7 @@ captured 1
 
 ```scrut {output_stream: stderr}
 $ los module-attempt module-demo --termin 2 --date 2026-10-09 --result sat
-canonical writes must use GatewayEnvelopeV2* (glob)
+los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability module.attempt.record --payload-file ENVELOPE.json` (payload schema: `los capabilities module.attempt.record --json`; envelope: WORKFLOWS §25c)
 [2]
 ```
 
@@ -74,7 +74,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:6d1b18d03094ffe7a55564bd1a7cda1c78ecea1b068c78bff348f3f1cef22b63",
+  "snapshot_after": "sha256:b0fb9e6c7e08cac6dd8bf01b8c74fe4ad4261ae9f951c8f96b3633fe1cc46313",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -88,7 +88,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:6d1b18d03094ffe7a55564bd1a7cda1c78ecea1b068c78bff348f3f1cef22b63",
+    "snapshot_after": "sha256:b0fb9e6c7e08cac6dd8bf01b8c74fe4ad4261ae9f951c8f96b3633fe1cc46313",
     "replayed": false
   },
   "error": null
@@ -134,7 +134,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:2e2f653fb70aace671477c990afe1d27236876915bb4ea0927a746d9c0f2883b",
+  "snapshot_after": "sha256:7be5c6d4dde95e6b7ff0471f03f17f41d98da10cad1a7748770b96f3b60cd713",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -145,7 +145,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:2e2f653fb70aace671477c990afe1d27236876915bb4ea0927a746d9c0f2883b",
+    "snapshot_after": "sha256:7be5c6d4dde95e6b7ff0471f03f17f41d98da10cad1a7748770b96f3b60cd713",
     "replayed": false
   },
   "error": null

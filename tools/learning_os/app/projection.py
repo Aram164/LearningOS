@@ -25,6 +25,7 @@ from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     bytes_sha256,
     check_identity,
+    manifest_text,
 )
 
 
@@ -147,7 +148,10 @@ def fresh_manifest_and_repo(
             seed_source_fingerprint(repo, live)
         generated_at = stable_generated_at(root)
         backlinks = build_backlinks(repo, generated_at)
-        return build_manifest(repo, generated_at, backlinks), repo
+        # Match the published manifest representation, including nested key order,
+        # so the single CLI encoder produces identical bytes on cache hit and miss.
+        manifest = build_manifest(repo, generated_at, backlinks)
+        return json.loads(manifest_text(manifest)), repo
 
 
 def fresh_manifest(root: Path, *, snapshot_id: str | None = None,

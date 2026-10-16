@@ -350,12 +350,12 @@ def test_failed_commit_keeps_state_witness_and_ledger(mini_repo, monkeypatch,
                       "code": proc.returncode}]
     assert proc.returncode != 0
 
-    # The passthrough is exact: the same git call says the same bytes.
+    # B1 normalizes the CLI diagnostic once; the tool exit and text stay exact.
     direct = subprocess.run(
         ["git", "commit", "-m", "doomed"], cwd=mini_repo,
         capture_output=True, text=True, timeout=120)
-    assert (direct.returncode, direct.stdout, direct.stderr) == (
-        proc.returncode, proc.stdout, proc.stderr)
+    assert (proc.returncode, proc.stdout, proc.stderr) == (
+        direct.returncode, direct.stdout, f"los: {direct.stderr.strip()}\n")
 
 
 def test_failed_push_records_sha_and_keeps_the_window(mini_repo, monkeypatch,
@@ -380,8 +380,8 @@ def test_failed_push_records_sha_and_keeps_the_window(mini_repo, monkeypatch,
     direct = subprocess.run(
         ["git", "push"], cwd=mini_repo,
         capture_output=True, text=True, timeout=120)
-    assert (direct.returncode, direct.stdout, direct.stderr) == (
-        proc.returncode, proc.stdout, proc.stderr)
+    assert (proc.returncode, proc.stdout, proc.stderr) == (
+        direct.returncode, direct.stdout, f"los: {direct.stderr.strip()}\n")
 
 
 def test_push_retry_succeeds_on_the_exact_sha(mini_repo, monkeypatch,
@@ -462,7 +462,7 @@ def test_commit_and_review_refuse_in_committed_unpushed(
     assert refused_commit.stderr == f"los: INVALID_REQUEST: {want}\n"
     assert commit_lines == [{"operation": "session.end",
                              "kind": "failure",
-                             "site": "cli.session-end.already-committed",
+                             "site": "session.end.already-committed",
                              "class": "WriteRefused", "exit_code": 2}]
 
     refused_review, review_lines = _witnessed_session_end(
@@ -471,7 +471,7 @@ def test_commit_and_review_refuse_in_committed_unpushed(
     assert refused_review.stderr == f"los: INVALID_REQUEST: {want}\n"
     assert review_lines == [{"operation": "session.end",
                              "kind": "failure",
-                             "site": "cli.session-end.already-committed",
+                             "site": "session.end.already-committed",
                              "class": "WriteRefused", "exit_code": 2}]
 
 
@@ -502,7 +502,7 @@ def test_retry_after_head_moved_refuses(mini_repo, monkeypatch, tmp_path):
     assert "is no longer HEAD" in refused.stderr
     assert lines == [{"operation": "session.end",
                       "kind": "failure",
-                      "site": "cli.session-end.head-changed",
+                      "site": "session.end.head-changed",
                       "class": "WriteRefused", "exit_code": 2}]
 
 
@@ -561,7 +561,7 @@ def test_corrupt_ledger_refuses_with_its_site(mini_repo, monkeypatch,
     assert "ledger is unreadable" in refused.stderr
     assert lines == [{"operation": "session.end",
                       "kind": "failure",
-                      "site": "cli.session-end.unreadable-ledger",
+                      "site": "session.end.unreadable-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
 
 
@@ -611,7 +611,7 @@ def test_malformed_own_contract_fields_refuse_unsupported(
         "session ownership ledger has an unsupported contract\n")
     assert lines == [{"operation": "session.end",
                       "kind": "failure",
-                      "site": "cli.session-end.unreadable-ledger",
+                      "site": "session.end.unreadable-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
 
 

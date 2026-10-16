@@ -46,7 +46,7 @@ cases:
   - --recipe
   - nope
   expect:
-    site: cli.semantic.bad-recipe
+    site: semantic.query.bad-recipe
 - id: unknown-predicate
   kind: refusal
   transport: cli
@@ -54,7 +54,7 @@ cases:
   - semantic
   - Nope
   expect:
-    site: cli.semantic.unknown-predicate
+    site: semantic.query.unknown-predicate
 - id: bad-input
   kind: refusal
   transport: cli
@@ -64,7 +64,7 @@ cases:
   - --input
   - novalue
   expect:
-    site: cli.semantic.bad-input
+    site: semantic.query.bad-input
 - id: missing-inputs
   kind: refusal
   transport: cli
@@ -72,5 +72,5 @@ cases:
   - semantic
   - RepoClean
   expect:
-    site: cli.semantic.malformed-inputs
+    site: semantic.query.malformed-inputs
 untriggered: []

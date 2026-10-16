@@ -27,7 +27,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los goal goal-demo-deferred --defer --note "Synthetic: revisit after the sitting." --revisit-on 2026-11-01 --check
-{"ok": true, "check": true, "reviewed_sha256": "sha256:b2487f16d1387f582284fafc8dd587f21004442d8257e6bf9d54e0fe69770e0b", "goal_ids": ["goal-demo-deferred"], "state": "deferred", "changes": [{"goal_id": "goal-demo-deferred", "before": {"state": "deferred", "decided_at": "2026-09-20"}, "after": {"state": "deferred", "decided_at": "2026-10-01", "revisit_on": "2026-11-01", "note": "Synthetic: revisit after the sitting."}}]}
+{"ok":true,"check":true,"reviewed_sha256":"sha256:b2487f16d1387f582284fafc8dd587f21004442d8257e6bf9d54e0fe69770e0b","goal_ids":["goal-demo-deferred"],"state":"deferred","changes":[{"goal_id":"goal-demo-deferred","before":{"state":"deferred","decided_at":"2026-09-20"},"after":{"state":"deferred","decided_at":"2026-10-01","revisit_on":"2026-11-01","note":"Synthetic: revisit after the sitting."}}]}
 ```
 
 ## The ledger is a non-canonical sidecar
@@ -102,7 +102,7 @@ captured 1
 
 ```scrut
 $ los goal goal-demo-deferred --defer --note "Synthetic: revisit after the sitting." --revisit-on 2026-11-01
-{"ok": true, "state": "deferred", "goal_id": "goal-demo-deferred", "revisit_on": "2026-11-01"}
+{"ok":true,"state":"deferred","goal_id":"goal-demo-deferred","revisit_on":"2026-11-01"}
 ```
 
 ## The deferral landed in the goal ledger
@@ -127,7 +127,7 @@ canonical unchanged; goal receipt and session verified
 
 ```scrut
 $ los goal goal-demo-deferred goal-demo-rejected --close --note "Synthetic: close both together." --check
-{"ok": true, "check": true, "reviewed_sha256": "sha256:2ebf1e0a838bd72ebf65539b9520a0ba5f4aaba3e6a8ca329048bb7fabf7b3f2", "goal_ids": ["goal-demo-deferred", "goal-demo-rejected"], "state": "closed", "changes": [{"goal_id": "goal-demo-deferred", "before": {"state": "deferred", "decided_at": "2026-10-01", "revisit_on": "2026-11-01", "note": "Synthetic: revisit after the sitting."}, "after": {"state": "closed", "decided_at": "2026-10-01", "note": "Synthetic: close both together."}}, {"goal_id": "goal-demo-rejected", "before": {"state": "rejected", "decided_at": "2026-09-20"}, "after": {"state": "closed", "decided_at": "2026-10-01", "note": "Synthetic: close both together."}}]}
+{"ok":true,"check":true,"reviewed_sha256":"sha256:2ebf1e0a838bd72ebf65539b9520a0ba5f4aaba3e6a8ca329048bb7fabf7b3f2","goal_ids":["goal-demo-deferred","goal-demo-rejected"],"state":"closed","changes":[{"goal_id":"goal-demo-deferred","before":{"state":"deferred","decided_at":"2026-10-01","revisit_on":"2026-11-01","note":"Synthetic: revisit after the sitting."},"after":{"state":"closed","decided_at":"2026-10-01","note":"Synthetic: close both together."}},{"goal_id":"goal-demo-rejected","before":{"state":"rejected","decided_at":"2026-09-20"},"after":{"state":"closed","decided_at":"2026-10-01","note":"Synthetic: close both together."}}]}
 ```
 
 ## Capture the pre-apply-refusal state
@@ -167,7 +167,7 @@ captured 2
 
 ```scrut
 $ los goal goal-demo-deferred goal-demo-rejected --close --note "Synthetic: close both together." --reviewed-sha256 sha256:2ebf1e0a838bd72ebf65539b9520a0ba5f4aaba3e6a8ca329048bb7fabf7b3f2 --session-id session-goal-batch
-{"ok": true, "state": "closed", "goal_ids": ["goal-demo-deferred", "goal-demo-rejected"]}
+{"ok":true,"state":"closed","goal_ids":["goal-demo-deferred","goal-demo-rejected"]}
 ```
 
 ## Both closures landed in the goal ledger

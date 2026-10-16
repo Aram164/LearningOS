@@ -331,7 +331,8 @@ def test_zero_stage_cli_refusal_keeps_the_legacy_line_and_writes_nothing(mini_re
     typed = run_los(mini_repo, "material-span", "unit-demo-l01", route_id,
                     "--stage", "stage-ghost", "--resource-index", "0", "--json")
     assert typed.returncode == 2
-    error = json.loads(typed.stdout)["error"]
+    assert typed.stdout == ""
+    error = json.loads(typed.stderr)["error"]
     assert error["code"] == "INVALID_REQUEST"
     assert error["message"] == "placement is missing or ambiguous in this unit"
     assert error["retryable"] is False

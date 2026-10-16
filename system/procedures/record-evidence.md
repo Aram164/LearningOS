@@ -26,7 +26,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:707f9d0411832cdc3822ee666c67c41e004533a54ac50d114f87ff7852a5337c", "replayed": false}
+{"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"sha256:d0c7c5ba2f66cd4de6b2d06e95e04940e0b6145288148ea9e71fc06d8e0f1f1e","replayed":false}
 ```
 
 ## The newest receipt names the capability
@@ -89,7 +89,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:2d8bd1cab70dccc05ff7b2db7e21f4ea3e79f5c45bd43e7054a46faae5340b17",
+  "snapshot_after": "sha256:8ef2943a3fda4871616992746ce3e1d65148775877d58e388191f5df87f8d800",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +102,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:2d8bd1cab70dccc05ff7b2db7e21f4ea3e79f5c45bd43e7054a46faae5340b17",
+    "snapshot_after": "sha256:8ef2943a3fda4871616992746ce3e1d65148775877d58e388191f5df87f8d800",
     "replayed": false
   },
   "error": null
