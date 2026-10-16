@@ -547,7 +547,9 @@ def test_dynamic_advisory_warnings_do_not_block_master_promotion_preflight(
 
     # INBOX-STALE demonstrably reaches the shadow; WS-NEGLECT currently does
     # not, because the shadow copy never contains .git.
-    from learning_os.app._plan_gate import _module_plan_validation_errors
+    from learning_os.app._plan_gate import (
+        module_plan_validation_errors as _module_plan_validation_errors,
+    )
 
     shadow_codes = {i.code for i in _module_plan_validation_errors(mini_repo, {})}
     assert "INBOX-STALE" not in shadow_codes
@@ -613,7 +615,7 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
 
     import learning_os.store.transactions as transactions
 
-    original_write = transactions._atomic_write_bytes
+    original_write = transactions.atomic_write_bytes
     failure_path = master_promotion_destination(mini_repo, package["id"])
 
     def fail_provenance(path, content):
@@ -621,7 +623,7 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
             raise TransactionFailure("injected promotion provenance failure")
         return original_write(path, content)
 
-    monkeypatch.setattr(transactions, "_atomic_write_bytes", fail_provenance)
+    monkeypatch.setattr(transactions, "atomic_write_bytes", fail_provenance)
     intent = "sha256:" + "1" * 64
     # A real GatewayEnvelopeV2 request carries one approved snapshot, and the
     # handler is dispatched with that same token (capability.py builds both the

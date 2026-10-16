@@ -76,7 +76,7 @@ def pipe(mini_repo):
 def lock_calls(monkeypatch):
     """Record (shared,) for every pipeline lock take; delegate to the real one."""
 
-    real_lock = plumbing._operator_lock
+    real_lock = plumbing.operator_lock
     calls = []
 
     from contextlib import contextmanager

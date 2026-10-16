@@ -30,7 +30,7 @@ from learning_os.derive.projection.manifest import (
     project_manifest_records,
     publish_manifest_metadata,
 )
-from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.derive.projection.projection import (
     build_counts,
     build_indexes,

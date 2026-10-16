@@ -229,7 +229,7 @@ def _unresolved_reason(unresolved: list[dict], *, withheld: bool) -> str:
 
 
 def build_learner_interpretations_json(repo: Repo, generated_at: str) -> str:
-    interpretations = _collect_and_interpret(repo)
+    interpretations = collect_and_interpret(repo)
     output = {
         "_generated": {
             "generated_at": generated_at,
@@ -240,7 +240,7 @@ def build_learner_interpretations_json(repo: Repo, generated_at: str) -> str:
     return json.dumps(output, separators=(",", ":"), sort_keys=True, ensure_ascii=False)
 
 def build_learner_interpretations_md(repo: Repo) -> str:
-    interpretations = _collect_and_interpret(repo)
+    interpretations = collect_and_interpret(repo)
     lines = ["# Learner Interpretations (Runtime Projection)\n", "> **WARNING:** This file is GENERATED. Do not edit directly.\n"]
     if not interpretations:
         lines.append("No interpretations available.")
@@ -268,7 +268,7 @@ def build_learner_interpretations_md(repo: Repo) -> str:
         lines.append("\n---\n")
     return "\n".join(lines) + "\n"
 
-def _collect_and_interpret(repo: Repo) -> dict[str, dict]:
+def collect_and_interpret(repo: Repo) -> dict[str, dict]:
     requirements = collect_requirements(repo)
     observations = read_observations(repo, requirements)
     return {

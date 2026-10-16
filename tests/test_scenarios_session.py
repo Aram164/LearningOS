@@ -142,7 +142,7 @@ def _live_digests(root: Path, touched: list[str]) -> dict[str, dict]:
 
 
 def _own_envelope(root: Path, session: str = "channel:operator") -> dict:
-    envelope = session_store._load_session_ledger(root, session)
+    envelope = session_store.load_session_ledger(root, session)
     assert envelope is not None
     return envelope
 
@@ -181,7 +181,7 @@ def test_matching_witness_commit_succeeds(mini_repo, monkeypatch):
     closed = _session_end(mini_repo, "--commit-message", "match")
     assert closed.returncode == 0, closed.stderr
     assert json.loads(closed.stdout)["committed"] is True
-    assert not session_store._session_ledger(
+    assert not session_store.session_ledger(
         mini_repo, "channel:operator").exists()
 
 
@@ -263,7 +263,7 @@ def test_stale_opt_in_flag_change_refuses_until_rereview(
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="flag-change-001", text="aging")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     data = json.loads(ledger.read_text(encoding="utf-8"))
     aged = (dt.datetime.now(dt.UTC) - dt.timedelta(hours=25)).isoformat()
     for row in data["paths"].values():
@@ -307,7 +307,7 @@ def test_canvas_rows_are_never_selected(mini_repo, monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     captured = _capture(mini_repo, key="canvas-001", text="with canvas")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     data = json.loads(ledger.read_text(encoding="utf-8"))
     data["paths"]["work/board.canvas"] = {
         "state": "file", "channel": "operator",
@@ -332,7 +332,7 @@ def test_failed_commit_keeps_state_witness_and_ledger(mini_repo, monkeypatch,
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="fail-commit-001", text="doomed")
-    before = session_store._session_ledger(
+    before = session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes()
     hook = mini_repo / ".git" / "hooks" / "pre-commit"
     hook.write_text("#!/bin/sh\necho t70-hook-marker >&2\nexit 3\n",
@@ -343,7 +343,7 @@ def test_failed_commit_keeps_state_witness_and_ledger(mini_repo, monkeypatch,
         mini_repo, tmp_path, "--commit-message", "doomed")
     assert "t70-hook-marker" in proc.stderr
     assert proc.stdout == ""
-    assert session_store._session_ledger(
+    assert session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes() == before
     assert lines == [{"operation": "cli.session-end",
                       "kind": "command-failure", "site": None,
@@ -413,7 +413,7 @@ def test_push_retry_succeeds_on_the_exact_sha(mini_repo, monkeypatch,
     assert payload["committed"] is True
     assert payload["pushed"] is True
     assert payload["session_closed"] is True
-    assert not session_store._session_ledger(
+    assert not session_store.session_ledger(
         mini_repo, "channel:operator").exists()
     landed = subprocess.run(
         ["git", "--git-dir", str(remote), "rev-parse", "refs/heads/main"],
@@ -512,16 +512,16 @@ def test_close_in_committed_unpushed_deletes_only_own_ledger(
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="close-unpushed-001", text="closing")
-    session_store._record_touched(
+    session_store.record_touched(
         mini_repo, [mini_repo / "operations" / "goal-ledger.yaml"],
         session_id="other-session")
-    other = session_store._session_ledger(mini_repo, "other-session")
+    other = session_store.session_ledger(mini_repo, "other-session")
     assert other.is_file()
 
     closed = _session_end(mini_repo, "--close")
     assert closed.returncode == 0, closed.stderr
     assert json.loads(closed.stdout)["session_closed"] is True
-    assert not session_store._session_ledger(
+    assert not session_store.session_ledger(
         mini_repo, "channel:operator").exists()
     assert other.is_file()
 
@@ -542,7 +542,7 @@ def test_close_after_failed_push_keeps_the_commit(mini_repo, monkeypatch,
     closed = _session_end(mini_repo, "--close")
     assert closed.returncode == 0, closed.stderr
     assert json.loads(closed.stdout)["session_closed"] is True
-    assert not session_store._session_ledger(
+    assert not session_store.session_ledger(
         mini_repo, "channel:operator").exists()
     assert _head(mini_repo) == sha
 
@@ -552,7 +552,7 @@ def test_corrupt_ledger_refuses_with_its_site(mini_repo, monkeypatch,
     """A damaged own ledger refuses unreadable, witnessed (D7)."""
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
-    session_store._session_ledger(
+    session_store.session_ledger(
         mini_repo, "channel:operator").write_text(
             '{"paths": {"work/x.md": {', encoding="utf-8")
 
@@ -572,7 +572,7 @@ def test_unwritable_state_dir_refuses(mini_repo, monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="nowrite-001", text="no room")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     before = ledger.read_bytes()
     state_dir = mini_repo / ".git" / "learningos"
     state_dir.chmod(0o555)
@@ -595,7 +595,7 @@ def test_malformed_own_contract_fields_refuse_unsupported(
     """Unhashable own schema_version/state refuse; never a TypeError (T73-1)."""
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     ledger.parent.mkdir(parents=True, exist_ok=True)
     doc = {"schema_version": 3, "session_id": "channel:operator",
            "version": 0, "state": "recording", "paths": {},
@@ -620,10 +620,10 @@ def test_malformed_foreign_contract_is_skipped(mini_repo, monkeypatch, bad):
     """An unhashable foreign schema_version is skipped, not fatal (T73-1)."""
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
-    session_store._record_touched(
+    session_store.record_touched(
         mini_repo, [mini_repo / "operations" / "goal-ledger.yaml"],
         session_id="other-session")
-    foreign = session_store._session_ledger(mini_repo, "foreign-session")
+    foreign = session_store.session_ledger(mini_repo, "foreign-session")
     foreign.parent.mkdir(parents=True, exist_ok=True)
     foreign.write_text(json.dumps(
         {"schema_version": bad, "session_id": "foreign-session",
@@ -659,7 +659,7 @@ def test_write_while_committed_unpushed_refuses_before_any_mutation(
     sha = _own_envelope(mini_repo)["commit_sha"]
     assert sha == _head(mini_repo)
     before_tree = _canonical_tree(mini_repo)
-    before_ledger = session_store._session_ledger(
+    before_ledger = session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes()
     before_receipts = sorted(
         (mini_repo / "operations" / "transactions").glob(
@@ -681,7 +681,7 @@ def test_write_while_committed_unpushed_refuses_before_any_mutation(
     assert doc["transaction_id"] is None
     assert doc["receipt_path"] is None
     assert _canonical_tree(mini_repo) == before_tree
-    assert session_store._session_ledger(
+    assert session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes() == before_ledger
     assert sorted((mini_repo / "operations" / "transactions").glob(
         "transaction-*.yaml")) == before_receipts
@@ -711,14 +711,14 @@ def test_write_in_another_sealed_session_while_unpushed_succeeds(
                    cwd=mini_repo, check=True)
     failed = _session_end(mini_repo, "--commit-message", "mine", "--push")
     assert failed.returncode == 128, failed.stderr
-    own_before = session_store._session_ledger(
+    own_before = session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes()
 
     captured = _sealed_capture(mini_repo, key="other-002", text="theirs",
                                session_id="other-session")
-    other = session_store._load_session_ledger(mini_repo, "other-session")
+    other = session_store.load_session_ledger(mini_repo, "other-session")
     assert captured in other["paths"]
-    assert session_store._session_ledger(
+    assert session_store.session_ledger(
         mini_repo, "channel:operator").read_bytes() == own_before
 
 
@@ -815,7 +815,7 @@ def test_gateway_write_with_corrupt_own_ledger_refuses_before_any_mutation(
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="admit-001", text="claimed")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     ledger.write_text('{"paths": {"work/x.md": {', encoding="utf-8")
     before_tree, before_ledger, before_receipts = _snapshots(
         mini_repo, ledger)
@@ -840,7 +840,7 @@ def test_gateway_write_with_unsupported_own_ledger_refuses_before_any_mutation(
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="admit-011", text="claimed")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     ledger.write_text(json.dumps(
         {"schema_version": 99, "session_id": "channel:operator",
          "paths": {}}), encoding="utf-8")
@@ -867,7 +867,7 @@ def test_gateway_write_with_null_sha_unpushed_refuses_before_any_mutation(
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="admit-021", text="claimed")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     ledger.write_text(json.dumps(
         {"schema_version": 3, "session_id": "channel:operator",
          "version": 1, "state": "committed_unpushed", "paths": {},

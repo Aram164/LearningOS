@@ -25,15 +25,15 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::os.replace
+  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::os.replace
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::unlink
+  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::unlink
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::write_text
+  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::write_text
     count: 1
     since: baseline
     approved_by: null
@@ -53,15 +53,15 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/store/fs.py::_atomic_text::os.replace
+  - signature: tools/learning_os/store/fs.py::atomic_text::os.replace
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
-  - signature: tools/learning_os/store/fs.py::_atomic_text::unlink
+  - signature: tools/learning_os/store/fs.py::atomic_text::unlink
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
-  - signature: tools/learning_os/store/fs.py::_atomic_text::write_text
+  - signature: tools/learning_os/store/fs.py::atomic_text::write_text
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
@@ -102,7 +102,7 @@ checks:
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
   A3-prose:
-  - signature: tools/learning_os/domain/plan_import.py::_inventory_block::method::```
+  - signature: tools/learning_os/domain/plan_import.py::inventory_block::method::```
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
@@ -114,7 +114,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/derive/projection/common.py::_git_state::substring::fatal:
+  - signature: 'tools/learning_os/derive/projection/common.py::git_state::substring::fatal:
       not a git repository'
     count: 2
     since: baseline
@@ -191,7 +191,7 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/derive/validation/materials.py::_uris_in::regex::material://([^\s`)\]\"'<>,;]+)
+  - signature: tools/learning_os/derive/validation/materials.py::uris_in::regex::material://([^\s`)\]\"'<>,;]+)
     count: 1
     since: baseline
     approved_by: null

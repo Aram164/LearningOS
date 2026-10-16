@@ -22,12 +22,12 @@ import yaml
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.derive.masters_catalog import (
     MastersPlanningError,
-    _assert_academic_only,
-    _read_yaml_object,
     load_master_catalog,
     master_catalog_destination,
     validate_master_catalog,
 )
+from learning_os.derive.masters_catalog import assert_academic_only as _assert_academic_only
+from learning_os.derive.masters_catalog import read_yaml_object as _read_yaml_object
 from learning_os.domain.failures import NotFound
 from learning_os.store import observations
 from learning_os.store.loader import load_repo

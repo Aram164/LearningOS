@@ -160,7 +160,7 @@ def observe_pins(root: Path) -> dict[str, str] | None:
         return None
 
 
-def _validation_spec() -> NodeSpec:
+def validation_spec() -> NodeSpec:
     """The derived node holding the static issues (SPEC §14: version 1)."""
     return NodeSpec(
         id=VALIDATION_NODE_ID,
@@ -170,7 +170,7 @@ def _validation_spec() -> NodeSpec:
     )
 
 
-def _validation_inputs(pins: dict[str, str]) -> dict[str, str]:
+def validation_inputs(pins: dict[str, str]) -> dict[str, str]:
     """Map the six frozen pins onto derived direct-input digests.
 
     Strict: exactly the six `cache_pins` keys, no more and no fewer.
@@ -182,7 +182,7 @@ def _validation_inputs(pins: dict[str, str]) -> dict[str, str]:
     return {_VALIDATION_INPUT_IDS[key]: pins[key] for key in _VALIDATION_INPUT_IDS}
 
 
-def _freeze_static(issues: list[Issue]) -> list[dict]:
+def freeze_static(issues: list[Issue]) -> list[dict]:
     """Frozen static issues: live advisories filtered at this one choke
     point, so no caller can persist clock-derived issues by accident."""
     return [
@@ -192,7 +192,7 @@ def _freeze_static(issues: list[Issue]) -> list[dict]:
     ]
 
 
-def _valid_static_value(value: Any) -> bool:
+def valid_static_value(value: Any) -> bool:
     """Whether a derived hit has exactly the frozen-static shape we write."""
     if not isinstance(value, list):
         return False
@@ -206,7 +206,7 @@ def _valid_static_value(value: Any) -> bool:
     )
 
 
-def _restore_static(value: list[dict]) -> list[Issue]:
+def restore_static(value: list[dict]) -> list[Issue]:
     return [Issue(
         severity=entry["severity"], code=entry["code"],
         message=entry["message"], path=entry["path"],
@@ -497,7 +497,7 @@ def read_cached_static_issues(
         if pins is None:
             return None
     try:
-        inputs = _validation_inputs(pins)
+        inputs = validation_inputs(pins)
     except DerivedError:
         return None
 
@@ -507,17 +507,17 @@ def read_cached_static_issues(
     try:
         evaluation = evaluate(
             root, VALIDATION_NODE_ID,
-            registry={VALIDATION_NODE_ID: (_validation_spec(), _no_rebuild)},
+            registry={VALIDATION_NODE_ID: (validation_spec(), _no_rebuild)},
             inputs=inputs)
     except (OSError, DerivedError, TransactionFailure, ValueError):
         return None
-    if not _valid_static_value(evaluation.value):
+    if not valid_static_value(evaluation.value):
         try:
             invalidate(root, VALIDATION_NODE_ID)
         except (OSError, TransactionFailure):
             pass
         return None
-    return _restore_static(evaluation.value)
+    return restore_static(evaluation.value)
 
 
 def write_static_cache(
@@ -538,10 +538,10 @@ def write_static_cache(
     if pins is None:
         pins = cache_pins(root)
     try:
-        inputs = _validation_inputs(pins)
+        inputs = validation_inputs(pins)
     except DerivedError as exc:
         raise OSError(f"validation-cache pins are incomplete: {exc}") from exc
-    frozen = _freeze_static(issues)
+    frozen = freeze_static(issues)
 
     def _fixed(_ctx: BuildContext) -> Any:
         return frozen
@@ -549,7 +549,7 @@ def write_static_cache(
     try:
         evaluate(
             root, VALIDATION_NODE_ID,
-            registry={VALIDATION_NODE_ID: (_validation_spec(), _fixed)},
+            registry={VALIDATION_NODE_ID: (validation_spec(), _fixed)},
             inputs=inputs)
     except (DerivedError, TransactionFailure, ValueError) as exc:
         raise OSError(f"validation-cache store failed: {exc}") from exc

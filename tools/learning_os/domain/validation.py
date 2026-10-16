@@ -118,12 +118,12 @@ GARDEN_SUBTREE = ("knowledge", "garden")
 STALE_LOCK_AGE_S = 600       # index.lock older than this = crashed git process
 
 
-def _in_garden(root: Path, path: Path) -> bool:
+def in_garden(root: Path, path: Path) -> bool:
     garden = root.joinpath(*GARDEN_SUBTREE)
     return path == garden or garden in path.parents
 
 
-def _in_quarantine(root: Path, path: Path) -> bool:
+def in_quarantine(root: Path, path: Path) -> bool:
     """Normal validation never reads sealed prospective content."""
     quarantine = root / "curriculum" / "quarantine"
     return path == quarantine or quarantine in path.parents

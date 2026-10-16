@@ -1211,7 +1211,7 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
     from scenario_fixtures import rich_world
 
     from learning_os.app.context import OpContext
-    from learning_os.app.projection import _fresh_manifest_and_repo
+    from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
     from learning_os.domain.failures import WriteRefused
     from learning_os.store.fingerprint import canonical_fingerprint
 

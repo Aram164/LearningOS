@@ -269,7 +269,7 @@ def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day):
     monkeypatch.setattr(
         modules_view, "observations",
         SimpleNamespace(today=lambda: datetime.date.fromisoformat(day)))
-    deadlines = modules_view._academic_deadlines(real_repo)
+    deadlines = modules_view.academic_deadlines(real_repo)
     target = {"module-hu-aml": "2026-09-30",
               "module-hu-m2-statistik-analysis": "2026-10-09"}
     got = {row["module_id"]: row["registration_state"] for row in deadlines
@@ -467,7 +467,7 @@ def test_non_git_tree_generates_with_null_revision(mini_repo, monkeypatch):
 @pytest.mark.parametrize("status, dirty", [("", False), (" M knowledge/concepts.yaml\n", True)])
 def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, dirty):
     (tmp_path / ".git").mkdir(exist_ok=True)
-    from learning_os.derive.projection.common import _git_state
+    from learning_os.derive.projection.common import git_state as _git_state
 
     def run(args, **kwargs):
         return subprocess.CompletedProcess(args, 0,
@@ -479,7 +479,7 @@ def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, di
 
 def test_git_state_reads_without_refreshing_index_or_leaving_lock(tmp_path):
     """A stat-only change stays clean without a read-side Git index write."""
-    from learning_os.derive.projection.common import _git_state
+    from learning_os.derive.projection.common import git_state as _git_state
 
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
     subprocess.run(["git", "config", "user.name", "Test"], cwd=tmp_path, check=True)
@@ -537,7 +537,8 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, contin
     ("<!--\nOnly a multi-line comment.\n-->", ""),
 ])
 def test_note_summary_drops_html_comments(body, expected):
-    from learning_os.derive.projection.common import _first_para, _strip_headings
+    from learning_os.derive.projection.common import first_para as _first_para
+    from learning_os.derive.projection.common import strip_headings as _strip_headings
 
     assert _first_para(_strip_headings(body)) == expected
 
@@ -608,7 +609,8 @@ def test_nested_export_boundaries(mini_repo):
     assert manifest["_generated"]["source_revision"] is None
 
 def test_boundary_functions_agree(mini_repo):
-    from learning_os.derive.projection.common import _git_state, stable_generated_at
+    from learning_os.derive.projection.common import git_state as _git_state
+    from learning_os.derive.projection.common import stable_generated_at
     from learning_os.store.session.githistory import read_history
     rev, dirty = _git_state(mini_repo)
     assert rev is None

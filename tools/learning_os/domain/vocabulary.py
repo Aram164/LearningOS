@@ -34,7 +34,7 @@ _CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 _INLINE_CODE_RE = re.compile(r"`[^`]*`")
 
 
-def _strip_code(text: str) -> str:
+def strip_code(text: str) -> str:
     return _INLINE_CODE_RE.sub(" ", _CODE_FENCE_RE.sub(" ", text))
 
 

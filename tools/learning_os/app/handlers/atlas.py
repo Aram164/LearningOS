@@ -26,8 +26,8 @@ from learning_os.derive.learning_runtime import runtime_path
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import suggest, with_suggestions
 from learning_os.store import observations
-from learning_os.store.codec import _render_frontmatter
-from learning_os.store.fingerprint import _snapshot
+from learning_os.store.codec import render_frontmatter as _render_frontmatter
+from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions

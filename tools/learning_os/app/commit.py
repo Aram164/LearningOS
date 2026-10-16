@@ -16,14 +16,10 @@ import sys
 from pathlib import Path
 
 from learning_os.app.context import OpContext
-from learning_os.app.outcomes import (
-    _record_gateway_refusal,
-    _refusal_from_failure,
-)
-from learning_os.app.projection import (
-    _publish,
-    _publish_repo,
-)
+from learning_os.app.outcomes import record_gateway_refusal as _record_gateway_refusal
+from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failure
+from learning_os.app.projection import publish as _publish
+from learning_os.app.projection import publish_repo as _publish_repo
 from learning_os.app.proposal import TransactionProposal
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.validation import validate
@@ -35,10 +31,8 @@ from learning_os.domain.failures import (
 )
 from learning_os.store.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.store.loader import load_repo
-from learning_os.store.session_ledger import (
-    _load_session_ledger,
-    _record_touched,
-)
+from learning_os.store.session_ledger import load_session_ledger as _load_session_ledger
+from learning_os.store.session_ledger import record_touched as _record_touched
 from learning_os.store.transactions import (
     PostCommitFailure,
     ProjectionFailure,

@@ -283,12 +283,12 @@ class ChecksMaterials:
         found: set[str] = set()
         for _path, text in self._canonical_texts():
             if "material://" in text:
-                found |= _uris_in(text)
+                found |= uris_in(text)
         found.discard("")
         return found
 
 
-def _uris_in(text: str) -> set[str]:
+def uris_in(text: str) -> set[str]:
     """Every material:// payload in one document, delimited forms first."""
     found: set[str] = set()
     for pattern in MATERIAL_URI_DELIMITED:

@@ -139,7 +139,7 @@ def test_unhandled_read_history_arguments_reach_real_git(monkeypatch, tmp_path):
 
 def test_walk_other_formats_reach_real_git(monkeypatch, tmp_path):
     _git_fixture(monkeypatch, tmp_path)
-    table = githistory._walk(str(REPO_ROOT), "%an")
+    table = githistory.walk(str(REPO_ROOT), "%an")
     assert table, "an unhandled walk format must still read real Git"
 
 

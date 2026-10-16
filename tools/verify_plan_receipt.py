@@ -46,13 +46,11 @@ TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 
-from learning_os.app.gateway import (  # noqa: E402
-    _context_from_v2,
-    _read_structured_file,
-    _validate_capability_envelope,
-    _validate_payload,
-)
-from learning_os.app.lock import _operator_lock  # noqa: E402
+from learning_os.app.gateway import context_from_v2 as _context_from_v2  # noqa: E402
+from learning_os.app.gateway import read_structured_file as _read_structured_file  # noqa: E402
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope  # noqa: E402
+from learning_os.app.gateway import validate_payload as _validate_payload  # noqa: E402
+from learning_os.app.lock import operator_lock as _operator_lock  # noqa: E402
 from learning_os.derive.material_synthesis import (  # noqa: E402
     MaterialSynthesisError,
     synthesis_destination,

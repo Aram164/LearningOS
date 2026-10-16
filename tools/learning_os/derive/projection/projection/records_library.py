@@ -5,12 +5,12 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from learning_os.derive.projection.atlas import ATLAS_COLLECTION_DOMAIN
-from learning_os.derive.projection.materials import _material_location
 from learning_os.derive.projection.projection.grouping import (
     ordered_thematic_group_ids,
     source_thematic_groups,
 )
 from learning_os.domain.snapshot import Repo
+from learning_os.store.materials.resolution import material_location as _material_location
 
 Revision = Callable[..., int]
 

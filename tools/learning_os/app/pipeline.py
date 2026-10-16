@@ -25,15 +25,15 @@ from learning_os.app.admission import (
 from learning_os.app.check import check_proposal
 from learning_os.app.commit import commit_proposal
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import _json_layout, encode_json
-from learning_os.app.gateway import (
-    _context_from_v2,
-    _dispatch,
-    _validate_capability_envelope,
-    prepare_dispatch,
-)
-from learning_os.app.lock import _operator_lock
-from learning_os.app.outcomes import _take_gateway_refusal, classify, error_object, resolve
+from learning_os.app.encoders import encode_json
+from learning_os.app.encoders import json_layout as _json_layout
+from learning_os.app.gateway import context_from_v2 as _context_from_v2
+from learning_os.app.gateway import dispatch as _dispatch
+from learning_os.app.gateway import prepare_dispatch
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
+from learning_os.app.lock import operator_lock as _operator_lock
+from learning_os.app.outcomes import classify, error_object, resolve
+from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.app.registry import REGISTRY
 from learning_os.app.render import call_renderer
 from learning_os.contracts.gateway import (
@@ -60,22 +60,20 @@ from learning_os.domain.failures import (
     TransactionRollbackIncomplete,
     TransactionSnapshotConflict,
     WriteRefused,
-    _ReplayRecoveryError,
 )
+from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
 from learning_os.domain.transaction import TransactionResult
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.evidence import replay_for_request
 from learning_os.store.fingerprint import canonical_fingerprint
-from learning_os.store.session_ledger import (
-    _current_session_id,
-    _load_session_ledger,
-    _row_proven_state,
-    _session_ledger,
-    _session_path_state,
-    _stamp_session_row,
-    _write_session_ledger,
-)
+from learning_os.store.session_ledger import current_session_id as _current_session_id
+from learning_os.store.session_ledger import load_session_ledger as _load_session_ledger
+from learning_os.store.session_ledger import row_proven_state as _row_proven_state
+from learning_os.store.session_ledger import session_ledger as _session_ledger
+from learning_os.store.session_ledger import session_path_state as _session_path_state
+from learning_os.store.session_ledger import stamp_session_row as _stamp_session_row
+from learning_os.store.session_ledger import write_session_ledger as _write_session_ledger
 
 
 @dataclass(frozen=True)
@@ -837,7 +835,7 @@ def _replay_response(root: Path, envelope: dict,
     )
 
 
-def _close_attempt(attempt, code: int, status: str,
+def close_attempt(attempt, code: int, status: str,
                    attrs: dict | None = None) -> int:
     """Close the attempt span and report the exit code unchanged.
 
@@ -886,7 +884,7 @@ def _finish(attempt, code: int, status: str, attrs: dict | None, *,
     ``exit_code`` is its return value. Every ordinary Outcome closes the
     same attempt at the same stage and in the same order.
     """
-    exit_code = _close_attempt(attempt, code, status, attrs)
+    exit_code = close_attempt(attempt, code, status, attrs)
     if response is None:
         return Outcome(commit="none", ok=False, payload=None, error=None,
                        exit_code=exit_code, receipt=None, replayed=False,
@@ -1030,7 +1028,7 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         _validate_capability_envelope(root, envelope, kind="request")
     except WriteRefused as exc:
         if not is_v2:
-            _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
+            close_attempt(attempt, 2, "error", {"stage": "core.admission"})
             raise
         _audit_failure(envelope.get("capability"), exc)
         response = _v2_response(

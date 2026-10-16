@@ -12,8 +12,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
-from learning_os.domain.snapshot import Program, Repo, StudyMap, Unit, _register
-from learning_os.store.loading.yamlio import LoaderError, _load_yaml, _record_id
+from learning_os.domain.snapshot import Program, Repo, StudyMap, Unit
+from learning_os.domain.snapshot import register as _register
+from learning_os.store.loading.yamlio import LoaderError
+from learning_os.store.loading.yamlio import load_yaml as _load_yaml
+from learning_os.store.loading.yamlio import record_id as _record_id
 
 
 def load_thematic_groups(repo: Repo, root: Path) -> None:

@@ -14,7 +14,7 @@ from types import SimpleNamespace
 import pytest
 from repo_builders import run_los
 
-from learning_os.app.encoders import _json_layout
+from learning_os.app.encoders import json_layout as _json_layout
 from learning_os.store import fingerprint
 from learning_os.store.loader import load_repo
 

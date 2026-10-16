@@ -164,7 +164,7 @@ def _capture_journal(root: Path, normalizer: _Normalizer) -> dict:
 def _capture_ledger(root: Path, normalizer: _Normalizer):
     import learning_os.store.session_ledger as plumbing
 
-    path = plumbing._session_ledger(root)
+    path = plumbing.session_ledger(root)
     if not path.is_file() or path.is_symlink():
         return None
     try:
@@ -309,7 +309,7 @@ def case_rollback_incomplete(tmp_path: Path) -> dict:
         resolved_target = target.resolve()
         before = _capture_all(root, normalizer)
         receipts_before = _list_receipts(root)
-        original_write = tx_module._atomic_write_bytes
+        original_write = tx_module.atomic_write_bytes
 
         def fail_only_when_restoring(path: Path, content: bytes):
             try:
@@ -322,7 +322,7 @@ def case_rollback_incomplete(tmp_path: Path) -> dict:
 
         result = None
         exc: BaseException | None = None
-        tx_module._atomic_write_bytes = fail_only_when_restoring
+        tx_module.atomic_write_bytes = fail_only_when_restoring
         try:
             try:
                 result = TransactionService(
@@ -334,7 +334,7 @@ def case_rollback_incomplete(tmp_path: Path) -> dict:
             except BaseException as error:  # noqa: BLE001 - recorded
                 exc = error
         finally:
-            tx_module._atomic_write_bytes = original_write
+            tx_module.atomic_write_bytes = original_write
         after = _capture_all(root, normalizer)
         return _finish_case(
             name, root, normalizer, before, after,
@@ -351,7 +351,7 @@ from zoneinfo import ZoneInfo
 import learning_os.store.transactions as tx
 from learning_os.store.transactions import TransactionService
 
-original_write = tx._atomic_write_bytes
+original_write = tx.atomic_write_bytes
 call_count = 0
 target_calls = int(sys.argv[1])
 
@@ -362,7 +362,7 @@ def crashing_write(path, content):
     if call_count == target_calls:
         os._exit(77)
 
-tx._atomic_write_bytes = crashing_write
+tx.atomic_write_bytes = crashing_write
 
 root = Path(sys.argv[2])
 clock_dt = datetime(2026, 10, 1, 9, 0, tzinfo=ZoneInfo("Europe/Berlin"))
@@ -397,7 +397,7 @@ def case_crash_recovery(tmp_path: Path) -> dict:
         result = None
         exc: BaseException | None = None
         try:
-            with plumbing._operator_lock(root):
+            with plumbing.operator_lock(root):
                 pass
         except BaseException as error:  # noqa: BLE001 - recorded
             exc = error
@@ -418,7 +418,7 @@ def case_sink_exception(tmp_path: Path) -> dict:
         target = root / "work" / "inbox" / "sink.md"
         before = _capture_all(root, normalizer)
         receipts_before = _list_receipts(root)
-        original_write = tx_module._atomic_write_bytes
+        original_write = tx_module.atomic_write_bytes
         calls = 0
 
         def fail_on_second(path: Path, content: bytes):
@@ -430,7 +430,7 @@ def case_sink_exception(tmp_path: Path) -> dict:
 
         result = None
         exc: BaseException | None = None
-        tx_module._atomic_write_bytes = fail_on_second
+        tx_module.atomic_write_bytes = fail_on_second
         try:
             try:
                 result = TransactionService(
@@ -441,7 +441,7 @@ def case_sink_exception(tmp_path: Path) -> dict:
             except BaseException as error:  # noqa: BLE001 - recorded
                 exc = error
         finally:
-            tx_module._atomic_write_bytes = original_write
+            tx_module.atomic_write_bytes = original_write
         after = _capture_all(root, normalizer)
         return _finish_case(
             name, root, normalizer, before, after,

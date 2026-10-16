@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import re
 
-from learning_os.derive.projection.common import (
-    _json_header,
-    _letter_toc,
-    _md_header,
-    mermaid_node_ids,
-)
+from learning_os.derive.projection.common import json_header as _json_header
+from learning_os.derive.projection.common import letter_toc as _letter_toc
+from learning_os.derive.projection.common import md_header as _md_header
+from learning_os.derive.projection.common import mermaid_node_ids
 from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import source_fingerprint
 
@@ -132,7 +130,7 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
     return publish_backlinks(repo, build_backlinks_semantic(repo), generated_at)
 
 
-def _evals_for_concept(repo: Repo, cid: str) -> list[tuple[str, dict, dict]]:
+def evals_for_concept(repo: Repo, cid: str) -> list[tuple[str, dict, dict]]:
     """(source_id, source, evaluation) pairs whose evaluation targets cid."""
     out = []
     for sid in sorted(repo.sources):
@@ -143,7 +141,7 @@ def _evals_for_concept(repo: Repo, cid: str) -> list[tuple[str, dict, dict]]:
     return out
 
 
-def _eval_line(sid: str, source: dict, ev: dict) -> str:
+def eval_line(sid: str, source: dict, ev: dict) -> str:
     bits = []
     if ev.get("roles"):
         bits.append("roles: " + ", ".join(ev["roles"]))
@@ -202,13 +200,13 @@ def build_concept_index(repo: Repo, backlinks: dict, generated_at: str) -> str:
                 lines.append(f"- {e['type']} → `{e['to']}`")
             for e in rels["incoming"]:
                 lines.append(f"- ← {e['type']} from `{e['from']}`")
-        evals = _evals_for_concept(repo, cid)
+        evals = evals_for_concept(repo, cid)
         if evals:
             lines.append("")
             lines.append("**Contextual sources:**")
             lines.append("")
             for sid, source, ev in evals:
-                lines.append(f"- {_eval_line(sid, source, ev)}")
+                lines.append(f"- {eval_line(sid, source, ev)}")
         lines.append("")
     return "\n".join(lines)
 

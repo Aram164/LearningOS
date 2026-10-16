@@ -98,8 +98,8 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     envelope passes through every gateway guard unchanged.
     """
     import los  # noqa: E402  (imports the parser, not a command)
-    from learning_os.app.gateway import _dispatch
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.gateway import dispatch as _dispatch
+    from learning_os.app.lock import operator_lock as _operator_lock
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -229,7 +229,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     from learning_os.app.check import check_proposal
     from learning_os.app.context import OpContext
     from learning_os.app.gateway import prepare_dispatch
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,

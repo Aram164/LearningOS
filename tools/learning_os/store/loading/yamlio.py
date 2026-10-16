@@ -67,7 +67,7 @@ def _safe_yaml(text: str):
     return yaml.load(text, Loader=UniqueKeySafeLoader)
 
 
-def _read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
+def read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
     try:
         return read_text_inside(root, path, errors=errors)
     except (OSError, PathBoundaryError) as exc:
@@ -101,8 +101,8 @@ def parse_frontmatter(text: str, path: Path) -> tuple[dict, str]:
     return _normalize(meta), text[m.end():]
 
 
-def _load_yaml(path: Path, root: Path) -> dict:
-    text = _read_text(path, root)
+def load_yaml(path: Path, root: Path) -> dict:
+    text = read_text(path, root)
     try:
         data = _safe_yaml(text)
     except yaml.YAMLError as exc:
@@ -114,7 +114,7 @@ def _load_yaml(path: Path, root: Path) -> dict:
     return _normalize(data)
 
 
-def _load_registry(
+def load_registry(
     consolidated: Path, partition_dir: Path, key: str, *, root: Path
 ) -> tuple[list, list[Path], list[tuple[Path, str]]]:
     """Load a registry from its consolidated file and/or partition directory.
@@ -133,7 +133,7 @@ def _load_registry(
         candidates.extend(sorted(partition_dir.glob("*.yaml")))
     for f in candidates:
         try:
-            data = _load_yaml(f, root)
+            data = load_yaml(f, root)
         except LoaderError as exc:
             failures.append((f, str(exc)))
             continue
@@ -152,7 +152,7 @@ def _load_registry(
     return records, origins, failures
 
 
-def _record_id(rec: dict) -> str | None:
+def record_id(rec: dict) -> str | None:
     """The record's id if it is a non-empty string, else None (reject empties)."""
     rid = rec.get("id")
     if isinstance(rid, str) and rid.strip():

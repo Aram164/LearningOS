@@ -15,23 +15,23 @@ import subprocess
 import sys
 from pathlib import Path
 
-from learning_os.app.projection import _publish
+from learning_os.app.projection import publish as _publish
 from learning_os.app.proposal import CommandOutput
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
+from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
+from learning_os.store.session_ledger import current_session_id as _current_session_id
+from learning_os.store.session_ledger import delete_session_ledger as _delete_session_ledger
 from learning_os.store.session_ledger import (
-    SESSION_LEDGER_STALE_HOURS,
-    _current_session_id,
-    _delete_session_ledger,
-    _load_other_session_ledgers,
-    _load_session_ledger,
-    _row_is_stale,
-    _row_proven_state,
-    _row_recorded_at,
-    _session_path_state,
-    _write_session_ledger,
+    load_other_session_ledgers as _load_other_session_ledgers,
 )
+from learning_os.store.session_ledger import load_session_ledger as _load_session_ledger
+from learning_os.store.session_ledger import row_is_stale as _row_is_stale
+from learning_os.store.session_ledger import row_proven_state as _row_proven_state
+from learning_os.store.session_ledger import row_recorded_at as _row_recorded_at
+from learning_os.store.session_ledger import session_path_state as _session_path_state
+from learning_os.store.session_ledger import write_session_ledger as _write_session_ledger
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 
@@ -44,35 +44,35 @@ TOOLS = Path(__file__).resolve().parent.parent.parent
 CLIENT_ENV = "LOS_CLIENT"
 
 
-class _SessionUsageError(WriteRefused):
+class SessionUsageError(WriteRefused):
     """`--close` with `--commit-message`: usage, nothing was changed."""
 
 
-class _SessionChannelError(WriteRefused):
+class SessionChannelError(WriteRefused):
     """An unknown session channel: usage, nothing was changed."""
 
 
-class _SessionLedgerError(WriteRefused):
+class SessionLedgerError(WriteRefused):
     """The own ledger cannot be read: nothing was changed."""
 
 
-class _SessionEmptyError(WriteRefused):
+class SessionEmptyError(WriteRefused):
     """No files were touched through this session: nothing was changed."""
 
 
-class _SessionConflictError(WriteRefused):
+class SessionConflictError(WriteRefused):
     """A touched file changed after its recorded transaction: uncommitted."""
 
 
-class _SessionMismatchError(WriteRefused):
+class SessionMismatchError(WriteRefused):
     """The session changed after review: uncommitted, witness retained."""
 
 
-class _SessionCommittedError(WriteRefused):
+class SessionCommittedError(WriteRefused):
     """Already committed; only push retry or close: the commit stands."""
 
 
-class _SessionHeadMovedError(WriteRefused):
+class SessionHeadMovedError(WriteRefused):
     """The stored commit is no longer HEAD: nothing was pushed."""
 
 
@@ -128,7 +128,7 @@ def _verify_witness(root: Path, envelope: dict | None, touched: list[str]) -> No
     version = envelope["version"] if envelope is not None else 0
     if review["version"] != version \
             or review["states"] != _witness_states(root, touched):
-        raise _SessionMismatchError(
+        raise SessionMismatchError(
             "the session changed after review — run session-end again")
 
 
@@ -157,27 +157,27 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     review and the later commit invocations.
     """
     if close and commit_message:
-        raise _SessionUsageError(
+        raise SessionUsageError(
             "--close and --commit-message are mutually exclusive: "
             "closing discards the ownership window instead of committing it")
     if channel is not None and channel not in GATEWAY_CHANNELS:
-        raise _SessionChannelError(
+        raise SessionChannelError(
             f"unknown session channel {channel!r} "
             f"(one of: {', '.join(sorted(GATEWAY_CHANNELS))})")
     own_session = _current_session_id(channel=channel, explicit=session_id)
     try:
         envelope = _load_session_ledger(root, own_session)
     except WriteRefused as exc:
-        raise _SessionLedgerError(str(exc)) from exc
+        raise SessionLedgerError(str(exc)) from exc
     unpushed = envelope is not None and envelope["state"] == "committed_unpushed"
     if unpushed and not close and not (push and not commit_message):
-        raise _SessionCommittedError(
+        raise SessionCommittedError(
             f"already committed as {envelope['commit_sha']}; use --push or --close")
     retry = bool(unpushed and push and not commit_message and not close)
     if retry:
         head = _current_head(root)
         if head != envelope["commit_sha"]:
-            raise _SessionHeadMovedError(
+            raise SessionHeadMovedError(
                 f"session commit {envelope['commit_sha']} is no longer HEAD "
                 f"({head or 'unknown'}); push it by hand or close the session")
     others = _load_other_session_ledgers(root, own_session)
@@ -267,7 +267,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
             payload["session_closed"] = False
         return payload
     if not touched:
-        raise _SessionEmptyError(
+        raise SessionEmptyError(
             "no files were touched through this learning session")
     ownership_conflicts = [
         path for path in touched
@@ -275,7 +275,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     ]
     payload["ownership_conflicts"] = ownership_conflicts
     if ownership_conflicts:
-        raise _SessionConflictError(
+        raise SessionConflictError(
             "refusing to stage files changed after their recorded LearningOS "
             "transaction: " + ", ".join(ownership_conflicts))
     _verify_witness(root, envelope, touched)
@@ -293,7 +293,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         if pushed.returncode != 0:
             sha = _current_head(root)
             if sha is None:  # pragma: no cover - the commit just succeeded
-                raise _SessionLedgerError(
+                raise SessionLedgerError(
                     "cannot record the unpushed commit: HEAD is unresolvable")
             _write_session_ledger(
                 root, recorded, own_session,

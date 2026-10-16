@@ -140,7 +140,7 @@ def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
     log_path = tmp_path / "a2-f1.log"
     arch_audit_hook.install(str(log_path))
     try:
-        with plumbing._operator_lock(root, shared=True):
+        with plumbing.operator_lock(root, shared=True):
             pass
     finally:
         arch_audit_hook.uninstall()

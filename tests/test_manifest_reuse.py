@@ -28,7 +28,7 @@ from learning_os.app.handlers.reads import (
     related_records,
 )
 from learning_os.derive.projection import generate_all, write_outputs
-from learning_os.derive.semantics.source_use import _use_evidence
+from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.manifest_identity import (
@@ -84,7 +84,7 @@ def test_reuse_serves_the_stored_build_without_rebuilding(mini_repo, monkeypatch
     builds = _counted(monkeypatch, "build_manifest")
     loads = _counted(monkeypatch, "load_repo")
 
-    manifest = plumbing._fresh_manifest(mini_repo)
+    manifest = plumbing.fresh_manifest(mini_repo)
 
     assert builds == [] and loads == []
     assert manifest == built == _stored_manifest(mini_repo)
@@ -128,7 +128,7 @@ def test_canonical_edit_rebuilds_with_fresh_output(mini_repo, monkeypatch):
         "Body prose.", "Body prose with an edited second sentence."), encoding="utf-8")
 
     builds = _counted(monkeypatch, "build_manifest")
-    manifest = plumbing._fresh_manifest(mini_repo)
+    manifest = plumbing.fresh_manifest(mini_repo)
     assert len(builds) == 1
     [record] = [row for row in manifest["records"] if row["id"] == "note-demo"]
     assert record["summary"] == "Body prose with an edited second sentence."
@@ -152,7 +152,7 @@ def test_code_edit_invalidates_in_a_fixture(mini_repo, monkeypatch):
     assert "code" in reason
 
     builds = _counted(monkeypatch, "build_manifest")
-    plumbing._fresh_manifest(mini_repo)
+    plumbing.fresh_manifest(mini_repo)
     assert len(builds) == 1
 
 
@@ -174,7 +174,7 @@ def test_corrupt_or_missing_files_rebuild(mini_repo, monkeypatch, breakage):
         (gen / IDENTITY_FILENAME).write_text("[1,2]", encoding="utf-8")
 
     builds = _counted(monkeypatch, "build_manifest")
-    served = plumbing._fresh_manifest(mini_repo)
+    served = plumbing.fresh_manifest(mini_repo)
 
     assert len(builds) == 1
     assert _without_generated(served) == _without_generated(manifest)
@@ -188,7 +188,7 @@ def test_stale_snapshot_rebuilds(mini_repo, monkeypatch):
     path.write_text(json.dumps(identity), encoding="utf-8")
 
     builds = _counted(monkeypatch, "build_manifest")
-    served = plumbing._fresh_manifest(mini_repo)
+    served = plumbing.fresh_manifest(mini_repo)
 
     assert len(builds) == 1
     assert _without_generated(served) == _without_generated(manifest)
@@ -267,7 +267,7 @@ def test_identity_sidecar_pins_the_live_build(mini_repo):
 def test_lazy_repo_loads_once_on_first_use(mini_repo, monkeypatch):
     _generate(mini_repo)
     loads = _counted(monkeypatch, "load_repo")
-    manifest, repo = plumbing._fresh_manifest_and_repo(mini_repo)
+    manifest, repo = plumbing.fresh_manifest_and_repo(mini_repo)
     assert isinstance(repo, plumbing._LazyRepo)
     assert loads == []
     assert sorted(repo.notes) == sorted(
@@ -304,7 +304,7 @@ def test_snapshot_bound_reads_share_one_hash_on_reuse(mini_repo, monkeypatch):
     snapshot = _live_snapshot(mini_repo)
     hashes = _counted(monkeypatch, "canonical_fingerprint")
     builds = _counted(monkeypatch, "build_manifest")
-    plumbing._fresh_manifest(mini_repo, snapshot_id=snapshot)
+    plumbing.fresh_manifest(mini_repo, snapshot_id=snapshot)
     assert hashes == [] and builds == []
 
 
@@ -324,7 +324,7 @@ def test_a_manifest_the_sidecar_does_not_describe_is_rebuilt(mini_repo, monkeypa
     assert _stored_identity(mini_repo)["snapshot_id"] == stale["_generated"]["snapshot_id"]
     builds = _counted(monkeypatch, "build_manifest")
 
-    manifest = plumbing._fresh_manifest(mini_repo)
+    manifest = plumbing.fresh_manifest(mini_repo)
 
     assert len(builds) == 1
     assert "_stale_build_marker" not in manifest

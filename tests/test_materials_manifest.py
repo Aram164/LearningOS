@@ -17,7 +17,7 @@ import pytest
 import yaml
 
 from learning_os.derive.validation import validate
-from learning_os.derive.validation.materials import _uris_in
+from learning_os.derive.validation.materials import uris_in as _uris_in
 from learning_os.store.loader import load_repo
 
 
@@ -430,7 +430,7 @@ def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypa
     ],
 )
 def test_a_material_reference_extends_as_far_as_its_field_says(text, expected, why):
-    from learning_os.derive.validation.materials import _uris_in
+    from learning_os.derive.validation.materials import uris_in as _uris_in
 
     assert expected in _uris_in(text), why
 

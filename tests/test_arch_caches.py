@@ -170,7 +170,7 @@ def test_node_specs_cover_the_independent_inventory():
     assert vc.VALIDATION_NODE_ID == "cache.validation-static"
     assert vc.VALIDATION_NODE_VERSION == 1
     assert "tools/learning_os/store/validation_cache.py" in vc.VALIDATION_PRODUCER_FILES
-    spec = vc._validation_spec()
+    spec = vc.validation_spec()
     assert spec.id == "cache.validation-static" and spec.version == 1
     assert len(spec.direct_inputs) == len(VALIDATION_INPUTS) == 6
     assert rc.RECEIPT_NODE_VERSION == 1

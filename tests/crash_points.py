@@ -86,7 +86,7 @@ def _crash():
 
 
 if POINT in ("before-first-write", "after-first-write"):
-    _original_write = transactions._atomic_write_bytes
+    _original_write = transactions.atomic_write_bytes
     _armed = True
 
     def _counting_write(path, content):
@@ -102,7 +102,7 @@ if POINT in ("before-first-write", "after-first-write"):
         else:
             _original_write(path, content)
 
-    transactions._atomic_write_bytes = _counting_write
+    transactions.atomic_write_bytes = _counting_write
 elif POINT != "none":
     _original_commit = transactions.TransactionService.commit
 

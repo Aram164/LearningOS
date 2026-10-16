@@ -222,7 +222,7 @@ class Repo:
         return [p for p in self.learning_paths.values() if not p.archived]
 
 
-def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path,
+def register(repo: Repo, family: dict, rec_id: str, record, origin: Path,
               family_name: str) -> bool:
     if rec_id in family:
         repo.duplicate_ids.append((family_name, rec_id, origin))

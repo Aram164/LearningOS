@@ -11,14 +11,12 @@ import yaml
 from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
-from learning_os.app.gateway import _read_content_bound_file
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.pipeline import _classify_failure, _projection_error
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.domain.failures import StaleSnapshot
 from learning_os.store.fingerprint import canonical_fingerprint
-from learning_os.store.session_ledger import (
-    _session_ledger,
-)
+from learning_os.store.session_ledger import session_ledger as _session_ledger
 from learning_os.store.transactions import (
     ProjectionFailure,
     TransactionFailure,

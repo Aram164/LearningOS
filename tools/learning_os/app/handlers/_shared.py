@@ -11,18 +11,16 @@ import tempfile
 from pathlib import Path
 
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import (
-    _context_from_v2,
-    _read_structured_file,
-    _validate_capability_envelope,
-)
+from learning_os.app.gateway import context_from_v2 as _context_from_v2
+from learning_os.app.gateway import read_structured_file as _read_structured_file
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.proposal import CommandOutput
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store.revisions import artifact_revision
 
 
-def _on_commit_refused(errors: list) -> list[str]:
+def on_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
     return list(errors[:12])
 
@@ -30,18 +28,18 @@ def _on_commit_refused(errors: list) -> list[str]:
 NOTES_PREFIX = Path("knowledge/notes")
 
 
-def _guard_rows(root, artifacts):
+def guard_rows(root, artifacts):
     return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
 
 
-def _map_for_unit(repo, unit_id):
+def map_for_unit(repo, unit_id):
     maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
     if len(maps) > 1:
         raise WriteRefused(f"unit {unit_id} has ambiguous study maps")
     return maps[0] if maps else None
 
 
-def _input_record(req: dict, label: str) -> dict:
+def input_record(req: dict, label: str) -> dict:
     """The inline record or structured file, from the request (SPEC §12).
 
     Moved from ``commands.collection_entry`` with ``args.<dest>`` retargeted
@@ -58,7 +56,7 @@ def _input_record(req: dict, label: str) -> dict:
     return _read_structured_file(file_name)
 
 
-def _require_gateway_v2() -> None:
+def require_gateway_v2() -> None:
     """Refuse a direct CLI apply of an approved write (SPEC §12).
 
     Moved verbatim from ``commands.collection_entry``; the source units
@@ -72,7 +70,7 @@ def _require_gateway_v2() -> None:
         )
 
 
-def _inbox_search_rows(root: Path) -> list[dict]:
+def inbox_search_rows(root: Path) -> list[dict]:
     """One discovery row per inbox file, matched on names only, never bytes.
 
     Inbox drops are arbitrary files (binary captures included), so the
@@ -94,13 +92,13 @@ def _inbox_search_rows(root: Path) -> list[dict]:
                      "path": f"work/inbox/{rel}"})
     return rows
 
-def _discovery_row(rec):
+def discovery_row(rec):
     """One stable discovery row, shared by search and inbox-list."""
     return {k: rec.get(k) for k in
             ("id", "type", "title", "path", "status",
              "state", "deprecated")}
 
-def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
+def content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
     return {
         "contract": contract, ref_key: ref, "path": relpath,
         "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
@@ -111,7 +109,7 @@ def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, lim
         "next_offset": offset + limit if offset + limit < len(content) else None,
     }
 
-def _window_values(offset: int, limit: int, expected_snapshot: str | None,
+def window_values(offset: int, limit: int, expected_snapshot: str | None,
                    maximum: int) -> tuple[int, int]:
     """Offset/limit validation with the exact commands.reads._window rules."""
     if offset < 0 or not 1 <= limit <= maximum:

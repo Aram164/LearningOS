@@ -19,8 +19,8 @@ from learning_os.derive.learning_runtime import (
     read_stage_results,
     stage_results_for,
 )
-from learning_os.derive.projection.common import _first_para
-from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.derive.projection.resume_dossier import ResumeDossierError, build_resume_dossier
 from learning_os.derive.semantics.dossiers import (
     DossierError,
@@ -35,7 +35,7 @@ from learning_os.derive.semantics.predicates import CONTRACT_VERSION as SEMANTIC
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.material_refs import unit_routes
 from learning_os.domain.suggest import not_found, with_suggestions
-from learning_os.store.fingerprint import _snapshot
+from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.layout import PathBoundaryError, resolved_inside
 from learning_os.store.materials.resolution import (
     material_uri_authority,

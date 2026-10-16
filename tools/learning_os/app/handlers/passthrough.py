@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 from learning_os.app.context import OpContext
-from learning_os.app.projection import _publish
+from learning_os.app.projection import publish as _publish
 from learning_os.app.proposal import CommandOutput, Result
 from learning_os.app.registry import register
 

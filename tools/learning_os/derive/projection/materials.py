@@ -37,13 +37,13 @@ __all__ = [
     "_PAGE_COUNT_SUFFIX",
     "_material_location",
     "_material_uri_authority",
-    "_materials_queue_rows",
+    "materials_queue_rows",
     "_project_material_resource",
     "_safe_material_locator",
 ]
 
 
-def _materials_queue_rows(repo: Repo) -> list[str]:
+def materials_queue_rows(repo: Repo) -> list[str]:
     """Pending-human-decision piles under materials/ (human-operability #10).
     Shared by the coordination view and the reading room."""
     rows: list[str] = []

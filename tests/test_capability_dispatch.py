@@ -16,10 +16,8 @@ from pathlib import Path
 import pytest
 from gateway_helpers import approved_v2_envelope
 
-from learning_os.app.gateway import (
-    _dispatch,
-    _validate_capability_envelope,
-)
+from learning_os.app.gateway import dispatch as _dispatch
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.domain.failures import WriteRefused
 
@@ -326,12 +324,8 @@ def test_generated_schemas_carry_parser_help_text(repo_root: Path):
     """
     import los
     from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import (
-        _NESTED_SCHEMAS,
-        all_payload_schemas,
-        payload_fields,
-        subparsers,
-    )
+    from learning_os.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
+    from learning_os.contracts.payloads import all_payload_schemas, payload_fields, subparsers
 
     parser = los.build_parser()
     commands = subparsers(parser)

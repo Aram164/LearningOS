@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import (
-    LECTURE_KEY_RE,
-    SELECTOR_ROLES,
-    _letter_toc,
-    _md_header,
-)
-from learning_os.derive.projection.concepts import _eval_line, _evals_for_concept
+from learning_os.derive.projection.common import LECTURE_KEY_RE, SELECTOR_ROLES
+from learning_os.derive.projection.common import letter_toc as _letter_toc
+from learning_os.derive.projection.common import md_header as _md_header
+from learning_os.derive.projection.concepts import eval_line as _eval_line
+from learning_os.derive.projection.concepts import evals_for_concept as _evals_for_concept
 from learning_os.domain.snapshot import Repo
 
 

@@ -16,10 +16,8 @@ from pathlib import Path
 
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
-from learning_os.store.session_ledger import (
-    _is_anchored,
-    _process_state_dir,
-)
+from learning_os.store.session_ledger import is_anchored as _is_anchored
+from learning_os.store.session_ledger import process_state_dir as _process_state_dir
 from learning_os.store.transactions import reconcile_inflight_transactions
 
 #: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
@@ -161,7 +159,7 @@ def _has_armed_inflight(root: Path) -> bool:
         return False
 
 
-def _escalate_operator_lock(root: Path) -> bool:
+def escalate_operator_lock(root: Path) -> bool:
     """Drop a held shared lock and take the exclusive one; True when it dropped.
 
     Never upgrades in place: the shared lock is released first, then the
@@ -202,7 +200,7 @@ def _escalate_operator_lock(root: Path) -> bool:
 
 
 @contextlib.contextmanager
-def _operator_lock(root: Path, *, shared: bool = False):
+def operator_lock(root: Path, *, shared: bool = False):
     """Cross-process lock for every read and write/generation transaction.
 
     Writes take it exclusive, as before. Reads that only serve a provably
@@ -228,7 +226,7 @@ def _operator_lock(root: Path, *, shared: bool = False):
         if held_mode == "released":
             raise WriteRefused("operator lock is no longer held after a failed escalation")
         if not shared and held_mode == "shared":
-            _escalate_operator_lock(root)
+            escalate_operator_lock(root)
         yield
         return
     lock_path = _operator_lock_path(root)
@@ -250,7 +248,7 @@ def _operator_lock(root: Path, *, shared: bool = False):
             _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
         try:
             if shared and _has_armed_inflight(root):
-                _escalate_operator_lock(root)
+                escalate_operator_lock(root)
             yield
         finally:
             _HELD_OPERATOR_LOCKS.reset(context_token)

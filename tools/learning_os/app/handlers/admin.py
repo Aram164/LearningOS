@@ -14,10 +14,8 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.render import parse_sections
 from learning_os.domain.render import replace_h2_section as _replace_h2_section
 from learning_os.domain.suggest import not_found
-from learning_os.store.codec import (
-    _dump_yaml,
-    _render_frontmatter,
-)
+from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions

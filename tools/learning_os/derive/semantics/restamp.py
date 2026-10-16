@@ -52,11 +52,9 @@ from learning_os.derive.semantics.lineage import (
     route_content_digest,
 )
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION
-from learning_os.derive.semantics.scan import (
-    _live_claim_digests,
-    _scan_manifest_files,
-    live_evidence_digest,
-)
+from learning_os.derive.semantics.scan import live_claim_digests as _live_claim_digests
+from learning_os.derive.semantics.scan import live_evidence_digest
+from learning_os.derive.semantics.scan import scan_manifest_files as _scan_manifest_files
 from learning_os.store.loader import load_repo
 from learning_os.store.session import githistory
 

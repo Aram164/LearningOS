@@ -717,7 +717,7 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
 
     def flapping(root, expected=None):
         if expected is None:
-            return plumbing._snapshot(root)
+            return plumbing.snapshot(root)
         raise StaleSnapshot(
             "snapshot changed; restart this read before continuing")
 
@@ -2928,7 +2928,7 @@ def _prove_session_unreadable_ledger(mini_repo: Path, tmp_path: Path,
 
     import los
     from learning_os.app import pipeline as pipeline_module
-    from learning_os.store.session_ledger import _session_ledger
+    from learning_os.store.session_ledger import session_ledger as _session_ledger
 
     for command in (["git", "init", "-q"],
                     ["git", "config", "user.email", "tests@example.invalid"],
@@ -2965,7 +2965,7 @@ def _prove_session_ownership_conflict(mini_repo: Path, tmp_path: Path,
 
     import los
     from learning_os.app import pipeline as pipeline_module
-    from learning_os.store.session_ledger import _record_touched
+    from learning_os.store.session_ledger import record_touched as _record_touched
 
     for command in (["git", "init", "-q"],
                     ["git", "config", "user.email", "tests@example.invalid"],
@@ -3009,7 +3009,7 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
 
     import los
     from learning_os.app import pipeline as pipeline_module
-    from learning_os.store.session_ledger import _record_touched
+    from learning_os.store.session_ledger import record_touched as _record_touched
 
     for command in (["git", "init", "-q"],
                     ["git", "config", "user.email", "tests@example.invalid"],

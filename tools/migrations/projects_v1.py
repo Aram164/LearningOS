@@ -54,7 +54,7 @@ def lock(root: Path):
     # The shared operator lock, not a second implementation of it: a
     # temp-dir lock of its own would no longer exclude the
     # repository-anchored one.
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     with _operator_lock(root):
         yield

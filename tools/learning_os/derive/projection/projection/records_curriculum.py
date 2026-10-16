@@ -5,8 +5,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
-from learning_os.derive.projection.common import _first_para, _git_last_commit
-from learning_os.derive.projection.materials import _project_material_resource
+from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.derive.projection.common import git_last_commit as _git_last_commit
 from learning_os.derive.projection.projection.grouping import ordered_thematic_group_ids
 from learning_os.derive.projection.projection.lifecycle import module_lifecycle
 from learning_os.derive.projection.projection.stages import project_stages
@@ -19,6 +19,9 @@ from learning_os.derive.semantics import predicates as semantic_predicates
 from learning_os.domain.snapshot import Repo
 from learning_os.domain.unit_notes import unit_note_sections as parse_unit_note_sections
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolved_inside
+from learning_os.store.materials.resolution import (
+    project_material_resource as _project_material_resource,
+)
 
 Revision = Callable[..., int]
 

@@ -389,7 +389,7 @@ def _renderers() -> list[tuple[str, str, str, str, ast.AST, dict]]:
 
 #: Bare-name calls the flagger reports (SPEC §3.5b item 5).
 _BARE_CALLS = frozenset({
-    "load_repo", "canonical_fingerprint", "_operator_lock",
+    "load_repo", "canonical_fingerprint", "_operator_lock", "operator_lock",
     "TransactionService", "commit_proposal", "_write_transaction", "open",
 })
 

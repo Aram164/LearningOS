@@ -64,12 +64,10 @@ from learning_os.store import revisions as revision_store
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
-from learning_os.store.evidence import (
-    _default_authority_root,
-    _idempotency_ledger_path,
-    _load_idempotency_entries,
-    replay_for_request,
-)
+from learning_os.store.evidence import default_authority_root as _default_authority_root
+from learning_os.store.evidence import idempotency_ledger_path as _idempotency_ledger_path
+from learning_os.store.evidence import load_idempotency_entries as _load_idempotency_entries
+from learning_os.store.evidence import replay_for_request
 
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
@@ -177,7 +175,7 @@ def transaction_artifacts(root: Path, artifact_ids: Iterable[str],
     return artifacts
 
 
-def _atomic_write_bytes(path: Path, content: bytes) -> None:
+def atomic_write_bytes(path: Path, content: bytes) -> None:
     """Atomically replace *path* and make the replacement crash-durable.
 
     ``os.replace`` alone guarantees visibility, not persistence. Flushing the
@@ -305,7 +303,7 @@ def _update_intent_after(inflight_dir: Path, relative: str,
         raise TransactionFailure(
             f"transaction recovery journal has no entry for {relative}"
         )
-    _atomic_write_bytes(intent_path, json.dumps(intent).encode("utf-8"))
+    atomic_write_bytes(intent_path, json.dumps(intent).encode("utf-8"))
 
 
 def _inspect_live_path(path: Path) -> tuple[str, str | None]:
@@ -695,7 +693,7 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
                                           [conflict]),
                         transaction_id=transaction_id, conflicts=[conflict])
                 with _engine_phase("restore"):
-                    _atomic_write_bytes(path, blob)
+                    atomic_write_bytes(path, blob)
         except TransactionRecoveryConflict:
             raise
         except Exception as exc:
@@ -1520,7 +1518,7 @@ class TransactionService:
                 before: dict = {"kind": "absent"}
             else:
                 backup_id = f"backup-{i}"
-                _atomic_write_bytes(run.staging_dir / backup_id, old)
+                atomic_write_bytes(run.staging_dir / backup_id, old)
                 before = {
                     "kind": "file",
                     "sha256": f"sha256:{_sha256_bytes(old)}",
@@ -1543,7 +1541,7 @@ class TransactionService:
             # _update_intent_after before that write lands. Until then
             # recovery treats anything but `before` as unprovable.
             intent["paths"].append(entry)
-        _atomic_write_bytes(
+        atomic_write_bytes(
             run.staging_dir / "intent.json", json.dumps(intent).encode("utf-8"))
         os.rename(run.staging_dir, run.inflight_dir)
         run.journal_published = True
@@ -1560,7 +1558,7 @@ class TransactionService:
             # approved write set, but avoid replacing identical files.
             if run.backups[path] != content:
                 with _engine_phase("apply"):
-                    _atomic_write_bytes(path, content)
+                    atomic_write_bytes(path, content)
         for path in run.delete_paths:
             if path.is_dir():
                 raise TransactionFailure(f"transaction refuses to delete directory: {path}")
@@ -1685,7 +1683,7 @@ class TransactionService:
             # after-image before these bytes land.
             _update_intent_after(
                 run.inflight_dir, run.idempotency_relative, idempotency_content)
-            _atomic_write_bytes(run.idempotency_path, idempotency_content)
+            atomic_write_bytes(run.idempotency_path, idempotency_content)
             run.normalized_writes[run.idempotency_path] = idempotency_content
 
     def _write_receipt(self, run: _CommitRun, metadata) -> None:
@@ -1777,7 +1775,7 @@ class TransactionService:
                 )
         if run.receipt_path.exists():
             raise TransactionFailure(f"receipt path already exists: {run.receipt_path}")
-        _atomic_write_bytes(run.receipt_path, _receipt_text(receipt).encode("utf-8"))
+        atomic_write_bytes(run.receipt_path, _receipt_text(receipt).encode("utf-8"))
         run.commit_reached = True
         # The irrevocable point: receipt bytes are durable and the except
         # path below no longer rolls back. `core.transaction.committed`

@@ -606,9 +606,7 @@ def _read_ledger_file(root: Path, *parts: str):
 def _session_ledger_path(root: Path):
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
-        from learning_os.store.session_ledger import (
-            _session_ledger,
-        )
+        from learning_os.store.session_ledger import session_ledger as _session_ledger
     finally:
         del sys.path[0]
     return _session_ledger(root)

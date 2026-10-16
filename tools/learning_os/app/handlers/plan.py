@@ -13,21 +13,26 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.app._plan_gate import coverage_audit_problems as _coverage_audit_problems
+from learning_os.app._plan_gate import enumerate_inventory_roots as _enumerate_inventory_roots
+from learning_os.app._plan_gate import inventory_row_problems as _inventory_row_problems
 from learning_os.app._plan_gate import (
-    _coverage_audit_problems,
-    _enumerate_inventory_roots,
-    _inventory_row_problems,
-    _master_promotion_check_result,
-    _master_promotion_preflight,
-    _module_plan_check_report,
-    _module_plan_contract_problems,
-    _module_plan_validation_errors,
-    _plan_apply_gate,
+    master_promotion_check_result as _master_promotion_check_result,
 )
+from learning_os.app._plan_gate import master_promotion_preflight as _master_promotion_preflight
+from learning_os.app._plan_gate import module_plan_check_report as _module_plan_check_report
+from learning_os.app._plan_gate import (
+    module_plan_contract_problems as _module_plan_contract_problems,
+)
+from learning_os.app._plan_gate import (
+    module_plan_validation_errors as _module_plan_validation_errors,
+)
+from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
 from learning_os.app.admin.masters_planning import prepare_master_promotion
-from learning_os.app.check import _staged_shadow
+from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import _read_content_bound_file, prepare_review_envelope
+from learning_os.app.gateway import prepare_review_envelope
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
@@ -54,23 +59,31 @@ from learning_os.derive.semantics.lineage import (
     withdraw,
 )
 from learning_os.domain.failures import NotFound, RevisionConflict, WriteRefused
+from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
+from learning_os.domain.plan_import import apply_unit_route_changes as _apply_unit_route_changes
 from learning_os.domain.plan_import import (
-    _ack_shape_problems,
-    _apply_unit_route_changes,
-    _assemble_compact_module_revision,
-    _inventory_block,
-    _inventory_view,
-    _knowledge_node_rows,
-    _minimal_artifact_ids,
-    _module_plan_ordering_problems,
-    _module_plan_routing_problems,
-    _source_map_routes,
-    _source_map_routes_with_source,
-    _synthesis_entries,
+    assemble_compact_module_revision as _assemble_compact_module_revision,
 )
+from learning_os.domain.plan_import import inventory_block as _inventory_block
+from learning_os.domain.plan_import import inventory_view as _inventory_view
+from learning_os.domain.plan_import import knowledge_node_rows as _knowledge_node_rows
+from learning_os.domain.plan_import import minimal_artifact_ids as _minimal_artifact_ids
+from learning_os.domain.plan_import import (
+    module_plan_ordering_problems as _module_plan_ordering_problems,
+)
+from learning_os.domain.plan_import import (
+    module_plan_routing_problems as _module_plan_routing_problems,
+)
+from learning_os.domain.plan_import import source_map_routes as _source_map_routes
+from learning_os.domain.plan_import import (
+    source_map_routes_with_source as _source_map_routes_with_source,
+)
+from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
 from learning_os.domain.render import replace_h2_section as _replace_h2_section
 from learning_os.domain.suggest import not_found
-from learning_os.store.codec import _dump_study_map, _dump_yaml, _render_frontmatter
+from learning_os.store.codec import dump_study_map as _dump_study_map
+from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 

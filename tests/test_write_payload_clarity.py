@@ -122,10 +122,8 @@ def test_every_opaque_payload_field_declares_its_accepted_shape(repo_root):
     """
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import (
-        _NESTED_SCHEMAS,
-        json_object_fields,
-    )
+    from learning_os.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
+    from learning_os.contracts.payloads import json_object_fields
 
     declared = set(resolve_all(repo_root)) | set(_NESTED_SCHEMAS)
     missing, dangling = [], []

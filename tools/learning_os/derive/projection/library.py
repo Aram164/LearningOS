@@ -64,7 +64,8 @@ different shelf in each surface would rightly stop trusting both.
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import _md_header, _slug
+from learning_os.derive.projection.common import md_header as _md_header
+from learning_os.derive.projection.common import slug as _slug
 from learning_os.domain.snapshot import Repo
 
 # The nine material types, in the order the Library shows them.

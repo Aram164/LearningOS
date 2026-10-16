@@ -24,7 +24,8 @@ from learning_os.derive.semantics.goals import (
     cluster_goals,
     rank_clusters,
 )
-from learning_os.derive.semantics.scan import _read_goal_ledger, collect_observations
+from learning_os.derive.semantics.scan import collect_observations
+from learning_os.derive.semantics.scan import read_goal_ledger as _read_goal_ledger
 
 
 def _goal(goal_id: str, detector: str, evidence=()) -> CandidateGoal:

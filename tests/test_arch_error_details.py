@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.app.gateway import _validate_capability_envelope
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.domain.failures import WriteRefused
 
 

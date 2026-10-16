@@ -248,7 +248,7 @@ def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_pat
     submitted = _submit(mini_repo, out)
     assert submitted.returncode == 0, submitted.stderr or submitted.stdout
     captured = json.loads(submitted.stdout)["result"]["captured"]
-    recorded = plumbing_support._load_session_paths(mini_repo, "sealed-agent")
+    recorded = plumbing_support.load_session_paths(mini_repo, "sealed-agent")
     assert captured in recorded
 
 

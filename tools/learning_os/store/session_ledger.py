@@ -78,7 +78,7 @@ def _git_dir(root: Path) -> Path | None:
     return resolved
 
 
-def _process_state_dir(root: Path) -> Path:
+def process_state_dir(root: Path) -> Path:
     """Where this checkout's operator lock and session ledgers live.
 
     `<git-dir>/learningos/` — per checkout, never committed, surviving `git
@@ -102,7 +102,7 @@ def _process_state_dir(root: Path) -> Path:
     return state
 
 
-def _is_anchored(root: Path) -> bool:
+def is_anchored(root: Path) -> bool:
     return _git_dir(root) is not None
 
 
@@ -150,7 +150,7 @@ def _is_member(value: object, choices: frozenset) -> bool:
         return False
 
 
-def _resolve_session_identity(*, channel: str | None = None,
+def resolve_session_identity(*, channel: str | None = None,
                               explicit: str | None = None
                               ) -> tuple[str, str]:
     """The session identity every ledger operation resolves, and its source.
@@ -179,21 +179,21 @@ def _resolve_session_identity(*, channel: str | None = None,
     return f"channel:{resolved}", "channel"
 
 
-def _current_session_id(*, channel: str | None = None,
+def current_session_id(*, channel: str | None = None,
                         explicit: str | None = None) -> str:
     """The session identity every ledger operation resolves the same way."""
-    identity, _ = _resolve_session_identity(channel=channel, explicit=explicit)
+    identity, _ = resolve_session_identity(channel=channel, explicit=explicit)
     return identity
 
 
-def _session_ledger(root: Path, session_id: str | None = None) -> Path:
+def session_ledger(root: Path, session_id: str | None = None) -> Path:
     token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
-    identity = _current_session_id(explicit=session_id)
+    identity = current_session_id(explicit=session_id)
     slug = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
-    return _process_state_dir(root) / f"learningos-{token}-{slug}-touched.json"
+    return process_state_dir(root) / f"learningos-{token}-{slug}-touched.json"
 
 
-def _session_path_state(root: Path, relative: str) -> dict[str, str]:
+def session_path_state(root: Path, relative: str) -> dict[str, str]:
     """Return the exact post-transaction state used to prove session ownership."""
     lexical = root / relative
     try:
@@ -214,7 +214,7 @@ def _session_path_state(root: Path, relative: str) -> dict[str, str]:
     return {"state": "file", "sha256": digest}
 
 
-def _row_proven_state(row: dict) -> dict[str, str]:
+def row_proven_state(row: dict) -> dict[str, str]:
     """The bytes-proving subset of a ledger row, for live-file comparison.
 
     Provenance (`channel`, `recorded_at`) describes the claim, not the file;
@@ -227,7 +227,7 @@ def _row_proven_state(row: dict) -> dict[str, str]:
     return proven
 
 
-def _row_recorded_at(row: dict) -> _dt.datetime | None:
+def row_recorded_at(row: dict) -> _dt.datetime | None:
     raw = row.get("recorded_at")
     if not isinstance(raw, str) or not raw:
         return None
@@ -248,7 +248,7 @@ def _validate_session_row(relative: str, state: object) -> dict[str, str]:
     row = {str(key): str(value) for key, value in state.items()}
     if not row.get("state") or not row.get("channel") or not row.get("recorded_at"):
         raise WriteRefused("session ownership ledger contains an unstamped path row")
-    if _row_recorded_at(row) is None:
+    if row_recorded_at(row) is None:
         raise WriteRefused("session ownership ledger contains an undated path row")
     return row
 
@@ -278,15 +278,15 @@ def _validate_session_review(review: object) -> dict | None:
     return {"version": review["version"], "states": states}
 
 
-def _load_session_ledger(root: Path, session_id: str | None = None) -> dict | None:
+def load_session_ledger(root: Path, session_id: str | None = None) -> dict | None:
     """The own ledger as a v3 envelope, or None when no ledger file exists.
 
     A version 2 file reads as recording/version 0/null witness/null SHA and
     is rewritten as v3 on the next write. Every refusal keeps today's
     message: unreadable, unsupported contract, or a different session.
     """
-    identity = _current_session_id(explicit=session_id)
-    ledger = _session_ledger(root, identity)
+    identity = current_session_id(explicit=session_id)
+    ledger = session_ledger(root, identity)
     if not ledger.is_file():
         return None
     try:
@@ -321,16 +321,16 @@ def _load_session_ledger(root: Path, session_id: str | None = None) -> dict | No
             "commit_sha": commit_sha}
 
 
-def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
+def load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
     """The own ledger's validated path rows, or {} when no ledger exists."""
-    envelope = _load_session_ledger(root, session_id)
+    envelope = load_session_ledger(root, session_id)
     if envelope is None:
         return {}
     return envelope["paths"]
 
 
-def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
-    row = _session_path_state(root, relative)
+def stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
+    row = session_path_state(root, relative)
     row["channel"] = channel
     row["recorded_at"] = observations.now().astimezone(_dt.UTC).replace(
         microsecond=0).isoformat()
@@ -356,7 +356,7 @@ def _atomic_text(path: Path, content: str) -> None:
         raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
 
 
-def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
+def write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
                           session_id: str | None = None, *,
                           version: int, state: str,
                           review: dict | None, commit_sha: str | None) -> None:
@@ -365,8 +365,8 @@ def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
     The whole envelope is explicit: no caller may silently reset the
     version, the state, the witness or the recorded SHA.
     """
-    identity = _current_session_id(explicit=session_id)
-    _atomic_text(_session_ledger(root, identity), json.dumps({
+    identity = current_session_id(explicit=session_id)
+    _atomic_text(session_ledger(root, identity), json.dumps({
         "schema_version": SESSION_LEDGER_SCHEMA_VERSION,
         "session_id": identity,
         "version": version,
@@ -377,7 +377,7 @@ def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
     }, indent=2, sort_keys=True) + "\n")
 
 
-def _delete_session_ledger(root: Path, session_id: str | None = None) -> None:
+def delete_session_ledger(root: Path, session_id: str | None = None) -> None:
     """Delete this session's own ledger file, if present (SPEC §13).
 
     Close and the successful commit/push-retry paths end the ownership
@@ -386,10 +386,10 @@ def _delete_session_ledger(root: Path, session_id: str | None = None) -> None:
     and a missing file is fine (a window that never claimed anything
     closes the same way).
     """
-    _session_ledger(root, session_id).unlink(missing_ok=True)
+    session_ledger(root, session_id).unlink(missing_ok=True)
 
 
-def _record_touched(root: Path, paths, channel: str | None = None, *,
+def record_touched(root: Path, paths, channel: str | None = None, *,
                     session_id: str | None = None) -> None:
     """Stamp post-write rows into the caller's session ledger.
 
@@ -402,9 +402,9 @@ def _record_touched(root: Path, paths, channel: str | None = None, *,
     witness and the recorded SHA: a later recording invalidates a review
     by version, never by erasing the witness.
     """
-    identity = _current_session_id(channel=channel, explicit=session_id)
-    envelope = (_load_session_ledger(root, identity)
-                if _session_ledger(root, identity).is_file() else None)
+    identity = current_session_id(channel=channel, explicit=session_id)
+    envelope = (load_session_ledger(root, identity)
+                if session_ledger(root, identity).is_file() else None)
     current = dict(envelope["paths"]) if envelope is not None else {}
     request = current_gateway_request()
     actor = channel or (request.channel if request is not None else DEFAULT_SESSION_CHANNEL)
@@ -418,8 +418,8 @@ def _record_touched(root: Path, paths, channel: str | None = None, *,
         # action ledger. The protection is about the file type, not the first
         # three default names Obsidian happened to generate.
         if p.suffix.lower() != ".canvas":
-            current[rel] = _stamp_session_row(root, rel, actor)
-    _write_session_ledger(
+            current[rel] = stamp_session_row(root, rel, actor)
+    write_session_ledger(
         root, current, identity,
         version=(envelope["version"] if envelope is not None else 0) + 1,
         state=envelope["state"] if envelope is not None else "recording",
@@ -438,13 +438,13 @@ def _legacy_session_ledger(root: Path) -> Path:
     return Path(tempfile.gettempdir()) / f"learningos-{token}-touched.json"
 
 
-def _row_is_stale(row: dict, now: _dt.datetime | None = None) -> bool:
+def row_is_stale(row: dict, now: _dt.datetime | None = None) -> bool:
     """Whether a row is too old to stage without an explicit flag.
 
     A row whose age cannot be proven is stale: staging it would inherit a
     claim of unknown vintage.
     """
-    moment = _row_recorded_at(row)
+    moment = row_recorded_at(row)
     if moment is None:
         return True
     now = now or observations.now().astimezone(_dt.UTC)
@@ -475,7 +475,7 @@ def _read_sibling_session_ledger(path: Path) -> tuple[str, dict[str, dict]] | No
     return identity, rows
 
 
-def _load_other_session_ledgers(root: Path,
+def load_other_session_ledgers(root: Path,
                                 session_id: str | None = None
                                 ) -> dict[str, dict[str, dict]]:
     """Every session ledger for this root except this session's own.
@@ -487,11 +487,11 @@ def _load_other_session_ledgers(root: Path,
     reported as foreign — including this session's own previous-location
     rows, which are labelled so they cannot be mistaken for the live ones.
     """
-    own = _current_session_id(explicit=session_id)
+    own = current_session_id(explicit=session_id)
     token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
     pattern = f"learningos-{token}-*-touched.json"
     others: dict[str, dict[str, dict]] = {}
-    own_ledger = _session_ledger(root, own)
+    own_ledger = session_ledger(root, own)
 
     def _claim(candidate: Path, *, previous_location: bool) -> None:
         if candidate == own_ledger:
@@ -510,12 +510,12 @@ def _load_other_session_ledgers(root: Path,
             others[identity] = rows
 
     try:
-        current = sorted(_process_state_dir(root).glob(pattern))
+        current = sorted(process_state_dir(root).glob(pattern))
     except OSError:
         current = []
     for candidate in current:
         _claim(candidate, previous_location=False)
-    if _is_anchored(root):
+    if is_anchored(root):
         # The old temp-dir location: every ledger written there before the
         # move still surfaces, as foreign, until the OS reclaims it.
         try:

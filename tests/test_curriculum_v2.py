@@ -361,7 +361,7 @@ def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch
     monkeypatch.setattr(
         modules_view, "observations",
         SimpleNamespace(today=lambda: _dt.date.fromisoformat("2026-10-10")))
-    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    rows = modules_view.academic_deadlines(load_repo(mini_repo))
     mine = next(row for row in rows if row.get("termin") == 2)
     assert (mine["start_date"], mine["registration_state"]) == ("2026-10-09", "unrecorded")
 
@@ -370,7 +370,7 @@ def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch
         "--termin", "2", "--date", "2026-10-09", "--result", "withdrawn",
         artifact_ids=["module-demo"], idempotency_key="attempt-settle-001")
     assert applied.returncode == 0, applied.stdout + applied.stderr
-    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    rows = modules_view.academic_deadlines(load_repo(mini_repo))
     assert next(row for row in rows if row.get("termin") == 2)[
         "registration_state"] == "withdrawn"
 

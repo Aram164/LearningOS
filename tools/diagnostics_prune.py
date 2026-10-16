@@ -63,7 +63,7 @@ def main() -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     if args.derived_state:
-        from learning_os.app.lock import _operator_lock
+        from learning_os.app.lock import operator_lock as _operator_lock
         from learning_os.store.derived.store import sweep_unreferenced_blobs  # noqa: E402
 
         # Pre-4.3 cache sidecars, retired from active use (SPEC §14 step 3).

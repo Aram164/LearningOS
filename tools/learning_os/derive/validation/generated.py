@@ -12,9 +12,9 @@ from learning_os.domain.validation import (
     GENERATED_ALLOWED,
     GENERATED_REPORT_PREFIXES,
     MD_LINK_RE,
-    _in_garden,
-    _in_quarantine,
 )
+from learning_os.domain.validation import in_garden as _in_garden
+from learning_os.domain.validation import in_quarantine as _in_quarantine
 
 
 def _collect_http_urls(value, urls: set[str] | None = None) -> set[str]:

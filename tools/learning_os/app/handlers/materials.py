@@ -10,7 +10,9 @@ from pathlib import Path, PurePosixPath
 import yaml
 
 from learning_os.app.context import OpContext
-from learning_os.app.handlers._shared import _guard_rows, _map_for_unit, _window_values
+from learning_os.app.handlers._shared import guard_rows as _guard_rows
+from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
+from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.proposal import Result
 from learning_os.app.registry import register
 from learning_os.derive.learning_runtime import (
@@ -19,7 +21,8 @@ from learning_os.derive.learning_runtime import (
     stage_results_for,
 )
 from learning_os.derive.material_synthesis import material_synthesis_freshness
-from learning_os.derive.semantics.source_use import _evidence_label, _use_evidence
+from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
+from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.material_refs import (
     MATERIAL_FIELDS,
@@ -30,20 +33,18 @@ from learning_os.domain.material_refs import (
 )
 from learning_os.domain.suggest import MAX_SUGGESTIONS, expansion, suggest, with_suggestions
 from learning_os.domain.vocabulary import FRONTMATTER_RE
-from learning_os.store.fingerprint import _snapshot
-from learning_os.store.fs import _note_bytes
+from learning_os.store.fingerprint import snapshot as _snapshot
+from learning_os.store.fs import note_bytes as _note_bytes
 from learning_os.store.material_analysis import observe_local_material
 from learning_os.store.materials.resolution import (
     project_material_resource,
     resolve_route_material_files,
     sha256_file,
 )
-from learning_os.store.materials.slices import (
-    SliceResolutionError,
-    _read_part,
-    _route_material_files,
-    _unit_note_scope,
-)
+from learning_os.store.materials.slices import SliceResolutionError
+from learning_os.store.materials.slices import read_part as _read_part
+from learning_os.store.materials.slices import route_material_files as _route_material_files
+from learning_os.store.materials.slices import unit_note_scope as _unit_note_scope
 
 MAX_STAGE_RESULTS = 5
 
@@ -242,7 +243,7 @@ def _unit_audit(root, repo, unit) -> dict:
     Moved verbatim from ``commands.material`` for the plan reads (SPEC
     (bs) item 3).
     """
-    from learning_os.app._plan_gate import _match_key
+    from learning_os.app._plan_gate import match_key as _match_key
     from learning_os.derive.material_synthesis import (
         MaterialSynthesisError,
         synthesis_destination,

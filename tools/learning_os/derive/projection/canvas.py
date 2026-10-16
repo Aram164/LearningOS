@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import _json_header
+from learning_os.derive.projection.common import json_header as _json_header
 from learning_os.derive.projection.concepts import PREREQ_TYPES
 from learning_os.domain.snapshot import Repo
 

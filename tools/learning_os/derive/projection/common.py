@@ -10,12 +10,8 @@ from pathlib import Path
 from learning_os import __version__
 from learning_os.domain.failures import TransactionFailure
 from learning_os.store.fingerprint import CANONICAL_ROOTS
-from learning_os.store.session.githistory import (
-    GitHistoryError,
-    _lookup,
-    last_commit_date,
-    read_history,
-)
+from learning_os.store.session.githistory import GitHistoryError, last_commit_date, read_history
+from learning_os.store.session.githistory import lookup as _lookup
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
@@ -49,7 +45,7 @@ def mermaid_node_ids(ids) -> dict[str, str]:
     return mapping
 
 
-def _md_header(title: str, generated_at: str) -> list[str]:
+def md_header(title: str, generated_at: str) -> list[str]:
     return [
         f"# {title}",
         "",
@@ -62,7 +58,7 @@ def _md_header(title: str, generated_at: str) -> list[str]:
     ]
 
 
-def _json_header(generated_at: str) -> dict:
+def json_header(generated_at: str) -> dict:
     return {
         "warning": "GENERATED file - do not edit; rebuilt by python tools/generate.py",
         "generator": f"learning_os v{__version__}",
@@ -70,14 +66,14 @@ def _json_header(generated_at: str) -> dict:
     }
 
 
-def _slug(heading: str) -> str:
+def slug(heading: str) -> str:
     """GitHub-style anchor for a Markdown heading."""
     s = heading.lower()
     s = "".join(ch for ch in s if ch.isalnum() or ch in " -")
     return s.replace(" ", "-")
 
 
-def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
+def letter_toc(entries: list[tuple[str, str]]) -> list[str]:
     """Compact letter-grouped table of contents.
 
     entries: (display text, heading text used for the anchor), pre-sorted.
@@ -89,14 +85,14 @@ def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
         letter = display[:1].upper() if display else "#"
         if not letter.isalpha():
             letter = "#"
-        by_letter.setdefault(letter, []).append(f"[{display}](#{_slug(heading)})")
+        by_letter.setdefault(letter, []).append(f"[{display}](#{slug(heading)})")
     for letter in sorted(by_letter):
         lines.append(f"**{letter}:** " + " · ".join(by_letter[letter]))
         lines.append("")
     return lines
 
 
-def _git_last_commit(
+def git_last_commit(
     root: Path, rel: str, git_table: dict[str, str] | None = None
 ) -> str:
     """Last-commit date for one path, from an attempt table or the live cache.
@@ -138,7 +134,7 @@ def stable_generated_at(root: Path) -> str:
         if ts.endswith("Z"):
             ts = ts[:-1] + "+00:00"
         if ts:
-            _, dirty = _git_state(root)
+            _, dirty = git_state(root)
             if dirty:
                 return f"{ts} (last commit, uncommitted changes)"
             return f"{ts} (last commit)"
@@ -147,7 +143,7 @@ def stable_generated_at(root: Path) -> str:
     return "(no Git history available)"
 
 
-def _git_state(root: Path) -> tuple[str | None, bool]:
+def git_state(root: Path) -> tuple[str | None, bool]:
     """Publish cleanliness only after successful Git queries.
 
     An explicit non-repository response is the sole no-history exception.
@@ -199,7 +195,7 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
 LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
-def _strip_headings(text: str | None) -> str:
+def strip_headings(text: str | None) -> str:
     """Prefer prose after dropping headings, callouts, tables, rules and comments.
 
     HTML comment blocks (``<!-- … -->``, including multi-line) are dropped
@@ -248,7 +244,7 @@ def _strip_headings(text: str | None) -> str:
     return prose if prose.strip() else "\n".join(fallback)
 
 
-def _first_para(text: str | None) -> str:
+def first_para(text: str | None) -> str:
     if not text:
         return ""
     for block in text.split("\n\n"):

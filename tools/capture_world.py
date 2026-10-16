@@ -79,8 +79,8 @@ def _capture_observations(root: Path) -> dict:
     try:
         head = githistory.read_history(root, "-1", "--format=%H").strip() or None
         head_time = githistory.read_history(root, "-1", "--format=%cI").strip() or None
-        dates = githistory._walk(os.path.abspath(root), "%cs")
-        timestamps = githistory._walk(os.path.abspath(root), "%ct")
+        dates = githistory.walk(os.path.abspath(root), "%cs")
+        timestamps = githistory.walk(os.path.abspath(root), "%ct")
         now = observations.now().isoformat()
     finally:
         if saved is not None:
@@ -177,7 +177,7 @@ def _material_entry(materials_root: Path, rel: str, exists: bool) -> dict:
 
 def _capture_materials(root: Path, out: Path) -> tuple[list[dict] | None, str | None]:
     """The reference inventory (SPEC §6, amendments (ah) and (n))."""
-    from learning_os.derive.validation.materials import _uris_in
+    from learning_os.derive.validation.materials import uris_in as _uris_in
     from learning_os.store.loader import load_repo
     from learning_os.store.materials.resolution import (
         MATERIAL_SCHEME,

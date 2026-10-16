@@ -15,13 +15,14 @@ import yaml
 
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import dumps_indented
-from learning_os.app.handlers._shared import _input_record, _require_gateway_v2
+from learning_os.app.handlers._shared import input_record as _input_record
+from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
+from learning_os.derive.material_synthesis import COMPARED_BASIS_FIELDS as _COMPARED_BASIS_FIELDS
 from learning_os.derive.material_synthesis import (
-    _COMPARED_BASIS_FIELDS,
     MaterialSynthesisError,
     current_unit_material_basis,
     publication_lineage_record,
@@ -31,7 +32,7 @@ from learning_os.derive.semantics.lineage import LEDGER_RELATIVE, dump_ledger, l
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import with_suggestions
 from learning_os.domain.validation import CANONICAL_TREES
-from learning_os.store.codec import _dump_yaml
+from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 from learning_os.store.materials.resolution import (
     MATERIAL_SCHEME,

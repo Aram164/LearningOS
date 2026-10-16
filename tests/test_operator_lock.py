@@ -17,7 +17,7 @@ from repo_builders import LOS, run_los
 
 def _hold_in_background(root: Path):
     """Hold the repo's operator lock on a worker thread; returns (release, done)."""
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     release = threading.Event()
     acquired = threading.Event()
@@ -76,7 +76,7 @@ def test_lock_timeout_exits_2_naming_holder(mini_repo):
 
 
 def test_released_lock_ignores_stale_holder_metadata(mini_repo):
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     with _operator_lock(mini_repo):
         pass  # writes holder metadata; the kernel releases the lock on exit
@@ -120,7 +120,7 @@ def test_crashed_holder_never_blocks_next_acquirer(mini_repo, tmp_path):
     """A lock file with a dead holder's metadata still acquires instantly."""
     import hashlib
 
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     token = hashlib.sha256(str(mini_repo.resolve()).encode("utf-8")).hexdigest()[:16]
     lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
@@ -144,7 +144,7 @@ def _git_init(root: Path) -> None:
 
 def _hold_shared_in_background(root: Path):
     """Hold the repo's operator lock shared on a worker thread."""
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     release = threading.Event()
     acquired = threading.Event()
@@ -162,7 +162,8 @@ def _hold_shared_in_background(root: Path):
 
 def test_lock_lives_beside_the_checkout_not_the_tempdir(mini_repo):
     """A git checkout anchors its lock under its own git dir (#110)."""
-    from learning_os.app.lock import _operator_lock, _operator_lock_path
+    from learning_os.app.lock import _operator_lock_path
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     _git_init(mini_repo)
     with _operator_lock(mini_repo):
@@ -245,7 +246,7 @@ def test_write_waits_for_a_shared_read(mini_repo, monkeypatch, capsys):
     """A shared read still excludes writers; the waiter is announced."""
     import pytest
 
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
     from learning_os.domain.failures import WriteRefused
 
     release, worker = _hold_shared_in_background(mini_repo)
@@ -266,7 +267,8 @@ def test_write_waits_for_a_shared_read(mini_repo, monkeypatch, capsys):
 
 def test_nested_exclusive_request_escalates_a_shared_section(mini_repo):
     """A write nested inside a read section strengthens it, safely in-process."""
-    from learning_os.app.lock import _held_entry, _operator_lock
+    from learning_os.app.lock import _held_entry
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     root_key = str(mini_repo.resolve())
     with _operator_lock(mini_repo, shared=True):
@@ -282,7 +284,8 @@ def test_shared_section_escalates_past_a_published_journal(mini_repo, monkeypatc
     import pytest
 
     from learning_os.app import lock as plumbing_support
-    from learning_os.app.lock import _has_armed_inflight, _held_entry, _operator_lock
+    from learning_os.app.lock import _has_armed_inflight, _held_entry
+    from learning_os.app.lock import operator_lock as _operator_lock
     from learning_os.store.transactions import TransactionRecoveryConflict
 
     journal = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
@@ -305,7 +308,8 @@ def test_shared_section_escalates_past_a_published_journal(mini_repo, monkeypatc
 
 def test_staging_debris_alone_keeps_a_shared_section_shared(mini_repo):
     """`.preparing-*` debris died before any mutation, so reads stay shared."""
-    from learning_os.app.lock import _has_armed_inflight, _held_entry, _operator_lock
+    from learning_os.app.lock import _has_armed_inflight, _held_entry
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     staging = mini_repo / "operations" / "transactions" / ".inflight" / ".preparing-tx"
     staging.mkdir(parents=True)
@@ -347,7 +351,7 @@ def test_broken_git_anchor_refuses_instead_of_using_a_second_lock(mini_repo):
 def test_unreadable_crash_journal_directory_refuses_shared_reads(mini_repo, monkeypatch):
     import pytest
 
-    from learning_os.app.lock import _operator_lock
+    from learning_os.app.lock import operator_lock as _operator_lock
 
     original = Path.iterdir
     inflight = mini_repo / "operations" / "transactions" / ".inflight"
@@ -377,12 +381,12 @@ def test_failed_escalation_never_leaves_a_reentrant_unlocked_scope(mini_repo, mo
         return original(handle, exclusive=exclusive, **kwargs)
 
     monkeypatch.setattr(plumbing_support, "_acquire_flock", fail_exclusive)
-    with plumbing_support._operator_lock(mini_repo, shared=True):
+    with plumbing_support.operator_lock(mini_repo, shared=True):
         with pytest.raises(WriteRefused, match="exclusive acquisition failed"):
-            with plumbing_support._operator_lock(mini_repo):
+            with plumbing_support.operator_lock(mini_repo):
                 pytest.fail("exclusive acquisition should fail")
         with pytest.raises(WriteRefused, match="no longer held"):
-            with plumbing_support._operator_lock(mini_repo, shared=True):
+            with plumbing_support.operator_lock(mini_repo, shared=True):
                 pytest.fail("an unlocked outer scope cannot be reused")
 
 

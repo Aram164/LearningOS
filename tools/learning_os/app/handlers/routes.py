@@ -7,15 +7,16 @@ import copy
 import hashlib
 import json
 
+from learning_os.app._plan_gate import compose_plan_gate_errors as _compose_plan_gate_errors
 from learning_os.app._plan_gate import (
-    _compose_plan_gate_errors,
-    _module_plan_validation_errors,
-    _plan_apply_gate,
-    _real_perimeter_errors,
+    module_plan_validation_errors as _module_plan_validation_errors,
 )
+from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
+from learning_os.app._plan_gate import real_perimeter_errors as _real_perimeter_errors
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import dumps_compact
-from learning_os.app.handlers._shared import _guard_rows, _map_for_unit
+from learning_os.app.handlers._shared import guard_rows as _guard_rows
+from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
@@ -30,7 +31,7 @@ from learning_os.domain.material_refs import (
     unit_routes,
 )
 from learning_os.domain.suggest import with_suggestions
-from learning_os.store.codec import _dump_yaml
+from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.transactions import parse_expected_revisions
 from learning_os.store.warning_baseline import signatures_from_issues
 

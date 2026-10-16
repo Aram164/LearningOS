@@ -34,7 +34,7 @@ from learning_os.store import digests
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 
 
-def _snapshot(root, expected=None) -> str:
+def snapshot(root, expected=None) -> str:
     actual = f"sha256:{canonical_fingerprint(root)}"
     if expected is not None and expected != actual:
         raise StaleSnapshot("snapshot changed; restart this read before continuing")

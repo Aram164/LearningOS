@@ -24,9 +24,9 @@ from learning_os.derive.learning_runtime import (
 )
 from learning_os.derive.projection import generate_all
 from learning_os.derive.projection.learner_interpreter import (
-    _collect_and_interpret,
-    interpret_observations,
+    collect_and_interpret as _collect_and_interpret,
 )
+from learning_os.derive.projection.learner_interpreter import interpret_observations
 from learning_os.derive.projection.session_compiler import compile_session, replan_session
 from learning_os.derive.validation import validate
 from learning_os.store.loader import load_repo

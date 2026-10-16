@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import _md_header
+from learning_os.derive.projection.common import md_header as _md_header
 from learning_os.domain.snapshot import Repo
 from learning_os.store import observations
 
@@ -56,7 +56,7 @@ def _withdrawal_deadline_row(module_id: str, module: dict, sitting: dict,
     }
 
 
-def _academic_deadlines(repo: Repo) -> list[dict]:
+def academic_deadlines(repo: Repo) -> list[dict]:
     """Project structured exam sittings and registration windows for interfaces.
 
     Attempts remain the authority for what the learner actually registered,
@@ -177,7 +177,7 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
     return deadlines
 
 
-def _exam_spine_lines(repo: Repo) -> list[str]:
+def exam_spine_lines(repo: Repo) -> list[str]:
     lines = []
     spine = exam_spine(repo)
     if spine:
@@ -188,7 +188,7 @@ def _exam_spine_lines(repo: Repo) -> list[str]:
                          f"| {att.get('termin', '')} | {att.get('notes', '')} |")
     else:
         lines.append("(no registered attempt in any module's module.yaml)")
-    deadlines = _academic_deadlines(repo)
+    deadlines = academic_deadlines(repo)
     # Pending means no attempt recorded: upcoming sittings read as a
     # missing fact ("registration not recorded", the brief's phrase) and
     # elapsed ones as the missing record they are ("unrecorded").
@@ -225,7 +225,7 @@ def build_module_view(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Module view", generated_at)
     lines.append("## Upcoming exam spine (registered attempts, sorted by date)")
     lines.append("")
-    lines.extend(_exam_spine_lines(repo))
+    lines.extend(exam_spine_lines(repo))
     lines.append("")
     for mid in sorted(repo.modules):
         m = repo.modules[mid]

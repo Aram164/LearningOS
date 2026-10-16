@@ -411,7 +411,7 @@ def test_conflict_returns_3_with_legacy_lines_and_refusal(
         "los: artifact revision conflict — reload the affected record before writing")
     assert json.loads(err.splitlines()[1]) == {
         "conflicts": {"a:1": {"expected": 0, "actual": 1}}}
-    assert plumbing._take_gateway_refusal() == (REVISION_CONFLICT, True)
+    assert plumbing.take_gateway_refusal() == (REVISION_CONFLICT, True)
 
 
 @pytest.mark.parametrize("failure,snapshot", [
@@ -435,7 +435,7 @@ def test_typed_engine_failures_propagate(
         with pytest.raises(type(failure)) as caught:
             ops_commit.commit_proposal(_ctx(mini_repo, "capture.create"), proposal)
     assert caught.value is failure
-    assert plumbing._take_gateway_refusal() is None
+    assert plumbing.take_gateway_refusal() is None
 
 
 @pytest.mark.parametrize("failure,recorded", [
@@ -460,7 +460,7 @@ def test_transaction_failures_return_2_with_optional_refusal(
     assert code == 2
     assert errors == [str(failure)]
     assert confirmation == {}
-    assert plumbing._take_gateway_refusal() == recorded
+    assert plumbing.take_gateway_refusal() == recorded
 
 
 def test_translate_runs_before_legacy_catches(mini_repo: Path, monkeypatch, capsys):
@@ -485,7 +485,7 @@ def test_translate_runs_before_legacy_catches(mini_repo: Path, monkeypatch, caps
     assert caught.value is translated
     assert caught.value.__cause__ is original
     assert capsys.readouterr().err == ""
-    assert plumbing._take_gateway_refusal() is None
+    assert plumbing.take_gateway_refusal() is None
 
 
 def test_translate_none_re_raises_into_legacy_handling(
@@ -508,7 +508,7 @@ def test_translate_none_re_raises_into_legacy_handling(
             _ctx(mini_repo, "ai-action.delivery.apply"), proposal)
     assert (code, errors, confirmation) == (3, [], {})
     assert "artifact revision conflict" in capsys.readouterr().err
-    assert plumbing._take_gateway_refusal() == (REVISION_CONFLICT, True)
+    assert plumbing.take_gateway_refusal() == (REVISION_CONFLICT, True)
 
 
 def test_ai_translate_chain_semantics(mini_repo: Path, monkeypatch):
@@ -549,7 +549,7 @@ def test_ai_translate_chain_semantics(mini_repo: Path, monkeypatch):
                 ops_commit.commit_proposal(
                     _ctx(mini_repo, "ai-action.delivery.apply"), proposal)
         assert caught.value.__cause__ is original
-    assert plumbing._take_gateway_refusal() is None
+    assert plumbing.take_gateway_refusal() is None
 
 
 def test_standard_hooks_wire_validation_publish_and_touched(mini_repo: Path, monkeypatch):
@@ -609,7 +609,7 @@ def test_standard_hooks_wire_validation_publish_and_touched(mini_repo: Path, mon
     touched_path = mini_repo / "work/inbox/touched-by-hook.md"
     touched_path.write_text("hooked\n", encoding="utf-8")
     captured["touched"]([touched_path])
-    rows = session_support._load_session_paths(mini_repo)
+    rows = session_support.load_session_paths(mini_repo)
     assert rows["work/inbox/touched-by-hook.md"]["state"] == "file"
 
 

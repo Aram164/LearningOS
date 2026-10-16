@@ -15,13 +15,12 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from learning_os.app.gateway import (
-    _context_from_v2,
-    _dispatch,
-    _read_structured_file,
-    _validate_capability_envelope,
-)
-from learning_os.app.pipeline import _close_attempt, run_gateway
+from learning_os.app.gateway import context_from_v2 as _context_from_v2
+from learning_os.app.gateway import dispatch as _dispatch
+from learning_os.app.gateway import read_structured_file as _read_structured_file
+from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
+from learning_os.app.pipeline import close_attempt as _close_attempt
+from learning_os.app.pipeline import run_gateway
 from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.domain.failures import WriteRefused
 from learning_os.store.diagnostics import tracer as diag_tracer

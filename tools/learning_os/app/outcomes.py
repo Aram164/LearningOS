@@ -44,8 +44,8 @@ from learning_os.domain.failures import (
     TransactionSnapshotConflict,
     TransactionValidationFailure,
     WriteRefused,
-    _ReplayRecoveryError,
 )
+from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.legacy_archive import LegacyArchiveError
 
@@ -63,17 +63,17 @@ _GATEWAY_REFUSAL: contextvars.ContextVar[tuple[str, bool] | None] = (
     contextvars.ContextVar("learningos_gateway_refusal", default=None)
 )
 
-def _record_gateway_refusal(code: str, retryable: bool) -> None:
+def record_gateway_refusal(code: str, retryable: bool) -> None:
     """Carry one typed refusal code across the handler's int-exit boundary."""
     _GATEWAY_REFUSAL.set((code, retryable))
 
-def _take_gateway_refusal() -> tuple[str, bool] | None:
+def take_gateway_refusal() -> tuple[str, bool] | None:
     """Read and clear the recorded refusal, if any."""
     refusal = _GATEWAY_REFUSAL.get()
     _GATEWAY_REFUSAL.set(None)
     return refusal
 
-def _refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
+def refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
     """Map a refusal to its V2 ``(code, retryable)`` by type, never by prose.
 
     Returns ``None`` for an untyped refusal, which the gateway reports as

@@ -913,7 +913,7 @@ def test_dossier_lineage_failure_rolls_back_source_and_dossier(
     namespace = los.build_parser().parse_args([
         "--root", str(mini_repo), "capability", "source.record.revise",
         "--payload-file", str(envelope_file)])
-    real_write = transactions._atomic_write_bytes
+    real_write = transactions.atomic_write_bytes
     failed = False
 
     def fail_lineage_once(path, content):
@@ -923,7 +923,7 @@ def test_dossier_lineage_failure_rolls_back_source_and_dossier(
             raise OSError("injected dossier lineage failure")
         return real_write(path, content)
 
-    monkeypatch.setattr(transactions, "_atomic_write_bytes", fail_lineage_once)
+    monkeypatch.setattr(transactions, "atomic_write_bytes", fail_lineage_once)
     assert namespace.func(namespace) != 0
     assert failed
     assert all(path.read_bytes() == original for path, original in before.items())

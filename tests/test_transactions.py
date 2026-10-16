@@ -225,7 +225,7 @@ def test_transaction_walks_twice_but_reads_each_file_once(
     target_rel = target.relative_to(mini_repo).as_posix()
     digests.clear()
 
-    with plumbing_support._operator_lock(mini_repo):
+    with plumbing_support.operator_lock(mini_repo):
         with gateway_request_context(context), verified_gateway_snapshot(
             mini_repo, expected
         ):
@@ -351,7 +351,7 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
     target = mini_repo / "work/inbox/bounded-fingerprints.md"
     artifact = "capture-test:bounded-fingerprints"
 
-    with plumbing_support._operator_lock(mini_repo):
+    with plumbing_support.operator_lock(mini_repo):
         with gateway_request_context(context), verified_gateway_snapshot(
             mini_repo, expected
         ):
@@ -386,8 +386,8 @@ def test_operator_lock_is_reentrant_in_one_dispatch(
     # The outer acquire probes non-blocking first; the inner re-entrant
     # acquire performs no lock operation at all.
     probe = fcntl.LOCK_EX | fcntl.LOCK_NB
-    with plumbing_support._operator_lock(tmp_path):
-        with plumbing_support._operator_lock(tmp_path):
+    with plumbing_support.operator_lock(tmp_path):
+        with plumbing_support.operator_lock(tmp_path):
             assert calls == [probe]
 
     assert calls == [probe, fcntl.LOCK_UN]
@@ -509,9 +509,9 @@ def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Pa
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     canvas = mini_repo / "Untitled 37.canvas"
     regular = mini_repo / "work/inbox/kept.md"
-    session_support._record_touched(mini_repo, [canvas, regular])
+    session_support.record_touched(mini_repo, [canvas, regular])
     recorded = json.loads(
-        session_support._session_ledger(mini_repo).read_text(encoding="utf-8")
+        session_support.session_ledger(mini_repo).read_text(encoding="utf-8")
     )
     assert "Untitled 37.canvas" not in recorded["paths"]
     row = recorded["paths"]["work/inbox/kept.md"]
@@ -544,7 +544,7 @@ def test_atomic_transaction_write_fsyncs_file_and_parent_directory(
     monkeypatch.setattr(transaction_module.os, "fsync", lambda fd: calls.append(fd))
     target = tmp_path / "durable.yaml"
 
-    transaction_module._atomic_write_bytes(target, b"durable\n")
+    transaction_module.atomic_write_bytes(target, b"durable\n")
 
     assert target.read_bytes() == b"durable\n"
     assert len(calls) == 2
@@ -1036,14 +1036,14 @@ def test_incomplete_rollback_is_reported_with_the_unrestored_path(
     target = root / "projects/registry/project-demo.yaml"
     target.parent.mkdir(parents=True)
     target.write_text("old\n", encoding="utf-8")
-    original_write = transaction_module._atomic_write_bytes
+    original_write = transaction_module.atomic_write_bytes
 
     def fail_only_when_restoring(path: Path, content: bytes):
         if path == target and content == b"old\n":
             raise TransactionFailure("forced restore failure")
         return original_write(path, content)
 
-    monkeypatch.setattr(transaction_module, "_atomic_write_bytes", fail_only_when_restoring)
+    monkeypatch.setattr(transaction_module, "atomic_write_bytes", fail_only_when_restoring)
     with pytest.raises(TransactionFailure, match="rollback incomplete for: projects/registry/project-demo.yaml"):
         TransactionService(root).commit(
             capability="project.update",
@@ -1072,7 +1072,7 @@ sys.path.insert(0, str(TOOLS_DIR))
 from learning_os.store import transactions
 import los
 
-original_write = transactions._atomic_write_bytes
+original_write = transactions.atomic_write_bytes
 call_count = 0
 target_calls = int(sys.argv[1])
 
@@ -1083,7 +1083,7 @@ def crashing_write(path, content):
     if call_count == target_calls:
         os._exit(77)
 
-transactions._atomic_write_bytes = crashing_write
+transactions.atomic_write_bytes = crashing_write
 
 sys.argv = [sys.argv[0]] + sys.argv[2:]
 los.main()

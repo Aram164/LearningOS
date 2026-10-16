@@ -12,16 +12,16 @@ class _NoAliasSafeDumper(yaml.SafeDumper):
         return True
 
 
-def _dump_yaml(data: dict) -> str:
+def dump_yaml(data: dict) -> str:
     return yaml.dump(data, Dumper=_NoAliasSafeDumper, sort_keys=False,
                      allow_unicode=True, width=100)
 
 
-def _render_frontmatter(meta: dict, body: str) -> str:
-    return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
+def render_frontmatter(meta: dict, body: str) -> str:
+    return "---\n" + dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
 
-def _dump_study_map(study_map, data: dict) -> str:
+def dump_study_map(study_map, data: dict) -> str:
     from learning_os.domain.material_refs import preserve_map_refs
 
-    return _dump_yaml(preserve_map_refs(study_map, data))
+    return dump_yaml(preserve_map_refs(study_map, data))

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import _first_para, _strip_headings
+from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.derive.projection.common import strip_headings as _strip_headings
 from learning_os.domain.snapshot import Repo
 
 

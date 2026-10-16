@@ -8,8 +8,9 @@ from pathlib import Path, PurePosixPath
 from learning_os import __version__
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import dumps_compact
-from learning_os.app.handlers._shared import _inbox_search_rows, _window_values
-from learning_os.app.projection import _fresh_manifest
+from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
+from learning_os.app.handlers._shared import window_values as _window_values
+from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
 from learning_os.app.registry import register
@@ -19,20 +20,24 @@ from learning_os.contracts.json_schema import ContractValidationError, validate_
 from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
 from learning_os.derive.projection import adoption_counts, exam_spine
 from learning_os.derive.projection.atlas import ATLAS_DOMAINS
-from learning_os.derive.projection.learner_interpreter import _collect_and_interpret
+from learning_os.derive.projection.learner_interpreter import (
+    collect_and_interpret as _collect_and_interpret,
+)
 from learning_os.derive.projection.projection.atlas import STAGE_CONCEPT
 from learning_os.derive.projection.session_compiler import compile_session, replan_session
 from learning_os.derive.semantics.goals import RankedCluster, goal_to_dict
 from learning_os.derive.semantics.predicates import PREDICATES, evaluate
 from learning_os.derive.semantics.recipes import RecipeError, recipes_for
 from learning_os.derive.semantics.session_counts import FeedError, feed_scan_kwargs
-from learning_os.derive.semantics.source_use import _evidence_label, _use_evidence
+from learning_os.derive.semantics.source_use import evidence_label as _evidence_label
+from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
-from learning_os.store.fingerprint import _snapshot
+from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.session.githistory import GitHistoryError
-from learning_os.store.session_ledger import SESSION_ID_ENV, _resolve_session_identity
+from learning_os.store.session_ledger import SESSION_ID_ENV
+from learning_os.store.session_ledger import resolve_session_identity as _resolve_session_identity
 from learning_os.store.validation_cache import observe_pins
 
 

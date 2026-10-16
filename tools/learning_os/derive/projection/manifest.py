@@ -25,9 +25,10 @@ from learning_os.contracts.manifest_contract import (
     enforce,
 )
 from learning_os.derive.garden import project_garden_entries
-from learning_os.derive.projection.common import _git_state, _json_header
+from learning_os.derive.projection.common import git_state as _git_state
+from learning_os.derive.projection.common import json_header as _json_header
 from learning_os.derive.projection.coordination import adoption_counts
-from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.derive.projection.projection import (
     build_counts,
     build_indexes,

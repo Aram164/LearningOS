@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from learning_os.derive.projection.atlas import ATLAS_COLLECTION_DOMAIN
-from learning_os.derive.projection.common import _first_para, _git_last_commit, _md_header
-from learning_os.derive.projection.materials import _materials_queue_rows
-from learning_os.derive.projection.modules_view import _exam_spine_lines
+from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.derive.projection.common import git_last_commit as _git_last_commit
+from learning_os.derive.projection.common import md_header as _md_header
+from learning_os.derive.projection.materials import materials_queue_rows as _materials_queue_rows
+from learning_os.derive.projection.modules_view import exam_spine_lines as _exam_spine_lines
 from learning_os.domain.snapshot import Repo
 
 

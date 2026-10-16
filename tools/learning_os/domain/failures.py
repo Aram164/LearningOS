@@ -309,7 +309,7 @@ class MalformedId(WriteRefused):
         self.value = value
 
 
-class _ReplayRecoveryError(Exception):
+class ReplayRecoveryError(Exception):
     """The committed receipt cannot prove what the original call wrote."""
 
 

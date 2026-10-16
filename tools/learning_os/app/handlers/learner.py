@@ -10,9 +10,9 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import _read_content_bound_file
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
+from learning_os.app.handlers._shared import on_commit_refused as _on_commit_refused
 from learning_os.app.handlers._shared import (
-    _on_commit_refused,
     require_path_or_error,
     require_stage,
     require_unit_map_or_error,
@@ -32,7 +32,8 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.domain.unit_notes import unit_note_marker
 from learning_os.store import observations
-from learning_os.store.codec import _dump_study_map, _dump_yaml
+from learning_os.store.codec import dump_study_map as _dump_study_map
+from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.transactions import parse_expected_revisions
 
 #: The one return-to-work record. `los resume` and the app's Home both start

@@ -9,7 +9,7 @@ from pathlib import Path
 from learning_os.domain.failures import WriteRefused
 
 
-def _atomic_text(path: Path, content: str) -> None:
+def atomic_text(path: Path, content: str) -> None:
     """Temp file + os.replace, cleaning up after any failure.
 
     Every mutating command funnels through here, so an ordinary filesystem
@@ -28,7 +28,7 @@ def _atomic_text(path: Path, content: str) -> None:
         raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
 
 
-def _bytes_inside_owner(root, path, owner, *, escape, symlink):
+def bytes_inside_owner(root, path, owner, *, escape, symlink):
     """Read bytes admitted by one owner directory; symlinks always refuse.
 
     The one admission rule for note, garden, and inbox reads: the resolved
@@ -45,8 +45,8 @@ def _bytes_inside_owner(root, path, owner, *, escape, symlink):
     return path.read_bytes()
 
 
-def _note_bytes(root, note):
-    return _bytes_inside_owner(
+def note_bytes(root, note):
+    return bytes_inside_owner(
         root, note.path, root / "knowledge" / "notes",
         escape="note path escapes its knowledge owner",
         symlink="note read refuses symlinks")

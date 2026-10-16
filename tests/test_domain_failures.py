@@ -139,7 +139,7 @@ def test_suggestions_returns_exactly_the_shown_ids():
 
 
 def test_replay_recovery_error_is_one_class_object():
-    assert ops_pipeline._ReplayRecoveryError is failures._ReplayRecoveryError
+    assert ops_pipeline._ReplayRecoveryError is failures.ReplayRecoveryError
 
 
 def test_not_found_one_shot_candidates_preserve_message_and_suggestions():

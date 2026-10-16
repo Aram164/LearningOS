@@ -19,7 +19,9 @@ from __future__ import annotations
 import yaml
 from repo_builders import _add_material_overview, add_curriculum
 
-from learning_os.app._plan_gate import _module_plan_validation_errors
+from learning_os.app._plan_gate import (
+    module_plan_validation_errors as _module_plan_validation_errors,
+)
 from learning_os.app.validation_service import collect
 from learning_os.store.warning_baseline import write_baseline
 

@@ -39,7 +39,7 @@ _PERSONAL_LINK_HOSTS = frozenset({
 })
 
 
-def _assert_academic_only(value: Any, *, pointer: str = "") -> None:
+def assert_academic_only(value: Any, *, pointer: str = "") -> None:
     if isinstance(value, dict):
         for key, child in value.items():
             name = str(key).casefold().replace("-", "_")
@@ -47,10 +47,10 @@ def _assert_academic_only(value: Any, *, pointer: str = "") -> None:
                 raise MastersPlanningError(
                     f"sanitized Master Planning input contains forbidden field at {pointer}/{key}"
                 )
-            _assert_academic_only(child, pointer=f"{pointer}/{key}")
+            assert_academic_only(child, pointer=f"{pointer}/{key}")
     elif isinstance(value, list):
         for index, child in enumerate(value):
-            _assert_academic_only(child, pointer=f"{pointer}/{index}")
+            assert_academic_only(child, pointer=f"{pointer}/{index}")
 
 
 def _sanitized_file(
@@ -87,7 +87,7 @@ def _sanitized_file(
     return cursor
 
 
-def _read_yaml_object(root: Path, path: Path, *, label: str) -> dict[str, Any]:
+def read_yaml_object(root: Path, path: Path, *, label: str) -> dict[str, Any]:
     safe_path = _sanitized_file(root, path, label=label, required=True)
     assert safe_path is not None  # required=True
     try:
@@ -133,7 +133,7 @@ def validate_master_catalog(
     *,
     planned_canonical_source_ids: set[str] | frozenset[str] = frozenset(),
 ) -> dict[str, Any]:
-    _assert_academic_only(value)
+    assert_academic_only(value)
     try:
         validate_contract(root, "master-planning-catalog.schema.json", value)
     except ValueError as exc:
@@ -201,5 +201,5 @@ def load_master_catalog(root: Path) -> dict[str, Any] | None:
         return None
     return validate_master_catalog(
         root,
-        _read_yaml_object(root, safe_path, label="Master Planning catalog"),
+        read_yaml_object(root, safe_path, label="Master Planning catalog"),
     )

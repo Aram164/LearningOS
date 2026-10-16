@@ -10,7 +10,8 @@ import yaml
 
 from learning_os.domain.ai_errors import DeliveryBindingError, DeliveryValidationError
 from learning_os.domain.ai_types import DeliveryRecord
-from learning_os.store.ai_actions.support import _inside, _sha256_bytes
+from learning_os.store.ai_actions.support import inside as _inside
+from learning_os.store.ai_actions.support import sha256_bytes as _sha256_bytes
 
 
 def validated_sha256(value: Any, *, label: str) -> str:

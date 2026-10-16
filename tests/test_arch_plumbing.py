@@ -19,12 +19,13 @@ FIX = "Handlers get the snapshot and lock from the pipeline (PLAN D20)."
 CHECK_ID = "A4-plumbing"
 CHECK_ID2 = "A4-plumbing-2"
 
-_BARE_CALLEES = ("load_repo", "canonical_fingerprint", "_operator_lock", "print", "exit")
+_BARE_CALLEES = ("load_repo", "canonical_fingerprint", "_operator_lock", "operator_lock",
+                 "print", "exit")
 
 #: A4 names when called qualified or through an import alias (SPEC §3.7 item 4).
 #: `sys.exit` stays A4's alone and is never counted here.
 _QUALIFIED_CALLEES = ("load_repo", "canonical_fingerprint", "_operator_lock",
-                      "print", "exit")
+                      "operator_lock", "print", "exit")
 
 
 @dataclass(frozen=True)

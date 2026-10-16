@@ -10,15 +10,13 @@ from pathlib import Path
 import jsonschema
 
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import _read_content_bound_file
-from learning_os.app.handlers._shared import (
-    NOTES_PREFIX,
-    _content_envelope,
-    _discovery_row,
-    _inbox_search_rows,
-    _window_values,
-)
-from learning_os.app.projection import _fresh_manifest
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
+from learning_os.app.handlers._shared import NOTES_PREFIX
+from learning_os.app.handlers._shared import content_envelope as _content_envelope
+from learning_os.app.handlers._shared import discovery_row as _discovery_row
+from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
+from learning_os.app.handlers._shared import window_values as _window_values
+from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.garden import garden_id
@@ -30,10 +28,11 @@ from learning_os.domain.snapshot import Repo
 from learning_os.domain.suggest import expansion, not_found, suggest
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, FRONTMATTER_RE
 from learning_os.store import observations
-from learning_os.store.codec import _dump_yaml
+from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.derived import DerivedError, evaluate
-from learning_os.store.fingerprint import _snapshot
-from learning_os.store.fs import _bytes_inside_owner, _note_bytes
+from learning_os.store.fingerprint import snapshot as _snapshot
+from learning_os.store.fs import bytes_inside_owner as _bytes_inside_owner
+from learning_os.store.fs import note_bytes as _note_bytes
 from learning_os.store.loader import LoaderError, parse_frontmatter
 from learning_os.store.loading import load_garden, load_notes
 from learning_os.store.transactions import parse_expected_revisions

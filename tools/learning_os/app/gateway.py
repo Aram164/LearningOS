@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
-from learning_os.app.outcomes import _take_gateway_refusal
+from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
@@ -25,7 +25,7 @@ from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 
 
-def _read_content_bound_file(
+def read_content_bound_file(
     path_value: str,
     expected_sha256: str | None = None,
     *,
@@ -69,7 +69,7 @@ def _read_content_bound_file(
     return source, content
 
 
-def _read_structured_file(
+def read_structured_file(
     path_value: str,
     *,
     expected_sha256: str | None = None,
@@ -92,7 +92,7 @@ def _read_structured_file(
         if not isinstance(data, dict):
             raise WriteRefused("structured input must be an object")
         return data
-    path, raw_bytes = _read_content_bound_file(
+    path, raw_bytes = read_content_bound_file(
         path_value,
         expected_sha256,
         label=label,
@@ -144,7 +144,7 @@ def _payload_schema_path(root: Path, name: str) -> Path:
     return root / "system" / "schema" / "capabilities" / f"{name}.schema.json"
 
 
-def _validate_payload(root: Path, name: str, payload: dict) -> None:
+def validate_payload(root: Path, name: str, payload: dict) -> None:
     """Refuse a payload the capability never declared.
 
     A missing schema is itself a refusal: an undeclared payload surface means
@@ -191,7 +191,7 @@ def prepare_dispatch(
             f"GatewayEnvelopeV2 {definition.name} requires an inline record so "
             "approval is bound to the exact content"
         )
-    _validate_payload(root, definition.name, payload)
+    validate_payload(root, definition.name, payload)
     commands = subparsers(parser_factory())
     command_parser = commands.get(definition.cli_command or "")
     if command_parser is None:
@@ -218,7 +218,7 @@ def prepare_dispatch(
     return command_parser, namespace
 
 
-def _dispatch(
+def dispatch(
     root: Path,
     definition,
     envelope: dict,
@@ -274,7 +274,7 @@ def _dispatch(
     return 0, result
 
 
-def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
+def validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
     if kind == "request" and envelope.get("schema_version") != 2:
         # Before dispatch, and before the schema's oneOf can misread the
         # shape: an envelope without `schema_version: 2` used to travel all
@@ -302,7 +302,7 @@ def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> N
         raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
 
 
-def _context_from_v2(envelope: dict) -> GatewayRequestContext:
+def context_from_v2(envelope: dict) -> GatewayRequestContext:
     subject_hash = intent_sha256(envelope)
     approval = envelope["approval"]
     if approval["subject_sha256"] != subject_hash:

@@ -69,7 +69,7 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
-    from learning_os.app.gateway import _dispatch
+    from learning_os.app.gateway import dispatch as _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
 
     definitions = command_definitions(mini_repo)
@@ -98,7 +98,9 @@ def test_gateway_refuses_smuggled_approval(mini_repo: Path):
 
 def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
     """An undeclared wrapper sibling must fail `--check`, not just live apply."""
-    from learning_os.app._plan_gate import _module_plan_validation_errors
+    from learning_os.app._plan_gate import (
+        module_plan_validation_errors as _module_plan_validation_errors,
+    )
 
     wrapper = mini_repo.parent
     for anchor in ("obsidian-ui", "workbench", "archive"):
@@ -1068,7 +1070,7 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.app.check import _staged_shadow
+    from learning_os.app.check import staged_shadow as _staged_shadow
     from learning_os.derive.material_synthesis import current_unit_material_basis
     from learning_os.derive.semantics.lineage import load_ledger
     from learning_os.store.revisions import load_revisions
@@ -1334,7 +1336,7 @@ def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path
 def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     """The CLI-only output flag is not part of the unit.plan.revise contract."""
     import los
-    from learning_os.app.gateway import _dispatch
+    from learning_os.app.gateway import dispatch as _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payloads import payload_schema
 

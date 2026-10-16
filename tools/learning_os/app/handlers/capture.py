@@ -10,14 +10,12 @@ import sys
 from pathlib import Path
 
 from learning_os.app.context import OpContext
-from learning_os.app.gateway import _read_content_bound_file
-from learning_os.app.handlers._shared import (
-    _content_envelope,
-    _discovery_row,
-    _inbox_search_rows,
-    _window_values,
-    require_unit_map_or_error,
-)
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
+from learning_os.app.handlers._shared import content_envelope as _content_envelope
+from learning_os.app.handlers._shared import discovery_row as _discovery_row
+from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
+from learning_os.app.handlers._shared import require_unit_map_or_error
+from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.contracts.gateway import (
@@ -27,9 +25,9 @@ from learning_os.contracts.gateway import (
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.domain.unit_notes import unit_note_sections
 from learning_os.store import observations
-from learning_os.store.codec import _dump_study_map
-from learning_os.store.fingerprint import _snapshot
-from learning_os.store.fs import _bytes_inside_owner
+from learning_os.store.codec import dump_study_map as _dump_study_map
+from learning_os.store.fingerprint import snapshot as _snapshot
+from learning_os.store.fs import bytes_inside_owner as _bytes_inside_owner
 from learning_os.store.transactions import parse_expected_revisions
 
 

@@ -473,7 +473,7 @@ def test_mid_commit_failure_rolls_back_lineage_and_canonical(
     before = source_map_path.read_bytes()
     assert not lineage_path.exists()
 
-    real_write = transactions._atomic_write_bytes
+    real_write = transactions.atomic_write_bytes
     state = {"failed": False}
 
     def fail_lineage_write(path, content):
@@ -482,7 +482,7 @@ def test_mid_commit_failure_rolls_back_lineage_and_canonical(
             raise OSError("injected mid-commit failure")
         return real_write(path, content)
 
-    monkeypatch.setattr(transactions, "_atomic_write_bytes", fail_lineage_write)
+    monkeypatch.setattr(transactions, "atomic_write_bytes", fail_lineage_write)
     code = _apply_in_process(
         mini_repo, package, "phaseB-e2e-rollback", "request-rollback-1")
     captured = capsys.readouterr()
@@ -674,7 +674,7 @@ def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
     assert len(route_live) == 1
 
     def _live():
-        from learning_os.derive.semantics.scan import _scan_manifest_files
+        from learning_os.derive.semantics.scan import scan_manifest_files as _scan_manifest_files
 
         files = _scan_manifest_files(root)
         digest = live_evidence_digest(root, "manifest:book/demo.pdf", files)
@@ -728,7 +728,7 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
     post = {"module-demo": 4, "unit-demo-l01": 2}
 
     def _live_for(key):
-        from learning_os.derive.semantics.scan import _scan_manifest_files
+        from learning_os.derive.semantics.scan import scan_manifest_files as _scan_manifest_files
 
         digest = live_evidence_digest(root, key, _scan_manifest_files(root))
         live = dict(route_live)

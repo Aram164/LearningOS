@@ -201,11 +201,11 @@ def test_close_deletes_only_own_ledger(mini_repo, monkeypatch):
     _git_init(mini_repo)
     monkeypatch.setenv("LOS_SESSION_ID", "session-a")
     actor_a = _capture(mini_repo, key="wipe-a-001", text="A's note")
-    ledger_a = session_store._session_ledger(mini_repo, "session-a")
+    ledger_a = session_store.session_ledger(mini_repo, "session-a")
     assert ledger_a.is_file()
     monkeypatch.setenv("LOS_SESSION_ID", "session-b")
     actor_b = _capture(mini_repo, key="wipe-b-001", text="B's note")
-    ledger_b = session_store._session_ledger(mini_repo, "session-b")
+    ledger_b = session_store.session_ledger(mini_repo, "session-b")
 
     review = _session_end(mini_repo)
     assert review.returncode == 0, review.stderr
@@ -231,7 +231,7 @@ def test_close_and_commit_message_is_a_usage_error(mini_repo, monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
     _git_init(mini_repo)
     _capture(mini_repo, key="close-usage-001", text="usage note")
-    ledger = session_store._session_ledger(mini_repo, "channel:operator")
+    ledger = session_store.session_ledger(mini_repo, "channel:operator")
     assert ledger.is_file()
 
     refused = _session_end(mini_repo, "--close", "--commit-message", "both")
@@ -277,12 +277,12 @@ def test_goal_session_id_flag_overrides_the_environment(mini_repo, monkeypatch):
     decided = run_los(mini_repo, "goal", goal_id, "--reject",
                       "--session-id", "explicit-session")
     assert decided.returncode == 0, decided.stderr
-    explicit = session_store._load_session_paths(mini_repo, "explicit-session")
+    explicit = session_store.load_session_paths(mini_repo, "explicit-session")
     assert "operations/goal-ledger.yaml" in explicit
     row = explicit["operations/goal-ledger.yaml"]
     assert set(row) == {"state", "sha256", "channel", "recorded_at"}
     assert row["state"] == "file" and row["channel"] == "operator"
-    assert not session_store._session_ledger(
+    assert not session_store.session_ledger(
         mini_repo, "env-session").exists()
 
 
@@ -297,7 +297,7 @@ def _unpushed_session(mini_repo: Path, tmp_path: Path, session: str) -> str:
                    cwd=mini_repo, check=True)
     failed = _session_end(mini_repo, "--commit-message", "ambient", "--push")
     assert failed.returncode == 128, failed.stderr
-    envelope = session_store._load_session_ledger(mini_repo, session)
+    envelope = session_store.load_session_ledger(mini_repo, session)
     assert envelope["state"] == "committed_unpushed"
     return envelope["commit_sha"]
 
@@ -310,7 +310,7 @@ def test_goal_write_while_own_session_unpushed_refuses(
     (goal_id,) = seed_live_goal_ids(mini_repo, "goal-trap")
     ledger_file = mini_repo / "operations" / "goal-ledger.yaml"
     before_goal = ledger_file.read_bytes() if ledger_file.exists() else None
-    before_ledger = session_store._session_ledger(
+    before_ledger = session_store.session_ledger(
         mini_repo, "goal-session").read_bytes()
 
     refused = run_los(mini_repo, "goal", goal_id, "--reject")
@@ -319,7 +319,7 @@ def test_goal_write_while_own_session_unpushed_refuses(
         f"already committed as {sha}; use --push or --close\n")
     assert (ledger_file.read_bytes() if ledger_file.exists() else None) \
         == before_goal
-    assert session_store._session_ledger(
+    assert session_store.session_ledger(
         mini_repo, "goal-session").read_bytes() == before_ledger
 
 
@@ -329,20 +329,20 @@ def test_goal_write_in_another_explicit_session_while_ambient_unpushed(
     monkeypatch.setenv("LOS_SESSION_ID", "goal-session")
     _unpushed_session(mini_repo, tmp_path, "goal-session")
     (goal_id,) = seed_live_goal_ids(mini_repo, "goal-elsewhere")
-    before_ledger = session_store._session_ledger(
+    before_ledger = session_store.session_ledger(
         mini_repo, "goal-session").read_bytes()
 
     decided = run_los(mini_repo, "goal", goal_id, "--reject",
                       "--session-id", "goal-other")
     assert decided.returncode == 0, decided.stderr
-    other = session_store._load_session_paths(mini_repo, "goal-other")
+    other = session_store.load_session_paths(mini_repo, "goal-other")
     assert "operations/goal-ledger.yaml" in other
-    assert session_store._session_ledger(
+    assert session_store.session_ledger(
         mini_repo, "goal-session").read_bytes() == before_ledger
 
 
 def _age_own_ledger(mini_repo: Path, session: str, hours: int = 25) -> None:
-    ledger = session_store._session_ledger(mini_repo, session)
+    ledger = session_store.session_ledger(mini_repo, session)
     data = json.loads(ledger.read_text(encoding="utf-8"))
     aged = (dt.datetime.now(dt.UTC) - dt.timedelta(hours=hours)).isoformat()
     for row in data["paths"].values():
@@ -451,7 +451,7 @@ def test_replay_recovers_the_writing_channel_without_a_named_session(
     assert second.returncode == 0, second.stdout
     assert json.loads(second.stdout)["replayed"] is True
 
-    recorded = session_store._load_session_paths(mini_repo, "channel:ui")
+    recorded = session_store.load_session_paths(mini_repo, "channel:ui")
     assert captured in recorded
     assert recorded[captured]["channel"] == "ui"
 
@@ -465,14 +465,14 @@ def test_unknown_channel_is_refused(mini_repo):
 
 def test_session_identity_resolution_precedence(monkeypatch):
     monkeypatch.delenv("LOS_SESSION_ID", raising=False)
-    assert session_store._current_session_id() == "channel:operator"
-    assert session_store._current_session_id(channel="ui") == "channel:ui"
+    assert session_store.current_session_id() == "channel:operator"
+    assert session_store.current_session_id(channel="ui") == "channel:ui"
     monkeypatch.setenv("LOS_SESSION_ID", "env-session")
-    assert session_store._current_session_id() == "env-session"
-    assert session_store._current_session_id(channel="ui") == "env-session"
-    assert session_store._current_session_id(explicit="flag") == "flag"
+    assert session_store.current_session_id() == "env-session"
+    assert session_store.current_session_id(channel="ui") == "env-session"
+    assert session_store.current_session_id(explicit="flag") == "flag"
     monkeypatch.setenv("LOS_SESSION_ID", "   ")
-    assert session_store._current_session_id() == "channel:operator"
+    assert session_store.current_session_id() == "channel:operator"
 
 
 def test_sealed_session_identity_resolution_precedence(monkeypatch):
@@ -491,15 +491,15 @@ def test_sealed_session_identity_resolution_precedence(monkeypatch):
         session_id="sealed-session",
     )
     with gateway_request_context(context):
-        assert session_store._current_session_id() == "sealed-session"
-        assert session_store._resolve_session_identity()[1] == "envelope"
+        assert session_store.current_session_id() == "sealed-session"
+        assert session_store.resolve_session_identity()[1] == "envelope"
         monkeypatch.setenv("LOS_SESSION_ID", "env-session")
-        assert session_store._current_session_id() == "sealed-session"
-        assert session_store._current_session_id(explicit="flag") == "flag"
-        assert session_store._resolve_session_identity(explicit="flag")[1] \
+        assert session_store.current_session_id() == "sealed-session"
+        assert session_store.current_session_id(explicit="flag") == "flag"
+        assert session_store.resolve_session_identity(explicit="flag")[1] \
             == "explicit"
-    assert session_store._current_session_id() == "env-session"
-    assert session_store._resolve_session_identity()[1] == "environment"
+    assert session_store.current_session_id() == "env-session"
+    assert session_store.resolve_session_identity()[1] == "environment"
 
 
 def _sealed_capture(root: Path, *, key: str, text: str, session_id: str) -> str:
@@ -645,10 +645,10 @@ def test_replay_recovers_the_sealed_session_without_a_named_session(
     assert second.returncode == 0, second.stdout
     assert json.loads(second.stdout)["replayed"] is True
 
-    recorded = session_store._load_session_paths(mini_repo, "sealed-replay-session")
+    recorded = session_store.load_session_paths(mini_repo, "sealed-replay-session")
     assert captured in recorded
     assert recorded[captured]["channel"] == "operator"
-    assert session_store._load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
+    assert session_store.load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
 
 
 def test_atomic_ledger_write_cleans_its_temp_file_on_failure(tmp_path):
@@ -809,10 +809,10 @@ def test_v2_writer_fixture_matches_the_writer_and_reads(mini_repo):
     """
     assert (json.dumps(json.loads(V2_WRITER_BYTES), indent=2, sort_keys=True)
             + "\n") == V2_WRITER_BYTES
-    ledger = session_store._session_ledger(mini_repo, "fixture-session")
+    ledger = session_store.session_ledger(mini_repo, "fixture-session")
     try:
         ledger.write_text(V2_WRITER_BYTES, encoding="utf-8")
-        recorded = session_store._load_session_paths(
+        recorded = session_store.load_session_paths(
             mini_repo, "fixture-session")
         assert set(recorded) == {"work/inbox/note-alpha.md", "work/notes.md"}
         assert recorded["work/notes.md"] == {
@@ -823,20 +823,20 @@ def test_v2_writer_fixture_matches_the_writer_and_reads(mini_repo):
         }
         ledger.write_text(V2_WRONG_SESSION_TWIN_BYTES, encoding="utf-8")
         with pytest.raises(WriteRefused, match="names a different session"):
-            session_store._load_session_paths(mini_repo, "fixture-session")
+            session_store.load_session_paths(mini_repo, "fixture-session")
         ledger.write_text(V2_CORRUPT_BYTES, encoding="utf-8")
         with pytest.raises(WriteRefused, match="ledger is unreadable"):
-            session_store._load_session_paths(mini_repo, "fixture-session")
+            session_store.load_session_paths(mini_repo, "fixture-session")
     finally:
         ledger.unlink(missing_ok=True)
 
 
 def test_v2_ledger_reads_as_recording_and_migrates_on_write(mini_repo):
     """A v2 file reads as recording/version 0 and rewrites as v3 (M-06)."""
-    ledger = session_store._session_ledger(mini_repo, "fixture-session")
+    ledger = session_store.session_ledger(mini_repo, "fixture-session")
     ledger.write_text(V2_WRITER_BYTES, encoding="utf-8")
     try:
-        envelope = session_store._load_session_ledger(
+        envelope = session_store.load_session_ledger(
             mini_repo, "fixture-session")
         assert envelope["schema_version"] == 3
         assert envelope["version"] == 0
@@ -847,7 +847,7 @@ def test_v2_ledger_reads_as_recording_and_migrates_on_write(mini_repo):
             "work/inbox/note-alpha.md", "work/notes.md"}
         extra = mini_repo / "work" / "migrated.md"
         extra.write_text("migrated\n", encoding="utf-8")
-        session_store._record_touched(
+        session_store.record_touched(
             mini_repo, [extra], session_id="fixture-session")
         migrated = json.loads(ledger.read_text(encoding="utf-8"))
         assert migrated["schema_version"] == 3
@@ -868,7 +868,7 @@ def test_v2_ledger_review_then_commit_through_the_cli(mini_repo, monkeypatch):
     (mini_repo / "work" / "inbox" / "note-alpha.md").write_text(
         "alpha\n", encoding="utf-8")
     (mini_repo / "work" / "notes.md").write_text("bravo\n", encoding="utf-8")
-    ledger = session_store._session_ledger(mini_repo, "fixture-session")
+    ledger = session_store.session_ledger(mini_repo, "fixture-session")
     # The literal's recorded_at is frozen; freshen it so the rows are
     # selectable whatever day the suite runs (the shape stays v2).
     planted = json.loads(V2_WRITER_BYTES)
@@ -882,7 +882,7 @@ def test_v2_ledger_review_then_commit_through_the_cli(mini_repo, monkeypatch):
     assert review.returncode == 0, review.stderr
     assert sorted(json.loads(review.stdout)["touched"]) == [
         "work/inbox/note-alpha.md", "work/notes.md"]
-    envelope = session_store._load_session_ledger(
+    envelope = session_store.load_session_ledger(
         mini_repo, "fixture-session")
     assert envelope["state"] == "reviewed"
     assert envelope["review"] == {

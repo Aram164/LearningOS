@@ -20,11 +20,9 @@ from learning_os.app.context import OpContext
 from learning_os.app.encoders import (
     dumps_indented,
 )
-from learning_os.app.gateway import _read_structured_file
-from learning_os.app.projection import (
-    _fresh_manifest,
-    _fresh_manifest_and_repo,
-)
+from learning_os.app.gateway import read_structured_file as _read_structured_file
+from learning_os.app.projection import fresh_manifest as _fresh_manifest
+from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.backup_manifest import (
@@ -40,7 +38,7 @@ from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
-from learning_os.store.codec import _dump_yaml
+from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.diagnostics import conventions
 from learning_os.store.diagnostics.resolver import (
     AuthorityEvidence,
@@ -49,8 +47,8 @@ from learning_os.store.diagnostics.resolver import (
     resolve,
 )
 from learning_os.store.diagnostics.store import read_records
-from learning_os.store.fingerprint import _snapshot
-from learning_os.store.fs import _atomic_text
+from learning_os.store.fingerprint import snapshot as _snapshot
+from learning_os.store.fs import atomic_text as _atomic_text
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 from learning_os.store.legacy_archive import (
     inspect_legacy_archive,

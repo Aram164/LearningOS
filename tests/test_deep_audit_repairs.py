@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import pytest
 
 from learning_os.derive.projection import common as genout_common
-from learning_os.derive.projection.materials import _material_location, _safe_material_locator
+from learning_os.derive.projection.materials import _safe_material_locator
 from learning_os.derive.projection.outputs import write_outputs
 from learning_os.derive.projection.projection.records_curriculum import project_units
 from learning_os.derive.projection.projection.stages import project_stages
@@ -17,7 +17,9 @@ from learning_os.derive.validation import validate
 from learning_os.domain.snapshot import Repo, Unit
 from learning_os.store import session_ledger as plumbing_support
 from learning_os.store.loader import load_repo
-from learning_os.store.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
+from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
+from learning_os.store.loading.yamlio import load_yaml as _load_yaml
+from learning_os.store.materials.resolution import material_location as _material_location
 from learning_os.store.transactions import TransactionFailure, load_revisions
 
 
@@ -226,7 +228,7 @@ def test_git_dirty_state_covers_every_canonical_root(
     # cannot stand in for that, because the boundary is settled on the
     # filesystem before the first Git call is made.
     (tmp_path / ".git").mkdir()
-    assert genout_common._git_state(tmp_path) == ("deadbeef", False)
+    assert genout_common.git_state(tmp_path) == ("deadbeef", False)
     status = next(command for command in commands if command[1] == "status")
     for canonical_root in genout_common.CANONICAL_ROOTS:
         assert canonical_root in status
@@ -262,14 +264,14 @@ def test_revision_ledger_damage_fails_closed_and_is_reported(mini_repo: Path):
 def test_session_ownership_state_detects_post_transaction_edits(mini_repo: Path):
     target = mini_repo / "work/inbox/session-note.md"
     target.write_text("recorded\n", encoding="utf-8")
-    plumbing_support._record_touched(mini_repo, [target])
-    recorded = plumbing_support._load_session_paths(mini_repo)
-    assert plumbing_support._session_path_state(
+    plumbing_support.record_touched(mini_repo, [target])
+    recorded = plumbing_support.load_session_paths(mini_repo)
+    assert plumbing_support.session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) == plumbing_support._row_proven_state(
+    ) == plumbing_support.row_proven_state(
         recorded["work/inbox/session-note.md"])
     target.write_text("edited elsewhere\n", encoding="utf-8")
-    assert plumbing_support._session_path_state(
+    assert plumbing_support.session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) != plumbing_support._row_proven_state(
+    ) != plumbing_support.row_proven_state(
         recorded["work/inbox/session-note.md"])

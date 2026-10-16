@@ -20,12 +20,10 @@ from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store import observations
 from learning_os.store.revisions import artifact_revision
-from learning_os.store.session_ledger import (
-    _current_session_id,
-    _load_session_paths,
-    _record_touched,
-    _session_ledger,
-)
+from learning_os.store.session_ledger import current_session_id as _current_session_id
+from learning_os.store.session_ledger import load_session_paths as _load_session_paths
+from learning_os.store.session_ledger import record_touched as _record_touched
+from learning_os.store.session_ledger import session_ledger as _session_ledger
 
 GOAL_CAPABILITY = "goal.decision.record"
 

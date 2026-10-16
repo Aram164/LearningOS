@@ -7,7 +7,7 @@ from pathlib import Path
 
 from learning_os.ai_actions import AIActionService
 from learning_os.app.context import OpContext
-from learning_os.app.projection import _publish
+from learning_os.app.projection import publish as _publish
 from learning_os.app.proposal import Result
 from learning_os.app.registry import register
 from learning_os.contracts.gateway import current_gateway_request
@@ -30,7 +30,7 @@ from learning_os.domain.failures import (
     Unconfirmed,
     WriteRefused,
 )
-from learning_os.store.session_ledger import _record_touched
+from learning_os.store.session_ledger import record_touched as _record_touched
 from learning_os.store.transactions import parse_expected_revisions
 
 #: The typed refusal for each ``_ai_refusal`` code (SPEC (be) item 1).

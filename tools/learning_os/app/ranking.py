@@ -9,17 +9,15 @@ from learning_os.derive.learning_runtime import (
     collect_requirements,
     read_observations,
 )
-from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.derive.semantics.goals import (
     CandidateGoal,
     RankedCluster,
     cluster_goals,
     rank_clusters,
 )
-from learning_os.derive.semantics.scan import (
-    _read_goal_ledger,
-    intelligence_scan,
-)
+from learning_os.derive.semantics.scan import intelligence_scan
+from learning_os.derive.semantics.scan import read_goal_ledger as _read_goal_ledger
 from learning_os.store import observations
 from learning_os.store.loader import load_repo
 

@@ -6,7 +6,8 @@ import contextlib
 import dataclasses
 
 from learning_os.app.context import OpContext
-from learning_os.app.outcomes import _take_gateway_refusal, exit_for
+from learning_os.app.outcomes import exit_for
+from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.app.registry import REGISTRY, register
 from learning_os.contracts.gateway import (
     GatewayRequestContext,

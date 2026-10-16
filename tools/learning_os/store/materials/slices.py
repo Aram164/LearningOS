@@ -66,7 +66,7 @@ def _materials_rel_for_uri(repo, uri) -> str | None:
         return None
     return rel
 
-def _route_material_files(repo, source_id, route) -> set[str]:
+def route_material_files(repo, source_id, route) -> set[str]:
     """Every materials-relative file one route reads, or empty when unproven.
 
     A route's own ``vault_path`` wins as a single file; otherwise a
@@ -150,7 +150,7 @@ def _note_pages(binding) -> tuple[int, int] | None:
         return None
     return (start, end) if start <= end else None
 
-def _unit_note_scope(repo, binding, routes) -> str | None:
+def unit_note_scope(repo, binding, routes) -> str | None:
     """"direct", "related", or None: one note's standing against unit routes.
 
     THE shared note-to-route rule: material-context and the plan brief
@@ -171,7 +171,7 @@ def _unit_note_scope(repo, binding, routes) -> str | None:
     for source_id, route in routes:
         same_source = (isinstance(note_sid, str) and note_sid
                        and note_sid == source_id)
-        route_files = _route_material_files(repo, source_id, route)
+        route_files = route_material_files(repo, source_id, route)
         same_file = (isinstance(note_ref, str) and note_ref
                      and note_ref in route_files)
         if not same_source and not same_file:
@@ -380,7 +380,7 @@ def _read_text_part(route_id: str, material_uri: str, path: Path) -> SlicePart:
                      file_sha256=sha256_file(path))
 
 
-def _read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str) -> SlicePart:
+def read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str) -> SlicePart:
     suffix = resolved.path.suffix.lower()
     if suffix == ".pdf":
         return _read_pdf_part(route_id, resolved.material_uri, resolved.path, locator)
@@ -521,7 +521,7 @@ def build_unit_slices(
                 f"its exact material cannot be resolved from locator {route.get('locator')!r}",
             )
         parts = tuple(
-            _read_part(route_id, resolved, str(route.get("locator"))) for resolved in files
+            read_part(route_id, resolved, str(route.get("locator"))) for resolved in files
         )
         if not any(part.text.strip() for part in parts):
             raise SliceResolutionError(route_id, "its file yields no extractable text")

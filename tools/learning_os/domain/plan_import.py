@@ -37,10 +37,10 @@ UNIT_ROUTE_UPDATE_FIELDS = frozenset({
 
 _INVENTORY_FENCE = "```inventory-v1"
 
-_INVENTORY_ROW_DISPOSITIONS = ("routed", "linked", "out-of-scope", "duplicate")
+INVENTORY_ROW_DISPOSITIONS = ("routed", "linked", "out-of-scope", "duplicate")
 
 
-def _source_map_routes(source_map: Any) -> dict[str, dict[str, Any]]:
+def source_map_routes(source_map: Any) -> dict[str, dict[str, Any]]:
     routes: dict[str, dict[str, Any]] = {}
     if not isinstance(source_map, dict):
         return routes
@@ -53,7 +53,7 @@ def _source_map_routes(source_map: Any) -> dict[str, dict[str, Any]]:
     return routes
 
 
-def _source_map_routes_with_source(
+def source_map_routes_with_source(
         source_map: Any) -> dict[str, tuple[str, dict[str, Any]]]:
     """Route id to (owning source id, row), for content-digest reads."""
     routes: dict[str, tuple[str, dict[str, Any]]] = {}
@@ -69,7 +69,7 @@ def _source_map_routes_with_source(
     return routes
 
 
-def _knowledge_node_rows(unit_data: Any) -> dict[str, dict[str, Any]]:
+def knowledge_node_rows(unit_data: Any) -> dict[str, dict[str, Any]]:
     """Knowledge node id to row for one unit mapping, or {} when absent."""
     if not isinstance(unit_data, dict):
         return {}
@@ -84,7 +84,7 @@ def _knowledge_node_rows(unit_data: Any) -> dict[str, dict[str, Any]]:
     return rows
 
 
-def _inventory_block(audit_text: str) -> tuple[dict[str, Any] | None, list[str]]:
+def inventory_block(audit_text: str) -> tuple[dict[str, Any] | None, list[str]]:
     """Parse the structured inventory block, or (None, []) when absent."""
     opens = [i for i in range(len(audit_text))
              if audit_text.startswith(_INVENTORY_FENCE, i)]
@@ -105,7 +105,7 @@ def _inventory_block(audit_text: str) -> tuple[dict[str, Any] | None, list[str]]
     return block, []
 
 
-def _inventory_view(block: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+def inventory_view(block: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     """The human audit view, generated from the structured rows."""
     local, linked = [], []
     for row in block.get("rows") or []:
@@ -125,7 +125,7 @@ def _inventory_view(block: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     return {"local": local, "linked": linked}
 
 
-def _ack_shape_problems(acknowledgments: Any) -> list[str]:
+def ack_shape_problems(acknowledgments: Any) -> list[str]:
     problems: list[str] = []
     if acknowledgments is None:
         return problems
@@ -167,7 +167,7 @@ def _declared_reorders(package: dict[str, Any]) -> set[tuple[str, str]]:
     }
 
 
-def _module_plan_ordering_problems(repo: Any, module_id: str,
+def module_plan_ordering_problems(repo: Any, module_id: str,
                                    package: dict[str, Any]) -> list[str]:
     """Reject silent reordering while allowing explicit reviewed changes."""
     declared = _declared_reorders(package)
@@ -262,7 +262,7 @@ def _route_unit_id(route: object) -> str | None:
     return None
 
 
-def _module_plan_routing_problems(repo: Any, module_id: str,
+def module_plan_routing_problems(repo: Any, module_id: str,
                                   package: dict[str, Any]) -> list[str]:
     """Catch source omissions that ordinary referential validation cannot see."""
     source_map = package.get("source_map")
@@ -319,7 +319,7 @@ def _module_plan_routing_problems(repo: Any, module_id: str,
     return problems
 
 
-def _synthesis_entries(module_id: str,
+def synthesis_entries(module_id: str,
                        package: dict[str, Any]) -> tuple[list[tuple[str, dict[str, Any]]], list[str]]:
     """Split the optional atomic synthesis replacements from the package.
 
@@ -359,7 +359,7 @@ def _synthesis_entries(module_id: str,
     return entries, problems
 
 
-def _assemble_compact_module_revision(repo: Any, module_id: str,
+def assemble_compact_module_revision(repo: Any, module_id: str,
                                       revision: dict[str, Any]) -> tuple[dict[str, Any] | None, list[str]]:
     """Expand reviewed unit deltas against one live snapshot for the existing import gate."""
     problems: list[str] = []
@@ -460,7 +460,7 @@ def _assemble_compact_module_revision(repo: Any, module_id: str,
                 problems.append(f"{where}.route_changes.{kind} must be a list")
         if problems:
             continue
-        source_map, _, route_problems = _apply_unit_route_changes(
+        source_map, _, route_problems = apply_unit_route_changes(
             source_map, module_id, uid, changes)
         problems.extend(f"{where}: {problem}" for problem in route_problems)
         patches = item.get("stage_patches", [])
@@ -559,7 +559,7 @@ def _assemble_compact_module_revision(repo: Any, module_id: str,
     return package, []
 
 
-def _apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_id: str,
+def apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_id: str,
                               changes: dict[str, Any]) -> tuple[dict[str, Any], dict[str, list[str]], list[str]]:
     """Apply add/update/remove ops to one unit's routes, fail closed.
 
@@ -687,7 +687,7 @@ def _apply_unit_route_changes(source_map: dict[str, Any], module_id: str, unit_i
     return new_map, summary, problems
 
 
-def _minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
+def minimal_artifact_ids(root: Path, module_id: str, writes: dict[Path, str],
                           entries: list[tuple[str, dict[str, Any]]]) -> list[str]:
     """Semantic owners for exactly the files a unit revision changes."""
     ids: list[str] = []

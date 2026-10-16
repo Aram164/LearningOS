@@ -76,7 +76,7 @@ def _record_fragment(fragment: dict) -> None:
         handle.write(json.dumps(existing, sort_keys=True, indent=2) + "\n")
 
 
-def _record_git(**items: object) -> None:
+def record_git(**items: object) -> None:
     """File one real Git fragment under ``git``; called by ``githistory``.
 
     Private: only the two Git readers call it, with values just read from

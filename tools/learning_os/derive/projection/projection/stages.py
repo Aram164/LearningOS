@@ -10,10 +10,12 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from learning_os.derive.projection.common import _git_last_commit
-from learning_os.derive.projection.materials import _project_material_resource
+from learning_os.derive.projection.common import git_last_commit as _git_last_commit
 from learning_os.domain.snapshot import Repo
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolved_inside
+from learning_os.store.materials.resolution import (
+    project_material_resource as _project_material_resource,
+)
 
 _OPEN_TARGET_KEYS = (
     "material_uri",

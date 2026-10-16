@@ -9,7 +9,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
-from learning_os.app.handlers._shared import _on_commit_refused
+from learning_os.app.handlers._shared import on_commit_refused as _on_commit_refused
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.contracts.gateway import (

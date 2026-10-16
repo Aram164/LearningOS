@@ -9,7 +9,7 @@ POSITIVE_FEEDBACK = frozenset({"helpful", "useful-for-derivation",
 MISMATCH_FEEDBACK = frozenset({"too-advanced", "wrong-perspective"})
 
 
-def _use_evidence(repo):
+def use_evidence(repo):
     """Recorded stage-use evidence per source id: raw feedback counts.
 
     Canonical study-map data, so the read's snapshot guard already binds
@@ -38,7 +38,7 @@ def _use_evidence(repo):
     return tallies
 
 
-def _evidence_label(tally):
+def evidence_label(tally):
     positive = sum(count for value, count in tally.items()
                    if value in POSITIVE_FEEDBACK)
     mismatch = sum(count for value, count in tally.items()

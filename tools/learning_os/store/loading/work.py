@@ -9,14 +9,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from learning_os.domain.snapshot import Coordination, LearningPath, Repo, Workspace, _register
-from learning_os.store.loading.yamlio import (
-    LoaderError,
-    _load_yaml,
-    _read_text,
-    _record_id,
-    parse_frontmatter,
-)
+from learning_os.domain.snapshot import Coordination, LearningPath, Repo, Workspace
+from learning_os.domain.snapshot import register as _register
+from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
+from learning_os.store.loading.yamlio import load_yaml as _load_yaml
+from learning_os.store.loading.yamlio import read_text as _read_text
+from learning_os.store.loading.yamlio import record_id as _record_id
 
 
 def _load_learning_paths(repo: Repo, context_file: Path, workspace_id: str,

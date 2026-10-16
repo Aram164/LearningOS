@@ -24,7 +24,7 @@ import json
 from pathlib import Path
 
 from .capability_catalog import PAYLOAD_RECORD_KEYS, load_capability_catalog
-from .payloads import _NESTED_SCHEMAS
+from .payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
 
 JSON_TYPES = frozenset(
     {"string", "integer", "number", "boolean", "object", "array", "null"}

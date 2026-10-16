@@ -95,7 +95,7 @@ def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
 # dossier stays current; an evidential change moves exactly the checksums of
 # the units that rest on it. The revision travels as provenance so a reader
 # can still tell which module state was live at review time.
-_COMPARED_BASIS_FIELDS = (
+COMPARED_BASIS_FIELDS = (
     "source_map_checksum",
     "route_set_checksum",
     "material_checksums",
@@ -105,7 +105,7 @@ _COMPARED_BASIS_FIELDS = (
 
 def material_basis_checksum(basis: dict) -> str:
     """The same evidential basis used by freshness, excluding revision counters."""
-    return stable_checksum({key: basis.get(key) for key in _COMPARED_BASIS_FIELDS})
+    return stable_checksum({key: basis.get(key) for key in COMPARED_BASIS_FIELDS})
 
 
 def publication_lineage(root: Path, unit_id: str, value: dict, content: str, request) -> str:
@@ -321,7 +321,7 @@ def validate_unit_material_synthesis(
     basis = value["basis"]
     material_cache: dict[Path, str] = {}
     current = current_unit_material_basis(root, unit_id, repo=repo, cache=material_cache)
-    stale = [field for field in _COMPARED_BASIS_FIELDS
+    stale = [field for field in COMPARED_BASIS_FIELDS
              if basis.get(field) != current[field]]
     if stale:
         expected = {field: current[field] for field in stale}
@@ -623,7 +623,7 @@ def material_synthesis_freshness(
         # local failure, while an ordinary manifest exposes only a stable code.
         return {"status": "stale", "reasons": ["current-basis-unavailable"]}
     basis = value.get("basis") or {}
-    for field in _COMPARED_BASIS_FIELDS:
+    for field in COMPARED_BASIS_FIELDS:
         if basis.get(field) != current.get(field):
             reasons.append(field)
     refs = [ref for row in value.get("route_assessments", []) or []

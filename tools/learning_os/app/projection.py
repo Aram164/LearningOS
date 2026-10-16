@@ -5,7 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from learning_os.app.lock import _escalate_operator_lock, _operator_lock
+from learning_os.app.lock import escalate_operator_lock as _escalate_operator_lock
+from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.derive.projection import (
     build_backlinks,
     build_manifest,
@@ -13,7 +14,7 @@ from learning_os.derive.projection import (
     stable_generated_at,
     write_outputs,
 )
-from learning_os.derive.projection.common import _git_state
+from learning_os.derive.projection.common import git_state as _git_state
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.fingerprint import (
     canonical_fingerprint,
@@ -27,11 +28,11 @@ from learning_os.store.manifest_identity import (
 )
 
 
-def _publish(root: Path) -> None:
-    _publish_repo(load_repo(root))
+def publish(root: Path) -> None:
+    publish_repo(load_repo(root))
 
 
-def _publish_repo(repo) -> None:
+def publish_repo(repo) -> None:
     write_outputs(repo, generate_all(repo))
 
 
@@ -101,7 +102,7 @@ def _try_reuse_manifest(root: Path, live_snapshot: str, *, restamp: bool) -> dic
     return manifest
 
 
-def _fresh_manifest_and_repo(
+def fresh_manifest_and_repo(
     root: Path, *, snapshot_id: str | None = None, restamp: bool = False,
 ) -> tuple[dict, object]:
     """A current manifest plus the repo it was built from.
@@ -149,7 +150,7 @@ def _fresh_manifest_and_repo(
         return build_manifest(repo, generated_at, backlinks), repo
 
 
-def _fresh_manifest(root: Path, *, snapshot_id: str | None = None,
+def fresh_manifest(root: Path, *, snapshot_id: str | None = None,
                     restamp: bool = False) -> dict:
-    manifest, _ = _fresh_manifest_and_repo(root, snapshot_id=snapshot_id, restamp=restamp)
+    manifest, _ = fresh_manifest_and_repo(root, snapshot_id=snapshot_id, restamp=restamp)
     return manifest

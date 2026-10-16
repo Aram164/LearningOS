@@ -12,7 +12,8 @@ from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
 from repo_builders import add_curriculum, run_los, write_yaml
 
 from learning_os.derive.projection import adoption_counts, generate_all
-from learning_os.derive.projection.modules_view import _academic_deadlines, _exam_spine_lines
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
+from learning_os.derive.projection.modules_view import exam_spine_lines as _exam_spine_lines
 from learning_os.store.loader import load_repo
 
 

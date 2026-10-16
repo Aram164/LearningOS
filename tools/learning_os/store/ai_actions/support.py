@@ -34,18 +34,18 @@ def check_request_id(request_id: str) -> str:
     return str(request_id)
 
 
-def _read_yaml(path: Path, default: Any = None) -> Any:
+def read_yaml(path: Path, default: Any = None) -> Any:
     if not path.is_file():
         return default
     value = yaml.safe_load(path.read_text(encoding="utf-8"))
     return default if value is None else value
 
 
-def _dump_yaml(value: Any) -> str:
+def dump_yaml(value: Any) -> str:
     return yaml.safe_dump(value, sort_keys=False, allow_unicode=True, width=100)
 
 
-def _atomic_text(path: Path, content: str) -> None:
+def atomic_text(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
     try:
@@ -56,19 +56,19 @@ def _atomic_text(path: Path, content: str) -> None:
             tmp.unlink(missing_ok=True)
 
 
-def _sha256_bytes(content: bytes) -> str:
+def sha256_bytes(content: bytes) -> str:
     return "sha256:" + hashlib.sha256(content).hexdigest()
 
 
-def _sha256_file(path: Path) -> str:
-    return _sha256_bytes(path.read_bytes())
+def sha256_file(path: Path) -> str:
+    return sha256_bytes(path.read_bytes())
 
 
-def _now_utc() -> dt.datetime:
+def now_utc() -> dt.datetime:
     return observations.now().astimezone(dt.UTC)
 
 
-def _iso(value: dt.datetime) -> str:
+def iso(value: dt.datetime) -> str:
     return value.isoformat(timespec="seconds")
 
 
@@ -79,7 +79,7 @@ def _safe_relative(value: str) -> PurePosixPath:
     return rel
 
 
-def _inside(root: Path, rel: str) -> Path:
+def inside(root: Path, rel: str) -> Path:
     target = (root / Path(*_safe_relative(rel).parts)).resolve()
     try:
         target.relative_to(root.resolve())
@@ -88,7 +88,7 @@ def _inside(root: Path, rel: str) -> Path:
     return target
 
 
-def _snapshot(root: Path) -> str:
+def snapshot(root: Path) -> str:
     # Local import avoids a cycle when genout projects AI-action state.
     from learning_os.store.fingerprint import source_fingerprint
     from learning_os.store.loader import load_repo

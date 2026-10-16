@@ -95,9 +95,9 @@ def read_history(root: Path | str, *args: str) -> str:
 
     def _real(value: str) -> str:
         if tuple(args) == ("-1", "--format=%H"):
-            observations._record_git(head=value.strip() or None)
+            observations.record_git(head=value.strip() or None)
         elif tuple(args) == ("-1", "--format=%cI"):
-            observations._record_git(head_time=value.strip() or None)
+            observations.record_git(head_time=value.strip() or None)
         return value
 
     root = os.path.abspath(root)
@@ -122,7 +122,7 @@ def read_history(root: Path | str, *args: str) -> str:
     return _real(_git(root, "log", *args, git_dir=git_dir).stdout)
 
 
-def _walk(root: str, fmt: str) -> dict[str, str]:
+def walk(root: str, fmt: str) -> dict[str, str]:
     """path -> value of `fmt` for the newest commit touching it.
 
     Under an observation override (PLAN D19), ``"%cs"`` is answered from
@@ -147,9 +147,9 @@ def _walk(root: str, fmt: str) -> dict[str, str]:
             # git log walks newest-first, so the first sighting wins.
             found.setdefault(line, current)
     if fmt == "%cs":
-        observations._record_git(dates=found)
+        observations.record_git(dates=found)
     elif fmt == "%ct":
-        observations._record_git(timestamps=found)
+        observations.record_git(timestamps=found)
     return found
 
 
@@ -185,7 +185,7 @@ def fresh_git_snapshot(root: Path | str) -> GitSnapshot:
     if head is None:
         return GitSnapshot(head=None, table={})
     try:
-        return GitSnapshot(head=head, table=_walk(os.path.abspath(root), "%cs"))
+        return GitSnapshot(head=head, table=walk(os.path.abspath(root), "%cs"))
     except GitHistoryError:
         return GitSnapshot(head=head, table=None)
 
@@ -193,16 +193,16 @@ def fresh_git_snapshot(root: Path | str) -> GitSnapshot:
 @lru_cache(maxsize=4)
 def last_commit_dates(root: str) -> dict[str, str]:
     """path -> last commit date, `%cs` (YYYY-MM-DD)."""
-    return _walk(root, "%cs")
+    return walk(root, "%cs")
 
 
 @lru_cache(maxsize=4)
 def last_commit_timestamps(root: str) -> dict[str, str]:
     """path -> last commit Unix timestamp, `%ct`."""
-    return _walk(root, "%ct")
+    return walk(root, "%ct")
 
 
-def _lookup(table: dict[str, str], rel: str) -> str | None:
+def lookup(table: dict[str, str], rel: str) -> str | None:
     exact = table.get(rel)
     if exact is not None:
         return exact
@@ -215,9 +215,9 @@ def _lookup(table: dict[str, str], rel: str) -> str | None:
 
 
 def last_commit_date(root: Path | str, rel: str) -> str:
-    return _lookup(last_commit_dates(str(root)), rel) or ""
+    return lookup(last_commit_dates(str(root)), rel) or ""
 
 
 def last_commit_timestamp(root: Path | str, rel: str) -> float | None:
-    found = _lookup(last_commit_timestamps(str(root)), rel)
+    found = lookup(last_commit_timestamps(str(root)), rel)
     return float(found) if found else None

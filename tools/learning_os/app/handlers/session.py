@@ -9,17 +9,15 @@ from __future__ import annotations
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import CommandOutput, Result
 from learning_os.app.registry import register
-from learning_os.app.session import (
-    _SessionChannelError,
-    _SessionCommittedError,
-    _SessionConflictError,
-    _SessionEmptyError,
-    _SessionHeadMovedError,
-    _SessionLedgerError,
-    _SessionMismatchError,
-    _SessionUsageError,
-    session_end,
-)
+from learning_os.app.session import SessionChannelError as _SessionChannelError
+from learning_os.app.session import SessionCommittedError as _SessionCommittedError
+from learning_os.app.session import SessionConflictError as _SessionConflictError
+from learning_os.app.session import SessionEmptyError as _SessionEmptyError
+from learning_os.app.session import SessionHeadMovedError as _SessionHeadMovedError
+from learning_os.app.session import SessionLedgerError as _SessionLedgerError
+from learning_os.app.session import SessionMismatchError as _SessionMismatchError
+from learning_os.app.session import SessionUsageError as _SessionUsageError
+from learning_os.app.session import session_end
 from learning_os.domain.failures import WriteRefused
 
 

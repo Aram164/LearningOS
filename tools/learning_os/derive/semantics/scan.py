@@ -160,7 +160,7 @@ def _route_units(repo) -> dict[str, str]:
     return owners
 
 
-def _read_goal_ledger(root: Path, *, today: _dt.date | None = None) -> tuple[str, ...]:
+def read_goal_ledger(root: Path, *, today: _dt.date | None = None) -> tuple[str, ...]:
     """Goal ids Aram already decided. Tolerant: missing or malformed input
     reads as no decisions, so the scan never crashes on operational state
     and never invents a decision nobody recorded."""
@@ -364,14 +364,14 @@ def _current_revisions(root: Path) -> dict[str, int]:
         return {}
 
 
-def _scan_manifest_files(root: Path) -> dict:
+def scan_manifest_files(root: Path) -> dict:
     """Live materials-manifest files map, or {} when unreadable."""
     data = _read_yaml(root / "records" / "materials-manifest.yaml")
     files = data.get("files") if isinstance(data, dict) else None
     return files if isinstance(files, dict) else {}
 
 
-def _live_claim_digests(repo) -> tuple[dict[str, str], dict[str, str]]:
+def live_claim_digests(repo) -> tuple[dict[str, str], dict[str, str]]:
     """Live route-row and knowledge-node digests, keyed by claim-read key.
 
     Mirrors the Phase B digest binding in ``commands.module``: one entry
@@ -446,7 +446,7 @@ def live_evidence_digest(root: Path, key: str, manifest_files: dict, *, repo=Non
         if route_digests is None or node_digests is None:
             try:
                 repo = load_repo(root) if repo is None else repo
-                live_routes, live_nodes = _live_claim_digests(repo)
+                live_routes, live_nodes = live_claim_digests(repo)
             except (OSError, ValueError):
                 return None
             if route_digests is None:
@@ -504,7 +504,7 @@ def collect_observations(root: Path | str, *,
     repo = load_repo(root)
     records = load_ledger(root)
     current = _current_revisions(root)
-    manifest_files = _scan_manifest_files(root)
+    manifest_files = scan_manifest_files(root)
     route_units = _route_units(repo)
     route_digest_pins: dict[str, str] = {}
     route_revision_pins: dict[str, dict[str, int]] = {}
@@ -519,7 +519,7 @@ def collect_observations(root: Path | str, *,
     # closed downstream, exactly as before.
     live_all: dict[str, str] = {}
     attempted: set[str] = set()
-    claim_routes, claim_nodes = _live_claim_digests(repo)
+    claim_routes, claim_nodes = live_claim_digests(repo)
     for lineage in records.values():
         for key in dict(lineage.derived_from.source_hashes):
             if key not in live_all and key not in attempted:
@@ -611,7 +611,7 @@ def collect_observations(root: Path | str, *,
     # `commands/goal.py`; this read stays tolerant on purpose — a missing
     # ledger means no decisions yet, and a malformed row is skipped rather
     # than trusted, so the scan degrades to re-emitting, never to lying.
-    decided = _read_goal_ledger(root)
+    decided = read_goal_ledger(root)
     # Learning-side truth maintenance: results held against requirements
     # that moved since. An unreadable runtime degrades to no evidence
     # goals — the scan reports the world, never a traceback.

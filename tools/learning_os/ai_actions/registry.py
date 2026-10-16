@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from learning_os.domain.ai_errors import ActionNotFound, ActionPolicyError
-from learning_os.store.ai_actions.support import _read_yaml
+from learning_os.store.ai_actions.support import read_yaml as _read_yaml
 
 
 @dataclass(frozen=True)

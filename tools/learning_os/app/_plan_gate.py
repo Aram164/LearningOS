@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
-from learning_os.app.check import _staged_shadow
+from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
@@ -21,14 +21,14 @@ from learning_os.derive.material_synthesis import (
     validate_unit_material_synthesis,
 )
 from learning_os.derive.validation import validate
+from learning_os.domain.plan_import import INVENTORY_ROW_DISPOSITIONS as _INVENTORY_ROW_DISPOSITIONS
+from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
+from learning_os.domain.plan_import import inventory_block as _inventory_block
+from learning_os.domain.plan_import import minimal_artifact_ids as _minimal_artifact_ids
 from learning_os.domain.plan_import import (
-    _INVENTORY_ROW_DISPOSITIONS,
-    _ack_shape_problems,
-    _inventory_block,
-    _minimal_artifact_ids,
-    _module_plan_routing_problems,
-    _synthesis_entries,
+    module_plan_routing_problems as _module_plan_routing_problems,
 )
+from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.material_analysis import observe_local_material
@@ -161,7 +161,7 @@ _LEARNER_STAGE_FIELDS = ("status", "working_note", "attachments",
                          "source_feedback", "runtime_review", "completed")
 
 
-def _match_key(resource: dict) -> tuple:
+def match_key(resource: dict) -> tuple:
     if isinstance(resource.get("route_id"), str):
         return ("route", resource["route_id"])
     if isinstance(resource.get("source_id"), str):
@@ -216,16 +216,16 @@ def _unit_semantic_diff(live_map: dict, staged_map: dict,
     promoted_advanced = sorted(
         rid for rid, row in staged_rows.items()
         if row.get("depth") == "advanced-reference"
-        and any(_match_key(p) in {("route", rid),
+        and any(match_key(p) in {("route", rid),
                                  ("source", row.get("source_id"), row.get("locator"))}
                 and p.get("scope_triage") in {"required-now", "helpful-now"}
                 for p in staged_placements)
         and (live_rows.get(rid, {}).get("depth") != "advanced-reference"
-             or not any(_match_key(p) in {("route", rid),
+             or not any(match_key(p) in {("route", rid),
                                          ("source", row.get("source_id"), row.get("locator"))}
                         and p.get("scope_triage") in {"required-now", "helpful-now"}
                         for p in live_placements)))
-    placed_keys = {_match_key(r) for r in staged_placements}
+    placed_keys = {match_key(r) for r in staged_placements}
     unplaced = sorted(
         rid for rid, row in staged_rows.items()
         if ("route", rid) not in placed_keys
@@ -276,11 +276,11 @@ def _unit_semantic_diff(live_map: dict, staged_map: dict,
                 continue
             # Preserve each evidence-bearing placement, including duplicates.
             match = next((i for i, r in enumerate(remaining)
-                          if isinstance(r, dict) and _match_key(r) == _match_key(old)
+                          if isinstance(r, dict) and match_key(r) == match_key(old)
                           and r.get("independent_evidence") == old["independent_evidence"]), None)
             if match is None:
-                resource_learner_changes.append(f"{sid}:{_match_key(old)}:independent_evidence")
-                destructive.append(f"{sid}:{_match_key(old)} loses independent evidence")
+                resource_learner_changes.append(f"{sid}:{match_key(old)}:independent_evidence")
+                destructive.append(f"{sid}:{match_key(old)} loses independent evidence")
             else:
                 remaining.pop(match)
     map_state_changes = [f for f in ("status", "current_stage", "detours", "shelving")
@@ -401,7 +401,7 @@ def _semantic_ack_problems(module_id: str, live_repo, staged_repo,
     return problems
 
 
-def _real_perimeter_errors(root: Path) -> list[str]:
+def real_perimeter_errors(root: Path) -> list[str]:
     """Environment errors from the real wrapper tree, in live format.
 
     Content validation runs in a shadow copy of ``repository/`` alone, where
@@ -430,7 +430,7 @@ def _real_perimeter_errors(root: Path) -> list[str]:
 _PERIMETER_CODE_PREFIX = "PERIMETER-"
 
 
-def _compose_plan_gate_errors(
+def compose_plan_gate_errors(
     root: Path,
     *,
     perimeter_errors: list[str],
@@ -463,7 +463,7 @@ def _compose_plan_gate_errors(
     ]
 
 
-def _plan_apply_gate(
+def plan_apply_gate(
     root: Path,
     *,
     live_repo=None,
@@ -509,7 +509,7 @@ def _plan_apply_gate(
                 ack_errors = _semantic_ack_problems(
                     module_id, live_repo, staged_repo,
                     touched_units, acknowledgments)
-        errors = _compose_plan_gate_errors(
+        errors = compose_plan_gate_errors(
             root,
             perimeter_errors=perimeter_errors,
             synthesis_errors=synthesis_errors,
@@ -522,7 +522,7 @@ def _plan_apply_gate(
     return validate_extra, errors_out
 
 
-def _module_plan_validation_errors(
+def module_plan_validation_errors(
     root: Path,
     writes: dict[Path, str],
     *,
@@ -547,7 +547,7 @@ def _module_plan_validation_errors(
     transaction refuses on it, so the preflight must too, with the identical
     string, before any canonical write begins.
     """
-    perimeter_errors = _real_perimeter_errors(root)
+    perimeter_errors = real_perimeter_errors(root)
     with _staged_shadow(root, writes) as shadow:
         signatures, errors = signatures_from_issues(
             validate(load_repo(shadow), online=False))
@@ -566,7 +566,7 @@ def _module_plan_validation_errors(
                     module_id, live_repo, staged_repo,
                     touched_units, acknowledgments)
         content_errors = errors
-    return _compose_plan_gate_errors(
+    return compose_plan_gate_errors(
         root,
         perimeter_errors=perimeter_errors,
         synthesis_errors=synthesis_errors,
@@ -575,7 +575,7 @@ def _module_plan_validation_errors(
         signatures=signatures)
 
 
-def _coverage_audit_problems(root: Path, contract: dict) -> list[str]:
+def coverage_audit_problems(root: Path, contract: dict) -> list[str]:
     """The audit-evidence rules shared by the module (v2) and unit (v1) contracts."""
     problems: list[str] = []
     if contract.get("plan_template_version") != PLAN_TEMPLATE_VERSION:
@@ -616,7 +616,7 @@ def _coverage_audit_problems(root: Path, contract: dict) -> list[str]:
         problems.extend(_structured_inventory_problems(root, audit_ref))
     return problems
 
-def _enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, str], list[str]]:
+def enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, str], list[str]]:
     """Live file set under explicitly scoped material roots: relpath -> sha256.
 
     Only the declared roots are walked; dotfiles and symlinks are skipped.
@@ -655,7 +655,7 @@ def _enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, 
                 problems.append(f"material inventory cannot read observed file: {rel}")
     return observed, problems
 
-def _inventory_row_problems(block: dict, observed: dict[str, str],
+def inventory_row_problems(block: dict, observed: dict[str, str],
                             materials: Path) -> list[str]:
     """Row shape, scope, digest, and duplicate-bytes rules for one inventory."""
     problems: list[str] = []
@@ -766,18 +766,18 @@ def _structured_inventory_problems(root: Path, audit_ref: str) -> list[str]:
     if not isinstance(roots, list) or not roots:
         return ["coverage audit inventory-v1 block needs a nonempty roots list"]
     materials = root.parent / "materials"
-    observed, problems = _enumerate_inventory_roots(materials, roots)
+    observed, problems = enumerate_inventory_roots(materials, roots)
     if problems:
         return problems
-    return _inventory_row_problems(block, observed, materials)
+    return inventory_row_problems(block, observed, materials)
 
-def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
+def module_plan_contract_problems(root: Path, package: dict) -> list[str]:
     """Verify the human review evidence required before a plan is executable."""
     problems: list[str] = []
     contract = package.get("plan_contract")
     if not isinstance(contract, dict) or contract.get("version") != 2:
         return ["plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)"]
-    problems.extend(_coverage_audit_problems(root, contract))
+    problems.extend(coverage_audit_problems(root, contract))
     problems.extend(_ack_shape_problems(package.get("acknowledgments", [])))
     intentional_reorders = contract.get("intentional_reorders", [])
     if not isinstance(intentional_reorders, list):
@@ -822,7 +822,7 @@ def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
     problems.extend(synthesis_problems)
     return problems
 
-def _module_plan_check_report(root: Path, module_id: str, package: dict,
+def module_plan_check_report(root: Path, module_id: str, package: dict,
                               writes: dict[Path, str],
                               entries: list[tuple[str, dict]],
                               package_sha: str,
@@ -948,7 +948,7 @@ def _module_plan_check_report(root: Path, module_id: str, package: dict,
         "canonical_files_written": 0,
     }
 
-def _master_promotion_preflight(
+def master_promotion_preflight(
     root: Path,
     module_id: str,
     plan: MasterPromotionPlan,
@@ -956,7 +956,7 @@ def _master_promotion_preflight(
     *,
     skip_validation: bool = False,
 ) -> list[str]:
-    problems = _module_plan_contract_problems(root, package)
+    problems = module_plan_contract_problems(root, package)
     if problems:
         return [f"contract: {problem}" for problem in problems]
     repo = load_repo(root)
@@ -968,12 +968,12 @@ def _master_promotion_preflight(
         # transaction instead; the package layers above still refuse here.
         return []
     try:
-        errors = _module_plan_validation_errors(root, plan.writes)
+        errors = module_plan_validation_errors(root, plan.writes)
     except ValueError as exc:
         return [str(exc)]
     return [str(issue) for issue in errors]
 
-def _master_promotion_check_result(
+def master_promotion_check_result(
     root: Path,
     module_id: str,
     plan: MasterPromotionPlan,

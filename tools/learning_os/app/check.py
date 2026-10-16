@@ -20,10 +20,11 @@ from pathlib import Path
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import TransactionProposal
 from learning_os.derive.validation import validate
-from learning_os.store.fs import _atomic_text
+from learning_os.store.fs import atomic_text as _atomic_text
 from learning_os.store.loader import load_repo
 from learning_os.store.revisions import load_revisions
-from learning_os.store.transactions import _atomic_write_bytes, transaction_artifacts
+from learning_os.store.transactions import atomic_write_bytes as _atomic_write_bytes
+from learning_os.store.transactions import transaction_artifacts
 from learning_os.store.warning_baseline import (
     delta,
     load_baseline,
@@ -32,7 +33,7 @@ from learning_os.store.warning_baseline import (
 
 
 @contextlib.contextmanager
-def _staged_shadow(root: Path, writes: Mapping[Path, str | bytes],
+def staged_shadow(root: Path, writes: Mapping[Path, str | bytes],
                    deletes: Iterable[Path] = ()) -> Iterator[Path]:
     """A shadow copy of ``repository/`` carrying planned writes, no canonical I/O.
 
@@ -129,7 +130,7 @@ def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
             raise ValueError(
                 f"planned delete escapes repository: {path}") from None
         delete_rels.append(rel)
-    with _staged_shadow(root, proposal.writes, proposal.deletes or ()) as shadow:
+    with staged_shadow(root, proposal.writes, proposal.deletes or ()) as shadow:
         staged_repo = load_repo(shadow)
         issues = validate(staged_repo, online=False)
         if proposal.validate_extra is not None:

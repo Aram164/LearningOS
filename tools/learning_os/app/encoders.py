@@ -8,7 +8,7 @@ import sys
 from learning_os.app.proposal import JsonFormat
 
 
-def _json_layout(stream=None) -> dict:
+def json_layout(stream=None) -> dict:
     """Indented JSON for a person at a terminal, compact JSON on a pipe.
 
     Agents and the UI read through pipes, where indentation was 15-22% of
@@ -49,7 +49,7 @@ def dumps_indented_sorted(payload) -> str:
 
 
 def dumps_layout_sorted(payload) -> str:
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+    return json.dumps(payload, **json_layout(), sort_keys=True, ensure_ascii=False)
 
 
 def encode_json(payload, option: JsonFormat) -> str:

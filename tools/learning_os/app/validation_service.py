@@ -20,16 +20,12 @@ from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.model import DerivedError
 from learning_os.store.derived.store import invalidate
 from learning_os.store.loader import load_repo
-from learning_os.store.validation_cache import (
-    VALIDATION_NODE_ID,
-    _freeze_static,
-    _restore_static,
-    _valid_static_value,
-    _validation_inputs,
-    _validation_spec,
-    observe_pins,
-    write_static_cache,
-)
+from learning_os.store.validation_cache import VALIDATION_NODE_ID, observe_pins, write_static_cache
+from learning_os.store.validation_cache import freeze_static as _freeze_static
+from learning_os.store.validation_cache import restore_static as _restore_static
+from learning_os.store.validation_cache import valid_static_value as _valid_static_value
+from learning_os.store.validation_cache import validation_inputs as _validation_inputs
+from learning_os.store.validation_cache import validation_spec as _validation_spec
 from learning_os.store.warning_baseline import signatures_from_issues
 
 if TYPE_CHECKING:

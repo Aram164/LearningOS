@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from learning_os.derive.projection.common import _first_para, _git_last_commit, _md_header
+from learning_os.derive.projection.common import first_para as _first_para
+from learning_os.derive.projection.common import git_last_commit as _git_last_commit
+from learning_os.derive.projection.common import md_header as _md_header
 from learning_os.derive.projection.coordination import adoption_counts
-from learning_os.derive.projection.materials import _materials_queue_rows
-from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.materials import materials_queue_rows as _materials_queue_rows
+from learning_os.derive.projection.modules_view import academic_deadlines as _academic_deadlines
 from learning_os.domain.snapshot import Repo
 
 

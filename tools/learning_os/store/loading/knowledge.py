@@ -9,15 +9,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from learning_os.domain.snapshot import GardenNote, Note, Repo, _register
-from learning_os.domain.vocabulary import GARDEN_TAG_RE, _strip_code
-from learning_os.store.loading.yamlio import (
-    LoaderError,
-    _load_registry,
-    _read_text,
-    _record_id,
-    parse_frontmatter,
-)
+from learning_os.domain.snapshot import GardenNote, Note, Repo
+from learning_os.domain.snapshot import register as _register
+from learning_os.domain.vocabulary import GARDEN_TAG_RE
+from learning_os.domain.vocabulary import strip_code as _strip_code
+from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
+from learning_os.store.loading.yamlio import load_registry as _load_registry
+from learning_os.store.loading.yamlio import read_text as _read_text
+from learning_os.store.loading.yamlio import record_id as _record_id
 
 
 def load_concepts(repo: Repo, root: Path) -> None:
@@ -54,7 +53,7 @@ def load_abilities(repo: Repo, root: Path) -> None:
     # Candidate edges remain visible but cannot affect readiness or transfer.
     path = root / "knowledge" / "abilities.yaml"
     if path.exists():
-        from learning_os.store.loading.yamlio import _load_yaml
+        from learning_os.store.loading.yamlio import load_yaml as _load_yaml
         try:
             data = _load_yaml(path, root)
             if not isinstance(data, dict) or not isinstance(data.get("bridges"), list):

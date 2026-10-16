@@ -68,7 +68,7 @@ _GATEWAY_INLINE_REQUIRED = {
 #: written inline here: one source of truth, mirrored nowhere. A nested shape
 #: must mirror its handler's checks, never invent stricter ones: direct CLI
 #: use never sees the schema.
-_NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
+NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
     ("note.analysis.save_batch", "bundle"): batch_notes_schema(),
     ("atlas.question.save", "question"): atlas_question_schema(),
 }
@@ -233,7 +233,7 @@ def payload_schema(
     for dest in doc.get("required", []):
         if dest in properties:
             required.append(dest)
-    for (capability_name, field), nested in _NESTED_SCHEMAS.items():
+    for (capability_name, field), nested in NESTED_SCHEMAS.items():
         if capability_name == name and field in properties:
             # A fragment with its own description keeps it; otherwise the
             # parser help still describes the field.

@@ -35,12 +35,12 @@ from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.revisions import load_revisions
 
 
-def _idempotency_ledger_path(root: Path) -> Path:
+def idempotency_ledger_path(root: Path) -> Path:
     return root / "operations" / "transactions" / "idempotency.yaml"
 
 
-def _load_idempotency_entries(root: Path) -> dict[str, dict]:
-    path = _idempotency_ledger_path(root)
+def load_idempotency_entries(root: Path) -> dict[str, dict]:
+    path = idempotency_ledger_path(root)
     if not path.exists() and not path.is_symlink():
         return {}
     try:
@@ -78,7 +78,7 @@ def _load_idempotency_entries(root: Path) -> dict[str, dict]:
     return normalized
 
 
-def _default_authority_root(root: Path) -> Path | None:
+def default_authority_root(root: Path) -> Path | None:
     implicit_catalogue = root / "system" / "contracts" / "capabilities.yaml"
     return root if implicit_catalogue.is_file() else None
 
@@ -190,7 +190,7 @@ def verify_committed_evidence(
     (approval == intent). Tampering with either side of the row/receipt
     pair therefore fails here exactly as it fails a live replay.
     """
-    row = _load_idempotency_entries(root).get(request.idempotency_key)
+    row = load_idempotency_entries(root).get(request.idempotency_key)
     if row is None:
         return None
     if row["capability"] != request.capability \
@@ -232,7 +232,7 @@ def verify_committed_evidence(
     if not isinstance(receipt, dict):
         raise ReplayEvidenceError("idempotent receipt is not a mapping")
 
-    schema_root = authority_root or _default_authority_root(root) or root
+    schema_root = authority_root or default_authority_root(root) or root
     schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
     if not schema_path.is_file():
         raise ReplayEvidenceError(
@@ -331,7 +331,7 @@ def verify_committed_evidence(
     if not isinstance(grants, list) or not grants:
         raise ReplayEvidenceError("idempotent receipt has no authority grants")
 
-    resolved_authority_root = authority_root or _default_authority_root(root)
+    resolved_authority_root = authority_root or default_authority_root(root)
     allowed_scopes: list[str] = []
     if resolved_authority_root is not None:
         from learning_os.contracts.capability_catalog import (

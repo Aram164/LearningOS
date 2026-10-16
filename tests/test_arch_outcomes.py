@@ -13,14 +13,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from learning_os.app.outcomes import (
-    TABLE,
-    _refusal_from_failure,
-    classify,
-    error_object,
-    exit_for,
-    resolve,
-)
+from learning_os.app.outcomes import TABLE, classify, error_object, exit_for, resolve
+from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failure
 from learning_os.app.pipeline import (
     _classify_failure,
     _post_commit_error,
@@ -49,8 +43,8 @@ from learning_os.domain.failures import (
     TransactionSnapshotConflict,
     TransactionValidationFailure,
     WriteRefused,
-    _ReplayRecoveryError,
 )
+from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.legacy_archive import LegacyArchiveError
 
