@@ -231,7 +231,7 @@ cases:
   - id: lineage-admission-direct
     kind: refusal
     transport: cli
-    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml", --expected-snapshot, "sha256:71b1bfce85eaf7139b6c831d11349afb9f9fc764c6a4239b6346e9119bb1f32e"]
+    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml", --expected-snapshot, "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"]
     expect: {site: null}
   - id: import-hits-warning-gate
     kind: sequence

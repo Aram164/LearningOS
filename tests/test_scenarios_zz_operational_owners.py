@@ -549,3 +549,11 @@ def test_unbound_world_cannot_credit_an_unresolved_descriptor(tmp_path):
     rows[1]["argv"] = ["-c"]
     log.write_text("\n".join(json.dumps(row) for row in rows) + "\n")
     assert _violations_in_log(log, _load_owners())
+
+
+def test_ai_storage_owner_rejects_application_or_rogue_writers(tmp_path):
+    path = "/w/operations/ai-actions/requests/request-demo/request.yaml"
+    for owner in ("learning_os.store.ai_actions.storage", "learning_os.store.ai_actions.support"):
+        assert _signatures(tmp_path, [_write_record(path, owner)]) == set()
+    for rogue in ("learning_os.app.ai_actions.service", "learning_os.rogue"):
+        assert _signatures(tmp_path, [_write_record(path, rogue)]) != set()

@@ -15,7 +15,7 @@ entries:
   # table assumed. The SPEC table row is amended by this declaration.
   - {glob: "operations/transactions/lineage.yaml", sink: "engine:apply", capabilities: [unit.material-synthesis.publish, lineage.restamp, module.plan.import, unit.plan.revise]}
   - {glob: "operations/legacy/**", sink: "engine:apply", capabilities: [legacy.archive.lock.publish]}
-  - {glob: "operations/ai-actions/**", sink: module, owner: learning_os.app.ai_actions}
+  - {glob: "operations/ai-actions/**", sink: module, owner: learning_os.store.ai_actions}
   - {glob: "operations/ai-actions/**", sink: "engine:apply", capabilities: [ai-action.delivery.apply]}
   - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
   - {glob: "operations/migrations/**", sink: module, owner: migrations}
