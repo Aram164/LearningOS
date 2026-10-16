@@ -36,17 +36,13 @@ from learning_os.learning_runtime import (
     runtime_path,
     validate_runtime_record,
 )
-from learning_os.ops._legacy_plumbing import (
-    _read_content_bound_file,
-)
+from learning_os.ops.admission import gesture_allowed
 from learning_os.ops.context import OpContext
+from learning_os.ops.gateway import _read_content_bound_file
 from learning_os.ops.handlers._shared import (
     require_path_or_error,
     require_stage,
     require_unit_map_or_error,
-)
-from learning_os.ops.legacy import (
-    gesture_allowed,
 )
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register

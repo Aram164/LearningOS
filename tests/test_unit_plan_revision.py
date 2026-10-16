@@ -70,7 +70,7 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.ops.legacy import _dispatch
+    from learning_os.ops.gateway import _dispatch
 
     definitions = command_definitions(mini_repo)
     definition = definitions["capture.create"]
@@ -1327,7 +1327,7 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     import los
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payloads import payload_schema
-    from learning_os.ops.legacy import _dispatch
+    from learning_os.ops.gateway import _dispatch
 
     repo_root = Path(__file__).resolve().parent.parent
     assert "report_out" not in payload_schema(

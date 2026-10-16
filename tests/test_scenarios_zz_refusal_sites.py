@@ -759,7 +759,7 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
     from learning_os.diagnostics.store import bind_store as _bind_diag_store
     from learning_os.domain.failures import WriteRefused
     from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.legacy import prepare_dispatch
+    from learning_os.ops.gateway import prepare_dispatch
 
     site = "stage.progress.update.unknown-status"
     with pytest.raises(SystemExit) as status:
@@ -886,7 +886,7 @@ def _prove_guarded_enum(mini_repo: Path, tmp_path: Path, monkeypatch, *,
     import los
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.legacy import prepare_dispatch
+    from learning_os.ops.gateway import prepare_dispatch
 
     with pytest.raises(SystemExit) as refused:
         los.build_parser().parse_args(cli_argv)

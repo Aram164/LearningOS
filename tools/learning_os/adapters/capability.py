@@ -20,10 +20,10 @@ from learning_os.diagnostics import tracer as diag_tracer
 from learning_os.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.diagnostics.store import bind_store as _bind_diag_store
 from learning_os.domain.failures import WriteRefused
-from learning_os.ops._legacy_plumbing import _read_structured_file
-from learning_os.ops.legacy import (
+from learning_os.ops.gateway import (
     _context_from_v2,
     _dispatch,
+    _read_structured_file,
     _validate_capability_envelope,
 )
 from learning_os.ops.pipeline import _close_attempt, run_gateway

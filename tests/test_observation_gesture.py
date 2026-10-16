@@ -27,7 +27,7 @@ from learning_os.contracts.capability_catalog import (
 )
 from learning_os.contracts.gateway import intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops.legacy import (
+from learning_os.ops.admission import (
     GESTURE_ALLOWLIST,
     UI_REVIEWED_ALLOWLIST,
     gesture_allowed,

@@ -12,9 +12,12 @@ from pathlib import Path
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.ops._legacy_plumbing import _read_structured_file
 from learning_os.ops.context import OpContext
-from learning_os.ops.legacy import _context_from_v2, _validate_capability_envelope
+from learning_os.ops.gateway import (
+    _context_from_v2,
+    _read_structured_file,
+    _validate_capability_envelope,
+)
 from learning_os.ops.proposal import CommandOutput
 
 

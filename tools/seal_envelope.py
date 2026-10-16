@@ -105,7 +105,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         verified_gateway_snapshot,
     )
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.legacy import _dispatch
+    from learning_os.ops.gateway import _dispatch
     from learning_os.ops.lock import _operator_lock
     from learning_os.revisions import load_revisions
     from learning_os.transactions import transaction_artifacts
@@ -236,7 +236,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     from learning_os.domain.failures import WriteRefused
     from learning_os.ops.check import check_proposal
     from learning_os.ops.context import OpContext
-    from learning_os.ops.legacy import prepare_dispatch
+    from learning_os.ops.gateway import prepare_dispatch
     from learning_os.ops.lock import _operator_lock
 
     if parser_factory is None:

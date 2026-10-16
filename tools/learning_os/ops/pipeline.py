@@ -46,16 +46,18 @@ from learning_os.domain.failures import (
 )
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.ops import handlers  # noqa: F401  (registration side effect)
+from learning_os.ops.admission import (
+    gesture_allowed,
+    gesture_refusal,
+)
 from learning_os.ops.check import check_proposal
 from learning_os.ops.commit import commit_proposal
 from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import _json_layout, encode_json
-from learning_os.ops.legacy import (
+from learning_os.ops.gateway import (
     _context_from_v2,
     _dispatch,
     _validate_capability_envelope,
-    gesture_allowed,
-    gesture_refusal,
     prepare_dispatch,
 )
 from learning_os.ops.lock import _operator_lock

@@ -14,8 +14,8 @@ from learning_os import observations
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
+from learning_os.ops.admission import gesture_allowed
 from learning_os.ops.context import OpContext
-from learning_os.ops.legacy import gesture_allowed
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision

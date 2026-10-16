@@ -49,12 +49,14 @@ from learning_os.ops._legacy_plumbing import (
     _content_envelope,
     _discovery_row,
     _inbox_search_rows,
-    _read_content_bound_file,
-    _read_structured_file,
     _window_values,
-    prepare_review_envelope,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.gateway import (
+    _read_content_bound_file,
+    _read_structured_file,
+    prepare_review_envelope,
+)
 from learning_os.ops.projection import _fresh_manifest
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register

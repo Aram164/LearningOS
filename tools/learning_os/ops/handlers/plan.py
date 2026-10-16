@@ -109,13 +109,10 @@ from learning_os.ops._legacy_plumbing import (
     _freshness_label,
     _guard_rows,
     _map_for_unit,
-    _read_content_bound_file,
-    _read_structured_file,
     _route_material_files,
     _unit_note_scope,
     _use_evidence,
     _window_values,
-    prepare_review_envelope,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -135,6 +132,11 @@ from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import (
     dumps_compact,
     dumps_indented,
+)
+from learning_os.ops.gateway import (
+    _read_content_bound_file,
+    _read_structured_file,
+    prepare_review_envelope,
 )
 from learning_os.ops.handlers._shared import apply_reviewed_envelope
 from learning_os.ops.proposal import Result, TransactionProposal

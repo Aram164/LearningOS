@@ -11,17 +11,13 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
-import sys
 from pathlib import Path, PurePosixPath
 
 import jsonschema
 import yaml
 
-from learning_os import observations
 from learning_os.contracts.gateway import (
     current_gateway_request,
-    intent_sha256,
 )
 from learning_os.domain.failures import WriteRefused
 from learning_os.loading.yamlio import UniqueKeySafeLoader
@@ -36,6 +32,7 @@ from learning_os.materials_resolution import (
     material_uri_authority,
     safe_material_locator,
 )
+from learning_os.ops.gateway import _read_structured_file
 from learning_os.store.codec import _dump_yaml
 from learning_os.transactions import artifact_revision
 
@@ -63,89 +60,8 @@ from learning_os.transactions import artifact_revision
 # Content-bound input, moved verbatim from commands.support (SPEC (az) item 2).
 
 
-def _read_content_bound_file(
-    path_value: str,
-    expected_sha256: str | None = None,
-    *,
-    label: str = "file input",
-) -> tuple[Path, bytes]:
-    """Read an external file once and verify the bytes a V2 request approved.
-
-    The returned bytes are the bytes the caller must parse or write. Hashing
-    and then reopening the pathname would merely move the TOCTOU window.
-    Direct human CLI preflights may omit the digest; an active V2 gateway
-    context may not.
-    """
-    if path_value == "-" and current_gateway_request() is not None:
-        raise WriteRefused(
-            f"GatewayEnvelopeV2 {label} must be a real path with an approved SHA-256; "
-            "unbound stdin is not allowed"
-        )
-    source = Path(path_value).expanduser().resolve()
-    if not source.is_file():
-        raise WriteRefused(f"no such {label}: {source}")
-    try:
-        content = source.read_bytes()
-    except OSError as exc:
-        raise WriteRefused(f"cannot read {label} {source}: {exc}") from exc
-    if expected_sha256 is None:
-        if current_gateway_request() is not None:
-            raise WriteRefused(
-                f"GatewayEnvelopeV2 {label} requires a SHA-256 bound to the exact bytes"
-            )
-        return source, content
-    if not re.fullmatch(r"sha256:[a-f0-9]{64}", expected_sha256):
-        raise WriteRefused(
-            f"{label} SHA-256 must use sha256:<64 lowercase hexadecimal digits>"
-        )
-    actual_sha256 = "sha256:" + hashlib.sha256(content).hexdigest()
-    if actual_sha256 != expected_sha256:
-        raise WriteRefused(
-            f"approved {label} changed before use; expected {expected_sha256}, "
-            f"found {actual_sha256}. Review the new bytes and create a new approval."
-        )
-    return source, content
 
 
-def _read_structured_file(
-    path_value: str,
-    *,
-    expected_sha256: str | None = None,
-    label: str = "structured input",
-) -> dict:
-    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
-
-    Stdin matters for callers that build an envelope in memory: writing it to
-    a temp file first means a real file holding canonical intent has to be
-    created, found, and cleaned up on every write path, including the ones
-    that fail. ``-`` removes that lifecycle entirely.
-    """
-    if path_value == "-" and expected_sha256 is None \
-            and current_gateway_request() is None:
-        raw = sys.stdin.read()
-        try:
-            data = json.loads(raw)
-        except ValueError as exc:
-            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
-        if not isinstance(data, dict):
-            raise WriteRefused("structured input must be an object")
-        return data
-    path, raw_bytes = _read_content_bound_file(
-        path_value,
-        expected_sha256,
-        label=label,
-    )
-    try:
-        raw = raw_bytes.decode("utf-8")
-        if path.suffix.lower() == ".json":
-            data = json.loads(raw)
-        else:
-            data = yaml.safe_load(raw)
-    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
-        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
-    if not isinstance(data, dict):
-        raise WriteRefused(f"structured input must be an object: {path}")
-    return data
 
 
 def _require_gateway_v2() -> None:
@@ -246,22 +162,6 @@ def _changed_write(writes, path, data):
 # _window_values is the extracted value-based core of commands.reads._window.
 
 
-def prepare_review_envelope(capability_name: str, payload: dict,
-                            snapshot: str, revisions: dict) -> dict:
-    """Prepare a recoverable request during preflight, while its lock is held."""
-    envelope = {
-        "schema_version": 2,
-        "request_id": f"request-reviewed-{observations.new_hex()}",
-        "idempotency_key": f"reviewed-{observations.new_hex()}",
-        "capability": capability_name,
-        "channel": "codex",
-        "expected_snapshot": snapshot,
-        "expected_revisions": revisions,
-        "payload": payload,
-        "approval": {"kind": "operator-approval", "subject_sha256": ""},
-    }
-    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
-    return envelope
 
 
 def _inbox_search_rows(root: Path) -> list[dict]:

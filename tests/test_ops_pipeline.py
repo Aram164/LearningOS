@@ -598,7 +598,7 @@ def test_cli_gesture_handler_refuses_a_non_admitted_capability(
         pipe, mini_repo):
     """SPEC (br) R7: the handler refuses before any write unless admitted."""
     from learning_os.contracts.gateway import current_gateway_request
-    from learning_os.ops.legacy import gesture_allowed
+    from learning_os.ops.admission import gesture_allowed
 
     def handler(ctx, req):
         if not gesture_allowed(TEST_OP):
@@ -884,7 +884,7 @@ def test_gateway_refuses_malformed_payload_with_todays_message(
         pipe, mini_repo):
     """The K1 malformed-payload refusal carries the dispatch message."""
 
-    from learning_os.ops.legacy import prepare_dispatch
+    from learning_os.ops.gateway import prepare_dispatch
 
     definitions = _write_gateway_wiring(mini_repo)
     pipe("command")
@@ -943,7 +943,7 @@ def test_gateway_receives_envelope_guards_in_req(pipe, mini_repo):
 def test_gateway_refuses_approve_in_v2_payload(pipe, mini_repo):
     """An approve key in a V2 payload is refused before validation."""
 
-    from learning_os.ops.legacy import prepare_dispatch
+    from learning_os.ops.gateway import prepare_dispatch
 
     definitions = _write_gateway_wiring(mini_repo)
     pipe("command")

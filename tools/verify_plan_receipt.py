@@ -54,11 +54,9 @@ from learning_os.material_synthesis import (  # noqa: E402
     synthesis_destination,
     validate_unit_material_synthesis,
 )
-from learning_os.ops._legacy_plumbing import (  # noqa: E402
-    _read_structured_file,
-)
-from learning_os.ops.legacy import (  # noqa: E402
+from learning_os.ops.gateway import (  # noqa: E402
     _context_from_v2,
+    _read_structured_file,
     _validate_capability_envelope,
     _validate_payload,
 )
