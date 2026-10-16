@@ -9,7 +9,6 @@ import re
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
-from learning_os.ops._legacy_plumbing import _dump_yaml, _render_frontmatter
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -17,6 +16,10 @@ from learning_os.pathing import PathBoundaryError, read_bytes_inside
 from learning_os.render import parse_sections
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.revisions import artifact_revision
+from learning_os.store.codec import (
+    _dump_yaml,
+    _render_frontmatter,
+)
 from learning_os.transactions import parse_expected_revisions
 
 ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")

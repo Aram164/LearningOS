@@ -32,7 +32,7 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.derived.model import DerivedError
-from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import canonical_fingerprint, seed_source_fingerprint
 from learning_os.genout import (
     build_backlinks,
@@ -70,6 +70,7 @@ from learning_os.semantics.goals import (
     rank_clusters,
 )
 from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
+from learning_os.store.codec import _dump_yaml
 from learning_os.store.session_ledger import _is_anchored, _process_state_dir
 from learning_os.transactions import artifact_revision, reconcile_inflight_transactions
 
@@ -378,23 +379,6 @@ def _json_layout(stream=None) -> dict:
     return {"indent": 2} if interactive else {"separators": (",", ":")}
 
 
-def _atomic_text(path: Path, content: str) -> None:
-    """Temp file + os.replace, cleaning up after any failure.
-
-    Every mutating command funnels through here, so an ordinary filesystem
-    problem — target replaced by a directory, permission denied, full disk —
-    must surface as an actionable refusal instead of a traceback that leaves a
-    stray `.tmp` sibling behind.
-    """
-    tmp = path.with_name(f".{path.name}.tmp")
-    try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, path)
-    except OSError as exc:
-        with contextlib.suppress(OSError):
-            tmp.unlink(missing_ok=True)
-        raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
 
 
 def _confirmation_from(result) -> dict:
@@ -545,11 +529,6 @@ def _fresh_manifest(root: Path, *, snapshot_id: str | None = None,
 # Read preflight, moved verbatim from commands.reads (SPEC (az) item 2).
 
 
-def _snapshot(root, expected=None) -> str:
-    actual = f"sha256:{canonical_fingerprint(root)}"
-    if expected is not None and expected != actual:
-        raise StaleSnapshot("snapshot changed; restart this read before continuing")
-    return actual
 
 
 # ---------------------------------------------------------------------------
@@ -674,26 +653,12 @@ def _input_record_values(record, file_name, label: str) -> dict:
 # (SPEC (az) item 2).
 
 
-class _NoAliasSafeDumper(yaml.SafeDumper):
-    """Keep authored YAML deterministic even when an input package uses anchors."""
-
-    def ignore_aliases(self, data):  # noqa: ANN001 - PyYAML callback signature
-        return True
 
 
-def _dump_yaml(data: dict) -> str:
-    return yaml.dump(data, Dumper=_NoAliasSafeDumper, sort_keys=False,
-                     allow_unicode=True, width=100)
 
 
-def _render_frontmatter(meta: dict, body: str) -> str:
-    return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
 
-def _dump_study_map(study_map, data: dict) -> str:
-    from learning_os.material_refs import preserve_map_refs
-
-    return _dump_yaml(preserve_map_refs(study_map, data))
 
 
 # ---------------------------------------------------------------------------
@@ -801,28 +766,8 @@ def _discovery_row(rec):
              "state", "deprecated")}
 
 
-def _bytes_inside_owner(root, path, owner, *, escape, symlink):
-    """Read bytes admitted by one owner directory; symlinks always refuse.
-
-    The one admission rule for note, garden, and inbox reads: the resolved
-    target must sit below the owner, and no path component may be a link —
-    even one that would resolve in-tree. Only the refusal wording differs
-    per surface.
-    """
-    try:
-        path.resolve(strict=True).relative_to(owner.resolve(strict=True))
-    except (ValueError, OSError) as exc:
-        raise WriteRefused(escape) from exc
-    if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
-        raise WriteRefused(symlink)
-    return path.read_bytes()
 
 
-def _note_bytes(root, note):
-    return _bytes_inside_owner(
-        root, note.path, root / "knowledge" / "notes",
-        escape="note path escapes its knowledge owner",
-        symlink="note read refuses symlinks")
 
 
 def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):

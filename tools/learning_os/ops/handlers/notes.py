@@ -30,6 +30,7 @@ from learning_os.domain.failures import (
     unreadable_refusal,
 )
 from learning_os.domain.suggest import expansion, not_found, suggest
+from learning_os.fingerprint import _snapshot
 from learning_os.garden import garden_id
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, parse_frontmatter
 from learning_os.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
@@ -45,16 +46,12 @@ from learning_os.materials_resolution import (
     resolve_material_target,
 )
 from learning_os.ops._legacy_plumbing import (
-    _bytes_inside_owner,
     _content_envelope,
     _discovery_row,
-    _dump_yaml,
     _fresh_manifest,
     _inbox_search_rows,
-    _note_bytes,
     _read_content_bound_file,
     _read_structured_file,
-    _snapshot,
     _window_values,
     prepare_review_envelope,
 )
@@ -66,6 +63,11 @@ from learning_os.revisions import artifact_revision
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
+from learning_os.store.codec import _dump_yaml
+from learning_os.store.fs import (
+    _bytes_inside_owner,
+    _note_bytes,
+)
 from learning_os.transactions import parse_expected_revisions
 
 

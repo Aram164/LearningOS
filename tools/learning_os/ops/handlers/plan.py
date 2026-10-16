@@ -58,6 +58,7 @@ from learning_os.domain.suggest import (
     suggest,
     with_suggestions,
 )
+from learning_os.fingerprint import _snapshot
 from learning_os.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
@@ -104,18 +105,13 @@ from learning_os.ops._legacy_plumbing import (
     _apply_hint,
     _approved_assessments,
     _changed_write,
-    _dump_study_map,
-    _dump_yaml,
     _evidence_label,
     _freshness_label,
     _guard_rows,
     _map_for_unit,
-    _note_bytes,
     _read_content_bound_file,
     _read_structured_file,
-    _render_frontmatter,
     _route_material_files,
-    _snapshot,
     _unit_note_scope,
     _use_evidence,
     _window_values,
@@ -166,6 +162,12 @@ from learning_os.semantics.restamp import (
     analyze,
     claims_list_sha256,
 )
+from learning_os.store.codec import (
+    _dump_study_map,
+    _dump_yaml,
+    _render_frontmatter,
+)
+from learning_os.store.fs import _note_bytes
 from learning_os.transactions import parse_expected_revisions, transaction_artifacts
 from learning_os.warning_baseline import signatures_from_issues
 

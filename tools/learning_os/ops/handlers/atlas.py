@@ -19,19 +19,19 @@ from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import suggest, with_suggestions
+from learning_os.fingerprint import _snapshot
 from learning_os.learning_runtime import runtime_path
 from learning_os.ops._legacy_plumbing import (
     RELATION_ARTIFACT,
     _registries,
-    _render_frontmatter,
     _safe,
     _schema,
-    _snapshot,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
+from learning_os.store.codec import _render_frontmatter
 from learning_os.transactions import parse_expected_revisions
 
 

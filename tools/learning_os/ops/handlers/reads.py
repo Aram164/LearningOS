@@ -19,6 +19,7 @@ from learning_os.domain.failures import (
     unreadable_refusal,
 )
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
+from learning_os.fingerprint import _snapshot
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.genout.common import _first_para
@@ -46,7 +47,6 @@ from learning_os.ops._legacy_plumbing import (
     _evidence_label,
     _fresh_manifest,
     _inbox_search_rows,
-    _snapshot,
     _use_evidence,
     _window_values,
     ranked_scan,

@@ -53,15 +53,15 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::os.replace
+  - signature: tools/learning_os/store/fs.py::_atomic_text::os.replace
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
-  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::unlink
+  - signature: tools/learning_os/store/fs.py::_atomic_text::unlink
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
-  - signature: tools/learning_os/ops/_legacy_plumbing.py::_atomic_text::write_text
+  - signature: tools/learning_os/store/fs.py::_atomic_text::write_text
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"

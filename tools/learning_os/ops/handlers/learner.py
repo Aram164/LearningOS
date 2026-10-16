@@ -37,8 +37,6 @@ from learning_os.learning_runtime import (
     validate_runtime_record,
 )
 from learning_os.ops._legacy_plumbing import (
-    _dump_study_map,
-    _dump_yaml,
     _read_content_bound_file,
 )
 from learning_os.ops.context import OpContext
@@ -47,11 +45,17 @@ from learning_os.ops.handlers._shared import (
     require_stage,
     require_unit_map_or_error,
 )
-from learning_os.ops.legacy import gesture_allowed
+from learning_os.ops.legacy import (
+    gesture_allowed,
+)
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
+from learning_os.store.codec import (
+    _dump_study_map,
+    _dump_yaml,
+)
 from learning_os.transactions import parse_expected_revisions
 from learning_os.unit_notes import unit_note_marker
 

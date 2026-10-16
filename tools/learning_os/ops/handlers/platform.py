@@ -34,6 +34,7 @@ from learning_os.diagnostics.resolver import (
 from learning_os.diagnostics.store import read_records
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
+from learning_os.fingerprint import _snapshot
 from learning_os.health import build_health_report
 from learning_os.legacy_archive import (
     inspect_legacy_archive,
@@ -42,14 +43,11 @@ from learning_os.legacy_archive import (
     load_legacy_archive_lock,
 )
 from learning_os.ops._legacy_plumbing import (
-    _atomic_text,
-    _dump_yaml,
     _fresh_manifest,
     _fresh_manifest_and_repo,
     _input_record_values,
     _read_structured_file,
     _require_gateway_v2,
-    _snapshot,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import (
@@ -58,6 +56,8 @@ from learning_os.ops.encoders import (
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
+from learning_os.store.codec import _dump_yaml
+from learning_os.store.fs import _atomic_text
 from learning_os.transactions import parse_expected_revisions
 
 

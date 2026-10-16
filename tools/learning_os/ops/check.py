@@ -18,11 +18,11 @@ from collections.abc import Iterable, Iterator, Mapping
 from pathlib import Path
 
 from learning_os.loader import load_repo
-from learning_os.ops._legacy_plumbing import _atomic_text
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.revisions import load_revisions
 from learning_os.rules import validate
+from learning_os.store.fs import _atomic_text
 from learning_os.transactions import _atomic_write_bytes, transaction_artifacts
 from learning_os.warning_baseline import (
     delta,

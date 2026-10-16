@@ -28,9 +28,19 @@ import weakref
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from learning_os.domain.failures import StaleSnapshot
+
 from . import digests
 from .contracts.local_attachments import local_paths
 from .pathing import PathBoundaryError, read_bytes_inside
+
+
+def _snapshot(root, expected=None) -> str:
+    actual = f"sha256:{canonical_fingerprint(root)}"
+    if expected is not None and expected != actual:
+        raise StaleSnapshot("snapshot changed; restart this read before continuing")
+    return actual
+
 
 if TYPE_CHECKING:
     from .loader import Repo
