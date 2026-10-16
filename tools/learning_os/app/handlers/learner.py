@@ -1006,5 +1006,3 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
         on_commit_refused=_on_commit_refused,
         json_format="unescaped",
     )
-
-
