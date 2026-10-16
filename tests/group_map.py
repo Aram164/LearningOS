@@ -262,7 +262,7 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/materials_index/", frozenset({"materials"})),
     ("tools/materials_manifest.py", frozenset({"materials"})),
     ("tools/normalise_material_uris.py", frozenset({"materials"})),
-    ("tools/lift_angle_out_of_locator.py", frozenset({"materials", "studyplan"})),
+    ("tools/migrations/lift_angle_out_of_locator.py", frozenset({"materials", "studyplan"})),
     ("tools/assemble_lecture_study_maps.py", frozenset({"studyplan"})),
     ("tools/verify_plan_receipt.py", frozenset({"studyplan"})),
     ("tools/plan_write_audit.py", frozenset({"studyplan"})),

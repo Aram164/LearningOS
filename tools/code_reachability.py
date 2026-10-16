@@ -41,7 +41,6 @@ ENTRYPOINTS = (
     "ingest_transcript.py",
     "legacy_exit_review.py",
     "library_reconciliation.py",
-    "lift_angle_out_of_locator.py",
     "los.py",
     "manifest_contract.py",
     "material_text.py",
@@ -87,6 +86,9 @@ UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
     "migrations.curriculum_v2": "retired module-first migration (through v0)",
     "migrations.job_quarantine_collapse": (
         "completed migration; runtime wiring retired by PLAN D13 (ADR-018)"
+    ),
+    "migrations.lift_angle_out_of_locator": (
+        "completed locator/angle repair (through v12); LOCATOR-ANGLE-FUSED now refuses the defect"
     ),
     "migrations.library_taxonomy_v1": "retired taxonomy migration (through v1)",
     "migrations.projects_v1": "retired project migration (through v0)",

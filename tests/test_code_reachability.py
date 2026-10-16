@@ -274,6 +274,7 @@ def test_production_edges_are_clean_with_no_allowlist_growth():
         "migrations.curriculum_v2",
         "migrations.job_quarantine_collapse",
         "migrations.library_taxonomy_v1",
+        "migrations.lift_angle_out_of_locator",
         "migrations.projects_v1",
         "migrations.registry_partition_v1",
         "migrations.route_identity_v13",

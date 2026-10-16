@@ -173,7 +173,7 @@ What changed:
 - **Angle is a field.** `angle` and `angle_detail` are properties of a resource
   row (`learning-plan.schema.json`, `study-map.schema.json`) and of a source-map
   route (`module-source-map.schema.json`). The assembler no longer concatenates
-  the angle onto `locator`; `tools/lift_angle_out_of_locator.py` un-fused the
+  the angle onto `locator`; `tools/migrations/lift_angle_out_of_locator.py` un-fused the
   3,885 rows already on disk. Data contract bumped v11 → v12, new format fixture
   frozen at `tests/fixtures/formats/v12/`.
 - **The defect cannot return.** `LOCATOR-ANGLE-FUSED` is an error, so a locator

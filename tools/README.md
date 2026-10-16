@@ -46,7 +46,6 @@ runtime coverage; the exact roots and historical allowlist live in
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
 | `library_reconciliation.py` | read-only diagnostic | Occurrence-level reconciliation of the old resource lists against the source registry (two-pass source intake); reads only declared inputs and writes only inside its workspace, never canonical records. |
 | `plan_write_audit.py` | read-only diagnostic | Reports plan changes without same-commit gateway receipts. |
-| `lift_angle_out_of_locator.py` | compatibility repair | Bounded repair for the former fused locator/angle representation. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
 | `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 | `affected_tests.py` | supported test tool | Maps changed files to test groups for `make test-affected`; a rerun minimizer, never a gate. |
@@ -82,6 +81,7 @@ contract is newer than the last generation it understands.
 | `library_taxonomy_v1.py` | retired after v1 | Historical taxonomy migration. |
 | `projects_v1.py` | retired after v0 | Historical project migration/rollback evidence. |
 | `registry_partition_v1.py` | retired after v1 | Historical source-registry partition migration. |
+| `lift_angle_out_of_locator.py` | retired after v12 | Historical un-fusing of locator and angle (3,885 study-map rows); `LOCATOR-ANGLE-FUSED` now refuses the defect. |
 | `standardize_job_plans_v1.py` | retired after v10 | Historical Job plan standardization. |
 | `standardize_plan_template_v10.py` | retired after v10 | Historical plan-template standardization. |
 | `route_identity_v13.py` | apply retired after v13; compatibility planner retained | The public compatibility command still imports its deterministic planner and fails closed on current apply. |

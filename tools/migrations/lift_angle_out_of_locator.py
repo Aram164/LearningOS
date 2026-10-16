@@ -13,7 +13,7 @@ resource row is matched back to its route by `source_id` + label/title, and the
 route's `locator`, `angle` and `angle_detail` are copied onto the row. A row
 whose route cannot be found is left exactly as it is and reported.
 
-    python tools/lift_angle_out_of_locator.py [--dry-run]
+    python tools/migrations/lift_angle_out_of_locator.py [--dry-run]
 """
 
 from __future__ import annotations
