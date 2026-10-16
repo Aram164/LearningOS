@@ -37,6 +37,19 @@ def _json_equal(first, second) -> bool:
     value, so ``False`` differs from ``0``. Any other type compares by
     ``==``, as before.
     """
+    t_first = type(first)
+    if t_first is type(second):
+        if t_first is dict:
+            return (first.keys() == second.keys()
+                    and all(_json_equal(first[key], second[key])
+                            for key in first))
+        if t_first is list:
+            return (len(first) == len(second)
+                    and all(_json_equal(left, right)
+                            for left, right in zip(first, second, strict=True)))
+        if t_first in _JSON_SCALAR_TYPES:
+            return first == second
+
     if isinstance(first, dict) and isinstance(second, dict):
         return (first.keys() == second.keys()
                 and all(_json_equal(first[key], second[key])
@@ -45,9 +58,9 @@ def _json_equal(first, second) -> bool:
         return (len(first) == len(second)
                 and all(_json_equal(left, right)
                         for left, right in zip(first, second, strict=True)))
-    if (type(first) in _JSON_SCALAR_TYPES
+    if (t_first in _JSON_SCALAR_TYPES
             or type(second) in _JSON_SCALAR_TYPES):
-        return type(first) is type(second) and first == second
+        return t_first is type(second) and first == second
     return first == second
 
 
