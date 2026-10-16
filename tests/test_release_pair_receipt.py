@@ -106,6 +106,23 @@ def _generate(pair: dict, **overrides) -> dict:
     return rpr.generate(**kwargs)
 
 
+def test_rebuilt_generated_plugin_outputs_do_not_dirty_the_ui(clean_pair):
+    # A platform rebuild may rewrite the generated bundle with different
+    # bytes; that alone must not refuse an otherwise exact pair.
+    (clean_pair["ui"] / "plugin" / "main.js").write_bytes(b"'use strict';\n// rebuilt\n")
+    _write_build_info(clean_pair["ui"], ui_sha=clean_pair["ui_sha"],
+                      core_sha=clean_pair["core_sha"])
+    receipt = _generate(clean_pair)
+    assert receipt["ui_sha"] == clean_pair["ui_sha"]
+
+
+def test_dirty_ui_source_is_still_refused(clean_pair):
+    (clean_pair["ui"] / "plugin" / "manifest.json").write_text(
+        '{"version": "9.9.9"}', encoding="utf-8")
+    with pytest.raises(rpr.ReleasePairReceiptError, match="dirty"):
+        _generate(clean_pair)
+
+
 # ---- generation --------------------------------------------------------
 
 def test_a_valid_exact_pair_generates_a_schema_valid_receipt(clean_pair):

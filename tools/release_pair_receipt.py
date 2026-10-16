@@ -100,7 +100,34 @@ def _git(repo: Path, *args: str) -> str:
     return proc.stdout.strip()
 
 
-def _require_clean_head(repo: Path, expected_sha: str, label: str) -> str:
+# The UI build rewrites these generated artifacts itself (build.mjs keeps
+# the same set); a platform rebuild can legitimately change their bytes
+# without any source change, so they never count as a dirty UI worktree.
+_UI_GENERATED_OUTPUTS = frozenset(
+    {"plugin/main.js", "plugin/styles.css", "plugin/build-info.json"})
+
+
+def _dirty_paths(status: str, exclude: frozenset[str]) -> list[str]:
+    paths = []
+    for line in status.splitlines():
+        if not line.strip():
+            continue
+        # Porcelain v1 is "XY <path>", but _git strips the result, which
+        # removes the first line's leading status space.
+        if len(line) >= 4 and line[2] == " ":
+            path = line[3:]
+        elif len(line) >= 3 and line[1] == " ":
+            path = line[2:]
+        else:
+            path = line[3:]
+        path = path.split(" -> ")[-1].strip().strip('"')
+        if path not in exclude:
+            paths.append(path)
+    return paths
+
+
+def _require_clean_head(repo: Path, expected_sha: str, label: str,
+                        exclude: frozenset[str] = frozenset()) -> str:
     actual = _git(repo, "rev-parse", "HEAD")
     if not _FULL_SHA_RE.fullmatch(actual):
         raise ReleasePairReceiptError(f"{label} HEAD is not a readable 40-character revision: {actual!r}")
@@ -109,7 +136,7 @@ def _require_clean_head(repo: Path, expected_sha: str, label: str) -> str:
             f"{label} HEAD ({actual}) does not equal the requested SHA ({expected_sha})"
         )
     status = _git(repo, "status", "--porcelain")
-    if status:
+    if _dirty_paths(status, exclude):
         raise ReleasePairReceiptError(f"{label} worktree is dirty; a release-pair receipt requires a clean checkout")
     return actual
 
@@ -175,7 +202,7 @@ def generate(
         )
 
     _require_clean_head(core_root, core_sha, "Core")
-    _require_clean_head(ui_root, ui_sha, "UI")
+    _require_clean_head(ui_root, ui_sha, "UI", exclude=_UI_GENERATED_OUTPUTS)
 
     build_info_path = ui_root / "plugin" / "build-info.json"
     try:
