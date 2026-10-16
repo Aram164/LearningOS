@@ -234,7 +234,7 @@ def test_pins_are_observed_before_validation(mini_repo, monkeypatch):
     with the pre-write issues."""
     _stage_validation_producers(mini_repo)
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
-    real = vc.validate
+    real = validation_service.validate
 
     def racing(repo, online=False):
         issues = real(repo, online=online)
