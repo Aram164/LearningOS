@@ -139,6 +139,7 @@ from learning_os.domain.suggest import (
     suggest,
     with_suggestions,
 )
+from learning_os.domain.vocabulary import FRONTMATTER_RE
 from learning_os.store import observations
 from learning_os.store.codec import (
     _dump_study_map,
@@ -148,7 +149,6 @@ from learning_os.store.codec import (
 from learning_os.store.fingerprint import _snapshot
 from learning_os.store.fs import _note_bytes
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
-from learning_os.store.loading import FRONTMATTER_RE
 from learning_os.store.material_analysis import observe_local_material
 from learning_os.store.materials.resolution import (
     MATERIAL_SCHEME,

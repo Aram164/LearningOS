@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
-    from learning_os.store.loader import Repo
+    from learning_os.domain.snapshot import Repo
 
 
 class ResolvedMaterialFile(NamedTuple):

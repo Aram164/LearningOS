@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from learning_os.derive.projection.common import _json_header
 from learning_os.derive.projection.concepts import PREREQ_TYPES
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 CANVAS_EDGE_COLORS = {
     "requires": "1", "builds-on": "2", "derives": "3", "generalizes": "4",

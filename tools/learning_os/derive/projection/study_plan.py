@@ -23,7 +23,7 @@ text stays visible to grep and to a plain-text reader who never hovers at all.
 from __future__ import annotations
 
 from learning_os.derive.projection.common import _md_header
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 _KIND_MARK = {
     "read": "read",

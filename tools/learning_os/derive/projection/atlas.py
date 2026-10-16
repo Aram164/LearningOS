@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from learning_os.derive.projection.common import _md_header
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 ATLAS_DOMAINS = [
     "mathematics", "machine-learning", "systems", "data-systems",

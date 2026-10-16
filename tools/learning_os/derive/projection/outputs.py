@@ -32,8 +32,8 @@ from learning_os.derive.projection.reading_room import build_reading_room
 from learning_os.derive.projection.sources import build_collection_view, build_source_index
 from learning_os.derive.projection.study_plan import build_study_plan_view
 from learning_os.domain.failures import TransactionFailure
+from learning_os.domain.snapshot import Repo
 from learning_os.store.derived.store import DERIVED_TOP_DIR
-from learning_os.store.loader import Repo
 from learning_os.store.manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
 
 

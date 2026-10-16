@@ -8,7 +8,8 @@ from typing import Any
 import yaml
 
 from learning_os.derive.garden import project_garden_entries
-from learning_os.store.loader import Repo, load_repo
+from learning_os.domain.snapshot import Repo
+from learning_os.store.loader import load_repo
 
 from .errors import AIActionError
 from .registry import (

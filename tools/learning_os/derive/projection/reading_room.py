@@ -6,7 +6,7 @@ from learning_os.derive.projection.common import _first_para, _git_last_commit, 
 from learning_os.derive.projection.coordination import adoption_counts
 from learning_os.derive.projection.materials import _materials_queue_rows
 from learning_os.derive.projection.modules_view import _academic_deadlines
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def build_reading_room(repo: Repo, generated_at: str) -> str:

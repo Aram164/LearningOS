@@ -17,8 +17,8 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from learning_os.domain.snapshot import Repo
 from learning_os.store.layout import PathBoundaryError
-from learning_os.store.loader import Repo
 
 
 class RuntimeInputError(ValueError):

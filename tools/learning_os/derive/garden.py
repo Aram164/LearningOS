@@ -15,7 +15,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def _slug(value: str) -> str:

@@ -6,7 +6,7 @@ from learning_os.derive.learning_runtime import (
     read_observations,
     requirement_fingerprint,
 )
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 NEGATIVE_RESULTS = frozenset({"incorrect", "partial"})
 

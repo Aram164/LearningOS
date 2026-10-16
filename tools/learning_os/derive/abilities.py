@@ -15,7 +15,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.derive.learning_runtime import RuntimeInputError, runtime_path
 from learning_os.domain.material_refs import matching_routes, unit_routes
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def ability_fingerprint(ability: dict) -> str:

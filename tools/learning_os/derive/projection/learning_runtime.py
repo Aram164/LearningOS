@@ -1,7 +1,7 @@
 import json
 
 from learning_os.derive.learning_runtime import collect_requirements
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def build_learning_requirements_json(repo: Repo, generated_at: str) -> str:

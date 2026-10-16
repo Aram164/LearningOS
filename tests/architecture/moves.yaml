@@ -69,3 +69,7 @@ moves:
   to: tools/learning_os/store/validation_cache.py
 - from: tools/learning_os/warning_baseline.py
   to: tools/learning_os/store/warning_baseline.py
+- from: tools/learning_os/store/loading/model.py
+  to: tools/learning_os/domain/snapshot.py
+- from: tools/learning_os/store/loading/vocabulary.py
+  to: tools/learning_os/domain/vocabulary.py

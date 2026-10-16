@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from learning_os.derive.projection.common import _git_last_commit, _md_header
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def _garden_relpath(repo: Repo, note) -> str:

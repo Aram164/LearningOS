@@ -26,12 +26,17 @@ domain owns a module, and the sequence here is the only place the order between
 domains is stated. The order is load-bearing in two places — modules must come
 after their programs, and learning paths are discovered inside the workspace
 walk — but everything else is grouped for reading, not for dependency.
+
+Snapshot values are owned by ``learning_os.domain.snapshot``, vocabulary by
+``learning_os.domain.vocabulary`` and ``md_section`` by
+``learning_os.domain.markdown``; import them there.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from learning_os.domain.snapshot import Repo
 from learning_os.store.loading.curriculum import (
     load_modules,
     load_programs,
@@ -47,54 +52,17 @@ from learning_os.store.loading.knowledge import (
     load_relations,
 )
 from learning_os.store.loading.library import load_collections, load_sources, load_topics
-from learning_os.store.loading.model import (
-    Coordination,
-    GardenNote,
-    LearningPath,
-    Note,
-    Program,
-    Project,
-    Repo,
-    StudyMap,
-    Unit,
-    Workspace,
-)
 from learning_os.store.loading.projects import (
     load_project_aliases,
     load_project_relations,
     load_projects,
 )
-from learning_os.store.loading.vocabulary import (
-    EVIDENCE_SCHEMES,
-    FRONTMATTER_RE,
-    GARDEN_TAG_RE,
-    ID_RE,
-    NOTE_ROLES,
-    PATH_ID_RE,
-    PREREQUISITE_RELATIONS,
-    PROGRAM_ID_RE,
-    PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE,
-    RELATION_SEMANTICS,
-    RELATION_TYPES,
-    STUDY_MAP_ID_RE,
-    SYMMETRIC_RELATIONS,
-    UNIT_ID_RE,
-)
 from learning_os.store.loading.work import load_coordination, load_workspaces
-from learning_os.store.loading.yamlio import LoaderError, md_section, parse_frontmatter
+from learning_os.store.loading.yamlio import LoaderError, parse_frontmatter
 
 __all__ = [
-    # model
-    "Coordination", "GardenNote", "LearningPath", "Note", "Program", "Project",
-    "Repo", "StudyMap", "Unit", "Workspace",
-    # vocabulary
-    "EVIDENCE_SCHEMES", "FRONTMATTER_RE", "GARDEN_TAG_RE", "ID_RE", "NOTE_ROLES",
-    "PATH_ID_RE", "PREREQUISITE_RELATIONS", "PROGRAM_ID_RE", "PROJECT_ID_RE",
-    "PROJECT_RELATION_ID_RE", "RELATION_SEMANTICS", "RELATION_TYPES",
-    "STUDY_MAP_ID_RE", "SYMMETRIC_RELATIONS", "UNIT_ID_RE",
     # reading
-    "LoaderError", "md_section", "parse_frontmatter",
+    "LoaderError", "parse_frontmatter",
     # domain loaders
     "load_collections", "load_concepts", "load_coordination", "load_garden",
     "load_modules", "load_notes", "load_programs", "load_project_aliases",

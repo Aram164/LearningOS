@@ -10,8 +10,8 @@ from learning_os.derive.projection.common import (
     _md_header,
     mermaid_node_ids,
 )
+from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import source_fingerprint
-from learning_os.store.loader import Repo
 
 
 def build_backlinks_semantic(repo: Repo) -> dict:

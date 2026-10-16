@@ -8,7 +8,7 @@ the records shipped beside it.
 
 from __future__ import annotations
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],

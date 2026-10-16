@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from learning_os.derive.projection.common import _md_header
+from learning_os.domain.snapshot import Repo
 from learning_os.store import observations
-from learning_os.store.loader import Repo
 
 
 def exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:

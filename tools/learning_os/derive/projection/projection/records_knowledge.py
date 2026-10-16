@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from learning_os.derive.projection.common import _first_para, _strip_headings
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def project_notes(repo: Repo) -> list[dict]:

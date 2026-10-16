@@ -41,7 +41,7 @@ from learning_os.store.digests import file_content, file_sha256
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 
 if TYPE_CHECKING:
-    from learning_os.store.loader import Repo
+    from learning_os.domain.snapshot import Repo
 
 
 class ReceiptValidator(Protocol):

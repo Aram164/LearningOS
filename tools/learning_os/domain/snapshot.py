@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from learning_os.store.loading.yamlio import md_section
+from learning_os.domain.markdown import md_section
 
 
 @dataclass

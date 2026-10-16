@@ -9,7 +9,7 @@ from learning_os.derive.validation.common import (
     ISO_DATE_RE,
     JUDGMENT_HEADERS,
 )
-from learning_os.store.loader import PREREQUISITE_RELATIONS, RELATION_TYPES
+from learning_os.domain.vocabulary import PREREQUISITE_RELATIONS, RELATION_TYPES
 
 _GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/")
 

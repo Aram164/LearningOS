@@ -9,48 +9,21 @@ the callers.
 
 See ``learning_os.store.loading`` for the registry layouts and for which module owns
 which part of the tree.
+
+Snapshot values are owned by ``learning_os.domain.snapshot``, vocabulary by
+``learning_os.domain.vocabulary`` and ``md_section`` by
+``learning_os.domain.markdown``; import them there.
 """
 
 from __future__ import annotations
 
 from learning_os.store.loading import (  # noqa: F401  (re-exported public surface)
-    EVIDENCE_SCHEMES,
-    FRONTMATTER_RE,
-    GARDEN_TAG_RE,
-    ID_RE,
-    NOTE_ROLES,
-    PATH_ID_RE,
-    PREREQUISITE_RELATIONS,
-    PROGRAM_ID_RE,
-    PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE,
-    RELATION_SEMANTICS,
-    RELATION_TYPES,
-    STUDY_MAP_ID_RE,
-    SYMMETRIC_RELATIONS,
-    UNIT_ID_RE,
-    Coordination,
-    GardenNote,
-    LearningPath,
     LoaderError,
-    Note,
-    Program,
-    Project,
-    Repo,
-    StudyMap,
-    Unit,
-    Workspace,
     load_repo,
-    md_section,
     parse_frontmatter,
 )
 
 __all__ = [
-    "EVIDENCE_SCHEMES", "FRONTMATTER_RE", "GARDEN_TAG_RE", "ID_RE", "NOTE_ROLES",
-    "PATH_ID_RE", "PREREQUISITE_RELATIONS", "PROGRAM_ID_RE", "PROJECT_ID_RE",
-    "PROJECT_RELATION_ID_RE", "RELATION_SEMANTICS", "RELATION_TYPES",
-    "STUDY_MAP_ID_RE", "SYMMETRIC_RELATIONS", "UNIT_ID_RE",
-    "Coordination", "GardenNote", "LearningPath", "LoaderError", "Note",
-    "Program", "Project", "Repo", "StudyMap", "Unit", "Workspace",
-    "load_repo", "md_section", "parse_frontmatter",
+    "LoaderError",
+    "load_repo", "parse_frontmatter",
 ]

@@ -6,7 +6,7 @@ here may be true unless the records shipped alongside say so.
 
 from __future__ import annotations
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def build_progress(modules_v2: list[dict], units_v2: list[dict],

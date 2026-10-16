@@ -8,7 +8,7 @@ of ``genout`` already imports.
 
 from __future__ import annotations
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 from learning_os.store.materials.resolution import (
     MATERIAL_RESOURCE_SUFFIXES as _MATERIAL_RESOURCE_SUFFIXES,
 )

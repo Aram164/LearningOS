@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from learning_os.store.loader import Repo
+    from learning_os.domain.snapshot import Repo
 
 from learning_os.route_identity import ROUTE_ID_RE as ROUTE_ID_RE
 from learning_os.route_identity import deterministic_route_id as deterministic_route_id

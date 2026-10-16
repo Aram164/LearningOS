@@ -24,7 +24,7 @@ from learning_os.derive.learning_runtime import (
     requirement_stage,
     runtime_path,
 )
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 from learning_os.store.materials.resolution import project_material_resource
 
 

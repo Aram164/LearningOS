@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from learning_os.store.loading.model import Project, Repo, _register
+from learning_os.domain.snapshot import Project, Repo, _register
 from learning_os.store.loading.yamlio import LoaderError, _load_yaml, _record_id
 
 

@@ -55,8 +55,8 @@ from learning_os.derive.projection.projection import (
 )
 from learning_os.derive.projection.review import build_review_items
 from learning_os.domain.failures import TransactionFailure, unreadable_refusal
+from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import source_fingerprint
-from learning_os.store.loader import Repo
 from learning_os.store.revisions import load_revisions
 
 

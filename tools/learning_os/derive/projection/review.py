@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def _sha256(path: Path) -> str:

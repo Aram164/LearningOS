@@ -12,7 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
-from learning_os.store.loading.model import Program, Repo, StudyMap, Unit, _register
+from learning_os.domain.snapshot import Program, Repo, StudyMap, Unit, _register
 from learning_os.store.loading.yamlio import LoaderError, _load_yaml, _record_id
 
 

@@ -7,7 +7,7 @@ stated once.
 
 from __future__ import annotations
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def ordered_thematic_group_ids(repo: Repo, values) -> list[str]:

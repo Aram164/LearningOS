@@ -12,9 +12,9 @@ from learning_os.contracts.gateway import (
     gateway_snapshot_is_verified,
 )
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
-from learning_os.store.loading import Repo
 
 
 @dataclass

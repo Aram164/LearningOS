@@ -10,7 +10,7 @@ from learning_os.derive.projection.projection.grouping import (
     ordered_thematic_group_ids,
     source_thematic_groups,
 )
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 Revision = Callable[..., int]
 

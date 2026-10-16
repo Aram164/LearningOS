@@ -16,9 +16,9 @@ from learning_os.derive.routes import (
     route_with_identity,
 )
 from learning_os.derive.semantics import predicates as semantic_predicates
+from learning_os.domain.snapshot import Repo
 from learning_os.domain.unit_notes import unit_note_sections as parse_unit_note_sections
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolved_inside
-from learning_os.store.loader import Repo
 
 Revision = Callable[..., int]
 

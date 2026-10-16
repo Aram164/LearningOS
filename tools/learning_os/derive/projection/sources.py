@@ -9,7 +9,7 @@ from learning_os.derive.projection.common import (
     _md_header,
 )
 from learning_os.derive.projection.concepts import _eval_line, _evals_for_concept
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 def _lecture_entries(repo: Repo) -> list[tuple[str, str, str, dict]]:

@@ -14,9 +14,9 @@ from learning_os.derive.projection.outputs import write_outputs
 from learning_os.derive.projection.projection.records_curriculum import project_units
 from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.derive.validation import validate
+from learning_os.domain.snapshot import Repo, Unit
 from learning_os.store import session_ledger as plumbing_support
 from learning_os.store.loader import load_repo
-from learning_os.store.loading.model import Repo, Unit
 from learning_os.store.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
 from learning_os.store.transactions import TransactionFailure, load_revisions
 

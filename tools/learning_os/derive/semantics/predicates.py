@@ -23,8 +23,8 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
 from learning_os.contracts.write_scopes import WriteScopeError, scope_matches
+from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, ID_RE, RELATION_TYPES, UNIT_ID_RE
 from learning_os.route_identity import ROUTE_ID_RE
-from learning_os.store.loading.vocabulary import EVIDENCE_SCHEMES, ID_RE, RELATION_TYPES, UNIT_ID_RE
 
 #: Version of the predicate contract. Bumped when a predicate's inputs, truth
 #: table, or registry membership changes. Lineage sidecars (Phase 2) cite this

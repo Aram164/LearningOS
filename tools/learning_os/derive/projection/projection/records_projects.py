@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 Revision = Callable[..., int]
 

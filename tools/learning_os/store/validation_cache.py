@@ -84,7 +84,7 @@ from learning_os.store.manifest_identity import materials_digest, operations_dig
 if TYPE_CHECKING:
     from typing import Any
 
-    from learning_os.store.loader import Repo
+    from learning_os.domain.snapshot import Repo
 
 #: Obsolete sidecar location (pre-4.3). Active reads/writes go through the
 #: derived node below; this path survives only so pre-migration leftovers

@@ -42,7 +42,7 @@ def _snapshot(root, expected=None) -> str:
 
 
 if TYPE_CHECKING:
-    from learning_os.store.loader import Repo
+    from learning_os.domain.snapshot import Repo
 
 CANONICAL_ROOTS = (
     "knowledge",

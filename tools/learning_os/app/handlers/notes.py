@@ -46,7 +46,9 @@ from learning_os.domain.failures import (
     WriteRefused,
     unreadable_refusal,
 )
+from learning_os.domain.snapshot import Repo
 from learning_os.domain.suggest import expansion, not_found, suggest
+from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, FRONTMATTER_RE
 from learning_os.store import observations
 from learning_os.store.codec import _dump_yaml
 from learning_os.store.derived import DerivedError, evaluate
@@ -56,8 +58,8 @@ from learning_os.store.fs import (
     _note_bytes,
 )
 from learning_os.store.layout import PathBoundaryError
-from learning_os.store.loader import EVIDENCE_SCHEMES, LoaderError, parse_frontmatter
-from learning_os.store.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
+from learning_os.store.loader import LoaderError, parse_frontmatter
+from learning_os.store.loading import load_garden, load_notes
 from learning_os.store.material_analysis import (
     binding_consistent,
     normalize_binding_spellings,

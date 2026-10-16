@@ -31,7 +31,7 @@ from learning_os.derive.validation.projects import ChecksProjects
 from learning_os.derive.validation.references import ChecksReferences
 from learning_os.derive.validation.registries import ChecksRegistries
 from learning_os.derive.validation.structure import ChecksStructure
-from learning_os.store.loader import Repo
+from learning_os.domain.snapshot import Repo
 
 
 class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):

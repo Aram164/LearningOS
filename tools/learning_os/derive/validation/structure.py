@@ -5,7 +5,7 @@ from __future__ import annotations
 from learning_os.contracts import local_attachments
 from learning_os.derive.validation.advisories import inbox_stale_issues
 from learning_os.derive.validation.common import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
-from learning_os.store.loader import (
+from learning_os.domain.vocabulary import (
     ID_RE,
     PATH_ID_RE,
     PROGRAM_ID_RE,

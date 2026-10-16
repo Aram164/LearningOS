@@ -13,7 +13,7 @@ from learning_os.derive.validation.common import (
     id_list_items,
     list_items,
 )
-from learning_os.store.loader import EVIDENCE_SCHEMES
+from learning_os.domain.vocabulary import EVIDENCE_SCHEMES
 
 
 @dataclass(frozen=True)
