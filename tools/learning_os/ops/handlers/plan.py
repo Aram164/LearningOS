@@ -69,6 +69,7 @@ from learning_os.masters_planning import (
     MastersPlanningError,
     prepare_master_promotion,
 )
+from learning_os.material_analysis import observe_local_material
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
     PATCH_FIELDS,
@@ -79,7 +80,12 @@ from learning_os.material_refs import (
     persist_route_ids,
     unit_routes,
 )
-from learning_os.material_slices import SliceResolutionError, _read_part
+from learning_os.material_slices import (
+    SliceResolutionError,
+    _read_part,
+    _route_material_files,
+    _unit_note_scope,
+)
 from learning_os.material_synthesis import (
     _COMPARED_BASIS_FIELDS,
     MaterialSynthesisError,
@@ -98,21 +104,6 @@ from learning_os.materials_resolution import (
     project_material_resource,
     resolve_route_material_files,
     sha256_file,
-)
-from learning_os.ops._legacy_plumbing import (
-    MAX_STAGE_RESULTS,
-    _analysis_notes,
-    _apply_hint,
-    _approved_assessments,
-    _changed_write,
-    _evidence_label,
-    _freshness_label,
-    _guard_rows,
-    _map_for_unit,
-    _route_material_files,
-    _unit_note_scope,
-    _use_evidence,
-    _window_values,
 )
 from learning_os.ops._plan_gate import (
     _compose_plan_gate_errors,
@@ -138,7 +129,7 @@ from learning_os.ops.gateway import (
     _read_structured_file,
     prepare_review_envelope,
 )
-from learning_os.ops.handlers._shared import apply_reviewed_envelope
+from learning_os.ops.handlers._shared import _window_values, apply_reviewed_envelope
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
@@ -164,6 +155,10 @@ from learning_os.semantics.restamp import (
     analyze,
     claims_list_sha256,
 )
+from learning_os.semantics.source_use import (
+    _evidence_label,
+    _use_evidence,
+)
 from learning_os.store.codec import (
     _dump_study_map,
     _dump_yaml,
@@ -172,6 +167,92 @@ from learning_os.store.codec import (
 from learning_os.store.fs import _note_bytes
 from learning_os.transactions import parse_expected_revisions, transaction_artifacts
 from learning_os.warning_baseline import signatures_from_issues
+
+
+def _guard_rows(root, artifacts):
+    return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
+
+def _apply_hint(args, capability, snapshot_id, revisions):
+    """Ready-to-submit apply values for a successful --check.
+
+    Direct CLI application is disabled, so the hint echoes everything the
+    GatewayEnvelopeV2 needs except the per-request fields (request_id,
+    idempotency_key, channel, approval): capability, exact payload,
+    expected snapshot, and expected revisions. Output layer only —
+    validation, guards, and receipts are unchanged.
+    """
+    if capability != "route.patch":
+        return None
+    return {
+        "apply_via": "GatewayEnvelopeV2",
+        "capability": capability,
+        "payload": {
+            "unit_id": args.unit_id,
+            "route_id": args.route_id,
+            "changes": args.changes,
+        },
+        "expected_snapshot": snapshot_id,
+        "expected_revisions": dict(revisions),
+        "apply_how": ("direct CLI application is disabled; submit a "
+                      "GatewayEnvelopeV2 with this capability, payload, "
+                      "expected_snapshot and expected_revisions"),
+    }
+
+def _map_for_unit(repo, unit_id):
+    maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
+    if len(maps) > 1:
+        raise WriteRefused(f"unit {unit_id} has ambiguous study maps")
+    return maps[0] if maps else None
+
+def _changed_write(writes, path, data):
+    content = _dump_yaml(data)
+    # Callers compare record values first; this second check also avoids a
+    # write intent when the exact serialized bytes are already current.
+    if path.read_bytes() != content.encode("utf-8"):
+        writes[path] = content
+
+MAX_STAGE_RESULTS = 5
+
+def _analysis_notes(repo):
+    return sorted((note for note in repo.notes.values()
+                   if isinstance(note.meta.get("material_analysis"), dict)),
+                  key=lambda note: note.id)
+
+def _approved_assessments(repo):
+    found = []
+    for synthesis_id in sorted(repo.unit_material_syntheses):
+        data = repo.unit_material_syntheses[synthesis_id]
+        if not isinstance(data, dict) or data.get("status") != "approved":
+            continue
+        unit_id = data.get("unit_id")
+        assessments = data.get("route_assessments")
+        if not isinstance(assessments, list):
+            continue
+        for assessment in assessments:
+            if isinstance(assessment, dict):
+                found.append((synthesis_id, unit_id, assessment))
+    found.sort(key=lambda row: (row[1] or "", row[2].get("route_id") or ""))
+    return found
+
+def _freshness_label(root, binding, observations=None):
+    """Live source freshness: current, stale, or unreadable. Never inferred.
+
+    When `observations` is given, the observed bytes (or their absence)
+    are recorded under the material relpath so a paged continuation can
+    prove the external state it pages over did not move between pages.
+    """
+    material = str(binding.get("material") or "")
+    observation = observe_local_material(
+        root.parent / "materials", material,
+        str(binding.get("recorded_source_digest") or ""))
+    if observations is not None:
+        live = observation.get("live_digest")
+        observations[f"material:{material}"] = \
+            live if live is not None else observation["status"]
+    status = observation["status"]
+    if status in ("current", "stale"):
+        return status
+    return "unreadable"
 
 
 def _require_unit(repo, unit_id):

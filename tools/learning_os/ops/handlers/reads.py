@@ -43,14 +43,12 @@ from learning_os.materials_resolution import (
     single_file_material,
 )
 from learning_os.observations import today as observed_today
-from learning_os.ops._legacy_plumbing import (
-    _evidence_label,
-    _inbox_search_rows,
-    _use_evidence,
-    _window_values,
-)
 from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import dumps_compact
+from learning_os.ops.handlers._shared import (
+    _inbox_search_rows,
+    _window_values,
+)
 from learning_os.ops.projection import _fresh_manifest
 from learning_os.ops.proposal import Result
 from learning_os.ops.ranking import ranked_scan
@@ -74,6 +72,10 @@ from learning_os.semantics.predicates import (
 )
 from learning_os.semantics.recipes import RecipeError, recipes_for
 from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
+from learning_os.semantics.source_use import (
+    _evidence_label,
+    _use_evidence,
+)
 from learning_os.store.session_ledger import (
     SESSION_ID_ENV,
     _resolve_session_identity,

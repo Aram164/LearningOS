@@ -73,10 +73,7 @@ def test_unit_note_scope_uses_the_sources_declared_material_authority(mini_repo)
     from repo_builders import _sliced_route, _sliced_unit
 
     from learning_os.loader import load_repo
-    from learning_os.ops._legacy_plumbing import (
-        _route_material_files,
-        _unit_note_scope,
-    )
+    from learning_os.material_slices import _route_material_files, _unit_note_scope
 
     route = _sliced_route("route-demo-alias", "shared.pdf, PDF pp. 1-3")
     _sliced_unit(mini_repo, [route])
@@ -700,7 +697,7 @@ def test_string_route_units_list_same_source_notes_as_related_only(
 def test_unit_note_scope_defensive_branches(tmp_path):
     from types import SimpleNamespace
 
-    from learning_os.ops._legacy_plumbing import _unit_note_scope
+    from learning_os.material_slices import _unit_note_scope
 
     learningos = tmp_path / "LearningOS"
     materials = learningos / "materials"

@@ -5,7 +5,9 @@ from __future__ import annotations
 import copy
 import json
 from datetime import UTC
+from pathlib import Path
 
+import jsonschema
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -21,18 +23,47 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import suggest, with_suggestions
 from learning_os.fingerprint import _snapshot
 from learning_os.learning_runtime import runtime_path
-from learning_os.ops._legacy_plumbing import (
-    RELATION_ARTIFACT,
-    _registries,
-    _safe,
-    _schema,
-)
+from learning_os.loading.yamlio import UniqueKeySafeLoader
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
 from learning_os.store.codec import _render_frontmatter
 from learning_os.transactions import parse_expected_revisions
+
+
+def _safe(root: Path, path: Path) -> Path:
+    """Reject links before reading even when a link would resolve in-tree."""
+    relative = path.relative_to(root)
+    current = root
+    for part in relative.parts:
+        current /= part
+        if current.is_symlink():
+            raise WriteRefused(f"Atlas cannot use a symlink: {relative}")
+    return path
+
+def _schema(root: Path, name: str, data: object) -> None:
+    schema = json.loads((root / f"system/schema/{name}.schema.json").read_text())
+    try:
+        jsonschema.Draft202012Validator(schema, format_checker=jsonschema.FormatChecker()).validate(data)
+    except jsonschema.ValidationError as exc:
+        raise WriteRefused(f"{name}: {exc.message}") from exc
+
+RELATION_ARTIFACT = "registry-concept-relations"
+
+def _registries(root: Path) -> dict[Path, dict]:
+    single = _safe(root, root / "knowledge/concept-relations.yaml")
+    folder = _safe(root, root / "knowledge/concept-relations")
+    paths = ([single] if single.exists() else []) + (
+        sorted(folder.glob("*.yaml")) if folder.exists() else [])
+    if single.exists() and len(paths) > 1:
+        raise WriteRefused("both consolidated and partitioned relations exist")
+    records = {}
+    for path in paths:
+        data = yaml.load(_safe(root, path).read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader)
+        _schema(root, "concept-relations", data)
+        records[path] = data
+    return records
 
 
 def _on_commit_refused(errors: list) -> list[str]:

@@ -29,8 +29,18 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass, field, replace
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
+
+from learning_os.materials_resolution import (
+    MATERIAL_RESOURCE_SUFFIXES,
+    MATERIAL_SCHEME,
+    MATERIAL_SUFFIX_TOKEN,
+    leading_material_locator,
+    material_location,
+    material_uri_authority,
+    safe_material_locator,
+)
 
 from .materials_resolution import (
     ResolvedMaterialFile,
@@ -39,8 +49,146 @@ from .materials_resolution import (
     sha256_file,
 )
 
+
 #: Scopes whose routes must carry a readable slice into the compare bundle.
 #: Anything else stays metadata-only and may honestly be screened.
+def _materials_rel_for_uri(repo, uri) -> str | None:
+    """The materials-relative file a ``material://`` URI names, or None.
+
+    Identity only: the file need not exist. Anything resolving outside
+    the materials tree — or to a directory rather than a material file —
+    is not a material path at all, so folder-level URIs prove no file.
+    """
+    if not isinstance(uri, str) or not uri:
+        return None
+    path = material_location(repo, uri).get("material_path")
+    if not isinstance(path, str) or not path.startswith("materials/"):
+        return None
+    rel = path[len("materials/"):]
+    if PurePosixPath(rel).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+    return rel
+
+def _route_material_files(repo, source_id, route) -> set[str]:
+    """Every materials-relative file one route reads, or empty when unproven.
+
+    A route's own ``vault_path`` wins as a single file; otherwise a
+    semicolon-separated locator naming two or more files resolves to the
+    set it names — the same deliberate two-file binding the dossier basis
+    resolves for freshness; otherwise the locator's leading file resolves
+    against the route's source; otherwise the route inherits the source
+    record's held material. The multi-file branch is strict: every part
+    must name exactly one safe distinct file, otherwise the route proves
+    no file at all rather than guessing one. String routes, prose-only
+    locators, and material-less sources prove no file.
+    """
+    if not isinstance(route, dict):
+        route = {}
+    vault = _materials_rel_for_uri(repo, route.get("vault_path"))
+    if vault is not None:
+        return {vault}
+    record = repo.sources.get(source_id) if isinstance(source_id, str) else None
+    held = record.get("material") if isinstance(record, dict) else None
+    authority = material_uri_authority(held)
+    if authority is None and isinstance(source_id, str) and source_id:
+        # Legacy routes can name an exact source-id-prefixed file without
+        # a source-level material field. A declared shared authority wins.
+        authority = source_id
+    locator = route.get("locator")
+    if (isinstance(locator, str) and ";" in locator
+            and len(MATERIAL_SUFFIX_TOKEN.findall(locator)) >= 2):
+        if authority is None:
+            return set()
+        candidates: list[str] = []
+        for part in locator.split(";"):
+            matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
+            if len(matches) != 1:
+                return set()
+            candidate = safe_material_locator(part[:matches[0].end()].strip())
+            if candidate is None:
+                return set()
+            candidates.append(candidate)
+        if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+            return set()
+        resolved: set[str] = set()
+        for candidate in candidates:
+            found = _materials_rel_for_uri(
+                repo, f"{MATERIAL_SCHEME}{authority}/{candidate}")
+            if found is None:
+                return set()
+            resolved.add(found)
+        return resolved
+    head = None
+    if isinstance(locator, str):
+        # Strict first, then the weaker head-of-prose question — the same
+        # order the material projection resolves a row.
+        head = safe_material_locator(locator) or leading_material_locator(locator)
+    if head and authority:
+        found = _materials_rel_for_uri(
+            repo, f"{MATERIAL_SCHEME}{authority}/{head}")
+        if found is not None:
+            return {found}
+    inherited = _materials_rel_for_uri(repo, held)
+    return {inherited} if inherited is not None else set()
+
+def _single_route_range(route) -> tuple[int, int] | None:
+    """The one usable page range a route states, or None.
+
+    Zero ranges (a whole-file route) and several ranges (a curated tour)
+    both decline the page test: only a single stated range narrows what a
+    note about the file must overlap to count as direct evidence.
+    """
+    locator = route.get("locator") if isinstance(route, dict) else None
+    ranges = parse_locator_page_ranges(locator) if isinstance(locator, str) else []
+    return ranges[0] if len(ranges) == 1 else None
+
+def _note_pages(binding) -> tuple[int, int] | None:
+    """A note's inspected physical page window, or None when unstated."""
+    inspected = binding.get("inspected_range") if isinstance(binding, dict) else None
+    if not isinstance(inspected, dict):
+        return None
+    start, end = inspected.get("start"), inspected.get("end")
+    if (isinstance(start, bool) or isinstance(end, bool)
+            or not isinstance(start, int) or not isinstance(end, int)):
+        return None
+    return (start, end) if start <= end else None
+
+def _unit_note_scope(repo, binding, routes) -> str | None:
+    """"direct", "related", or None: one note's standing against unit routes.
+
+    THE shared note-to-route rule: material-context and the plan brief
+    both answer from here. Material identity comes from existing
+    resolution, never from a shared source id alone, and a route stating
+    a single usable page range additionally requires physical overlap with
+    the note's inspected window. Same-source-only notes are related, never
+    direct; notes touching neither the source nor the file are out.
+    ``routes`` is (source_id, route-dict) pairs; string routes arrive as
+    (source_id, {}) and prove identity only through inheritance.
+    """
+    if not isinstance(binding, dict):
+        return None
+    note_sid = binding.get("source_id")
+    note_ref = binding.get("material")
+    pages = _note_pages(binding)
+    standing = None
+    for source_id, route in routes:
+        same_source = (isinstance(note_sid, str) and note_sid
+                       and note_sid == source_id)
+        route_files = _route_material_files(repo, source_id, route)
+        same_file = (isinstance(note_ref, str) and note_ref
+                     and note_ref in route_files)
+        if not same_source and not same_file:
+            continue
+        if same_source and same_file:
+            window = _single_route_range(route) if len(route_files) == 1 else None
+            if window is None or (
+                    pages is not None
+                    and window[0] <= pages[1] and pages[0] <= window[1]):
+                return "direct"
+        standing = "related"
+    return standing
+
+
 MANDATORY_SLICE_SCOPES = frozenset({"current", "prerequisite"})
 
 #: Per-file page ceiling for PDF slices. No route-count ceiling exists: every

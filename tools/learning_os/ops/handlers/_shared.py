@@ -21,6 +21,55 @@ from learning_os.ops.gateway import (
 from learning_os.ops.proposal import CommandOutput
 
 
+def _inbox_search_rows(root: Path) -> list[dict]:
+    """One discovery row per inbox file, matched on names only, never bytes.
+
+    Inbox drops are arbitrary files (binary captures included), so the
+    metadata search reads no content here: the haystack is the file name
+    and path. Content stays behind ``inbox-read``, which refuses non-text.
+    Raises OSError when the listing itself fails; a missing inbox is empty.
+    """
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return []
+    rows = []
+    for path in sorted(inbox.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(inbox).as_posix()
+        if any(part.startswith(".") for part in rel.split("/")):
+            continue
+        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
+                     "path": f"work/inbox/{rel}"})
+    return rows
+
+def _discovery_row(rec):
+    """One stable discovery row, shared by search and inbox-list."""
+    return {k: rec.get(k) for k in
+            ("id", "type", "title", "path", "status",
+             "state", "deprecated")}
+
+def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
+    return {
+        "contract": contract, ref_key: ref, "path": relpath,
+        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+        "offset": offset, "offset_unit": "unicode_characters",
+        "total_characters": len(content),
+        "start_line": content.count("\n", 0, offset) + 1,
+        "content": content[offset:offset + limit],
+        "next_offset": offset + limit if offset + limit < len(content) else None,
+    }
+
+def _window_values(offset: int, limit: int, expected_snapshot: str | None,
+                   maximum: int) -> tuple[int, int]:
+    """Offset/limit validation with the exact commands.reads._window rules."""
+    if offset < 0 or not 1 <= limit <= maximum:
+        raise WriteRefused(f"offset must be nonnegative and limit between 1 and {maximum}")
+    if offset and not expected_snapshot:
+        raise WriteRefused("continuation requires --expected-snapshot from the previous response")
+    return offset, limit
+
+
 def require_unit_map_or_error(ctx: OpContext, unit_id: str):
     """The raising twin of support._unit_map_or_error (SPEC R3).
 

@@ -45,17 +45,17 @@ from learning_os.materials_resolution import (
     material_uri_authority,
     resolve_material_target,
 )
-from learning_os.ops._legacy_plumbing import (
-    _content_envelope,
-    _discovery_row,
-    _inbox_search_rows,
-    _window_values,
-)
 from learning_os.ops.context import OpContext
 from learning_os.ops.gateway import (
     _read_content_bound_file,
     _read_structured_file,
     prepare_review_envelope,
+)
+from learning_os.ops.handlers._shared import (
+    _content_envelope,
+    _discovery_row,
+    _inbox_search_rows,
+    _window_values,
 )
 from learning_os.ops.projection import _fresh_manifest
 from learning_os.ops.proposal import Result, TransactionProposal

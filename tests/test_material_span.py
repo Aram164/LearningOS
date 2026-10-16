@@ -232,8 +232,7 @@ def test_zero_matching_stage_is_a_typed_notfound(mini_repo):
     """SPEC (cq) 3: only the zero-stage branch is typed."""
     from learning_os.domain import suggest as suggest_mod
     from learning_os.domain.failures import NotFound
-    from learning_os.ops._legacy_plumbing import _map_for_unit
-    from learning_os.ops.handlers.plan import _placement_route
+    from learning_os.ops.handlers.plan import _map_for_unit, _placement_route
 
     _placement_setup(mini_repo)
     ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
@@ -261,8 +260,7 @@ def test_zero_matching_stage_is_a_typed_notfound(mini_repo):
 def test_duplicate_stage_and_bad_index_stay_untyped(mini_repo, mutate):
     """SPEC (cq) 3: the sibling branches keep the plain refusal."""
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops._legacy_plumbing import _map_for_unit
-    from learning_os.ops.handlers.plan import _placement_route
+    from learning_os.ops.handlers.plan import _map_for_unit, _placement_route
 
     _placement_setup(mini_repo)
     ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)

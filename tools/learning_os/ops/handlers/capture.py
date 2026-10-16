@@ -16,15 +16,15 @@ from learning_os.contracts.gateway import (
 )
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.fingerprint import _snapshot
-from learning_os.ops._legacy_plumbing import (
+from learning_os.ops.context import OpContext
+from learning_os.ops.gateway import _read_content_bound_file
+from learning_os.ops.handlers._shared import (
     _content_envelope,
     _discovery_row,
     _inbox_search_rows,
     _window_values,
+    require_unit_map_or_error,
 )
-from learning_os.ops.context import OpContext
-from learning_os.ops.gateway import _read_content_bound_file
-from learning_os.ops.handlers._shared import require_unit_map_or_error
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.store.codec import _dump_study_map
