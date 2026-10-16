@@ -375,7 +375,7 @@ TransactionService(root, clock=lambda: clock_dt).commit(
 
 
 def case_crash_recovery(tmp_path: Path) -> dict:
-    import learning_os.ops._legacy_plumbing as plumbing
+    import learning_os.ops.lock as plumbing
 
     name = "crash-recovery"
     with _pinned_tz():

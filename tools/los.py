@@ -30,9 +30,7 @@ import os
 import sys
 
 from learning_os.adapters.cli_parser import build_parser  # noqa: E402
-from learning_os.ops._legacy_plumbing import (  # noqa: E402
-    LOS_LOCK_TIMEOUT_ENV,
-)
+from learning_os.ops.lock import LOS_LOCK_TIMEOUT_ENV
 from learning_os.ops.outcomes import classify, resolve  # noqa: E402
 
 

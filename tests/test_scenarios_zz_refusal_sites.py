@@ -702,7 +702,7 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
     """
     import arch_audit_hook
 
-    import learning_os.ops._legacy_plumbing as plumbing
+    import learning_os.fingerprint as plumbing
     import learning_os.ops.handlers.platform as platform
     import los
     from learning_os.domain.failures import StaleSnapshot

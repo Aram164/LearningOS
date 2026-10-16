@@ -43,8 +43,6 @@ from learning_os.legacy_archive import (
     load_legacy_archive_lock,
 )
 from learning_os.ops._legacy_plumbing import (
-    _fresh_manifest,
-    _fresh_manifest_and_repo,
     _input_record_values,
     _read_structured_file,
     _require_gateway_v2,
@@ -52,6 +50,10 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import (
     dumps_indented,
+)
+from learning_os.ops.projection import (
+    _fresh_manifest,
+    _fresh_manifest_and_repo,
 )
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register

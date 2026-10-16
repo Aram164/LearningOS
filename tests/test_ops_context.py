@@ -13,11 +13,8 @@ from learning_os.contracts.gateway import (
 from learning_os.domain.codes import INVALID_REQUEST, STALE_SNAPSHOT
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops._legacy_plumbing import (
-    _take_gateway_refusal,
-)
 from learning_os.ops.context import OpContext
-from learning_os.ops.outcomes import exit_for
+from learning_os.ops.outcomes import _take_gateway_refusal, exit_for
 from learning_os.ops.registry import REGISTRY, register
 
 STALE = "sha256:" + "0" * 64

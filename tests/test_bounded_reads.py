@@ -297,7 +297,7 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
     mini_repo, monkeypatch, capsys,
 ):
     import los
-    from learning_os.ops import _legacy_plumbing as plumbing
+    from learning_os import fingerprint as plumbing
     from learning_os.ops import pipeline as ops_pipeline
 
     unit_id, (first, second) = _two_route_context(mini_repo)

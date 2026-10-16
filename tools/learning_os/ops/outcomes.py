@@ -9,6 +9,7 @@ and ``_classify_failure``; ``cli`` drives ``tools/los.py`` main. The
 
 from __future__ import annotations
 
+import contextvars
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -49,6 +50,49 @@ from learning_os.transactions import (
     TransactionScopeError,
     TransactionSnapshotConflict,
 )
+
+#: The typed refusal a failed handler step recorded for the gateway.
+#:
+#: Handlers answer with an int exit code plus printed prose, so a typed
+#: refusal caught inside a handler (a revision conflict in
+#: ``_write_transaction``, a stale delivery in the AI-action handler)
+#: would lose its type at that boundary. The catching step records the
+#: ``(code, retryable)`` pair here instead, and the gateway dispatch
+#: takes it after a non-zero return. Never reconstructed from prose or
+#: from the exit code: exit 3 alone is ambiguous (a snapshot guard, a
+#: revision conflict, and a stale reviewed digest all use it).
+_GATEWAY_REFUSAL: contextvars.ContextVar[tuple[str, bool] | None] = (
+    contextvars.ContextVar("learningos_gateway_refusal", default=None)
+)
+
+def _record_gateway_refusal(code: str, retryable: bool) -> None:
+    """Carry one typed refusal code across the handler's int-exit boundary."""
+    _GATEWAY_REFUSAL.set((code, retryable))
+
+def _take_gateway_refusal() -> tuple[str, bool] | None:
+    """Read and clear the recorded refusal, if any."""
+    refusal = _GATEWAY_REFUSAL.get()
+    _GATEWAY_REFUSAL.set(None)
+    return refusal
+
+def _refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
+    """Map a refusal to its V2 ``(code, retryable)`` by type, never by prose.
+
+    Returns ``None`` for an untyped refusal, which the gateway reports as
+    ``INVALID_REQUEST``. ``TransactionConflict`` and
+    ``TransactionSnapshotConflict`` normally never reach this helper —
+    ``_write_transaction`` records the first and re-raises the second —
+    but mapping them here keeps the table total over every failure the
+    gateway boundary can observe.
+    """
+    row = classify(failure, "gateway.refusal")
+    if row is None:
+        return None
+    resolved = resolve(row, failure)
+    if resolved["code"] is None:
+        return None
+    return (resolved["code"], resolved["retryable"])
+
 
 Value = str | bool | int | None
 Fn = Callable[[BaseException], Value]

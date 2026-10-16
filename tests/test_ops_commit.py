@@ -38,8 +38,8 @@ from learning_os.domain.failures import (
     TransactionIdempotencyConflict,
     TransactionValidationFailure,
 )
-from learning_os.ops import _legacy_plumbing as plumbing
 from learning_os.ops import commit as ops_commit
+from learning_os.ops import outcomes as plumbing
 from learning_os.ops.context import OpContext
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.store import session_ledger as session_support
@@ -109,7 +109,7 @@ def _stub_result():
 
 
 def test_no_gateway_refusal_text_is_unchanged(mini_repo: Path):
-    assert plumbing.current_gateway_request() is None
+    assert ops_commit.current_gateway_request() is None
     proposal = TransactionProposal(
         capability="capture.create", writes={}, artifact_ids=())
     code, errors, confirmation = ops_commit.commit_proposal(
@@ -181,7 +181,7 @@ def test_legacy_wrapper_without_gateway_names_operator_channel(
         return 2, ["refused"], {}
 
     monkeypatch.setattr(ops_commit, "commit_proposal", capture)
-    assert plumbing.current_gateway_request() is None
+    assert ops_commit.current_gateway_request() is None
     code, errors, _ = _legacy_write_transaction(
         mini_repo, {}, capability="capture.create")
     assert (code, errors) == (2, ["refused"])

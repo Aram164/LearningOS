@@ -28,7 +28,7 @@ from learning_os.domain.failures import (
     TransactionFailure,
     WriteRefused,
 )
-from learning_os.ops import _legacy_plumbing as plumbing
+from learning_os.ops import lock as plumbing
 from learning_os.ops import pipeline as pipeline_module
 from learning_os.ops.proposal import CommandOutput, Result, TransactionProposal
 from learning_os.ops.registry import REGISTRY, register

@@ -18,7 +18,7 @@ from pathlib import Path
 from learning_os import observations
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
-from learning_os.ops._legacy_plumbing import _publish
+from learning_os.ops.projection import _publish
 from learning_os.ops.proposal import CommandOutput
 from learning_os.store.session_ledger import (
     SESSION_LEDGER_STALE_HOURS,

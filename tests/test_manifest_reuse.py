@@ -32,7 +32,7 @@ from learning_os.manifest_identity import (
     materials_digest,
     operations_digest,
 )
-from learning_os.ops import _legacy_plumbing as plumbing
+from learning_os.ops import projection as plumbing
 from learning_os.ops._legacy_plumbing import _use_evidence
 from learning_os.ops.handlers.reads import (
     _use_evidence_from_manifest,

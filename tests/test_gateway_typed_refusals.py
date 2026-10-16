@@ -42,15 +42,15 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.ops import commit as ops_commit
-from learning_os.ops._legacy_plumbing import (
-    _operator_lock,
-    _refusal_from_failure,
-    _take_gateway_refusal,
-)
 from learning_os.ops.context import OpContext
 from learning_os.ops.handlers import ai as ai_handler
 from learning_os.ops.handlers.ai import _ai_refusal
 from learning_os.ops.handlers.reads import _render as _render_resume
+from learning_os.ops.lock import _operator_lock
+from learning_os.ops.outcomes import (
+    _refusal_from_failure,
+    _take_gateway_refusal,
+)
 from learning_os.ops.pipeline import _classify_failure, _v2_exit_code, run_cli
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.pathing import PathBoundaryError

@@ -20,5 +20,5 @@ entries:
   - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
   - {glob: "operations/migrations/**", sink: module, owner: migrations}
   - {glob: "<STATE>/learningos-*-touched.json", sink: module, owner: learning_os.store.session_ledger}
-  - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.ops._legacy_plumbing}
-  - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.ops._legacy_plumbing}
+  - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.ops.lock}
+  - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.ops.lock}

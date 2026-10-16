@@ -55,7 +55,6 @@ from learning_os.material_synthesis import (  # noqa: E402
     validate_unit_material_synthesis,
 )
 from learning_os.ops._legacy_plumbing import (  # noqa: E402
-    _operator_lock,
     _read_structured_file,
 )
 from learning_os.ops.legacy import (  # noqa: E402
@@ -63,6 +62,7 @@ from learning_os.ops.legacy import (  # noqa: E402
     _validate_capability_envelope,
     _validate_payload,
 )
+from learning_os.ops.lock import _operator_lock  # noqa: E402
 from learning_os.transactions import (  # noqa: E402
     TransactionFailure,
     TransactionIdempotencyConflict,

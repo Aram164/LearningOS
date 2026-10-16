@@ -1211,8 +1211,8 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
 
     from learning_os.domain.failures import WriteRefused
     from learning_os.fingerprint import canonical_fingerprint
-    from learning_os.ops._legacy_plumbing import _fresh_manifest_and_repo
     from learning_os.ops.context import OpContext
+    from learning_os.ops.projection import _fresh_manifest_and_repo
 
     named = rich_world(mini_repo)
     assert named, f"A6 rich_world returned no named ids — {FIX}"

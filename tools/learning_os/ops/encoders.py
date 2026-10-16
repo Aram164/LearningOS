@@ -3,9 +3,25 @@
 from __future__ import annotations
 
 import json
+import sys
 
-from learning_os.ops._legacy_plumbing import _json_layout
 from learning_os.ops.proposal import JsonFormat
+
+
+def _json_layout(stream=None) -> dict:
+    """Indented JSON for a person at a terminal, compact JSON on a pipe.
+
+    Agents and the UI read through pipes, where indentation was 15-22% of
+    the bytes of inspect, resume, search and semantic output and carried no
+    information (measured 2026-09-22). Any JSON parser reads both forms.
+    """
+    if stream is None:
+        stream = sys.stdout
+    try:
+        interactive = stream.isatty()
+    except (AttributeError, ValueError):
+        interactive = False
+    return {"indent": 2} if interactive else {"separators": (",", ":")}
 
 
 def dumps_unescaped(payload) -> str:

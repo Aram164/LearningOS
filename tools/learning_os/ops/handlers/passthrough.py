@@ -12,8 +12,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from learning_os.ops._legacy_plumbing import _publish
 from learning_os.ops.context import OpContext
+from learning_os.ops.projection import _publish
 from learning_os.ops.proposal import CommandOutput, Result
 from learning_os.ops.registry import register
 

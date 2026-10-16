@@ -26,8 +26,8 @@ from learning_os.domain.failures import (
     Unconfirmed,
     WriteRefused,
 )
-from learning_os.ops._legacy_plumbing import _publish
 from learning_os.ops.context import OpContext
+from learning_os.ops.projection import _publish
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
 from learning_os.store.session_ledger import _record_touched

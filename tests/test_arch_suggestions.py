@@ -783,7 +783,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # SPEC (cn) item 1: _filtered_units matches against the
         # manifest's module ids (reads.py), through the same
         # _fresh_manifest the handler reads.
-        from learning_os.ops._legacy_plumbing import _fresh_manifest
+        from learning_os.ops.projection import _fresh_manifest
 
         manifest = _fresh_manifest(ctx.root)
         ordered = [row.get("id")
@@ -803,8 +803,8 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = platform_handlers._project_ids(ctx.root)
         return ordered, set(ordered)
     if owner == "inspect-reference":
-        from learning_os.ops._legacy_plumbing import _fresh_manifest_and_repo
         from learning_os.ops.handlers import platform as platform_handlers
+        from learning_os.ops.projection import _fresh_manifest_and_repo
 
         manifest, repo = _fresh_manifest_and_repo(ctx.root)
         ordered = platform_handlers._inspect_candidates(manifest, repo)
@@ -866,9 +866,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
     if owner == "related-record":
         # Builder Task 78 ((cx) D-7): manifest record ids, as the
         # handler's heterogeneous owner probe enumerates them.
-        from learning_os.ops._legacy_plumbing import (
-            _fresh_manifest_and_repo,
-        )
+        from learning_os.ops.projection import _fresh_manifest_and_repo
 
         manifest, _repo = _fresh_manifest_and_repo(ctx.root)
         ordered = [str(row["id"]) for row in manifest["records"]

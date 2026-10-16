@@ -45,15 +45,15 @@ from learning_os.materials_resolution import (
 from learning_os.observations import today as observed_today
 from learning_os.ops._legacy_plumbing import (
     _evidence_label,
-    _fresh_manifest,
     _inbox_search_rows,
     _use_evidence,
     _window_values,
-    ranked_scan,
 )
 from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import dumps_compact
+from learning_os.ops.projection import _fresh_manifest
 from learning_os.ops.proposal import Result
+from learning_os.ops.ranking import ranked_scan
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_text_inside, resolved_inside
 from learning_os.semantics.dossiers import (
@@ -1697,7 +1697,7 @@ def _top_cluster(root: Path) -> dict | None:
     moves when the top cluster moves and never with the clock.
     """
     try:
-        from learning_os.ops._legacy_plumbing import ranked_scan
+        from learning_os.ops.ranking import ranked_scan
 
         _, ranked, _ = ranked_scan(root, days=30)
     except (GitHistoryError, OSError, ValueError):

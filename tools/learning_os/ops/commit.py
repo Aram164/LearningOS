@@ -20,14 +20,15 @@ from learning_os.domain.codes import REVISION_CONFLICT
 from learning_os.domain.failures import WriteRefused
 from learning_os.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.loader import load_repo
-from learning_os.ops._legacy_plumbing import (
-    _confirmation_from,
-    _publish,
-    _publish_repo,
+from learning_os.ops.context import OpContext
+from learning_os.ops.outcomes import (
     _record_gateway_refusal,
     _refusal_from_failure,
 )
-from learning_os.ops.context import OpContext
+from learning_os.ops.projection import (
+    _publish,
+    _publish_repo,
+)
 from learning_os.ops.proposal import TransactionProposal
 from learning_os.rules import validate
 from learning_os.store.session_ledger import (
@@ -42,6 +43,24 @@ from learning_os.transactions import (
     TransactionService,
     TransactionSnapshotConflict,
 )
+
+
+def _confirmation_from(result) -> dict:
+    """Receipt facts a command reports after its own successful transaction."""
+    if result is None:
+        return {}
+    parts = result.receipt_path.parts
+    try:
+        relative = Path(*parts[parts.index("operations"):]).as_posix()
+    except ValueError:
+        relative = result.receipt_path.name
+    return {
+        "transaction_id": result.transaction_id,
+        "receipt_path": relative,
+        "artifact_revisions": dict(result.revisions),
+        "snapshot_after": result.snapshot_after,
+        "replayed": bool(result.replayed),
+    }
 
 
 def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> tuple[int, list[str], dict]:

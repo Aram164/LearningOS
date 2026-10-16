@@ -16,7 +16,7 @@ from repo_builders import run_los
 
 from learning_os import fingerprint
 from learning_os.loader import load_repo
-from learning_os.ops._legacy_plumbing import _json_layout
+from learning_os.ops.encoders import _json_layout
 
 
 def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
@@ -267,8 +267,8 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
 
 
 def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch):
+    from learning_os import fingerprint as plumbing
     from learning_os.domain.failures import StaleSnapshot
-    from learning_os.ops import _legacy_plumbing as plumbing
     from learning_os.ops.context import OpContext
     from learning_os.ops.handlers import platform as platform_handlers
 
@@ -313,7 +313,7 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
 def test_bounded_read_hashes_thrice_with_seeded_manifest(
     mini_repo, monkeypatch, capsys, command,
 ):
-    from learning_os.ops import _legacy_plumbing as plumbing
+    from learning_os.ops import projection as plumbing
 
     original = fingerprint.canonical_fingerprint
     calls = []

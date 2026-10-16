@@ -119,7 +119,7 @@ def _write_journal_v2(root: Path, tx_id: str, entries: list) -> Path:
 
 
 def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
-    import learning_os.ops._legacy_plumbing as plumbing
+    import learning_os.ops.lock as plumbing
 
     tmp_path = Path(tmp_path)
     root = _build_root(tmp_path, "a2-f1")

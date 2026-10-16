@@ -36,11 +36,9 @@ from learning_os.health import HealthReportError
 from learning_os.legacy_archive import LegacyArchiveError
 from learning_os.masters_planning import MastersPlanningError
 from learning_os.material_synthesis import MaterialSynthesisError
-from learning_os.ops._legacy_plumbing import (
-    _refusal_from_failure,
-)
 from learning_os.ops.outcomes import (
     TABLE,
+    _refusal_from_failure,
     classify,
     error_object,
     exit_for,

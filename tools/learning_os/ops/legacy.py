@@ -17,7 +17,7 @@ from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.diagnostics import conventions as diag_conventions
 from learning_os.diagnostics import tracer as diag_tracer
 from learning_os.domain.failures import WriteRefused
-from learning_os.ops._legacy_plumbing import _take_gateway_refusal
+from learning_os.ops.outcomes import _take_gateway_refusal
 
 _CONTENT_BOUND_V2 = frozenset({
     "legacy.archive.lock.publish",
