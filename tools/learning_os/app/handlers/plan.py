@@ -34,7 +34,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import (
@@ -695,7 +695,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
     if req.get("check"):
         return Result(
             _master_promotion_check_result(root, req["module_id"], plan),
-            json_format="indented",
+
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:
@@ -723,16 +723,9 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
         )
     validate_extra, gate_errors = _plan_apply_gate(root)
 
-    def after_commit(code, errors, confirmation):
-        if gate_errors:
-            _plan_refuse(
-                ctx,
-                "Master Planning promotion preflight failed; no canonical "
-                "files were written",
-                "promotion-preflight-failed",
-                exit_code=1,
-                extra=tuple(gate_errors[:12]),
-            )
+    refusal = (gate_errors, WriteRefused('Master Planning promotion preflight failed; no canonical files were written',
+        site=f"{ctx.operation}.promotion-preflight-failed", reason='promotion-preflight-failed',
+        prefixed=True, exit_code=1))
 
     def finish_promotion(confirmation):
         return {
@@ -750,18 +743,18 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
         return ["los: Master Planning promotion failed", *errors[:12]]
 
     return Result(
-        {"ok": True},
-        proposal=TransactionProposal(
+        ResponsePayload({"ok": True}, finish_promotion({}), confirmation='merge'),
+        proposal=TransactionProposal(refusal=refusal,
             capability="module.plan.import",
             writes=plan.writes,
             artifact_ids=plan.artifact_ids,
             expected_revisions=expected_revisions,
             validate_extra=validate_extra,
         ),
-        finish=finish_promotion,
-        after_commit=after_commit,
-        on_commit_refused=refused_promotion,
-        json_format="unescaped",
+
+
+
+
     )
 
 
@@ -961,7 +954,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         return Result(
             {"unit_id": basis_unit, "basis": basis,
              "package_sha256": package_sha, "validated": False},
-            json_format="indented_sorted",
+
         )
     if req.get("check") or current_gateway_request() is None:
         try:
@@ -1034,7 +1027,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                     exit_code=code,
                 )
             result = compact
-        return Result(result, json_format="unescaped")
+        return Result(result)
     if minimal_writes:
         artifact_ids = _minimal_artifact_ids(
             root, module_id, writes, synthesis_entries)
@@ -1055,15 +1048,9 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             exit_code=2,
         ) from exc
 
-    def after_commit(code, errors, confirmation):
-        if gate_errors:
-            _plan_refuse(
-                ctx,
-                "module plan validation preflight failed; no canonical files were written",
-                "validation-preflight-failed",
-                exit_code=1,
-                extra=tuple(str(issue) for issue in gate_errors[:12]),
-            )
+    refusal = (gate_errors, WriteRefused('module plan validation preflight failed; no canonical files were written',
+        site=f"{ctx.operation}.validation-preflight-failed", reason='validation-preflight-failed',
+        prefixed=True, exit_code=1))
 
     def finish_plan_import(confirmation):
         return {"ok": True, "mode": "apply", "module_id": module_id,
@@ -1074,18 +1061,18 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         return ["los: module plan import failed", *errors[:12]]
 
     return Result(
-        {"ok": True},
-        proposal=TransactionProposal(
+        ResponsePayload({"ok": True}, finish_plan_import({}), confirmation='merge'),
+        proposal=TransactionProposal(refusal=refusal,
             capability=capability_override or "module.plan.import",
             writes=writes,
             artifact_ids=artifact_ids,
             expected_revisions=expected_revisions,
             validate_extra=validate_extra,
         ),
-        finish=finish_plan_import,
-        after_commit=after_commit,
-        on_commit_refused=refused_plan_import,
-        json_format="unescaped",
+
+
+
+
     )
 
 
@@ -1100,16 +1087,8 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
         if stale_material:
             _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
         return Result(
-            {},
-            command_output=apply_reviewed_envelope(
-                ctx,
-                capability_name="module.plan.import",
-                payload={"module_id": req["module_id"], "file": str(source),
-                         "file_sha256": apply_sha},
-                reviewed_content=revision_bytes,
-                reviewed_sha256=apply_sha,
-                review_report=req.get("review_report"),
-            ),
+            apply_reviewed_envelope(ctx, capability_name='module.plan.import', payload={'module_id': req['module_id'], 'file': str(source), 'file_sha256': apply_sha}, reviewed_content=revision_bytes, reviewed_sha256=apply_sha, review_report=req.get('review_report')),
+
         )
     repo = ctx.repo()
     package, problems = _assemble_compact_module_revision(
@@ -1146,7 +1125,7 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
     )
 
 
-@register("module.plan.import", kind="command", json_formats=("indented", "indented_sorted", "unescaped"))
+@register("module.plan.import", kind="command")
 def module_plan_import(ctx: OpContext, req: dict) -> Result:
     """Apply one reviewable, module-scoped curriculum plan as a transaction.
 
@@ -1203,16 +1182,8 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
         if stale_material:
             _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
         return Result(
-            {},
-            command_output=apply_reviewed_envelope(
-                ctx,
-                capability_name="module.plan.import",
-                payload={"module_id": req["module_id"], "file": str(_source),
-                         "file_sha256": apply_sha},
-                reviewed_content=package_bytes,
-                reviewed_sha256=apply_sha,
-                review_report=req.get("review_report"),
-            ),
+            apply_reviewed_envelope(ctx, capability_name='module.plan.import', payload={'module_id': req['module_id'], 'file': str(_source), 'file_sha256': apply_sha}, reviewed_content=package_bytes, reviewed_sha256=apply_sha, review_report=req.get('review_report')),
+
         )
     if not req.get("check") and not req.get("expected_snapshot") \
             and not req.get("apply_reviewed_sha256"):
@@ -1231,7 +1202,7 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("unit.plan.revise", kind="command", json_formats=("indented_sorted", "unescaped"))
+@register("unit.plan.revise", kind="command")
 def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one existing lecture: compact patch in, one governed transaction out.
 
@@ -1309,15 +1280,8 @@ def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
         if stale_material:
             _plan_refuse(ctx, stale_material, "stale-reviewed-apply")
         return Result(
-            {},
-            command_output=apply_reviewed_envelope(
-                ctx,
-                capability_name="unit.plan.revise",
-                payload={"unit_id": req["unit_id"], "record": revision},
-                reviewed_content=revision_bytes,
-                reviewed_sha256=apply_flag,
-                review_report=req.get("review_report"),
-            ),
+            apply_reviewed_envelope(ctx, capability_name='unit.plan.revise', payload={'unit_id': req['unit_id'], 'record': revision}, reviewed_content=revision_bytes, reviewed_sha256=apply_flag, review_report=req.get('review_report')),
+
         )
     if not req.get("check") and not req.get("expected_snapshot") and not apply_flag:
         _plan_refuse(

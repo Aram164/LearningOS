@@ -638,7 +638,7 @@ def _check_json_accepted(operation: str) -> None:
         raise AssertionError(
             f"A7 {operation}: the real parser rejects {argv!r} — {FIX}"
         ) from exc
-    if operation in {"cli.generate", "cli.validate"}:
+    if operation in {"projection.generate", "repository.validate"}:
         # SPEC (cx) D9 / (cy) R6 preserves the raw tool interface.
         with pytest.raises(SystemExit):
             parser.parse_args([argv[0], "--json", *argv[1:]])
@@ -751,7 +751,7 @@ def test_control_argv_fallback_follows_original_order():
 
 @pytest.mark.parametrize(
     "operation",
-    ["cli.ai-action-import-delivery", "cli.ai-action-validate-delivery",
+    ["ai-action.delivery.import", "ai-action.delivery.validate",
      "note.create"])
 def test_control_argv_prefers_original_top_level_literal(operation):
     """An earlier fallback source never shadows the top-level literal."""
@@ -877,34 +877,25 @@ def test_star_census_rejects_extra_and_missing():
 #: registered operation owns a refusal unit or exactly one table row,
 #: never both.
 NO_REFUSAL_UNIT = {
-    "cli.generate": "raw tool carrier; input-independent environment failures are command-failure witnesses, not typed refusal units (SPEC cy R6)",
-    "cli.validate": "raw tool carrier; canonical validation errors are command-failure witnesses, not typed refusal units (SPEC cy R6)",
-    "cli.ai-action-list": ("no refusal raise in the handler closure: list_actions "
+    "projection.generate": "raw tool carrier; input-independent environment failures are command-failure witnesses, not typed refusal units (SPEC cy R6)",
+    "repository.validate": "raw tool carrier; canonical validation errors are command-failure witnesses, not typed refusal units (SPEC cy R6)",
+    "ai-action.list": ("no refusal raise in the handler closure: list_actions "
                            "only projects the action registry"),
-    "cli.program-list": "no refusal raise in the handler closure",
-    "cli.status": ("only refusal is cli.status.unreadable-records, unreachable "
+    "program.list": "no refusal raise in the handler closure",
+    "status.read": ("only refusal is cli.status.unreadable-records, unreachable "
                    "from inputs: parse failures need corrupt canonical records "
                    "and no status input writes records"),
-    "cli.health-report": ("no refusal raise in the handler closure: "
+    "health.report": ("no refusal raise in the handler closure: "
                            "health_report only builds the report"),
-    "health.report": ("shares cli.health-report's handler; no refusal raise "
-                       "declares for health.report"),
-    "cli.inbox-list": ("only refusal is cli.inbox-list.list-failed, unreachable "
+    "inbox.list": ("only refusal is cli.inbox-list.list-failed, unreachable "
                         "from inputs: listing work/inbox fails only on OSError"),
-    "inbox.list": ("shares cli.inbox-list's handler; the closure's only "
-                    "refusal declares as cli.inbox-list.list-failed"),
-    "cli.legacy-archive-status": ("no refusal raise in the handler closure: "
+    "legacy.archive.status": ("no refusal raise in the handler closure: "
                                    "legacy_archive_status only loads the "
                                    "published lock"),
-    "legacy.archive.status": ("shares cli.legacy-archive-status's handler; no "
-                               "refusal raise declares for "
-                               "legacy.archive.status"),
-    "cli.module-list": ("no refusal raise in the handler closure: module_list "
+    "module.list": ("no refusal raise in the handler closure: module_list "
                          "only filters manifest rows"),
-    "cli.project-list": ("no refusal raise in the handler closure: "
+    "project.list": ("no refusal raise in the handler closure: "
                           "project_list only filters manifest rows"),
-    "project.list": ("shares cli.project-list's handler; no refusal raise "
-                      "declares for project.list"),
 }
 
 
@@ -932,7 +923,7 @@ def test_control_reconstruct_resolves_from_where_defined():
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.ai_errors import TargetNotFoundError
 
-    exc = _reconstruct("cli.ai-action-status", "TargetNotFoundError",
+    exc = _reconstruct("ai-action.status", "TargetNotFoundError",
                        None)
     assert type(exc) is TargetNotFoundError
     assert exit_for(exc, "cli") == 1
@@ -941,18 +932,18 @@ def test_control_reconstruct_resolves_from_where_defined():
 def test_control_reconstruct_rejects_non_failure():
     """A non-failure global and an unknown name reconstruct to nothing."""
     with pytest.raises(AssertionError, match="not a failure"):
-        _reconstruct("cli.ai-action-list", "AIActionService", None)
+        _reconstruct("ai-action.list", "AIActionService", None)
     with pytest.raises(AssertionError, match="not a failure"):
-        _reconstruct("cli.ai-action-list", "NoSuchFailure", None)
+        _reconstruct("ai-action.list", "NoSuchFailure", None)
 
 
 def test_sweep_control_table_row_for_refusing_op_fails():
     """SPEC (bu) 6 control: a table row for an operation that owns a
     refusal unit fails the census."""
     units = {operation for operation, *_ in _all_refusal_units()}
-    assert "cli.dossier" in units
+    assert "dossier.read" in units
     with pytest.raises(AssertionError, match="sweep census"):
-        _check_sweep_census(units, {**NO_REFUSAL_UNIT, "cli.dossier": "control"})
+        _check_sweep_census(units, {**NO_REFUSAL_UNIT, "dossier.read": "control"})
 
 
 # --- required controls ----------------------------------------------------------
@@ -1121,12 +1112,12 @@ def test_control_cli_error_shape_is_checked():
 # --- SPEC (ct) diagnostic controls -------------------------------------------
 
 def _a_diagnostic_line() -> dict:
-    return {"operation": "cli.backup-verify",
+    return {"operation": "backup.verify",
             "kind": "diagnostic-failure", "site": None, "code": 1}
 
 
 def _a_diagnostic_stdout() -> str:
-    return json.loads((RECORDED_DIR / "cli.backup-verify"
+    return json.loads((RECORDED_DIR / "backup.verify"
                        / "checksums-fail.json").read_text(
                            encoding="utf-8"))["stdout"]
 
@@ -1136,9 +1127,9 @@ def test_control_diagnostic_clean_passes():
     stdout = _a_diagnostic_stdout()
     assert isinstance(json.loads(stdout), dict)
     _check_live_exit("a7-control::diag-clean", "cli", 1, 1,
-                     [_a_diagnostic_line()], "cli.backup-verify")
+                     [_a_diagnostic_line()], "backup.verify")
     _check_cli_refusal_stdout("a7-control::diag-clean",
-                              "cli.backup-verify", stdout,
+                              "backup.verify", stdout,
                               _a_diagnostic_line(), stdout)
 
 
@@ -1146,15 +1137,15 @@ def test_control_diagnostic_duplicate_lines_fail():
     with pytest.raises(AssertionError, match="2 witness lines"):
         _check_live_exit("a7-control::diag-two", "cli", 1, 1,
                          [_a_diagnostic_line(), _a_diagnostic_line()],
-                         "cli.backup-verify")
+                         "backup.verify")
 
 
 def test_control_diagnostic_wrong_operation_fails():
     line = _a_diagnostic_line()
     line["operation"] = "route.patch"
-    with pytest.raises(AssertionError, match="unit 'cli.backup-verify'"):
+    with pytest.raises(AssertionError, match="unit 'backup.verify'"):
         _check_live_exit("a7-control::diag-op", "cli", 1, 1,
-                         [line], "cli.backup-verify")
+                         [line], "backup.verify")
 
 
 def test_control_diagnostic_non_null_site_fails():
@@ -1162,7 +1153,7 @@ def test_control_diagnostic_non_null_site_fails():
     line["site"] = "cli.backup-verify.bad-file"
     with pytest.raises(AssertionError, match="diagnostic line names site"):
         _check_live_exit("a7-control::diag-site", "cli", 1, 1,
-                         [line], "cli.backup-verify")
+                         [line], "backup.verify")
 
 
 def test_control_diagnostic_malformed_shape_fails():
@@ -1170,7 +1161,7 @@ def test_control_diagnostic_malformed_shape_fails():
     extra["class"] = "WriteRefused"
     with pytest.raises(AssertionError, match="diagnostic line has shape"):
         _check_live_exit("a7-control::diag-shape", "cli", 1, 1,
-                         [extra], "cli.backup-verify")
+                         [extra], "backup.verify")
 
 
 def test_control_diagnostic_zero_code_fails():
@@ -1178,7 +1169,7 @@ def test_control_diagnostic_zero_code_fails():
     line["code"] = 0
     with pytest.raises(AssertionError, match="not integer 1"):
         _check_live_exit("a7-control::diag-zero", "cli", 1, 1,
-                         [line], "cli.backup-verify")
+                         [line], "backup.verify")
 
 
 def test_control_diagnostic_bool_code_fails():
@@ -1186,7 +1177,7 @@ def test_control_diagnostic_bool_code_fails():
     line["code"] = True
     with pytest.raises(AssertionError, match="not integer 1"):
         _check_live_exit("a7-control::diag-bool", "cli", 1, 1,
-                         [line], "cli.backup-verify")
+                         [line], "backup.verify")
 
 
 def test_control_diagnostic_wrong_code_fails():
@@ -1194,26 +1185,26 @@ def test_control_diagnostic_wrong_code_fails():
     line["code"] = 2
     with pytest.raises(AssertionError, match="not integer 1"):
         _check_live_exit("a7-control::diag-code", "cli", 1, 1,
-                         [line], "cli.backup-verify")
+                         [line], "backup.verify")
 
 
 def test_control_diagnostic_wrong_exit_fails():
     with pytest.raises(AssertionError, match="want 1"):
         _check_live_exit("a7-control::diag-exit", "cli", 2, 2,
-                         [_a_diagnostic_line()], "cli.backup-verify")
+                         [_a_diagnostic_line()], "backup.verify")
 
 
 def test_control_diagnostic_non_json_stdout_fails():
     with pytest.raises(AssertionError, match="not JSON"):
         _check_cli_refusal_stdout("a7-control::diag-nojson",
-                                  "cli.backup-verify", "not json",
+                                  "backup.verify", "not json",
                                   _a_diagnostic_line(), "not json")
 
 
 def test_control_diagnostic_non_object_stdout_fails():
     with pytest.raises(AssertionError, match="not a JSON object"):
         _check_cli_refusal_stdout("a7-control::diag-noobj",
-                                  "cli.backup-verify", "[]",
+                                  "backup.verify", "[]",
                                   _a_diagnostic_line(), "[]")
 
 
@@ -1221,20 +1212,20 @@ def test_control_diagnostic_changed_stdout_fails():
     stdout = _a_diagnostic_stdout()
     with pytest.raises(AssertionError, match="differs from recorded"):
         _check_cli_refusal_stdout("a7-control::diag-changed",
-                                  "cli.backup-verify", stdout,
+                                  "backup.verify", stdout,
                                   _a_diagnostic_line(), stdout + " ")
 
 
 # --- SPEC (cx) D-9 command-failure controls ------------------------------------
 
 def _a_command_line() -> dict:
-    return {"operation": "cli.session-end",
+    return {"operation": "session.end",
             "kind": "command-failure", "site": None, "code": 128}
 
 
 def _a_command_streams() -> tuple[str, str]:
     """The recorded failed-push raw streams (real child output)."""
-    step = json.loads((RECORDED_DIR / "cli.session-end"
+    step = json.loads((RECORDED_DIR / "session.end"
                        / "failed-push.json").read_text(
                            encoding="utf-8"))["steps"][1]
     assert step["exit"] == 128
@@ -1245,9 +1236,9 @@ def test_control_command_clean_passes():
     """The recorded failed-push streams pass both command clauses."""
     stdout, stderr = _a_command_streams()
     _check_live_exit("a7-control::cmd-clean", "cli", 128, 128,
-                     [_a_command_line()], "cli.session-end")
+                     [_a_command_line()], "session.end")
     _check_command_failure_streams(
-        "a7-control::cmd-clean", "cli.session-end", stdout, stderr,
+        "a7-control::cmd-clean", "session.end", stdout, stderr,
         _a_command_line(), stdout, stderr)
 
 
@@ -1255,15 +1246,15 @@ def test_control_command_duplicate_lines_fail():
     with pytest.raises(AssertionError, match="2 witness lines"):
         _check_live_exit("a7-control::cmd-two", "cli", 128, 128,
                          [_a_command_line(), _a_command_line()],
-                         "cli.session-end")
+                         "session.end")
 
 
 def test_control_command_wrong_operation_fails():
     line = _a_command_line()
     line["operation"] = "route.patch"
-    with pytest.raises(AssertionError, match="unit 'cli.session-end'"):
+    with pytest.raises(AssertionError, match="unit 'session.end'"):
         _check_live_exit("a7-control::cmd-op", "cli", 128, 128,
-                         [line], "cli.session-end")
+                         [line], "session.end")
 
 
 def test_control_command_non_null_site_fails():
@@ -1271,7 +1262,7 @@ def test_control_command_non_null_site_fails():
     line["site"] = "cli.session-end.nothing-touched"
     with pytest.raises(AssertionError, match="command line names site"):
         _check_live_exit("a7-control::cmd-site", "cli", 128, 128,
-                         [line], "cli.session-end")
+                         [line], "session.end")
 
 
 def test_control_command_malformed_shape_fails():
@@ -1279,7 +1270,7 @@ def test_control_command_malformed_shape_fails():
     extra["class"] = "WriteRefused"
     with pytest.raises(AssertionError, match="command line has shape"):
         _check_live_exit("a7-control::cmd-shape", "cli", 128, 128,
-                         [extra], "cli.session-end")
+                         [extra], "session.end")
 
 
 def test_control_command_missing_code_fails():
@@ -1287,7 +1278,7 @@ def test_control_command_missing_code_fails():
     del line["code"]
     with pytest.raises(AssertionError, match="command line has shape"):
         _check_live_exit("a7-control::cmd-nocode", "cli", 128, 128,
-                         [line], "cli.session-end")
+                         [line], "session.end")
 
 
 @pytest.mark.parametrize("code", [0, True, False, 128.0, "128", None])
@@ -1296,22 +1287,22 @@ def test_control_command_bad_code_fails(code):
     line["code"] = code
     with pytest.raises(AssertionError, match="not a nonzero integer"):
         _check_live_exit("a7-control::cmd-code", "cli", 128, 128,
-                         [line], "cli.session-end")
+                         [line], "session.end")
 
 
 def test_control_command_wrong_exit_fails():
     with pytest.raises(AssertionError, match="witnessed command code 1"):
         _check_live_exit("a7-control::cmd-exit", "cli", 128, 128,
-                         [{"operation": "cli.session-end",
+                         [{"operation": "session.end",
                            "kind": "command-failure", "site": None,
-                           "code": 1}], "cli.session-end")
+                           "code": 1}], "session.end")
 
 
 def test_control_command_changed_stdout_fails():
     stdout, stderr = _a_command_streams()
     with pytest.raises(AssertionError, match="live stdout differs"):
         _check_command_failure_streams(
-            "a7-control::cmd-stdout", "cli.session-end", stdout, stderr,
+            "a7-control::cmd-stdout", "session.end", stdout, stderr,
             _a_command_line(), stdout + " ", stderr)
 
 
@@ -1319,7 +1310,7 @@ def test_control_command_changed_stderr_fails():
     stdout, stderr = _a_command_streams()
     with pytest.raises(AssertionError, match="live stderr differs"):
         _check_command_failure_streams(
-            "a7-control::cmd-stderr", "cli.session-end", stdout, stderr,
+            "a7-control::cmd-stderr", "session.end", stdout, stderr,
             _a_command_line(), stdout, stderr + " ")
 
 
@@ -1327,7 +1318,7 @@ def test_control_command_missing_live_streams_fails():
     stdout, stderr = _a_command_streams()
     with pytest.raises(AssertionError, match="live streams are missing"):
         _check_command_failure_streams(
-            "a7-control::cmd-nolive", "cli.session-end", stdout, stderr,
+            "a7-control::cmd-nolive", "session.end", stdout, stderr,
             _a_command_line(), stdout, None)
 
 
@@ -1335,5 +1326,5 @@ def test_control_command_streams_without_line_fails():
     stdout, stderr = _a_command_streams()
     with pytest.raises(AssertionError, match="without a command-failure"):
         _check_command_failure_streams(
-            "a7-control::cmd-noline", "cli.session-end", stdout, stderr,
+            "a7-control::cmd-noline", "session.end", stdout, stderr,
             None, stdout, stderr)

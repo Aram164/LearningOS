@@ -7,7 +7,7 @@ its refusals to refusal sites and its results to `Result`s.
 from __future__ import annotations
 
 from learning_os.app.context import OpContext
-from learning_os.app.proposal import CommandOutput, Result
+from learning_os.app.proposal import Result
 from learning_os.app.registry import register
 from learning_os.app.session import SessionChannelError as _SessionChannelError
 from learning_os.app.session import SessionCommittedError as _SessionCommittedError
@@ -21,7 +21,7 @@ from learning_os.app.session import session_end
 from learning_os.domain.failures import WriteRefused
 
 
-@register("cli.session-end", kind="porcelain", json_formats=("indented",))
+@register("session.end", kind="porcelain")
 def session_end_command(ctx: OpContext, req: dict) -> Result:
     """Validate, show exact session-owned files, optionally commit/push."""
     try:
@@ -66,6 +66,5 @@ def session_end_command(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.head-changed",
             prefixed=True, exit_code=2) from exc
-    if isinstance(outcome, CommandOutput):
-        return Result({}, command_output=outcome)
-    return Result(outcome, json_format="indented")
+    return Result(outcome)
+    return Result(outcome)

@@ -24,11 +24,18 @@ from learning_os.adapters import cli as cli_adapter
 from learning_os.adapters.cli_parser import _repository_root
 from learning_os.app import lock as plumbing
 from learning_os.app import pipeline as pipeline_module
-from learning_os.app.proposal import CommandOutput, Result, TransactionProposal
+from learning_os.app.proposal import (
+    DeliveryCompletion,
+    Presentation,
+    ResponsePayload,
+    Result,
+    TransactionProposal,
+)
 from learning_os.app.registry import REGISTRY, register
 from learning_os.app.render import RenderPurityError, call_renderer, current_render
 from learning_os.domain.failures import (
     StaleSnapshot,
+    ToolFailure,
     TransactionFailure,
     WriteRefused,
 )
@@ -62,7 +69,7 @@ def pipe(mini_repo):
 
         def default_handler(ctx, req):
             calls.append({"ctx": ctx, "req": req})
-            return Result({"echo": req.get("alpha"), "n": req.get("beta")})
+            return Result({'echo': req.get('alpha'), 'n': req.get('beta')})
 
         register(TEST_OP, kind=kind, human=human,
                  render_check=render_check)(handler or default_handler)
@@ -194,7 +201,7 @@ def test_human_view_reaches_two_arg_renderer(pipe, mini_repo):
     """SPEC (bu) 1: a set view reaches human(payload, view)."""
 
     def handler(ctx, req):
-        return Result({"echo": req.get("alpha")}, human_view={"mark": "!"})
+        return Result({'echo': req.get('alpha')}, human_view={'mark': '!'})
 
     def human(payload, view):
         return f"ECHO {payload['echo']}{view['mark']}"
@@ -212,7 +219,7 @@ def test_human_view_purity_sees_both_arguments(
     """SPEC (bu) 1: the purity marker sees payload and view alike."""
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, human_view={"mark": "!"})
+        return Result({'echo': 'x'}, human_view={'mark': '!'})
 
     def human(payload, view):
         if mutate == "payload":
@@ -236,10 +243,10 @@ def test_json_bytes_identical_with_and_without_view(pipe, mini_repo):
         return "NEVER"
 
     def with_view(ctx, req):
-        return Result({"echo": req.get("alpha")}, human_view={"mark": "!"})
+        return Result({'echo': req.get('alpha')}, human_view={'mark': '!'})
 
     def without_view(ctx, req):
-        return Result({"echo": req.get("alpha")})
+        return Result({'echo': req.get('alpha')})
 
     pipe("query", handler=with_view, human=human)
     with_outcome = pipeline_module.run_cli(
@@ -256,7 +263,7 @@ def test_one_arg_renderer_still_works(pipe, mini_repo):
     """SPEC (bu) 1: an unset view keeps the one-argument call."""
 
     def handler(ctx, req):
-        return Result({"echo": req.get("alpha")})
+        return Result({'echo': req.get('alpha')})
 
     pipe("query", handler=handler,
          human=lambda payload: f"ECHO {payload['echo']}")
@@ -267,7 +274,7 @@ def test_one_arg_renderer_still_works(pipe, mini_repo):
 
 def test_finish_applies_to_empty_confirmation(pipe, mini_repo):
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=lambda conf: {"folded": True, **conf})
+        return Result(ResponsePayload({'echo': 'x'}, (lambda conf: {'folded': True, **conf})({}), confirmation='merge'))
 
     pipe("query", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -355,12 +362,8 @@ def test_refusal_json_error_object(pipe, mini_repo):
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP,
                                       _ns(mini_repo, json=True))
+    assert outcome.stdout == ""
     assert outcome.stderr == (
-        "los: INVALID_REQUEST: unit u-x not found (did you mean u-a?)\n"
-        "  did you mean: u-b\n"
-        "  next: create it first\n"
-    )
-    assert outcome.stdout == (
         '{"error":{"code":"INVALID_REQUEST",'
         '"message":"unit u-x not found (did you mean u-a?)",'
         '"retryable":false,'
@@ -372,7 +375,7 @@ def test_refusal_json_error_object(pipe, mini_repo):
     schema_path = (Path(__file__).resolve().parent / "architecture"
                    / "cli-error.schema.json")
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    Draft202012Validator(schema).validate(json.loads(outcome.stdout))
+    Draft202012Validator(schema).validate(json.loads(outcome.stderr))
     assert schema["properties"]["error"]["properties"]["code"]["enum"] == (
         list(PUBLIC_CODES))
     assert schema["properties"]["error"]["properties"]["details"][
@@ -389,7 +392,7 @@ def test_refusal_json_with_human_has_no_error_object(pipe, mini_repo):
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP,
                                       _ns(mini_repo, json=True))
     assert outcome.stdout == ""
-    assert outcome.stderr == "los: INVALID_REQUEST: nope\n"
+    assert json.loads(outcome.stderr) == {"error": {"code": "INVALID_REQUEST", "message": "nope", "retryable": False, "details": {}}}
     assert outcome.exit_code == 2
 
 
@@ -404,7 +407,7 @@ def test_unknown_exception_propagates(pipe, mini_repo):
 
 def test_diagnostic_failed_exits_1_with_result(pipe, mini_repo):
     def handler(ctx, req):
-        return Result({"echo": "diag"}, diagnostic_failed=True)
+        return Result({'echo': 'diag'}, diagnostic_failed=True)
 
     pipe("query", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -446,8 +449,7 @@ def test_cli_proposal_without_gateway_request_keeps_the_legacy_refusal(
     """No gateway context: the commit step returns the legacy refusal."""
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "noctx"))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'noctx'))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -455,44 +457,33 @@ def test_cli_proposal_without_gateway_request_keeps_the_legacy_refusal(
     assert outcome.ok is False
     assert outcome.commit == "none"
     assert outcome.stdout == ""
-    assert outcome.stderr.startswith("los: canonical writes must use ")
+    assert outcome.stderr.startswith("los: INVALID_REQUEST: canonical writes must use ")
     assert "direct CLI application is disabled" in outcome.stderr
     assert not (mini_repo / "work/inbox/noctx.md").exists()
 
 
 def test_cli_proposal_runs_after_commit_then_finish(pipe, mini_repo):
-    """A real CLI commit calls after_commit once, then finish."""
-
+    """A named completion runs once and its facts survive response projection."""
+    from dataclasses import replace
     _write_gateway_wiring(mini_repo)
-    order = []
-
+    calls = []
+    class Service:
+        def apply_delivery_receipt(self, confirmation, touched_base):
+            calls.append((confirmation["transaction_id"], touched_base))
+            return {**confirmation, "revision_updates": {}}
     def handler(ctx, req):
-        def after_commit(code, errors, confirmation):
-            order.append("after_commit")
-            assert code == 0
-            assert errors == []
-
-        def finish(confirmation):
-            order.append("finish")
-            return {"done": True, "tx": confirmation["transaction_id"]}
-
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "order"),
-            after_commit=after_commit, finish=finish)
-
+        proposal = replace(_pipe_proposal(mini_repo, "order"),
+            completion=DeliveryCompletion(Service(), "baseline"))
+        return Result(ResponsePayload({}, {'done': True}), proposal=proposal)
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-order-001"):
-        outcome = pipeline_module.run_cli(
-            mini_repo, TEST_OP, _ns(mini_repo))
-    assert order == ["after_commit", "finish"]
-    assert outcome.exit_code == 0
-    assert outcome.ok is True
-    assert outcome.commit == "committed"
+        outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     body = json.loads(outcome.stdout)
+    assert calls == [(body["transaction_id"], "baseline")]
+    assert outcome.exit_code == 0 and outcome.commit == "committed"
     assert body["done"] is True
-    assert body["tx"].startswith("transaction-")
-    assert (mini_repo / "work/inbox/order.md").read_text(
-        encoding="utf-8") == "pipe\n"
+    assert (mini_repo / outcome.receipt["receipt_path"]).is_file()
+
 
 
 def _pipe_gesture(ctx, capability: str):
@@ -529,9 +520,7 @@ def test_cli_gesture_commit_succeeds_with_a_receipt(pipe, mini_repo):
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "gesture"),
-            gesture=_pipe_gesture(ctx, TEST_OP))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'gesture'), gesture=_pipe_gesture(ctx, TEST_OP))
 
     pipe("command", handler=handler)
     assert current_gateway_request() is None
@@ -564,9 +553,7 @@ def test_cli_gesture_refusal_resets_the_context(pipe, mini_repo):
             artifact_ids=("test-only:dir",),
             expected_revisions={},
         )
-        return Result(
-            {"echo": "x"}, proposal=proposal,
-            gesture=_pipe_gesture(ctx, TEST_OP))
+        return Result({'echo': 'x'}, proposal=proposal, gesture=_pipe_gesture(ctx, TEST_OP))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -583,9 +570,7 @@ def test_cli_gesture_under_a_gateway_request_is_a_programming_error(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "nested"),
-            gesture=_pipe_gesture(ctx, TEST_OP))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'nested'), gesture=_pipe_gesture(ctx, TEST_OP))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-nested-001"):
@@ -608,7 +593,7 @@ def test_cli_gesture_handler_refuses_a_non_admitted_capability(
                 gateway_message="los: the direct test path is not admitted",
                 exit_code=2,
             )
-        return Result({"echo": "x"})
+        return Result({'echo': 'x'})
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -641,8 +626,7 @@ def test_cli_proposal_merges_confirmation_by_default(pipe, mini_repo):
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "merge"))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'merge'))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-merge-001"):
@@ -660,16 +644,15 @@ def test_cli_proposal_uses_on_commit_refused_lines_verbatim(
     """Custom refusal lines render once, in order, without a prefix."""
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "custom"),
-            on_commit_refused=lambda errors: [
-                "first complaint", f"second: {len(errors)} error(s)"])
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'custom'))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.exit_code == 2
     assert outcome.stdout == ""
-    assert outcome.stderr == "first complaint\nsecond: 1 error(s)\n"
+    assert outcome.stderr.startswith("los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2")
+    assert outcome.commit == "none" and outcome.receipt is None
+    assert not (mini_repo / "work/inbox/custom.md").exists()
 
 
 def test_cli_proposal_conflict_renders_the_captured_complaint(
@@ -679,8 +662,7 @@ def test_cli_proposal_conflict_renders_the_captured_complaint(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "clash"))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'clash'))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-clash-first"):
@@ -694,7 +676,7 @@ def test_cli_proposal_conflict_renders_the_captured_complaint(
     assert outcome.ok is False
     assert outcome.stdout == ""
     assert outcome.stderr.splitlines()[0] == (
-        "los: artifact revision conflict — reload the affected record "
+        "los: REVISION_CONFLICT: artifact revision conflict — reload the affected record "
         "before writing")
     assert json.loads(outcome.stderr.splitlines()[1]) == {
         "conflicts": {"test-only:clash": {"expected": 0, "actual": 1}}}
@@ -703,31 +685,24 @@ def test_cli_proposal_conflict_renders_the_captured_complaint(
     assert err == ""
 
 
-def test_cli_after_commit_refusal_follows_cli_classification(
-        pipe, mini_repo):
-    """A refusal raised by after_commit renders like a handler refusal."""
-
+def test_cli_after_commit_refusal_follows_cli_classification(pipe, mini_repo):
+    """Completion failure preserves committed facts and does not invite a second write."""
+    from dataclasses import replace
     _write_gateway_wiring(mini_repo)
-
-    def handler(ctx, req):
-        def after_commit(code, errors, confirmation):
+    class Service:
+        def apply_delivery_receipt(self, confirmation, touched_base):
             raise WriteRefused("after-nope")
-
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "afterbad"),
-            after_commit=after_commit)
-
+    def handler(ctx, req):
+        return Result({}, proposal=replace(_pipe_proposal(mini_repo, 'afterbad'), completion=DeliveryCompletion(Service(), None)))
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-afterbad-001"):
-        outcome = pipeline_module.run_cli(
-            mini_repo, TEST_OP, _ns(mini_repo))
-    assert outcome.exit_code == 2
-    assert outcome.stdout == ""
-    assert outcome.stderr == "los: INVALID_REQUEST: after-nope\n"
+        outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 2 and outcome.stdout == ""
+    assert "after-nope" in outcome.stderr
     assert outcome.commit == "committed"
-    assert outcome.receipt["transaction_id"].startswith("transaction-")
     assert (mini_repo / outcome.receipt["receipt_path"]).is_file()
     assert outcome.replayed is False
+
 
 
 def test_cli_proposal_snapshot_conflict_uses_cli_classification(
@@ -743,7 +718,7 @@ def test_cli_proposal_snapshot_conflict_uses_cli_classification(
             artifact_ids=proposal.artifact_ids,
             expected_revisions=dict(proposal.expected_revisions),
             expected_snapshot="sha256:" + "0" * 64)
-        return Result({"echo": "x"}, proposal=proposal)
+        return Result({'echo': 'x'}, proposal=proposal)
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-stale-001"):
@@ -986,8 +961,7 @@ def test_cli_check_validates_once_with_prepared_render_data(
     def handler(ctx, req):
         seen.append((ctx.invocation, req["check"]))
         proposal = _pipe_proposal(mini_repo, "check-only")
-        return Result(prepared, proposal=proposal, finish=forbidden,
-                      after_commit=forbidden)
+        return Result(ResponsePayload(prepared, {}, confirmation='merge'), proposal=proposal)
 
     def render(record, facts):
         assert facts is prepared
@@ -1020,8 +994,7 @@ def test_cli_check_renderer_refusal_keeps_bytes_exit_and_no_commit(
     def handler(ctx, req):
         proposal = _pipe_proposal(mini_repo, "check-refused")
         from dataclasses import replace
-        return Result({"plan": "prepared"}, proposal=replace(
-            proposal, deletes=None, validate_extra=lambda repo, issues: ["check refused"]))
+        return Result({'plan': 'prepared'}, proposal=replace(proposal, deletes=None, validate_extra=lambda repo, issues: ['check refused']))
 
     def render(record, prepared):
         assert prepared == {"plan": "prepared"}
@@ -1055,8 +1028,7 @@ def test_cli_receipt_and_replay_survive_finish_without_receipt_fields(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result({}, proposal=_pipe_proposal(mini_repo, "receipt-facts"),
-                      finish=lambda confirmation: {"done": True})
+        return Result(ResponsePayload({}, (lambda confirmation: {'done': True})({}), confirmation='omit'), proposal=_pipe_proposal(mini_repo, 'receipt-facts'))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-receipt-facts"):
@@ -1084,7 +1056,7 @@ def test_cli_post_commit_failure_carries_actual_durable_receipt(
         raise OSError("ownership unavailable")
 
     def handler(ctx, req):
-        return Result({}, proposal=_pipe_proposal(mini_repo, "post-failure"))
+        return Result({}, proposal=_pipe_proposal(mini_repo, 'post-failure'))
 
     pipe("command", handler=handler)
     monkeypatch.setattr(commit_module, "_record_touched", broken_touched)
@@ -1134,13 +1106,13 @@ def test_render_nondeterministic_fixture_fails(pipe, mini_repo, monkeypatch):
     render = _load_fixture_renderer("pos_render_nondeterministic.py")
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({'echo': 'x'}, )
 
-    pipe("query", handler=handler)
+    pipe("query", handler=handler, human=lambda payload: json.dumps(render(payload)))
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     with pytest.raises(RenderPurityError) as caught:
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert str(caught.value) == f"{TEST_OP}::finish::not-deterministic"
+    assert str(caught.value) == f"{TEST_OP}::human::not-deterministic"
     assert current_render() is None
 
 
@@ -1149,13 +1121,13 @@ def test_render_mutates_arg_fixture_fails(pipe, mini_repo, monkeypatch):
     render = _load_fixture_renderer("pos_render_mutates_arg.py")
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({'echo': 'x'}, )
 
-    pipe("query", handler=handler)
+    pipe("query", handler=handler, human=lambda payload: json.dumps(render(payload)))
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     with pytest.raises(RenderPurityError) as caught:
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert str(caught.value) == f"{TEST_OP}::finish::argument-mutated"
+    assert str(caught.value) == f"{TEST_OP}::human::argument-mutated"
     assert current_render() is None
 
 
@@ -1164,13 +1136,13 @@ def test_render_check_off_skips_purity(pipe, mini_repo, monkeypatch):
     render = _load_fixture_renderer("pos_render_nondeterministic.py")
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({'echo': 'x'}, )
 
-    pipe("query", handler=handler)
+    pipe("query", handler=handler, human=lambda payload: json.dumps(render(payload)))
     monkeypatch.delenv("LOS_ARCH_RENDER_CHECK", raising=False)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.exit_code == 0
-    assert json.loads(outcome.stdout)["payload"] == {}
+    assert json.loads(outcome.stdout)["payload"] == {"echo": "x"}
     assert current_render() is None
 
 
@@ -1310,8 +1282,7 @@ def test_render_type_control_positive(monkeypatch):
 def test_render_check_on_pure_renderer_passes(pipe, mini_repo, monkeypatch):
     """With the check on, a pure finish renderer runs the CLI path cleanly."""
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=lambda confirmation: {
-            "echo": "x", "flag": False, "count": 0})
+        return Result(ResponsePayload({'echo': 'x'}, (lambda confirmation: {'echo': 'x', 'flag': False, 'count': 0})({}), confirmation='merge'))
 
     pipe("query", handler=handler)
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
@@ -1333,10 +1304,7 @@ def test_cli_commit_refusal_keeps_engine_complaint_before_handler_lines(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"},
-            proposal=_pipe_proposal(mini_repo, "late", revision=5),
-            on_commit_refused=lambda errors: ["los: handler line"])
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'late', revision=5))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-bd-conflict-001"):
@@ -1345,11 +1313,13 @@ def test_cli_commit_refusal_keeps_engine_complaint_before_handler_lines(
     assert outcome.stdout == ""
     lines = outcome.stderr.splitlines()
     assert lines[0] == (
-        "los: artifact revision conflict — reload the affected record "
+        "los: REVISION_CONFLICT: artifact revision conflict — reload the affected record "
         "before writing")
     assert json.loads(lines[1]) == {
         "conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
-    assert lines[2:] == ["los: handler line"]
+    assert lines[2:] == []
+    assert outcome.error["code"] == "REVISION_CONFLICT"
+    assert outcome.error["retryable"] is True
 
 
 def test_cli_refused_stdout_prints_the_legacy_json_on_stdout(
@@ -1357,19 +1327,14 @@ def test_cli_refused_stdout_prints_the_legacy_json_on_stdout(
     """refused_stdout puts the legacy refusal print on stdout, stderr empty."""
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "outjson"),
-            refused_stdout=lambda errors: json.dumps(
-                {"ok": False, "errors": errors}, separators=(",", ":")))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'outjson'))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.exit_code == 2
-    assert outcome.stderr == ""
-    body = json.loads(outcome.stdout)
-    assert outcome.stdout == json.dumps(body, separators=(",", ":")) + "\n"
-    assert body["ok"] is False
-    assert body["errors"][0].startswith("canonical writes must use ")
+    assert outcome.stdout == ""
+    assert outcome.stderr.startswith("los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2")
+    assert outcome.commit == "none" and outcome.receipt is None
     assert not (mini_repo / "work/inbox/outjson.md").exists()
 
 
@@ -1381,21 +1346,18 @@ def test_gateway_refused_stdout_is_the_error_without_a_complaint(
     (mini_repo / "work/inbox/blocked.md").mkdir(parents=True)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"}, proposal=_pipe_proposal(mini_repo, "blocked"),
-            refused_stdout=lambda errors: json.dumps(
-                {"ok": False, "errors": errors}, separators=(",", ":")))
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'blocked'))
 
     pipe("command", handler=handler)
     outcome = _run_test_gateway(mini_repo, None, key="k1-bd-stdout-001")
     body = json.loads(outcome.stdout)
     assert outcome.exit_code == 2
     assert body["ok"] is False
-    message = json.loads(body["error"]["message"])
-    assert message["ok"] is False
-    assert message["errors"] == [
-        f"cannot change {mini_repo / 'work/inbox/blocked.md'}: "
-        "target is not a regular file"]
+    assert body["error"]["message"] == (
+        f"cannot change {mini_repo / 'work/inbox/blocked.md'}: target is not a regular file")
+    assert body["error"]["code"] == "INVALID_REQUEST"
+    assert body["error"]["retryable"] is False
+    assert outcome.commit == "none" and outcome.receipt is None
 
 
 def test_gateway_commit_complaint_wins_over_refused_stdout(pipe, mini_repo):
@@ -1404,23 +1366,16 @@ def test_gateway_commit_complaint_wins_over_refused_stdout(pipe, mini_repo):
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"},
-            proposal=_pipe_proposal(mini_repo, "late", revision=5),
-            on_commit_refused=lambda errors: ["los: handler line"],
-            refused_stdout=lambda errors: "{\"ok\":false}")
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'late', revision=5))
 
     pipe("command", handler=handler)
     outcome = _run_test_gateway(mini_repo, None, key="k1-bd-complaint-001")
     body = json.loads(outcome.stdout)
     assert outcome.exit_code == 3
-    lines = body["error"]["message"].splitlines()
-    assert lines[0] == (
-        "los: artifact revision conflict — reload the affected record "
-        "before writing")
-    assert json.loads(lines[1]) == {
-        "conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
-    assert lines[2:] == ["los: handler line"]
+    assert body["error"]["message"] == "artifact revision conflict — reload the affected record before writing"
+    assert body["error"]["details"] == {"conflicts": {"test-only:late": {"expected": 5, "actual": 0}}}
+    assert body["error"]["code"] == "REVISION_CONFLICT"
+    assert body["error"]["retryable"] is True
 
 
 def test_gateway_raised_refusal_keeps_its_explicit_exit_code(pipe, mini_repo):
@@ -1478,9 +1433,7 @@ def test_cli_standard_after_commit_joins_first_twelve(
     _refusing_commit(monkeypatch, _R8_ISSUES)
 
     def handler(ctx, req):
-        return Result(
-            {"ok": True}, proposal=_pipe_proposal(mini_repo, "standard"),
-            after_commit="STANDARD")
+        return Result({'ok': True}, proposal=_pipe_proposal(mini_repo, 'standard'))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -1497,16 +1450,14 @@ def test_cli_standard_after_commit_json_keeps_code_and_retryability(
     _refusing_commit(monkeypatch, _R8_ISSUES)
 
     def handler(ctx, req):
-        return Result(
-            {"ok": True}, proposal=_pipe_proposal(mini_repo, "std-json"),
-            after_commit="STANDARD")
+        return Result({'ok': True}, proposal=_pipe_proposal(mini_repo, 'std-json'))
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(
         mini_repo, TEST_OP, _ns(mini_repo, json=True))
     assert outcome.exit_code == 2
-    assert outcome.stderr == f"los: INVALID_REQUEST: {_R8_JOINED}\n"
-    assert json.loads(outcome.stdout) == {"error": {
+    assert outcome.stdout == ""
+    assert json.loads(outcome.stderr) == {"error": {
         "code": "INVALID_REQUEST", "message": _R8_JOINED,
         "retryable": False, "details": {}}}
 
@@ -1519,9 +1470,7 @@ def test_gateway_standard_after_commit_joins_first_twelve(
     _refusing_commit(monkeypatch, _R8_ISSUES)
 
     def handler(ctx, req):
-        return Result(
-            {"ok": True}, proposal=_pipe_proposal(mini_repo, "gstandard"),
-            after_commit="STANDARD")
+        return Result({'ok': True}, proposal=_pipe_proposal(mini_repo, 'gstandard'))
 
     pipe("command", handler=handler)
     outcome = _run_test_gateway(mini_repo, None, key="k1-r8-join-001")
@@ -1540,9 +1489,7 @@ def test_standard_after_commit_success_does_not_raise(pipe, mini_repo):
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"ok": True}, proposal=_pipe_proposal(mini_repo, "std-ok"),
-            after_commit="STANDARD")
+        return Result({'ok': True}, proposal=_pipe_proposal(mini_repo, 'std-ok'))
 
     pipe("command", handler=handler)
     with _gateway_context(TEST_OP, "cli-std-ok-001"):
@@ -1554,36 +1501,24 @@ def test_standard_after_commit_success_does_not_raise(pipe, mini_repo):
     body = json.loads(outcome.stdout)
     assert body["ok"] is True
     assert body["transaction_id"].startswith("transaction-")
-    assert pipeline_module._standard_after_commit(0, ["ignored"], {}) is None
 
 
-def test_unknown_after_commit_string_is_rejected(
-        pipe, mini_repo, monkeypatch):
-    """Any string but STANDARD is rejected loudly on both transports."""
-
-    assert pipeline_module._resolve_after_commit("STANDARD") is (
-        pipeline_module._standard_after_commit)
-    with pytest.raises(TypeError, match="unknown after_commit 'BOGUS'"):
-        pipeline_module._resolve_after_commit("BOGUS")
-    monkeypatch.setattr(
-        pipeline_module, "commit_proposal",
-        lambda ctx, proposal: (0, [], {}))
-
+def test_unknown_after_commit_string_is_rejected(pipe, mini_repo, monkeypatch):
+    """Deleted output callbacks fail closed before a commit can execute."""
+    calls = []
+    monkeypatch.setattr(pipeline_module, "commit_proposal", lambda *a: calls.append(a))
     def handler(ctx, req):
-        return Result(
-            {"ok": True}, proposal=_pipe_proposal(mini_repo, "bogus"),
-            after_commit="BOGUS")
-
+        return Result({}, after_commit="BOGUS")
     pipe("command", handler=handler)
-    with pytest.raises(TypeError, match="unknown after_commit 'BOGUS'"):
+    with pytest.raises(TypeError, match="after_commit"):
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert calls == []
     _write_gateway_wiring(mini_repo)
     outcome = _run_test_gateway(mini_repo, None, key="k1-r8-bogus-001")
-    body = json.loads(outcome.stdout)
     assert outcome.exit_code == 2
-    assert body["ok"] is False
-    assert body["error"]["code"] == "INTERNAL_FAILURE"
-    assert "unknown after_commit 'BOGUS'" in body["error"]["message"]
+    assert json.loads(outcome.stdout)["error"]["code"] == "INTERNAL_FAILURE"
+    assert calls == []
+
 
 
 # ---------------------------------------------------------------------------
@@ -1594,9 +1529,7 @@ def test_cli_notices_write_verbatim_stderr_in_order(pipe, mini_repo):
     """R16 on the CLI: notices land on stderr verbatim and in order."""
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"},
-            notices=("los: first notice", "los: second notice"))
+        return Result({'echo': 'x'}, human_view=Presentation(notices=('los: first notice', 'los: second notice')))
 
     pipe("query", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -1610,7 +1543,7 @@ def test_cli_empty_notices_change_nothing(pipe, mini_repo):
     """R16 with no notices: stderr stays empty, success bytes unchanged."""
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, notices=())
+        return Result({'echo': 'x'}, human_view=Presentation(notices=()))
 
     pipe("query", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
@@ -1626,9 +1559,7 @@ def test_gateway_ignores_notices(pipe, mini_repo):
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"},
-            notices=("los: a notice the gateway drops",))
+        return Result({'echo': 'x'}, human_view=Presentation(notices=('los: a notice the gateway drops',)))
 
     pipe("command", handler=handler)
     outcome = _run_test_gateway(mini_repo, None, key="k1-r16-ignore-001")
@@ -1678,7 +1609,7 @@ def test_cli_diagnostic_failed_emits_exactly_one_line(
     from arch_audit_hook import SITE_WITNESS_ENV
 
     def handler(ctx, req):
-        return Result({"echo": "diag"}, diagnostic_failed=True)
+        return Result({'echo': 'diag'}, diagnostic_failed=True)
 
     pipe("query", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -1730,13 +1661,10 @@ def test_cli_diagnostic_renderer_failure_emits_only_failure(
     from arch_audit_hook import SITE_WITNESS_ENV
 
     def handler(ctx, req):
-        def finish(conf):
-            raise WriteRefused("render-nope",
-                               site="test-only.pipe.render-bad")
-        return Result({"echo": "x"}, diagnostic_failed=True,
-                      finish=finish)
-
-    pipe("query", handler=handler)
+        return Result({"echo": "x"}, diagnostic_failed=True)
+    def render(payload):
+        raise WriteRefused("render-nope", site="test-only.pipe.render-bad")
+    pipe("query", handler=handler, human=render)
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
     witness.touch()
@@ -1766,7 +1694,7 @@ def test_gateway_diagnostic_without_proposal_emits_exactly_one_line(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result({"echo": "diag"}, diagnostic_failed=True)
+        return Result({'echo': 'diag'}, diagnostic_failed=True)
 
     pipe("command", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -1797,10 +1725,7 @@ def test_gateway_diagnostic_with_commit_emits_exactly_one_line(
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"echo": "x"},
-            proposal=_pipe_proposal(mini_repo, "ct-diag"),
-            diagnostic_failed=True)
+        return Result({'echo': 'x'}, proposal=_pipe_proposal(mini_repo, 'ct-diag'), diagnostic_failed=True)
 
     pipe("command", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -1828,7 +1753,7 @@ def test_diagnostic_outputs_identical_with_and_without_witness_env(
     from arch_audit_hook import SITE_WITNESS_ENV
 
     def handler(ctx, req):
-        return Result({"echo": "diag"}, diagnostic_failed=True)
+        return Result({'echo': 'diag'}, diagnostic_failed=True)
 
     pipe("query", handler=handler)
     monkeypatch.delenv(SITE_WITNESS_ENV, raising=False)
@@ -1872,7 +1797,7 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
     from arch_audit_hook import SITE_WITNESS_ENV
 
     src = (Path(__file__).resolve().parent / "scenarios" / "files"
-           / "cli.backup-verify" / "checksums-fail" / "manifest.json")
+           / "backup.verify" / "checksums-fail" / "manifest.json")
     manifest = tmp_path / "manifest.json"
     shutil.copy(src, manifest)
     restored = {}
@@ -1883,7 +1808,7 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
 
     def ns():
         return argparse.Namespace(
-            root=str(mini_repo), _operation="cli.backup-verify",
+            root=str(mini_repo), _operation="backup.verify",
             json=False, manifest=str(manifest),
             restored_core=str(restored["r-core"]),
             restored_ui=str(restored["r-ui"]),
@@ -1895,7 +1820,7 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
     arch_audit_hook.install(str(log))
     try:
         plain = pipeline_module.run_cli(
-            mini_repo, "cli.backup-verify", ns())
+            mini_repo, "backup.verify", ns())
     finally:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
@@ -1908,7 +1833,7 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     try:
         witnessed = pipeline_module.run_cli(
-            mini_repo, "cli.backup-verify", ns())
+            mini_repo, "backup.verify", ns())
     finally:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
@@ -1917,7 +1842,7 @@ def test_backup_verify_diagnostic_bytes_identical_with_and_without_witness(
     assert witnessed.exit_code == plain.exit_code == 1
     assert witnessed.payload == plain.payload
     assert _read_witness_lines(witness) == [
-        {"operation": "cli.backup-verify",
+        {"operation": "backup.verify",
          "kind": "diagnostic-failure", "site": None, "code": 1}]
 
 
@@ -1961,7 +1886,7 @@ def test_cu_gateway_diagnostic_serialization_failure_without_proposal_writes_no_
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result({"bad": {1, 2}}, diagnostic_failed=True)
+        return Result({'bad': {1, 2}}, diagnostic_failed=True)
 
     pipe("command", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -1994,10 +1919,7 @@ def test_cu_gateway_diagnostic_serialization_failure_with_commit_writes_no_diagn
     _write_gateway_wiring(mini_repo)
 
     def handler(ctx, req):
-        return Result(
-            {"bad": {1, 2}},
-            proposal=_pipe_proposal(mini_repo, "cu-diag"),
-            diagnostic_failed=True)
+        return Result({'bad': {1, 2}}, proposal=_pipe_proposal(mini_repo, 'cu-diag'), diagnostic_failed=True)
 
     pipe("command", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -2030,12 +1952,11 @@ def test_cu_gateway_diagnostic_serialization_failure_with_commit_writes_no_diagn
 
 def _carrier_handler(payload_extra=None, **result_kwargs):
     def handler(ctx, req):
-        return Result(
-            {"carrier": True, **(payload_extra or {})},
-            command_output=CommandOutput(
-                stdout="out-bytes\n", stderr="err-bytes\n", exit_code=128),
-            **result_kwargs)
+        if result_kwargs:
+            return Result({}, command_output=object(), **result_kwargs)
+        raise ToolFailure("out-bytes\n", "err-bytes\n", 128)
     return handler
+
 
 
 def test_cx_carrier_passes_exact_streams_and_exit(pipe, mini_repo):
@@ -2044,8 +1965,8 @@ def test_cx_carrier_passes_exact_streams_and_exit(pipe, mini_repo):
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.exit_code == 128
     assert outcome.ok is False
-    assert outcome.stdout == "out-bytes\n"
-    assert outcome.stderr == "err-bytes\n"
+    assert outcome.stdout == ""
+    assert outcome.stderr == "los: INVALID_REQUEST: err-bytes\n"
     assert outcome.commit == "none"
     assert outcome.receipt is None
     assert outcome.replayed is False
@@ -2079,8 +2000,7 @@ def test_cx_zero_exit_carrier_witnesses_nothing(
     from arch_audit_hook import SITE_WITNESS_ENV
 
     def handler(ctx, req):
-        return Result({"carrier": True}, command_output=CommandOutput(
-            stdout="ok\n", stderr="", exit_code=0))
+        return Result({'carrier': True})
 
     pipe("porcelain", handler=handler)
     log = tmp_path / "audit.jsonl"
@@ -2095,7 +2015,7 @@ def test_cx_zero_exit_carrier_witnesses_nothing(
     arch_audit_hook.assert_capture_ok()
     assert outcome.exit_code == 0
     assert outcome.ok is True
-    assert outcome.stdout == "ok\n"
+    assert json.loads(outcome.stdout) == {"carrier": True}
     assert _read_witness_lines(witness) == []
 
 
@@ -2115,19 +2035,18 @@ def test_cx_carrier_composition_is_a_programming_error(
         pipe, mini_repo, extra):
     """A carrier beside any proposal/render/gesture/diagnostic fails (D-9)."""
     pipe("porcelain", handler=_carrier_handler(**extra))
-    with pytest.raises(TypeError, match="composes with nothing"):
+    with pytest.raises(TypeError, match="command_output"):
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
 
 
 def test_json_format_must_be_declared_by_operation(pipe, mini_repo):
-    """An undeclared Result json_format is a programming error (P6-02)."""
-
+    """A handler cannot reintroduce a per-operation JSON encoder."""
     def handler(ctx, req):
         return Result({"echo": "x"}, json_format="compact")
-
     pipe("query", handler=handler)
-    with pytest.raises(TypeError, match="undeclared JSON format"):
+    with pytest.raises(TypeError, match="json_format"):
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo, json=True))
+
 
 
 def test_cx_carrier_with_gesture_is_a_programming_error(
@@ -2145,7 +2064,7 @@ def test_cx_carrier_with_gesture_is_a_programming_error(
         expected_snapshot="sha256:" + "0" * 64,
     )
     pipe("porcelain", handler=_carrier_handler(gesture=gesture))
-    with pytest.raises(TypeError, match="composes with nothing"):
+    with pytest.raises(TypeError, match="command_output"):
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
 
 

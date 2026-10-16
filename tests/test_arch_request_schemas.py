@@ -32,12 +32,10 @@ PLACEHOLDER_MARK = "(no description in the parser yet)"
 #: annotation sit at ``false``; the D4 purity test tolerates the base
 #: annotation flip for exactly these pairs, and nothing else.
 BU4_FILTER_NOT_LOOKUP = {
-    ("cli.module-list", "/properties/program_id"):
+    ("module.list", "/properties/program_id"):
         "SPEC (bu) 4: filter, not a lookup",
-    ("cli.plan-template", "/properties/module_id"):
-        "SPEC (cq) 2: generated-template seed, not a lookup",
-    ("cli.plan-template", "/properties/unit_id"):
-        "SPEC (cq) 2: generated-template seed, not a lookup",
+
+
     ("plan.template", "/properties/module_id"):
         "SPEC (cq) 2: generated-template seed, not a lookup",
     ("plan.template", "/properties/unit_id"):
@@ -104,9 +102,9 @@ def test_exactly_91_cli_bindings_and_107_union():
     with_cli = [op for op, data in primaries.items() if "x-los-cli-command" in data]
     assert len(with_cli) == 91, len(with_cli)
     assert len(primaries) == 91, len(primaries)
-    assert len(aliases) == 16, len(aliases)
+    assert len(aliases) == 0, len(aliases)
     union = set(primaries) | set(aliases)
-    assert len(union) == 107, len(union)
+    assert len(union) == 91, len(union)
     cases = {p.name[: -len(".yaml")] for p in CASES_DIR.glob("*.yaml")}
     assert union == cases, f"missing={sorted(cases - union)} extra={sorted(union - cases)}"
 
@@ -122,15 +120,15 @@ def test_forbidden_reference_forms_rejected(tmp_path: Path):
 
     work = tmp_path / "repo"
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
-    base_primary = "cli.inspect"
+    base_primary = "project.inspect"
     assert (work / "system/schema/requests" / f"{base_primary}.schema.json").is_file()
     bad_refs = [
-        "sub/cli.inspect.schema.json",
-        "sub\\cli.inspect.schema.json",
-        "../cli.inspect.schema.json",
-        "https://example.com/cli.inspect.schema.json",
-        "cli.inspect.schema.json#/$defs/x",
-        "cli.inspect.schema.json ",
+        "sub/project.inspect.schema.json",
+        "sub\\project.inspect.schema.json",
+        "../project.inspect.schema.json",
+        "https://example.com/project.inspect.schema.json",
+        "project.inspect.schema.json#/$defs/x",
+        "project.inspect.schema.json ",
     ]
     for index, ref in enumerate(bad_refs):
         alias = f"alias.bad{index}"
@@ -167,10 +165,10 @@ def test_scheme_ref_targets_rejected_despite_literal_file(tmp_path: Path):
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
     directory = work / "system/schema/requests"
     for index, scheme in enumerate(("file", "urn")):
-        target = f"{scheme}:cli.inspect.schema.json"
+        target = f"{scheme}:project.inspect.schema.json"
         literal = directory / target
         literal.write_text(
-            (directory / "cli.inspect.schema.json").read_text(
+            (directory / "project.inspect.schema.json").read_text(
                 encoding="utf-8"),
             encoding="utf-8")
         assert literal.is_file()
@@ -192,11 +190,16 @@ def test_reference_chains_and_cycles_rejected(tmp_path: Path):
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
     directory = work / "system/schema/requests"
     # Chain: alias -> alias.
+    (directory / "alias.inner.schema.json").write_text(json.dumps({
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "learningos/requests/alias.inner", "x-governs": "artifact",
+        "$ref": "project.inspect.schema.json",
+    }), encoding="utf-8")
     (directory / "alias.chain.schema.json").write_text(json.dumps({
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "learningos/requests/alias.chain",
         "x-governs": "artifact",
-        "$ref": "project.inspect.schema.json",
+        "$ref": "alias.inner.schema.json",
     }), encoding="utf-8")
     with pytest.raises(ValueError):
         request_schema(work, "alias.chain")
@@ -222,7 +225,7 @@ def test_canary_propagates_through_effective_alias(tmp_path: Path):
 
     work = tmp_path / "repo"
     shutil.copytree(REQUESTS_DIR, work / "system/schema/requests")
-    primary_path = work / "system/schema/requests/cli.inspect.schema.json"
+    primary_path = work / "system/schema/requests/project.inspect.schema.json"
     primary = json.loads(primary_path.read_text(encoding="utf-8"))
     primary["properties"]["id"]["description"] = "CANARY-DESCRIPTION"
     primary["properties"]["id"]["x-los-cli"]["default"] = "CANARY-DEFAULT"
@@ -401,22 +404,22 @@ def test_collector_detects_corruption_through_effective_aliases(
         mutate(doc)
         path.write_text(json.dumps(doc), encoding="utf-8")
 
-    # Corrupt primary annotation value (cli.atlas-context backs
+    # Corrupt primary annotation value (atlas.context backs
     # atlas.context).
-    rewrite("cli.atlas-context", lambda doc: doc["properties"][
+    rewrite("atlas.context", lambda doc: doc["properties"][
         "concept_id"].update({"x-los-id-kind": "unit"}))
     # Corrupt scalar shape at a decided pointer.
     rewrite("source.record.revise", lambda doc: doc["properties"][
         "expected_diff_sha256"].update({"type": "integer"}))
-    # Blank a real description in an alias primary (cli.search backs
+    # Blank a real description in an alias primary (note.search backs
     # note.search) and drop sibling CLI metadata.
-    rewrite("cli.search", lambda doc: doc["properties"]["query"].update(
+    rewrite("note.search", lambda doc: doc["properties"]["query"].update(
         {"description": ""}))
-    rewrite("cli.search",
+    rewrite("note.search",
             lambda doc: doc["properties"]["type"].pop("x-los-cli"))
-    # Corrupt an annotation the alias inherits (cli.plan-template backs
+    # Corrupt an annotation the alias inherits (plan.template backs
     # plan.template).
-    rewrite("cli.plan-template", lambda doc: doc["properties"][
+    rewrite("plan.template", lambda doc: doc["properties"][
         "module_id"].update({"x-los-id-kind": "unit"}))
     # Drop a required id row.
     id_fields = work / "tests/architecture/id-fields.yaml"
@@ -432,15 +435,11 @@ def test_collector_detects_corruption_through_effective_aliases(
     delta = set((_current_exceptions() - production).elements())
     assert delta == {
         "atlas.context::/properties/concept_id::id-annotation",
-        "cli.atlas-context::/properties/concept_id::id-annotation",
         "source.record.revise::/properties/expected_diff_sha256"
         "::id-annotation",
         "ability.context::ability_id::id-row",
-        "cli.search::query::description",
         "note.search::query::description",
-        "cli.search::type::cli",
         "note.search::type::cli",
-        "cli.plan-template::/properties/module_id::id-annotation",
         "plan.template::/properties/module_id::id-annotation",
     }
 
@@ -547,10 +546,10 @@ def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
         def edit(doc):
             del doc["properties"]["id"]["x-los-id-owner"]
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.inspect.schema.json", edit)
+            root / "system/schema/requests/project.inspect.schema.json", edit)
 
     message = delta(strip_cli_id_owner)
-    assert "cli.inspect::/properties/id::id-annotation" in message
+    assert "project.inspect::/properties/id::id-annotation" in message
     assert "project.inspect::/properties/id::id-annotation" in message
 
     def truthy_lookup(root):
@@ -567,29 +566,29 @@ def test_owner_annotation_mutants_surface_id_annotation(tmp_path, monkeypatch):
             doc["properties"]["more_ids"]["items"]["x-los-id-owner"] = (
                 "invented-owner")
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.inspect.schema.json", edit)
+            root / "system/schema/requests/project.inspect.schema.json", edit)
 
     message = delta(wrong_owner)
-    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
     assert "project.inspect::/properties/more_ids/items::id-annotation" in message
 
     def wrong_shape(root):
         def edit(doc):
             doc["properties"]["more_ids"]["items"]["type"] = "integer"
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.inspect.schema.json", edit)
+            root / "system/schema/requests/project.inspect.schema.json", edit)
 
     message = delta(wrong_shape)
-    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
 
     def deleted_node(root):
         def edit(doc):
             del doc["properties"]["more_ids"]["items"]
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.inspect.schema.json", edit)
+            root / "system/schema/requests/project.inspect.schema.json", edit)
 
     message = delta(deleted_node)
-    assert "cli.inspect::/properties/more_ids/items::id-annotation" in message
+    assert "project.inspect::/properties/more_ids/items::id-annotation" in message
 
     def inventory_owner(root):
         path = root / "tests/architecture/id-fields.yaml"
@@ -643,20 +642,20 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         def edit(doc):
             doc["properties"]["note_id"]["x-los-lookup"] = False
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.note-read.schema.json", edit)
+            root / "system/schema/requests/note.content.schema.json", edit)
 
     message = delta(other_operation_lookup)
-    assert "cli.note-read::/properties/note_id::id-annotation" in message
+    assert "note.content::/properties/note_id::id-annotation" in message
     assert "note.content::/properties/note_id::id-annotation" in message
 
     def other_annotation_same_pointer(root):
         def edit(doc):
             doc["properties"]["program_id"]["x-los-id-kind"] = "unit"
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.module-list.schema.json", edit)
+            root / "system/schema/requests/module.list.schema.json", edit)
 
     message = delta(other_annotation_same_pointer)
-    assert ("cli.module-list::/properties/program_id::id-annotation"
+    assert ("module.list::/properties/program_id::id-annotation"
             in message)
 
     def inventory_lookup_back(root):
@@ -668,13 +667,13 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
 
     message = delta(inventory_lookup_back)
-    assert ("cli.module-list::/properties/program_id::id-annotation"
+    assert ("module.list::/properties/program_id::id-annotation"
             in message)
     # SPEC (cq) 2: the flip-back above also restores the four
     # generation-input rows; each must raise again.
     for operation, pointer in (
-            ("cli.plan-template", "/properties/module_id"),
-            ("cli.plan-template", "/properties/unit_id"),
+            ("plan.template", "/properties/module_id"),
+            ("plan.template", "/properties/unit_id"),
             ("plan.template", "/properties/module_id"),
             ("plan.template", "/properties/unit_id")):
         assert f"{operation}::{pointer}::id-annotation" in message
@@ -687,17 +686,17 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         def edit(doc):
             doc["properties"]["module_id"]["x-los-lookup"] = True
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.plan-template.schema.json",
+            root / "system/schema/requests/plan.template.schema.json",
             edit)
         path = root / "tests/architecture/id-fields.yaml"
         doc = yaml.safe_load(path.read_text(encoding="utf-8"))
         for row in doc["fields"]:
-            if row["operation"] in ("cli.plan-template", "plan.template"):
+            if row["operation"] in ("plan.template", "plan.template"):
                 row["lookup"] = False
         path.write_text(yaml.safe_dump(doc, sort_keys=False), encoding="utf-8")
 
     message = delta(generation_seed_schema_lookup_back)
-    assert ("cli.plan-template::/properties/module_id::id-annotation"
+    assert ("plan.template::/properties/module_id::id-annotation"
             in message)
     assert ("plan.template::/properties/module_id::id-annotation"
             in message)
@@ -706,11 +705,11 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         def edit(doc):
             doc["properties"]["module_id"]["x-los-id-kind"] = "unit"
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.plan-template.schema.json",
+            root / "system/schema/requests/plan.template.schema.json",
             edit)
 
     message = delta(generation_seed_kind_drift)
-    assert ("cli.plan-template::/properties/module_id::id-annotation"
+    assert ("plan.template::/properties/module_id::id-annotation"
             in message)
     assert ("plan.template::/properties/module_id::id-annotation"
             in message)
@@ -719,11 +718,11 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         def edit(doc):
             doc["properties"]["unit_id"]["type"] = "integer"
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.plan-template.schema.json",
+            root / "system/schema/requests/plan.template.schema.json",
             edit)
 
     message = delta(generation_seed_type_drift)
-    assert ("cli.plan-template::/properties/unit_id::id-annotation"
+    assert ("plan.template::/properties/unit_id::id-annotation"
             in message)
     assert ("plan.template::/properties/unit_id::id-annotation"
             in message)
@@ -732,11 +731,11 @@ def test_bu4_allowance_covers_no_other_annotation(tmp_path, monkeypatch):
         def edit(doc):
             doc["properties"]["unit_id"]["description"] = ""
         _rewrite_schema_json(
-            root / "system/schema/requests/cli.plan-template.schema.json",
+            root / "system/schema/requests/plan.template.schema.json",
             edit)
 
     message = delta(generation_seed_description_drift)
-    assert "cli.plan-template::unit_id::description" in message
+    assert "plan.template::unit_id::description" in message
     assert "plan.template::unit_id::description" in message
 
     def generation_seed_inventory_lookup_back(root):

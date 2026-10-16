@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, cast
@@ -58,12 +57,12 @@ from learning_os.store import observations
 from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
 from learning_os.store.ai_actions.registry import ActionRegistry, AdapterRegistry
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
+from learning_os.store.ai_actions.storage import atomic_text as _atomic_text
 from learning_os.store.ai_actions.support import (
     Clock,
     check_request_id,
     parse_frontmatter_request_id,
 )
-from learning_os.store.ai_actions.support import atomic_text as _atomic_text
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import iso as _iso
@@ -628,9 +627,8 @@ class AIActionService:
         record_target = bundle_dir / record_path
         record_target.parent.mkdir(parents=True, exist_ok=True)
         _atomic_text(record_target, _dump_yaml(continuation_record_dict(record)))
-        slice_target = bundle_dir / index_entry["bundle_path"]
-        slice_target.parent.mkdir(parents=True, exist_ok=True)
-        slice_target.write_bytes(body)
+        self.repository.write_bundle_slice(
+            str(request["id"]), index_entry["bundle_path"], body)
         index_records.append(index_entry)
         _atomic_text(bundle_dir / SLICE_BUNDLE_PREFIX / "index.json",
                      json.dumps(index_records, indent=2) + "\n")
@@ -650,7 +648,7 @@ class AIActionService:
         try:
             self._validate(delivery, staged)
         except Exception:
-            shutil.rmtree(staged.parent, ignore_errors=True)
+            self.repository.discard_staged_delivery(staged)
             raise
         request = self.repository.get_request(str(delivery["request_id"]))
         request["status"] = "delivery-ready"

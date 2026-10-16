@@ -13,7 +13,7 @@ import copy
 #: Exact SPEC (ay) owner metadata per primary request-schema file: node
 #: pointer parts -> (owner, owner_shape). Alias files carry no metadata.
 OWNER_METADATA_POINTERS: dict[str, dict[tuple[str, ...], tuple[str, str]]] = {
-    "cli.inspect": {
+    "project.inspect": {
         ("properties", "id"): ("inspect-reference", "scalar"),
         ("properties", "more_ids", "items"): ("inspect-reference", "scalar"),
     },
@@ -122,28 +122,28 @@ BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
         ("properties", "delivery_id"),
         ("properties", "expected_snapshot"),
     ),
-    "cli.inspect": (
+    "project.inspect": (
         ("properties", "id"),
     ),
-    "cli.ai-action-append-slices": (
+    "ai-action.append-slices": (
         ("properties", "request_id"),
         ("properties", "route_id"),
         ("properties", "expected_snapshot"),
     ),
-    "cli.ai-action-import-delivery": (
+    "ai-action.delivery.import": (
         ("properties", "path"),
     ),
-    "cli.ai-action-prepare": (
+    "ai-action.prepare": (
         ("properties", "action_id"),
         ("properties", "target_kind"),
         ("properties", "target_id"),
         ("properties", "provider"),
         ("properties", "expected_snapshot"),
     ),
-    "cli.ai-action-status": (
+    "ai-action.status": (
         ("properties", "request_id"),
     ),
-    "cli.ai-action-validate-delivery": (
+    "ai-action.delivery.validate": (
         ("properties", "delivery_id"),
     ),
     "detour.create": (
@@ -266,82 +266,82 @@ BF_DESCRIPTION_POINTERS: dict[str, tuple[tuple[str, ...], ...]] = {
         ("properties", "expected_snapshot"),
         ("properties", "question"),
     ),
-    "cli.atlas-context": (
+    "atlas.context": (
         ("properties", "concept_id"),
         ("properties", "expected_snapshot"),
     ),
-    "cli.backup-manifest": (
+    "backup.manifest": (
         ("properties", "materials_root"),
         ("properties", "ui_root"),
     ),
-    "cli.backup-verify": (
+    "backup.verify": (
         ("properties", "manifest"),
         ("properties", "restored_core"),
         ("properties", "restored_materials"),
         ("properties", "restored_ui"),
     ),
-    "cli.bootstrap": (
+    "operator.bootstrap": (
         ("properties", "expected_snapshot"),
         ("properties", "limit"),
         ("properties", "offset"),
     ),
-    "cli.goal": (
+    "goal.decide": (
         ("properties", "close"),
         ("properties", "defer"),
         ("properties", "reject"),
     ),
-    "cli.inbox-read": (
+    "inbox.content": (
         ("properties", "expected_snapshot"),
     ),
-    "cli.legacy-archive-inspect": (
+    "legacy.archive.inspect": (
         ("properties", "allowlist"),
         ("properties", "archive_root"),
     ),
-    "cli.masters-planning-dashboard": (
+    "masters-planning.dashboard": (
         ("properties", "confirm_masters_planning"),
     ),
-    "cli.module-list": (
+    "module.list": (
         ("properties", "program_id"),
         ("properties", "status"),
     ),
-    "cli.note-read": (
+    "note.content": (
         ("properties", "expected_snapshot"),
         ("properties", "note_id"),
     ),
-    "cli.observe": (
+    "learner.observe": (
         ("properties", "activity"),
         ("properties", "assistance"),
         ("properties", "result"),
         ("properties", "tags"),
     ),
-    "cli.plan-edit-context": (
+    "plan.edit-context": (
         ("properties", "expected_snapshot"),
         ("properties", "unit_id"),
     ),
-    "cli.plan-template": (
+    "plan.template": (
         ("properties", "module_id"),
         ("properties", "profile"),
         ("properties", "title"),
         ("properties", "unit_id"),
     ),
-    "cli.project-list": (
+    "project.list": (
         ("properties", "status"),
     ),
-    "cli.related": (
+    "related.read": (
         ("properties", "id"),
     ),
-    "cli.runtime-session": (
+    "runtime.session": (
         ("properties", "context_json"),
         ("properties", "event"),
         ("properties", "expected_snapshot"),
         ("properties", "requirement"),
     ),
-    "cli.search": (
+    "note.search": (
         ("properties", "expected_snapshot"),
         ("properties", "limit"),
         ("properties", "offset"),
     ),
-    "cli.unit-list": (
+    "unit.list": (
         ("properties", "component_id"),
         ("properties", "expected_snapshot"),
         ("properties", "limit"),
@@ -499,4 +499,4 @@ def _strip_bf_description_updates(operation: str, old: dict, new: dict
 
 
 # Exact SPEC (cx) D6-D9 metadata transitions; every other delta remains visible.
-PHASE4_METADATA_CHANGES = {'cli.ai-action-append-slices': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-prepare': {('properties', 'action_id', 'x-los-id-owner'): (None, 'ai-action-registry', False), ('properties', 'action_id', 'x-los-lookup'): (None, True, False), ('properties', 'request_id', 'x-los-lookup'): (None, False, False), ('properties', 'target_id', 'x-los-id-owner'): (None, 'ai-action-target', False), ('properties', 'target_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-status': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.ai-action-validate-delivery': {('properties', 'delivery_id', 'x-los-id-owner'): (None, 'ai-delivery-store', False), ('properties', 'delivery_id', 'x-los-lookup'): (None, True, False)}, 'cli.operations': {('properties', 'request_id', 'x-los-id-owner'): (None, 'operations-trace-request', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'cli.related': {('properties', 'id', 'x-los-id-owner'): (None, 'related-record', False), ('properties', 'id', 'x-los-lookup'): (None, True, False)}, 'masters-planning.comparison.publish': {('properties', 'candidate_module_id', 'x-los-id-owner'): (None, 'masters-candidate-module', False), ('properties', 'candidate_module_id', 'x-los-lookup'): (None, True, False)}, 'cli.session-end': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}, 'cli.goal': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}}
+PHASE4_METADATA_CHANGES = {'ai-action.append-slices': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.prepare': {('properties', 'action_id', 'x-los-id-owner'): (None, 'ai-action-registry', False), ('properties', 'action_id', 'x-los-lookup'): (None, True, False), ('properties', 'request_id', 'x-los-lookup'): (None, False, False), ('properties', 'target_id', 'x-los-id-owner'): (None, 'ai-action-target', False), ('properties', 'target_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.status': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.delivery.validate': {('properties', 'delivery_id', 'x-los-id-owner'): (None, 'ai-delivery-store', False), ('properties', 'delivery_id', 'x-los-lookup'): (None, True, False)}, 'operations.read': {('properties', 'request_id', 'x-los-id-owner'): (None, 'operations-trace-request', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'related.read': {('properties', 'id', 'x-los-id-owner'): (None, 'related-record', False), ('properties', 'id', 'x-los-lookup'): (None, True, False)}, 'masters-planning.comparison.publish': {('properties', 'candidate_module_id', 'x-los-id-owner'): (None, 'masters-candidate-module', False), ('properties', 'candidate_module_id', 'x-los-lookup'): (None, True, False)}, 'session.end': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}, 'goal.decide': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}}

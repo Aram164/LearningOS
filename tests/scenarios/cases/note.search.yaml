@@ -1,75 +1,329 @@
 operation: note.search
 fixture: rich_world
-observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
 cases:
-  - id: content-hit
-    kind: success
-    transport: cli
-    argv: [search, prose, --content]
-    a5_base: true
-    expect: {site: null}
-  - id: content-empty
-    kind: success
-    transport: cli
-    argv: [search, zzz-no-such-term, --content]
-    expect: {site: null}
-  - id: metadata-hit
-    kind: success
-    transport: cli
-    argv: [search, demo]
-    expect: {site: null}
-  - id: metadata-page
-    kind: success
-    transport: cli
-    argv: [search, demo, --page, --limit, 2]
-    expect: {site: null}
-  - id: metadata-empty
-    kind: success
-    transport: cli
-    argv: [search, zzz-no-such-term]
-    expect: {site: null}
-  - id: metadata-truncated
-    kind: success
-    transport: cli
-    argv: [search, demo, --limit, 2]
-    expect: {site: null}
-  - id: bad-type
-    kind: refusal
-    transport: cli
-    argv: [search, demo, --type, nope]
-    expect: {site: null}
-  - id: page-with-content
-    kind: refusal
-    transport: cli
-    argv: [search, demo, --content, --page]
-    expect: {site: cli.search.page-content}
-  - id: bad-window
-    kind: refusal
-    transport: cli
-    argv: [search, demo, --offset, -1]
-    expect: {site: null}
-  - id: content-bad-window
-    kind: refusal
-    transport: cli
-    argv: [search, prose, --content, --offset, -1]
-    expect: {site: null}
-  - id: content-offset-needs-snapshot
-    kind: refusal
-    transport: cli
-    argv: [search, prose, --content, --offset, 5]
-    expect: {site: null}
-  - id: content-wrong-type
-    kind: refusal
-    transport: cli
-    argv: [search, prose, --content, --type, workspace]
-    expect: {site: null}
-  - id: content-empty-query
-    kind: refusal
-    transport: cli
-    argv: [search, "", --content]
-    expect: {site: null}
-  - id: content-stale-snapshot
-    kind: refusal
-    transport: cli
-    argv: [search, prose, --content, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: cli.search.stale-snapshot}
+- id: content-hit
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - prose
+  - --content
+  a5_base: true
+  expect:
+    site: null
+- id: content-empty
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - zzz-no-such-term
+  - --content
+  expect:
+    site: null
+- id: metadata-hit
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  expect:
+    site: null
+- id: metadata-page
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  - --limit
+  - 2
+  expect:
+    site: null
+- id: metadata-empty
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - zzz-no-such-term
+  expect:
+    site: null
+- id: metadata-truncated
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --limit
+  - 2
+  expect:
+    site: null
+- id: bad-type
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --type
+  - nope
+  expect:
+    site: null
+- id: page-with-content
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --content
+  - --page
+  expect:
+    site: cli.search.page-content
+- id: bad-window
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --offset
+  - -1
+  expect:
+    site: null
+- id: content-bad-window
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - prose
+  - --content
+  - --offset
+  - -1
+  expect:
+    site: null
+- id: content-offset-needs-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - prose
+  - --content
+  - --offset
+  - 5
+  expect:
+    site: null
+- id: content-wrong-type
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - prose
+  - --content
+  - --type
+  - workspace
+  expect:
+    site: null
+- id: content-empty-query
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - ''
+  - --content
+  expect:
+    site: null
+- id: content-stale-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - prose
+  - --content
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.search.stale-snapshot
+- id: cli-metadata
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  expect:
+    site: null
+- id: cli-metadata-empty-query
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - ''
+  expect:
+    site: null
+- id: cli-metadata-type
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --type
+  - note
+  expect:
+    site: null
+- id: cli-metadata-window
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --offset
+  - 1
+  - --limit
+  - 1
+  expect:
+    site: null
+- id: cli-page
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  expect:
+    site: null
+- id: cli-page-continued
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  - --offset
+  - 1
+  - --limit
+  - 1
+  - --expected-snapshot
+  - sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c
+  expect:
+    site: null
+- id: cli-content
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --content
+  expect:
+    site: null
+- id: cli-content-typed
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --type
+  - note
+  - --content
+  expect:
+    site: null
+- id: cli-content-empty
+  kind: success
+  transport: cli
+  argv:
+  - search
+  - zzz-no-such-term
+  - --content
+  expect:
+    site: null
+- id: cli-unknown-type
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --type
+  - nope
+  expect:
+    site: null
+- id: cli-page-and-content
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  - --content
+  expect:
+    site: cli.search.page-content
+- id: cli-bad-array-window
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --offset
+  - -1
+  expect:
+    site: null
+- id: cli-bad-page-window
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  - --limit
+  - 200
+  expect:
+    site: null
+- id: cli-page-continuation-needs-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --page
+  - --offset
+  - 2
+  expect:
+    site: null
+- id: cli-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.search.stale-snapshot
+- id: cli-content-wrong-type
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - demo
+  - --type
+  - workspace
+  - --content
+  expect:
+    site: null
+- id: cli-content-empty-query
+  kind: refusal
+  transport: cli
+  argv:
+  - search
+  - ''
+  - --content
+  expect:
+    site: null
+untriggered:
+- where: tools/learning_os/app/handlers/notes.py:1382
+  reason: 'unreadable inbox: needs an OSError no step can arrange'
+- site: cli.search.read-failed
+  reason: os-error-only
+- site: cli.search.bad-encoding
+  reason: fixture-inexpressible

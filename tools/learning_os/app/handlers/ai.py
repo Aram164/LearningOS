@@ -8,7 +8,7 @@ from pathlib import Path
 from learning_os.app.ai_actions import AIActionService
 from learning_os.app.context import OpContext
 from learning_os.app.projection import publish as _publish
-from learning_os.app.proposal import Result
+from learning_os.app.proposal import DeliveryCompletion, ResponsePayload, Result
 from learning_os.app.registry import register
 from learning_os.domain.ai_errors import (
     AIActionError,
@@ -30,7 +30,6 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.store.contracts.gateway import current_gateway_request
-from learning_os.store.session_ledger import record_touched as _record_touched
 from learning_os.store.transactions import parse_expected_revisions
 
 #: The typed refusal for each ``_ai_refusal`` code (SPEC (be) item 1).
@@ -94,7 +93,7 @@ def _delivery_output(receipt: dict) -> dict:
     }
 
 
-@register("ai-action.delivery.apply", kind="command", json_formats=("indented",))
+@register("ai-action.delivery.apply", kind="command")
 def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     """Apply an approved AI delivery in one receipted transaction."""
     root = ctx.root
@@ -127,53 +126,40 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     if proposal is None:
         # A replay: nothing commits and nothing was touched.
         replayed.pop("touched_paths", [])
-        return Result(_delivery_output(replayed), json_format="indented")
-    prepared: dict = {}
+        return Result(_delivery_output(replayed))
 
     def translate(exc: BaseException) -> BaseException | None:
         translated = AIActionService._translate_commit_failure(exc)
         return None if translated is None else _refusal(translated, ctx.operation)
 
-    def after_commit(code, errors, confirmation):
-        # The service's receipt read and the command's touched bookkeeping,
-        # once, after a successful commit, under the same lock (az) S15 3.
-        if code != 0:
-            return
-        receipt = service.apply_delivery_receipt(confirmation, touched_base)
-        touched = [root / rel for rel in receipt.pop("touched_paths", [])]
-        if touched:
-            _record_touched(root, touched)
-        prepared["receipt"] = receipt
-
     def finish(confirmation):
-        return _delivery_output(prepared["receipt"])
+        return _delivery_output(confirmation['delivery_receipt'])
 
     return Result(
-        {"delivery_id": req["delivery_id"]},
-        proposal=dataclasses.replace(proposal, translate=translate),
-        after_commit=after_commit,
-        finish=finish,
-        json_format="indented",
+        ResponsePayload({"delivery_id": req["delivery_id"]}, None, confirmation='delivery'),
+        proposal=dataclasses.replace(proposal, translate=translate,
+                                     completion=DeliveryCompletion(service, touched_base)),
+
+
+
     )
 
 
-@register("cli.ai-action-list", kind="tool", json_formats=("indented",))
+@register("ai-action.list", kind="tool")
 def ai_action_list(ctx: OpContext, req: dict) -> Result:
     """List the provider-independent AI actions."""
     actions = AIActionService(ctx.root).list_actions()
-    return Result({"ok": True, "actions": actions},
-                  json_format="indented")
+    return Result({"ok": True, "actions": actions})
 
 
-@register("cli.ai-action-status", kind="tool", json_formats=("indented",))
+@register("ai-action.status", kind="tool")
 def ai_action_status(ctx: OpContext, req: dict) -> Result:
     """Show one prepared request status."""
     request = AIActionService(ctx.root).request_status(req["request_id"])
-    return Result({"ok": True, "request": request},
-                  json_format="indented")
+    return Result({"ok": True, "request": request})
 
 
-@register("cli.ai-action-prepare", kind="porcelain", json_formats=("indented",))
+@register("ai-action.prepare", kind="porcelain")
 def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     """Persist a bounded AI request bundle."""
     root = ctx.root
@@ -189,10 +175,10 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
         "ok": True, "request": service.request_status(request["id"]),
         "bundle_path": service.repository.request_dir(
             request["id"]).relative_to(root).as_posix(),
-    }, json_format="indented")
+    })
 
 
-@register("cli.ai-action-append-slices", kind="porcelain", json_formats=("indented",))
+@register("ai-action.append-slices", kind="porcelain")
 def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     """Attach one targeted follow-up slice pass to a prepared request."""
     root = ctx.root
@@ -212,23 +198,21 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
         exc.site = "cli.ai-action-append-slices.unknown-concept"
         raise
     _publish(root)
-    return Result({"ok": True, "continuation": result},
-                  json_format="indented")
+    return Result({"ok": True, "continuation": result})
 
 
-@register("cli.ai-action-validate-delivery", kind="tool", json_formats=("indented",))
+@register("ai-action.delivery.validate", kind="tool")
 def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
     """Validate one imported delivery without applying it."""
     result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
-    return Result(result, json_format="indented")
+    return Result(result)
 
 
-@register("cli.ai-action-import-delivery", kind="porcelain", json_formats=("indented",))
+@register("ai-action.delivery.import", kind="porcelain")
 def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     """Import and validate an approved delivery directory."""
     root = ctx.root
     service = AIActionService(root)
     delivery = service.import_delivery(Path(req["path"]))
     _publish(root)
-    return Result({"ok": True, "delivery": delivery},
-                  json_format="indented")
+    return Result({"ok": True, "delivery": delivery})

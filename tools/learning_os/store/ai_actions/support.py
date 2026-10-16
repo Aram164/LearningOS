@@ -3,10 +3,8 @@ place the manifest AI shape is defined."""
 
 from __future__ import annotations
 
-import contextlib
 import datetime as dt
 import hashlib
-import os
 import re
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
@@ -45,15 +43,6 @@ def dump_yaml(value: Any) -> str:
     return yaml.safe_dump(value, sort_keys=False, allow_unicode=True, width=100)
 
 
-def atomic_text(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
-    try:
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, path)
-    finally:
-        with contextlib.suppress(OSError):
-            tmp.unlink(missing_ok=True)
 
 
 def sha256_bytes(content: bytes) -> str:

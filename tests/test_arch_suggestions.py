@@ -626,7 +626,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = list(repo.abilities)
         return ordered, set(ordered)
-    if kind == "goal" and operation == "cli.goal":
+    if kind == "goal" and operation == "goal.decide":
         # SPEC (cn) item 1: the goal handler's decidable ids: the
         # ledger's decision keys plus the live scan ids, sorted
         # (goals.py). A scan that cannot be read degrades to
@@ -711,7 +711,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         ordered = [str(row["id"]) for row in resources
                    if isinstance(row, dict) and row.get("id")]
         return ordered, set(ordered)
-    if kind == "route" and operation == "cli.ai-action-append-slices":
+    if kind == "route" and operation == "ai-action.append-slices":
         # The append request carries no unit_id; the unit resolves
         # through the prepared request, exactly as ``append_slices``
         # resolves it. The domain is the raw traversal the match uses
@@ -747,7 +747,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = sorted(repo.concepts)
         return ordered, set(ordered)
-    if kind == "note" and operation in ("cli.note-read", "note.content"):
+    if kind == "note" and operation in ("note.content", "note.content"):
         # SPEC (cn) item 1: note_read looks up the note registry,
         # then the garden seeds, and refuses over both lists
         # (notes.py), through the same two loaders.
@@ -779,7 +779,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         repo = load_repo(ctx.root)
         ordered = list(repo.module_source_maps)
         return ordered, set(ordered)
-    if kind == "module" and operation == "cli.unit-list":
+    if kind == "module" and operation == "unit.list":
         # SPEC (cn) item 1: _filtered_units matches against the
         # manifest's module ids (reads.py), through the same
         # _fresh_manifest the handler reads.
@@ -974,7 +974,7 @@ def _cli_sequence_failure(operation: str, pointer: str, kind: str,
     )
     from learning_os.domain.failures import NotFound
 
-    if operation == "cli.ai-action-append-slices":
+    if operation == "ai-action.append-slices":
         if pointer == "/properties/route_id":
             return RouteNotFound("route", miss, domain, message=message)
         return ConceptNotFound("concept", miss, domain, message=message)
@@ -1165,25 +1165,25 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("unit.source-selection.set.unknown-source", "unknown-source"),
     ("unit.source-selection.set", "/properties/unit_id"):
         ("unit.source-selection.set.unknown-unit", "unknown-unit"),
-    ("cli.ai-action-append-slices", "/properties/route_id"):
+    ("ai-action.append-slices", "/properties/route_id"):
         ("cli.ai-action-append-slices.unknown-route", "unknown-route"),
-    ("cli.ai-action-append-slices", "/properties/concept_id/items"):
+    ("ai-action.append-slices", "/properties/concept_id/items"):
         ("cli.ai-action-append-slices.unknown-concept", "unknown-concept"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): the AI/operations/related
     # anchors; AI refusal cases carry no A9 site (site None).
-    ("cli.ai-action-append-slices", "/properties/request_id"):
+    ("ai-action.append-slices", "/properties/request_id"):
         (None, "unknown-request"),
-    ("cli.ai-action-status", "/properties/request_id"):
+    ("ai-action.status", "/properties/request_id"):
         (None, "unknown-request"),
-    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+    ("ai-action.delivery.validate", "/properties/delivery_id"):
         (None, "unknown-delivery"),
-    ("cli.ai-action-prepare", "/properties/action_id"):
+    ("ai-action.prepare", "/properties/action_id"):
         (None, "unknown-action"),
-    ("cli.ai-action-prepare", "/properties/target_id"):
+    ("ai-action.prepare", "/properties/target_id"):
         (None, "unknown-garden-target"),
-    ("cli.operations", "/properties/request_id"):
+    ("operations.read", "/properties/request_id"):
         ("cli.operations.unknown-request", "unknown-request"),
-    ("cli.related", "/properties/id"):
+    ("related.read", "/properties/id"):
         ("cli.related.unknown-id", "unknown-id"),
     ("module.attempt.record", "/properties/module_id"):
         ("module.attempt.record.unknown-module", "unknown-module"),
@@ -1203,22 +1203,17 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     # SPEC (cn) item 1: the refused CLI anchors. The gateway
     # operations served through the same CLI command witness the
     # CLI operation's site, as their cases declare.
-    ("cli.dossier", "/properties/unit_id"):
+    ("dossier.read", "/properties/unit_id"):
         ("cli.dossier.unknown-unit", "unknown-unit"),
-    ("cli.note-read", "/properties/note_id"):
-        ("cli.note-read.unknown-note", "unknown-note"),
+
     ("note.content", "/properties/note_id"):
         ("cli.note-read.unknown-note", "unknown-note"),
-    ("cli.unit-list", "/properties/module_id"):
+    ("unit.list", "/properties/module_id"):
         ("cli.unit-list.unknown-module", "unknown-module"),
-    ("cli.plan-edit-context", "/properties/unit_id"):
-        ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
-    ("cli.plan-edit-context", "/properties/route_id"):
-        ("cli.plan-edit-context.unknown-route", "unknown-route"),
-    ("cli.plan-edit-context", "/properties/route_ids/items"):
-        ("cli.plan-edit-context.unknown-route", "batch-unknown"),
-    ("cli.plan-edit-context", "/properties/stage_id"):
-        ("cli.plan-edit-context.unknown-stage", "unknown-stage"),
+
+
+
+
     ("plan.edit-context", "/properties/unit_id"):
         ("cli.plan-edit-context.unknown-unit", "unknown-unit"),
     ("plan.edit-context", "/properties/route_id"):
@@ -1231,9 +1226,8 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
         ("material.span.unknown-unit", "unknown-unit"),
     ("material.span", "/properties/route_id"):
         ("material.span.unknown-route", "route-near-miss"),
+
     ("atlas.context", "/properties/concept_id"):
-        ("cli.atlas-context.unknown-concept", "unknown-concept"),
-    ("cli.atlas-context", "/properties/concept_id"):
         ("cli.atlas-context.unknown-concept", "unknown-concept"),
     # SPEC (cn) item 1: the content-binding digest anchors (bf 4).
     ("coordination.section.revise",
@@ -1247,7 +1241,7 @@ POINTER_SITE_CASE: dict[tuple[str, str], tuple[str, str]] = {
     ("unit.material-synthesis.publish", "/properties/unit_id"):
         ("unit.material-synthesis.publish.unknown-unit",
          "unknown-unit-coordinated"),
-    ("cli.goal", "/properties/goal_id/items"):
+    ("goal.decide", "/properties/goal_id/items"):
         ("cli.goal.unknown-goal", "unknown-goal"),
     ("material.span", "/properties/stage_id"):
         ("material.span.unknown-placement", "placement-missing"),
@@ -1322,29 +1316,29 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("prefixed", "unit"),
     ("unit.source-selection.set", "/properties/source_id"):
         ("prefixed", "source"),
-    ("cli.ai-action-append-slices", "/properties/route_id"):
+    ("ai-action.append-slices", "/properties/route_id"):
         ("legacy-verbatim",
          "route {miss} is not part of this request's unit"),
-    ("cli.ai-action-append-slices", "/properties/concept_id/items"):
+    ("ai-action.append-slices", "/properties/concept_id/items"):
         ("legacy-verbatim",
          "route route-b2f1f80014860a929a3af0bc continuation refused: "
          "unknown concept ids: ['{miss}']"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): each handler keeps its
     # legacy complaint as the NotFound message; the CLI pipeline
     # adds the bounded suggestion lines (the (cd) rendering).
-    ("cli.ai-action-append-slices", "/properties/request_id"):
+    ("ai-action.append-slices", "/properties/request_id"):
         ("legacy-verbatim", "AI action request not found: {miss}"),
-    ("cli.ai-action-status", "/properties/request_id"):
+    ("ai-action.status", "/properties/request_id"):
         ("legacy-verbatim", "AI action request not found: {miss}"),
-    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+    ("ai-action.delivery.validate", "/properties/delivery_id"):
         ("legacy-verbatim", "AI delivery not found: {miss}"),
-    ("cli.ai-action-prepare", "/properties/action_id"):
+    ("ai-action.prepare", "/properties/action_id"):
         ("legacy-verbatim", "unknown AI action: {miss}"),
-    ("cli.ai-action-prepare", "/properties/target_id"):
+    ("ai-action.prepare", "/properties/target_id"):
         ("legacy-verbatim", "Garden target not found: {miss}"),
-    ("cli.operations", "/properties/request_id"):
+    ("operations.read", "/properties/request_id"):
         ("legacy-verbatim", "unknown request_id"),
-    ("cli.related", "/properties/id"): ("template", "record"),
+    ("related.read", "/properties/id"): ("template", "record"),
     ("module.attempt.record", "/properties/module_id"):
         ("prefixed", "module"),
     ("module.sitting.update", "/properties/module_id"):
@@ -1360,21 +1354,14 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
          "project file id does not match command project_id"),
     # SPEC (cn) item 1: the refused CLI complaints. The CLI renders
     # the message part; the oracle adds the (cd) 2 suggestion lines.
-    ("cli.dossier", "/properties/unit_id"): ("template", "unit"),
-    ("cli.note-read", "/properties/note_id"): ("template", "note"),
+    ("dossier.read", "/properties/unit_id"): ("template", "unit"),
+
     ("note.content", "/properties/note_id"): ("template", "note"),
-    ("cli.unit-list", "/properties/module_id"): ("template", "module"),
-    ("cli.plan-edit-context", "/properties/unit_id"):
-        ("template", "unit"),
-    ("cli.plan-edit-context", "/properties/route_id"):
-        ("legacy",
-         "route {miss} is missing or ambiguous in this unit"),
-    ("cli.plan-edit-context", "/properties/route_ids/items"):
-        ("legacy",
-         "route {miss} is missing or ambiguous in this unit"),
-    ("cli.plan-edit-context", "/properties/stage_id"):
-        ("legacy-verbatim",
-         "stage {miss} is missing or ambiguous in this unit"),
+    ("unit.list", "/properties/module_id"): ("template", "module"),
+
+
+
+
     ("plan.edit-context", "/properties/unit_id"): ("template", "unit"),
     ("plan.edit-context", "/properties/route_id"):
         ("legacy",
@@ -1389,9 +1376,8 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
         ("legacy", "unknown unit {miss}"),
     ("material.span", "/properties/route_id"):
         ("legacy", "route not found: {miss} in unit-demo-l01"),
+
     ("atlas.context", "/properties/concept_id"):
-        ("legacy", "unknown concept: {miss}"),
-    ("cli.atlas-context", "/properties/concept_id"):
         ("legacy", "unknown concept: {miss}"),
     # SPEC (cn) item 1: the content-binding digest complaints.
     ("coordination.section.revise",
@@ -1408,7 +1394,7 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
     ("unit.map.import", "/properties/unit_id"): ("prefixed", "unit"),
     ("unit.material-synthesis.publish", "/properties/unit_id"):
         ("legacy-verbatim", "unit not found: {miss}"),
-    ("cli.goal", "/properties/goal_id/items"): ("template", "goal"),
+    ("goal.decide", "/properties/goal_id/items"): ("template", "goal"),
     ("material.span", "/properties/stage_id"):
         ("legacy-verbatim",
          "placement is missing or ambiguous in this unit"),
@@ -1416,8 +1402,8 @@ MESSAGE_FORM: dict[tuple[str, str], tuple[str, str]] = {
 
 #: The recorded CLI refusal per inspect probe pointer: the expected exit.
 INSPECT_REFUSAL_CASE: dict[tuple[str, str], str] = {
-    ("cli.inspect", "/properties/id"): "unknown-id",
-    ("cli.inspect", "/properties/more_ids/items"): "batch-unknown-member",
+
+
     ("project.inspect", "/properties/id"): "unknown-id",
     ("project.inspect", "/properties/more_ids/items"): "batch-unknown-member",
 }
@@ -1426,11 +1412,11 @@ INSPECT_REFUSAL_CASE: dict[tuple[str, str], str] = {
 #: recordings carry no error object and a D16-stripped stderr; they
 #: use the (ay) CLI oracle shape generalized to a sequence anchor.
 _CLI_SEQUENCE_POINTERS = frozenset({
-    ("cli.ai-action-append-slices", "/properties/route_id"),
-    ("cli.ai-action-append-slices", "/properties/concept_id/items"),
+    ("ai-action.append-slices", "/properties/route_id"),
+    ("ai-action.append-slices", "/properties/concept_id/items"),
     # Builder Task 78 ((cx) D-8): sequence bases, single refusals.
-    ("cli.ai-action-append-slices", "/properties/request_id"),
-    ("cli.ai-action-validate-delivery", "/properties/delivery_id"),
+    ("ai-action.append-slices", "/properties/request_id"),
+    ("ai-action.delivery.validate", "/properties/delivery_id"),
 })
 
 #: The refused CLI anchors (SPEC (cn) item 1): single CLI refusal
@@ -1438,31 +1424,31 @@ _CLI_SEQUENCE_POINTERS = frozenset({
 #: same (cd) oracle as the sequence anchors; the anchor's own argv
 #: is the last step and there are no prerequisites to replay.
 _CLI_REFUSED_POINTERS = frozenset({
-    ("cli.dossier", "/properties/unit_id"),
-    ("cli.note-read", "/properties/note_id"),
+    ("dossier.read", "/properties/unit_id"),
     ("note.content", "/properties/note_id"),
-    ("cli.unit-list", "/properties/module_id"),
-    ("cli.plan-edit-context", "/properties/unit_id"),
-    ("cli.plan-edit-context", "/properties/route_id"),
-    ("cli.plan-edit-context", "/properties/route_ids/items"),
-    ("cli.plan-edit-context", "/properties/stage_id"),
+
+    ("unit.list", "/properties/module_id"),
     ("plan.edit-context", "/properties/unit_id"),
     ("plan.edit-context", "/properties/route_id"),
     ("plan.edit-context", "/properties/route_ids/items"),
     ("plan.edit-context", "/properties/stage_id"),
+
+
+
+
     ("material.span", "/properties/unit_id"),
     ("material.span", "/properties/route_id"),
     ("atlas.context", "/properties/concept_id"),
-    ("cli.atlas-context", "/properties/concept_id"),
+
     # SPEC (cq) items 3 and 6: the repaired CLI lookup anchors.
-    ("cli.goal", "/properties/goal_id/items"),
+    ("goal.decide", "/properties/goal_id/items"),
     ("material.span", "/properties/stage_id"),
     # Builder Task 78 ((cx) D-6/D-7/D-8): single-case CLI anchors.
-    ("cli.ai-action-status", "/properties/request_id"),
-    ("cli.ai-action-prepare", "/properties/action_id"),
-    ("cli.ai-action-prepare", "/properties/target_id"),
-    ("cli.operations", "/properties/request_id"),
-    ("cli.related", "/properties/id"),
+    ("ai-action.status", "/properties/request_id"),
+    ("ai-action.prepare", "/properties/action_id"),
+    ("ai-action.prepare", "/properties/target_id"),
+    ("operations.read", "/properties/request_id"),
+    ("related.read", "/properties/id"),
 })
 
 #: Every CLI-anchored pointer: sequence plus refused anchors.
@@ -1890,10 +1876,10 @@ def test_message_form_cli_sequence_route_mutant_fails(tmp_path):
     the recorded bytes.
     """
     rebuilt, recorded = _mutant_rebuild(
-        tmp_path, "cli.ai-action-append-slices", "/properties/route_id",
+        tmp_path, "ai-action.append-slices", "/properties/route_id",
         ("template", "route"))
     assert rebuilt != recorded, (
-        "A5 cli.ai-action-append-slices::/properties/route_id: a wrong "
+        "A5 ai-action.append-slices::/properties/route_id: a wrong "
         f"form still rebuilds {recorded!r} — {FIX}")
 
 
@@ -1906,7 +1892,7 @@ def test_message_form_cli_sequence_concept_dropped_line_fails(
     """
     from learning_os.domain.suggest import suggestions
 
-    operation = "cli.ai-action-append-slices"
+    operation = "ai-action.append-slices"
     pointer = "/properties/concept_id/items"
     domain, miss, recorded_stderr = _cli_anchor_rebuild_parts(
         tmp_path, operation, pointer)
@@ -2327,7 +2313,7 @@ def test_l01_l02_collision_selects_l03():
 
 def test_mutually_exclusive_fields_select_separate_bases():
     """plan-edit-context's exclusive fields keep separate bases (SPEC (af))."""
-    operation = "cli.plan-edit-context"
+    operation = "plan.edit-context"
     route_id = {"operation": operation, "pointer": "/properties/route_id"}
     route_ids = {"operation": operation,
                  "pointer": "/properties/route_ids/items"}

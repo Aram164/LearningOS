@@ -1,20 +1,77 @@
 operation: legacy.archive.inspect
 fixture: rich_world
-observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
 cases:
-  - id: inspect-allowlist
-    kind: success
-    transport: cli
-    argv: [legacy-archive-inspect, --archive-root, "<CASEDATA>/arch", --allowlist, "<CASEDATA>/allowlist.yaml"]
-    expect: {site: null}
-  - id: missing-allowlist
-    kind: refusal
-    transport: cli
-    argv: [legacy-archive-inspect, --archive-root, no-such-arch, --allowlist, no-such-allowlist.yaml]
-    expect: {site: null}
-  - id: bad-archive-root
-    kind: refusal
-    transport: cli
-    argv: [legacy-archive-inspect, --archive-root, no-such-arch, --allowlist, "<CASEDATA>/allowlist.yaml"]
-    expect: {site: null}
+- id: inspect-allowlist
+  kind: success
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - <CASEDATA>/arch
+  - --allowlist
+  - <CASEDATA>/allowlist.yaml
+  expect:
+    site: null
+- id: missing-allowlist
+  kind: refusal
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - no-such-arch
+  - --allowlist
+  - no-such-allowlist.yaml
+  expect:
+    site: null
+- id: bad-archive-root
+  kind: refusal
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - no-such-arch
+  - --allowlist
+  - <CASEDATA>/allowlist.yaml
+  expect:
+    site: null
+- id: cli-inspect-allowlist
+  kind: success
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - <CASEDATA>/arch
+  - --allowlist
+  - <CASEDATA>/allowlist.yaml
+  expect:
+    site: null
+- id: cli-missing-allowlist
+  kind: refusal
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - no-such-arch
+  - --allowlist
+  - no-such-allowlist.yaml
+  expect:
+    site: null
+- id: cli-bad-archive-root
+  kind: refusal
+  transport: cli
+  argv:
+  - legacy-archive-inspect
+  - --archive-root
+  - no-such-arch
+  - --allowlist
+  - <CASEDATA>/allowlist.yaml
+  expect:
+    site: null
 untriggered: []

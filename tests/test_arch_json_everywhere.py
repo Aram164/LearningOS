@@ -154,6 +154,21 @@ def _subcommands(parser) -> dict:
     raise AssertionError("no subparsers action")
 
 
+def _operation_moves():
+    return json.loads((ARCH / "operation-moves.json").read_text())
+
+
+def _current_schema_filename(filename):
+    operation = filename.removesuffix(".schema.json")
+    return _operation_moves().get(operation, operation) + ".schema.json"
+
+
+def _historical_primary(filename):
+    operation = filename.removesuffix(".schema.json")
+    inverse = {new: old for old, new in _operation_moves().items()}
+    return inverse.get(operation, operation) + ".schema.json"
+
+
 def _schema_for_subcommand(subcommand: str) -> tuple[str, dict]:
     """(file name, live document) governing ``subcommand``."""
     for path in sorted(REQUESTS_DIR.glob("*.schema.json")):
@@ -170,11 +185,11 @@ def test_d16_approvals_pair_cli_with_governing_schema():
     for key, sub in sorted(cli.items()):
         assert sub not in C_SUBCOMMANDS, sub
         fname, _ = _schema_for_subcommand(sub)
-        assert f"request_schemas.{fname}" in schemas, (key, fname)
+        assert fname in {_current_schema_filename(value) for value in schemas.values()}, (key, fname)
     governed = {key for key in schemas if key.endswith(".schema.json")}
     assert governed == set(schemas), set(schemas) - governed
     for key, fname in sorted(schemas.items()):
-        data = json.loads((REQUESTS_DIR / fname).read_text(encoding="utf-8"))
+        data = json.loads((REQUESTS_DIR / _current_schema_filename(fname)).read_text(encoding="utf-8"))
         cmd = data.get("x-los-cli-command") or {}
         assert f"cli.{cmd.get('name')}" in cli, key
 
@@ -240,15 +255,18 @@ def _assert_only_json_added_to_request_schemas(
     for key in sorted(new_schemas):
         fname = new_schemas[key]
         rel = f"system/schema/requests/{fname}"
-        operation = fname.removesuffix(".schema.json")
+        current_fname = _current_schema_filename(fname)
+        operation = current_fname.removesuffix(".schema.json")
         old = json.loads(_git_show(base, rel))
-        new = json.loads((REQUESTS_DIR / fname).read_text(encoding="utf-8"))
+        new = json.loads((REQUESTS_DIR / _current_schema_filename(fname)).read_text(encoding="utf-8"))
+        if current_fname != fname:
+            old["$id"] = "learningos/requests/" + operation
         old, new = _strip_approved_owner_metadata(operation, old, new)
         old, new = _strip_bf_description_updates(operation, old, new)
         assert set(new) == set(old), (key, set(new) ^ set(old))
         for top in old:
             if top == "x-los-cli-command":
-                _assert_cli_command_only_handler_rebound(key, fname, old[top], new[top])
+                _assert_cli_command_only_handler_rebound(key, current_fname, old[top], new[top])
             elif top != "properties":
                 assert new[top] == old[top], (key, top)
         assert set(new["properties"]) == set(old["properties"]) | {"json"}, key
@@ -385,11 +403,17 @@ def _assert_every_subcommand_is_a_b_or_c(base: str, new_cli: dict[str, str]) -> 
         has_flag = "--json" in subparser._option_string_actions
         if has_flag:
             assert "json" in live["properties"], sub
-            base_doc = json.loads(_git_show(base, f"system/schema/requests/{fname}"))
+            base_doc = json.loads(_git_show(base, f"system/schema/requests/{_historical_primary(fname)}"))
             had = "json" in base_doc["properties"]
-            assert had != (sub in b), f"{sub}: had={had} b={sub in b}"
+            if sub in C_SUBCOMMANDS:
+                # B1 adds JSON to these two former human-only child tools.
+                assert not had and sub not in b, sub
+                _, reference = _schema_for_subcommand("health-report")
+                assert live["properties"]["json"] == reference["properties"]["json"], sub
+            else:
+                assert had != (sub in b), f"{sub}: had={had} b={sub in b}"
         else:
-            assert sub in C_SUBCOMMANDS, f"{sub}: jsonless and not (c)"
+            raise AssertionError(f"{sub}: missing the common JSON transport")
             assert "json" not in live["properties"], sub
             assert sub not in b, sub
 

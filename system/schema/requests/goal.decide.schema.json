@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/goal.decide",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "goal_id"
+  ],
+  "properties": {
+    "goal_id": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "x-los-id-kind": "goal",
+        "x-los-lookup": true
+      },
+      "description": "exact candidate goal ids from intelligence-scan",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": "+",
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "reject": {
+      "type": "boolean",
+      "description": "reject the goal instead of closing or deferring it",
+      "x-los-cli": {
+        "flags": [
+          "--reject"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "defer": {
+      "type": "boolean",
+      "description": "defer the goal instead of closing or rejecting it; --revisit-on requires deferring",
+      "x-los-cli": {
+        "flags": [
+          "--defer"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "close": {
+      "type": "boolean",
+      "description": "decide the goal as closed; the decision when neither --reject nor --defer is given",
+      "x-los-cli": {
+        "flags": [
+          "--close"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "note": {
+      "type": "string",
+      "description": "why this decision, in Aram's words",
+      "x-los-cli": {
+        "flags": [
+          "--note"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "revisit_on": {
+      "type": "string",
+      "description": "for --defer only: let the goal reappear on this YYYY-MM-DD date",
+      "x-los-cli": {
+        "flags": [
+          "--revisit-on"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "check": {
+      "type": "boolean",
+      "description": "preview exact decisions without writing",
+      "x-los-cli": {
+        "flags": [
+          "--check"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "reviewed_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "required for a batch: exact decision and ledger hash returned by --check",
+      "x-los-cli": {
+        "flags": [
+          "--reviewed-sha256"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": "sha256_value",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-kind": "digest",
+      "x-los-lookup": false
+    },
+    "session_id": {
+      "type": "string",
+      "description": "record the decision in this session's ledger (default: LOS_SESSION_ID, else this channel's ledger)",
+      "x-los-cli": {
+        "flags": [
+          "--session-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-lookup": false
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "goal",
+    "help": "record Aram's explicit decision on a proposed goal",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [
+      {
+        "required": true,
+        "dests": [
+          "reject",
+          "defer",
+          "close"
+        ]
+      }
+    ],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:goal.decide",
+    "parser_factory": false
+  }
+}

@@ -679,13 +679,13 @@ def _prove_cli_read_failed(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["inspect", "project-demo", "note-demo"])
-        outcome = pipeline_module.run_cli(mini_repo, "cli.inspect", args)
+        outcome = pipeline_module.run_cli(mini_repo, "project.inspect", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 2
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "cli.inspect", "kind": "failure",
+    assert lines[0] == {"operation": "project.inspect", "kind": "failure",
                         "site": "cli.inspect.read-failed",
                         "class": "WriteRefused", "exit_code": 2}
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -729,13 +729,13 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["inspect", "project-demo", "note-demo"])
-        outcome = pipeline_module.run_cli(mini_repo, "cli.inspect", args)
+        outcome = pipeline_module.run_cli(mini_repo, "project.inspect", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 3
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "cli.inspect", "kind": "failure",
+    assert lines[0] == {"operation": "project.inspect", "kind": "failure",
                         "site": "cli.inspect.stale-snapshot",
                         "class": "StaleSnapshot", "exit_code": 3}
     assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
@@ -1449,18 +1449,18 @@ def _prove_inbox_list_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.inbox-list", "list-drops", tmp_path)
+    ctx = _a9_world("inbox.list", "list-drops", tmp_path)
     root = ctx.root
 
     def boom(root):
         raise OSError("a9-proof: the listing failed")
 
     monkeypatch.setattr(capture, "_inbox_search_rows", boom)
-    outcome, lines = _a9_run_cli(root, "cli.inbox-list", ["inbox-list"],
+    outcome, lines = _a9_run_cli(root, "inbox.list", ["inbox-list"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.inbox-list", "kind": "failure",
+    assert lines == [{"operation": "inbox.list", "kind": "failure",
                       "site": "cli.inbox-list.list-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1478,19 +1478,19 @@ def _prove_inbox_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.inbox-read", "read-file", tmp_path)
+    ctx = _a9_world("inbox.content", "read-file", tmp_path)
     root = ctx.root
 
     def boom(*args, **kwargs):
         raise OSError("a9-proof: the read failed")
 
     monkeypatch.setattr(capture, "_bytes_inside_owner", boom)
-    outcome, lines = _a9_run_cli(root, "cli.inbox-read",
+    outcome, lines = _a9_run_cli(root, "inbox.content",
                                  ["inbox-read", "note-drop.md"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.inbox-read", "kind": "failure",
+    assert lines == [{"operation": "inbox.content", "kind": "failure",
                       "site": "cli.inbox-read.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1724,19 +1724,19 @@ def _prove_note_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.note-read", "read-note", tmp_path)
+    ctx = _a9_world("note.content", "read-note", tmp_path)
     root = ctx.root
 
     def boom(root, note):
         raise OSError("a9-proof: the read failed")
 
     monkeypatch.setattr(notes, "_note_bytes", boom)
-    outcome, lines = _a9_run_cli(root, "cli.note-read",
+    outcome, lines = _a9_run_cli(root, "note.content",
                                  ["note-read", "note-demo"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.note-read", "kind": "failure",
+    assert lines == [{"operation": "note.content", "kind": "failure",
                       "site": "cli.note-read.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1754,19 +1754,19 @@ def _prove_note_read_bad_encoding(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.note-read", "read-note", tmp_path)
+    ctx = _a9_world("note.content", "read-note", tmp_path)
     root = ctx.root
 
     def boom(root, note):
         return b"\xff\xfe-not-utf8-\xff"
 
     monkeypatch.setattr(notes, "_note_bytes", boom)
-    outcome, lines = _a9_run_cli(root, "cli.note-read",
+    outcome, lines = _a9_run_cli(root, "note.content",
                                  ["note-read", "note-demo"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.note-read", "kind": "failure",
+    assert lines == [{"operation": "note.content", "kind": "failure",
                       "site": "cli.note-read.bad-encoding",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1785,19 +1785,19 @@ def _prove_search_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.search", "content", tmp_path)
+    ctx = _a9_world("note.search", "content", tmp_path)
     root = ctx.root
 
     def boom(root, note):
         raise OSError("a9-proof: the read failed")
 
     monkeypatch.setattr(notes, "_note_bytes", boom)
-    outcome, lines = _a9_run_cli(root, "cli.search",
+    outcome, lines = _a9_run_cli(root, "note.search",
                                  ["search", "demo", "--content"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.search", "kind": "failure",
+    assert lines == [{"operation": "note.search", "kind": "failure",
                       "site": "cli.search.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1815,19 +1815,19 @@ def _prove_search_bad_encoding(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.search", "content", tmp_path)
+    ctx = _a9_world("note.search", "content", tmp_path)
     root = ctx.root
 
     def boom(root, note):
         return b"\xff\xfe-not-utf8-\xff"
 
     monkeypatch.setattr(notes, "_note_bytes", boom)
-    outcome, lines = _a9_run_cli(root, "cli.search",
+    outcome, lines = _a9_run_cli(root, "note.search",
                                  ["search", "demo", "--content"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.search", "kind": "failure",
+    assert lines == [{"operation": "note.search", "kind": "failure",
                       "site": "cli.search.bad-encoding",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1845,17 +1845,17 @@ def _prove_goal_malformed_ledger(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    ctx = _a9_world("goal.decide", "close-goal", tmp_path)
     root = ctx.root
     ledger = root / "operations" / "goal-ledger.yaml"
     assert ledger.is_file(), "A9 proof needs the ledger to corrupt"
     ledger.write_text("not: [valid\n  yaml: {\n", encoding="utf-8")
-    outcome, lines = _a9_run_cli(root, "cli.goal",
+    outcome, lines = _a9_run_cli(root, "goal.decide",
                                  ["goal", "goal-demo-deferred", "--close"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.goal", "kind": "failure",
+    assert lines == [{"operation": "goal.decide", "kind": "failure",
                       "site": "cli.goal.malformed-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1874,20 +1874,20 @@ def _prove_goal_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    ctx = _a9_world("goal.decide", "close-goal", tmp_path)
     root = ctx.root
     ledger = root / "operations" / "goal-ledger.yaml"
     assert ledger.is_file(), "A9 proof needs the ledger to revoke"
     os.chmod(ledger, 0)
     try:
         outcome, lines = _a9_run_cli(
-            root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+            root, "goal.decide", ["goal", "goal-demo-deferred", "--close"],
             tmp_path, monkeypatch)
     finally:
         os.chmod(ledger, 0o644)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.goal", "kind": "failure",
+    assert lines == [{"operation": "goal.decide", "kind": "failure",
                       "site": "cli.goal.unreadable-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1906,7 +1906,7 @@ def _prove_goal_unreadable_session(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    ctx = _a9_world("goal.decide", "close-goal", tmp_path)
     root = ctx.root
 
     def fake_ledger(root, session_id):
@@ -1918,11 +1918,11 @@ def _prove_goal_unreadable_session(mini_repo: Path, tmp_path: Path,
     monkeypatch.setattr(goals, "_session_ledger", fake_ledger)
     monkeypatch.setattr(goals, "_load_session_paths", boom)
     outcome, lines = _a9_run_cli(
-        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        root, "goal.decide", ["goal", "goal-demo-deferred", "--close"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.goal", "kind": "failure",
+    assert lines == [{"operation": "goal.decide", "kind": "failure",
                       "site": "cli.goal.unreadable-session",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1941,16 +1941,16 @@ def _prove_goal_not_admitted(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    ctx = _a9_world("goal.decide", "close-goal", tmp_path)
     root = ctx.root
     monkeypatch.setattr(goals, "gesture_allowed",
                         lambda capability: False)
     outcome, lines = _a9_run_cli(
-        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        root, "goal.decide", ["goal", "goal-demo-deferred", "--close"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.goal", "kind": "failure",
+    assert lines == [{"operation": "goal.decide", "kind": "failure",
                       "site": "cli.goal.not-admitted",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -1970,7 +1970,7 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
     from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
+    ctx = _a9_world("learner.observe", "record-evidence", tmp_path)
     root = ctx.root
 
     def boom(repo):
@@ -1978,13 +1978,13 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
 
     monkeypatch.setattr(learner_observations, "collect_requirements", boom)
     outcome, lines = _a9_run_cli(
-        root, "cli.observe",
+        root, "learner.observe",
         ["observe", "req-demo-l01-demo", "--activity", "exercise",
          "--result", "partial"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.observe", "kind": "failure",
+    assert lines == [{"operation": "learner.observe", "kind": "failure",
                       "site": "cli.observe.invalid-target",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -2003,18 +2003,18 @@ def _prove_observe_not_admitted(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
+    ctx = _a9_world("learner.observe", "record-evidence", tmp_path)
     root = ctx.root
     monkeypatch.setattr(learner_observations, "gesture_allowed",
                         lambda capability: False)
     outcome, lines = _a9_run_cli(
-        root, "cli.observe",
+        root, "learner.observe",
         ["observe", "req-demo-l01-demo", "--activity", "exercise",
          "--result", "partial"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.observe", "kind": "failure",
+    assert lines == [{"operation": "learner.observe", "kind": "failure",
                       "site": "cli.observe.not-admitted",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -2088,15 +2088,15 @@ def _prove_dossier_unreadable_records(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
     _corrupt_note_demo(root)
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.unreadable-records",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2113,18 +2113,18 @@ def _prove_dossier_no_source_map(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
     source_map = (root / "curriculum" / "modules" / "module-demo"
                   / "source-map.yaml")
     assert source_map.is_file(), "A9 proof needs the map to drop"
     source_map.unlink()
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.no-source-map",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2143,7 +2143,7 @@ def _prove_dossier_bad_knowledge_map(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
     unit_file = (root / "curriculum" / "modules" / "module-demo"
                  / "units" / "unit-demo-l01" / "unit.yaml")
@@ -2153,12 +2153,12 @@ def _prove_dossier_bad_knowledge_map(mini_repo: Path, tmp_path: Path,
     data["knowledge_map"] = ["not", "a", "mapping"]
     unit_file.write_text(yaml.safe_dump(data, sort_keys=False),
                          encoding="utf-8")
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.bad-knowledge-map",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2177,19 +2177,19 @@ def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.derive.semantics.dossiers import DossierError
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
 
     def boom(**kwargs):
         raise DossierError("a9-proof: the build failed")
 
     monkeypatch.setattr(resume, "build_dossier", boom)
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.build-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2206,7 +2206,7 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
     real_snapshot = resume._snapshot
     calls = []
@@ -2218,12 +2218,12 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
         raise StaleSnapshot("a9-proof: a write landed mid-read")
 
     monkeypatch.setattr(resume, "_snapshot", racing)
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 3
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.stale-snapshot",
                       "class": "StaleSnapshot", "exit_code": 3}]
     assert exit_for(StaleSnapshot("a9-proof", exit_code=3), "cli") == 3
@@ -2240,19 +2240,19 @@ def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
+    ctx = _a9_world("dossier.read", "serve-l01", tmp_path)
     root = ctx.root
 
     def boom(root, expected=None):
         raise OSError("a9-proof: the read failed")
 
     monkeypatch.setattr(resume, "_snapshot", boom)
-    outcome, lines = _a9_run_cli(root, "cli.dossier",
+    outcome, lines = _a9_run_cli(root, "dossier.read",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.dossier", "kind": "failure",
+    assert lines == [{"operation": "dossier.read", "kind": "failure",
                       "site": "cli.dossier.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2269,19 +2269,19 @@ def _prove_bootstrap_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.bootstrap", "compact", tmp_path)
+    ctx = _a9_world("operator.bootstrap", "compact", tmp_path)
     root = ctx.root
 
     def boom(root, expected=None):
         raise OSError("a9-proof: the read failed")
 
     monkeypatch.setattr(reads, "_snapshot", boom)
-    outcome, lines = _a9_run_cli(root, "cli.bootstrap",
+    outcome, lines = _a9_run_cli(root, "operator.bootstrap",
                                  ["bootstrap", "--compact"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.bootstrap", "kind": "failure",
+    assert lines == [{"operation": "operator.bootstrap", "kind": "failure",
                       "site": "cli.bootstrap.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2298,14 +2298,14 @@ def _prove_status_unreadable_records(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.status", "screen", tmp_path)
+    ctx = _a9_world("status.read", "screen", tmp_path)
     root = ctx.root
     _corrupt_note_demo(root)
-    outcome, lines = _a9_run_cli(root, "cli.status", ["status"],
+    outcome, lines = _a9_run_cli(root, "status.read", ["status"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.status", "kind": "failure",
+    assert lines == [{"operation": "status.read", "kind": "failure",
                       "site": "cli.status.unreadable-records",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2324,19 +2324,19 @@ def _prove_intelligence_git_history(mini_repo: Path, tmp_path: Path,
     from learning_os.domain.failures import WriteRefused
     from learning_os.store.session.githistory import GitHistoryError
 
-    ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
+    ctx = _a9_world("intelligence.scan", "scan-text", tmp_path)
     root = ctx.root
 
     def boom(root, days=None, feed=None):
         raise GitHistoryError("a9-proof: git is corrupt")
 
     monkeypatch.setattr(reads, "ranked_scan", boom)
-    outcome, lines = _a9_run_cli(root, "cli.intelligence-scan",
+    outcome, lines = _a9_run_cli(root, "intelligence.scan",
                                  ["intelligence-scan"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.intelligence-scan",
+    assert lines == [{"operation": "intelligence.scan",
                       "kind": "failure",
                       "site": "cli.intelligence-scan.git-history",
                       "class": "WriteRefused", "exit_code": 2}]
@@ -2354,19 +2354,19 @@ def _prove_intelligence_unrankable_queue(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
+    ctx = _a9_world("intelligence.scan", "scan-text", tmp_path)
     root = ctx.root
 
     def boom(root, days=None, feed=None):
         raise ValueError("a9-proof: the queue is malformed")
 
     monkeypatch.setattr(reads, "ranked_scan", boom)
-    outcome, lines = _a9_run_cli(root, "cli.intelligence-scan",
+    outcome, lines = _a9_run_cli(root, "intelligence.scan",
                                  ["intelligence-scan"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.intelligence-scan",
+    assert lines == [{"operation": "intelligence.scan",
                       "kind": "failure",
                       "site": "cli.intelligence-scan.unrankable-queue",
                       "class": "WriteRefused", "exit_code": 2}]
@@ -2384,18 +2384,18 @@ def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.resume", "screen", tmp_path)
+    ctx = _a9_world("resume.read", "screen", tmp_path)
     root = ctx.root
 
     def boom(repo):
         return None, "a9-proof: nothing is resumable"
 
     monkeypatch.setattr(resume, "_resolve_stage", boom)
-    outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
+    outcome, lines = _a9_run_cli(root, "resume.read", ["resume"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.resume", "kind": "failure",
+    assert lines == [{"operation": "resume.read", "kind": "failure",
                       "site": "cli.resume.no-resumable-stage",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2414,18 +2414,18 @@ def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.derive.projection.resume_dossier import ResumeDossierError
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.resume", "screen", tmp_path)
+    ctx = _a9_world("resume.read", "screen", tmp_path)
     root = ctx.root
 
     def boom(**kwargs):
         raise ResumeDossierError("a9-proof: the build failed")
 
     monkeypatch.setattr(resume, "build_resume_dossier", boom)
-    outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
+    outcome, lines = _a9_run_cli(root, "resume.read", ["resume"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.resume", "kind": "failure",
+    assert lines == [{"operation": "resume.read", "kind": "failure",
                       "site": "cli.resume.dossier-build-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2442,7 +2442,7 @@ def _prove_runtime_mid_read_stale(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
 
-    ctx = _a9_world("cli.runtime-session", "propose", tmp_path)
+    ctx = _a9_world("runtime.session", "propose", tmp_path)
     root = ctx.root
 
     def stale(root):
@@ -2450,12 +2450,12 @@ def _prove_runtime_mid_read_stale(mini_repo: Path, tmp_path: Path,
 
     monkeypatch.setattr(reads, "_snapshot", stale)
     outcome, lines = _a9_run_cli(
-        root, "cli.runtime-session",
+        root, "runtime.session",
         ["runtime-session", "--requirement", "req-demo-l01-demo"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 3
-    assert lines == [{"operation": "cli.runtime-session", "kind": "failure",
+    assert lines == [{"operation": "runtime.session", "kind": "failure",
                       "site": "cli.runtime-session.mid-read-stale",
                       "class": "StaleSnapshot", "exit_code": None}]
     assert exit_for(StaleSnapshot("a9-proof"), "cli") == 3
@@ -2472,18 +2472,18 @@ def _prove_capabilities_unreadable_schema(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.capabilities", "one-command", tmp_path)
+    ctx = _a9_world("capabilities.read", "one-command", tmp_path)
     root = ctx.root
     schema = (root / "system" / "schema" / "capabilities"
               / "stage.progress.update.schema.json")
     assert schema.is_file(), "A9 proof needs the schema to drop"
     schema.unlink()
-    outcome, lines = _a9_run_cli(root, "cli.capabilities",
+    outcome, lines = _a9_run_cli(root, "capabilities.read",
                                  ["capabilities", "stage.progress.update"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.capabilities", "kind": "failure",
+    assert lines == [{"operation": "capabilities.read", "kind": "failure",
                       "site": "cli.capabilities.unreadable-payload-schema",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2500,7 +2500,7 @@ def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.unit-list", "filter-module", tmp_path)
+    ctx = _a9_world("unit.list", "filter-module", tmp_path)
     root = ctx.root
 
     def boom(root, expected=None):
@@ -2508,12 +2508,12 @@ def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
 
     monkeypatch.setattr(reads, "_snapshot", boom)
     outcome, lines = _a9_run_cli(
-        root, "cli.unit-list",
+        root, "unit.list",
         ["unit-list", "--module-id", "module-demo", "--compact"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.unit-list", "kind": "failure",
+    assert lines == [{"operation": "unit.list", "kind": "failure",
                       "site": "cli.unit-list.read-failed",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2587,7 +2587,7 @@ def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.atlas-context", "editor-read", tmp_path)
+    ctx = _a9_world("atlas.context", "editor-read", tmp_path)
     root = ctx.root
     calls = []
 
@@ -2596,12 +2596,12 @@ def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
         return f"a9-proof-snapshot-{len(calls)}"
 
     monkeypatch.setattr(atlas, "_snapshot", racing)
-    outcome, lines = _a9_run_cli(root, "cli.atlas-context",
+    outcome, lines = _a9_run_cli(root, "atlas.context",
                                  ["atlas-context", "concept-expected-value"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.atlas-context", "kind": "failure",
+    assert lines == [{"operation": "atlas.context", "kind": "failure",
                       "site": "cli.atlas-context.snapshot-changed",
                       "class": "WriteRefused", "exit_code": None}]
     assert exit_for(WriteRefused("a9-proof"), "cli") == 2
@@ -2641,7 +2641,7 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.plan-edit-context", "stage", tmp_path)
+    ctx = _a9_world("plan.edit-context", "stage", tmp_path)
     root = ctx.root
 
     def boom(*args, **kwargs):
@@ -2649,13 +2649,13 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
 
     monkeypatch.setattr(materials, "stage_results_for", boom)
     outcome, lines = _a9_run_cli(
-        root, "cli.plan-edit-context",
+        root, "plan.edit-context",
         ["plan-edit-context", "unit-demo-l01",
          "--stage-id", "stage-demo"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.plan-edit-context", "kind": "failure",
+    assert lines == [{"operation": "plan.edit-context", "kind": "failure",
                       "site": "cli.plan-edit-context.bad-stage-results",
                       "class": "WriteRefused", "exit_code": None}]
     assert exit_for(WriteRefused("a9-proof"), "cli") == 2
@@ -2674,7 +2674,7 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     from learning_os.domain.failures import WriteRefused
     from learning_os.store.contracts.json_schema import ContractValidationError
 
-    ctx = _a9_world("cli.plan-template", "yaml", tmp_path)
+    ctx = _a9_world("plan.template", "yaml", tmp_path)
     root = ctx.root
     real_validate = maps.validate_contract
     calls = []
@@ -2687,13 +2687,13 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
 
     monkeypatch.setattr(maps, "validate_contract", second_fails)
     outcome, lines = _a9_run_cli(
-        root, "cli.plan-template",
+        root, "plan.template",
         ["plan-template", "curriculum", "--title", "Scenario Template",
          "--unit-id", "unit-demo-l01", "--module-id", "module-demo"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.plan-template", "kind": "failure",
+    assert lines == [{"operation": "plan.template", "kind": "failure",
                       "site": "cli.plan-template.bad-response",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
@@ -2893,7 +2893,7 @@ def _prove_goal_invalid_ledger(mini_repo: Path, tmp_path: Path,
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
-    ctx = _a9_world("cli.goal", "close-goal", tmp_path)
+    ctx = _a9_world("goal.decide", "close-goal", tmp_path)
     root = ctx.root
     ledger = root / "operations" / "goal-ledger.yaml"
     assert ledger.is_file(), "A9 proof needs the ledger to plant into"
@@ -2904,11 +2904,11 @@ def _prove_goal_invalid_ledger(mini_repo: Path, tmp_path: Path,
     ledger.write_text(yaml.safe_dump(data, sort_keys=False),
                       encoding="utf-8")
     outcome, lines = _a9_run_cli(
-        root, "cli.goal", ["goal", "goal-demo-deferred", "--close"],
+        root, "goal.decide", ["goal", "goal-demo-deferred", "--close"],
         tmp_path, monkeypatch)
     assert outcome.ok is False
     assert outcome.exit_code == 2
-    assert lines == [{"operation": "cli.goal", "kind": "failure",
+    assert lines == [{"operation": "goal.decide", "kind": "failure",
                       "site": "cli.goal.invalid-ledger",
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2),
@@ -2945,13 +2945,13 @@ def _prove_session_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     try:
         args = los.build_parser().parse_args(["session-end"])
-        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+        outcome = pipeline_module.run_cli(mini_repo, "session.end", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 2
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+    assert lines[0] == {"operation": "session.end", "kind": "failure",
                         "site": "cli.session-end.unreadable-ledger",
                         "class": "WriteRefused", "exit_code": 2}
 
@@ -2985,13 +2985,13 @@ def _prove_session_ownership_conflict(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["session-end", "--commit-message", "conflict"])
-        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+        outcome = pipeline_module.run_cli(mini_repo, "session.end", args)
     finally:
         arch_audit_hook.uninstall()
     assert outcome.exit_code == 2
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+    assert lines[0] == {"operation": "session.end", "kind": "failure",
                         "site": "cli.session-end.ownership-conflict",
                         "class": "WriteRefused", "exit_code": 2}
 
@@ -3029,7 +3029,7 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
     try:
         args = los.build_parser().parse_args(
             ["session-end", "--commit-message", "push me", "--push"])
-        outcome = pipeline_module.run_cli(mini_repo, "cli.session-end", args)
+        outcome = pipeline_module.run_cli(mini_repo, "session.end", args)
         assert outcome.exit_code == 128
         extra = mini_repo / "work" / "diverged.md"
         extra.write_text("diverge\n", encoding="utf-8")
@@ -3040,14 +3040,14 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
         monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
         retry_args = los.build_parser().parse_args(
             ["session-end", "--push"])
-        retry = pipeline_module.run_cli(mini_repo, "cli.session-end",
+        retry = pipeline_module.run_cli(mini_repo, "session.end",
                                         retry_args)
     finally:
         arch_audit_hook.uninstall()
     assert retry.exit_code == 2
     lines = _read_witness_lines(witness)
     assert len(lines) == 1, lines
-    assert lines[0] == {"operation": "cli.session-end", "kind": "failure",
+    assert lines[0] == {"operation": "session.end", "kind": "failure",
                         "site": "cli.session-end.head-changed",
                         "class": "WriteRefused", "exit_code": 2}
 
@@ -3261,12 +3261,12 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
     outside = json.dumps({"operation": "route.patch", "kind": "failure",
                           "site": "route.patch.unknown-route",
                           "class": "NotFound", "exit_code": 2})
-    inside = json.dumps({"operation": "cli.inspect", "kind": "failure",
+    inside = json.dumps({"operation": "project.inspect", "kind": "failure",
                          "site": "cli.inspect.unknown-id",
                          "class": "WriteRefused", "exit_code": 2})
     dest.write_text(outside + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
-    with harness._case_site_witnesses("cli.inspect", "a9-control"):
+    with harness._case_site_witnesses("project.inspect", "a9-control"):
         private = os.environ[SITE_WITNESS_ENV]
         assert private != str(dest)
         with open(private, "a", encoding="utf-8") as handle:
@@ -3275,8 +3275,8 @@ def test_control_attribution_counts_only_the_case_run(tmp_path,
     assert not Path(private).exists()
     assert dest.read_text(encoding="utf-8").splitlines() == [outside, inside]
     attributed = harness.CASE_SITE_WITNESSES.pop(
-        (str(dest), "cli.inspect:a9-control"))
-    assert attributed == {("cli.inspect", "cli.inspect.unknown-id")}
+        (str(dest), "project.inspect:a9-control"))
+    assert attributed == {("project.inspect", "cli.inspect.unknown-id")}
     assert not [key for key in harness.CASE_SITE_WITNESSES
                 if key[0] == str(dest)]
 
@@ -3288,16 +3288,16 @@ def test_control_failed_append_leaves_the_case_unattributed(tmp_path,
 
     dest = tmp_path / "no-such-dir" / "sites.jsonl"
     monkeypatch.setenv(SITE_WITNESS_ENV, str(dest))
-    with harness._case_site_witnesses("cli.inspect", "a9-control-fail"):
+    with harness._case_site_witnesses("project.inspect", "a9-control-fail"):
         with open(os.environ[SITE_WITNESS_ENV], "a",
                   encoding="utf-8") as handle:
             handle.write(json.dumps({
-                "operation": "cli.inspect", "kind": "failure",
+                "operation": "project.inspect", "kind": "failure",
                 "site": "cli.inspect.unknown-id", "class": "WriteRefused",
                 "exit_code": 2}) + "\n")
     assert os.environ[SITE_WITNESS_ENV] == str(dest)
     assert not dest.exists()
-    assert (str(dest), "cli.inspect:a9-control-fail") \
+    assert (str(dest), "project.inspect:a9-control-fail") \
         not in harness.CASE_SITE_WITNESSES
 
 
@@ -3335,7 +3335,7 @@ def test_control_site_entry_with_where_fails(tmp_path, monkeypatch):
     cases = tmp_path / "cases"
     cases.mkdir()
     (cases / "cli.inspect.yaml").write_text(yaml.safe_dump({
-        "operation": "cli.inspect",
+        "operation": "project.inspect",
         "untriggered": [{
             "site": "cli.inspect.read-failed",
             "where": "tools/learning_os/app/handlers/platform.py:325",
@@ -3356,9 +3356,9 @@ def test_control_imported_subtype_sites_are_declared():
     assert getattr(failures, "RouteNotFound", None) is None
     assert getattr(failures, "ConceptNotFound", None) is None
     declared = _declared_sites()
-    assert ("cli.ai-action-append-slices",
+    assert ("ai-action.append-slices",
             "cli.ai-action-append-slices.unknown-route") in declared
-    assert ("cli.ai-action-append-slices",
+    assert ("ai-action.append-slices",
             "cli.ai-action-append-slices.unknown-concept") in declared
 
 
@@ -3387,8 +3387,8 @@ def _a9_control_handler(source: str) -> ast.ExceptHandler:
     return handlers[0]
 
 
-_A9_CONTROL_SERVING = {"cli.ai-action-append-slices"}
-_A9_CONTROL_ENTERED = ["cli.ai-action-append-slices"]
+_A9_CONTROL_SERVING = {"ai-action.append-slices"}
+_A9_CONTROL_ENTERED = ["ai-action.append-slices"]
 
 
 def test_control_literal_assigned_site_is_recorded():
@@ -3402,7 +3402,7 @@ def test_control_literal_assigned_site_is_recorded():
     assert _except_handler_sites(
         node, stem="ai", serving=_A9_CONTROL_SERVING,
         entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
-        ("cli.ai-action-append-slices",
+        ("ai-action.append-slices",
          "cli.ai-action-append-slices.unknown-route", 4)]
 
 
@@ -3443,7 +3443,7 @@ def test_control_template_assigned_site_still_resolves():
     assert _except_handler_sites(
         node, stem="ai", serving=_A9_CONTROL_SERVING,
         entered=_A9_CONTROL_ENTERED, rel="a9-control") == [
-        ("cli.ai-action-append-slices",
+        ("ai-action.append-slices",
          "cli.ai-action-append-slices.unknown-route", 4)]
 
 
@@ -3482,9 +3482,9 @@ def test_control_twin_template_drops_never_called_operations():
     assert ("note.revise",
             "note.revise.already-recorded") not in declared
     # The AI phantom .binding expansions.
-    assert ("cli.ai-action-list",
+    assert ("ai-action.list",
             "cli.ai-action-list.binding") not in declared
-    assert ("cli.ai-action-append-slices",
+    assert ("ai-action.append-slices",
             "cli.ai-action-append-slices.binding") not in declared
 
 
@@ -3581,21 +3581,21 @@ def test_witness_propagates_into_a_real_child(tmp_path, monkeypatch):
             **bare_case}
     witness = tmp_path / "sites.jsonl"
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
-    with_witness = harness.run_case(case, "cli.inspect",
+    with_witness = harness.run_case(case, "project.inspect",
                                    tmp_path / "with-witness")
     assert with_witness["exit"] == 2
     lines = witness.read_text(encoding="utf-8").splitlines()
     assert len(lines) == 1, lines
     assert json.loads(lines[0]) == {
-        "operation": "cli.inspect", "kind": "failure",
+        "operation": "project.inspect", "kind": "failure",
         "site": "cli.inspect.unknown-id", "class": "WriteRefused",
         "exit_code": 2}
     # SPEC (bh): the real case run is attributed to exactly that case.
     assert harness.CASE_SITE_WITNESSES.pop(
-        (str(witness), "cli.inspect:unknown-id")) == {
-        ("cli.inspect", "cli.inspect.unknown-id")}
+        (str(witness), "project.inspect:unknown-id")) == {
+        ("project.inspect", "cli.inspect.unknown-id")}
     monkeypatch.delenv(SITE_WITNESS_ENV)
-    bare = harness.run_case(case, "cli.inspect", tmp_path / "bare")
+    bare = harness.run_case(case, "project.inspect", tmp_path / "bare")
     assert bare == with_witness
 
 
@@ -3823,7 +3823,7 @@ def test_control_failed_witness_write_is_swallowed(tmp_path, monkeypatch):
         monkeypatch.setenv(
             SITE_WITNESS_ENV,
             str(tmp_path / "no-such-dir" / "sites.jsonl"))
-        sys.audit("learningos.refusal", "cli.inspect", "failure",
+        sys.audit("learningos.refusal", "project.inspect", "failure",
                   "cli.inspect.unknown-id", "WriteRefused", 2)
     finally:
         arch_audit_hook.uninstall()
@@ -3874,7 +3874,7 @@ def test_control_malformed_witness_line_fails(tmp_path, monkeypatch):
     """A line outside the item 8.1 shapes fails the read."""
     witness = tmp_path / "sites.jsonl"
     witness.write_text(
-        json.dumps({"operation": "cli.inspect",
+        json.dumps({"operation": "project.inspect",
                     "site": "cli.inspect.unknown-id"})
         + "\n",
         encoding="utf-8")
@@ -3894,14 +3894,14 @@ def test_control_failed_append_is_reported_unwitnessed(mini_repo, tmp_path,
     assert refused.returncode == 2
     assert "record not found: nope-id" in refused.stderr
     with pytest.raises(AssertionError, match="unwitnessed"):
-        _assert_matched("cli.inspect", "cli.inspect.unknown-id",
+        _assert_matched("project.inspect", "cli.inspect.unknown-id",
                         "a9-control:1", set(),
-                        {"cli.inspect.unknown-id": "cli.inspect:unknown-id"})
+                        {"cli.inspect.unknown-id": "project.inspect:unknown-id"})
 
 
 def test_control_diagnostic_line_never_supplies_a_site(tmp_path, monkeypatch):
     witness = tmp_path / "sites.jsonl"
-    diagnostic = {"operation": "cli.backup-verify",
+    diagnostic = {"operation": "backup.verify",
                   "kind": "diagnostic-failure", "site": None, "code": 1}
     witness.write_text(json.dumps(diagnostic) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
@@ -3923,7 +3923,7 @@ def test_control_diagnostic_line_never_supplies_a_site(tmp_path, monkeypatch):
 def test_control_malformed_diagnostic_line_fails(tmp_path, monkeypatch,
                                                 mutation):
     witness = tmp_path / "sites.jsonl"
-    record = {"operation": "cli.backup-verify", "kind": "diagnostic-failure",
+    record = {"operation": "backup.verify", "kind": "diagnostic-failure",
               "site": None, "code": 1, **mutation}
     witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
@@ -3934,18 +3934,18 @@ def test_control_malformed_diagnostic_line_fails(tmp_path, monkeypatch,
 def test_control_command_line_never_supplies_a_site(tmp_path, monkeypatch):
     """A command-failure line witnesses no business refusal site (D-9)."""
     witness = tmp_path / "sites.jsonl"
-    command = {"operation": "cli.session-end",
+    command = {"operation": "session.end",
                "kind": "command-failure", "site": None, "code": 128}
     witness.write_text(json.dumps(command) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     assert _session_witnesses() == set()
-    genuine = {"operation": "cli.session-end", "kind": "failure",
+    genuine = {"operation": "session.end", "kind": "failure",
                "site": "cli.session-end.nothing-touched",
                "class": "WriteRefused", "exit_code": 2}
     with witness.open("a", encoding="utf-8") as stream:
         stream.write(json.dumps(genuine) + "\n")
     assert _session_witnesses() == {
-        ("cli.session-end", "cli.session-end.nothing-touched")}
+        ("session.end", "cli.session-end.nothing-touched")}
 
 
 @pytest.mark.parametrize("mutation", [
@@ -3957,7 +3957,7 @@ def test_control_command_line_never_supplies_a_site(tmp_path, monkeypatch):
 def test_control_malformed_command_line_fails(tmp_path, monkeypatch,
                                               mutation):
     witness = tmp_path / "sites.jsonl"
-    record = {"operation": "cli.session-end", "kind": "command-failure",
+    record = {"operation": "session.end", "kind": "command-failure",
               "site": None, "code": 128, **mutation}
     witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
@@ -3968,7 +3968,7 @@ def test_control_malformed_command_line_fails(tmp_path, monkeypatch,
 def test_control_command_line_without_code_fails(tmp_path, monkeypatch):
     """A command line without a code is not an item 8.1 line (D-9)."""
     witness = tmp_path / "sites.jsonl"
-    record = {"operation": "cli.session-end", "kind": "command-failure",
+    record = {"operation": "session.end", "kind": "command-failure",
               "site": None}
     witness.write_text(json.dumps(record) + "\n", encoding="utf-8")
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))

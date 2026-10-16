@@ -11,7 +11,7 @@ import yaml
 
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
@@ -43,8 +43,7 @@ def _human_plan_template(payload: dict) -> str:
     ).removesuffix("\n")
 
 
-@register("cli.plan-template", kind="query", human=_human_plan_template, json_formats=("unescaped",))
-@register("plan.template", kind="query", human=_human_plan_template, json_formats=("unescaped",))
+@register("plan.template", kind="query", human=_human_plan_template)
 def plan_template(ctx: OpContext, req: dict) -> Result:
     """Read-only access to the single versioned study-map creation template."""
     root = ctx.root
@@ -85,7 +84,7 @@ def plan_template(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         ) from exc
-    return Result(response, json_format="unescaped")
+    return Result(response)
 
 
 _PRESERVED_STAGE_STATE = (
@@ -284,7 +283,7 @@ def _on_commit_refused_unit_map_import(errors: list) -> list[str]:
             *(str(issue) for issue in errors[:12])]
 
 
-@register("unit.map.import", kind="command", json_formats=("unescaped",))
+@register("unit.map.import", kind="command")
 def unit_map_import(ctx: OpContext, req: dict) -> Result:
     """Create, or revise under preservation rules, the one current study map.
 
@@ -472,7 +471,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                  for key in [req["unit_id"], str(data["id"])]
              },
              "diff": diff},
-            json_format="unescaped",
+
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -488,14 +487,14 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                 **confirmation}
 
     return Result(
-        {"ok": True},
+        ResponsePayload({"ok": True}, finish_unit_map_import({}), confirmation='merge'),
         proposal=TransactionProposal(
             capability="unit.map.import",
             writes=writes,
             artifact_ids=[req["unit_id"], str(data.get("id") or f"study-map:{req['unit_id']}")],
             expected_revisions=expected_revisions,
         ),
-        finish=finish_unit_map_import,
-        on_commit_refused=_on_commit_refused_unit_map_import,
-        json_format="unescaped",
+
+
+
     )

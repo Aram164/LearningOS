@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/ai-action.prepare",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action_id",
+    "target_id",
+    "target_kind"
+  ],
+  "properties": {
+    "action_id": {
+      "type": "string",
+      "description": "Names the registered AI action to prepare; unknown actions are refused.",
+      "x-los-cli": {
+        "flags": [
+          "--action-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-owner": "ai-action-registry",
+      "x-los-lookup": true
+    },
+    "target_kind": {
+      "type": "string",
+      "description": "The kind of the action target, which must be one of the action's declared target kinds.",
+      "x-los-cli": {
+        "flags": [
+          "--target-kind"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "target_id": {
+      "type": "string",
+      "description": "The id of the action target: a unit id when target-kind is unit, otherwise a garden target id; unknown ids are refused.",
+      "x-los-cli": {
+        "flags": [
+          "--target-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      },
+      "x-los-id-owner": "ai-action-target",
+      "x-los-lookup": true
+    },
+    "provider": {
+      "type": "string",
+      "description": "The provider that will serve the request, default manual-bundle; it must be supported by the action and resolve to an available adapter.",
+      "x-los-cli": {
+        "flags": [
+          "--provider"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": "manual-bundle",
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "Optional concurrency guard: a sha256: snapshot token that must equal the live source fingerprint, otherwise the request is refused as stale.",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "request_id": {
+      "type": "string",
+      "description": "optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ (refused before anything is persisted)",
+      "x-los-lookup": false,
+      "x-los-cli": {
+        "flags": [
+          "--request-id"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "ai-action-prepare",
+    "help": "persist a bounded AI request bundle",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:ai-action.prepare",
+    "parser_factory": false
+  }
+}

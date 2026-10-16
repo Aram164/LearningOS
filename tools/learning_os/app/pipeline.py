@@ -7,13 +7,10 @@ bytes for the adapter to write and the process exit.
 
 from __future__ import annotations
 
-import contextlib
 import hashlib
-import io
 import json
 import re
 import sys
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -25,7 +22,6 @@ from learning_os.app.admission import (
 from learning_os.app.check import check_proposal
 from learning_os.app.commit import commit_proposal
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import encode_json
 from learning_os.app.encoders import json_layout as _json_layout
 from learning_os.app.gateway import context_from_v2 as _context_from_v2
 from learning_os.app.gateway import dispatch as _dispatch
@@ -34,6 +30,13 @@ from learning_os.app.gateway import validate_capability_envelope as _validate_ca
 from learning_os.app.lock import operator_lock as _operator_lock
 from learning_os.app.outcomes import classify, error_object, resolve
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
+from learning_os.app.proposal import (
+    DeliveryCompletion,
+    GatewayDispatch,
+    InboxCompletion,
+    Presentation,
+    ResponsePayload,
+)
 from learning_os.app.registry import REGISTRY
 from learning_os.app.render import call_renderer
 from learning_os.domain.codes import (
@@ -48,6 +51,7 @@ from learning_os.domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
     ReplayEvidenceError,
+    ToolFailure,
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionRecoveryConflict,
@@ -138,52 +142,21 @@ def _audit_command_failure(operation: str | None, code: int) -> None:
               None, None, code)
 
 
-def _check_command_output_alone(operation: str, result) -> None:
-    """The D-9 composition guard: a carrier composes with nothing.
-
-    Any proposal, render callback, gesture, notice or diagnostic-failed
-    flag beside `command_output` is a programming error: the adapter
-    must print the child's exact streams and exit, nothing else.
-    """
-    offenders = []
-    if result.proposal is not None:
-        offenders.append("proposal")
-    for name in ("finish", "on_commit_refused", "refused_stdout",
-                 "human_view", "json_format", "after_commit", "gesture"):
-        if getattr(result, name) is not None:
-            offenders.append(name)
-    if result.notices:
-        offenders.append("notices")
-    if result.diagnostic_failed:
-        offenders.append("diagnostic_failed")
-    if offenders:
-        raise TypeError(
-            f"{operation}: command_output composes with nothing, "
-            f"got {', '.join(offenders)}")
-
-
-def _standard_after_commit(code: int, errors: list, confirmation: dict) -> None:
-    """Recipe R8: the legacy raise-on-commit-error, shared (SPEC (bp) 1).
-
-    Byte for byte the converted handlers' old ``if code: raise`` line;
-    both transports render the raised refusal through the R4 path.
-    """
-    if code != 0:
-        raise WriteRefused("; ".join(str(issue) for issue in errors[:12]))
-
-
-def _resolve_after_commit(
-        value: Callable[[int, list, dict], None] | str,
-) -> Callable[[int, list, dict], None]:
-    """The ``after_commit`` wiring as a callable: ``"STANDARD"`` resolves to
-    the shared raise; any other string is rejected loudly."""
-    if value == "STANDARD":
-        return _standard_after_commit
-    if isinstance(value, str):
-        raise TypeError(
-            f"unknown after_commit {value!r}: expected a callable or "
-            f"\"STANDARD\"")
-    return value
+def _success_payload(data, confirmation: dict) -> dict:
+    if not isinstance(data, ResponsePayload):
+        return {**data, **confirmation}
+    if data.confirmation == "omit":
+        return data.success
+    if data.confirmation == "prepend":
+        return {**confirmation, **data.success}
+    if data.confirmation == "delivery":
+        receipt = confirmation["delivery_receipt"]
+        return {"ok": True, "transaction_id": receipt["transaction_id"],
+                "receipt_path": receipt["receipt_path"],
+                "snapshot_after": receipt["snapshot_after"],
+                "artifact_revisions": receipt["revision_updates"],
+                "replayed": receipt.get("replayed", False), "receipt": receipt}
+    return {**data.success, **confirmation}
 
 
 def _commit_with_gesture(ctx, operation: str, result):
@@ -195,13 +168,44 @@ def _commit_with_gesture(ctx, operation: str, result):
     not be reached that way. Without a gesture this is commit_proposal.
     """
     if result.gesture is None:
-        return commit_proposal(ctx, result.proposal)
-    if current_gateway_request() is not None:
-        raise AssertionError(
-            f"{operation}: a gesture commit needs no ambient gateway request")
-    with gateway_request_context(result.gesture), verified_gateway_snapshot(
-            ctx.root, result.gesture.expected_snapshot):
-        return commit_proposal(ctx, result.proposal)
+        outcome = commit_proposal(ctx, result.proposal)
+    else:
+        if current_gateway_request() is not None:
+            raise AssertionError(
+                f"{operation}: a gesture commit needs no ambient gateway request")
+        with gateway_request_context(result.gesture), verified_gateway_snapshot(
+                ctx.root, result.gesture.expected_snapshot):
+            outcome = commit_proposal(ctx, result.proposal)
+    code, errors, confirmation = outcome
+    if code:
+        if result.proposal.refusal is not None:
+            gate_errors, refusal = result.proposal.refusal
+            if gate_errors:
+                refusal.extra_stderr = tuple(map(str, gate_errors[:12]))
+                raise refusal
+        return outcome
+    try:
+        completion = result.proposal.completion
+        if isinstance(completion, DeliveryCompletion):
+            receipt = completion.service.apply_delivery_receipt(
+                confirmation, completion.touched_base)
+            touched = [ctx.root / rel for rel in receipt.pop("touched_paths", [])]
+            if touched:
+                from learning_os.store.session_ledger import record_touched
+                record_touched(ctx.root, touched)
+            confirmation = {**confirmation, "delivery_receipt": receipt}
+        elif isinstance(completion, InboxCompletion):
+            from learning_os.app.handlers.capture import prune_empty_dirs
+            prune_empty_dirs(completion.inbox, completion.target)
+        elif completion is not None:
+            raise TypeError(f"unknown application completion: {completion!r}")
+    except PostCommitFailure:
+        raise
+    except Exception as exc:
+        raise PostCommitFailure(str(exc), transaction_id=confirmation["transaction_id"],
+            receipt_path=confirmation["receipt_path"],
+            snapshot_after=confirmation["snapshot_after"]) from exc
+    return code, errors, confirmation
 
 
 def run_cli(root: Path, operation: str, args) -> Outcome:
@@ -213,10 +217,11 @@ def run_cli(root: Path, operation: str, args) -> Outcome:
     """
 
     entry = REGISTRY[operation]
-    if entry.kind == "query":
+    kind = getattr(args, "_operation_kind", entry.kind)
+    if kind == "query":
         with _operator_lock(root, shared=True):
             return _execute_cli(root, operation, entry, args)
-    if entry.kind == "tool":
+    if kind == "tool":
         return _execute_cli(root, operation, entry, args)
     with _operator_lock(root):
         return _execute_cli(root, operation, entry, args)
@@ -227,124 +232,84 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
     properties = schema.get("properties", {})
     req = {key: value for key, value in vars(args).items() if key in properties}
     checking = req.get("check") is True
-    ctx = OpContext(
-        root=root,
-        operation=operation,
-        channel="operator",
-        invocation="check" if checking else _KIND_TO_INVOCATION.get(
-            entry.kind, "command"),
-        gateway=None,
-    )
+    ctx = OpContext(root=root, operation=operation, channel="operator",
+        invocation="check" if checking else _KIND_TO_INVOCATION.get(getattr(args, "_operation_kind", entry.kind), "command"),
+        gateway=None)
     commit, receipt, replayed = "none", None, False
+    _take_gateway_refusal()
     try:
         result = entry.handler(ctx, req)
-        if result.command_output is not None:
-            _check_command_output_alone(operation, result)
-            carrier = result.command_output
-            if carrier.exit_code != 0:
-                _audit_command_failure(operation, carrier.exit_code)
-            return Outcome(
-                commit="none", ok=carrier.exit_code == 0,
-                payload=result.payload, error=None,
-                exit_code=carrier.exit_code, receipt=None, replayed=False,
-                stdout=carrier.stdout, stderr=carrier.stderr)
+        if isinstance(result.payload, GatewayDispatch):
+            from learning_os.store.contracts.capability_catalog import command_definitions
+            envelope = result.payload.envelope
+            attempt = diag_tracer.begin_attempt({"capability": envelope["capability"]})
+            outcome = run_gateway(root, envelope, requested=envelope["capability"],
+                definitions=command_definitions(root), attempt=attempt,
+                replay_only=False, parser_factory=args._parser_factory)
+            if outcome is None:
+                raise WriteRefused("reviewed apply requires GatewayEnvelopeV2")
+            return outcome
         if checking and result.proposal is not None:
             record = check_proposal(ctx, result.proposal)
-            payload = (call_renderer(
-                operation, "render_check", entry.render_check,
-                record, result.payload)
-                if entry.render_check is not None else record)
+            payload = (call_renderer(operation, "render_check", entry.render_check,
+                                     record, result.payload.prepared if isinstance(result.payload, ResponsePayload) else result.payload)
+                       if entry.render_check is not None else record)
         elif result.proposal is not None:
-            captured, errors = io.StringIO(), io.StringIO()
-            with contextlib.redirect_stdout(captured), \
-                    contextlib.redirect_stderr(errors):
-                code, commit_errors, confirmation = _commit_with_gesture(
-                    ctx, operation, result)
-                if code == 0:
-                    commit = "committed"
-                    receipt = {key: confirmation.get(key) for key in (
-                        "transaction_id", "receipt_path", "snapshot_after")}
-                    replayed = bool(confirmation.get("replayed", False))
-                if result.after_commit is not None:
-                    after_commit = _resolve_after_commit(
-                        result.after_commit)
-                    after_commit(code, commit_errors, confirmation)
-            if code != 0:
+            code, commit_errors, confirmation = _commit_with_gesture(ctx, operation, result)
+            if code:
                 _audit_commit_refused(operation, code)
-                if (result.on_commit_refused is not None
-                        or result.refused_stdout is not None):
-                    stdout, stderr = _legacy_refusal_streams(
-                        operation, result, commit_errors, errors.getvalue())
-                    return Outcome(
-                        commit=commit, ok=False, payload=None, error=None,
-                        exit_code=code, receipt=receipt, replayed=replayed,
-                        stdout=stdout, stderr=stderr)
-                if errors.getvalue().strip():
-                    lines = errors.getvalue().strip().splitlines()
-                else:
-                    lines = [f"los: {error}" for error in commit_errors]
-                return Outcome(
-                    commit=commit, ok=False, payload=None, error=None,
-                    exit_code=code, receipt=receipt, replayed=replayed,
-                    stdout="", stderr="".join(f"{line}\n" for line in lines))
-            payload = (call_renderer(
-                operation, "finish", result.finish, confirmation)
-                if result.finish is not None
-                else {**result.payload, **confirmation})
-        elif result.finish is not None:
-            payload = call_renderer(operation, "finish", result.finish, {})
+                error = _classify_failure(code,
+                    "; ".join(map(str, commit_errors[:12])) or f"{operation} failed",
+                    refusal=_take_gateway_refusal())
+                error["details"].update(getattr(commit_errors, "details", {}))
+                return Outcome(commit=commit, ok=False, payload=None, error=error,
+                    exit_code=code, receipt=receipt, replayed=replayed, stdout="",
+                    stderr=_render_cli_error(error, args))
+            commit = "committed"
+            receipt = {key: confirmation.get(key) for key in
+                       ("transaction_id", "receipt_path", "snapshot_after")}
+            replayed = bool(confirmation.get("replayed", False))
+            payload = _success_payload(result.payload, confirmation)
         else:
-            payload = result.payload
+            payload = _success_payload(result.payload, {})
         exit_code = 1 if result.diagnostic_failed else 0
+        presentation = result.human_view
+        view = presentation.view if isinstance(presentation, Presentation) else presentation
         if entry.human is not None and not getattr(args, "json", False):
-            if result.human_view is not None:
-                stdout = call_renderer(
-                    operation, "human", entry.human, payload,
-                    result.human_view) + "\n"
-            else:
-                stdout = call_renderer(
-                    operation, "human", entry.human, payload) + "\n"
-        elif result.json_format is not None:
-            if result.json_format not in entry.json_formats:
-                raise TypeError(
-                    f"{operation}: undeclared JSON format {result.json_format!r}")
-            stdout = encode_json(payload, result.json_format) + "\n"
+            stdout = (call_renderer(operation, "human", entry.human, payload, view)
+                      if view is not None else
+                      call_renderer(operation, "human", entry.human, payload)) + "\n"
         else:
-            stdout = json.dumps(payload, **_json_layout()) + "\n"
+            stdout = json.dumps(payload, ensure_ascii=False, **_json_layout()) + "\n"
         if result.diagnostic_failed:
             _audit_diagnostic_failed(operation)
     except Exception as exc:
-        # The row check mirrors _cli_refusal's: an unlisted exception is
-        # re-raised, not a refusal, and witnesses nothing.
-        if classify(exc, "cli") is not None:
+        if isinstance(exc, ToolFailure):
+            _audit_command_failure(operation, exc.exit_code)
+        elif classify(exc, "cli") is not None:
             _audit_failure(operation, exc)
         return _cli_refusal(exc, entry=entry, args=args, commit=commit,
                             receipt=receipt, replayed=replayed)
-    return Outcome(
-        commit=commit, ok=exit_code == 0, payload=payload, error=None,
-        exit_code=exit_code, receipt=receipt, replayed=replayed,
-        stdout=stdout,
-        stderr="".join(f"{line}\n" for line in result.notices),
-    )
+    return Outcome(commit=commit, ok=exit_code == 0, payload=payload, error=None,
+        exit_code=exit_code, receipt=receipt, replayed=replayed, stdout=stdout,
+        stderr=("".join(f"{line}\n" for line in presentation.notices)
+                if isinstance(presentation, Presentation) else ""))
 
 
-def _legacy_refusal_streams(operation: str, result, commit_errors: list,
-                            commit_stderr: str) -> tuple[str, str]:
-    """A refused commit's legacy ``(stdout, stderr)`` (SPEC (bd)).
-
-    A legacy handler let ``commit_proposal``'s own complaint (the revision
-    conflict lines) reach stderr first, then printed its refusal lines to
-    stderr, its refusal JSON to stdout, or both.
-    """
-    lines = (call_renderer(
-        operation, "on_commit_refused",
-        result.on_commit_refused, commit_errors)
-        if result.on_commit_refused is not None else [])
-    stdout = (call_renderer(
-        operation, "refused_stdout",
-        result.refused_stdout, commit_errors) + "\n"
-        if result.refused_stdout is not None else "")
-    return stdout, commit_stderr + "".join(f"{line}\n" for line in lines)
+def _render_cli_error(error: dict, args) -> str:
+    if getattr(args, "json", False):
+        return json.dumps({"error": error}, ensure_ascii=False, **_json_layout()) + "\n"
+    lines = [f"los: {error['code']}: {error['message']}"]
+    details = error.get("details") or {}
+    for suggestion in details.get("suggestions", []):
+        if suggestion not in error["message"]:
+            lines.append(f"  did you mean: {suggestion}")
+    if details.get("conflicts"):
+        lines.append(json.dumps({"conflicts": details["conflicts"]}, ensure_ascii=False))
+    lines.extend(map(str, details.get("diagnostics", [])))
+    if details.get("remedy"):
+        lines.append(f"  next: {details['remedy']}")
+    return "\n".join(lines) + "\n"
 
 
 def _cli_error_code(exc: Exception) -> tuple[str, bool]:
@@ -382,22 +347,13 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
     reason = getattr(exc, "reason", None)
     suggestions = getattr(exc, "suggestions", None) or ()
     remedy = getattr(exc, "remedy", None)
-    lines = [f"los: {code}: {message}"]
-    for suggestion in suggestions:
-        if suggestion not in message:
-            lines.append(f"  did you mean: {suggestion}")
-    if remedy is not None:
-        lines.append(f"  next: {remedy}")
-    for line in getattr(exc, "extra_stderr", ()) or ():
-        lines.append(line)
-    stderr = "\n".join(lines) + "\n"
+    error = error_object(code, message, retryable=retryable, reason=reason,
+                         suggestions=list(suggestions) or None, remedy=remedy)
+    diagnostics = tuple(getattr(exc, "extra_stderr", ()) or ())
+    if diagnostics:
+        error["details"]["diagnostics"] = list(map(str, diagnostics))
+    stderr = _render_cli_error(error, args)
     stdout = ""
-    if getattr(args, "json", False) and entry.human is None:
-        stdout = json.dumps({
-            "error": error_object(
-                code, message, retryable=retryable, reason=reason,
-                suggestions=list(suggestions) or None, remedy=remedy),
-        }, **_json_layout()) + "\n"
     if isinstance(exc, PostCommitFailure):
         commit = "committed"
         receipt = {key: getattr(exc, key) for key in (
@@ -405,7 +361,7 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
     elif isinstance(exc, TransactionRollbackIncomplete) or (
             isinstance(exc, ProjectionFailure) and not exc.rollback_complete):
         commit = "unknown"
-    return Outcome(commit=commit, ok=False, payload=None, error=None,
+    return Outcome(commit=commit, ok=False, payload=None, error=error,
                    exit_code=resolve(row, exc)["exit"], receipt=receipt,
                    replayed=replayed, stdout=stdout, stderr=stderr)
 
@@ -920,12 +876,10 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     Shared admission first (``prepare_dispatch``, identical to legacy), then
     the request filtered to the effective request-schema properties, then
     the handler. A proposal commits once via ``commit_proposal`` (whose own
-    legacy prints are captured, as ``_dispatch`` captures handler prints);
-    ``after_commit`` runs once even on a returned refusal; ``finish`` or the
-    ``{**payload, **confirmation}`` default shapes success;
-    ``on_commit_refused`` or the ``los: ``-prefixed default shapes a
-    returned refusal. Raised typed refusals propagate to the dispatch
-    except chain, which classifies them exactly as before. The refusal
+    shared transaction owner). Success is a data projection plus receipt
+    facts; typed refusals propagate to dispatch classification. Post-commit
+    completion is an explicit proposal value, executed once under the lock.
+    The refusal
     cellar clears at the same start/success/take boundaries as ``_dispatch``.
     In check mode the proposal is checked, never committed, and rendered
     with ``render_check``.
@@ -947,64 +901,41 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
         gateway=context,
     )
     _take_gateway_refusal()
-    res = entry.handler(ctx, req)
-    if res.command_output is not None:
-        raise WriteRefused(
-            f"{operation}: a command-output result is CLI-only",
-            prefixed=True,
-            exit_code=2)
+    try:
+        res = entry.handler(ctx, req)
+    except ToolFailure as exc:
+        raise WriteRefused("external-tool failure results are CLI-only", exit_code=2) from exc
+    if isinstance(res.payload, GatewayDispatch):
+        raise WriteRefused(f"{operation}: reviewed dispatch is CLI-only", exit_code=2)
     if checking and res.proposal is not None:
         record = check_proposal(ctx, res.proposal)
         if entry.render_check is not None:
             rendered = call_renderer(
                 operation, "render_check", entry.render_check,
-                record, res.payload)
+                record, res.payload.prepared if isinstance(res.payload, ResponsePayload) else res.payload)
         else:
             rendered = record
         _take_gateway_refusal()
         return 0, rendered
     if res.proposal is None:
-        if res.finish is not None:
-            final = call_renderer(operation, "finish", res.finish, {})
-        else:
-            final = res.payload
+        final = _success_payload(res.payload, {})
         _take_gateway_refusal()
         if res.diagnostic_failed:
             error_text = json.dumps(final, separators=(",", ":"))
             _audit_diagnostic_failed(operation)
             return 1, {"error": error_text}
         return 0, final
-    captured, errors = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
-        code, commit_errors, confirmation = _commit_with_gesture(
-            ctx, operation, res)
-        if res.after_commit is not None:
-            after_commit = _resolve_after_commit(res.after_commit)
-            after_commit(code, commit_errors, confirmation)
+    code, commit_errors, confirmation = _commit_with_gesture(ctx, operation, res)
     if code != 0:
         _audit_commit_refused(operation, code)
         refusal = _take_gateway_refusal()
-        if res.on_commit_refused is not None or res.refused_stdout is not None:
-            # Legacy _dispatch's rule: the complaint, else the printed text.
-            text, complaint = _legacy_refusal_streams(
-                operation, res, commit_errors, errors.getvalue())
-            result = {"error": complaint.strip() or text.strip()
-                      or f"{operation} failed"}
-        else:
-            if errors.getvalue().strip():
-                lines = errors.getvalue().strip().splitlines()
-            else:
-                lines = [f"los: {error}" for error in commit_errors]
-            result = {"error": "\n".join(lines)}
+        result = {"error": "; ".join(map(str, commit_errors[:12])),
+                  "error_details": getattr(commit_errors, "details", {})}
         if refusal is not None:
             result["error_code"], result["error_retryable"] = refusal
         return code, result
     _take_gateway_refusal()
-    if res.finish is not None:
-        final = call_renderer(
-            operation, "finish", res.finish, confirmation)
-    else:
-        final = {**res.payload, **confirmation}
+    final = _success_payload(res.payload, confirmation)
     if res.diagnostic_failed:
         error_text = json.dumps(final, separators=(",", ":"))
         _audit_diagnostic_failed(operation)
@@ -1408,6 +1339,8 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
             if isinstance(carried, str) else None
         error = None if code == 0 else _classify_failure(
             code, complaint, failure=failure, refusal=refusal)
+        if error is not None:
+            error["details"].update(result.get("error_details", {}))
         response = _v2_response(
             envelope,
             ok=code == 0,

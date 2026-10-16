@@ -17,7 +17,7 @@ from learning_os.app.handlers._shared import discovery_row as _discovery_row
 from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
 from learning_os.app.handlers._shared import window_values as _window_values
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import Presentation, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.garden import garden_id
 from learning_os.derive.search.index import NoteBlob, build_registry
@@ -53,7 +53,7 @@ def _render_frontmatter(meta: dict, body: str) -> str:
     return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
 
-@register("note.evidence.add", kind="command", json_formats=("unescaped",))
+@register("note.evidence.add", kind="command")
 def note_evidence(ctx: OpContext, req: dict) -> Result:
     """Append one evidence pointer to a note without touching its body.
 
@@ -133,8 +133,8 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["note_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused_evidence,
-        json_format="unescaped",
+
+
     )
 
 
@@ -143,7 +143,7 @@ def _on_commit_refused_revise(errors: list) -> list[str]:
     return ["los: note revision rejected by validation", *errors[:12]]
 
 
-@register("note.revise", kind="command", json_formats=("unescaped",))
+@register("note.revise", kind="command")
 def note_revise(ctx: OpContext, req: dict) -> Result:
     """Replace one existing note after explicit, reviewable approval.
 
@@ -220,8 +220,8 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["note_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused_revise,
-        json_format="unescaped",
+
+
     )
 
 
@@ -458,7 +458,7 @@ def _resolve_note_create(root: Path, repo, note: dict,
     return note_id, path, _render_exact_note(meta, body), deprecations
 
 
-@register("note.create", kind="command", json_formats=("unescaped",))
+@register("note.create", kind="command")
 def note_create(ctx: OpContext, req: dict) -> Result:
     """Create one durable note from approved bytes.
 
@@ -502,8 +502,8 @@ def note_create(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[note_id, *_id_list(note, "supersedes")],
             expected_revisions=expected_revisions,
         ),
-        after_commit="STANDARD",
-        json_format="unescaped",
+
+
     )
 
 
@@ -522,8 +522,7 @@ def _garden_notes(root):
             for note in repo.garden_notes]
 
 
-@register("cli.note-read", kind="query", json_formats=("compact",))
-@register("note.content", kind="query", json_formats=("compact",))
+@register("note.content", kind="query")
 def note_read(ctx: OpContext, req: dict) -> Result:
     """Read a bounded segment of a durable note or garden seed by stable ID."""
     root = ctx.root
@@ -558,7 +557,7 @@ def note_read(ctx: OpContext, req: dict) -> Result:
             _snapshot(root, snapshot)
             return Result(
                 {"schema_version": 1, "snapshot_id": snapshot, **payload},
-                json_format="compact",
+
             )
         raw = _note_bytes(root, note)
         content = raw.decode("utf-8")
@@ -569,7 +568,7 @@ def note_read(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -693,8 +692,8 @@ def _metadata_search_page(ctx: OpContext, req: dict) -> Result:
              "has_more": next_offset is not None,
              "expand": {"next": _metadata_next_command(req, limit, next_offset, snapshot)
                         if next_offset is not None else None}},
-            notices=tuple(notices),
-            json_format="compact",
+            human_view=Presentation(notices=tuple(notices)),
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -954,8 +953,8 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
              "items": matches[offset:offset + limit],
              "total": len(matches),
              "next_offset": offset + limit if offset + limit < len(matches) else None},
-            notices=tuple(notices),
-            json_format="compact",
+            human_view=Presentation(notices=tuple(notices)),
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -980,8 +979,7 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.search", kind="query", json_formats=("compact", "layout_sorted"))
-@register("note.search", kind="query", json_formats=("compact", "layout_sorted"))
+@register("note.search", kind="query")
 def search(ctx: OpContext, req: dict) -> Result:
     """Search records, garden seeds, and inbox filenames; empty query lists rows."""
     if req["type"] is not None and req["type"] not in VALID_RECORD_TYPES:
@@ -1028,6 +1026,6 @@ def search(ctx: OpContext, req: dict) -> Result:
             "totals and a snapshot-bound continuation")
     return Result(
         shown,
-        notices=tuple(notices),
-        json_format="layout_sorted",
+        human_view=Presentation(notices=tuple(notices)),
+
     )

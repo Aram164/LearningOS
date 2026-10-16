@@ -1160,7 +1160,7 @@ def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
             args = los.build_parser().parse_args(
                 ["ai-action-append-slices", *argv])
             return pipeline_module.run_cli(
-                mini_repo, "cli.ai-action-append-slices", args)
+                mini_repo, "ai-action.append-slices", args)
 
         base = ["--request-id", "ai-request-sites", "--start", "21",
                 "--end", "30", "--kind", "example"]
@@ -1196,15 +1196,15 @@ def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
              for line in witness.read_text(encoding="utf-8").splitlines()
              if line.strip()]
     assert lines == [
-        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+        {"operation": "ai-action.append-slices", "kind": "failure",
          "site": "cli.ai-action-append-slices.unknown-route",
          "class": "RouteNotFound", "exit_code": None},
-        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+        {"operation": "ai-action.append-slices", "kind": "failure",
          "site": "cli.ai-action-append-slices.unknown-concept",
          "class": "ConceptNotFound", "exit_code": None},
-        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+        {"operation": "ai-action.append-slices", "kind": "failure",
          "site": None, "class": "ContinuationRefusedError",
          "exit_code": None},
-        {"operation": "cli.ai-action-append-slices", "kind": "failure",
+        {"operation": "ai-action.append-slices", "kind": "failure",
          "site": None, "class": "ActionPolicyError", "exit_code": None},
     ]

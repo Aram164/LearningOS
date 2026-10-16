@@ -184,7 +184,7 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
                         "capabilities": "capabilities --compact --json",
                         "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT"},
              },
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -307,7 +307,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
                                 for unit_id in owed],
              },
              },
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -325,8 +325,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.bootstrap", kind="query", json_formats=("compact", "layout_sorted"))
-@register("operator.bootstrap", kind="query", json_formats=("compact", "layout_sorted"))
+@register("operator.bootstrap", kind="query")
 def bootstrap(ctx: OpContext, req: dict) -> Result:
     """Serve the operator bootstrap: full, brief, or compact pages."""
     if req.get("brief"):
@@ -347,14 +346,14 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
-    return Result(payload, json_format="layout_sorted")
+    return Result(payload)
 
 
-@register("cli.program-list", kind="query", json_formats=("layout_sorted",))
+@register("program.list", kind="query")
 def program_list(ctx: OpContext, req: dict) -> Result:
     """List programs as discovery rows."""
     manifest = _fresh_manifest(ctx.root)
-    return Result(manifest.get("programs", []), json_format="layout_sorted")
+    return Result(manifest.get("programs", []))
 
 
 def _human_status(payload: dict) -> str:
@@ -397,7 +396,7 @@ def _human_status(payload: dict) -> str:
     return "\n".join(lines)
 
 
-@register("cli.status", kind="tool", human=_human_status, json_formats=("layout_sorted",))
+@register("status.read", kind="tool", human=_human_status)
 def status(ctx: OpContext, req: dict) -> Result:
     """Serve the status screen: counts, exam spine, and validation."""
     root = ctx.root
@@ -490,7 +489,7 @@ def status(ctx: OpContext, req: dict) -> Result:
         "validation": {"skipped": True} if no_validate else {
             "errors": errors, "warnings": warnings, "ok": errors == 0},
     }
-    return Result(payload, json_format="layout_sorted",
+    return Result(payload,
                   diagnostic_failed=bool(errors))
 
 
@@ -505,7 +504,7 @@ def _coerce(raw: str) -> object:
         return raw
 
 
-@register("cli.semantic", kind="tool", json_formats=("layout_sorted",))
+@register("semantic.query", kind="tool")
 def semantic(ctx: OpContext, req: dict) -> Result:
     """Evaluate one predicate, list the registry, or serve a recipe."""
     if req.get("recipe"):
@@ -518,16 +517,14 @@ def semantic(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             ) from exc
-        return Result({"class": req["recipe"], "recipes": rows},
-                      json_format="layout_sorted")
+        return Result({"class": req["recipe"], "recipes": rows})
     if req.get("list"):
         return Result(
             [{"name": name,
               "inputs": list(PREDICATES[name].authoritative_inputs),
               "authority": PREDICATES[name].authority,
               "description": PREDICATES[name].description}
-             for name in sorted(PREDICATES)],
-            json_format="layout_sorted")
+             for name in sorted(PREDICATES)])
     name = req.get("predicate")
     if name not in PREDICATES:
         message = f"unknown semantic predicate: {name}"
@@ -561,8 +558,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         ) from exc
     return Result({"predicate": name, "verdict": verdict,
-                   "inputs": inputs},
-                  json_format="layout_sorted")
+                   "inputs": inputs})
 
 
 #: Brief cap: at most this many ranked groups, whatever the tiers hold. The
@@ -687,7 +683,7 @@ def _human_intelligence_scan(payload, view) -> str:
     return "\n".join(lines)
 
 
-@register("cli.intelligence-scan", kind="tool", human=_human_intelligence_scan, json_formats=("layout_sorted",))
+@register("intelligence.scan", kind="tool", human=_human_intelligence_scan)
 def intelligence_scan(ctx: OpContext, req: dict) -> Result:
     """Run one observation loop: observe, interpret, propose.
 
@@ -767,7 +763,7 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
         "evidence": {goal.goal_id: list(goal.evidence) for goal in goals},
         "hidden_count": hidden,
     }
-    return Result(payload, json_format="layout_sorted", human_view=view)
+    return Result(payload,  human_view=view)
 
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -825,7 +821,7 @@ def _human_capabilities(payload, view) -> str:
          "  every successful canonical write has one receipt"])
 
 
-@register("cli.capabilities", kind="tool", human=_human_capabilities, json_formats=("compact", "layout_sorted"))
+@register("capabilities.read", kind="tool", human=_human_capabilities)
 def capabilities(ctx: OpContext, req: dict) -> Result:
     """Serve the machine discovery/read catalogue, in full or in part."""
     root = ctx.root
@@ -866,15 +862,15 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 ) from exc
             payload["payload_schema_path"] = relative
             payload["payload_schema"] = schema
-        return Result(payload, json_format="compact",
+        return Result(payload,
                       human_view={"branch": "name"})
     if compact:
         for key in ("queries", "commands"):
             payload[key] = sorted(payload[key])
         payload["detail"] = "capabilities NAME --json"
-        return Result(payload, json_format="compact",
+        return Result(payload,
                       human_view={"branch": "compact"})
-    return Result(payload, json_format="layout_sorted",
+    return Result(payload,
                   human_view={"branch": "screen"})
 
 
@@ -1043,7 +1039,7 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
             for _, _, _, rid in ranked]
 
 
-@register("cli.related", kind="query", json_formats=("layout_sorted",))
+@register("related.read", kind="query")
 def related(ctx: OpContext, req: dict) -> Result:
     """Ranked one-hop connections for one record id."""
     root = ctx.root
@@ -1062,11 +1058,10 @@ def related(ctx: OpContext, req: dict) -> Result:
     # so related skips the repo load on the reuse fast path (#83).
     out = related_records(manifest, resolved_id, None,
                           tallies=_use_evidence_from_manifest(manifest))
-    return Result(out, json_format="layout_sorted")
+    return Result(out)
 
 
-@register("cli.runtime-session", kind="porcelain", json_formats=("sorted",))
-@register("runtime.session", kind="porcelain", json_formats=("sorted",))
+@register("runtime.session", kind="porcelain")
 def runtime_session(ctx: OpContext, req: dict) -> Result:
     """Propose (or repair) one runtime study session. Read-only."""
     root = ctx.root
@@ -1105,7 +1100,7 @@ def runtime_session(ctx: OpContext, req: dict) -> Result:
                 "snapshot changed during runtime read; retry",
                 site=f"{ctx.operation}.mid-read-stale",
             )
-        return Result(result, json_format="sorted")
+        return Result(result)
     except (RuntimeInputError, ContractValidationError,
             json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(
@@ -1220,8 +1215,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
                  ("status", req.get("status"))) if value is not None},
              "items": items, "total": total,
              "next_offset": offset + limit if offset + limit < total else None,
-             "detail": "inspect UNIT_ID"},
-            json_format="compact")
+             "detail": "inspect UNIT_ID"})
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
@@ -1236,7 +1230,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.unit-list", kind="query", json_formats=("compact", "layout_sorted"))
+@register("unit.list", kind="query")
 def unit_list(ctx: OpContext, req: dict) -> Result:
     """List units, optionally filtered; compact serves the summary page."""
     root = ctx.root
@@ -1251,11 +1245,10 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         )
     manifest = _fresh_manifest(root)
-    return Result(_filtered_units(manifest, req, ctx.operation),
-                  json_format="layout_sorted")
+    return Result(_filtered_units(manifest, req, ctx.operation))
 
 
-@register("cli.module-list", kind="query", json_formats=("layout_sorted",))
+@register("module.list", kind="query")
 def module_list(ctx: OpContext, req: dict) -> Result:
     """List modules with optional program/status filters."""
     root = ctx.root
@@ -1265,4 +1258,4 @@ def module_list(ctx: OpContext, req: dict) -> Result:
         rows = [row for row in rows if row.get("area_id") == req["program_id"]]
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req["status"]]
-    return Result(rows, json_format="layout_sorted")
+    return Result(rows)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import re
 import shutil
@@ -19,10 +20,20 @@ from learning_os.domain.ai_errors import (
     RequestNotFound,
 )
 from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, RequestStatus
-from learning_os.store.ai_actions.support import atomic_text as _atomic_text
 from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
 from learning_os.store.ai_actions.support import inside as _inside
 from learning_os.store.ai_actions.support import read_yaml as _read_yaml
+
+
+def atomic_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+    try:
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, path)
+    finally:
+        with contextlib.suppress(OSError):
+            tmp.unlink(missing_ok=True)
 
 
 class FilesystemAIActionRepository:
@@ -59,7 +70,7 @@ class FilesystemAIActionRepository:
         destination.parent.mkdir(parents=True, exist_ok=True)
         temp = Path(tempfile.mkdtemp(prefix=f".{destination.name}-", dir=destination.parent))
         try:
-            _atomic_text(temp / "request.yaml", _dump_yaml(request))
+            atomic_text(temp / "request.yaml", _dump_yaml(request))
             for rel, content in bundle_files.items():
                 target = _inside(temp, rel)
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -83,7 +94,7 @@ class FilesystemAIActionRepository:
         return cast(AIActionRequest, value)
 
     def update_request(self, request: AIActionRequest) -> None:
-        _atomic_text(self.request_path(str(request["id"])), _dump_yaml(request))
+        atomic_text(self.request_path(str(request["id"])), _dump_yaml(request))
 
     def stage_delivery_directory(self, source: Path) -> tuple[DeliveryRecord, Path]:
         """Copy untrusted provider output into a quarantine directory.
@@ -184,7 +195,7 @@ class FilesystemAIActionRepository:
             if destination is not None:
                 shutil.rmtree(destination, ignore_errors=True)
             try:
-                _atomic_text(request_path, previous_request)
+                atomic_text(request_path, previous_request)
             except Exception as rollback_exc:
                 raise DeliveryValidationError(
                     "delivery import failed and request rollback also failed"
@@ -242,3 +253,12 @@ class FilesystemAIActionRepository:
                 "bundle_path": path.parent.relative_to(self.root).as_posix(),
             })
         return rows
+
+
+    def write_bundle_slice(self, request_id: str, relative: str, body: bytes) -> None:
+        target = self.request_dir(request_id) / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(body)
+
+    def discard_staged_delivery(self, staged: Path) -> None:
+        shutil.rmtree(staged.parent, ignore_errors=True)

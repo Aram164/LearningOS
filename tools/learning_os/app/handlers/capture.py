@@ -16,7 +16,7 @@ from learning_os.app.handlers._shared import discovery_row as _discovery_row
 from learning_os.app.handlers._shared import inbox_search_rows as _inbox_search_rows
 from learning_os.app.handlers._shared import require_unit_map_or_error
 from learning_os.app.handlers._shared import window_values as _window_values
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import InboxCompletion, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.domain.unit_notes import unit_note_sections
@@ -86,7 +86,7 @@ def _seed_content(text: str, title: str | None) -> str:
     return content if content.endswith("\n") else content + "\n"
 
 
-@register("capture.create", kind="command", human=_human_capture, json_formats=("unescaped",))
+@register("capture.create", kind="command", human=_human_capture)
 def capture(ctx: OpContext, req: dict) -> Result:
     """Judgment-free capture into work/inbox/ with a transaction receipt."""
     root = ctx.root
@@ -152,12 +152,12 @@ def capture(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[artifact_id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("garden.seed.create", kind="command", human=_human_garden_seed, json_formats=("unescaped",))
+@register("garden.seed.create", kind="command", human=_human_garden_seed)
 def garden_seed_create(ctx: OpContext, req: dict) -> Result:
     """Create one free-form Markdown seed under knowledge/garden/."""
     root = ctx.root
@@ -210,13 +210,12 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[artifact_id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("cli.inbox-list", kind="tool", json_formats=("layout_sorted",))
-@register("inbox.list", kind="tool", json_formats=("layout_sorted",))
+@register("inbox.list", kind="tool")
 def inbox_list(ctx: OpContext, req: dict) -> Result:
     """List work/inbox files by name, without reading bytes."""
     root = ctx.root
@@ -239,7 +238,7 @@ def inbox_list(ctx: OpContext, req: dict) -> Result:
         except OSError:
             row["age_days"] = None
         out.append(row)
-    return Result(out, json_format="layout_sorted")
+    return Result(out)
 
 
 def _inbox_folder_envelope(root: Path, name: str) -> dict:
@@ -261,8 +260,7 @@ def _inbox_folder_envelope(root: Path, name: str) -> dict:
     }
 
 
-@register("cli.inbox-read", kind="query", json_formats=("compact",))
-@register("inbox.content", kind="query", json_formats=("compact",))
+@register("inbox.content", kind="query")
 def inbox_read(ctx: OpContext, req: dict) -> Result:
     """Read a bounded segment of one work/inbox file by inbox-relative name.
 
@@ -292,7 +290,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             _snapshot(root, snapshot)
             return Result(
                 {"schema_version": 1, "snapshot_id": snapshot, **payload},
-                json_format="compact",
+
             )
         if not target.is_symlink() and not target.is_file():
             raise WriteRefused(
@@ -321,7 +319,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -390,7 +388,7 @@ def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> li
     return lines
 
 
-@register("review.prepare", kind="command", json_formats=("unescaped",))
+@register("review.prepare", kind="command")
 def shelving_prepare(ctx: OpContext, req: dict) -> Result:
     """Prepare a review packet; never applies canonical changes."""
     root = ctx.root
@@ -485,8 +483,8 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -505,7 +503,7 @@ def _approved_destination(root: Path, item: dict) -> Path | None:
     return target
 
 
-@register("review.apply", kind="command", json_formats=("unescaped",))
+@register("review.apply", kind="command")
 def shelving_apply(ctx: OpContext, req: dict) -> Result:
     """Apply only explicitly approved proposal IDs."""
     if not req.get("approve"):
@@ -566,8 +564,8 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id, *sorted(selected)],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused_apply,
-        json_format="unescaped",
+
+
     )
 
 
@@ -575,7 +573,7 @@ def _file_digest(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
 
-def _prune_empty_dirs(inbox: Path, target: Path) -> None:
+def prune_empty_dirs(inbox: Path, target: Path) -> None:
     """Remove directories the move just emptied, up to (not incl.) the inbox.
 
     Best-effort structural cleanup after a committed move: empty
@@ -644,7 +642,7 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     return files
 
 
-@register("inbox.resolve", kind="command", json_formats=("ascii",))
+@register("inbox.resolve", kind="command")
 def inbox_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve one routed inbox drop to the archive.
 
@@ -737,11 +735,6 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         ) from exc
 
-    def after_commit(code, errors, confirmation):
-        if code != 0:
-            return
-        _prune_empty_dirs(inbox, target)
-
     return Result(
         {"ok": True, "resolved": req["name"],
          "archived": sorted(path.relative_to(root).as_posix()
@@ -749,13 +742,14 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
          "routed_to": routed_to},
         proposal=TransactionProposal(
             capability="inbox.resolve",
+            completion=InboxCompletion(inbox, target),
             writes=writes,
             artifact_ids=(),
             deletes=deletes,
             metadata={"routed_to": routed_to},
             expected_revisions=expected_revisions,
         ),
-        after_commit=after_commit,
-        on_commit_refused=_on_commit_refused,
-        json_format="ascii",
+
+
+
     )

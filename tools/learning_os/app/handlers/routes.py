@@ -17,7 +17,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.encoders import dumps_compact
 from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.material_refs import (
@@ -306,7 +306,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
                 artifact_ids=sorted(artifacts),
                 validate_extra=_check_gate(root, writes),
             ),
-            json_format="compact",
+
         )
     if not writes:
         raise WriteRefused("no material changes to apply",
@@ -317,9 +317,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
     except ValueError as exc:
         raise WriteRefused(str(exc)) from exc
 
-    def after_commit(code, errors, confirmation):
-        if gate_errors:
-            raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, gate_errors[:8])))
+    refusal = (gate_errors, ValidationFailed("canonical validation failed"))
 
     def finish(confirmation):
         return {**result, "ok": True, **confirmation}
@@ -329,22 +327,22 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
                             **({"errors": list(map(str, errors))} if errors else {})})
 
     return Result(
-        result,
-        proposal=TransactionProposal(
+        ResponsePayload(result, finish({}), confirmation='merge'),
+        proposal=TransactionProposal(refusal=refusal,
             capability=capability,
             writes=writes,
             artifact_ids=sorted(artifacts),
             expected_revisions=expected_revisions or {},
             validate_extra=validate_extra,
         ),
-        finish=finish,
-        after_commit=after_commit,
-        refused_stdout=refused_stdout,
-        json_format="compact",
+
+
+
+
     )
 
 
-@register("route.patch", kind="command", render_check=_render_plan_check, json_formats=("compact",))
+@register("route.patch", kind="command", render_check=_render_plan_check)
 def route_patch(ctx: OpContext, req: dict) -> Result:
     """Patch one material route's declared fields, with its map mirrors."""
     return _execute_material_plan(ctx, req, "route.patch", lambda repo: route_patch_plan(
@@ -353,7 +351,7 @@ def route_patch(ctx: OpContext, req: dict) -> Result:
 
 
 @register("module.materials.compact", kind="command",
-          render_check=_render_plan_check, json_formats=("compact",))
+          render_check=_render_plan_check)
 def module_materials_compact(ctx: OpContext, req: dict) -> Result:
     """Share repeated stage material fields losslessly across one module's maps."""
     return _execute_material_plan(

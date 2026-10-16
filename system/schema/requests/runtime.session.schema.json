@@ -2,5 +2,147 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learningos/requests/runtime.session",
   "x-governs": "artifact",
-  "$ref": "cli.runtime-session.schema.json"
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requirement"
+  ],
+  "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "requirement": {
+      "type": "string",
+      "description": "requirement id to propose the session for; unknown ids refuse",
+      "x-los-cli": {
+        "flags": [
+          "--requirement"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "context_json": {
+      "type": "string",
+      "description": "extra proposal context as a JSON object string",
+      "x-los-cli": {
+        "flags": [
+          "--context-json"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": "{}",
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "previous_json": {
+      "type": "string",
+      "description": "previous runtime-session-v1 packet (with snapshot_id), not the bare session",
+      "x-los-cli": {
+        "flags": [
+          "--previous-json"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "event": {
+      "type": "string",
+      "description": "event name recorded with a bounded repair; requires previous-json",
+      "x-los-cli": {
+        "flags": [
+          "--event"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "runtime-session",
+    "help": "propose or locally repair one evidence-based session without writing",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:runtime.session",
+    "parser_factory": false
+  }
 }

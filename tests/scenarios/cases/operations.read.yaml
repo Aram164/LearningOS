@@ -1,0 +1,36 @@
+operation: operations.read
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: list-operations
+  kind: success
+  transport: cli
+  argv:
+  - operations
+  expect:
+    site: null
+- id: list-limited
+  kind: success
+  transport: cli
+  argv:
+  - operations
+  - --limit
+  - 5
+  expect:
+    site: null
+- id: unknown-request
+  kind: refusal
+  transport: cli
+  argv:
+  - operations
+  - --request-id
+  - req-nope
+  expect:
+    site: cli.operations.unknown-request
+untriggered: []

@@ -12,12 +12,11 @@ from __future__ import annotations
 import datetime as _dt
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 from learning_os.app.projection import publish as _publish
-from learning_os.app.proposal import CommandOutput
-from learning_os.domain.failures import WriteRefused
+from learning_os.app.validation import validation_run
+from learning_os.domain.failures import ToolFailure, WriteRefused
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
@@ -144,7 +143,7 @@ def _current_head(root: Path) -> str | None:
 
 def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 include_stale: bool, close: bool,
-                commit_message: str | None, push: bool) -> dict | CommandOutput:
+                commit_message: str | None, push: bool) -> dict:
     """Run one `session-end` invocation (PLAN D7, SPEC §13).
 
     Returns the legacy JSON payload, or the raw `CommandOutput` of a
@@ -204,19 +203,10 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     # live in — not the one this session touched. Pass the root explicitly.
     # --compact: a failed close prints its errors and the summary line, not
     # every baselined warning; the full list is in the validation report.
-    validation = subprocess.run(
-        [sys.executable, str(TOOLS / "validate.py"), "--compact", "--root", str(root)],
-        cwd=root, capture_output=True, text=True)
-    if validation.returncode != 0:
-        return CommandOutput(
-            stdout=validation.stdout, stderr=validation.stderr,
-            exit_code=validation.returncode or 1)
-    # Errors gate; warnings are advisory and reported. Gating on zero warnings
-    # made session-end impossible in a repository carrying the by-design
-    # "material may be offline" set. External link rot is gated only by the
-    # explicit online validator and never runs during session-end.
-    validation_line = next((line for line in validation.stdout.splitlines()
-                            if "warning(s)" in line), "").strip()
+    validation = validation_run(root)
+    if validation["errors"]:
+        raise ToolFailure("", "\n".join(validation["issues"]), 1)
+    validation_line = f"0 error(s), {validation['warnings']} warning(s) — OK"
     _publish(root)
     all_changed = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
@@ -243,7 +233,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
                                 text=True, timeout=180)
         if pushed.returncode != 0:
-            return CommandOutput(
+            raise ToolFailure(
                 stdout=pushed.stdout, stderr=pushed.stderr,
                 exit_code=pushed.returncode)
         payload["pushed"] = True
@@ -283,7 +273,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     commit = subprocess.run(["git", "commit", "-m", commit_message], cwd=root,
                             capture_output=True, text=True, timeout=180)
     if commit.returncode != 0:
-        return CommandOutput(
+        raise ToolFailure(
             stdout=commit.stdout, stderr=commit.stderr,
             exit_code=commit.returncode)
     payload["committed"] = True
@@ -301,7 +291,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
                 state="committed_unpushed",
                 review=envelope["review"] if envelope is not None else None,
                 commit_sha=sha)
-            return CommandOutput(
+            raise ToolFailure(
                 stdout=pushed.stdout, stderr=pushed.stderr,
                 exit_code=pushed.returncode)
         payload["pushed"] = True

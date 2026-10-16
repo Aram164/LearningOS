@@ -2,5 +2,187 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learningos/requests/note.search",
   "x-governs": "artifact",
-  "$ref": "cli.search.schema.json"
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "query"
+  ],
+  "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "query": {
+      "type": "string",
+      "description": "literal-AND substrings; \"\" lists every row (combine with --type, e.g. workspace)",
+      "x-los-cli": {
+        "flags": [],
+        "position": 0,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "type": {
+      "type": "string",
+      "description": "optional record type",
+      "x-los-cli": {
+        "flags": [
+          "--type"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "limit": {
+      "type": "integer",
+      "description": "matches shown per response; at least 1, at most 100 with --page or --content",
+      "x-los-cli": {
+        "flags": [
+          "--limit"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 50,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "content": {
+      "type": "boolean",
+      "description": "search complete durable note text with exact line snippets",
+      "x-los-cli": {
+        "flags": [
+          "--content"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "offset": {
+      "type": "integer",
+      "description": "matches to skip before the shown page; with --page or --content a nonzero offset needs the previous snapshot",
+      "x-los-cli": {
+        "flags": [
+          "--offset"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": 0,
+        "type": "int",
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "page": {
+      "type": "boolean",
+      "description": "paged packet with totals and a snapshot-bound continuation instead of the full array",
+      "x-los-cli": {
+        "flags": [
+          "--page"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "search",
+    "help": "search records, garden seeds, and inbox filenames; empty query lists rows",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:note.search",
+    "parser_factory": false
+  }
 }

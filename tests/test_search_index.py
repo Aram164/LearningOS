@@ -650,7 +650,7 @@ def _run_search(root: Path, query: str, *,
     from learning_os.app.context import OpContext
     from learning_os.domain.failures import StaleSnapshot, WriteRefused
 
-    ctx = OpContext(root=root, operation="cli.search", channel="cli",
+    ctx = OpContext(root=root, operation="note.search", channel="cli",
                     invocation="query", gateway=None)
     req = {"query": query, "type": type_, "offset": offset, "limit": limit,
            "expected_snapshot": expected_snapshot, "content": True}

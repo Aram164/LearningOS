@@ -126,7 +126,7 @@ def _evidence(repo, source_ids) -> dict[str, str]:
     return evidence
 
 
-@register("cli.dossier", kind="porcelain", json_formats=("compact",))
+@register("dossier.read", kind="porcelain")
 def dossier(ctx: OpContext, req: dict) -> Result:
     """Build, serve, or rebuild one unit's semantic dossier. Read-only."""
     root = ctx.root
@@ -224,7 +224,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -890,7 +890,7 @@ def _human_resume(payload, view) -> str:
     return rendered
 
 
-@register("cli.resume", kind="tool", human=_human_resume, json_formats=("layout_sorted",))
+@register("resume.read", kind="tool", human=_human_resume)
 def resume(ctx: OpContext, req: dict) -> Result:
     """Compile and print the return-to-study screen. Read-only."""
     root = ctx.root
@@ -900,7 +900,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         resolved, study_option = _study_option(repo, unit_id=req.get("unit"))
         if resolved is None:
             if isinstance(study_option, dict):
-                return Result(study_option, json_format="layout_sorted",
+                return Result(study_option,
                               human_view={"screen": "study-menu"})
             raise WriteRefused(
                 study_option,
@@ -1034,4 +1034,4 @@ def resume(ctx: OpContext, req: dict) -> Result:
         "stage_progress": stage_progress,
         "untargeted_section": untargeted_section,
     }
-    return Result(output, json_format="layout_sorted", human_view=view)
+    return Result(output,  human_view=view)

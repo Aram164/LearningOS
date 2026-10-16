@@ -17,7 +17,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.encoders import dumps_indented
 from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.material_synthesis import COMPARED_BASIS_FIELDS as _COMPARED_BASIS_FIELDS
 from learning_os.derive.material_synthesis import (
@@ -227,7 +227,7 @@ def _plan_collection_entry_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("collection.entry.revise", kind="command", json_formats=("indented",))
+@register("collection.entry.revise", kind="command")
 def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one collection entry's `why`, atomically."""
     root = ctx.root
@@ -251,7 +251,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_format="indented",
+
         )
     if not req.get("approve"):
         message = "collection entry revision requires explicit approval"
@@ -307,16 +307,16 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
         })
 
     return Result(
-        {"ok": True},
+        ResponsePayload({"ok": True}, finish_collection_entry_revise({}), confirmation='merge'),
         proposal=TransactionProposal(
             capability="collection.entry.revise",
             writes=plan["writes"],
             artifact_ids=tuple(plan["artifact_ids"]),
             expected_revisions=expected_revisions,
         ),
-        finish=finish_collection_entry_revise,
-        refused_stdout=refused_stdout_collection_entry_revise,
-        json_format="indented",
+
+
+
     )
 
 
@@ -699,7 +699,7 @@ def _plan_source_intake(root: Path, repo, items: Any) -> dict:
     }
 
 
-@register("source.intake.record", kind="command", json_formats=("indented",))
+@register("source.intake.record", kind="command")
 def source_intake_record(ctx: OpContext, req: dict) -> Result:
     """Create metadata-only sources or correct intake-owned fields, atomically."""
     root = ctx.root
@@ -723,7 +723,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_format="indented",
+
         )
     if not req.get("approve"):
         message = "source intake requires explicit approval"
@@ -779,16 +779,16 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
         })
 
     return Result(
-        {"ok": True},
+        ResponsePayload({"ok": True}, finish_source_intake_record({}), confirmation='merge'),
         proposal=TransactionProposal(
             capability="source.intake.record",
             writes=plan["writes"],
             artifact_ids=tuple(plan["artifact_ids"]),
             expected_revisions=expected_revisions,
         ),
-        finish=finish_source_intake_record,
-        refused_stdout=refused_stdout_source_intake_record,
-        json_format="indented",
+
+
+
     )
 
 
@@ -1319,7 +1319,7 @@ def _plan_source_record_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("source.record.revise", kind="command", json_formats=("indented",))
+@register("source.record.revise", kind="command")
 def source_record_revise(ctx: OpContext, req: dict) -> Result:
     """Attach verified local material to one existing source, atomically."""
     root = ctx.root
@@ -1343,7 +1343,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_format="indented",
+
         )
     if not req.get("approve"):
         message = "source revision requires explicit approval"
@@ -1407,14 +1407,14 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
         })
 
     return Result(
-        {"ok": True},
+        ResponsePayload({"ok": True}, finish_source_record_revise({}), confirmation='merge'),
         proposal=TransactionProposal(
             capability="source.record.revise",
             writes=plan["writes"],
             artifact_ids=tuple(plan["artifact_ids"]),
             expected_revisions=expected_revisions,
         ),
-        finish=finish_source_record_revise,
-        refused_stdout=refused_stdout_source_record_revise,
-        json_format="indented",
+
+
+
     )

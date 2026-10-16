@@ -115,48 +115,48 @@ EXPECTED_JSON_FORMATS = {
     "ability.candidate.append": ('ascii',),
     "ability.context": ('compact',),
     "ai-action.delivery.apply": ('indented',),
-    "atlas.context": ('unescaped',),
+
     "atlas.question.save": ('unescaped',),
-    "backup.manifest": ('indented',),
+
     "capture.create": ('unescaped',),
-    "cli.ai-action-append-slices": ('indented',),
-    "cli.ai-action-import-delivery": ('indented',),
-    "cli.ai-action-list": ('indented',),
-    "cli.ai-action-prepare": ('indented',),
-    "cli.ai-action-status": ('indented',),
-    "cli.ai-action-validate-delivery": ('indented',),
-    "cli.atlas-context": ('unescaped',),
-    "cli.backup-manifest": ('indented',),
-    "cli.backup-verify": ('indented',),
-    "cli.bootstrap": ('compact', 'layout_sorted'),
-    "cli.capabilities": ('compact', 'layout_sorted'),
-    "cli.dossier": ('compact',),
-    "cli.goal": ('ascii',),
-    "cli.health-report": ('indented',),
-    "cli.inbox-list": ('layout_sorted',),
-    "cli.inbox-read": ('compact',),
-    "cli.inspect": ('compact', 'layout_sorted'),
-    "cli.intelligence-scan": ('layout_sorted',),
-    "cli.legacy-archive-inspect": ('indented',),
-    "cli.legacy-archive-status": ('indented',),
-    "cli.masters-planning-dashboard": ('indented',),
-    "cli.module-list": ('layout_sorted',),
-    "cli.note-analysis-prepare": ('indented',),
-    "cli.note-read": ('compact',),
-    "cli.observe": ('ascii',),
-    "cli.operations": ('indented',),
-    "cli.plan-edit-context": ('compact',),
-    "cli.plan-template": ('unescaped',),
-    "cli.program-list": ('layout_sorted',),
-    "cli.project-list": ('layout_sorted',),
-    "cli.related": ('layout_sorted',),
-    "cli.resume": ('layout_sorted',),
-    "cli.runtime-session": ('sorted',),
-    "cli.search": ('compact', 'layout_sorted'),
-    "cli.semantic": ('layout_sorted',),
-    "cli.session-end": ('indented',),
-    "cli.status": ('layout_sorted',),
-    "cli.unit-list": ('compact', 'layout_sorted'),
+    "ai-action.append-slices": ('indented',),
+    "ai-action.delivery.import": ('indented',),
+    "ai-action.list": ('indented',),
+    "ai-action.prepare": ('indented',),
+    "ai-action.status": ('indented',),
+    "ai-action.delivery.validate": ('indented',),
+    "atlas.context": ('unescaped',),
+    "backup.manifest": ('indented',),
+    "backup.verify": ('indented',),
+
+    "capabilities.read": ('compact', 'layout_sorted'),
+    "dossier.read": ('compact',),
+    "goal.decide": ('ascii',),
+
+
+
+
+    "intelligence.scan": ('layout_sorted',),
+
+
+
+    "module.list": ('layout_sorted',),
+    "note.analysis.prepare": ('indented',),
+
+    "learner.observe": ('ascii',),
+    "operations.read": ('indented',),
+
+
+    "program.list": ('layout_sorted',),
+
+    "related.read": ('layout_sorted',),
+    "resume.read": ('layout_sorted',),
+
+
+    "semantic.query": ('layout_sorted',),
+    "session.end": ('indented',),
+    "status.read": ('layout_sorted',),
+    "unit.list": ('compact', 'layout_sorted'),
     "collection.entry.revise": ('indented',),
     "concept.relations.change": ('unescaped',),
     "coordination.section.revise": ('unescaped',),
@@ -220,11 +220,7 @@ EXPECTED_JSON_FORMATS = {
 
 
 def test_registrations_declare_measured_json_formats():
-    actual = {
-        name: entry.json_formats
-        for name, entry in REGISTRY.items()
-        if entry.json_formats
-    }
-    assert actual == EXPECTED_JSON_FORMATS
-    assert REGISTRY["cli.validate"].json_formats == ()
-    assert REGISTRY["cli.generate"].json_formats == ()
+    # Formatting is a transport policy, never per-operation metadata.
+    assert all(not hasattr(entry, "json_formats") for entry in REGISTRY.values())
+    assert {f.name for f in dataclasses.fields(Result)} == {
+        "payload", "proposal", "diagnostic_failed", "human_view", "gesture"}

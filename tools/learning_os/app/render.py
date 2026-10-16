@@ -1,7 +1,6 @@
 """The render marker: which rendering callback is running (SPEC 3.5b).
 
-Rendering callbacks (``Result.finish``, ``Result.on_commit_refused``,
-``Operation.human``, ``Operation.render_check``) must be pure: no I/O, no
+Rendering callbacks (``Operation.human``, ``Operation.render_check``) must be pure: no I/O, no
 observations, deterministic, non-mutating. Every invocation goes through
 :func:`call_renderer`, which sets :data:`_RENDER` around the call so the
 audit hook (``tests/arch_audit_hook.py``) can attribute any audited event

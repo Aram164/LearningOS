@@ -167,7 +167,7 @@ def test_goal_scan_failure_degrades_to_ledger_only(mini_repo: Path, monkeypatch)
         raise OSError("disk gone")
 
     monkeypatch.setattr(goals_mod, "intelligence_scan", boom)
-    ctx = OpContext(root=mini_repo, operation="cli.goal",
+    ctx = OpContext(root=mini_repo, operation="goal.decide",
                     channel="cli", invocation="command", gateway=None)
     with pytest.raises(NotFound) as caught:
         goals_mod.goal(ctx, {"goal_id": ["bogus-id"], "reject": True})

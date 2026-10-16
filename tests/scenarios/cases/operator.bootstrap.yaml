@@ -1,56 +1,206 @@
 operation: operator.bootstrap
 fixture: rich_world
-observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
 cases:
-  - id: full
-    kind: success
-    transport: cli
-    argv: [bootstrap]
-    a5_base: true
-    expect: {site: null}
-  - id: brief
-    kind: success
-    transport: cli
-    argv: [bootstrap, --brief]
-    expect: {site: null}
-  - id: compact
-    kind: success
-    transport: cli
-    argv: [bootstrap, --compact]
-    expect: {site: null}
-  - id: compact-continued
-    kind: success
-    transport: cli
-    argv: [bootstrap, --compact, --offset, 1, --limit, 1, --expected-snapshot, "sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c"]
-    expect: {site: null}
-  - id: brief-and-compact
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --brief, --compact]
-    expect: {site: cli.bootstrap.brief-and-compact}
-  - id: brief-with-offset
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --brief, --offset, 3]
-    expect: {site: cli.bootstrap.brief-with-offset}
-  - id: compact-bad-limit
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --compact, --limit, 99]
-    expect: {site: cli.bootstrap.bad-window}
-  - id: compact-offset-needs-snapshot
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --compact, --offset, 2]
-    expect: {site: cli.bootstrap.bad-window}
-  - id: compact-stale
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --compact, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: cli.bootstrap.stale-snapshot}
-  - id: brief-stale
-    kind: refusal
-    transport: cli
-    argv: [bootstrap, --brief, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
-    expect: {site: cli.bootstrap.stale-snapshot}
-untriggered: []
+- id: full
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  a5_base: true
+  expect:
+    site: null
+- id: brief
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  expect:
+    site: null
+- id: compact
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  expect:
+    site: null
+- id: compact-continued
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --offset
+  - 1
+  - --limit
+  - 1
+  - --expected-snapshot
+  - sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c
+  expect:
+    site: null
+- id: brief-and-compact
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --compact
+  expect:
+    site: cli.bootstrap.brief-and-compact
+- id: brief-with-offset
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --offset
+  - 3
+  expect:
+    site: cli.bootstrap.brief-with-offset
+- id: compact-bad-limit
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --limit
+  - 99
+  expect:
+    site: cli.bootstrap.bad-window
+- id: compact-offset-needs-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --offset
+  - 2
+  expect:
+    site: cli.bootstrap.bad-window
+- id: compact-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.bootstrap.stale-snapshot
+- id: brief-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.bootstrap.stale-snapshot
+- id: cli-full
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  expect:
+    site: null
+- id: cli-brief
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  expect:
+    site: null
+- id: cli-compact
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  expect:
+    site: null
+- id: cli-compact-continued
+  kind: success
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --offset
+  - 1
+  - --limit
+  - 1
+  - --expected-snapshot
+  - sha256:e130cdd2dd31ff6edd41ddbf7b8a2c244e7c5cbbb26fac05624721dc0eaa121c
+  expect:
+    site: null
+- id: cli-brief-and-compact
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --compact
+  expect:
+    site: cli.bootstrap.brief-and-compact
+- id: cli-brief-with-offset
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --offset
+  - 3
+  expect:
+    site: cli.bootstrap.brief-with-offset
+- id: cli-compact-bad-limit
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --limit
+  - 99
+  expect:
+    site: cli.bootstrap.bad-window
+- id: cli-compact-offset-needs-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --offset
+  - 2
+  expect:
+    site: cli.bootstrap.bad-window
+- id: cli-compact-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --compact
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.bootstrap.stale-snapshot
+- id: cli-brief-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - bootstrap
+  - --brief
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: cli.bootstrap.stale-snapshot
+untriggered:
+- site: cli.bootstrap.read-failed
+  reason: os-error-only

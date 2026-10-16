@@ -1,0 +1,72 @@
+operation: resume.read
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: screen
+  kind: success
+  transport: cli
+  argv:
+  - resume
+  expect:
+    site: null
+- id: screen-json
+  kind: success
+  transport: cli
+  argv:
+  - resume
+  - --json
+  expect:
+    site: null
+- id: study-option
+  kind: success
+  transport: cli
+  argv:
+  - resume
+  - --study
+  expect:
+    site: null
+- id: study-unit
+  kind: success
+  transport: cli
+  argv:
+  - resume
+  - --study
+  - --unit
+  - unit-demo-l01
+  expect:
+    site: null
+- id: study-unknown-unit
+  kind: refusal
+  transport: cli
+  argv:
+  - resume
+  - --study
+  - --unit
+  - unit-nope
+  expect:
+    site: cli.resume.no-study-option
+- id: unit-without-study
+  kind: refusal
+  transport: cli
+  argv:
+  - resume
+  - --unit
+  - unit-demo-l01
+  expect:
+    site: cli.resume.unit-without-study
+untriggered:
+- where: tools/learning_os/app/handlers/reads.py:2036
+  reason: 'unresolvable stage: the fixture pointer resolves, and no step can break
+    it'
+- where: tools/learning_os/app/handlers/reads.py:2124
+  reason: 'dossier build failure: needs dossier-breaking data no step can author'
+- site: cli.resume.no-resumable-stage
+  reason: fixture-inexpressible
+- site: cli.resume.dossier-build-failed
+  reason: fixture-inexpressible

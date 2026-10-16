@@ -17,26 +17,6 @@ baselined:
 - A19-owners
 checks:
   A2-static:
-  - signature: tools/learning_os/app/ai_actions/service.py::append_slices::write_bytes
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/app/ai_actions/service.py::import_delivery::shutil.rmtree
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::os.replace
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::unlink
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/store/ai_actions/support.py::atomic_text::write_text
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/store/contracts/data_contract.py::write_contract::write_text
     count: 1
     since: baseline
@@ -56,27 +36,27 @@ checks:
   - signature: tools/learning_os/store/fs.py::atomic_text::os.replace
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
   - signature: tools/learning_os/store/fs.py::atomic_text::unlink
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
   - signature: tools/learning_os/store/fs.py::atomic_text::write_text
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
+    approved_by: 'Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly'
   - signature: tools/learning_os/app/handlers/note_analysis.py::_prepare_out_dir::shutil.rmtree
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare::write_bytes
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare::write_text
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: tools/learning_os/derive/semantics/dossiers.py::store_dossier::write_text
     count: 1
     since: baseline
@@ -84,28 +64,25 @@ checks:
   - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::open
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+    approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
+      possible'
   - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::unlink
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
-  - signature: tools/learning_os/app/handlers/_shared.py::apply_reviewed_envelope::open
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
-  - signature: tools/learning_os/app/handlers/_shared.py::apply_reviewed_envelope::unlink
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+    approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
+      possible'
   - signature: tools/learning_os/app/handlers/plan.py::_save_check_report_and_compact::unlink
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
+    approved_by: 'Aram 2026-10-13: take over phase 4 work and finish it as fast as
+      possible'
   A3-prose:
   - signature: tools/learning_os/domain/plan_import.py::inventory_block::method::```
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
+    approved_by: 'Aram 2026-10-13: Make routine technical decisions yourself and continue
+      through completion; Codex ruling limited to exact inherited R4 carriers and
+      source relocations'
   - signature: tools/learning_os/store/contracts/perimeter.py::_block_bounds::method::-->
     count: 1
     since: baseline
@@ -162,13 +139,13 @@ checks:
       '
     count: 3
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: 'tools/learning_os/app/handlers/materials.py::_explanation_snippets::method::
 
       '
     count: 3
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   A3-prose-2:
   - signature: tools/learning_os/store/derived/store.py::read_state::regex::[0-9a-f]{64}
     count: 1
@@ -178,8 +155,8 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/derive/health.py::_time_machine_check::substring::No destinations
-      configured
+  - signature: tools/learning_os/derive/health.py::_time_machine_check::substring::No
+      destinations configured
     count: 1
     since: baseline
     approved_by: null
@@ -220,7 +197,7 @@ checks:
   - signature: lineage.restamp::/properties/claim_ids/items::review
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-08: i approve you decide the best course of action"
+    approved_by: 'Aram 2026-10-08: i approve you decide the best course of action'
   A13-request-schemas:
   - signature: cli.capability::name::description
     count: 1
@@ -230,11 +207,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.session-end::commit_message::description
+  - signature: session.end::commit_message::description
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.session-end::push::description
+  - signature: session.end::push::description
     count: 1
     since: baseline
     approved_by: null
@@ -263,26 +240,24 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.unit-list::/properties/component_id::no-base
+  - signature: unit.list::/properties/component_id::no-base
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  # Reclassified from ::review by Task 78 (net-zero): the product
-  # lookup and A6 owner execute, but no deterministic A5 case base
-  # exists — gateway envelope ids are harness-generated (operations
-  # traces) and the masters anchor recording is sequence-shaped.
-  - signature: cli.operations::/properties/request_id::no-base
+    approved_by: 'Aram 2026-10-10: you take open desicions'
+  - signature: operations.read::/properties/request_id::no-base
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: masters-planning.comparison.publish::/properties/candidate_module_id::no-base
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
+    approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: lineage.restamp::/properties/claim_ids/items::review
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex narrows the inherited lineage star to its existing unresolved claim-owner pointer"
+    approved_by: 'Aram 2026-10-13: Make routine technical decisions yourself and continue
+      through completion; Codex narrows the inherited lineage star to its existing
+      unresolved claim-owner pointer'
   A7-output:
   - signature: cli.capability::*
     count: 1
@@ -318,20 +293,10 @@ checks:
   - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::validate_extra
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
-  - signature: tools/learning_os/app/handlers/ai.py::ai_action_apply_delivery::after_commit
-    count: 1
-    since: baseline
-    approved_by: null
+    approved_by: 'Aram 2026-10-13: Make routine technical decisions yourself and continue
+      through completion; Codex ruling limited to exact inherited R4 carriers and
+      source relocations'
   - signature: tools/learning_os/app/handlers/ai.py::ai_action_apply_delivery::translate
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: tools/learning_os/app/handlers/capture.py::inbox_resolve::after_commit
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/app/handlers/routes.py::_execute_material_plan::after_commit
     count: 1
     since: baseline
     approved_by: null
@@ -342,12 +307,4 @@ checks:
   - signature: tools/learning_os/app/handlers/goals.py::goal::touched
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::after_commit
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
-  - signature: tools/learning_os/app/handlers/plan.py::_master_promotion_import::after_commit
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
+    approved_by: 'Aram 2026-10-10: you take open desicions'

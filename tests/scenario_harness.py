@@ -231,7 +231,7 @@ class _CaseContext:
 #: Scenario operations whose children observe a controlled Time Machine
 #: input (SPEC (bm), disposition 3): exactly the two health-report
 #: operations, nothing else.
-_HEALTH_SCENARIO_OPERATIONS = frozenset({"cli.health-report", "health.report"})
+_HEALTH_SCENARIO_OPERATIONS = frozenset({"health.report"})
 
 #: The controlled `tmutil` the health scenarios observe: exit 1 with the
 #: no-destination report on stderr, the external input producing the

@@ -122,7 +122,7 @@ def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root:
     if definition.name in REGISTRY:
         assert func is invoke
         # The CLI route executes the stacked primary alias, which shares
-        # the declared query's handler (cli.inspect precedent).
+        # the declared query's handler (project.inspect precedent).
         handler = REGISTRY[definition.name].handler
         assert parser.get_default("_operation") in {
             op for op, entry in REGISTRY.items() if entry.handler is handler}

@@ -270,6 +270,8 @@ def build_parser() -> argparse.ArgumentParser:
         for dest, schema in properties.items():
             _add_property(group_for.get(dest, p), dest, schema)
         p.set_defaults(**cmd.get("defaults", {}))
+        if "operation_kind" in cmd:
+            p.set_defaults(_operation_kind=cmd["operation_kind"])
         handler = cmd["handler"]
         func = _resolve_handler(handler)
         if handler.startswith("learning_os.adapters.cli.invoke:"):

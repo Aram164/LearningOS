@@ -28,7 +28,7 @@ def _ctx(tmp_path: Path, operation: str) -> scenario_harness._CaseContext:
         operation=operation, case_id="shim-control")
 
 
-@pytest.mark.parametrize("operation", ["cli.health-report", "health.report"])
+@pytest.mark.parametrize("operation", ["health.report", "health.report"])
 def test_health_child_observes_the_scoped_tmutil(tmp_path: Path, operation: str):
     """A real health child runs the case-scoped fake, not the host tool."""
     ctx = _ctx(tmp_path, operation)
@@ -51,7 +51,7 @@ def test_health_child_observes_the_scoped_tmutil(tmp_path: Path, operation: str)
 
 
 @pytest.mark.parametrize("operation", [
-    "cli.backup-manifest",  # a real unrelated operation, unmodified
+    "backup.manifest",  # a real unrelated operation, unmodified
     "health.reports",  # a near-miss name: the scope is exactly the two
 ])
 def test_unrelated_operation_path_is_unchanged(tmp_path: Path, operation: str):

@@ -289,6 +289,8 @@ def _translate_one(signature: str, move: dict) -> str:
             return move["to"] + "::" + signature[len(prefix):]
         return signature
     translate = _move_map().translate
+    if sep and path == move["from"] and "/" not in path:
+        return move["to"] + sep + rest
     if sep and "/" in path:
         return translate([move], path) + sep + rest
     left, arrow, right = signature.partition(" -> ")
@@ -726,7 +728,7 @@ def test_surface_diffs_have_approvals(base_ref):
 def test_opcontext_surface_keys_use_the_a17_sentence():
     assert _surface_rule("opcontext.root") == "A17"
     assert _surface_rule("opcontext.require_snapshot") == "A17"
-    assert _surface_rule("cli.inspect") == "A11"
+    assert _surface_rule("project.inspect") == "A11"
     assert _surface_rule("tools.seal_envelope.py") == "A11"
 
 
@@ -963,15 +965,21 @@ def test_converted_request_schema_changes_only_the_handler(base_ref):
 
 
 def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
-    rel = "system/schema/requests/project.inspect.schema.json"
-    base_text = _git_show(base_ref, rel)
-    assert base_text is not None, (
-        f"A11 project.inspect: no {rel} at the base — {FIX['A11']}")
-    new_text = (ROOT / rel).read_text(encoding="utf-8")
-    try:
-        _assert_alias_schema_identical("project.inspect", base_text, new_text)
-    except AssertionError as exc:
-        pytest.fail(f"A11 project.inspect: {exc} — {rel} — {FIX['A11']}")
+    # B2 retires aliases. Verify all 40 effective requests against their
+    # former primary schemas; all unlisted shape differences still fail.
+    mapping = json.loads((ARCH / "operation-moves.json").read_text())
+    assert len(mapping) == 40 and len(set(mapping.values())) == 40
+    for old_name, new_name in mapping.items():
+        rel = f"system/schema/requests/{old_name}.schema.json"
+        old = json.loads(_git_show(base_ref, rel))
+        new = json.loads((ROOT / f"system/schema/requests/{new_name}.schema.json").read_text())
+        old["$id"] = "learningos/requests/" + new_name
+        old["x-los-cli-command"]["handler"] = "learning_os.adapters.cli.invoke:" + new_name
+        if new_name in {"backup.manifest", "health.report", "legacy.archive.inspect", "legacy.archive.status", "masters-planning.dashboard"}:
+            old["x-los-cli-command"]["operation_kind"] = "tool"
+        if new_name in {"repository.validate", "projection.generate"}:
+            old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
+        assert new == old, new_name
 
 
 def _owner_purity_docs():
@@ -998,7 +1006,7 @@ def _owner_purity_docs():
 def test_owner_metadata_strip_accepts_only_the_approved_pair():
     old, new = _owner_purity_docs()
     stripped_old, stripped_new = _strip_approved_owner_metadata(
-        "cli.inspect", old, new)
+        "project.inspect", old, new)
     assert stripped_new == stripped_old
     assert stripped_new["properties"] == old["properties"]
 
@@ -1006,7 +1014,7 @@ def test_owner_metadata_strip_accepts_only_the_approved_pair():
         _, mutant = _owner_purity_docs()
         mutator(mutant)
         with pytest.raises(AssertionError):
-            _strip_approved_owner_metadata("cli.inspect", old, mutant)
+            _strip_approved_owner_metadata("project.inspect", old, mutant)
 
     def drop_owner(doc):
         del doc["properties"]["id"]["x-los-id-owner"]
@@ -1036,7 +1044,7 @@ def test_owner_metadata_strip_accepts_only_the_approved_pair():
     pinned_old["properties"]["id"]["x-los-lookup"] = True
     pinned_new["properties"]["id"]["x-los-id-owner"] = "other-owner"
     with pytest.raises(AssertionError):
-        _strip_approved_owner_metadata("cli.inspect", pinned_old, pinned_new)
+        _strip_approved_owner_metadata("project.inspect", pinned_old, pinned_new)
 
 
 def test_owner_metadata_leaves_other_diffs_for_exact_compare():
@@ -1046,7 +1054,7 @@ def test_owner_metadata_leaves_other_diffs_for_exact_compare():
         _, mutant = _owner_purity_docs()
         mutator(mutant)
         _, stripped = _strip_approved_owner_metadata(
-            "cli.inspect", old, mutant)
+            "project.inspect", old, mutant)
         assert stripped["properties"] != old["properties"]
 
     def extra_keyword(doc):
@@ -1068,7 +1076,7 @@ def test_owner_metadata_leaves_other_diffs_for_exact_compare():
 
 
 def test_alias_identity_rejects_a_changed_alias():
-    old_text = json.dumps({"$ref": "cli.inspect.schema.json",
+    old_text = json.dumps({"$ref": "project.inspect.schema.json",
                            "x-governs": "project.inspect"}, indent=2)
     _assert_alias_schema_identical("project.inspect", old_text, old_text)
     new_text = json.dumps({"$ref": "other.schema.json",
@@ -1142,20 +1150,20 @@ def _strip_bf_then_bu4(operation: str, old: dict, new: dict
 
 
 def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
-    rel = "system/schema/requests/cli.module-list.schema.json"
+    rel = "system/schema/requests/module.list.schema.json"
     new = json.loads((ROOT / rel).read_text(encoding="utf-8"))
     # The historical transition is a unit fixture, independent of whether
     # the ratchet base already contains the approved lookup flip.
     old = copy.deepcopy(new)
     old["properties"]["program_id"]["x-los-lookup"] = True
-    _, stripped = _strip_bf_then_bu4("cli.module-list", old, new)
+    _, stripped = _strip_bf_then_bu4("module.list", old, new)
     assert stripped["properties"] == old["properties"]
 
     def rejects(mutator):
         mutant = copy.deepcopy(new)
         mutator(mutant)
         with pytest.raises(AssertionError):
-            _strip_bf_then_bu4("cli.module-list", old, mutant)
+            _strip_bf_then_bu4("module.list", old, mutant)
 
     def flipped_back(doc):
         doc["properties"]["program_id"]["x-los-lookup"] = True
@@ -1170,18 +1178,18 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
     reversed_base = copy.deepcopy(old)
     reversed_base["properties"]["program_id"]["x-los-lookup"] = False
     with pytest.raises(AssertionError):
-        _strip_bf_then_bu4("cli.module-list", reversed_base, new)
+        _strip_bf_then_bu4("module.list", reversed_base, new)
 
     # Another operation's annotation change is not stripped: it stays
     # for the exact comparison, which fails it.
-    _, untouched = _strip_bf_then_bu4("cli.note-read", old, new)
+    _, untouched = _strip_bf_then_bu4("note.content", old, new)
     assert untouched == new
 
     def differs(mutator):
         mutant = copy.deepcopy(new)
         mutator(mutant)
         _, stripped_mutant = _strip_bf_then_bu4(
-            "cli.module-list", old, mutant)
+            "module.list", old, mutant)
         assert stripped_mutant["properties"] != old["properties"]
 
     def extra_keyword(doc):
@@ -1201,22 +1209,22 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
         differs(mutator)
 
     # SPEC (cq) 2: the same composed allowance for the two
-    # cli.plan-template generation seeds (plan.template inherits
+    # plan.template generation seeds (plan.template inherits
     # through its alias and its file never changes).
-    seed_rel = "system/schema/requests/cli.plan-template.schema.json"
+    seed_rel = "system/schema/requests/plan.template.schema.json"
     seed_new = json.loads((ROOT / seed_rel).read_text(encoding="utf-8"))
     seed_old = copy.deepcopy(seed_new)
     for field in ("unit_id", "module_id"):
         seed_old["properties"][field]["x-los-lookup"] = True
     _, seed_stripped = _strip_bf_then_bu4(
-        "cli.plan-template", seed_old, seed_new)
+        "plan.template", seed_old, seed_new)
     assert seed_stripped["properties"] == seed_old["properties"]
 
     def seed_rejects(mutator):
         mutant = copy.deepcopy(seed_new)
         mutator(mutant)
         with pytest.raises(AssertionError):
-            _strip_bf_then_bu4("cli.plan-template", seed_old, mutant)
+            _strip_bf_then_bu4("plan.template", seed_old, mutant)
 
     def retained_unit_true(doc):
         doc["properties"]["unit_id"]["x-los-lookup"] = True
@@ -1235,18 +1243,18 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
     reversed_seed = copy.deepcopy(seed_old)
     reversed_seed["properties"]["module_id"]["x-los-lookup"] = False
     with pytest.raises(AssertionError):
-        _strip_bf_then_bu4("cli.plan-template", reversed_seed, seed_new)
+        _strip_bf_then_bu4("plan.template", reversed_seed, seed_new)
 
     # Another operation's annotation change is not stripped.
     _, seed_untouched = _strip_bf_then_bu4(
-        "cli.note-read", seed_old, seed_new)
+        "note.content", seed_old, seed_new)
     assert seed_untouched == seed_new
 
     def seed_differs(mutator):
         mutant = copy.deepcopy(seed_new)
         mutator(mutant)
         _, stripped_mutant = _strip_bf_then_bu4(
-            "cli.plan-template", seed_old, mutant)
+            "plan.template", seed_old, mutant)
         assert stripped_mutant["properties"] != seed_old["properties"]
 
     def seed_extra_keyword(doc):
@@ -1273,3 +1281,11 @@ def test_bu4_filter_flip_accepts_only_the_enumerated_lookup_change():
                     seed_changed_type, seed_flipped_kind,
                     seed_drifted_description, seed_other_pointer):
         seed_differs(mutator)
+
+
+def test_operation_move_changes_only_the_declared_identifier():
+    move = {"from": "cli.health-report", "to": "health.report"}
+    assert _translate_one("cli.health-report::diagnostic", move) == "health.report::diagnostic"
+    assert _translate_one("cli.health-report-other::diagnostic", move) == "cli.health-report-other::diagnostic"
+    assert _translate_one("health.report::diagnostic", move) == "health.report::diagnostic"
+    assert _translate_one("tools/x.py::cli.health-report", move) == "tools/x.py::cli.health-report"

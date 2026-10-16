@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/backup.verify",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest",
+    "restored_core",
+    "restored_materials",
+    "restored_ui"
+  ],
+  "properties": {
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    },
+    "manifest": {
+      "type": "string",
+      "description": "path to a JSON or YAML backup manifest file",
+      "x-los-cli": {
+        "flags": [
+          "--manifest"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": true,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "restored_core": {
+      "type": "string",
+      "description": "path to the restored Core checkout to verify",
+      "x-los-cli": {
+        "flags": [
+          "--restored-core"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "restored_ui": {
+      "type": "string",
+      "description": "path to the restored Obsidian UI checkout to verify",
+      "x-los-cli": {
+        "flags": [
+          "--restored-ui"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "restored_materials": {
+      "type": "string",
+      "description": "path to the restored materials checkout to verify",
+      "x-los-cli": {
+        "flags": [
+          "--restored-materials"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "checksums_only": {
+      "type": "boolean",
+      "description": "skip projection, validation, installer dry-run, and restored UI bundle smoke checks",
+      "x-los-cli": {
+        "flags": [
+          "--checksums-only"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "backup-verify",
+    "help": "verify a trusted restore against a backup manifest",
+    "description": "Full verification runs the restored installer in dry-run mode against a temporary vault. Use --checksums-only to check integrity without executing restored code. A backup carries Core's canonical data and the UI checkout in full. Core's own code is deliberately not included. Recovery pairs the restored data with a Core checkout at the commit the manifest records.",
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:backup.verify",
+    "parser_factory": false
+  }
+}

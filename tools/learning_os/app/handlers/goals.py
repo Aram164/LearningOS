@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.semantics.scan import intelligence_scan
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
@@ -67,7 +67,7 @@ def _render_goal_check(record: dict, payload: dict) -> dict:
     }
 
 
-@register("cli.goal", kind="command", render_check=_render_goal_check, json_formats=("ascii",))
+@register("goal.decide", kind="command", render_check=_render_goal_check)
 def goal(ctx: OpContext, req: dict) -> Result:
     """Record Aram's explicit decision on a proposed goal."""
     root = ctx.root
@@ -275,11 +275,11 @@ def goal(ctx: OpContext, req: dict) -> Result:
 
     if req.get("check"):
         return Result(
-            payload,
+            ResponsePayload(payload, finish({}), confirmation='omit'),
             proposal=proposal,
-            finish=finish,
-            on_commit_refused=_goal_on_commit_refused,
-            json_format="ascii",
+
+
+
             gesture=context,
         )
     expected = req.get("reviewed_sha256")
@@ -308,10 +308,10 @@ def goal(ctx: OpContext, req: dict) -> Result:
                 exit_code=2,
             ) from exc
     return Result(
-        payload,
+        ResponsePayload(payload, finish({}), confirmation='omit'),
         proposal=proposal,
-        finish=finish,
-        on_commit_refused=_goal_on_commit_refused,
-        json_format="ascii",
+
+
+
         gesture=context,
     )

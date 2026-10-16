@@ -11,8 +11,6 @@ before the standard legacy catches.
 
 from __future__ import annotations
 
-import json
-import sys
 from pathlib import Path
 
 from learning_os.app.context import OpContext
@@ -20,7 +18,7 @@ from learning_os.app.outcomes import record_gateway_refusal as _record_gateway_r
 from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failure
 from learning_os.app.projection import publish as _publish
 from learning_os.app.projection import publish_repo as _publish_repo
-from learning_os.app.proposal import TransactionProposal
+from learning_os.app.proposal import CommitIssues, TransactionProposal
 from learning_os.derive.validation import validate
 from learning_os.domain.codes import REVISION_CONFLICT
 from learning_os.domain.failures import (
@@ -192,14 +190,13 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> tuple[int,
                     raise
                 raise translated from exc
     except TransactionConflict as exc:
-        print("los: artifact revision conflict — reload the affected record before writing",
-              file=sys.stderr)
-        print(json.dumps({
-            "conflicts": {artifact: {"expected": expected, "actual": actual}
-                          for artifact, (expected, actual) in exc.conflicts.items()}
-        }, ensure_ascii=False), file=sys.stderr)
         _record_gateway_refusal(REVISION_CONFLICT, True)
-        return 3, [], {}
+        return 3, CommitIssues(
+            ["artifact revision conflict — reload the affected record before writing"],
+            details={"conflicts": {
+                artifact: {"expected": expected, "actual": actual}
+                for artifact, (expected, actual) in exc.conflicts.items()
+            }}), {}
     except TransactionSnapshotConflict:
         # The V2 gateway owns the typed stale-snapshot response. Let the exact
         # expected/actual values cross that boundary without being flattened

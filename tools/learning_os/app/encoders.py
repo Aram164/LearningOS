@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import json
 import sys
+from typing import Literal
 
-from learning_os.app.proposal import JsonFormat
+JsonFormat = Literal["ascii", "compact", "indented", "indented_sorted", "layout_sorted", "sorted", "unescaped"]
 
 
 def json_layout(stream=None) -> dict:

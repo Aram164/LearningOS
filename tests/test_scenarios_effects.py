@@ -448,7 +448,7 @@ def test_request_rendering_round_trips():
     request = {"goal_id": ["lineage-stale:claim-1",
                            "evidence-superseded:obs-2"],
                "reject": True}
-    argv = scenario_harness.request_to_argv("cli.goal", request, root)
+    argv = scenario_harness.request_to_argv("goal.decide", request, root)
     assert argv == ["lineage-stale:claim-1", "evidence-superseded:obs-2",
                    "--reject"]
     parsed = _subparser("goal").parse_args(argv)

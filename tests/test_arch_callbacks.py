@@ -523,13 +523,10 @@ def test_registered_renderer_is_statically_pure(key, location):
 
 def test_discovery_covers_the_known_renderers():
     known = {
-        ("ai-action.delivery.apply", "finish", "finish"),
         ("capture.create", "human", "_human_capture"),
-        ("capture.create", "on_commit_refused", "_on_commit_refused"),
-        ("stage.progress.update", "on_commit_refused", "_on_commit_refused"),
         ("route.patch", "render_check", "_render_plan_check"),
-        ("route.patch", "finish", "finish"),
-        ("route.patch", "refused_stdout", "refused_stdout"),
+        ("status.read", "human", "_human_status"),
+        ("capabilities.read", "human", "_human_capabilities"),
     }
     discovered = {(operation, kind, display)
                   for operation, kind, display, _, _, _ in _renderers()}
@@ -761,7 +758,7 @@ def _load_fixture_renderer(name: str):
 
 
 def _run_finish_with_audit(mini_repo, tmp_path, render):
-    """Run ``finish=render`` through run_cli under the installed hook."""
+    """Run the human renderer through run_cli under the installed hook."""
     from learning_os.app import pipeline as pipeline_module
     from learning_os.app.proposal import Result
 
@@ -769,11 +766,11 @@ def _run_finish_with_audit(mini_repo, tmp_path, render):
     log = tmp_path / "audit.jsonl"
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({"echo": "x"})
 
     from learning_os.app.registry import register
 
-    register(TEST_OP, kind="query")(handler)
+    register(TEST_OP, kind="query", human=lambda payload: str(render(payload)))(handler)
     try:
         arch_audit_hook.install(str(log))
         try:
@@ -844,13 +841,13 @@ def test_runtime_nondeterminism_fails(apipe, mini_repo, monkeypatch):
     render = _load_fixture_renderer("pos_render_nondeterministic.py")
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({"echo": "x"})
 
-    apipe("query", handler=handler)
+    apipe("query", handler=handler, human=lambda payload: str(render(payload)))
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     with pytest.raises(RenderPurityError) as caught:
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert str(caught.value) == f"{TEST_OP}::finish::not-deterministic"
+    assert str(caught.value) == f"{TEST_OP}::human::not-deterministic"
     assert current_render() is None
 
 
@@ -863,13 +860,13 @@ def test_runtime_mutation_fails(apipe, mini_repo, monkeypatch):
     render = _load_fixture_renderer("pos_render_mutates_arg.py")
 
     def handler(ctx, req):
-        return Result({"echo": "x"}, finish=render)
+        return Result({"echo": "x"})
 
-    apipe("query", handler=handler)
+    apipe("query", handler=handler, human=lambda payload: str(render(payload)))
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     with pytest.raises(RenderPurityError) as caught:
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert str(caught.value) == f"{TEST_OP}::finish::argument-mutated"
+    assert str(caught.value) == f"{TEST_OP}::human::argument-mutated"
     assert current_render() is None
 
 

@@ -1,48 +1,135 @@
 operation: masters-planning.dashboard
 fixture: rich_world
-observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
 cases:
-  - id: open-empty
-    kind: success
-    transport: cli
-    argv: [masters-planning-dashboard, --confirm-masters-planning]
-    expect: {site: null}
-  - id: needs-confirm
-    kind: refusal
-    transport: cli
-    argv: [masters-planning-dashboard]
-    expect: {site: null}
-  - id: open-after-catalog
-    kind: sequence
-    steps:
-      - transport: gateway
-        operation: masters-planning.catalog.update
-        request:
-          record:
-            schema_version: 1
-            id: master-planning-catalog
-            type: master-planning-catalog
-            revision: 0
-            updated_at: "2026-10-01T09:00:00+02:00"
-            candidate_modules:
-              - id: candidate-module-scenario-ml
-                title: Scenario ML module
-                planning_state: selected
-                privacy_class: academic-only
-                provenance: [scenario]
-                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
-                source_ids: [candidate-source-scenario-book]
-                unresolved_references: []
-            candidate_sources:
-              - id: candidate-source-scenario-book
-                title: Scenario Book
-                planning_state: selected
-                privacy_class: academic-only
-                provenance: [scenario]
-                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
-                type: book
-            comparison_ids: []
-        artifact_ids: [master-planning-catalog]
-      - transport: cli
-        argv: [masters-planning-dashboard, --confirm-masters-planning]
+- id: open-empty
+  kind: success
+  transport: cli
+  argv:
+  - masters-planning-dashboard
+  - --confirm-masters-planning
+  expect:
+    site: null
+- id: needs-confirm
+  kind: refusal
+  transport: cli
+  argv:
+  - masters-planning-dashboard
+  expect:
+    site: null
+- id: open-after-catalog
+  kind: sequence
+  steps:
+  - transport: gateway
+    operation: masters-planning.catalog.update
+    request:
+      record:
+        schema_version: 1
+        id: master-planning-catalog
+        type: master-planning-catalog
+        revision: 0
+        updated_at: '2026-10-01T09:00:00+02:00'
+        candidate_modules:
+        - id: candidate-module-scenario-ml
+          title: Scenario ML module
+          planning_state: selected
+          privacy_class: academic-only
+          provenance:
+          - scenario
+          fact_state:
+            status: unverified
+            as_of: '2026-09-23'
+            evidence:
+            - scenario
+          source_ids:
+          - candidate-source-scenario-book
+          unresolved_references: []
+        candidate_sources:
+        - id: candidate-source-scenario-book
+          title: Scenario Book
+          planning_state: selected
+          privacy_class: academic-only
+          provenance:
+          - scenario
+          fact_state:
+            status: unverified
+            as_of: '2026-09-23'
+            evidence:
+            - scenario
+          type: book
+        comparison_ids: []
+    artifact_ids:
+    - master-planning-catalog
+  - transport: cli
+    argv:
+    - masters-planning-dashboard
+    - --confirm-masters-planning
+- id: cli-open-empty
+  kind: success
+  transport: cli
+  argv:
+  - masters-planning-dashboard
+  - --confirm-masters-planning
+  expect:
+    site: null
+- id: cli-needs-confirm
+  kind: refusal
+  transport: cli
+  argv:
+  - masters-planning-dashboard
+  expect:
+    site: null
+- id: cli-open-after-catalog
+  kind: sequence
+  steps:
+  - transport: gateway
+    operation: masters-planning.catalog.update
+    request:
+      record:
+        schema_version: 1
+        id: master-planning-catalog
+        type: master-planning-catalog
+        revision: 0
+        updated_at: '2026-10-01T09:00:00+02:00'
+        candidate_modules:
+        - id: candidate-module-scenario-ml
+          title: Scenario ML module
+          planning_state: selected
+          privacy_class: academic-only
+          provenance:
+          - scenario
+          fact_state:
+            status: unverified
+            as_of: '2026-09-23'
+            evidence:
+            - scenario
+          source_ids:
+          - candidate-source-scenario-book
+          unresolved_references: []
+        candidate_sources:
+        - id: candidate-source-scenario-book
+          title: Scenario Book
+          planning_state: selected
+          privacy_class: academic-only
+          provenance:
+          - scenario
+          fact_state:
+            status: unverified
+            as_of: '2026-09-23'
+            evidence:
+            - scenario
+          type: book
+        comparison_ids: []
+    artifact_ids:
+    - master-planning-catalog
+  - transport: cli
+    argv:
+    - masters-planning-dashboard
+    - --confirm-masters-planning
 untriggered: []

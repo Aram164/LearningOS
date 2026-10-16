@@ -1,4 +1,3 @@
-# Conductor amendment 2026-10-08: twelve digest decisions, source evidence in each row.
 schema: 1
 fields:
 - operation: ability.context
@@ -11,14 +10,16 @@ fields:
   lookup: true
   owner: ai-delivery-artifact-digests
   owner_shape: mapping-values
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
 - operation: ai-action.delivery.apply
   pointer: /properties/delivery_id
   kind: null
   lookup: true
   owner: ai-delivery-exchange
   owner_shape: scalar
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
 - operation: ai-action.delivery.apply
   pointer: /properties/delivery_sha256
   kind: digest
@@ -33,148 +34,155 @@ fields:
   pointer: /properties/file_sha256
   kind: digest
   lookup: false
-- operation: cli.ai-action-append-slices
+- operation: ai-action.append-slices
   pointer: /properties/concept_id/items
   kind: concept
   lookup: true
-- operation: cli.ai-action-append-slices
+- operation: ai-action.append-slices
   pointer: /properties/request_id
   kind: null
   lookup: true
   owner: ai-request-store
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory; owner executed in test_arch_idroundtrip'
-- operation: cli.ai-action-append-slices
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.append-slices
   pointer: /properties/route_id
   kind: route
   lookup: true
-- operation: cli.ai-action-prepare
+- operation: ai-action.prepare
   pointer: /properties/action_id
   kind: null
   lookup: true
   owner: ai-action-registry
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded registry ids; owner executed in test_arch_idroundtrip'
-- operation: cli.ai-action-prepare
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded registry ids; owner
+    executed in test_arch_idroundtrip'
+- operation: ai-action.prepare
   pointer: /properties/request_id
   kind: null
   lookup: false
-  decision: 'Builder Task 78 (cx) D-6 2026-10-12: prepare request_id is a caller-supplied creation identity; never a known-ID lookup'
-- operation: cli.ai-action-prepare
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: prepare request_id is a caller-supplied
+    creation identity; never a known-ID lookup'
+- operation: ai-action.prepare
   pointer: /properties/target_id
   kind: null
   lookup: true
   owner: ai-action-target
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded garden/unit ids; owner executed in test_arch_idroundtrip'
-- operation: cli.ai-action-status
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded garden/unit ids;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.status
   pointer: /properties/request_id
   kind: null
   lookup: true
   owner: ai-request-store
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory; owner executed in test_arch_idroundtrip'
-- operation: cli.ai-action-validate-delivery
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.delivery.validate
   pointer: /properties/delivery_id
   kind: null
   lookup: true
   owner: ai-delivery-store
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store delivery inventory; owner executed in test_arch_idroundtrip'
-- operation: cli.atlas-context
-  pointer: /properties/concept_id
-  kind: concept
-  lookup: true
-- operation: cli.dossier
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store delivery inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: dossier.read
   pointer: /properties/unit_id
   kind: unit
   lookup: true
-- operation: cli.goal
+- operation: goal.decide
   pointer: /properties/goal_id/items
   kind: goal
   lookup: true
-- operation: cli.goal
+- operation: goal.decide
   pointer: /properties/reviewed_sha256
   kind: digest
   lookup: false
   decision: 'Codex conductor 2026-10-08: commands/goal.py:141-167 binds the computed
     ledger-plus-request decision review'
-- operation: cli.goal
+- operation: goal.decide
   pointer: /properties/session_id
   kind: null
   lookup: false
-  decision: 'Builder Task 78 (cx) D-6 2026-10-12: goal session_id is an ownership-window identity; never a known-ID lookup'
-- operation: cli.inspect
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: goal session_id is an ownership-window
+    identity; never a known-ID lookup'
+- operation: project.inspect
   pointer: /properties/id
   kind: null
   lookup: true
   owner: inspect-reference
   owner_shape: scalar
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
-- operation: cli.inspect
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: project.inspect
   pointer: /properties/more_ids/items
   kind: null
   lookup: true
   owner: inspect-reference
   owner_shape: scalar
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
-- operation: cli.module-list
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: module.list
   pointer: /properties/program_id
   kind: program
   lookup: false
-- operation: cli.note-read
+- operation: note.content
   pointer: /properties/note_id
   kind: note
   lookup: true
-- operation: cli.operations
+- operation: operations.read
   pointer: /properties/request_id
   kind: null
   lookup: true
   owner: operations-trace-request
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-6 2026-10-12: lookup over distinct already-loaded trace request ids; owner executed in test_arch_idroundtrip'
-- operation: cli.plan-edit-context
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: lookup over distinct already-loaded
+    trace request ids; owner executed in test_arch_idroundtrip'
+- operation: plan.edit-context
   pointer: /properties/route_id
   kind: route
   lookup: true
-- operation: cli.plan-edit-context
+- operation: plan.edit-context
   pointer: /properties/route_ids/items
   kind: route
   lookup: true
-- operation: cli.plan-edit-context
+- operation: plan.edit-context
   pointer: /properties/stage_id
   kind: stage
   lookup: true
-- operation: cli.plan-edit-context
+- operation: plan.edit-context
   pointer: /properties/unit_id
   kind: unit
   lookup: true
-- operation: cli.plan-template
+- operation: plan.template
   pointer: /properties/module_id
   kind: module
   lookup: false
-- operation: cli.plan-template
+- operation: plan.template
   pointer: /properties/unit_id
   kind: unit
   lookup: false
-- operation: cli.related
+- operation: related.read
   pointer: /properties/id
   kind: null
   lookup: true
   owner: related-record
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-7 2026-10-12: heterogeneous record owner probe over manifest record ids; owner executed in test_arch_idroundtrip'
-- operation: cli.session-end
+  decision: 'Builder Task 78 (cx) D-7 2026-10-12: heterogeneous record owner probe
+    over manifest record ids; owner executed in test_arch_idroundtrip'
+- operation: session.end
   pointer: /properties/session_id
   kind: null
   lookup: false
   decision: 'Task 73 conductor 2026-10-12: session-end session_id selects/creates
     the ownership window; never a known-ID lookup ((cx) D-6 analogue)'
-- operation: cli.unit-list
+- operation: unit.list
   pointer: /properties/component_id
   kind: component
   lookup: true
-- operation: cli.unit-list
+- operation: unit.list
   pointer: /properties/module_id
   kind: module
   lookup: true
@@ -229,7 +237,8 @@ fields:
   lookup: true
   owner: masters-candidate-module
   owner_shape: scalar
-  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map; owner executed in test_arch_idroundtrip'
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map;
+    owner executed in test_arch_idroundtrip'
 - operation: material.span
   pointer: /properties/route_id
   kind: route
@@ -284,10 +293,6 @@ fields:
   pointer: /properties/body_file_sha256
   kind: digest
   lookup: false
-- operation: note.content
-  pointer: /properties/note_id
-  kind: note
-  lookup: true
 - operation: note.create
   pointer: /properties/body_file_sha256
   kind: digest
@@ -332,48 +337,10 @@ fields:
   pointer: /properties/stage_id
   kind: stage
   lookup: true
-- operation: plan.edit-context
-  pointer: /properties/route_id
-  kind: route
-  lookup: true
-- operation: plan.edit-context
-  pointer: /properties/route_ids/items
-  kind: route
-  lookup: true
-- operation: plan.edit-context
-  pointer: /properties/stage_id
-  kind: stage
-  lookup: true
-- operation: plan.edit-context
-  pointer: /properties/unit_id
-  kind: unit
-  lookup: true
-- operation: plan.template
-  pointer: /properties/module_id
-  kind: module
-  lookup: false
-- operation: plan.template
-  pointer: /properties/unit_id
-  kind: unit
-  lookup: false
 - operation: project.create
   pointer: /properties/file_sha256
   kind: digest
   lookup: false
-- operation: project.inspect
-  pointer: /properties/id
-  kind: null
-  lookup: true
-  owner: inspect-reference
-  owner_shape: scalar
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
-- operation: project.inspect
-  pointer: /properties/more_ids/items
-  kind: null
-  lookup: true
-  owner: inspect-reference
-  owner_shape: scalar
-  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json; owner executed in test_arch_idroundtrip'
 - operation: project.update
   pointer: /properties/file_sha256
   kind: digest

@@ -2,19 +2,15 @@
 
 from __future__ import annotations
 
-import argparse
-import contextlib
 import hashlib
-import io
 import json
-import tempfile
 from pathlib import Path
 
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import context_from_v2 as _context_from_v2
 from learning_os.app.gateway import read_structured_file as _read_structured_file
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
-from learning_os.app.proposal import CommandOutput
+from learning_os.app.proposal import GatewayDispatch
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store.revisions import artifact_revision
@@ -194,7 +190,7 @@ def require_stage(ctx: OpContext, data: dict, stage_id: str):
 def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
                             payload: dict, reviewed_content: bytes,
                             reviewed_sha256: str,
-                            review_report: str | None) -> CommandOutput:
+                            review_report: str | None) -> GatewayDispatch:
     """The raising twin of the reviewed-apply transport (SPEC R3, PLAN 4.1).
 
     Verifies the reviewed bytes, report and saved gateway envelope exactly
@@ -211,24 +207,6 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
     is the codebase's established late-binding mechanism
     (``cli_parser._resolve_handler``).
     """
-    import importlib
-
-    # D1 RECORDED DEVIATION (closed, not deferred; T81 review disposition +
-    # T82 review): this transport import stays dynamic (import_module) by
-    # decision. Proven unlandable static in every form: module-level breaks
-    # entry via the capability-pipeline-handlers-plan load cycle (T81 proof), and any
-    # static edge — module-level or function-local — trips
-    # code_reachability's pinned no-cycle rule, which counts
-    # function-level imports (ast.walk) and offers no cycle exemption
-    # (T82 proof; attempt + layers-KEPT + reachability-2-fail reproduced
-    # by conductor). The behavior is correct, all suites green, and the
-    # probe covers check/apply/replay. Changing the reachability guard
-    # or restructuring the pipeline needs Aram's direct authorization.
-    _capability_transport = importlib.import_module(
-        "learning_os.adapters.capability")
-    build_parser = importlib.import_module(
-        "learning_os.adapters.cli_parser").build_parser
-
     actual = "sha256:" + hashlib.sha256(reviewed_content).hexdigest()
     if actual != reviewed_sha256:
         message = ("reviewed bytes changed since --check; re-run --check, "
@@ -272,22 +250,4 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
             prefixed=True,
             exit_code=2,
         ) from exc
-    fd, tmp_name = tempfile.mkstemp(prefix="learningos-reviewed-", suffix=".json")
-    try:
-        with open(fd, "w", encoding="utf-8") as handle:
-            json.dump(envelope, handle, ensure_ascii=False)
-        args = argparse.Namespace(
-            root=str(ctx.root),
-            name=capability_name,
-            payload_file=tmp_name,
-            replay_only=False,
-            _parser_factory=build_parser,
-        )
-        captured, errors = io.StringIO(), io.StringIO()
-        with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
-            code = _capability_transport.cmd_capability(args)
-    finally:
-        with contextlib.suppress(OSError):
-            Path(tmp_name).unlink()
-    return CommandOutput(
-        stdout=captured.getvalue(), stderr=errors.getvalue(), exit_code=code)
+    return GatewayDispatch(envelope)

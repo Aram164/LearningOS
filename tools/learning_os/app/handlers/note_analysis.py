@@ -15,7 +15,7 @@ from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.gateway import read_structured_file as _read_structured_file
 from learning_os.app.handlers._shared import NOTES_PREFIX
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.domain import ids
 from learning_os.domain.failures import WriteRefused
@@ -46,7 +46,7 @@ from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 
 
-@register("note.analysis.save", kind="command", json_formats=("unescaped",))
+@register("note.analysis.save", kind="command")
 def note_analysis_save(ctx: OpContext, req: dict) -> Result:
     """Preserve one source analysis as a durable reference note."""
     root = ctx.root
@@ -62,7 +62,7 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "replayed": True, "note_id": note_id,
              "note_path": path.relative_to(root).as_posix()},
-            json_format="unescaped",
+
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -77,8 +77,8 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[note_id],
             expected_revisions=expected_revisions,
         ),
-        after_commit="STANDARD",
-        json_format="unescaped",
+
+
     )
 
 
@@ -131,7 +131,7 @@ def _read_batch_items(bundle: object) -> list[tuple[int, dict, dict, bytes]]:
     return prepared
 
 
-@register("note.analysis.save_batch", kind="command", json_formats=("unescaped",))
+@register("note.analysis.save_batch", kind="command")
 def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
     """Preserve up to 20 source analyses atomically under one receipt."""
     root = ctx.root
@@ -159,7 +159,7 @@ def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "replayed": True, "created_note_ids": [],
              "replayed_note_ids": replayed_ids, "note_paths": paths},
-            json_format="unescaped",
+
         )
     # The envelope guards every batch id, but only new notes become
     # transaction artifacts: replayed notes keep their revision exactly
@@ -180,17 +180,17 @@ def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
                 "replayed_note_ids": replayed_ids, "note_paths": paths}
 
     return Result(
-        {"ok": True, "replayed": False, "created_note_ids": created,
-         "replayed_note_ids": replayed_ids, "note_paths": paths},
+        ResponsePayload({"ok": True, "replayed": False, "created_note_ids": created,
+         "replayed_note_ids": replayed_ids, "note_paths": paths}, finish_analysis_save_batch({}), confirmation='prepend'),
         proposal=TransactionProposal(
             capability="note.analysis.save_batch",
             writes=writes,
             artifact_ids=created,
             expected_revisions=expected,
         ),
-        finish=finish_analysis_save_batch,
-        after_commit="STANDARD",
-        json_format="unescaped",
+
+
+
     )
 
 
@@ -579,7 +579,7 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     return resolved
 
 
-@register("cli.note-analysis-prepare", kind="tool", json_formats=("indented",))
+@register("note.analysis.prepare", kind="tool")
 def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     """Drafts in, reviewable staging plus the exact envelope out.
 
@@ -643,5 +643,5 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
          "expected_snapshot": snapshot,
          "expected_revisions": revisions,
          "notes": report, "submit": submit},
-        json_format="indented",
+
     )

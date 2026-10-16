@@ -5,14 +5,29 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
+from learning_os.domain.failures import WriteRefused
 from learning_os.store.contracts.gateway import GatewayRequestContext
 
-JsonFormat = Literal[
-    "ascii", "compact", "indented", "indented_sorted", "layout_sorted",
-    "sorted", "unescaped",
-]
+
+class CommitIssues(list):
+    """Human-readable validation issues plus structured refusal facts."""
+    def __init__(self, issues=(), *, details=None):
+        super().__init__(issues)
+        self.details = dict(details or {})
+
+
+@dataclass(frozen=True)
+class DeliveryCompletion:
+    service: Any
+    touched_base: Any
+
+
+@dataclass(frozen=True)
+class InboxCompletion:
+    inbox: Path
+    target: Path
 
 
 @dataclass(frozen=True)
@@ -37,40 +52,44 @@ class TransactionProposal:
     touched: Callable | None | Literal["STANDARD"] = "STANDARD"
     clock: Callable | None = None                 # a call site's own TransactionService clock, else the default
     expected_snapshot: str | None = None        # None omits the engine kwarg (standard shapes); AI carries its explicit token
+    completion: DeliveryCompletion | InboxCompletion | None = None
+    refusal: tuple[list, WriteRefused] | None = None
     translate: Callable[[BaseException], BaseException | None] | None = None
     # The call site's own except-chain around commit; the pipeline raises the
     # translation `from` the original, or re-raises the original when None.
 
 
 @dataclass(frozen=True)
-class CommandOutput:
-    """A raw child-process result for the CLI to pass through (SPEC (cx) D-9).
+class GatewayDispatch:
+    """An already reviewed, guard-bound envelope for the shared pipeline."""
+    envelope: dict
 
-    Frozen: the stdout, stderr and exit code travel verbatim from the
-    process to the adapter. Consumed only by the CLI pipeline through
-    ``Result.command_output``; never composed with a proposal, a
-    finish/render callback, a gesture or a diagnostic-failed result,
-    and refused on the gateway path.
-    """
 
-    stdout: str
-    stderr: str
-    exit_code: int
+class ResponsePayload(dict):
+    """Prepared check data and a declarative success projection."""
+
+    def __init__(self, prepared: dict, success: dict | None = None,
+                 *, confirmation: str = "merge"):
+        super().__init__(prepared)
+        self.prepared = prepared
+        if confirmation not in ("merge", "prepend", "omit", "delivery"):
+            raise ValueError(f"unknown confirmation projection: {confirmation}")
+        self.success = dict(prepared if success is None else success)
+        self.confirmation = confirmation
+
+
+@dataclass(frozen=True)
+class Presentation:
+    view: dict | None = None
+    notices: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
 class Result:
     """What a registered handler returns (SPEC §11.1)."""
 
-    payload: dict
+    payload: dict | GatewayDispatch
     proposal: TransactionProposal | None = None
-    finish: Callable[[dict], dict] | None = None  # receives the confirmation dict; default {**payload, **confirmation}
-    on_commit_refused: Callable[[list[str]], list[str]] | None = None  # stderr lines for commit refusals
     diagnostic_failed: bool = False                # exit 1, a result rather than a refusal
-    after_commit: Callable[[int, list, dict], None] | Literal["STANDARD"] | None = None   # recipes R4/R8: a callable may raise a typed refusal; "STANDARD" is the shared legacy raise
-    json_format: JsonFormat | None = None
-    refused_stdout: Callable[[list[str]], str] | None = None  # SPEC (bd): the legacy refusal print to stdout, without its newline
-    human_view: dict | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it
-    notices: tuple[str, ...] = ()  # SPEC (bx) 2: success-path stderr lines; the CLI writes them verbatim, the gateway ignores them
+    human_view: dict | Presentation | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it
     gesture: GatewayRequestContext | None = None  # SPEC (br) R7: a terminal direct-user-gesture write; the pipeline commits inside this context
-    command_output: CommandOutput | None = None  # SPEC (cx) D-9: a raw child-process result; CLI-only, composes with nothing

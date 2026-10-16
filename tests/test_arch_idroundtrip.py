@@ -334,7 +334,7 @@ def test_decided_scalar_pointers_accept_their_values():
     from learning_os.store.contracts.requests import request_schema
 
     module_node = _navigate(
-        request_schema(ROOT, "cli.plan-template"), "/properties/module_id")
+        request_schema(ROOT, "plan.template"), "/properties/module_id")
     assert _scalar_accepts("module", "module-1", module_node)
     concept_node = _navigate(
         request_schema(ROOT, "atlas.context"), "/properties/concept_id")
@@ -490,29 +490,29 @@ def test_current_exceptions_are_recorded():
 #: suggests from the domain its handler already loads (or, for the
 #: AI store, a bounded miss-only enumeration of that same store).
 SUPPORTED_OWNER_ROWS: dict[tuple[str, str], tuple[str, str]] = {
-    ("cli.inspect", "/properties/id"): ("inspect-reference", "scalar"),
-    ("cli.inspect", "/properties/more_ids/items"): ("inspect-reference", "scalar"),
+
+
     ("project.inspect", "/properties/id"): ("inspect-reference", "scalar"),
     ("project.inspect", "/properties/more_ids/items"): ("inspect-reference", "scalar"),
     ("ai-action.delivery.apply", "/properties/delivery_id"):
         ("ai-delivery-exchange", "scalar"),
     ("ai-action.delivery.apply", "/properties/artifact_sha256"):
         ("ai-delivery-artifact-digests", "mapping-values"),
-    ("cli.ai-action-append-slices", "/properties/request_id"):
+    ("ai-action.append-slices", "/properties/request_id"):
         ("ai-request-store", "scalar"),
-    ("cli.ai-action-status", "/properties/request_id"):
+    ("ai-action.status", "/properties/request_id"):
         ("ai-request-store", "scalar"),
-    ("cli.ai-action-validate-delivery", "/properties/delivery_id"):
+    ("ai-action.delivery.validate", "/properties/delivery_id"):
         ("ai-delivery-store", "scalar"),
-    ("cli.ai-action-prepare", "/properties/action_id"):
+    ("ai-action.prepare", "/properties/action_id"):
         ("ai-action-registry", "scalar"),
-    ("cli.ai-action-prepare", "/properties/target_id"):
+    ("ai-action.prepare", "/properties/target_id"):
         ("ai-action-target", "scalar"),
-    ("cli.operations", "/properties/request_id"):
+    ("operations.read", "/properties/request_id"):
         ("operations-trace-request", "scalar"),
     ("masters-planning.comparison.publish", "/properties/candidate_module_id"):
         ("masters-candidate-module", "scalar"),
-    ("cli.related", "/properties/id"): ("related-record", "scalar"),
+    ("related.read", "/properties/id"): ("related-record", "scalar"),
 }
 
 
@@ -719,7 +719,7 @@ def test_owner_table_matches_the_inventory_exactly():
     rows = yaml.safe_load(
         (ROOT / "tests/architecture/id-fields.yaml").read_text(
             encoding="utf-8"))["fields"]
-    assert len(SUPPORTED_OWNER_ROWS) == 14
+    assert len(SUPPORTED_OWNER_ROWS) == 12
     tabled = set(SUPPORTED_OWNER_ROWS)
     inventory = {}
     for row in rows:
@@ -746,14 +746,14 @@ def test_owner_table_matches_the_inventory_exactly():
 #: lookup false, the schema marker and dated provenance, and no review;
 #: every other null kind without a supported owner keeps its review.
 NONLOOKUP_IDENTITY_ROWS: dict[tuple[str, str], str] = {
-    ("cli.session-end", "/properties/session_id"):
+    ("session.end", "/properties/session_id"):
         "selects/creates the ownership window; never a known-ID lookup",
     # Builder Task 78 ((cx) D-6): the two further decided identities.
     # Creation and ownership ids have no typo lookup domain, so no
     # candidate inventory is ever enumerated for them.
-    ("cli.ai-action-prepare", "/properties/request_id"):
+    ("ai-action.prepare", "/properties/request_id"):
         "caller-supplied creation identity; never a known-ID lookup",
-    ("cli.goal", "/properties/session_id"):
+    ("goal.decide", "/properties/session_id"):
         "ownership-window identity; never a known-ID lookup",
 }
 
@@ -838,10 +838,10 @@ def test_owner_selection_covers_scalar_items_and_mapping_values():
                "artifact_sha256": {"b.md": "sha256:" + "b" * 64,
                                    "a.md": "sha256:" + "a" * 64}}
     assert owner_selected_values(
-        "cli.inspect", "/properties/id", request) == [
+        "project.inspect", "/properties/id", request) == [
             ("/properties/id", "note-demo")]
     assert owner_selected_values(
-        "cli.inspect", "/properties/more_ids/items", request) == [
+        "project.inspect", "/properties/more_ids/items", request) == [
             ("/properties/more_ids/items/0", "stage-l01"),
             ("/properties/more_ids/items/1", "detour-1")]
     assert owner_selected_values(
@@ -865,17 +865,17 @@ def test_owner_selection_fails_closed():
     with pytest.raises(AssertionError):
         owner_selected_values("note.search", "/properties/id", request)
     with pytest.raises(AssertionError):
-        owner_selected_values("cli.inspect", "/properties/id", {})
+        owner_selected_values("project.inspect", "/properties/id", {})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "cli.inspect", "/properties/id", {"id": ["note-demo"]})
+            "project.inspect", "/properties/id", {"id": ["note-demo"]})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "cli.inspect", "/properties/more_ids/items",
+            "project.inspect", "/properties/more_ids/items",
             {"more_ids": "stage-l01"})
     with pytest.raises(AssertionError):
         owner_selected_values(
-            "cli.inspect", "/properties/more_ids/items",
+            "project.inspect", "/properties/more_ids/items",
             {"more_ids": ["ok", 7]})
     with pytest.raises(AssertionError):
         owner_selected_values(
@@ -1177,23 +1177,22 @@ def test_six_owner_rows_resolved_and_eleven_reviews_retained():
     removed = {
         "ai-action.delivery.apply::/properties/artifact_sha256::review",
         "ai-action.delivery.apply::/properties/delivery_id::review",
-        "cli.inspect::/properties/id::review",
-        "cli.inspect::/properties/more_ids/items::review",
         "project.inspect::/properties/id::review",
         "project.inspect::/properties/more_ids/items::review",
+
         # Task 73 decision 4: decided nonlookup, not under review.
-        "cli.session-end::/properties/session_id::review",
+        "session.end::/properties/session_id::review",
         # Builder Task 78 ((cx) D-6/D-7/D-8): decided lookups and
         # nonlookup identities, no longer under review.
-        "cli.ai-action-append-slices::/properties/request_id::review",
-        "cli.ai-action-prepare::/properties/action_id::review",
-        "cli.ai-action-prepare::/properties/request_id::review",
-        "cli.ai-action-prepare::/properties/target_id::review",
-        "cli.ai-action-status::/properties/request_id::review",
-        "cli.ai-action-validate-delivery::/properties/delivery_id::review",
+        "ai-action.append-slices::/properties/request_id::review",
+        "ai-action.prepare::/properties/action_id::review",
+        "ai-action.prepare::/properties/request_id::review",
+        "ai-action.prepare::/properties/target_id::review",
+        "ai-action.status::/properties/request_id::review",
+        "ai-action.delivery.validate::/properties/delivery_id::review",
         "cli.dual::/properties/session_id::review",
-        "cli.operations::/properties/request_id::review",
-        "cli.related::/properties/id::review",
+        "operations.read::/properties/request_id::review",
+        "related.read::/properties/id::review",
         "masters-planning.comparison.publish::/properties/candidate_module_id::review",
     }
     assert not (removed & set(current)), (
@@ -1228,7 +1227,7 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
             manifest=manifest, repo=repo, candidates=candidates)
         assert status == "resolved", f"A6 fixture id {value!r} misses — {FIX}"
     # Requested batch order and the unknown-id refusal through the handler.
-    ctx = OpContext(root=mini_repo, operation="cli.inspect",
+    ctx = OpContext(root=mini_repo, operation="project.inspect",
                     channel="operator", invocation="query", gateway=None)
     first, second = candidates[0], candidates[-1]
     batch = platform_handlers.inspect(
@@ -1237,7 +1236,7 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
     assert batch.payload["requested_ids"] == [first, second]
     with pytest.raises(WriteRefused) as raised:
         platform_handlers.inspect(ctx, {"id": "note-no-such-record"})
-    assert raised.value.site == "cli.inspect.unknown-id"
+    assert raised.value.site == "project.inspect.unknown-id"
     assert raised.value.exit_code == 2
     assert str(raised.value).startswith(
         "record not found: note-no-such-record")

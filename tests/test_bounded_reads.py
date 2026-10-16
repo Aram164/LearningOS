@@ -288,7 +288,7 @@ def test_route_batch_uses_one_repository_load(mini_repo, monkeypatch):
         ["--root", str(mini_repo), "plan-edit-context", unit_id,
          "--route-ids", first, second])
     outcome = ops_pipeline.run_cli(
-        mini_repo, "cli.plan-edit-context", args)
+        mini_repo, "plan.edit-context", args)
     assert outcome.exit_code == 0, outcome.stderr
     assert len(loads) == 1
 
@@ -319,7 +319,7 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
     # renders the stale snapshot as the D16 stderr line; nothing is
     # printed before the refusal either way.
     outcome = ops_pipeline.run_cli(
-        mini_repo, "cli.plan-edit-context", args)
+        mini_repo, "plan.edit-context", args)
     assert outcome.exit_code == 3, outcome.stderr
     assert outcome.stdout == ""
     assert outcome.stderr.splitlines()[0].startswith("los: STALE_SNAPSHOT: ")
@@ -387,13 +387,13 @@ def test_search_succeeds_despite_malformed_project(mini_repo):
     note = next(iter(load_repo(mini_repo).notes.values()))
     with note.path.open("a", encoding="utf-8") as f:
         f.write("\nNeedleUnfindable explanation.\n")
-    
+
     # Break a non-note file (modules)
     module_path = mini_repo / "records" / "modules.yaml"
     original_module_text = module_path.read_text(encoding="utf-8")
     broken_module_text = original_module_text.replace("modules:", "modules: [broken")
     module_path.write_text(broken_module_text, encoding="utf-8")
-    
+
     try:
         response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
         assert response.returncode == 0, response.stderr

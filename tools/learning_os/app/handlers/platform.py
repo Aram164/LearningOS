@@ -324,7 +324,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
             {"schema_version": 1, "snapshot_id": snapshot,
              "contract": "record-batch", "requested_ids": ids,
              "records": records},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -342,8 +342,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.inspect", kind="query", json_formats=("compact", "layout_sorted"))
-@register("project.inspect", kind="query", json_formats=("compact", "layout_sorted"))
+@register("project.inspect", kind="query")
 def inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect one record or structural id, or a batch of up to 20."""
     if req.get("more_ids"):
@@ -367,7 +366,7 @@ def inspect(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         )
     payload = with_coordination_digests(root, payload)
-    return Result(payload, json_format="layout_sorted")
+    return Result(payload)
 
 
 # ---------------------------------------------------------------------------
@@ -448,7 +447,7 @@ def _project_write(root: Path, data: dict, *,
     return {target: rendered}, project_id
 
 
-@register("project.create", kind="command", json_formats=("unescaped",))
+@register("project.create", kind="command")
 def project_create(ctx: OpContext, req: dict) -> Result:
     """Create one first-class project record."""
     root = ctx.root
@@ -468,12 +467,12 @@ def project_create(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[project_id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_project_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("project.update", kind="command", json_formats=("unescaped",))
+@register("project.update", kind="command")
 def project_update(ctx: OpContext, req: dict) -> Result:
     """Update one first-class project record."""
     root = ctx.root
@@ -499,20 +498,19 @@ def project_update(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[project_id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_project_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("cli.project-list", kind="query", json_formats=("layout_sorted",))
-@register("project.list", kind="query", json_formats=("layout_sorted",))
+@register("project.list", kind="query")
 def project_list(ctx: OpContext, req: dict) -> Result:
     """List first-class projects, optionally filtered by status."""
     manifest = _fresh_manifest(ctx.root)
     rows = manifest.get("projects", [])
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req.get("status")]
-    return Result(rows, json_format="layout_sorted")
+    return Result(rows)
 
 
 # ---------------------------------------------------------------------------
@@ -521,8 +519,7 @@ def project_list(ctx: OpContext, req: dict) -> Result:
 # Moved with the units from commands.vnext (SPEC §12).
 
 
-@register("backup.manifest", kind="query", json_formats=("indented",))
-@register("cli.backup-manifest", kind="tool", json_formats=("indented",))
+@register("backup.manifest", kind="query")
 def backup_manifest(ctx: OpContext, req: dict) -> Result:
     """Build the backup manifest, or write it outside every backed-up root."""
     root = ctx.root
@@ -544,16 +541,16 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
                     f"{label} root: {req.get('out')}")
         _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
         if req.get("stdout"):
-            return Result(manifest, json_format="indented")
+            return Result(manifest)
         return Result({
             "ok": True,
             "out": str(resolved),
             "roots": manifest["roots"],
             "entries": len(manifest["entries"]),
             "aggregate_sha256": manifest["aggregate_sha256"],
-        }, json_format="indented")
+        })
     if req.get("stdout"):
-        return Result(manifest, json_format="indented")
+        return Result(manifest)
     size_kb = len(json.dumps(manifest, ensure_ascii=False).encode("utf-8")) / 1024
     raise BackupManifestError(
         f"backup-manifest prints nothing by default: the manifest holds "
@@ -562,7 +559,7 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
         f"--stdout")
 
 
-@register("cli.backup-verify", kind="tool", json_formats=("indented",))
+@register("backup.verify", kind="tool")
 def backup_verify(ctx: OpContext, req: dict) -> Result:
     """Verify a backup manifest against the restored trees."""
     root = ctx.root
@@ -575,21 +572,18 @@ def backup_verify(ctx: OpContext, req: dict) -> Result:
         restored_ui=Path(req["restored_ui"]).expanduser().resolve(),
         restored_materials=Path(req["restored_materials"]).expanduser().resolve(),
     )
-    return Result(result, diagnostic_failed=not result["ok"],
-                  json_format="indented")
+    return Result(result, diagnostic_failed=not result["ok"])
 
 
-@register("cli.health-report", kind="tool", json_formats=("indented",))
-@register("health.report", kind="query", json_formats=("indented",))
+@register("health.report", kind="query")
 def health_report(ctx: OpContext, req: dict) -> Result:
     """Build the repository health report."""
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
-    return Result(build_health_report(ctx.root), json_format="indented")
+    return Result(build_health_report(ctx.root))
 
 
-@register("cli.legacy-archive-inspect", kind="tool", json_formats=("indented",))
-@register("legacy.archive.inspect", kind="query", json_formats=("indented",))
+@register("legacy.archive.inspect", kind="query")
 def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
     """Inspect a legacy archive against its allowlist."""
     root = ctx.root
@@ -597,11 +591,10 @@ def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
     lock = inspect_legacy_archive(
         root, Path(req["archive_root"]).expanduser().resolve(), allowlist,
     )
-    return Result(lock, json_format="indented")
+    return Result(lock)
 
 
-@register("cli.legacy-archive-status", kind="tool", json_formats=("indented",))
-@register("legacy.archive.status", kind="query", json_formats=("indented",))
+@register("legacy.archive.status", kind="query")
 def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
     """Report the published legacy-archive lock, if any."""
     root = ctx.root
@@ -613,17 +606,16 @@ def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
         "lock": lock,
     }
     validate_contract(root, "legacy-archive-status.schema.json", value)
-    return Result(value, json_format="indented")
+    return Result(value)
 
 
-@register("cli.masters-planning-dashboard", kind="tool", json_formats=("indented",))
-@register("masters-planning.dashboard", kind="query", json_formats=("indented",))
+@register("masters-planning.dashboard", kind="query")
 def masters_planning_dashboard(ctx: OpContext, req: dict) -> Result:
     """Render the Master's Planning dashboard."""
     value = masters_planning.masters_planning_dashboard(
         ctx.root, confirmed=bool(req.get("confirm_masters_planning")),
     )
-    return Result(value, json_format="indented")
+    return Result(value)
 
 
 # ---------------------------------------------------------------------------
@@ -933,7 +925,7 @@ def _describe_from_records(root: Path, request_id: str,
     }
 
 
-@register("cli.operations", kind="tool", json_formats=("indented",))
+@register("operations.read", kind="tool")
 def operations(ctx: OpContext, req: dict) -> Result:
     """List recent causal operations or explain one request id."""
     root = ctx.root
@@ -949,11 +941,11 @@ def operations(ctx: OpContext, req: dict) -> Result:
                     {"error": message, "request_id": req["request_id"]}),
                 exit_code=2,
             )
-        return Result(detail, json_format="indented")
+        return Result(detail)
     limit = req.get("limit") or 20
     return Result(
         {"operations": list_operations(root, limit=min(limit, 50))},
-        json_format="indented",
+
     )
 
 
@@ -974,7 +966,7 @@ def _publish_refused_stdout(errors: list) -> str:
     })
 
 
-@register("legacy.archive.lock.publish", kind="command", json_formats=("indented",))
+@register("legacy.archive.lock.publish", kind="command")
 def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed safe Legacy disposition lock."""
     root = ctx.root
@@ -1005,12 +997,12 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
             artifact_ids=["legacy-archive-lock"],
             expected_revisions=expected_revisions,
         ),
-        refused_stdout=_publish_refused_stdout,
-        json_format="indented",
+
+
     )
 
 
-@register("masters-planning.catalog.update", kind="command", json_formats=("indented",))
+@register("masters-planning.catalog.update", kind="command")
 def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
     """Update the reviewed academic-only Master Planning catalog."""
     root = ctx.root
@@ -1045,12 +1037,12 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
             artifact_ids=["master-planning-catalog"],
             expected_revisions=expected_revisions,
         ),
-        refused_stdout=_publish_refused_stdout,
-        json_format="indented",
+
+
     )
 
 
-@register("masters-planning.comparison.publish", kind="command", json_formats=("indented",))
+@register("masters-planning.comparison.publish", kind="command")
 def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one prospective source comparison against its catalog."""
     root = ctx.root
@@ -1087,6 +1079,6 @@ def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["candidate_module_id"], value["id"]],
             expected_revisions=expected_revisions,
         ),
-        refused_stdout=_publish_refused_stdout,
-        json_format="indented",
+
+
     )

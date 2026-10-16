@@ -170,13 +170,13 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
     if command == "cmd_note_read":
         cli_args = parser.parse_args(
             ["note-read", note.id, "--offset", "0", "--limit", "100"])
-        outcome = run_cli(mini_repo, "cli.note-read", cli_args)
+        outcome = run_cli(mini_repo, "note.content", cli_args)
         assert outcome.exit_code == 0
         payload = json.loads(outcome.stdout)
     else:
         cli_args = parser.parse_args(
             ["search", note.id, "--content", "--offset", "0", "--limit", "100"])
-        outcome = run_cli(mini_repo, "cli.search", cli_args)
+        outcome = run_cli(mini_repo, "note.search", cli_args)
         assert outcome.exit_code == 0
         payload = json.loads(outcome.stdout)
     assert len(parsed) == len(repo.notes)
@@ -194,7 +194,7 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
         cli_args = parser.parse_args(
             ["note-read", note.id, "--offset", "1", "--limit", "100",
              "--expected-snapshot", payload["snapshot_id"]])
-        outcome = run_cli(mini_repo, "cli.note-read", cli_args)
+        outcome = run_cli(mini_repo, "note.content", cli_args)
         assert outcome.exit_code == 3
         assert not outcome.stdout
         assert "snapshot changed" in outcome.stderr
@@ -202,7 +202,7 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
         cli_args = parser.parse_args(
             ["search", note.id, "--content", "--offset", "1", "--limit", "100",
              "--expected-snapshot", payload["snapshot_id"]])
-        outcome = run_cli(mini_repo, "cli.search", cli_args)
+        outcome = run_cli(mini_repo, "note.search", cli_args)
         assert outcome.exit_code == 3
         assert not outcome.stdout
         assert "snapshot changed" in outcome.stderr
@@ -255,7 +255,7 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
         return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}, None
 
     monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo", manifest)
-    ctx = OpContext(root=mini_repo, operation="cli.inspect",
+    ctx = OpContext(root=mini_repo, operation="project.inspect",
                     channel="operator", invocation="query", gateway=None)
     result = platform_handlers.inspect(
         ctx, {"id": "old", "more_ids": ["new", "old"]})
@@ -276,7 +276,7 @@ def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monke
                         lambda root, **kwargs: ({"records": [{"id": "a"}]}, None))
     fingerprints = iter(["a" * 64, "b" * 64])
     monkeypatch.setattr(plumbing, "canonical_fingerprint", lambda root: next(fingerprints))
-    ctx = OpContext(root=mini_repo, operation="cli.inspect",
+    ctx = OpContext(root=mini_repo, operation="project.inspect",
                     channel="operator", invocation="query", gateway=None)
     with pytest.raises(StaleSnapshot, match="snapshot changed"):
         platform_handlers.inspect(ctx, {"id": "a", "more_ids": ["a"]})
@@ -300,7 +300,7 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
     outputs = []
     for stream in (terminal, pipe):
         with redirect_stdout(stream):
-            outcome = run_cli(mini_repo, "cli.inspect", args)
+            outcome = run_cli(mini_repo, "project.inspect", args)
         assert outcome.exit_code == 0, outcome.stderr
         outputs.append(outcome.stdout)
     terminal_out, pipe_out = outputs
@@ -330,7 +330,7 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
         repo = load_repo(mini_repo)
         args = SimpleNamespace(root=str(mini_repo), id=next(iter(repo.notes)),
                                more_ids=[next(iter(repo.concepts))])
-        outcome = run_cli(mini_repo, "cli.inspect", args)
+        outcome = run_cli(mini_repo, "project.inspect", args)
         assert outcome.exit_code == 0, outcome.stderr
         payload = json.loads(outcome.stdout)
     else:
@@ -339,7 +339,7 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
         args = SimpleNamespace(root=str(mini_repo), brief=(command == "brief"),
                                compact=(command == "compact"),
                                expected_snapshot=None, offset=0, limit=10)
-        outcome = run_cli(mini_repo, "cli.bootstrap", args)
+        outcome = run_cli(mini_repo, "operator.bootstrap", args)
         assert outcome.exit_code == 0, outcome.stderr
         payload = json.loads(outcome.stdout)
     assert payload["snapshot_id"].startswith("sha256:")

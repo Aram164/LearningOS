@@ -11,7 +11,6 @@ import yaml
 
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
-from learning_os.app.handlers._shared import on_commit_refused as _on_commit_refused
 from learning_os.app.handlers._shared import (
     require_path_or_error,
     require_stage,
@@ -110,7 +109,7 @@ def _observe_offer(unit_id: str, stage: dict) -> dict:
     return offer
 
 
-@register("stage.progress.update", kind="command", json_formats=("unescaped",))
+@register("stage.progress.update", kind="command")
 def stage_progress(ctx: OpContext, req: dict) -> Result:
     """Move one stage's status and record progress against it."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -187,12 +186,12 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("stage.note.write", kind="command", json_formats=("unescaped",))
+@register("stage.note.write", kind="command")
 def stage_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a stage's working note."""
     root = ctx.root
@@ -239,8 +238,8 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -276,7 +275,7 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
         counter += 1
 
 
-@register("stage.attachment.add", kind="command", json_formats=("unescaped",))
+@register("stage.attachment.add", kind="command")
 def stage_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file beside a stage's working note."""
     root = ctx.root
@@ -319,12 +318,12 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("path.note.write", kind="command", json_formats=("unescaped",))
+@register("path.note.write", kind="command")
 def path_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a learning-path stage note."""
     root = ctx.root
@@ -369,8 +368,8 @@ def path_note(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["path_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -379,7 +378,7 @@ def _on_path_progress_refused(errors: list) -> list[str]:
     return ["los: path update rejected by validation", *errors[:12]]
 
 
-@register("path.progress.update", kind="command", json_formats=("unescaped",))
+@register("path.progress.update", kind="command")
 def path_progress(ctx: OpContext, req: dict) -> Result:
     """Move one learning-path stage's status."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -421,8 +420,8 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["path_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_path_progress_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -431,7 +430,7 @@ def _on_path_attach_refused(errors: list) -> list[str]:
     return ["los: attachment rejected by validation", *errors[:12]]
 
 
-@register("path.attachment.add", kind="command", json_formats=("unescaped",))
+@register("path.attachment.add", kind="command")
 def path_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file to a learning-path stage."""
     root = ctx.root
@@ -476,12 +475,12 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["path_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_path_attach_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("detour.create", kind="command", json_formats=("unescaped",))
+@register("detour.create", kind="command")
 def detour_create(ctx: OpContext, req: dict) -> Result:
     """Open a scoped detour off one stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -532,8 +531,8 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -542,7 +541,7 @@ def _stage(data: dict, stage_id: str):
                  if isinstance(row, dict) and row.get("id") == stage_id), None)
 
 
-@register("detour.resolve", kind="command", json_formats=("unescaped",))
+@register("detour.resolve", kind="command")
 def detour_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve a detour and reactivate its return stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -588,12 +587,12 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
-@register("source.feedback.record", kind="command", json_formats=("unescaped",))
+@register("source.feedback.record", kind="command")
 def source_feedback(ctx: OpContext, req: dict) -> Result:
     """Record source feedback against an exact unit/stage/source."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -660,8 +659,8 @@ def source_feedback(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"], study_map.id],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )
 
 
@@ -675,7 +674,7 @@ def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
     return target, rel
 
 
-@register("unit.note.append", kind="command", json_formats=("unescaped",))
+@register("unit.note.append", kind="command")
 def unit_note(ctx: OpContext, req: dict) -> Result:
     """Append one session-level section to the unit working note."""
     root = ctx.root
@@ -796,8 +795,8 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
                 artifact_ids=[req["unit_id"]],
                 expected_revisions=expected_revisions,
             ),
-            on_commit_refused=_on_commit_refused,
-            json_format="unescaped",
+
+
         )
     except (OSError, WriteRefused) as exc:
         raise WriteRefused(
@@ -837,7 +836,7 @@ def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
     return False
 
 
-@register("unit.source-selection.set", kind="command", json_formats=("unescaped",))
+@register("unit.source-selection.set", kind="command")
 def unit_source_selection(ctx: OpContext, req: dict) -> Result:
     """Persist one learner choice without changing the complete material menu."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -956,6 +955,6 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             artifact_ids=[req["unit_id"]],
             expected_revisions=expected_revisions,
         ),
-        on_commit_refused=_on_commit_refused,
-        json_format="unescaped",
+
+
     )

@@ -1,0 +1,101 @@
+operation: intelligence.scan
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: scan-text
+  kind: success
+  transport: cli
+  argv:
+  - intelligence-scan
+  a5_base: true
+  expect:
+    site: null
+- id: scan-json
+  kind: success
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --json
+  expect:
+    site: null
+- id: scan-brief-json
+  kind: success
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --brief
+  - --json
+  expect:
+    site: null
+- id: scan-with-feed
+  kind: success
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --feed
+  - <CASEDATA>/feed.json
+  - --json
+  expect:
+    site: null
+- id: negative-days
+  kind: refusal
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --days
+  - -1
+  expect:
+    site: cli.intelligence-scan.negative-days
+- id: unreadable-feed
+  kind: refusal
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --feed
+  - work/inbox/nope.json
+  expect:
+    site: cli.intelligence-scan.unreadable-feed
+- id: feed-dup-keys
+  kind: refusal
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --feed
+  - <CASEDATA>/feed.json
+  expect:
+    site: cli.intelligence-scan.malformed-feed
+- id: feed-not-json
+  kind: refusal
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --feed
+  - <CASEDATA>/feed.json
+  expect:
+    site: cli.intelligence-scan.feed-not-json
+- id: feed-bad-shape
+  kind: refusal
+  transport: cli
+  argv:
+  - intelligence-scan
+  - --feed
+  - <CASEDATA>/feed.json
+  expect:
+    site: cli.intelligence-scan.invalid-feed
+untriggered:
+- where: tools/learning_os/app/handlers/reads.py:1013
+  reason: 'unreadable Git history: the seam supplies an empty history; needs corrupt
+    git'
+- where: tools/learning_os/app/handlers/reads.py:1019
+  reason: 'rank failure: the fixture scans and ranks cleanly; needs malformed repo
+    data'
+- site: cli.intelligence-scan.git-history
+  reason: fixture-inexpressible
+- site: cli.intelligence-scan.unrankable-queue
+  reason: fixture-inexpressible

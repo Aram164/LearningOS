@@ -9,7 +9,6 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
-from learning_os.app.handlers._shared import on_commit_refused as _on_commit_refused
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.abilities import ability_fingerprint, read_ability_observations
@@ -38,7 +37,7 @@ from learning_os.store.transactions import parse_expected_revisions
 STAGE_RESULT_CAPABILITY = "learner.stage-result.append"
 
 
-@register("learner.stage-result.append", kind="command", json_formats=("ascii",))
+@register("learner.stage-result.append", kind="command")
 def stage_result(ctx: OpContext, req: dict) -> Result:
     """Append an untargeted learner result against a unit/stage."""
     root = ctx.root
@@ -119,8 +118,8 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
                 artifact_ids=[workspace.id],
                 expected_revisions=expected_revisions,
             ),
-            on_commit_refused=_on_commit_refused,
-            json_format="ascii",
+
+
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -233,7 +232,7 @@ def _condition_notice(requirement: dict, obs: dict) -> dict:
     }
 
 
-@register("learner.observation.append", kind="command", json_formats=("ascii",))
+@register("learner.observation.append", kind="command")
 def observation_append(ctx: OpContext, req: dict) -> Result:
     """Append one immutable learner observation against a requirement."""
     root = ctx.root
@@ -317,8 +316,8 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
                 artifact_ids=[workspace.id],
                 expected_revisions=expected_revisions,
             ),
-            on_commit_refused=_on_commit_refused,
-            json_format="ascii",
+
+
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -364,7 +363,7 @@ def _resolve_observe_workspace(repo, requirement, explicit_id):
     return repo.workspaces[candidates[0]], ""
 
 
-@register("cli.observe", kind="command", json_formats=("ascii",))
+@register("learner.observe", kind="command")
 def cli_observe(ctx: OpContext, req: dict) -> Result:
     """Record Aram's own evidence directly; the terminal session is the approval."""
     root = ctx.root
@@ -465,8 +464,8 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
     return Result(
         core.payload,
         proposal=core.proposal,
-        on_commit_refused=_on_commit_refused,
-        json_format="ascii",
+
+
         gesture=context,
     )
 
@@ -484,7 +483,7 @@ def _valid_work_ref(value: str) -> bool:
     return True
 
 
-@register("learner.ability-observation.append", kind="command", json_formats=("ascii",))
+@register("learner.ability-observation.append", kind="command")
 def ability_observation_append(ctx: OpContext, req: dict) -> Result:
     """Record an exact learner-confirmed claim; the V2 approval binds payload."""
     root = ctx.root
@@ -586,8 +585,8 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
                 artifact_ids=[workspace.id],
                 expected_revisions=expected_revisions,
             ),
-            on_commit_refused=_on_commit_refused,
-            json_format="ascii",
+
+
         )
     except (WriteRefused, OSError, ValueError) as exc:
         raise WriteRefused(

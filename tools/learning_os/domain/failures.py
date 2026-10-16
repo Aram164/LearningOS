@@ -210,6 +210,14 @@ class WriteRefused(Exception):
         self.extra_stderr = extra_stderr
 
 
+class ToolFailure(WriteRefused):
+    """An external tool failed; preserve its exit while adapters render once."""
+
+    def __init__(self, stdout: str, stderr: str, exit_code: int):
+        super().__init__(stderr.strip() or stdout.strip() or "external tool failed",
+                         exit_code=exit_code)
+
+
 class StaleSnapshot(WriteRefused):
     """A supplied concurrency token no longer matches live state; nothing was changed.
 

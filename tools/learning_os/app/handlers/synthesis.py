@@ -13,7 +13,7 @@ from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisUnitNotFound,
@@ -61,7 +61,7 @@ def _validate_publication_synthesis(root, unit_id: str, value: dict) -> dict:
         ) from exc
 
 
-@register("unit.material-synthesis.publish", kind="command", json_formats=("indented",))
+@register("unit.material-synthesis.publish", kind="command")
 def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed unit dossier, with lineage, atomically."""
     root = ctx.root
@@ -75,7 +75,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "check": True, "unit_id": req["unit_id"],
              "basis": basis},
-            json_format="indented",
+
         )
     if not req.get("approve"):
         message = "unit material synthesis publication requires explicit approval"
@@ -112,16 +112,16 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         })
 
     return Result(
-        {"ok": True},
+        ResponsePayload({"ok": True}, finish_unit_material_synthesis_publish({}), confirmation='merge'),
         proposal=TransactionProposal(
             capability="unit.material-synthesis.publish",
             writes={destination: content, root / LEDGER_RELATIVE: lineage},
             artifact_ids=(req["unit_id"], value["id"]),
             expected_revisions=expected_revisions,
         ),
-        finish=finish_unit_material_synthesis_publish,
-        refused_stdout=refused_stdout_unit_material_synthesis_publish,
-        json_format="indented",
+
+
+
     )
 
 
@@ -186,7 +186,7 @@ def _lineage_restamp_commit_lines(commit_errors: list) -> list[str]:
     return ["los: lineage re-stamp failed", *commit_errors[:12]]
 
 
-@register("lineage.restamp", kind="command", json_formats=("sorted",))
+@register("lineage.restamp", kind="command")
 def lineage_restamp(ctx: OpContext, req: dict) -> Result:
     """Narrow old coarse reads, never re-judge (#94)."""
     root = ctx.root
@@ -225,16 +225,8 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
                 exit_code=2,
             ) from exc
         return Result(
-            {},
-            command_output=apply_reviewed_envelope(
-                ctx,
-                capability_name="lineage.restamp",
-                payload={"claim_ids": sorted(claim_ids),
-                         "claims_sha256": claims_sha256},
-                reviewed_content=_canonical_list_bytes(claim_ids),
-                reviewed_sha256=claims_sha256,
-                review_report=review_report,
-            ),
+            apply_reviewed_envelope(ctx, capability_name='lineage.restamp', payload={'claim_ids': sorted(claim_ids), 'claims_sha256': claims_sha256}, reviewed_content=_canonical_list_bytes(claim_ids), reviewed_sha256=claims_sha256, review_report=review_report),
+
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:
@@ -252,7 +244,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "mode": "check", "capability": "lineage.restamp",
              "expected_snapshot": snapshot, **analysis},
-            json_format="sorted",
+
         )
     if not claim_ids or not claims_sha256:
         raise WriteRefused(
@@ -285,7 +277,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
              "reviewed_file_sha256": claims_sha256,
              "gateway_envelope": prepare_review_envelope(
                  "lineage.restamp", payload, snapshot, revisions)},
-            json_format="sorted",
+
         )
     request = current_gateway_request()
     if request is None:
@@ -338,6 +330,6 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
             metadata={"claims_sha256": claims_sha256,
                       "claims_count": len(ordered)},
         ),
-        on_commit_refused=_lineage_restamp_commit_lines,
-        json_format="sorted",
+
+
     )

@@ -32,8 +32,11 @@ def test_cli_operations_lists_every_cli_primary():
     operations = data.get("operations", {})
     assert len(operations) == 41, len(operations)
     for name, entry in sorted(operations.items()):
-        assert name.startswith("cli."), name
-        assert entry.get("cli_command") == name[len("cli."):], name
+        command = entry.get("cli_command")
+        assert isinstance(command, str) and command, name
+        if name != "cli.capability":
+            assert _handler_for_subcommand(command) == "learning_os.adapters.cli.invoke:" + name
+            assert not name.startswith("cli."), name
         assert entry.get("kind") in {"query", "command", "porcelain", "tool"}, name
 
 
@@ -50,6 +53,14 @@ def _handler_for_subcommand(subcommand: str) -> str | None:
     return None
 
 
+# Approved B2 internal binding relocation. These five commands were lock-free
+# tools before their duplicate registrations merged into canonical queries.
+CLI_TOOL_BINDINGS = {
+    "backup.manifest", "health.report", "legacy.archive.inspect",
+    "legacy.archive.status", "masters-planning.dashboard",
+}
+
+
 def _normalize_registered_namespace(recorded: dict, handler: str) -> dict:
     """Amendment (u) item 2: baseline namespace for a converted subcommand."""
     prefix = "learning_os.adapters.cli.invoke:"
@@ -58,6 +69,10 @@ def _normalize_registered_namespace(recorded: dict, handler: str) -> dict:
     normalized = dict(recorded)
     normalized["func"] = "learning_os.adapters.cli.invoke"
     normalized["_operation"] = operation
+    if operation in {"repository.validate", "projection.generate"}:
+        normalized["json"] = False
+    if operation in CLI_TOOL_BINDINGS:
+        normalized["_operation_kind"] = "tool"
     return normalized
 
 
@@ -68,6 +83,8 @@ def _normalize_registered_defaults(baseline_defaults: dict, handler: str) -> dic
     normalized = dict(baseline_defaults)
     normalized["func"] = "learning_os.adapters.cli.invoke"
     normalized["_operation"] = repr(operation)
+    if operation in CLI_TOOL_BINDINGS:
+        normalized["_operation_kind"] = repr("tool")
     return normalized
 
 
@@ -178,12 +195,12 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "route-patch": "route.patch",
     "stage-progress": "stage.progress.update",
     "ai-action-apply-delivery": "ai-action.delivery.apply",
-    "inspect": "cli.inspect",
-    "ai-action-append-slices": "cli.ai-action-append-slices",
-    "ai-action-import-delivery": "cli.ai-action-import-delivery",
-    "ai-action-prepare": "cli.ai-action-prepare",
-    "ai-action-status": "cli.ai-action-status",
-    "ai-action-validate-delivery": "cli.ai-action-validate-delivery",
+    "inspect": "project.inspect",
+    "ai-action-append-slices": "ai-action.append-slices",
+    "ai-action-import-delivery": "ai-action.delivery.import",
+    "ai-action-prepare": "ai-action.prepare",
+    "ai-action-status": "ai-action.status",
+    "ai-action-validate-delivery": "ai-action.delivery.validate",
     "detour-create": "detour.create",
     "detour-resolve": "detour.resolve",
     "ability-observation-append": "learner.ability-observation.append",
@@ -202,24 +219,24 @@ _BF_HELP_OPERATIONS: dict[str, str] = {
     "ability-candidate-append": "ability.candidate.append",
     "ability-context": "ability.context",
     "atlas-question-save": "atlas.question.save",
-    "atlas-context": "cli.atlas-context",
-    "backup-manifest": "cli.backup-manifest",
-    "backup-verify": "cli.backup-verify",
-    "bootstrap": "cli.bootstrap",
-    "goal": "cli.goal",
-    "inbox-read": "cli.inbox-read",
-    "legacy-archive-inspect": "cli.legacy-archive-inspect",
-    "masters-planning-dashboard": "cli.masters-planning-dashboard",
-    "module-list": "cli.module-list",
-    "note-read": "cli.note-read",
-    "observe": "cli.observe",
-    "plan-edit-context": "cli.plan-edit-context",
-    "plan-template": "cli.plan-template",
-    "project-list": "cli.project-list",
-    "related": "cli.related",
-    "runtime-session": "cli.runtime-session",
-    "search": "cli.search",
-    "unit-list": "cli.unit-list",
+    "atlas-context": "atlas.context",
+    "backup-manifest": "backup.manifest",
+    "backup-verify": "backup.verify",
+    "bootstrap": "operator.bootstrap",
+    "goal": "goal.decide",
+    "inbox-read": "inbox.content",
+    "legacy-archive-inspect": "legacy.archive.inspect",
+    "masters-planning-dashboard": "masters-planning.dashboard",
+    "module-list": "module.list",
+    "note-read": "note.content",
+    "observe": "learner.observe",
+    "plan-edit-context": "plan.edit-context",
+    "plan-template": "plan.template",
+    "project-list": "project.list",
+    "related": "related.read",
+    "runtime-session": "runtime.session",
+    "search": "note.search",
+    "unit-list": "unit.list",
     "collection-entry-revise": "collection.entry.revise",
     "concept-relations-change": "concept.relations.change",
     "coordination-section-revise": "coordination.section.revise",
@@ -271,16 +288,16 @@ def _normalize_bf_help(expected: dict) -> dict:
 
 def test_registered_normalization_with_synthetic_handler():
     # No production registration exists in S12; prove the future rule.
-    handler = "learning_os.adapters.cli.invoke:cli.inspect"
+    handler = "learning_os.adapters.cli.invoke:project.inspect"
     recorded = {"func": "learning_os.commands.query.cmd_inspect", "id": "X"}
     normalized = _normalize_registered_namespace(recorded, handler)
     assert normalized["func"] == "learning_os.adapters.cli.invoke"
-    assert normalized["_operation"] == "cli.inspect"
+    assert normalized["_operation"] == "project.inspect"
     assert normalized["id"] == "X"
     defaults = {"func": "learning_os.commands.query.cmd_inspect"}
     normalized_defaults = _normalize_registered_defaults(defaults, handler)
     assert normalized_defaults["func"] == "learning_os.adapters.cli.invoke"
-    assert normalized_defaults["_operation"] == repr("cli.inspect")
+    assert normalized_defaults["_operation"] == repr("project.inspect")
 
 
 def _normalize_describe(doc: dict) -> dict:
@@ -353,10 +370,10 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
     """
     directory = tmp_path / "requests"
     directory.mkdir()
-    (directory / "cli.inspect.schema.json").write_text(json.dumps({
+    (directory / "project.inspect.schema.json").write_text(json.dumps({
         "x-los-cli-command": {
             "name": "inspect",
-            "handler": "learning_os.adapters.cli.invoke:cli.inspect",
+            "handler": "learning_os.adapters.cli.invoke:project.inspect",
         },
     }), encoding="utf-8")
     monkeypatch.setattr("test_arch_cli_parity.REQUESTS_DIR", directory)
@@ -372,13 +389,13 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
     subcommand = recorded.get("namespace", {}).get("command")
     assert subcommand == "inspect"
     handler = _handler_for_subcommand(subcommand)
-    assert handler == "learning_os.adapters.cli.invoke:cli.inspect"
+    assert handler == "learning_os.adapters.cli.invoke:project.inspect"
     normalized = _normalize_registered_namespace(
         _normalize_namespace(recorded["namespace"]), handler)
     assert normalized == {
         "command": "inspect", "id": "note-demo",
         "func": "learning_os.adapters.cli.invoke",
-        "_operation": "cli.inspect",
+        "_operation": "project.inspect",
         "_parser_factory": "los.build_parser", "root": "/tmp/x",
     }
     normalized_defaults = _normalize_registered_defaults(
@@ -386,7 +403,7 @@ def test_registered_normalization_with_invoke_binding_and_root_options(
          "_parser_factory": "los.build_parser"}, handler)
     assert normalized_defaults == {
         "func": "learning_os.adapters.cli.invoke",
-        "_operation": repr("cli.inspect"),
+        "_operation": repr("project.inspect"),
         "_parser_factory": "los.build_parser",
     }
 
@@ -406,6 +423,10 @@ def test_generated_parser_matches_baseline_structure():
                 sub.get("defaults", {}), handler)
     # SPEC (bf) item 1: pilot descriptions became argparse help.
     expected = _normalize_bf_help(expected)
+    # B1 adds the same pre-existing JSON transport flag to the former tools.
+    json_action = next(action for action in baseline["subparsers"]["health-report"]["actions"] if action["dest"] == "json")
+    for command in ("validate", "generate"):
+        expected["subparsers"][command]["actions"].append(copy.deepcopy(json_action))
     assert live["order"] == expected["order"], f"{FIX} order"
     assert live["parser_class"] == expected["parser_class"]
     assert live["prog"] == expected["prog"], f"{FIX} prog"
@@ -510,6 +531,15 @@ def test_corpus_parity():
     for index, entry in enumerate(corpus["cases"]):
         argv = entry["argv"]
         recorded = entry["result"]
+        # These two historical rejections are the exact JSON flags B1 adds.
+        # Derive every other argument from the frozen old no-flag observation.
+        added_json = argv in (["generate", "--json"], ["validate", "--json"])
+        if added_json:
+            assert recorded["error"]["exit"] == 2
+            assert "--json" in recorded["error"]["stderr"]
+            baseline = next(row["result"] for row in corpus["cases"]
+                            if row["argv"] == argv[:1] and "namespace" in row["result"])
+            recorded = copy.deepcopy(baseline)
         actual = _run(parser, argv)
         # Registered-subcommand normalization (none yet; see unit test).
         subcommand = recorded.get("namespace", {}).get("command")
@@ -524,6 +554,8 @@ def test_corpus_parity():
                     if "namespace" in recorded else recorded
         elif "namespace" in recorded:
             recorded = {"namespace": _normalize_namespace(recorded["namespace"])}
+        if added_json:
+            recorded["namespace"]["json"] = True
         if "namespace" in recorded and "namespace" in actual:
             if recorded["namespace"] != actual["namespace"]:
                 failures.append(f"case {index} argv={argv}: namespace differs")

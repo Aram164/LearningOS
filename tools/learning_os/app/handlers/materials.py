@@ -546,8 +546,7 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
     }
 
 
-@register("cli.plan-edit-context", kind="query", json_formats=("compact",))
-@register("plan.edit-context", kind="query", json_formats=("compact",))
+@register("plan.edit-context", kind="query")
 def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     """Assemble one unit's edit context: map, routes, selections, audit."""
     root = ctx.root
@@ -651,7 +650,7 @@ def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     _snapshot(root, snapshot)
     return Result(
         {"schema_version": 1, "snapshot_id": snapshot, **payload},
-        json_format="compact",
+
     )
 
 
@@ -701,7 +700,7 @@ def _placement_route(ctx, repo, unit, source_map, routes, route, req):
     return selected, f" --stage {stage_id} --resource-index {index}"
 
 
-@register("material.span", kind="query", json_formats=("compact",))
+@register("material.span", kind="query")
 def material_span(ctx: OpContext, req: dict) -> Result:
     """One common source-span description, with optional bounded local inspection."""
     root = ctx.root
@@ -838,7 +837,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1179,7 +1178,7 @@ def _anchor_expansion_command(req, limit, snapshot, observed) -> str:
     return expansion(*parts)
 
 
-@register("material.context", kind="query", json_formats=("compact",))
+@register("material.context", kind="query")
 def material_context(ctx: OpContext, req: dict) -> Result:
     """Find saved explanations from an explanation need."""
     root = ctx.root
@@ -1477,7 +1476,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_format="compact",
+
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
