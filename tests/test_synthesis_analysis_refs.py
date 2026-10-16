@@ -226,7 +226,7 @@ def test_unknown_unit_lookup_raises_the_structured_subclass(mini_repo):
 def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
     """SPEC (cq) 5: NotFound for the lookup; other errors pass through."""
     import learning_os.app.synthesis.material_synthesis as synthesis_mod
-    from learning_os.app.handlers.plan import _validate_publication_synthesis
+    from learning_os.app.handlers.synthesis import _validate_publication_synthesis
     from learning_os.domain import suggest as suggest_mod
     from learning_os.domain.failures import NotFound
     from learning_os.store.loader import load_repo
@@ -271,7 +271,7 @@ def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
 def test_publication_validations_route_through_the_helper(mini_repo, monkeypatch):
     """SPEC (cq) 5: both publication validations translate the lookup."""
     from learning_os.app.context import OpContext
-    from learning_os.app.handlers import plan as plan_handlers
+    from learning_os.app.handlers import synthesis as plan_handlers
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,

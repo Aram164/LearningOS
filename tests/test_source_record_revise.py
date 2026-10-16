@@ -604,7 +604,7 @@ def test_rebase_refuses_recycled_provenance(mini_repo, tmp_path):
 
 
 def test_rebase_guard_rejects_a_second_moved_basis_field():
-    from learning_os.app.handlers.plan import _rebase_routes_or_refuse
+    from learning_os.app.handlers.sources import _rebase_routes_or_refuse
 
     live = {"source_map_checksum": "sha256:" + "a" * 64,
             "route_set_checksum": "sha256:" + "b" * 64,

@@ -358,7 +358,7 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
 
 
 def test_route_helper_refuses_unknown_and_ambiguous_ids():
-    from learning_os.app.handlers.plan import _require_route
+    from learning_os.app.handlers.routes import _require_route
     from learning_os.domain.failures import NotFound, WriteRefused
     from learning_os.domain.suggest import suggestions, with_suggestions
 

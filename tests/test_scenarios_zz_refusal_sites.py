@@ -2636,7 +2636,7 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     so no case input reaches the gate; the proof injects the read
     failure and asserts the witness line, the class and the exit.
     """
-    import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.materials as materials
     from learning_os.app.outcomes import exit_for
     from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
@@ -2647,7 +2647,7 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     def boom(*args, **kwargs):
         raise RuntimeInputError("a9-proof: the results are broken")
 
-    monkeypatch.setattr(plan, "stage_results_for", boom)
+    monkeypatch.setattr(materials, "stage_results_for", boom)
     outcome, lines = _a9_run_cli(
         root, "cli.plan-edit-context",
         ["plan-edit-context", "unit-demo-l01",
@@ -2669,14 +2669,14 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     validator's failure and asserts the witness line, the class and
     the exit.
     """
-    import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.maps as maps
     from learning_os.app.outcomes import exit_for
     from learning_os.contracts.json_schema import ContractValidationError
     from learning_os.domain.failures import WriteRefused
 
     ctx = _a9_world("cli.plan-template", "yaml", tmp_path)
     root = ctx.root
-    real_validate = plan.validate_contract
+    real_validate = maps.validate_contract
     calls = []
 
     def second_fails(*args, **kwargs):
@@ -2685,7 +2685,7 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
             return real_validate(*args, **kwargs)
         raise ContractValidationError("a9-proof: the response is invalid")
 
-    monkeypatch.setattr(plan, "validate_contract", second_fails)
+    monkeypatch.setattr(maps, "validate_contract", second_fails)
     outcome, lines = _a9_run_cli(
         root, "cli.plan-template",
         ["plan-template", "curriculum", "--title", "Scenario Template",
@@ -2708,7 +2708,7 @@ def _prove_span_placement_mismatch(mini_repo: Path, tmp_path: Path,
     belonging use plus a flipped loaded source by direct injection
     and asserts the witness line, the class and the exit.
     """
-    import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.materials as materials
     import learning_os.store.loading.curriculum as curriculum
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
@@ -2724,7 +2724,7 @@ def _prove_span_placement_mismatch(mini_repo: Path, tmp_path: Path,
                 resource["source_id"] = "source-other"
         return expanded
 
-    real_entry = plan._route_entry
+    real_entry = materials._route_entry
 
     def belonging(ctx, routes, study_map, source_map, unit, route_id):
         entry = real_entry(ctx, routes, study_map, source_map, unit,
@@ -2734,7 +2734,7 @@ def _prove_span_placement_mismatch(mini_repo: Path, tmp_path: Path,
         return entry
 
     monkeypatch.setattr(curriculum, "expand_map", flipped)
-    monkeypatch.setattr(plan, "_route_entry", belonging)
+    monkeypatch.setattr(materials, "_route_entry", belonging)
     outcome, lines = _a9_run_cli(
         root, "material.span",
         ["material-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc",
@@ -2756,7 +2756,7 @@ def _prove_span_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.materials as materials
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
@@ -2766,7 +2766,7 @@ def _prove_span_read_failed(mini_repo: Path, tmp_path: Path,
     def boom(root, expected=None):
         raise OSError("a9-proof: the read failed")
 
-    monkeypatch.setattr(plan, "_snapshot", boom)
+    monkeypatch.setattr(materials, "_snapshot", boom)
     outcome, lines = _a9_run_cli(
         root, "material.span",
         ["material-span", "unit-demo-l01", "route-b2f1f80014860a929a3af0bc"],
@@ -2786,7 +2786,7 @@ def _prove_material_context_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.materials as materials
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
@@ -2796,7 +2796,7 @@ def _prove_material_context_read_failed(mini_repo: Path, tmp_path: Path,
     def boom(root, expected=None):
         raise OSError("a9-proof: the read failed")
 
-    monkeypatch.setattr(plan, "_snapshot", boom)
+    monkeypatch.setattr(materials, "_snapshot", boom)
     outcome, lines = _a9_run_cli(root, "material.context",
                                  ["material-context", "derivation"],
                                  tmp_path, monkeypatch)
@@ -3074,6 +3074,7 @@ def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
     import scenario_harness as harness
 
     import learning_os.app.handlers.plan as plan
+    import learning_os.app.handlers.synthesis as synthesis
     from learning_os.derive.semantics.lineage import LineageError
 
     operation, slug = site.rsplit(".", 1)
@@ -3083,35 +3084,35 @@ def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
         payload = copy.deepcopy(next(c for c in doc["cases"] if c["id"] == "apply-success")["request"])
         if slug in ("reviewed-bytes-changed", "reviewed-needs-report"):
             claims = ["claim-a"]
-            raw = plan._canonical_list_bytes(claims)
-            digest = plan.claims_list_sha256(claims)
+            raw = synthesis._canonical_list_bytes(claims)
+            digest = synthesis.claims_list_sha256(claims)
             assert digest == "sha256:" + hashlib.sha256(raw).hexdigest()
             argv = ["lineage-restamp", "--claim-ids", *claims,
                     "--claims-sha256", digest, "--review-report", "not-used.json"]
             if slug == "reviewed-bytes-changed":
-                monkeypatch.setattr(plan, "_canonical_list_bytes", lambda ids: b"changed\n")
+                monkeypatch.setattr(synthesis, "_canonical_list_bytes", lambda ids: b"changed\n")
             else:
-                original = plan.apply_reviewed_envelope
+                original = synthesis.apply_reviewed_envelope
                 def without_report(*args, **kwargs):
                     assert kwargs["review_report"]
                     kwargs["review_report"] = None
                     return original(*args, **kwargs)
-                monkeypatch.setattr(plan, "apply_reviewed_envelope", without_report)
+                monkeypatch.setattr(synthesis, "apply_reviewed_envelope", without_report)
             outcome, lines = _a9_run_cli(ctx.root, operation, argv, tmp_path, monkeypatch)
         elif slug == "analysis-failed":
             def bad_analysis(root):
                 raise OSError("a9 analysis read fault")
-            monkeypatch.setattr(plan, "analyze", bad_analysis)
+            monkeypatch.setattr(synthesis, "analyze", bad_analysis)
             outcome, lines = _a9_run_cli(ctx.root, operation, ["lineage-restamp", "--check"], tmp_path, monkeypatch)
         else:
             if slug == "restamp-failed":
                 def failed_claim(*args, **kwargs):
                     raise LineageError("a9 claim changed after analysis")
-                monkeypatch.setattr(plan, "restamp_claim", failed_claim)
+                monkeypatch.setattr(synthesis, "restamp_claim", failed_claim)
             else:
                 def bad_revision(value):
                     raise ValueError("a9 malformed internal revision")
-                monkeypatch.setattr(plan, "parse_expected_revisions", bad_revision)
+                monkeypatch.setattr(synthesis, "parse_expected_revisions", bad_revision)
             outcome, lines = _a9_run_gateway(ctx.root, operation, payload,
                 ["file:operations/transactions/lineage.yaml"], "a9-"+slug, tmp_path, monkeypatch)
     else:

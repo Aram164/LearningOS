@@ -25,7 +25,7 @@ from test_compact_module_plan_revision import _revision, _two_units
 import los
 from learning_os.adapters.capability import cmd_capability
 from learning_os.app import pipeline as ops_pipeline
-from learning_os.app.handlers.plan import route_patch_plan
+from learning_os.app.handlers.routes import route_patch_plan
 from learning_os.derive.validation.core import Validator
 from learning_os.domain.material_refs import unit_routes
 from learning_os.store.fingerprint import canonical_fingerprint

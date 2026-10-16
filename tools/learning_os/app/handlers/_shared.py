@@ -19,6 +19,49 @@ from learning_os.app.gateway import (
 from learning_os.app.proposal import CommandOutput
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
+from learning_os.store.revisions import artifact_revision
+
+
+def _guard_rows(root, artifacts):
+    return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
+
+
+def _map_for_unit(repo, unit_id):
+    maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
+    if len(maps) > 1:
+        raise WriteRefused(f"unit {unit_id} has ambiguous study maps")
+    return maps[0] if maps else None
+
+
+def _input_record(req: dict, label: str) -> dict:
+    """The inline record or structured file, from the request (SPEC §12).
+
+    Moved from ``commands.collection_entry`` with ``args.<dest>`` retargeted
+    to the request dict; the source and publish units share this copy.
+    """
+    value = req.get("record")
+    if value is not None:
+        if not isinstance(value, dict):
+            raise WriteRefused(f"{label} must be an object")
+        return value
+    file_name = req.get("file")
+    if not file_name:
+        raise WriteRefused(f"{label} is required")
+    return _read_structured_file(file_name)
+
+
+def _require_gateway_v2() -> None:
+    """Refuse a direct CLI apply of an approved write (SPEC §12).
+
+    Moved verbatim from ``commands.collection_entry``; the source units
+    share this copy, and ``commands.vnext`` keeps its own for platform.
+    """
+    from learning_os.contracts.gateway import current_gateway_request
+
+    if current_gateway_request() is None:
+        raise WriteRefused(
+            "this approved write must use GatewayEnvelopeV2; direct CLI publication is disabled"
+        )
 
 
 def _inbox_search_rows(root: Path) -> list[dict]:

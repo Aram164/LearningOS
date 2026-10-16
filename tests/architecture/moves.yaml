@@ -73,3 +73,7 @@ moves:
   to: tools/learning_os/domain/snapshot.py
 - from: tools/learning_os/store/loading/vocabulary.py
   to: tools/learning_os/domain/vocabulary.py
+- from: tools/learning_os/app/handlers/plan.py::_execute_material_plan
+  to: tools/learning_os/app/handlers/routes.py::_execute_material_plan
+- from: tools/learning_os/app/handlers/plan.py::_explanation_snippets
+  to: tools/learning_os/app/handlers/materials.py::_explanation_snippets

@@ -15,11 +15,8 @@ from gateway_helpers import (
 )
 from repo_builders import material_fixture, run_los, write_yaml
 
-from learning_os.app.handlers.plan import (
-    compaction_plan,
-    route_patch_plan,
-    unit_map_import,
-)
+from learning_os.app.handlers.maps import unit_map_import
+from learning_os.app.handlers.routes import compaction_plan, route_patch_plan
 from learning_os.derive.projection import build_manifest
 from learning_os.domain.material_refs import (
     MaterialReferenceError,
