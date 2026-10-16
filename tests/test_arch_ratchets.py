@@ -112,10 +112,10 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
         "unmatched_ignore_imports_alerting": "error",
         "layers": [
             "adapters",
-            "app : ai_actions : backup_manifest",
+            "app",
             "derive",
-            "store : contracts",
-            "domain : route_identity",
+            "store",
+            "domain",
         ],
     },
     "A1 transaction writer access (PLAN A2, D4)": {
@@ -566,10 +566,10 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions : backup_manifest",
+  "app",
   "derive",
-  "store : contracts",
-  "domain : route_identity",
+  "store",
+  "domain",
 ]
 ignore_imports = []
 
@@ -601,10 +601,10 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions : backup_manifest",
+  "app",
   "derive",
-  "store : contracts",
-  "domain : route_identity",
+  "store",
+  "domain",
 ]
 ignore_imports = []
 
@@ -646,7 +646,7 @@ def test_contract_weakened_exhaustive_fails():
 
 def test_contract_weakened_layer_removed_fails():
     weakened = _TOML_THREE_CONTRACTS.replace(
-        '\n  "domain : route_identity",',
+        '\n  "domain",',
         "", 1)
     failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
     assert failures, "a removed layer must fail"

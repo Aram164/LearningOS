@@ -37,7 +37,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from learning_os.derive.semantics.predicates import CONTRACT_VERSION, claim_stale
-from learning_os.route_identity import route_with_identity
+from learning_os.domain.route_identity import route_with_identity
 
 #: The receipt-adjacent sidecar. Canonical records never carry lineage;
 #: the manifest never projects it.

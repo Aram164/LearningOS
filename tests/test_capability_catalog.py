@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from gateway_helpers import approved_v2_call, file_sha256
 
-from learning_os.contracts.capability_catalog import (
+from learning_os.store.contracts.capability_catalog import (
     CapabilityCatalogError,
     command_definitions,
     domain_capability_definitions,
@@ -20,7 +20,7 @@ def test_every_public_command_is_bound_to_its_declared_cli_handler(repo_root: Pa
     import los
     from learning_os.adapters.cli import invoke
     from learning_os.app.registry import REGISTRY
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     parsers = subparsers(los.build_parser())
     definitions = command_definitions(repo_root)
@@ -46,7 +46,7 @@ def test_every_v2_external_file_input_is_content_bound_or_inline_only(
     import los
     from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.app.gateway import _CONTENT_BOUND_V2
-    from learning_os.contracts.payloads import payload_fields, subparsers
+    from learning_os.store.contracts.payloads import payload_fields, subparsers
 
     external_fields = {"file", "items_file", "attachment"}
     parsers = subparsers(los.build_parser())
@@ -89,7 +89,7 @@ def test_every_path_backed_handler_consumes_the_bytes_its_hash_check_read(
     from learning_os.adapters.capability import _FILE_INPUTS_V2
     from learning_os.app.handlers import platform as platform_handlers
     from learning_os.app.registry import REGISTRY
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     parsers = subparsers(los.build_parser())
     definitions = command_definitions(repo_root)

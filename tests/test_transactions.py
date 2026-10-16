@@ -13,26 +13,15 @@ import yaml
 from gateway_helpers import approved_v2_envelope
 from repo_builders import add_curriculum
 
-import learning_os.ai_actions.projection as ai_projection
 import learning_os.app.commit as ops_commit
 import learning_os.app.context as context_module
 import learning_os.app.lock as plumbing_support
+import learning_os.derive.projection.ai_actions as ai_projection
 import learning_os.store.fingerprint as fingerprint_module
 import learning_os.store.session_ledger as session_support
 import learning_os.store.transactions as transaction_module
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import TransactionProposal
-from learning_os.contracts.gateway import (
-    GatewayRequestContext,
-    current_gateway_request,
-    gateway_request_context,
-    intent_sha256,
-    verified_gateway_snapshot,
-)
-from learning_os.contracts.json_schema import (
-    ContractValidationError,
-    validate_contract,
-)
 from learning_os.domain.failures import (
     StaleSnapshot,
     TransactionConflict,
@@ -40,6 +29,17 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.domain.validation import Issue
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+    intent_sha256,
+    verified_gateway_snapshot,
+)
+from learning_os.store.contracts.json_schema import (
+    ContractValidationError,
+    validate_contract,
+)
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.transactions import (

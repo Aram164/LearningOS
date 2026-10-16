@@ -19,10 +19,10 @@ import json
 import re
 from pathlib import Path
 
-from ..domain.failures import WriteRefused
-from .atlas_question import question_schema as atlas_question_schema
-from .batch_notes import bundle_schema as batch_notes_schema
-from .requests import request_schema
+from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.atlas_question import question_schema as atlas_question_schema
+from learning_os.store.contracts.batch_notes import bundle_schema as batch_notes_schema
+from learning_os.store.contracts.requests import request_schema
 
 # Owned by the envelope, never by the payload.
 #

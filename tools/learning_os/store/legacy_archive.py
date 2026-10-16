@@ -14,8 +14,8 @@ from typing import Any
 
 import yaml
 
-from learning_os.contracts.json_schema import validate_contract
 from learning_os.store import observations
+from learning_os.store.contracts.json_schema import validate_contract
 
 
 class LegacyArchiveError(ValueError):

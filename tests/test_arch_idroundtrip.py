@@ -20,7 +20,6 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from learning_os.app.handlers import platform as platform_handlers
-from learning_os.contracts.payloads import sha256_value
 from learning_os.domain import ids
 from learning_os.domain.ai_errors import (
     DeliveryBindingError,
@@ -30,6 +29,7 @@ from learning_os.domain.failures import MalformedId
 from learning_os.domain.ids import KINDS, Digest
 from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
+from learning_os.store.contracts.payloads import sha256_value
 
 ROOT = Path(__file__).resolve().parent.parent
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
@@ -223,7 +223,7 @@ def test_inventory_digest_representations():
     """Amendment (ad) at every scalar digest inventory pointer."""
     import hashlib
 
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     rows = yaml.safe_load(
         (ROOT / "tests/architecture/id-fields.yaml").read_text(
@@ -331,7 +331,7 @@ def test_real_nested_sequence_stdout_is_scanned():
 
 
 def test_decided_scalar_pointers_accept_their_values():
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     module_node = _navigate(
         request_schema(ROOT, "cli.plan-template"), "/properties/module_id")
@@ -356,7 +356,7 @@ def test_decided_scalar_pointers_accept_their_values():
 
 
 def test_scalar_checker_refuses_wrong_type_and_containers():
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     assert not _scalar_accepts("module", "module-1", {"type": "integer"})
     object_node = _navigate(
@@ -371,7 +371,7 @@ def test_id_scan_changes_no_production_file():
 
     watched = [
         ROOT / "tools/learning_os/adapters/cli_types.py",
-        ROOT / "tools/learning_os/contracts/payloads.py",
+        ROOT / "tools/learning_os/store/contracts/payloads.py",
         ROOT / "tests/architecture/id-fields.yaml",
         ROOT / "system/schema/note.schema.json",
     ]
@@ -401,7 +401,7 @@ def _walk_strings(node):
 
 
 def test_stdout_ids_parse():
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     rows = yaml.safe_load((ROOT / "tests/architecture/id-fields.yaml").read_text())["fields"]
     pointers = {}
@@ -760,7 +760,7 @@ NONLOOKUP_IDENTITY_ROWS: dict[tuple[str, str], str] = {
 
 def _assert_decided_nonlookup_identity(row: dict) -> None:
     """The exact decided nonlookup shape, row and schema marker (T73-4)."""
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     key = (row["operation"], row["pointer"])
     reason = NONLOOKUP_IDENTITY_ROWS[key]

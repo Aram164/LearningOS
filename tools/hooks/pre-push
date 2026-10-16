@@ -152,7 +152,7 @@ if [ -n "${PY:-}" ] && ! CORE_ROOT="$core" "$PY" -c "
 import os, sys
 sys.path.insert(0, os.path.join(os.environ['CORE_ROOT'], 'tools'))
 from pathlib import Path
-from learning_os.contracts import perimeter as pm
+from learning_os.store.contracts import perimeter as pm
 root = Path(os.environ['CORE_ROOT'])
 sys.exit(0 if pm.applies(root, pm.load(root)) else 1)
 " >/dev/null 2>&1; then

@@ -14,13 +14,13 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
-from learning_os.contracts.gateway import (
+from learning_os.domain.failures import WriteRefused
+from learning_os.store import observations
+from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
     intent_sha256,
 )
-from learning_os.domain.failures import WriteRefused
-from learning_os.store import observations
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 
@@ -178,7 +178,7 @@ def prepare_dispatch(
     namespace with parser defaults and the envelope guards. Returns
     (command_parser, namespace).
     """
-    from learning_os.contracts.payloads import payload_to_namespace, subparsers
+    from learning_os.store.contracts.payloads import payload_to_namespace, subparsers
 
     if envelope.get("schema_version") == 2 and "approve" in payload:
         raise WriteRefused(

@@ -18,8 +18,8 @@ import pytest
 from gateway_helpers import approved_v2_call, approved_v2_envelope, run_v2_capability
 from repo_builders import add_curriculum
 
-from learning_os.ai_actions import AIActionService
 from learning_os.app import commit as ops_commit
+from learning_os.app.ai_actions import AIActionService
 from learning_os.app.context import OpContext
 from learning_os.app.handlers import ai as ai_handler
 from learning_os.app.handlers.ai import _ai_refusal
@@ -29,12 +29,6 @@ from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failu
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.app.pipeline import _classify_failure, _v2_exit_code, run_cli
 from learning_os.app.proposal import TransactionProposal
-from learning_os.contracts.gateway import (
-    GatewayRequestContext,
-    current_gateway_request,
-    gateway_request_context,
-)
-from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.domain.ai_errors import (
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
@@ -55,6 +49,12 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.domain.validation import Issue
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+)
+from learning_os.store.contracts.write_scopes import WriteScopeError
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 from learning_os.store.transactions import (

@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from learning_os.contracts.gateway import GatewayRequestContext
+from learning_os.store.contracts.gateway import GatewayRequestContext
 
 JsonFormat = Literal[
     "ascii", "compact", "indented", "indented_sorted", "layout_sorted",

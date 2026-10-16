@@ -12,7 +12,6 @@ from pathlib import Path
 import jsonschema
 from referencing import Registry
 
-from learning_os.contracts.json_schema import ContractValidationError, schema_registry
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -34,6 +33,7 @@ from learning_os.domain.snapshot import Repo
 from learning_os.domain.validation import CANONICAL_TREES, Issue
 from learning_os.domain.validation import in_garden as _in_garden
 from learning_os.domain.validation import in_quarantine as _in_quarantine
+from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
 
 
 class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):

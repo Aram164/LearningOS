@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.contracts.gateway import GatewayRequestContext
+from learning_os.store.contracts.gateway import GatewayRequestContext
 from learning_os.store.diagnostics import conventions
 from learning_os.store.diagnostics.resolver import (
     AuthorityEvidence,

@@ -19,11 +19,6 @@ from collections.abc import Callable
 from functools import partial
 from pathlib import Path
 
-from learning_os.contracts.manifest_contract import (
-    declared_schema_sha256,
-    declared_version,
-    enforce,
-)
 from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.projection.common import git_state as _git_state
 from learning_os.derive.projection.common import json_header as _json_header
@@ -57,6 +52,11 @@ from learning_os.derive.projection.projection import (
 from learning_os.derive.projection.review import build_review_items
 from learning_os.domain.failures import TransactionFailure, unreadable_refusal
 from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.manifest_contract import (
+    declared_schema_sha256,
+    declared_version,
+    enforce,
+)
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.revisions import load_revisions
 
@@ -244,7 +244,7 @@ def count_inbox_items(root: Path) -> int:
 
 def project_manifest_ai_actions(repo: Repo) -> dict:
     """AI action state remains an optional additive subsystem."""
-    from learning_os.ai_actions.projection import project_ai_actions
+    from learning_os.derive.projection.ai_actions import project_ai_actions
     return project_ai_actions(repo)
 
 

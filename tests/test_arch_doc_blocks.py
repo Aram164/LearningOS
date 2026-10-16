@@ -16,9 +16,9 @@ import pytest
 import yaml
 
 from learning_os.adapters.cli_parser import build_parser
-from learning_os.contracts import doc_blocks as blocks
 from learning_os.derive.semantics import PREDICATES
 from learning_os.derive.validation.core import Validator
+from learning_os.store.contracts import doc_blocks as blocks
 
 ROOT = Path(__file__).resolve().parents[1]
 

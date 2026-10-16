@@ -17,9 +17,9 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
+from learning_os.store.contracts.gateway import current_gateway_request
 
 #: Positive-only cache of repository roots to their git directories. A root
 #: that gains a `.git` mid-process (tests do) must be re-probed, so misses

@@ -148,7 +148,7 @@ _HEADER = """\
 # and differ between one checkout and the next; dynamic-advisory warnings
 # (WS-NEGLECT, INBOX-STALE) are clock-derived and can appear with no authored
 # edit. Both stay visible in normal validation output; neither is exempt by
-# prefix or heuristic, only by exact code (learning_os.rules.common).
+# prefix or heuristic, only by exact code (learning_os.domain.validation).
 #
 # These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
 # them here defers them; it does not close the point.

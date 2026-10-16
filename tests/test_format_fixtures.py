@@ -178,7 +178,7 @@ def test_nothing_the_validator_applies_to_records_is_an_artifact(
 
 
 def test_classification_decides_the_fingerprint(repo_root, tmp_path):
-    from learning_os.contracts.data_contract import fingerprint
+    from learning_os.store.contracts.data_contract import fingerprint
 
     schema_dir = tmp_path / "schema"
     shutil.copytree(repo_root / "system" / "schema", schema_dir)
@@ -213,7 +213,7 @@ def test_classification_decides_the_fingerprint(repo_root, tmp_path):
 
 
 def test_unclassified_schema_still_counts_as_record(repo_root, tmp_path):
-    from learning_os.contracts.data_contract import record_schemas
+    from learning_os.store.contracts.data_contract import record_schemas
 
     schema_dir = tmp_path / "schema"
     schema_dir.mkdir()

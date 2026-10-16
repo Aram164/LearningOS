@@ -129,9 +129,9 @@ def test_projection_check_requires_matching_payload(mini_repo):
 
 def test_health_report_validates_once_when_stored_is_current(mini_repo, monkeypatch):
     """#92: one schema pass when stored bytes equal a fresh build."""
-    from learning_os.contracts import manifest_contract
     from learning_os.derive.projection import generate_all
     from learning_os.derive.projection.outputs import write_outputs
+    from learning_os.store.contracts import manifest_contract
     from learning_os.store.loader import load_repo
 
     repo = load_repo(mini_repo)
@@ -157,9 +157,9 @@ def test_health_report_validates_once_when_stored_is_current(mini_repo, monkeypa
 
 def test_health_report_still_validates_stale_and_corrupt(mini_repo, monkeypatch):
     """#92: differing stored bytes still get their own schema pass."""
-    from learning_os.contracts import manifest_contract
     from learning_os.derive.projection import generate_all
     from learning_os.derive.projection.outputs import write_outputs
+    from learning_os.store.contracts import manifest_contract
     from learning_os.store.loader import load_repo
 
     repo = load_repo(mini_repo)

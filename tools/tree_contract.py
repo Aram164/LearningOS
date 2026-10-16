@@ -23,8 +23,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from learning_os.contracts import perimeter as pm  # noqa: E402
-from learning_os.contracts.tree_contract import (  # noqa: E402
+from learning_os.store.contracts import perimeter as pm  # noqa: E402
+from learning_os.store.contracts.tree_contract import (  # noqa: E402
     ARCHITECTURE_RELATIVE,
     TreeContractError,
     block_is_current,

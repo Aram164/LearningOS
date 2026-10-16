@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from learning_os.contracts.payloads import json_object, sha256_value
+from learning_os.store.contracts.payloads import json_object, sha256_value
 
 CONVERTERS: dict[str, Callable] = {
     "str": str,

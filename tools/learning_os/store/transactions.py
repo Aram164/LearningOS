@@ -33,18 +33,6 @@ from typing import NoReturn
 import yaml
 from jsonschema import Draft202012Validator
 
-from learning_os.contracts.gateway import (
-    APPROVAL_KINDS,
-    GATEWAY_CHANNELS,
-    GatewayRequestContext,
-    current_gateway_request,
-)
-from learning_os.contracts.write_scopes import (
-    WriteScopeError,
-    require_write_scope,
-    scope_matches,
-    write_target,
-)
 from learning_os.domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
@@ -61,6 +49,18 @@ from learning_os.domain.failures import (
 from learning_os.domain.transaction import TransactionResult
 from learning_os.store import observations
 from learning_os.store import revisions as revision_store
+from learning_os.store.contracts.gateway import (
+    APPROVAL_KINDS,
+    GATEWAY_CHANNELS,
+    GatewayRequestContext,
+    current_gateway_request,
+)
+from learning_os.store.contracts.write_scopes import (
+    WriteScopeError,
+    require_write_scope,
+    scope_matches,
+    write_target,
+)
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
@@ -1274,7 +1274,7 @@ class TransactionService:
         # transaction-owned destination is known and before any file changes.
         run.authority_grants = {}
         if self.authority_root is not None:
-            from learning_os.contracts.capability_catalog import (
+            from learning_os.store.contracts.capability_catalog import (
                 command_definitions,
                 domain_capability_definitions,
             )

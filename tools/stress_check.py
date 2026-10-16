@@ -21,8 +21,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
 
-from learning_os.contracts.manifest_contract import declared_version
 from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.loader import load_repo
 
 

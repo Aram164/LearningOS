@@ -152,7 +152,7 @@ def _s2_stale_snapshot(scratch: Path) -> dict:
         expected_snapshot="sha256:" + "0" * 64)
     # Re-sign: the envelope helper signs the real snapshot, but the scenario
     # is a genuinely stale guard, so the approval must cover the stale value.
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     proc = _run_capability(mini, envelope)
@@ -185,7 +185,7 @@ def _s3_revision_conflict(scratch: Path) -> dict:
         mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
         artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s3")
     envelope["expected_revisions"]["study-map-demo-l01"] += 5
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     proc = _run_capability(mini, envelope)
@@ -418,7 +418,7 @@ def _s9_ambiguous_then_stale_recovery(scratch: Path) -> dict:
     # already stale at arrival; the refusal proves nothing about attempt 1.
     import copy
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     retry = copy.deepcopy(envelope)
     retry["expected_snapshot"] = "sha256:" + "0" * 64
@@ -491,7 +491,7 @@ def _s10_ambiguous_then_revision_recovery(scratch: Path) -> dict:
     # guard refuses. The refusal proves nothing about attempt 1.
     import copy
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     retry = copy.deepcopy(envelope)
     retry["expected_snapshot"] = writer_body["snapshot_after"]
@@ -542,7 +542,7 @@ def _s11_ambiguous_then_invalid_recovery(scratch: Path) -> dict:
     # nothing about attempt 1.
     import copy
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     retry = copy.deepcopy(envelope)
     retry["payload"]["approve"] = True

@@ -22,7 +22,7 @@ def _mini_with_curriculum(tmp_path: Path, name: str) -> Path:
 def _write(mini: Path, key: str, **overrides) -> dict | None:
     from gateway_helpers import approved_v2_envelope
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update",
@@ -243,7 +243,7 @@ def test_reused_request_id_names_every_distinct_request(tmp_path: Path):
     # A second write under the same shared request id, another capability.
     from gateway_helpers import approved_v2_envelope, request_artifact_id
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope = approved_v2_envelope(
         mini, capability="garden.seed.create",

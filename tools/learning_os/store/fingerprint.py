@@ -28,9 +28,9 @@ import weakref
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from learning_os.contracts.local_attachments import local_paths
 from learning_os.domain.failures import StaleSnapshot
 from learning_os.store import digests
+from learning_os.store.contracts.local_attachments import local_paths
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
 
 

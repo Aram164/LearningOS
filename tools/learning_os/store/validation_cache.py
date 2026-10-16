@@ -68,10 +68,10 @@ import stat
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from learning_os.contracts.local_attachments import local_paths
 from learning_os.domain import generated_reads
 from learning_os.domain.failures import TransactionFailure
 from learning_os.domain.validation import Issue, is_live_advisory
+from learning_os.store.contracts.local_attachments import local_paths
 from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.identity import digest_code_identity, runtime_digest
 from learning_os.store.derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec

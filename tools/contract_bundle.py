@@ -18,7 +18,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from learning_os.contracts.bundle import (  # noqa: E402
+from learning_os.store.contracts.bundle import (  # noqa: E402
     BundleError,
     build_bundle,
     build_meta,
@@ -26,7 +26,7 @@ from learning_os.contracts.bundle import (  # noqa: E402
     digest_of,
     resolve_closure,
 )
-from learning_os.contracts.manifest_contract import load_contract  # noqa: E402
+from learning_os.store.contracts.manifest_contract import load_contract  # noqa: E402
 
 
 def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> list[Path]:

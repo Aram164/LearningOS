@@ -77,7 +77,7 @@ PACKAGE_ROOTS: Mapping[str, str] = {
 # one-shot migration executed directly by the operator (never imported) is
 # listed here instead, with its lifecycle bound, until it retires the same way.
 UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
-    "learning_os.contracts.migration_lifecycle": (
+    "learning_os.store.contracts.migration_lifecycle": (
         "shared migration lifecycle; runtime wiring retired by PLAN D13 (ADR-018)"
     ),
     "migrations.summaries_to_notes_v1": (

@@ -22,7 +22,6 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from learning_os.contracts.write_scopes import WriteScopeError, scope_matches
 from learning_os.derive.semantics.predicates import (
     CONTRACT_VERSION,
     PREDICATES,
@@ -31,6 +30,7 @@ from learning_os.derive.semantics.predicates import (
     evaluate,
     snapshot_fresh,
 )
+from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches
 
 
 class ChangeError(ValueError):

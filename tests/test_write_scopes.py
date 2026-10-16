@@ -4,14 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.contracts.write_scopes import (
+from learning_os.domain.failures import TransactionScopeError
+from learning_os.store.contracts.write_scopes import (
     WriteScopeError,
     normalize_scope_pattern,
     require_write_scope,
     scope_matches,
     write_target,
 )
-from learning_os.domain.failures import TransactionScopeError
 from learning_os.store.transactions import TransactionService
 
 

@@ -17,7 +17,11 @@ from learning_os.app.gateway import read_structured_file as _read_structured_fil
 from learning_os.app.handlers._shared import NOTES_PREFIX
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts.batch_notes import (
+from learning_os.domain import ids
+from learning_os.domain.failures import WriteRefused
+from learning_os.store import observations
+from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.contracts.batch_notes import (
     ANALYSIS_FIELDS,
     ANALYSIS_FIELDS_ORDERED,
     ANALYSIS_HANDLER_OWNED,
@@ -26,10 +30,6 @@ from learning_os.contracts.batch_notes import (
     BATCH_MAX_NOTES,
     BATCH_MIN_NOTES,
 )
-from learning_os.domain import ids
-from learning_os.domain.failures import WriteRefused
-from learning_os.store import observations
-from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.material_analysis import (
     binding_consistent,

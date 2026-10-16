@@ -13,13 +13,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from learning_os.contracts.json_schema import validate_contract
 from learning_os.derive.semantics.lineage import (
     dump_ledger,
     emit_dossier_freshness,
     load_ledger,
     to_dict,
 )
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.loader import load_repo
 from learning_os.store.material_observations import (
     LiveMaterialObservations,

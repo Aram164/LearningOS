@@ -62,7 +62,7 @@ def require_gateway_v2() -> None:
     Moved verbatim from ``commands.collection_entry``; the source units
     share this copy, and ``commands.vnext`` keeps its own for platform.
     """
-    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.store.contracts.gateway import current_gateway_request
 
     if current_gateway_request() is None:
         raise WriteRefused(

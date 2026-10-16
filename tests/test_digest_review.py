@@ -212,7 +212,7 @@ def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
 
 
 def test_non_utf8_attachment_declaration_is_reported_and_excludes_nothing(mini_repo: Path):
-    from learning_os.contracts.local_attachments import check, local_paths
+    from learning_os.store.contracts.local_attachments import check, local_paths
     from learning_os.store.fingerprint import canonical_fingerprint
 
     declaration = mini_repo / "system/contracts/local-attachments.yaml"

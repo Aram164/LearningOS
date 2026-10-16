@@ -500,7 +500,7 @@ def _two_unit_scoped_world(mini_repo):
         node_content_digest,
         route_content_digest,
     )
-    from learning_os.route_identity import route_with_identity
+    from learning_os.domain.route_identity import route_with_identity
     from learning_os.store.revisions import dump_revisions
 
     add_curriculum(mini_repo)

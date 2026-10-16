@@ -14,7 +14,7 @@ import pytest
 import yaml
 from test_arch_idroundtrip import SUPPORTED_OWNER_ROWS
 
-from learning_os.contracts.requests import request_schema
+from learning_os.store.contracts.requests import request_schema
 
 ROOT = Path(__file__).resolve().parent.parent
 REQUESTS_DIR = ROOT / "system/schema/requests"

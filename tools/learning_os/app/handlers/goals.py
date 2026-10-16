@@ -14,11 +14,11 @@ from learning_os.app.admission import gesture_allowed
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.derive.semantics.scan import intelligence_scan
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store import observations
+from learning_os.store.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import load_session_paths as _load_session_paths

@@ -6,13 +6,13 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from learning_os.contracts.gateway import (
+from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
-from learning_os.domain.failures import StaleSnapshot, WriteRefused
-from learning_os.domain.snapshot import Repo
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 

@@ -417,7 +417,7 @@ def _substitute(value, ctx: _CaseContext):
 def _default_artifact_ids(capability: str, key: str) -> list[str]:
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
-        from learning_os.contracts.gateway import request_artifact_id
+        from learning_os.store.contracts.gateway import request_artifact_id
     finally:
         del sys.path[0]
     try:
@@ -463,7 +463,7 @@ def _cli_command_for(operation: str, root: Path) -> str:
         return operation[len("cli."):]
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
-        from learning_os.contracts.capability_catalog import command_definitions
+        from learning_os.store.contracts.capability_catalog import command_definitions
     finally:
         del sys.path[0]
     return command_definitions(root)[operation].cli_command
@@ -478,7 +478,7 @@ def request_to_argv(operation: str, request: dict, root: Path) -> list[str]:
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
         import los
-        from learning_os.contracts.payloads import subparsers
+        from learning_os.store.contracts.payloads import subparsers
     finally:
         del sys.path[0]
     parser = subparsers(los.build_parser())[_cli_command_for(operation, root)]
@@ -507,7 +507,7 @@ def _is_json_object_action(action) -> bool:
     """Whether the action converts with the shared ``json_object`` callable."""
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
-        from learning_os.contracts.payloads import json_object
+        from learning_os.store.contracts.payloads import json_object
     finally:
         del sys.path[0]
     return action.type is json_object

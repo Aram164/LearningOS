@@ -8,7 +8,7 @@ contract: learningos-local-attachments
 # disk, not the index). The pin is the only record of what belongs there on a
 # machine that lacks the file, so a present file must match it exactly.
 #
-# Checked by learning_os.contracts.local_attachments on every validation:
+# Checked by learning_os.store.contracts.local_attachments on every validation:
 #   present and different -> ATTACH-LOCAL-CHANGED (error)
 #   absent                -> ATTACH-LOCAL-ABSENT  (environmental warning; CI)
 #   unowned, tracked, or not ignored -> errors

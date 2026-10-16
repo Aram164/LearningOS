@@ -36,8 +36,6 @@ from learning_os.app.gateway import read_content_bound_file as _read_content_bou
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts import current_template_problems
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
@@ -84,6 +82,8 @@ from learning_os.domain.suggest import not_found
 from learning_os.store.codec import dump_study_map as _dump_study_map
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.codec import render_frontmatter as _render_frontmatter
+from learning_os.store.contracts import current_template_problems
+from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 

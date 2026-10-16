@@ -87,7 +87,7 @@ def test_content_guard_refuses_even_with_fresh_snapshot(mini_repo):
     stale_hash = envelope["payload"]["expected_content_sha256"]
     fresh_envelope = _envelope(mini_repo)
     fresh_envelope["payload"]["expected_content_sha256"] = stale_hash
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     fresh_envelope["approval"]["subject_sha256"] = intent_sha256(fresh_envelope)
     before = path.read_bytes()
@@ -113,7 +113,7 @@ def test_fenced_headings_are_preserved_but_duplicate_targets_refuse(mini_repo):
 
 @pytest.mark.parametrize("guard", ["expected_snapshot", "expected_revisions"])
 def test_stale_gateway_guards_refuse(mini_repo, guard):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope = _envelope(mini_repo)
     if guard == "expected_snapshot":

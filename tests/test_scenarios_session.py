@@ -22,8 +22,8 @@ import pytest
 from arch_audit_hook import SITE_WITNESS_ENV
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 
-from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.store import session_ledger as session_store
+from learning_os.store.contracts.gateway import intent_sha256, request_artifact_id
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 ARCH_SITE = Path(__file__).resolve().parent / "arch_site"

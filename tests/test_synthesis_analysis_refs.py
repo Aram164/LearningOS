@@ -272,11 +272,11 @@ def test_publication_validations_route_through_the_helper(mini_repo, monkeypatch
     """SPEC (cq) 5: both publication validations translate the lookup."""
     from learning_os.app.context import OpContext
     from learning_os.app.handlers import synthesis as plan_handlers
-    from learning_os.contracts.gateway import (
+    from learning_os.domain.failures import NotFound
+    from learning_os.store.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
     )
-    from learning_os.domain.failures import NotFound
 
     dossier = _seed(mini_repo, None)
     miss = "unit-nope"

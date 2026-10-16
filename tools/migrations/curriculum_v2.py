@@ -21,7 +21,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
-from learning_os.contracts.migration_lifecycle import (  # noqa: E402
+from learning_os.store.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )

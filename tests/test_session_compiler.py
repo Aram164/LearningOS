@@ -14,7 +14,6 @@ import yaml
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.contracts.json_schema import ContractValidationError
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     activity_fingerprint,
@@ -29,6 +28,7 @@ from learning_os.derive.projection.learner_interpreter import (
 from learning_os.derive.projection.learner_interpreter import interpret_observations
 from learning_os.derive.projection.session_compiler import compile_session, replan_session
 from learning_os.derive.validation import validate
+from learning_os.store.contracts.json_schema import ContractValidationError
 from learning_os.store.loader import load_repo
 
 TARGET = {
@@ -417,7 +417,7 @@ def test_runtime_cli_rejects_stale_previous_packet(runtime_root):
 
 
 def test_gateway_rejects_stale_revision_and_outside_workspace_scope(runtime_root):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     _, req = inputs(runtime_root)
     request = envelope(runtime_root, req["id"])
@@ -522,7 +522,7 @@ def test_legacy_unbound_answers_cannot_demonstrate(runtime_root):
 
 
 def test_explicit_correction_preserves_history_and_withdraws_old_credit(runtime_root):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     repo, req = inputs(runtime_root)
     ledger = runtime_root / "work/active/workspace-demo/observations.jsonl"

@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts.gateway import GatewayRequestContext
+from learning_os.store.contracts.gateway import GatewayRequestContext
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.transactions import (
     TransactionFailure,

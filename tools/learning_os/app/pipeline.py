@@ -36,12 +36,6 @@ from learning_os.app.outcomes import classify, error_object, resolve
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.app.registry import REGISTRY
 from learning_os.app.render import call_renderer
-from learning_os.contracts.gateway import (
-    current_gateway_request,
-    gateway_request_context,
-    verified_gateway_snapshot,
-)
-from learning_os.contracts.requests import request_schema
 from learning_os.domain.codes import (
     IDEMPOTENCY_CONFLICT,
     INTERNAL_FAILURE,
@@ -63,6 +57,12 @@ from learning_os.domain.failures import (
 )
 from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
 from learning_os.domain.transaction import TransactionResult
+from learning_os.store.contracts.gateway import (
+    current_gateway_request,
+    gateway_request_context,
+    verified_gateway_snapshot,
+)
+from learning_os.store.contracts.requests import request_schema
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.evidence import replay_for_request

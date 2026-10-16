@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import re
 
-from learning_os.contracts import data_contract
+from learning_os.store.contracts import data_contract
 
 _LIVING_CONTRACT_DOCS = (
     "README.md",
@@ -81,7 +81,10 @@ class ChecksContract:
         itself has not gone missing or unparseable, because that is the one
         failure mode which would turn enforcement off everywhere at once.
         """
-        from learning_os.contracts.manifest_contract import ManifestContractError, load_contract
+        from learning_os.store.contracts.manifest_contract import (
+            ManifestContractError,
+            load_contract,
+        )
 
         try:
             load_contract(self.repo.root)
@@ -100,7 +103,7 @@ class ChecksContract:
         control, so every disposition there is irreversible and belongs to the
         operator, not to a validation run.
         """
-        from learning_os.contracts import perimeter
+        from learning_os.store.contracts import perimeter
 
         for issue in perimeter.check(self.repo.root):
             code = f"PERIMETER-{issue.code}"
@@ -122,7 +125,7 @@ class ChecksContract:
         the only copy outside backups. An absent one is environmental (a CI
         checkout has none), so it warns; everything else is an error.
         """
-        from learning_os.contracts import local_attachments
+        from learning_os.store.contracts import local_attachments
 
         referenced = {
             str(entry).removeprefix("./")
@@ -146,7 +149,7 @@ class ChecksContract:
         block is generated. What remains checkable is the other direction: a
         directory nobody declared, and a block somebody hand-edited.
         """
-        from learning_os.contracts import tree_contract
+        from learning_os.store.contracts import tree_contract
 
         for issue in tree_contract.check(self.repo.root):
             code = f"TREE-{issue.code}"
@@ -163,7 +166,7 @@ class ChecksContract:
         failure mode is an agent reading a retired rule as current — which is
         indistinguishable from the rule being wrong.
         """
-        from learning_os.contracts import normative_corpus
+        from learning_os.store.contracts import normative_corpus
 
         for issue in normative_corpus.check(self.repo.root):
             self.err(f"NORMATIVE-CORPUS-{issue.code}", issue.message, issue.path)
@@ -203,7 +206,7 @@ class ChecksContract:
 
     def check_doc_blocks(self):
         """Generated counts/lists are checked from their metadata owners."""
-        from learning_os.contracts import doc_blocks
+        from learning_os.store.contracts import doc_blocks
 
         try:
             if not doc_blocks.applies(self.repo.root):

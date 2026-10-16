@@ -16,6 +16,13 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.admin import masters_planning
+from learning_os.app.backup_manifest import (
+    BackupManifestError,
+    backup_authorities,
+    build_backup_manifest,
+    verify_backup_manifest,
+    verify_restored_system,
+)
 from learning_os.app.context import OpContext
 from learning_os.app.encoders import (
     dumps_indented,
@@ -25,20 +32,13 @@ from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.backup_manifest import (
-    BackupManifestError,
-    backup_authorities,
-    build_backup_manifest,
-    verify_backup_manifest,
-    verify_restored_system,
-)
-from learning_os.contracts.gateway import current_gateway_request
-from learning_os.contracts.json_schema import validate_contract
 from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.diagnostics import conventions
 from learning_os.store.diagnostics.resolver import (
     AuthorityEvidence,

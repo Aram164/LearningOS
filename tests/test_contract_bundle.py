@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.contracts.bundle import (
+from learning_os.store.contracts.bundle import (
     BundleError,
     build_bundle,
     build_identity_index,
@@ -23,7 +23,7 @@ from learning_os.contracts.bundle import (
     digest_of,
     resolve_closure,
 )
-from learning_os.contracts.json_schema import schema_registry
+from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = pytest.mark.full_repo
 

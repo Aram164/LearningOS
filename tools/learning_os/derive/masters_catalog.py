@@ -14,7 +14,7 @@ from urllib.parse import urlsplit
 
 import yaml
 
-from learning_os.contracts.json_schema import validate_contract
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.loader import load_repo
 
 

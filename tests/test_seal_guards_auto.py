@@ -204,7 +204,7 @@ def test_guard_derivation_intercepts_every_commit_path(mini_repo: Path,
 
     def build_parser():
         parser = real_build_parser()
-        from learning_os.contracts.payloads import subparsers
+        from learning_os.store.contracts.payloads import subparsers
         subparsers(parser)["stage-note"].set_defaults(func=direct_commit_handler)
         return parser
 
@@ -232,8 +232,8 @@ def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_pat
     """#110: `--session-id` seals the session and still commits first try."""
     from repo_builders import add_curriculum
 
-    from learning_os.contracts.gateway import intent_sha256
     from learning_os.store import session_ledger as plumbing_support
+    from learning_os.store.contracts.gateway import intent_sha256
 
     add_curriculum(mini_repo)
     out = tmp_path / "sealed.json"
@@ -669,7 +669,7 @@ def test_inbox_resolve_sealed_envelope_still_refuses_a_stale_snapshot(
 def test_inbox_resolve_envelope_missing_a_file_guard_still_refuses(
         mini_repo: Path, tmp_path: Path):
     """Dropping one sealed file guard still trips the exact-coverage guard."""
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     payload, _, year = _inbox_drop_payload(mini_repo)
     inbox_guard = f"file:work/inbox/{payload['name']}"

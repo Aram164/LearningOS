@@ -14,7 +14,6 @@ import yaml
 
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
 from learning_os.app.check import staged_shadow as _staged_shadow
-from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     synthesis_destination,
@@ -29,6 +28,7 @@ from learning_os.domain.plan_import import (
     module_plan_routing_problems as _module_plan_routing_problems,
 )
 from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
+from learning_os.store.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.material_analysis import observe_local_material
@@ -412,7 +412,7 @@ def real_perimeter_errors(root: Path) -> list[str]:
     ``--check`` and live application; synthetic repositories without a
     declaration stay silent, exactly as in live validation.
     """
-    from learning_os.contracts import perimeter as _perimeter
+    from learning_os.store.contracts import perimeter as _perimeter
 
     out: list[str] = []
     for issue in _perimeter.check(root):

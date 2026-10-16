@@ -22,7 +22,7 @@
 # violated by the producer, not the consumer.
 #
 # So the producer now owns the contract. `build_manifest` enforces this file on
-# every build (learning_os/contracts/manifest_contract.py), which means any
+# every build (learning_os/store/contracts/manifest_contract.py), which means any
 # change to the published shape fails Core's own tests until the contract is
 # deliberately bumped. The UI lock is a mirror of this file, not the original.
 #

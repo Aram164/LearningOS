@@ -536,7 +536,7 @@ def test_an_unindexed_operator_skill_is_an_error():
 
     import yaml as _yaml
 
-    from learning_os.contracts import normative_corpus as nc
+    from learning_os.store.contracts import normative_corpus as nc
 
     assert "system/skills/*/SKILL.md" in nc.CORPUS_GLOBS
 
@@ -578,7 +578,7 @@ def test_an_unindexed_operator_skill_is_an_error():
 
 def test_the_shipped_operator_skills_are_classified_and_agree_with_the_contract():
     """F14: the three verified contradictions, pinned where they were found."""
-    from learning_os.contracts import normative_corpus as nc
+    from learning_os.store.contracts import normative_corpus as nc
 
     root = Path(__file__).resolve().parents[1]
     assert nc.check(root) == []

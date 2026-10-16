@@ -11,7 +11,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts.migration_lifecycle import (
+from learning_os.store.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )

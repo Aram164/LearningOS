@@ -21,8 +21,8 @@ from learning_os.app.gateway import read_structured_file as _read_structured_fil
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.pipeline import close_attempt as _close_attempt
 from learning_os.app.pipeline import run_gateway
-from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.capability_catalog import command_definitions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store

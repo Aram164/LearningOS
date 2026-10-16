@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts import tree_contract as tc
+from learning_os.store.contracts import tree_contract as tc
 
 ROOT = Path(__file__).resolve().parents[1]
 

@@ -411,8 +411,8 @@ def test_capability_backed_commands_take_only_the_approved_noop_json_flag(
     stays guarded by test_no_capability_schema_gains_a_json_property.
     """
     import los
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payloads import subparsers
 
     approvals = yaml.safe_load(
         (repo_root / "tests/architecture/surface-approvals.yaml")
@@ -440,9 +440,9 @@ def test_capability_backed_commands_take_only_the_approved_noop_json_flag(
 
 
 def test_no_capability_schema_gains_a_json_property(repo_root):
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import all_payload_schemas
 
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
@@ -626,7 +626,7 @@ def test_generated_parser_action_semantics_through_metadata(
 
 def test_production_bindings_and_baseline_stay_frozen(repo_root):
     import los
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     assert len(subparsers(los.build_parser())) == 91
     baseline = json.loads(

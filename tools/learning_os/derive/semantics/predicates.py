@@ -22,9 +22,9 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 
-from learning_os.contracts.write_scopes import WriteScopeError, scope_matches
+from learning_os.domain.route_identity import ROUTE_ID_RE
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES, ID_RE, RELATION_TYPES, UNIT_ID_RE
-from learning_os.route_identity import ROUTE_ID_RE
+from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches
 
 #: Version of the predicate contract. Bumped when a predicate's inputs, truth
 #: table, or registry membership changes. Lineage sidecars (Phase 2) cite this
@@ -765,7 +765,7 @@ PREDICATES: Mapping[str, Predicate] = {
     "RouteValid": _predicate(
         "RouteValid", route_valid,
         ("route_id", "unit_id", "source_id", "locator"),
-        "tools/learning_os/route_identity.py",
+        "tools/learning_os/domain/route_identity.py",
         "A route is addressable by id plus owning unit, source, and locator.",
     ),
     "RouteEvaluated": _predicate(

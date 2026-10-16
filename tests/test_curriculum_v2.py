@@ -21,10 +21,10 @@ from gateway_helpers import (
 )
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.contracts.manifest_contract import declared_version
 from learning_os.derive.projection import generate_all, write_outputs
 from learning_os.derive.routes import deterministic_route_id
 from learning_os.derive.validation import validate
+from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo, parse_frontmatter
 
@@ -538,7 +538,7 @@ def test_module_attempt_unknown_result_refuses_before_any_write(mini_repo):
 
 
 def test_module_attempt_stale_revision_refuses(mini_repo):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     add_curriculum(mini_repo)
     before = _demo_module_path(mini_repo).read_bytes()

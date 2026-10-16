@@ -14,19 +14,19 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts.atlas_question import (
-    QUESTION_FIELDS,
-    QUESTION_FIELDS_ORDERED,
-    QUESTION_HANDLER_OWNED,
-)
-from learning_os.contracts.gateway import current_gateway_request
-from learning_os.contracts.json_schema import validate_contract
 from learning_os.derive import abilities
 from learning_os.derive.learning_runtime import runtime_path
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import suggest, with_suggestions
 from learning_os.store import observations
 from learning_os.store.codec import render_frontmatter as _render_frontmatter
+from learning_os.store.contracts.atlas_question import (
+    QUESTION_FIELDS,
+    QUESTION_FIELDS_ORDERED,
+    QUESTION_HANDLER_OWNED,
+)
+from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import artifact_revision

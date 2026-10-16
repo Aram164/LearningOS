@@ -20,11 +20,6 @@ from learning_os.app import commit as ops_commit
 from learning_os.app import outcomes as plumbing
 from learning_os.app.context import OpContext
 from learning_os.app.proposal import TransactionProposal
-from learning_os.contracts.gateway import (
-    GatewayRequestContext,
-    current_gateway_request,
-    gateway_request_context,
-)
 from learning_os.domain.ai_errors import (
     DeliveryRevisionConflict,
     DeliveryValidationError,
@@ -45,6 +40,11 @@ from learning_os.domain.failures import (
     TransactionValidationFailure,
 )
 from learning_os.store import session_ledger as session_support
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+)
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 
 # Pinned from the pre-change capture (evidence/commit-kwarg-baseline.json).

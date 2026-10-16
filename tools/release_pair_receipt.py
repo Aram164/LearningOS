@@ -43,7 +43,7 @@ SHIPPED_ASSETS = ("main.js", "styles.css", "manifest.json", "build-info.json")
 LIVE_INSTALL_SCOPES = ("not-run-live-install-deselected", "full")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from learning_os.contracts.manifest_contract import (  # noqa: E402
+from learning_os.store.contracts.manifest_contract import (  # noqa: E402
     ManifestContractError,
     declared_schema_sha256,
     declared_version,

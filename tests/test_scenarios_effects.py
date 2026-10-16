@@ -416,7 +416,7 @@ def _subparser(command: str):
     sys.path.insert(0, str(scenario_harness.REPO_ROOT / "tools"))
     try:
         import los
-        from learning_os.contracts.payloads import subparsers
+        from learning_os.store.contracts.payloads import subparsers
     finally:
         del sys.path[0]
     return subparsers(los.build_parser())[command]

@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from learning_os.contracts.data_contract import bump, check, fingerprint
+from learning_os.store.contracts.data_contract import bump, check, fingerprint
 
 
 def build_parser() -> argparse.ArgumentParser:

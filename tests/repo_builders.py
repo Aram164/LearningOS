@@ -21,8 +21,8 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.validation_service import collect
-from learning_os.contracts.local_attachments import LOCAL_ATTACHMENTS_RELATIVE
 from learning_os.derive.routes import deterministic_route_id
+from learning_os.store.contracts.local_attachments import LOCAL_ATTACHMENTS_RELATIVE
 from learning_os.store.loader import load_repo, parse_frontmatter
 from learning_os.store.warning_baseline import write_baseline
 

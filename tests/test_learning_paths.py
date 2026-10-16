@@ -10,9 +10,9 @@ from pathlib import Path
 import yaml
 from gateway_helpers import approved_v2_call, file_sha256
 
-from learning_os.contracts.manifest_contract import declared_version
 from learning_os.derive.projection import generate_all, write_outputs
 from learning_os.derive.validation import validate
+from learning_os.store.contracts.manifest_contract import declared_version
 from learning_os.store.loader import load_repo
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"

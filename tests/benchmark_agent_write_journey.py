@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from conftest import build_mini_repo  # noqa: E402
 from repo_builders import _add_material_overview, add_curriculum  # noqa: E402
 
-from learning_os.contracts.gateway import intent_sha256  # noqa: E402
+from learning_os.store.contracts.gateway import intent_sha256  # noqa: E402
 
 JOURNEYS = (
     ("unit.source-selection.set", "unit-source-selection",

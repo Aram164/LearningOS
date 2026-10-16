@@ -13,20 +13,20 @@ from typing import Any
 
 import yaml
 
-from learning_os.contracts.capability_catalog import load_capability_catalog
-from learning_os.contracts.json_schema import validate_contract
-from learning_os.contracts.manifest_contract import (
-    check as check_manifest_contract,
-)
-from learning_os.contracts.manifest_contract import (
-    declared_schema_sha256,
-    declared_version,
-)
 from learning_os.derive.masters_catalog import load_master_catalog
 from learning_os.derive.material_synthesis import material_synthesis_freshness
 from learning_os.derive.projection import build_backlinks, build_manifest, stable_generated_at
 from learning_os.derive.validation import validate
 from learning_os.store import observations
+from learning_os.store.contracts.capability_catalog import load_capability_catalog
+from learning_os.store.contracts.json_schema import validate_contract
+from learning_os.store.contracts.manifest_contract import (
+    check as check_manifest_contract,
+)
+from learning_os.store.contracts.manifest_contract import (
+    declared_schema_sha256,
+    declared_version,
+)
 from learning_os.store.legacy_archive import load_legacy_archive_lock
 from learning_os.store.loader import load_repo
 from learning_os.store.manifest_identity import manifest_text

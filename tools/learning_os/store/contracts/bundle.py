@@ -2,7 +2,7 @@
 
 ``system/contracts/manifest-vN.schema.json`` references other schemas by URI
 (``https://learningos.local/schema/<name>``), which Core resolves through
-:func:`learning_os.contracts.json_schema.schema_registry`. The stamped
+:func:`learning_os.store.contracts.json_schema.schema_registry`. The stamped
 ``schema_sha256``, however, digests only the root file's bytes: a referenced
 resource can change while the contract identity stays fixed. This module
 computes the conservative alternative — the identity of the complete admitted

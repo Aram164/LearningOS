@@ -17,11 +17,11 @@ baselined:
 - A19-owners
 checks:
   A2-static:
-  - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
+  - signature: tools/learning_os/app/ai_actions/service.py::append_slices::write_bytes
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ai_actions/service.py::import_delivery::shutil.rmtree
+  - signature: tools/learning_os/app/ai_actions/service.py::import_delivery::shutil.rmtree
     count: 1
     since: baseline
     approved_by: null
@@ -37,19 +37,19 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/contracts/data_contract.py::write_contract::write_text
+  - signature: tools/learning_os/store/contracts/data_contract.py::write_contract::write_text
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/contracts/manifest_contract.py::bump::write_text
+  - signature: tools/learning_os/store/contracts/manifest_contract.py::bump::write_text
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/contracts/perimeter.py::write_block::write_text
+  - signature: tools/learning_os/store/contracts/perimeter.py::write_block::write_text
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/contracts/tree_contract.py::write_block::write_text
+  - signature: tools/learning_os/store/contracts/tree_contract.py::write_block::write_text
     count: 1
     since: baseline
     approved_by: null
@@ -106,11 +106,11 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
-  - signature: tools/learning_os/contracts/perimeter.py::_block_bounds::method::-->
+  - signature: tools/learning_os/store/contracts/perimeter.py::_block_bounds::method::-->
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/contracts/tree_contract.py::_block_bounds::method::-->
+  - signature: tools/learning_os/store/contracts/tree_contract.py::_block_bounds::method::-->
     count: 1
     since: baseline
     approved_by: null

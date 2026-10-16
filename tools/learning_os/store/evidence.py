@@ -23,14 +23,14 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
-from learning_os.contracts.gateway import GatewayRequestContext
-from learning_os.contracts.write_scopes import WriteScopeError, scope_matches, write_target
 from learning_os.domain.failures import (
     ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,
 )
 from learning_os.domain.transaction import TransactionResult
+from learning_os.store.contracts.gateway import GatewayRequestContext
+from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches, write_target
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.revisions import load_revisions
 
@@ -334,7 +334,7 @@ def verify_committed_evidence(
     resolved_authority_root = authority_root or default_authority_root(root)
     allowed_scopes: list[str] = []
     if resolved_authority_root is not None:
-        from learning_os.contracts.capability_catalog import (
+        from learning_os.store.contracts.capability_catalog import (
             command_definitions,
             domain_capability_definitions,
         )

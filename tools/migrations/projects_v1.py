@@ -21,12 +21,12 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
-from learning_os.contracts.migration_lifecycle import (  # noqa: E402
+from learning_os.derive.projection import generate_all, write_outputs  # noqa: E402
+from learning_os.derive.validation import validate  # noqa: E402
+from learning_os.store.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.derive.projection import generate_all, write_outputs  # noqa: E402
-from learning_os.derive.validation import validate  # noqa: E402
 from learning_os.store.loader import load_repo, parse_frontmatter  # noqa: E402
 from learning_os.store.transactions import TransactionFailure, TransactionService  # noqa: E402
 

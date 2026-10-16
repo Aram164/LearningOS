@@ -250,7 +250,7 @@ def test_route_patch_warning_refusal_matches_check(mini_repo: Path, tmp_path: Pa
 
 def test_route_patch_stale_revision_still_refuses(mini_repo: Path, tmp_path: Path,
                                                   capsys):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     repo, rid, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id

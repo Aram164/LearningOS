@@ -19,8 +19,8 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
-from learning_os.contracts.bundle import build_bundle, digest_of
-from learning_os.contracts.json_schema import schema_registry
+from learning_os.store.contracts.bundle import build_bundle, digest_of
+from learning_os.store.contracts.json_schema import schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 

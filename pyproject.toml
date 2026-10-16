@@ -91,14 +91,13 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions : backup_manifest",
+  "app",
   "derive",
-  "store : contracts",
-  "domain : route_identity",
+  "store",
+  "domain",
 ]
 ignore_imports = [
   # recorded baseline exceptions, one per line: "learning_os.x.y -> learning_os.z"
-  "learning_os.derive.projection.manifest -> learning_os.ai_actions.projection",
 ]
 
 [[tool.importlinter.contracts]]

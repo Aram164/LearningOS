@@ -413,7 +413,7 @@ def test_diagnostic_failed_exits_1_with_result(pipe, mini_repo):
 
 
 def _gateway_context(capability: str, suffix: str):
-    from learning_os.contracts.gateway import (
+    from learning_os.store.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
     )
@@ -497,8 +497,8 @@ def test_cli_proposal_runs_after_commit_then_finish(pipe, mini_repo):
 
 def _pipe_gesture(ctx, capability: str):
     """The (br) R7 handler-built context, exactly as `los observe` builds it."""
-    from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
     from learning_os.store import observations
+    from learning_os.store.contracts.gateway import GatewayRequestContext, intent_sha256
 
     snapshot = ctx.snapshot_id()
     subject = intent_sha256({
@@ -524,7 +524,7 @@ def _pipe_gesture(ctx, capability: str):
 
 def test_cli_gesture_commit_succeeds_with_a_receipt(pipe, mini_repo):
     """SPEC (br) R7: the same proposal with a gesture commits on the CLI."""
-    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.store.contracts.gateway import current_gateway_request
 
     _write_gateway_wiring(mini_repo)
 
@@ -550,7 +550,7 @@ def test_cli_gesture_commit_succeeds_with_a_receipt(pipe, mini_repo):
 
 def test_cli_gesture_refusal_resets_the_context(pipe, mini_repo):
     """SPEC (br) R7: a refused gesture commit still resets the context."""
-    from learning_os.contracts.gateway import (
+    from learning_os.store.contracts.gateway import (
         current_gateway_request,
         gateway_snapshot_is_verified,
     )
@@ -598,7 +598,7 @@ def test_cli_gesture_handler_refuses_a_non_admitted_capability(
         pipe, mini_repo):
     """SPEC (br) R7: the handler refuses before any write unless admitted."""
     from learning_os.app.admission import gesture_allowed
-    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.store.contracts.gateway import current_gateway_request
 
     def handler(ctx, req):
         if not gesture_allowed(TEST_OP):
@@ -624,7 +624,7 @@ def test_observation_core_without_a_context_keeps_the_direct_cli_guard(
     """SPEC (br) R7: without a gesture the observe core refuses directly."""
     from learning_os.app.context import OpContext
     from learning_os.app.handlers.learner_observations import observation_append
-    from learning_os.contracts.gateway import current_gateway_request
+    from learning_os.store.contracts.gateway import current_gateway_request
 
     assert current_gateway_request() is None
     ctx = OpContext(
@@ -809,7 +809,7 @@ def _write_gateway_wiring(root: Path) -> None:
     """Catalog row + payload schema + guard-carrying request schema."""
     import yaml
 
-    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.capability_catalog import command_definitions
 
     catalog = root / "system" / "contracts" / "capabilities.yaml"
     data = yaml.safe_load(catalog.read_text(encoding="utf-8"))
@@ -864,7 +864,7 @@ def _test_parser_factory():
 
 
 def _run_test_gateway(mini_repo, envelope, *, key="k1-001"):
-    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.capability_catalog import command_definitions
     from learning_os.store.diagnostics import tracer as diag_tracer
     from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
@@ -923,7 +923,7 @@ def test_gateway_applies_parser_defaults(pipe, mini_repo):
 def test_gateway_receives_envelope_guards_in_req(pipe, mini_repo):
     """The envelope's snapshot and revisions arrive in req."""
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
     from learning_os.store.fingerprint import canonical_fingerprint
 
     _write_gateway_wiring(mini_repo)
@@ -2133,7 +2133,7 @@ def test_json_format_must_be_declared_by_operation(pipe, mini_repo):
 def test_cx_carrier_with_gesture_is_a_programming_error(
         pipe, mini_repo):
     """A carrier beside a gesture fails without committing (D-9)."""
-    from learning_os.contracts.gateway import GatewayRequestContext
+    from learning_os.store.contracts.gateway import GatewayRequestContext
 
     gesture = GatewayRequestContext(
         request_id="request-carrier-gesture",

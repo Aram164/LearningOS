@@ -8,8 +8,8 @@ from pathlib import Path
 
 import yaml
 
-from .gateway import GATEWAY_CHANNELS
-from .write_scopes import WriteScopeError, normalize_scope_pattern
+from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
+from learning_os.store.contracts.write_scopes import WriteScopeError, normalize_scope_pattern
 
 
 class CapabilityCatalogError(Exception):

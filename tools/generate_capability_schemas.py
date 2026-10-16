@@ -17,9 +17,9 @@ from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
 
-from learning_os.contracts.capability_catalog import command_definitions  # noqa: E402
-from learning_os.contracts.payload_records import resolve_all  # noqa: E402
-from learning_os.contracts.payloads import all_payload_schemas  # noqa: E402
+from learning_os.store.contracts.capability_catalog import command_definitions  # noqa: E402
+from learning_os.store.contracts.payload_records import resolve_all  # noqa: E402
+from learning_os.store.contracts.payloads import all_payload_schemas  # noqa: E402
 
 
 def _build_schemas(root: Path) -> dict:

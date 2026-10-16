@@ -45,7 +45,7 @@ def _mini_with_curriculum(tmp_path: Path, name: str) -> Path:
 
 
 def _stage_write(mini: Path, key: str, **overrides):
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     envelope = approved_v2_envelope(
         mini, capability="stage.progress.update",

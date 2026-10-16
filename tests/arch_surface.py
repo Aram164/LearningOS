@@ -120,7 +120,7 @@ def build_surface(root: Path | str) -> dict:
     import seal_envelope  # noqa: E402  (imports the parser, not a command)
 
     import los  # noqa: E402  (imports the parser, not a command)
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     try:
         from learning_os.app.context import OpContext

@@ -419,3 +419,15 @@ moves:
   to: tools/learning_os/store/validation_cache.py::validation_inputs
 - from: tools/learning_os/store/validation_cache.py::_validation_spec
   to: tools/learning_os/store/validation_cache.py::validation_spec
+- from: tools/learning_os/ai_actions/registry.py
+  to: tools/learning_os/store/ai_actions/registry.py
+- from: tools/learning_os/ai_actions/projection.py
+  to: tools/learning_os/derive/projection/ai_actions.py
+- from: tools/learning_os/backup_manifest.py
+  to: tools/learning_os/app/backup_manifest.py
+- from: tools/learning_os/contracts/
+  to: tools/learning_os/store/contracts/
+- from: tools/learning_os/ai_actions/
+  to: tools/learning_os/app/ai_actions/
+- from: tools/learning_os/route_identity.py
+  to: tools/learning_os/domain/route_identity.py

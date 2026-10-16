@@ -15,7 +15,6 @@ from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisUnitNotFound,
     current_unit_material_basis,
@@ -34,6 +33,7 @@ from learning_os.derive.semantics.restamp import ELIGIBLE, analyze, claims_list_
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.store import observations
 from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.revisions import load_revisions
 from learning_os.store.session import githistory
 from learning_os.store.transactions import parse_expected_revisions, transaction_artifacts

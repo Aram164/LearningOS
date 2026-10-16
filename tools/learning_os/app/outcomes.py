@@ -13,9 +13,7 @@ import contextvars
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from learning_os.backup_manifest import BackupManifestError
-from learning_os.contracts.manifest_contract import ManifestContractError
-from learning_os.contracts.write_scopes import WriteScopeError
+from learning_os.app.backup_manifest import BackupManifestError
 from learning_os.derive.health import HealthReportError
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import MaterialSynthesisError
@@ -46,6 +44,8 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
+from learning_os.store.contracts.manifest_contract import ManifestContractError
+from learning_os.store.contracts.write_scopes import WriteScopeError
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.legacy_archive import LegacyArchiveError
 

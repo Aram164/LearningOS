@@ -16,8 +16,11 @@ from pathlib import Path
 
 import yaml
 
-from . import normative_corpus
-from .capability_catalog import CapabilityCatalogError, load_capability_catalog
+from learning_os.store.contracts import normative_corpus
+from learning_os.store.contracts.capability_catalog import (
+    CapabilityCatalogError,
+    load_capability_catalog,
+)
 
 OWNERS = {
     "capability-count": "system/AI-ACTIONS.md",

@@ -15,8 +15,6 @@ from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
 from learning_os.app.registry import register
 from learning_os.app.validation_service import status_issues
-from learning_os.contracts.capability_catalog import load_capability_catalog
-from learning_os.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
 from learning_os.derive.projection import adoption_counts, exam_spine
 from learning_os.derive.projection.atlas import ATLAS_DOMAINS
@@ -33,6 +31,8 @@ from learning_os.derive.semantics.source_use import evidence_label as _evidence_
 from learning_os.derive.semantics.source_use import use_evidence as _use_evidence
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
+from learning_os.store.contracts.capability_catalog import load_capability_catalog
+from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.session.githistory import GitHistoryError

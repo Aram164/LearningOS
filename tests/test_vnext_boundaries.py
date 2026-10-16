@@ -16,26 +16,26 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
-from learning_os.ai_actions import AIActionService
 from learning_os.app.admin.masters_planning import (
     candidate_set_checksum,
     masters_planning_dashboard,
     validate_candidate_comparison,
 )
-from learning_os.backup_manifest import (
+from learning_os.app.ai_actions import AIActionService
+from learning_os.app.backup_manifest import (
     BackupManifestError,
     build_backup_manifest,
     undeclared_canonical_inputs,
     verify_backup_manifest,
     verify_restored_system,
 )
-from learning_os.contracts.gateway import intent_sha256
 from learning_os.derive.masters_catalog import MastersPlanningError, validate_master_catalog
 from learning_os.derive.material_synthesis import (
     current_unit_material_basis,
     material_synthesis_freshness,
     validate_unit_material_synthesis,
 )
+from learning_os.store.contracts.gateway import intent_sha256
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.legacy_archive import LegacyArchiveError, inspect_legacy_archive
 from learning_os.store.transactions import artifact_revision
@@ -1902,7 +1902,7 @@ def test_restore_does_not_run_installer_before_checksum_verification(mini_repo, 
 def test_core_asset_reader_stays_in_step_with_paired_installer(tmp_path, repo_root):
     import runpy
 
-    from learning_os.backup_manifest import read_shipped_assets
+    from learning_os.app.backup_manifest import read_shipped_assets
 
     installer = repo_root.parent / "obsidian-ui/install.py"
     if not installer.is_file():
@@ -2226,7 +2226,7 @@ def test_backup_provenance_is_recorded(mini_repo, tmp_path, monkeypatch):
     subprocess.run(["git", "add", "."], cwd=ui, check=True)
     subprocess.run(["git", "commit", "-m", "init"], cwd=ui, check=True)
     
-    from learning_os.contracts.data_contract import load_contract
+    from learning_os.store.contracts.data_contract import load_contract
     version = load_contract(mini_repo / "system" / "contracts" / "data-contract.yaml").get("contract_version")
     
     manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
@@ -2330,7 +2330,7 @@ def test_backup_provenance_never_calls_a_checkout_clean_it_could_not_read(
     `dirty: false` there would put a claim in the inventory that nothing
     established.
     """
-    from learning_os import backup_manifest as module
+    from learning_os.app import backup_manifest as module
 
     real_run = subprocess.run
 

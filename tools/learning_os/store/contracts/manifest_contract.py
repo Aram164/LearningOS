@@ -29,8 +29,7 @@ import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
 from learning_os.store import observations
-
-from .json_schema import ContractValidationError, schema_registry
+from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
 
 CONTRACT_RELATIVE = "system/contracts/manifest-contract.yaml"
 

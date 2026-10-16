@@ -16,9 +16,9 @@ from typing import Any
 
 import yaml
 
-from learning_os.contracts.json_schema import validate_contract
-from learning_os.contracts.manifest_contract import declared_version
 from learning_os.store import observations
+from learning_os.store.contracts.json_schema import validate_contract
+from learning_os.store.contracts.manifest_contract import declared_version
 
 
 class BackupManifestError(ValueError):
@@ -267,7 +267,7 @@ def _declared_contract_version(root: Path) -> int | None:
     bound to the running checkout — reading that for both sides of a comparison
     compares a file with itself and can never disagree.
     """
-    from learning_os.contracts.data_contract import load_contract
+    from learning_os.store.contracts.data_contract import load_contract
     try:
         contract = load_contract(root / "system" / "contracts" / "data-contract.yaml")
     except (OSError, ValueError):

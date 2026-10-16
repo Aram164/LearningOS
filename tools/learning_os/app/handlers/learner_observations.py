@@ -12,13 +12,6 @@ from learning_os.app.context import OpContext
 from learning_os.app.handlers._shared import on_commit_refused as _on_commit_refused
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts.gateway import (
-    GatewayRequestContext,
-    current_gateway_request,
-    gateway_request_context,
-    intent_sha256,
-    verified_gateway_snapshot,
-)
 from learning_os.derive.abilities import ability_fingerprint, read_ability_observations
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
@@ -32,6 +25,13 @@ from learning_os.derive.learning_runtime import (
 from learning_os.domain.failures import Unconfirmed, WriteRefused
 from learning_os.domain.suggest import with_suggestions
 from learning_os.store import observations
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+    intent_sha256,
+    verified_gateway_snapshot,
+)
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 

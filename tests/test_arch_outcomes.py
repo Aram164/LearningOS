@@ -13,6 +13,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from learning_os.app.backup_manifest import BackupManifestError
 from learning_os.app.outcomes import TABLE, classify, error_object, exit_for, resolve
 from learning_os.app.outcomes import refusal_from_failure as _refusal_from_failure
 from learning_os.app.pipeline import (
@@ -20,9 +21,6 @@ from learning_os.app.pipeline import (
     _post_commit_error,
     _projection_error,
 )
-from learning_os.backup_manifest import BackupManifestError
-from learning_os.contracts.manifest_contract import ManifestContractError
-from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derive.health import HealthReportError
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import MaterialSynthesisError
@@ -45,6 +43,8 @@ from learning_os.domain.failures import (
     WriteRefused,
 )
 from learning_os.domain.failures import ReplayRecoveryError as _ReplayRecoveryError
+from learning_os.store.contracts.manifest_contract import ManifestContractError
+from learning_os.store.contracts.write_scopes import WriteScopeError
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.legacy_archive import LegacyArchiveError
 

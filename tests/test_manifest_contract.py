@@ -20,7 +20,9 @@ import shutil
 import pytest
 import yaml
 
-from learning_os.contracts.manifest_contract import (
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.manifest import build_manifest
+from learning_os.store.contracts.manifest_contract import (
     ManifestContractError,
     bump,
     check,
@@ -29,8 +31,6 @@ from learning_os.contracts.manifest_contract import (
     enforce,
     shape_of,
 )
-from learning_os.derive.projection import generate_all
-from learning_os.derive.projection.manifest import build_manifest
 from learning_os.store.loader import load_repo
 
 

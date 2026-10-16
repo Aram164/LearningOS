@@ -16,9 +16,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from learning_os.domain.snapshot import Repo
 
-from learning_os.route_identity import ROUTE_ID_RE as ROUTE_ID_RE
-from learning_os.route_identity import deterministic_route_id as deterministic_route_id
-from learning_os.route_identity import route_with_identity as route_with_identity
+from learning_os.domain.route_identity import ROUTE_ID_RE as ROUTE_ID_RE
+from learning_os.domain.route_identity import deterministic_route_id as deterministic_route_id
+from learning_os.domain.route_identity import route_with_identity as route_with_identity
 
 
 @dataclass(frozen=True)

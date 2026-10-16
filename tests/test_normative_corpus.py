@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts import normative_corpus as nc
+from learning_os.store.contracts import normative_corpus as nc
 
 ROOT = Path(__file__).resolve().parents[1]
 

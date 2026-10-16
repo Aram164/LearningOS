@@ -141,7 +141,7 @@ def _archive_head(root: Path, probe: Path) -> str | None:
 
 def _all_routes(repo) -> list[dict]:
     """Every route in every module source map, built as unit_routes builds."""
-    from learning_os.route_identity import route_with_identity
+    from learning_os.domain.route_identity import route_with_identity
 
     rows: list[dict] = []
     for module_id in sorted(repo.module_source_maps):

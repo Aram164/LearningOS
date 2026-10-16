@@ -107,8 +107,8 @@ def _entry_point_ops() -> frozenset[str]:
     CLI subcommand, or a catalog command the gateway dispatches.
     """
     import los
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payloads import subparsers
 
     defaults = {sub.get_default("_operation")
                 for sub in subparsers(los.build_parser()).values()}
@@ -756,8 +756,8 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
     import los
     from learning_os.app import pipeline as pipeline_module
     from learning_os.app.gateway import prepare_dispatch
-    from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.capability_catalog import command_definitions
     from learning_os.store.diagnostics import tracer as diag_tracer
     from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
@@ -841,10 +841,10 @@ def _a9_run_gateway(root: Path, operation: str, payload: dict,
 
     import los
     from learning_os.app import pipeline as pipeline_module
-    from learning_os.contracts.capability_catalog import (
+    from learning_os.store.contracts.capability_catalog import (
         command_definitions,
     )
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
     from learning_os.store.diagnostics import tracer as diag_tracer
     from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
@@ -885,8 +885,8 @@ def _prove_guarded_enum(mini_repo: Path, tmp_path: Path, monkeypatch, *,
 
     import los
     from learning_os.app.gateway import prepare_dispatch
-    from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.capability_catalog import command_definitions
 
     with pytest.raises(SystemExit) as refused:
         los.build_parser().parse_args(cli_argv)
@@ -2671,8 +2671,8 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     """
     import learning_os.app.handlers.maps as maps
     from learning_os.app.outcomes import exit_for
-    from learning_os.contracts.json_schema import ContractValidationError
     from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.json_schema import ContractValidationError
 
     ctx = _a9_world("cli.plan-template", "yaml", tmp_path)
     root = ctx.root
@@ -3710,7 +3710,7 @@ def test_direct_forbidden_gesture_emits_in_a_real_child(
     """A real child forbidden gesture writes one direct line (bg 1)."""
     from gateway_helpers import approved_v2_envelope
 
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     witness = _hooked_child_env(monkeypatch, tmp_path)
     envelope = approved_v2_envelope(

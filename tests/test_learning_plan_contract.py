@@ -10,12 +10,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts import (
+from learning_os.store.contracts import (
     build_plan_template,
     current_template_problems,
     validate_contract,
 )
-from learning_os.contracts.capability_catalog import query_definitions
+from learning_os.store.contracts.capability_catalog import query_definitions
 
 SHARED_PLAN_SCHEMA = "https://learningos.local/schema/learning-plan-v1"
 
@@ -88,7 +88,7 @@ def test_module_import_template_carries_current_plan_contract(repo_root):
 
 
 def test_unit_revise_template_carries_the_compact_contract(repo_root):
-    from learning_os.contracts import PLAN_TEMPLATE_VERSION
+    from learning_os.store.contracts import PLAN_TEMPLATE_VERSION
 
     raw = (repo_root / "system" / "templates" / "unit-plan-revise.template.yaml") \
         .read_text(encoding="utf-8")
@@ -114,7 +114,7 @@ def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root:
     import los
     from learning_os.adapters.cli import invoke
     from learning_os.app.registry import REGISTRY
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     parser = subparsers(los.build_parser()).get("plan-template")
     assert parser is not None, "the declared query has no executable CLI route"

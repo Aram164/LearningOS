@@ -21,7 +21,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts import normative_corpus as corpus
+from learning_os.store.contracts import normative_corpus as corpus
 
 ROOT = Path(__file__).resolve().parents[1]
 RATCHETS_PATH = ROOT / "tests" / "architecture" / "ratchets.yaml"

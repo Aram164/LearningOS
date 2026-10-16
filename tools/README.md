@@ -72,7 +72,7 @@ in a scratch copy and asserts exit 0 and no file changed.
 `tools/migrations/` is preserved executable evidence.  A completed migration is
 not an alternative writer for current records.  Unless noted as a compatibility
 planner below, its apply path is retired by
-`learning_os.contracts.migration_lifecycle` because the current stored-record
+`learning_os.store.contracts.migration_lifecycle` because the current stored-record
 contract is newer than the last generation it understands.
 
 | Migration | Status at data-contract v14 | Current relationship |

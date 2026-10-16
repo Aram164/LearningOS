@@ -19,13 +19,13 @@ from learning_os.app.admin.masters_planning import (
     prepare_master_promotion,
     promotion_package_sha256,
 )
-from learning_os.contracts.gateway import (
+from learning_os.derive.masters_catalog import MastersPlanningError
+from learning_os.derive.projection import build_manifest
+from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
     intent_sha256,
 )
-from learning_os.derive.masters_catalog import MastersPlanningError
-from learning_os.derive.projection import build_manifest
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.transactions import TransactionFailure

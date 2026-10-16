@@ -126,7 +126,7 @@ def _envelope(ctx: _RecoveryContext, *, capability: str, request: dict,
         artifact_ids=list(artifact_ids), idempotency_key=key)
     if session_claim is not None:
         body["session_id"] = session_claim
-        from learning_os.contracts.gateway import intent_sha256
+        from learning_os.store.contracts.gateway import intent_sha256
         body["approval"]["subject_sha256"] = intent_sha256(body)
     path = ctx.workdir / f"envelope-{key}.json"
     path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n",

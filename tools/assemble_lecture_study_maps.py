@@ -32,14 +32,14 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts import (
+from learning_os.derive.projection import build_backlinks, build_manifest
+from learning_os.domain.material_refs import compact_map
+from learning_os.store.contracts import (
     ContractValidationError,
     PlanTemplateError,
     require_current_template,
     validate_contract,
 )
-from learning_os.derive.projection import build_backlinks, build_manifest
-from learning_os.domain.material_refs import compact_map
 from learning_os.store.loader import load_repo
 
 REPO = Path(__file__).resolve().parents[1]

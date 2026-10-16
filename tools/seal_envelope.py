@@ -23,7 +23,7 @@ from pathlib import Path
 
 from learning_os.app import handlers  # noqa: F401  (registration side effect)
 from learning_os.app.registry import REGISTRY
-from learning_os.contracts.gateway import (
+from learning_os.store.contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
     GATEWAY_SCHEMA_VERSION,
@@ -100,20 +100,20 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.app.gateway import dispatch as _dispatch
     from learning_os.app.lock import operator_lock as _operator_lock
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.gateway import (
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
         verified_gateway_snapshot,
     )
-    from learning_os.domain.failures import WriteRefused
     from learning_os.store.revisions import load_revisions
     from learning_os.store.transactions import transaction_artifacts
 
     definitions = command_definitions(root)
     if capability not in definitions:
         raise ValueError(f"unknown capability: {capability}")
-    from learning_os.contracts.payloads import subparsers as _subparsers
+    from learning_os.store.contracts.payloads import subparsers as _subparsers
 
     command_parser = _subparsers(los.build_parser()).get(
         definitions[capability].cli_command or "")
@@ -230,14 +230,14 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     from learning_os.app.context import OpContext
     from learning_os.app.gateway import prepare_dispatch
     from learning_os.app.lock import operator_lock as _operator_lock
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.gateway import (
+    from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
         verified_gateway_snapshot,
     )
-    from learning_os.contracts.requests import request_schema
-    from learning_os.domain.failures import WriteRefused
+    from learning_os.store.contracts.requests import request_schema
 
     if parser_factory is None:
         import los  # noqa: E402  (imports the parser, not a command)
@@ -246,7 +246,7 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     definitions = command_definitions(root)
     if capability not in definitions:
         raise ValueError(f"unknown capability: {capability}")
-    from learning_os.contracts.payloads import subparsers as _subparsers
+    from learning_os.store.contracts.payloads import subparsers as _subparsers
 
     command_parser = _subparsers(parser_factory()).get(
         definitions[capability].cli_command or "")

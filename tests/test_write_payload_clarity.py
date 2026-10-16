@@ -29,8 +29,8 @@ from repo_builders import (
 from test_learning_paths import add_path
 
 from learning_os.app.handlers.notes import NOTE_FIELDS
-from learning_os.contracts.batch_notes import ANALYSIS_FIELDS
 from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.batch_notes import ANALYSIS_FIELDS
 
 # ------------------------------------------------------------------ #100
 
@@ -120,10 +120,10 @@ def test_every_opaque_payload_field_declares_its_accepted_shape(repo_root):
     contract-module fragment in ``contracts/payloads._NESTED_SCHEMAS`` —
     then regenerate with ``tools/generate_capability_schemas.py``.
     """
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
-    from learning_os.contracts.payloads import json_object_fields
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
+    from learning_os.store.contracts.payloads import json_object_fields
 
     declared = set(resolve_all(repo_root)) | set(_NESTED_SCHEMAS)
     missing, dangling = [], []
@@ -535,7 +535,7 @@ def _transport_keys(node):
 def test_transport_annotations_stripped_recursively_without_mutation():
     import copy
 
-    from learning_os.contracts.payloads import _without_cli_annotations
+    from learning_os.store.contracts.payloads import _without_cli_annotations
 
     node = {
         "type": "object",
@@ -561,10 +561,10 @@ def test_transport_annotations_stripped_recursively_without_mutation():
 
 
 def test_generated_payloads_carry_no_transport_annotations(repo_root):
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import all_payload_schemas
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.requests import request_schema
 
     # The request still annotates the nested items: the strip removes them.
     items = request_schema(

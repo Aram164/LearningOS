@@ -19,9 +19,9 @@ import pytest
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 from repo_builders import run_los, seed_live_goal_ids
 
-from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import session_ledger as session_store
+from learning_os.store.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.store.fingerprint import canonical_fingerprint
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
@@ -477,7 +477,7 @@ def test_session_identity_resolution_precedence(monkeypatch):
 
 def test_sealed_session_identity_resolution_precedence(monkeypatch):
     """Explicit flag > sealed envelope > environment > channel (#110)."""
-    from learning_os.contracts.gateway import (
+    from learning_os.store.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
     )

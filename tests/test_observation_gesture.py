@@ -26,11 +26,11 @@ from learning_os.app.admission import (
     UI_REVIEWED_ALLOWLIST,
     gesture_allowed,
 )
-from learning_os.contracts.capability_catalog import (
+from learning_os.store.contracts.capability_catalog import (
     gesture_admitted_capabilities,
     ui_reviewed_capabilities,
 )
-from learning_os.contracts.gateway import intent_sha256
+from learning_os.store.contracts.gateway import intent_sha256
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.transactions import artifact_revision
 

@@ -24,7 +24,7 @@
 #
 # HOW IT IS ENFORCED
 # ------------------
-# `tools/learning_os/contracts/normative_corpus.py`, wired into the validator,
+# `tools/learning_os/store/contracts/normative_corpus.py`, wired into the validator,
 # fails on: a system/*.md or system/adr/*.md file that is not indexed; an index
 # entry with no file; a duplicate path; a supersession edge to an unindexed
 # path; a cycle; a retired document not marked retired; a retired document that

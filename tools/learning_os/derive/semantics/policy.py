@@ -16,7 +16,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from learning_os.contracts.write_scopes import WriteScopeError, scope_matches
 from learning_os.derive.semantics.predicates import (
     PREDICATES,
     allowed_mutation,
@@ -27,6 +26,7 @@ from learning_os.derive.semantics.predicates import (
     shelving_approval,
     workspace_may_coordinate,
 )
+from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches
 
 #: Shared verdict vocabulary. ``defer`` is not ``deny``: a deferred critique
 #: point may come back with authorization, while a denied mutation must not

@@ -1,7 +1,7 @@
 """Versioned LearningOS interface and capability contracts."""
 
-from .json_schema import ContractValidationError, validate_contract
-from .learning_plan import (
+from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.contracts.learning_plan import (
     PLAN_TEMPLATE_VERSION,
     PlanTemplateError,
     build_plan_template,

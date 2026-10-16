@@ -454,7 +454,7 @@ def test_batch_fully_replayed_makes_no_write(mini_repo):
 def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
     import los
     from learning_os.app import pipeline as pipeline_module
-    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.capability_catalog import command_definitions
     from learning_os.store.diagnostics import tracer as diag_tracer
     from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
@@ -611,8 +611,8 @@ def test_batch_retry_returns_the_same_breakdown(mini_repo):
 def test_batch_shape_has_one_source_of_truth(repo_root):
     import los
     from learning_os.app.handlers import note_analysis as notes_handlers
-    from learning_os.contracts import batch_notes
-    from learning_os.contracts.payloads import (
+    from learning_os.store.contracts import batch_notes
+    from learning_os.store.contracts.payloads import (
         payload_fields,
         payload_schema,
         subparsers,
@@ -858,7 +858,7 @@ def _observed_deck(mini_repo, relpath: str = "demo/deck.pdf") -> str:
 def test_prepare_accepts_read_surface_spellings(mini_repo, tmp_path):
     """F8: material:// URIs, sha256:-prefixed digests, and materials/-prefixed
     paths normalize at the boundary: identical staging, replay, idempotency."""
-    from learning_os.contracts.gateway import intent_sha256
+    from learning_os.store.contracts.gateway import intent_sha256
 
     digest = _observed_deck(mini_repo)
     _register_material(mini_repo, "material://demo/")

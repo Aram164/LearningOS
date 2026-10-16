@@ -357,7 +357,7 @@ written, re-measured today rather than cited:
 - `e83231f` — `system/contracts/normative-corpus.yaml` now classifies every
   document under the corpus globs exactly once, with class, status, authority,
   owner and its supersession edges. Enforced at **error** severity through
-  `learning_os.contracts.normative_corpus` → `Validator.check_normative_corpus`.
+  `learning_os.store.contracts.normative_corpus` → `Validator.check_normative_corpus`.
 - Measured 2026-09-04: **36 documents on disk, 36 indexed, set-identical.**
   22 binding · 3 informative · 11 historical; 25 current · 10 frozen · 1
   superseded. `test_every_system_document_on_disk_is_classified` pins the set

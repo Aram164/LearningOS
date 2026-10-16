@@ -13,8 +13,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts.gateway import GatewayRequestContext
 from learning_os.domain.failures import ReplayEvidenceError
+from learning_os.store.contracts.gateway import GatewayRequestContext
 from learning_os.store.diagnostics.resolver import collect_authority, resolve
 from learning_os.store.evidence import replay_for_request
 from learning_os.store.transactions import TransactionService

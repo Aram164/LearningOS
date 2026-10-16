@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from learning_os.contracts import local_attachments
 from learning_os.derive.validation.advisories import inbox_stale_issues
 from learning_os.domain.validation import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
 from learning_os.domain.vocabulary import (
@@ -14,6 +13,7 @@ from learning_os.domain.vocabulary import (
     STUDY_MAP_ID_RE,
     UNIT_ID_RE,
 )
+from learning_os.store.contracts import local_attachments
 
 
 class ChecksStructure:

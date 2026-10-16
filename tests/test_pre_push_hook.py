@@ -51,9 +51,9 @@ def pair(tmp_path: Path, monkeypatch):
                 core / "tools" / "hooks" / "pre-push")
     shutil.copy(REPO_ROOT / "tools" / "verified_pairs.py",
                 core / "tools" / "verified_pairs.py")
-    (core / "tools" / "learning_os" / "contracts").mkdir(parents=True)
-    shutil.copy(REPO_ROOT / "tools" / "learning_os" / "contracts" / "perimeter.py",
-                core / "tools" / "learning_os" / "contracts" / "perimeter.py")
+    (core / "tools" / "learning_os" / "store" / "contracts").mkdir(parents=True)
+    shutil.copy(REPO_ROOT / "tools" / "learning_os" / "store" / "contracts" / "perimeter.py",
+                core / "tools" / "learning_os" / "store" / "contracts" / "perimeter.py")
     (core / "system" / "contracts").mkdir(parents=True)
     shutil.copy(REPO_ROOT / "system" / "contracts" / "perimeter.yaml",
                 core / "system" / "contracts" / "perimeter.yaml")

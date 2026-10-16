@@ -6,7 +6,7 @@ contract: learningos-backup-roots
 # went unbacked-up (#30): the list is written by hand and the loader is not.
 #
 # What keeps the two honest is `undeclared_canonical_inputs` in
-# tools/learning_os/backup_manifest.py. It records the files the loader actually
+# tools/learning_os/app/backup_manifest.py. It records the files the loader actually
 # reads and names any this contract does not cover, and the core gate fails on a
 # non-empty answer. So a new canonical input is caught when it is introduced
 # rather than during a recovery. If one genuinely belongs outside backups, it

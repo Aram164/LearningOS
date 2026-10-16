@@ -22,7 +22,7 @@ from repo_builders import (
     _valid_dossier,
 )
 
-from learning_os.contracts import perimeter as pm
+from learning_os.store.contracts import perimeter as pm
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT / "system" / "schema" / "capabilities"
@@ -70,7 +70,7 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
     from learning_os.app.gateway import dispatch as _dispatch
-    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.capability_catalog import command_definitions
 
     definitions = command_definitions(mini_repo)
     definition = definitions["capture.create"]
@@ -1337,8 +1337,8 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     """The CLI-only output flag is not part of the unit.plan.revise contract."""
     import los
     from learning_os.app.gateway import dispatch as _dispatch
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payloads import payload_schema
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payloads import payload_schema
 
     repo_root = Path(__file__).resolve().parent.parent
     assert "report_out" not in payload_schema(

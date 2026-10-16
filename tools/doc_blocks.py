@@ -20,8 +20,8 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     sys.dont_write_bytecode = True
     from learning_os.adapters.cli_parser import build_parser as cli_parser
-    from learning_os.contracts import doc_blocks
     from learning_os.derive.semantics import PREDICATES
+    from learning_os.store.contracts import doc_blocks
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     try:

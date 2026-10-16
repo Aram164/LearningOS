@@ -18,8 +18,8 @@ from gateway_helpers import approved_v2_envelope
 
 from learning_os.app.gateway import dispatch as _dispatch
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
-from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.domain.failures import WriteRefused
+from learning_os.store.contracts.capability_catalog import command_definitions
 
 SCHEMA_DIR = Path("system/schema/capabilities")
 
@@ -44,8 +44,8 @@ def test_every_command_capability_has_a_payload_schema(repo_root: Path):
 
 def test_payload_schemas_match_the_cli_parser(repo_root: Path):
     """Regenerating must be a no-op: the checked-in files are derived, not authored."""
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import all_payload_schemas
 
     generated = all_payload_schemas(
         repo_root, _definitions(repo_root),
@@ -59,8 +59,8 @@ def test_payload_schemas_match_the_cli_parser(repo_root: Path):
 
 def test_payload_records_rejects_an_unknown_capability(repo_root: Path):
     """Unknown names fail with ValueError, not a loader FileNotFoundError."""
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import all_payload_schemas
 
     with pytest.raises(ValueError, match="declares no json_object"):
         all_payload_schemas(
@@ -72,8 +72,8 @@ def test_payload_records_rejects_an_unknown_capability(repo_root: Path):
 
 def test_payload_records_rejects_a_capability_without_a_cli_binding(
         repo_root: Path):
-    from learning_os.contracts.capability_catalog import CapabilityDefinition
-    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.capability_catalog import CapabilityDefinition
+    from learning_os.store.contracts.payloads import all_payload_schemas
 
     definitions = dict(_definitions(repo_root))
     definitions["synth.nocli"] = CapabilityDefinition(
@@ -96,9 +96,9 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     import hashlib
     import shutil
 
-    from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.store.contracts.capability_catalog import command_definitions
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import all_payload_schemas
 
     published = sorted((repo_root / SCHEMA_DIR).glob("*.schema.json"))
     assert len(published) == 47
@@ -323,9 +323,9 @@ def test_generated_schemas_carry_parser_help_text(repo_root: Path):
     own description.
     """
     import los
-    from learning_os.contracts.payload_records import resolve_all
-    from learning_os.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
-    from learning_os.contracts.payloads import all_payload_schemas, payload_fields, subparsers
+    from learning_os.store.contracts.payload_records import resolve_all
+    from learning_os.store.contracts.payloads import NESTED_SCHEMAS as _NESTED_SCHEMAS
+    from learning_os.store.contracts.payloads import all_payload_schemas, payload_fields, subparsers
 
     parser = los.build_parser()
     commands = subparsers(parser)

@@ -89,7 +89,7 @@ def _sub_help(root: argparse.ArgumentParser, name: str) -> str | None:
 
 def describe(parser: argparse.ArgumentParser) -> dict:
     """Describe the parser structurally (JSON-serializable)."""
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     subs = subparsers(parser)
     order = list(subs.keys())

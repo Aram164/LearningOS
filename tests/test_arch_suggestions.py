@@ -138,7 +138,7 @@ def _command_served_ops(argv0: str) -> set[str]:
 
 def _los_parser(command):
     import los
-    from learning_os.contracts.payloads import subparsers
+    from learning_os.store.contracts.payloads import subparsers
 
     try:
         return subparsers(los.build_parser())[command]
@@ -472,7 +472,7 @@ def _navigate(doc: dict, pointer: str) -> dict:
 
 def _schema_node(operation: str, pointer: str) -> dict:
     """The effective request-schema node at one inventory pointer."""
-    from learning_os.contracts.requests import request_schema
+    from learning_os.store.contracts.requests import request_schema
 
     return _navigate(request_schema(ROOT, operation), pointer)
 
@@ -717,7 +717,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # resolves it. The domain is the raw traversal the match uses
         # (T32 A5 proposal §3) — never ``unit_routes()``, whose
         # ``route_with_identity`` substitutes ids production cannot match.
-        from learning_os.ai_actions.service import AIActionService
+        from learning_os.app.ai_actions.service import AIActionService
 
         repository = AIActionService(ctx.root).repository
         prepared = repository.get_request(request["request_id"])
@@ -830,7 +830,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
                  "ai-action-registry", "ai-action-target"):
         # Builder Task 78 ((cx) D-8): the same loaders each handler
         # reaches; AI-store domains enumerate only on this miss path.
-        from learning_os.ai_actions.service import AIActionService
+        from learning_os.app.ai_actions.service import AIActionService
 
         service = AIActionService(ctx.root)
         if owner == "ai-request-store":

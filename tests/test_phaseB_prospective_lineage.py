@@ -16,11 +16,11 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.handlers.plan import _phaseB_ledger_text, _phaseB_validate
-from learning_os.contracts.gateway import (
+from learning_os.derive.semantics.lineage import load_ledger
+from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
 )
-from learning_os.derive.semantics.lineage import load_ledger
 from learning_os.store.revisions import dump_revisions
 
 ROOT = Path(__file__).resolve().parent.parent

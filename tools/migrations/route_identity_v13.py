@@ -23,11 +23,11 @@ from yaml.constructor import ConstructorError
 from yaml.nodes import MappingNode, Node, ScalarNode, SequenceNode
 from yaml.resolver import BaseResolver
 
-from learning_os.contracts.migration_lifecycle import (
+from learning_os.derive.routes import ROUTE_ID_RE, deterministic_route_id
+from learning_os.store.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.derive.routes import ROUTE_ID_RE, deterministic_route_id
 from learning_os.store.fingerprint import canonical_fingerprint
 
 REVIEW_SCHEMA_VERSION = 1

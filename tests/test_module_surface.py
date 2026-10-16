@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 PACKAGES = [
-    "learning_os.ai_actions",
+    "learning_os.app.ai_actions",
     "learning_os.store.derived",
     "learning_os.derive.projection",
     "learning_os.derive.validation",
@@ -87,7 +87,7 @@ def test_no_module_references_an_undefined_global(package_name: str):
 
 def test_adapter_registry_falls_back_without_an_adapters_file(tmp_path: Path):
     """The exact path that lost DEFAULT_ADAPTERS."""
-    from learning_os.ai_actions.registry import AdapterRegistry
+    from learning_os.store.ai_actions.registry import AdapterRegistry
 
     adapters = AdapterRegistry(tmp_path / "does-not-exist.yaml").list()
     assert [a.id for a in adapters] == ["manual-bundle"]
@@ -96,8 +96,8 @@ def test_adapter_registry_falls_back_without_an_adapters_file(tmp_path: Path):
 def test_read_only_ai_projection_does_not_import_the_write_orchestrator():
     script = (
         "import sys; "
-        "import learning_os.ai_actions.projection; "
-        "assert 'learning_os.ai_actions.service' not in sys.modules; "
+        "import learning_os.derive.projection.ai_actions; "
+        "assert 'learning_os.app.ai_actions.service' not in sys.modules; "
         "assert 'learning_os.store.transactions' not in sys.modules; "
         "assert 'learning_os.derive.projection' not in sys.modules"
     )

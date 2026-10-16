@@ -17,6 +17,6 @@ Every migration must therefore be:
 This boundary exists because a once-idempotent migration can stop being
 idempotent as schemas and ownership rules evolve. Re-running the old program on
 new records can restore retired fields or defaults while still producing valid
-YAML. `learning_os.contracts.migration_lifecycle` makes that state transition
+YAML. `learning_os.store.contracts.migration_lifecycle` makes that state transition
 mechanical: historical code stays available as evidence, but cannot mutate a
 future live canon.

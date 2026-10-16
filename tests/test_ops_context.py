@@ -9,13 +9,13 @@ from learning_os.app.context import OpContext
 from learning_os.app.outcomes import exit_for
 from learning_os.app.outcomes import take_gateway_refusal as _take_gateway_refusal
 from learning_os.app.registry import REGISTRY, register
-from learning_os.contracts.gateway import (
+from learning_os.domain.codes import INVALID_REQUEST, STALE_SNAPSHOT
+from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
     verified_gateway_snapshot,
 )
-from learning_os.domain.codes import INVALID_REQUEST, STALE_SNAPSHOT
-from learning_os.domain.failures import StaleSnapshot, WriteRefused
 from learning_os.store.fingerprint import canonical_fingerprint
 
 STALE = "sha256:" + "0" * 64

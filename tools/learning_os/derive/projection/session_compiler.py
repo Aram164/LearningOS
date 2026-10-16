@@ -14,7 +14,6 @@ from __future__ import annotations
 import copy
 import math
 
-from learning_os.contracts.json_schema import validate_contract
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     activity_fingerprint,
@@ -25,6 +24,7 @@ from learning_os.derive.learning_runtime import (
     runtime_path,
 )
 from learning_os.domain.snapshot import Repo
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.materials.resolution import project_material_resource
 
 

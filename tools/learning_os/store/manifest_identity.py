@@ -37,8 +37,8 @@ import stat
 from pathlib import Path
 
 from learning_os import __version__
-from learning_os.contracts.manifest_contract import declared_schema_sha256, declared_version
 from learning_os.store import observations
+from learning_os.store.contracts.manifest_contract import declared_schema_sha256, declared_version
 from learning_os.store.derived.identity import (
     digest_code_identity,
     digest_matching_files,

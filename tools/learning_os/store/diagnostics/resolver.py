@@ -21,7 +21,6 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts.gateway import GatewayRequestContext
 from learning_os.domain.codes import (
     AMBIGUOUS_MIGRATION,
     IDEMPOTENCY_CONFLICT,
@@ -39,6 +38,7 @@ from learning_os.domain.failures import (
     TransactionFailure,
     TransactionIdempotencyConflict,
 )
+from learning_os.store.contracts.gateway import GatewayRequestContext
 from learning_os.store.diagnostics import conventions
 from learning_os.store.evidence import verify_committed_evidence
 from learning_os.store.fingerprint import FINGERPRINT_DEFINITION_VERSION, data_roots_fingerprint

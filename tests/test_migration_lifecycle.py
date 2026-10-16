@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts.migration_lifecycle import (
+from learning_os.store.contracts.migration_lifecycle import (
     MigrationLifecycleError,
     retired_migration,
 )

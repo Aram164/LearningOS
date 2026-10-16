@@ -10,7 +10,7 @@ from __future__ import annotations
 import copy
 import json
 
-from learning_os.route_identity import ROUTE_ID_RE, route_with_identity
+from learning_os.domain.route_identity import ROUTE_ID_RE, route_with_identity
 
 MATERIAL_FIELDS = {
     "label": "title", "source_id": "source_id", "locator": "locator",

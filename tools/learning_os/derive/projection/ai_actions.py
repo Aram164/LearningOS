@@ -10,15 +10,14 @@ import yaml
 from learning_os.derive.garden import project_garden_entries
 from learning_os.domain.ai_errors import AIActionError
 from learning_os.domain.snapshot import Repo
-from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
-from learning_os.store.loader import load_repo
-
-from .registry import (
+from learning_os.store.ai_actions.registry import (
     DEFAULT_ADAPTERS,
     ActionRegistry,
     AdapterDefinition,
     AdapterRegistry,
 )
+from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
+from learning_os.store.loader import load_repo
 
 
 def _projection(*, garden_entries: list[dict[str, Any]], available: list[dict[str, Any]],

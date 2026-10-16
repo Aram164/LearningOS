@@ -31,15 +31,15 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts.gateway import intent_sha256
-from learning_os.contracts.migration_lifecycle import (
+from learning_os.domain.failures import WriteRefused
+from learning_os.domain.validation import SUFFIX_RE
+from learning_os.store.contracts.gateway import intent_sha256
+from learning_os.store.contracts.migration_lifecycle import (
     MigrationLifecycleError,
     declared_data_contract,
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.domain.failures import WriteRefused
-from learning_os.domain.validation import SUFFIX_RE
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.loader import load_repo

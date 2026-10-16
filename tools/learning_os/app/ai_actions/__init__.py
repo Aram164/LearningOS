@@ -13,14 +13,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     # Static dependency declaration for reachability/cycle analysis; runtime
     # access remains lazy through __getattr__ below.
-    from .service import AIActionService as AIActionService
+    from learning_os.app.ai_actions.service import AIActionService as AIActionService
 
 _EXPORTS = {
-    "manifest_ai_projection": (".projection", "manifest_ai_projection"),
-    "ActionDefinition": (".registry", "ActionDefinition"),
-    "ActionRegistry": (".registry", "ActionRegistry"),
-    "AdapterDefinition": (".registry", "AdapterDefinition"),
-    "AdapterRegistry": (".registry", "AdapterRegistry"),
     "AIActionService": (".service", "AIActionService"),
 }
 

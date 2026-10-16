@@ -17,9 +17,9 @@ from pathlib import Path
 
 from learning_os.app.projection import publish as _publish
 from learning_os.app.proposal import CommandOutput
-from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.domain.failures import WriteRefused
 from learning_os.store import observations
+from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import delete_session_ledger as _delete_session_ledger

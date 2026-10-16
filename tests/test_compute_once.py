@@ -431,7 +431,7 @@ def test_validate_py_performs_one_canonical_walk(
 # ------------------------------------------------- receipt sidecar
 def _commit_capture(root: Path, key: str, request_id: str):
     """One genuine v2 commit (receipt + ledger row)."""
-    from learning_os.contracts.gateway import GatewayRequestContext
+    from learning_os.store.contracts.gateway import GatewayRequestContext
     from learning_os.store.transactions import TransactionService
 
     target = root / f"work/inbox/{key}.md"

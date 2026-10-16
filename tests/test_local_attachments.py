@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.contracts import local_attachments
 from learning_os.derive.validation import validate
+from learning_os.store.contracts import local_attachments
 from learning_os.store.loader import load_repo
 
 SCAN = "knowledge/attachments/note-demo/scan.pdf"

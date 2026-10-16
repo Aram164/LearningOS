@@ -11,16 +11,6 @@ from typing import Any, cast
 import yaml
 
 from learning_os.app.proposal import TransactionProposal
-from learning_os.contracts.capability_catalog import (
-    domain_capability_definitions,
-    load_capability_catalog,
-)
-from learning_os.contracts.gateway import (
-    current_gateway_request,
-    gateway_snapshot_is_verified,
-)
-from learning_os.contracts.manifest_contract import declared_version
-from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.material_synthesis import (
     current_unit_material_basis,
@@ -66,6 +56,7 @@ from learning_os.domain.failures import (
 )
 from learning_os.store import observations
 from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
+from learning_os.store.ai_actions.registry import ActionRegistry, AdapterRegistry
 from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 from learning_os.store.ai_actions.support import (
     Clock,
@@ -81,6 +72,16 @@ from learning_os.store.ai_actions.support import read_yaml as _read_yaml
 from learning_os.store.ai_actions.support import sha256_bytes as _sha256_bytes
 from learning_os.store.ai_actions.support import sha256_file as _sha256_file
 from learning_os.store.ai_actions.support import snapshot as _snapshot
+from learning_os.store.contracts.capability_catalog import (
+    domain_capability_definitions,
+    load_capability_catalog,
+)
+from learning_os.store.contracts.gateway import (
+    current_gateway_request,
+    gateway_snapshot_is_verified,
+)
+from learning_os.store.contracts.manifest_contract import declared_version
+from learning_os.store.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.store.evidence import replay_for_request
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
@@ -97,8 +98,6 @@ from learning_os.store.materials.slices import (
     slice_index_entry,
 )
 from learning_os.store.revisions import artifact_revision
-
-from .registry import ActionRegistry, AdapterRegistry
 
 #: Bundle name for the unit-scoped source-map read view. Deliberately not
 #: the canonical filename: the view is a filtered projection for one unit,
@@ -1136,6 +1135,6 @@ class AIActionService:
         # Compatibility method for callers that already hold a service. The
         # read model itself lives in the dependency-light projection module so
         # manifest generation never imports this write orchestrator.
-        from .projection import manifest_ai_projection
+        from learning_os.derive.projection.ai_actions import manifest_ai_projection
 
         return manifest_ai_projection(self.root)

@@ -50,7 +50,7 @@ contracts:
       (determined by filtering out schemas declaring x-governs: artifact). A
       schema edit that does not bump the contract fails closed.
     enforced_by: validator
-    checker: learning_os.contracts.data_contract
+    checker: learning_os.store.contracts.data_contract
     validator_method: check_data_contract
     severity: error
     test: tests/test_format_fixtures.py
@@ -63,7 +63,7 @@ contracts:
       which refuses to publish a drifted shape; that is the real gate, and it
       runs on every generate rather than on every commit.
     enforced_by: validator
-    checker: learning_os.contracts.manifest_contract
+    checker: learning_os.store.contracts.manifest_contract
     validator_method: check_manifest_contract
     severity: error
     test: tests/test_manifest_contract.py
@@ -74,7 +74,7 @@ contracts:
       operator enters. Set-identical against the corpus globs; supersession
       edges, retirement notices and index order all checked.
     enforced_by: validator
-    checker: learning_os.contracts.normative_corpus
+    checker: learning_os.store.contracts.normative_corpus
     validator_method: check_normative_corpus
     severity: error
     test: tests/test_normative_corpus.py
@@ -86,7 +86,7 @@ contracts:
       one warns (a CI checkout has none); each pin must be owned by a note's
       attachments, and Git must neither track nor fail to ignore it.
     enforced_by: validator
-    checker: learning_os.contracts.local_attachments
+    checker: learning_os.store.contracts.local_attachments
     validator_method: check_local_attachments
     severity: error
     test: tests/test_local_attachments.py
@@ -99,7 +99,7 @@ contracts:
       sees none of what this governs. Silent outside the real tree, by a
       declared anchor set rather than a hardcoded guess.
     enforced_by: validator
-    checker: learning_os.contracts.perimeter
+    checker: learning_os.store.contracts.perimeter
     validator_method: check_perimeter
     severity: error
     test: tests/test_perimeter.py
@@ -112,7 +112,7 @@ contracts:
       unchecked interior. Hidden entries are split into tracked configuration
       and ephemeral caches, the latter cross-checked against git.
     enforced_by: validator
-    checker: learning_os.contracts.tree_contract
+    checker: learning_os.store.contracts.tree_contract
     validator_method: check_tree_contract
     severity: error
     test: tests/test_tree_contract.py
@@ -129,7 +129,7 @@ contracts:
       dispatched; an undeclared capability or an out-of-scope write is refused
       there, which proves more than parsing it on a pre-commit hook would.
     enforced_by: runtime
-    checker: learning_os.contracts.capability_catalog
+    checker: learning_os.store.contracts.capability_catalog
     test: tests/test_capability_catalog.py
 
   - declaration: system/contracts/ai-adapters.yaml
@@ -137,7 +137,7 @@ contracts:
       The AI adapters an action may be routed through. Read by AdapterRegistry
       when an AI action is prepared; an unknown adapter is refused there.
     enforced_by: runtime
-    checker: learning_os.ai_actions.service
+    checker: learning_os.app.ai_actions.service
     test: tests/test_module_surface.py
 
   - declaration: system/contracts/backup-roots.yaml
@@ -145,7 +145,7 @@ contracts:
       The roots the backup manifest covers, and the `learningos-backup-roots`
       contract marker it must carry. Read when a backup manifest is built.
     enforced_by: runtime
-    checker: learning_os.backup_manifest
+    checker: learning_os.app.backup_manifest
     test: tests/test_vnext_boundaries.py
 
   - declaration: system/contracts/ai-actions/garden.shelve.yaml
@@ -154,7 +154,7 @@ contracts:
       and the capabilities it may and may not reach. Loaded by ActionRegistry;
       a capability outside `allowed_capabilities` is refused at dispatch.
     enforced_by: runtime
-    checker: learning_os.ai_actions.registry
+    checker: learning_os.store.ai_actions.registry
     test: tests/test_ai_actions.py
 
   - declaration: system/contracts/ai-actions/unit.compare-materials.yaml
@@ -164,7 +164,7 @@ contracts:
       (`unit.material-synthesis.publish`). External repository access and
       source upload are forbidden by the specification itself.
     enforced_by: runtime
-    checker: learning_os.ai_actions.registry
+    checker: learning_os.store.ai_actions.registry
     test: tests/test_ai_actions.py
 
   - declaration: system/contracts/cli-operations.yaml

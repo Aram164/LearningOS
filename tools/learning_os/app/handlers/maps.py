@@ -13,19 +13,19 @@ from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.contracts import (
+from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.material_refs import MaterialReferenceError, expand_map
+from learning_os.domain.suggest import not_found
+from learning_os.store.codec import dump_study_map as _dump_study_map
+from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.contracts import (
     PLAN_TEMPLATE_VERSION,
     ContractValidationError,
     PlanTemplateError,
     build_plan_template,
     require_current_template,
 )
-from learning_os.contracts.json_schema import validate_contract
-from learning_os.domain.failures import NotFound, WriteRefused
-from learning_os.domain.material_refs import MaterialReferenceError, expand_map
-from learning_os.domain.suggest import not_found
-from learning_os.store.codec import dump_study_map as _dump_study_map
-from learning_os.store.codec import dump_yaml as _dump_yaml
+from learning_os.store.contracts.json_schema import validate_contract
 from learning_os.store.revisions import artifact_revision
 from learning_os.store.transactions import parse_expected_revisions
 

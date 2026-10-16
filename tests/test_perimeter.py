@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts import perimeter as pm
+from learning_os.store.contracts import perimeter as pm
 
 ROOT = Path(__file__).resolve().parents[1]
 
