@@ -10,7 +10,7 @@ import yaml
 
 from learning_os.store import observations
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[4]
 CONTRACT = ROOT / "system" / "contracts" / "data-contract.yaml"
 SCHEMA_DIR = ROOT / "system" / "schema"
 

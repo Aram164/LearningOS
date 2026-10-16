@@ -206,7 +206,7 @@ any destination outside the transcript `TMPDIR`.
 
 ```scrut
 $ mkdir -p "$TMPDIR/inv-pair/repo" && export INV_PAIR="$(realpath "$TMPDIR/inv-pair")" INV_REPO="$(realpath "$TMPDIR/inv-pair/repo")" && $H/los-anchored-copy materials_manifest "$INV_REPO"
-sha256:7263fe8e93fe7fc7e536d49c35cc8fdaddf021de32bf66845f14f21d4a4ede78 Makefile
+sha256:4dd4d6db12b35b300efc55d8f31ac992ff514fff7075a0f18f829574c8c20aa1 Makefile
 sha256:be88a5742bea630226b59664b20e30b74381cc03c86ce71d3ec6d85acda93fd0 pyproject.toml
 sha256:0c84a5cae52dc8aa786e0009eaaa38e9e2f202b5f140e8cb07d1b188bc338ba8 tools/learning_os/__init__.py
 sha256:9f4511b38e35ff56efa15bc8b486a589d9dc42eed38ab331da85c7e7f6503c41 tools/learning_os/domain/material_inventory.py

@@ -521,3 +521,40 @@ def test_nothing_outside_the_boundary_carries_the_paired_mark():
         if path.name != "test_pre_push_hook.py"
         and "pytest.mark.paired" in path.read_text(encoding="utf-8"))
     assert marked == _PAIRED_BOUNDARY
+
+
+@pytest.mark.parametrize("selection", ["empty", "failure", "selected"])
+def test_commit_check_preserves_affected_selection_contract(tmp_path, selection):
+    """Empty selection skips; discovery failure blocks; selected tests run."""
+    import shlex
+
+    shutil.copy(REPO_ROOT / "Makefile", tmp_path / "Makefile")
+    venv = tmp_path / ".venv/bin"
+    venv.mkdir(parents=True)
+    imports = venv / "lint-imports"
+    imports.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    imports.chmod(0o755)
+    calls = tmp_path / "calls.jsonl"
+    driver = tmp_path / "probe_python.py"
+    driver.write_text(
+        "import json, os, sys\n"
+        "from pathlib import Path\n"
+        "args=sys.argv[1:]\n"
+        "with Path(os.environ['SELECTION_LOG']).open('a') as out: "
+        "out.write(json.dumps(args)+'\\n')\n"
+        "if args and args[0]=='tools/affected_tests.py':\n"
+        "    mode=os.environ['SELECTION_MODE']\n"
+        "    if mode=='failure': raise SystemExit(7)\n"
+        "    if mode=='selected': print('tests/test_selected.py')\n",
+        encoding="utf-8")
+    env = dict(os.environ, SELECTION_LOG=str(calls), SELECTION_MODE=selection)
+    result = subprocess.run(
+        ["make", "--silent", "commit-check", "BASE=reviewed-base",
+         "PY=" + shlex.join([sys.executable, str(driver)])],
+        cwd=tmp_path, env=env, capture_output=True, text=True, timeout=60)
+    invocations = [json.loads(line) for line in calls.read_text().splitlines()]
+    assert ["tools/affected_tests.py", "--base", "reviewed-base"] in invocations
+    assert ["-m", "pytest", "-q"] not in invocations
+    selected = ["-m", "pytest", "-q", "tests/test_selected.py"]
+    assert (selected in invocations) == (selection == "selected")
+    assert (result.returncode != 0) == (selection == "failure"), result.stderr

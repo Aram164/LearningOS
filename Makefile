@@ -137,7 +137,7 @@ commit-check:
 	.venv/bin/lint-imports --no-cache
 	$(PY) tools/warning_baseline.py --check
 	$(PY) -m pytest -q tests/test_arch_layers.py tests/test_arch_ratchets.py tests/test_arch_surface.py tests/test_move_map.py
-	$(PY) -m pytest -q $$($(PY) tools/affected_tests.py --base main)
+	$(MAKE) test-affected BASE="$(BASE)"
 
 clean-derived:
 	$(PY) tools/diagnostics_prune.py --derived-state

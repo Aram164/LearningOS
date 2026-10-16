@@ -222,3 +222,25 @@ def test_unclassified_schema_still_counts_as_record(repo_root, tmp_path):
 
     schemas = record_schemas(schema_dir)
     assert new_schema in schemas, "Unclassified schema should count as a record"
+
+
+@pytest.mark.parametrize("fingerprint_only", [True, False])
+def test_data_contract_cli_defaults_follow_its_moved_owner(repo_root, tmp_path, fingerprint_only):
+    """The public tool finds real schemas even from outside the repository."""
+    import subprocess
+    import sys
+
+    from learning_os.store.contracts.data_contract import fingerprint, record_schemas
+
+    schemas = repo_root / "system/schema"
+    assert record_schemas(schemas)
+    args = [sys.executable, str(repo_root / "tools/schema_contract.py")]
+    if fingerprint_only:
+        args.append("--fingerprint")
+    proc = subprocess.run(args, cwd=tmp_path, capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert proc.stderr == ""
+    if fingerprint_only:
+        assert proc.stdout == fingerprint(schemas) + "\n"
+    else:
+        assert f"matches {len(record_schemas(schemas))} record schemas" in proc.stdout
