@@ -295,7 +295,7 @@ def test_study_mode_reports_a_missing_registration_as_a_missing_fact(
         mini_repo: Path):
     # #114 item 3: `resume --study` says `registration not recorded`
     # for an upcoming sitting with no attempt, like the brief.
-    from learning_os.app.handlers.reads import _display_registration_state
+    from learning_os.app.handlers.resume import _display_registration_state
 
     assert _display_registration_state("unregistered") == "registration not recorded"
     assert _display_registration_state("unrecorded") == "unrecorded"
@@ -410,7 +410,7 @@ def test_resume_json_carries_the_top_cluster_section(mini_repo: Path):
 
 
 def test_render_shows_one_top_goal_row_and_files_nothing():
-    from learning_os.app.handlers.reads import _render
+    from learning_os.app.handlers.resume import _render
     from learning_os.derive.projection.resume_dossier import build_resume_dossier as build
 
     top = _cluster()
@@ -425,7 +425,7 @@ def test_render_shows_one_top_goal_row_and_files_nothing():
 
 
 def test_render_omits_the_section_without_a_cluster():
-    from learning_os.app.handlers.reads import _render
+    from learning_os.app.handlers.resume import _render
     from learning_os.derive.projection.resume_dossier import build_resume_dossier as build
 
     dossier = build(**_inputs())
@@ -510,7 +510,7 @@ def test_recovery_follows_the_newest_touch_even_with_no_requirement(
     new_map = ("curriculum/modules/module-demo/units/unit-demo-l02/"
                "study-map.yaml")
     import learning_os.store.session.githistory as _git
-    from learning_os.app.handlers.reads import _resolve_stage
+    from learning_os.app.handlers.resume import _resolve_stage
     from learning_os.store.loader import load_repo
 
     # The requirement-less map was touched more recently.

@@ -2172,7 +2172,7 @@ def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     builder failure and asserts the witness line, the class and the
     exit.
     """
-    import learning_os.app.handlers.reads as reads
+    import learning_os.app.handlers.resume as resume
     from learning_os.app.outcomes import exit_for
     from learning_os.derive.semantics.dossiers import DossierError
     from learning_os.domain.failures import WriteRefused
@@ -2183,7 +2183,7 @@ def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     def boom(**kwargs):
         raise DossierError("a9-proof: the build failed")
 
-    monkeypatch.setattr(reads, "build_dossier", boom)
+    monkeypatch.setattr(resume, "build_dossier", boom)
     outcome, lines = _a9_run_cli(root, "cli.dossier",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
@@ -2202,13 +2202,13 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the mid-read change and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.app.handlers.reads as reads
+    import learning_os.app.handlers.resume as resume
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
-    real_snapshot = reads._snapshot
+    real_snapshot = resume._snapshot
     calls = []
 
     def racing(root, expected=None):
@@ -2217,7 +2217,7 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
             return real_snapshot(root, expected)
         raise StaleSnapshot("a9-proof: a write landed mid-read")
 
-    monkeypatch.setattr(reads, "_snapshot", racing)
+    monkeypatch.setattr(resume, "_snapshot", racing)
     outcome, lines = _a9_run_cli(root, "cli.dossier",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
@@ -2236,7 +2236,7 @@ def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.app.handlers.reads as reads
+    import learning_os.app.handlers.resume as resume
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
@@ -2246,7 +2246,7 @@ def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
     def boom(root, expected=None):
         raise OSError("a9-proof: the read failed")
 
-    monkeypatch.setattr(reads, "_snapshot", boom)
+    monkeypatch.setattr(resume, "_snapshot", boom)
     outcome, lines = _a9_run_cli(root, "cli.dossier",
                                  ["dossier", "unit-demo-l01"],
                                  tmp_path, monkeypatch)
@@ -2380,7 +2380,7 @@ def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
     case input reaches the gate; the proof injects the resolution
     failure and asserts the witness line, the class and the exit.
     """
-    import learning_os.app.handlers.reads as reads
+    import learning_os.app.handlers.resume as resume
     from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
 
@@ -2390,7 +2390,7 @@ def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
     def boom(repo):
         return None, "a9-proof: nothing is resumable"
 
-    monkeypatch.setattr(reads, "_resolve_stage", boom)
+    monkeypatch.setattr(resume, "_resolve_stage", boom)
     outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False
@@ -2409,7 +2409,7 @@ def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     proof injects the builder failure and asserts the witness line,
     the class and the exit.
     """
-    import learning_os.app.handlers.reads as reads
+    import learning_os.app.handlers.resume as resume
     from learning_os.app.outcomes import exit_for
     from learning_os.derive.projection.resume_dossier import ResumeDossierError
     from learning_os.domain.failures import WriteRefused
@@ -2420,7 +2420,7 @@ def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     def boom(**kwargs):
         raise ResumeDossierError("a9-proof: the build failed")
 
-    monkeypatch.setattr(reads, "build_resume_dossier", boom)
+    monkeypatch.setattr(resume, "build_resume_dossier", boom)
     outcome, lines = _a9_run_cli(root, "cli.resume", ["resume"],
                                  tmp_path, monkeypatch)
     assert outcome.ok is False

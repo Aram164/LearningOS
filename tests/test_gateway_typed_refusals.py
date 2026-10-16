@@ -31,7 +31,7 @@ from learning_os.app import commit as ops_commit
 from learning_os.app.context import OpContext
 from learning_os.app.handlers import ai as ai_handler
 from learning_os.app.handlers.ai import _ai_refusal
-from learning_os.app.handlers.reads import _render as _render_resume
+from learning_os.app.handlers.resume import _render as _render_resume
 from learning_os.app.lock import _operator_lock
 from learning_os.app.outcomes import (
     _refusal_from_failure,
