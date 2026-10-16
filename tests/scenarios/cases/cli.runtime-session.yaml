@@ -55,4 +55,4 @@ cases:
     expect: {site: cli.runtime-session.bad-input}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/reads.py:2196", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
-  - {site: cli.runtime-session.mid-read-stale, where: "tools/learning_os/ops/handlers/reads.py:2196", reason: race-only}
+  - {site: cli.runtime-session.mid-read-stale, reason: race-only}

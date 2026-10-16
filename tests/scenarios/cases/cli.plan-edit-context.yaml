@@ -151,6 +151,6 @@ untriggered:
   - {where: "tools/learning_os/ops/handlers/plan.py:821", reason: "empty batch: --route-ids takes nargs=+ and argparse refuses zero ids first"}
   - {where: "tools/learning_os/ops/handlers/plan.py:1207", reason: "two selectors at once: the argparse mutually-exclusive group refuses first"}
   - {where: "tools/learning_os/ops/handlers/plan.py:1246", reason: "unreadable stage results: the fixture ledgers are clean, and no step can damage them"}
-  - {site: cli.plan-edit-context.empty-batch, where: "tools/learning_os/ops/handlers/plan.py:877", reason: guarded-before-handler}
-  - {site: cli.plan-edit-context.one-selector, where: "tools/learning_os/ops/handlers/plan.py:1263", reason: guarded-before-handler}
-  - {site: cli.plan-edit-context.bad-stage-results, where: "tools/learning_os/ops/handlers/plan.py:1302", reason: fixture-inexpressible}
+  - {site: cli.plan-edit-context.empty-batch, reason: guarded-before-handler}
+  - {site: cli.plan-edit-context.one-selector, reason: guarded-before-handler}
+  - {site: cli.plan-edit-context.bad-stage-results, reason: fixture-inexpressible}

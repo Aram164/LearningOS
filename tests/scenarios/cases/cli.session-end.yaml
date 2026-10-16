@@ -90,6 +90,6 @@ cases:
     expect:
       site: cli.session-end.already-committed
 untriggered:
-  - {site: cli.session-end.unreadable-ledger, where: "tools/learning_os/ops/handlers/session.py:55", reason: fixture-inexpressible, proof: _prove_session_unreadable_ledger}
-  - {site: cli.session-end.ownership-conflict, where: "tools/learning_os/ops/handlers/session.py:63", reason: fixture-inexpressible, proof: _prove_session_ownership_conflict}
-  - {site: cli.session-end.head-changed, where: "tools/learning_os/ops/handlers/session.py:75", reason: fixture-inexpressible, proof: _prove_session_head_changed}
+  - {site: cli.session-end.unreadable-ledger, reason: fixture-inexpressible, proof: _prove_session_unreadable_ledger}
+  - {site: cli.session-end.ownership-conflict, reason: fixture-inexpressible, proof: _prove_session_ownership_conflict}
+  - {site: cli.session-end.head-changed, reason: fixture-inexpressible, proof: _prove_session_head_changed}

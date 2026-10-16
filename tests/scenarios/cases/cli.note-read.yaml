@@ -46,5 +46,5 @@ cases:
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:556", reason: "note or garden path escapes its owner: loaded fixture paths resolve in-tree, and no step can move them"}
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components in a note or garden path: the fixture carries none, and no step can create one"}
-  - {site: cli.note-read.read-failed, where: "tools/learning_os/ops/handlers/notes.py:1257", reason: os-error-only}
-  - {site: cli.note-read.bad-encoding, where: "tools/learning_os/ops/handlers/notes.py:1264", reason: fixture-inexpressible}
+  - {site: cli.note-read.read-failed, reason: os-error-only}
+  - {site: cli.note-read.bad-encoding, reason: fixture-inexpressible}

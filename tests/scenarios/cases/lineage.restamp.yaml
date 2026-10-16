@@ -95,8 +95,8 @@ untriggered:
   - {where: "tools/learning_os/commands/lineage_restamp.py:88", reason: "listed but non-eligible claim: the fixture's single claim is eligible, so no listed claim refuses there"}
   - {where: "tools/learning_os/commands/lineage_restamp.py:145", reason: "analysis failure: the fixture analyzes cleanly; needs a corrupt ledger or git"}
   - {where: "tools/learning_os/commands/lineage_restamp.py:209", reason: "claim left the ledger: needs a ledger change between analysis and apply"}
-  - {"site": "lineage.restamp.analysis-failed", "where": "tools/learning_os/ops/handlers/plan.py:4019", "reason": "os-error-only", "proof": "_prove_phase4_plan_backstop"}
-  - {"site": "lineage.restamp.restamp-failed", "where": "tools/learning_os/ops/handlers/plan.py:4095", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
-  - {"site": "lineage.restamp.bad-expected-revision", "where": "tools/learning_os/ops/handlers/plan.py:4104", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
-  - {"site": "lineage.restamp.reviewed-bytes-changed", "where": "tools/learning_os/ops/handlers/_shared.py:136", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
-  - {"site": "lineage.restamp.reviewed-needs-report", "where": "tools/learning_os/ops/handlers/_shared.py:146", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.analysis-failed", "reason": "os-error-only", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.restamp-failed", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.bad-expected-revision", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.reviewed-bytes-changed", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.reviewed-needs-report", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}

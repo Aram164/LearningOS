@@ -566,7 +566,7 @@ def _untriggered_entries() -> dict[str, dict]:
 
     Entries without a site are legacy documentation and A9 ignores
     them. A site entry must name its operation's file, a declared
-    site at its declared raise line, and a fixed-vocabulary reason.
+    site, and a fixed-vocabulary reason.
     """
     import scenario_harness as harness
 
@@ -588,10 +588,9 @@ def _untriggered_entries() -> dict[str, dict]:
                 path.stem + "."), (
                 f"A9 {label}: the entry lives in another operation's "
                 f"file — {FIX}")
-            where = entry.get("where")
-            assert where == declared_where[site], (
-                f"A9 {label}: where {where!r} is not the declared raise "
-                f"{declared_where[site]!r} — {FIX}")
+            assert "where" not in entry, (
+                f"A9 {label}: a site-carrying untriggered entry is "
+                f"identified by its site id; remove where — {FIX}")
             assert entry.get("reason") in _UNTRIGGERED_REASONS, (
                 f"A9 {label}: reason {entry.get('reason')!r} is outside "
                 f"{sorted(_UNTRIGGERED_REASONS)} — {FIX}")
@@ -3325,6 +3324,28 @@ def test_control_untriggered_entry_with_failed_proof_fails():
                         "a9-control:1", set(), {},
                         entries={"a9-control.proof-failed": entry},
                         proofs={"a9-control.proof-failed": False})
+
+
+def test_control_site_entry_with_where_fails(tmp_path, monkeypatch):
+    """A site-carrying entry that still carries ``where`` fails (OD9)."""
+    import test_scenarios_zz_refusal_sites as zz
+    import yaml
+
+    cases = tmp_path / "cases"
+    cases.mkdir()
+    (cases / "cli.inspect.yaml").write_text(yaml.safe_dump({
+        "operation": "cli.inspect",
+        "untriggered": [{
+            "site": "cli.inspect.read-failed",
+            "where": "tools/learning_os/ops/handlers/platform.py:325",
+            "reason": "os-error-only",
+        }],
+    }), encoding="utf-8")
+    monkeypatch.setattr(zz, "CASES_DIR", cases)
+    with pytest.raises(
+            AssertionError,
+            match="identified by its site id; remove where"):
+        _untriggered_entries()
 
 
 def test_control_imported_subtype_sites_are_declared():

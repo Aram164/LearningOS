@@ -68,6 +68,6 @@ untriggered:
   - {where: "tools/learning_os/ops/handlers/admin.py:57", reason: "bad termin: the payload enum and argparse choices refuse it first"}
   - {where: "tools/learning_os/ops/handlers/admin.py:66", reason: "bad result: the payload enum and argparse choices refuse it first"}
   - {where: "tools/learning_os/ops/handlers/admin.py:88", reason: "non-numeric grade: the payload type and argparse type=float refuse it first"}
-  - {site: module.attempt.record.bad-termin, where: "tools/learning_os/ops/handlers/admin.py:57", reason: guarded-before-handler}
-  - {site: module.attempt.record.bad-result, where: "tools/learning_os/ops/handlers/admin.py:66", reason: guarded-before-handler}
-  - {site: module.attempt.record.bad-grade, where: "tools/learning_os/ops/handlers/admin.py:88", reason: guarded-before-handler}
+  - {site: module.attempt.record.bad-termin, reason: guarded-before-handler}
+  - {site: module.attempt.record.bad-result, reason: guarded-before-handler}
+  - {site: module.attempt.record.bad-grade, reason: guarded-before-handler}

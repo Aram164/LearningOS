@@ -66,7 +66,7 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/plan.py:1324", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
-  - {site: material.span.placement-source-mismatch, where: "tools/learning_os/ops/handlers/plan.py:1386", reason: fixture-inexpressible}
-  - {site: material.span.read-failed, where: "tools/learning_os/ops/handlers/plan.py:1544", reason: os-error-only}
+  - {site: material.span.placement-source-mismatch, reason: fixture-inexpressible}
+  - {site: material.span.read-failed, reason: os-error-only}
   - {where: "tools/learning_os/commands/material_span.py:62", reason: "unit without a module source map: every fixture unit's module carries one"}
   - {where: "tools/learning_os/commands/material_span.py:67", reason: "ambiguous route: the fixture carries each route id once per unit"}

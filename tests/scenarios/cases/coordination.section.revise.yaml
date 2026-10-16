@@ -90,6 +90,6 @@ untriggered:
   - {where: "tools/learning_os/ops/handlers/admin.py:232", reason: "unknown section: the payload enum and argparse choices refuse it first"}
   - {where: "tools/learning_os/ops/handlers/admin.py:239", reason: "missing COORDINATION.md: the fixture always carries it, and no step can delete it"}
   - {where: "tools/learning_os/ops/handlers/admin.py:249", reason: "unreadable coordination file: needs permissions no step can set"}
-  - {site: coordination.section.revise.unknown-section, where: "tools/learning_os/ops/handlers/admin.py:232", reason: guarded-before-handler}
-  - {site: coordination.section.revise.no-coordination-file, where: "tools/learning_os/ops/handlers/admin.py:239", reason: fixture-inexpressible}
-  - {site: coordination.section.revise.read-failed, where: "tools/learning_os/ops/handlers/admin.py:249", reason: os-error-only}
+  - {site: coordination.section.revise.unknown-section, reason: guarded-before-handler}
+  - {site: coordination.section.revise.no-coordination-file, reason: fixture-inexpressible}
+  - {site: coordination.section.revise.read-failed, reason: os-error-only}

@@ -339,4 +339,4 @@ untriggered:
   - {where: "tools/learning_os/commands/module.py:2655", reason: "inventory preflight: the fixture audit carries no inventory-v1 block, so the legacy path returns no problems"}
   - {where: "tools/learning_os/commands/module.py:2669", reason: "check-report write failure: module-plan-import admits no --report-out flag, so the save path is unreachable"}
   - {where: "tools/learning_os/commands/module.py:2704", reason: "import transaction failure: needs a seal/commit interleave, and the single-threaded harness cannot race itself"}
-  - {"site": "module.plan.import.bad-expected-revision", "where": "tools/learning_os/ops/handlers/plan.py:4756", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "module.plan.import.bad-expected-revision", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}

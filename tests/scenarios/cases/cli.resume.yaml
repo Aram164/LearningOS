@@ -35,5 +35,5 @@ cases:
 untriggered:
   - {where: "tools/learning_os/ops/handlers/reads.py:2036", reason: "unresolvable stage: the fixture pointer resolves, and no step can break it"}
   - {where: "tools/learning_os/ops/handlers/reads.py:2124", reason: "dossier build failure: needs dossier-breaking data no step can author"}
-  - {site: cli.resume.no-resumable-stage, where: "tools/learning_os/ops/handlers/reads.py:2036", reason: fixture-inexpressible}
-  - {site: cli.resume.dossier-build-failed, where: "tools/learning_os/ops/handlers/reads.py:2124", reason: fixture-inexpressible}
+  - {site: cli.resume.no-resumable-stage, reason: fixture-inexpressible}
+  - {site: cli.resume.dossier-build-failed, reason: fixture-inexpressible}

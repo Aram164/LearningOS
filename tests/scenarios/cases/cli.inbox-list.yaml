@@ -15,4 +15,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/capture.py:244", reason: "unreadable inbox: needs an OSError no step can arrange (the helper raise at query.py:352 needs the same)"}
-  - {site: cli.inbox-list.list-failed, where: "tools/learning_os/ops/handlers/capture.py:244", reason: os-error-only}
+  - {site: cli.inbox-list.list-failed, reason: os-error-only}

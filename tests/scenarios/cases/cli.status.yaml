@@ -19,4 +19,4 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/reads.py:675", reason: "parse failures need unreadable canonical files; the fixture validates and no step can damage it"}
-  - {site: cli.status.unreadable-records, where: "tools/learning_os/ops/handlers/reads.py:675", reason: fixture-inexpressible}
+  - {site: cli.status.unreadable-records, reason: fixture-inexpressible}

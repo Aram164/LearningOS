@@ -72,5 +72,5 @@ cases:
 untriggered:
   - {where: "tools/learning_os/ops/handlers/atlas.py:148", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
   - {where: "tools/learning_os/ops/handlers/atlas.py:178", reason: "reason_codes parallel check: the computed horizon rows are consistent"}
-  - {site: ability.context.unreadable-records, where: "tools/learning_os/ops/handlers/atlas.py:148", reason: fixture-inexpressible}
-  - {site: ability.context.reasons-not-parallel, where: "tools/learning_os/ops/handlers/atlas.py:178", reason: fixture-inexpressible}
+  - {site: ability.context.unreadable-records, reason: fixture-inexpressible}
+  - {site: ability.context.reasons-not-parallel, reason: fixture-inexpressible}

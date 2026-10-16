@@ -58,4 +58,4 @@ cases:
     expect: {site: note.evidence.add.bad-expected-revision}
 untriggered:
   - {where: "tools/learning_os/commands/note.py:148", reason: "unreadable note frontmatter: fixture notes parse cleanly, and no write path stores an unreadable one"}
-  - {site: note.evidence.add.unreadable-frontmatter, where: "tools/learning_os/ops/handlers/notes.py:138", reason: fixture-inexpressible}
+  - {site: note.evidence.add.unreadable-frontmatter, reason: fixture-inexpressible}

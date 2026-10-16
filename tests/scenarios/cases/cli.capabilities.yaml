@@ -40,4 +40,4 @@ cases:
     expect: {site: cli.capabilities.unknown-capability}
 untriggered:
   - {where: "tools/learning_os/ops/handlers/reads.py:1143", reason: "unreadable declared payload schema: all 47 catalog commands carry one, and no step can remove it"}
-  - {site: cli.capabilities.unreadable-payload-schema, where: "tools/learning_os/ops/handlers/reads.py:1143", reason: fixture-inexpressible}
+  - {site: cli.capabilities.unreadable-payload-schema, reason: fixture-inexpressible}

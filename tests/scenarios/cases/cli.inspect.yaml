@@ -35,5 +35,5 @@ cases:
     argv: [inspect, project-demo, nope-id]
     expect: {site: cli.inspect.unknown-id}
 untriggered:
-  - {site: cli.inspect.read-failed, where: "tools/learning_os/ops/handlers/platform.py:325", reason: os-error-only}
-  - {site: cli.inspect.stale-snapshot, where: "tools/learning_os/ops/handlers/platform.py:318", reason: race-only}
+  - {site: cli.inspect.read-failed, reason: os-error-only}
+  - {site: cli.inspect.stale-snapshot, reason: race-only}
