@@ -287,13 +287,58 @@ def _resolve_callback(funcs: dict[str, list], rel: str,
         f"{ast.dump(value)[:60]} — {FIX}")
 
 
+def _callback_location(funcs: dict[str, list], rel: str, tree: ast.Module,
+                       kind: str, value: ast.AST, lineno: int, *,
+                       imports: dict[str, tuple[str, ast.Module]]):
+    """``(owner_rel, resolved_node_or_None, owner_funcs)`` for a callback.
+
+    A ``Name`` bound by a top-level ``ImportFrom`` from
+    ``learning_os.app.handlers._shared`` resolves in that owner's
+    namespace; every other value keeps the local resolution.
+    """
+    if not isinstance(value, ast.Name):
+        return rel, _resolve_callback(funcs, rel, kind, value, lineno), funcs
+    bindings: list[ast.alias] = []
+    for node in tree.body:
+        if not isinstance(node, ast.ImportFrom):
+            continue
+        if node.level != 0 or node.module != (
+                "learning_os.app.handlers._shared"):
+            continue
+        for alias in node.names:
+            if (alias.asname or alias.name) == value.id:
+                bindings.append(alias)
+    if not bindings:
+        return rel, _resolve_callback(funcs, rel, kind, value, lineno), funcs
+    if len(bindings) != 1 or funcs.get(value.id):
+        raise AssertionError(
+            f"A18 {rel}:{lineno}: {value.id} has a conflicting or "
+            f"ambiguous shared binding — {FIX}")
+    owner = imports.get("learning_os.app.handlers._shared")
+    if owner is None:
+        raise AssertionError(
+            f"A18 {rel}:{lineno}: {value.id} resolves to 0 defs — {FIX}")
+    owner_rel, owner_tree = owner
+    owner_funcs = _module_funcs(owner_tree)
+    original = ast.Name(id=bindings[0].name, ctx=ast.Load())
+    resolved = _resolve_callback(
+        owner_funcs, owner_rel, kind, original, lineno)
+    return owner_rel, resolved, owner_funcs
+
+
 def _renderers() -> list[tuple[str, str, str, str, ast.AST, dict]]:
     """``(operation, kind, name, rel, node, funcs)`` per callback passed.
 
     ``kind`` is the ``Result``/``register`` keyword. A ``Name`` value
-    resolves to its unique same-module ``def``; a ``Lambda`` to its
-    body; ``None`` passes nothing; anything else fails loud.
+    resolves to its unique ``def`` in its definition owner's module
+    (the caller's module, or ``_shared`` when imported from there);
+    a ``Lambda`` to its body; ``None`` passes nothing; anything else
+    fails loud.
     """
+    shared_path = HANDLERS_DIR / "_shared.py"
+    shared_rel = shared_path.relative_to(ROOT).as_posix()
+    shared_tree = ast.parse(shared_path.read_text(encoding="utf-8"))
+    imports = {"learning_os.app.handlers._shared": (shared_rel, shared_tree)}
     found = []
     for name, operations in sorted(_serving_modules().items()):
         path = HANDLERS_DIR / name
@@ -327,15 +372,16 @@ def _renderers() -> list[tuple[str, str, str, str, ast.AST, dict]]:
             for kw in node.keywords:
                 if kw.arg not in keywords:
                     continue
-                resolved = _resolve_callback(
-                    funcs, rel, kw.arg, kw.value, node.lineno)
+                owner_rel, resolved, owner_funcs = _callback_location(
+                    funcs, rel, tree, kw.arg, kw.value, node.lineno,
+                    imports=imports)
                 if resolved is None:
                     continue
                 display = (kw.value.id if isinstance(kw.value, ast.Name)
                            else "<lambda>")
                 for operation in call_operations:
-                    found.append((operation, kw.arg, display, rel, resolved,
-                                  funcs))
+                    found.append((operation, kw.arg, display, owner_rel,
+                                  resolved, owner_funcs))
     return found
 
 
@@ -568,6 +614,95 @@ def test_bound_ctx_and_repo_are_not_free():
     funcs = _module_funcs(tree)
     assert _flags_for(funcs, funcs["render"][0]) == [], (
         "A18 bound names must not flag — " + FIX)
+
+
+_SHARED_REL = "tools/learning_os/app/handlers/_shared.py"
+_CALLER_REL = "tools/learning_os/app/handlers/caller.py"
+
+
+def _shared_location(caller_source: str, shared_source: str,
+                     imports=None):
+    caller_tree = ast.parse(caller_source)
+    shared_tree = ast.parse(shared_source)
+    if imports is None:
+        imports = {"learning_os.app.handlers._shared": (
+            _SHARED_REL, shared_tree)}
+    return _callback_location(
+        _module_funcs(caller_tree), _CALLER_REL, caller_tree,
+        "on_commit_refused", ast.Name(id="on_refusal", ctx=ast.Load()), 1,
+        imports=imports)
+
+
+def test_shared_imported_renderer_resolves_to_owner():
+    shared_tree = ast.parse(
+        "def render(errors):\n"
+        "    return [str(x) for x in errors]\n")
+    caller_tree = ast.parse(
+        "from learning_os.app.handlers._shared import "
+        "render as on_refusal\n")
+    owner_rel, node, owner_funcs = _callback_location(
+        _module_funcs(caller_tree), _CALLER_REL, caller_tree,
+        "on_commit_refused", ast.Name(id="on_refusal", ctx=ast.Load()), 1,
+        imports={"learning_os.app.handlers._shared": (
+            _SHARED_REL, shared_tree)})
+    assert owner_rel == _SHARED_REL
+    assert node is shared_tree.body[0]
+    assert owner_funcs == _module_funcs(shared_tree)
+    assert _flags_for(owner_funcs, node) == []
+
+
+def test_shared_renderer_helper_open_is_flagged_in_owner_namespace():
+    _owner_rel, node, owner_funcs = _shared_location(
+        "from learning_os.app.handlers._shared import "
+        "render as on_refusal\n",
+        "def render(errors):\n"
+        "    return helper(errors)\n"
+        "def helper(errors):\n"
+        "    return open('x').read()\n")
+    assert {violation for _, violation in _flags_for(owner_funcs, node)} == {
+        "call open"}
+
+
+def test_shared_renderer_read_text_is_flagged_in_owner_namespace():
+    _owner_rel, node, owner_funcs = _shared_location(
+        "from learning_os.app.handlers._shared import "
+        "render as on_refusal\n",
+        "def render(target):\n"
+        "    return target.read_text()\n")
+    assert {violation for _, violation in _flags_for(owner_funcs, node)} == {
+        "call .read_text"}
+
+
+def test_shared_missing_and_duplicate_definitions_raise():
+    caller = ("from learning_os.app.handlers._shared import "
+              "render as on_refusal\n")
+    with pytest.raises(AssertionError):
+        _shared_location(caller, "def other(errors):\n    return []\n")
+    with pytest.raises(AssertionError):
+        _shared_location(
+            caller,
+            "def render(errors):\n    return []\n"
+            "def render(errors):\n    return []\n")
+    with pytest.raises(AssertionError):
+        _shared_location(caller, "def render(errors):\n    return []\n",
+                         imports={})
+
+
+def test_import_from_other_module_still_raises_through_local_resolver():
+    with pytest.raises(AssertionError):
+        _shared_location(
+            "from learning_os.app.handlers.other import "
+            "render as on_refusal\n",
+            "def render(errors):\n    return []\n")
+
+
+def test_conflicting_local_and_shared_binding_raises():
+    with pytest.raises(AssertionError):
+        _shared_location(
+            "from learning_os.app.handlers._shared import "
+            "render as on_refusal\n"
+            "def on_refusal(errors):\n    return []\n",
+            "def render(errors):\n    return []\n")
 
 
 # --- (b) runtime: fixtures through a test-only operation --------------------------------
