@@ -81,7 +81,6 @@ cases:
 untriggered:
   - {where: "tools/learning_os/ops/handlers/plan.py:194", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
   - {where: "tools/learning_os/ops/handlers/plan.py:57", reason: "unit without a module source map: every fixture unit's module carries one"}
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:921", reason: "ambiguous study maps: the fixture carries one map per unit"}
   - {where: "tools/learning_os/ops/handlers/plan.py:82", reason: "ambiguous route in module: the fixture carries each route id once per module"}
   - {where: "tools/learning_os/ops/handlers/plan.py:100", reason: "ambiguous legacy selection: every fixture selection sharing a locator links its exact route or matches one route"}
   - {where: "tools/learning_os/ops/handlers/plan.py:198", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}

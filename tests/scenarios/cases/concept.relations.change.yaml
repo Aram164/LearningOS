@@ -90,6 +90,3 @@ cases:
     - ''
     expect:
       site: concept.relations.change.bad-expected-revision
-untriggered:
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:966", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}

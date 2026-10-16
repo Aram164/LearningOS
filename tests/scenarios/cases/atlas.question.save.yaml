@@ -129,6 +129,5 @@ cases:
     expect:
       site: atlas.question.save.bad-question-fields
 untriggered:
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:941", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
   - {where: "tools/learning_os/ops/handlers/atlas.py:289", reason: "question not an object: the payload type and argparse json_object refuse it first"}
   - {where: "tools/learning_os/ops/handlers/atlas.py:343", reason: "question destination already exists: needs a non-note file at the question path, which no step can author"}

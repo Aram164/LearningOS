@@ -72,6 +72,3 @@ cases:
         verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
     artifact_ids: [legacy-archive-lock]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:907", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/ops/_legacy_plumbing.py:910", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}

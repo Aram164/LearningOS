@@ -26,26 +26,12 @@ conflict.
 
 from __future__ import annotations
 
-import os
-import sys
-
+from learning_os.adapters.cli_entry import run  # noqa: E402
 from learning_os.adapters.cli_parser import build_parser  # noqa: E402
-from learning_os.ops.lock import LOS_LOCK_TIMEOUT_ENV
-from learning_os.ops.outcomes import classify, resolve  # noqa: E402
 
 
 def main() -> int:
-    args = build_parser().parse_args()
-    if args.lock_timeout is not None:
-        os.environ[LOS_LOCK_TIMEOUT_ENV] = str(args.lock_timeout)
-    try:
-        return args.func(args)
-    except Exception as exc:
-        row = classify(exc, "cli")
-        if row is None:
-            raise
-        print(f"los: {exc}", file=sys.stderr)
-        return resolve(row, exc)["exit"]
+    return run(build_parser().parse_args())
 
 
 if __name__ == "__main__":
