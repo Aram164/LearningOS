@@ -15,10 +15,12 @@ step 4).
 from __future__ import annotations
 
 import copy
+import importlib.util
 import json
 import os
 import re
 import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
@@ -36,6 +38,7 @@ ARCH = ROOT / arch_surface.ARCHITECTURE_DIR
 RATCHETS_PATH = ARCH / arch_surface.RATCHETS_FILENAME
 APPROVALS_PATH = ARCH / arch_surface.APPROVALS_FILENAME
 PYPROJECT_PATH = ROOT / "pyproject.toml"
+MOVES_PATH = ROOT / "tests" / "architecture" / "moves.yaml"
 
 BASE_ENV = "LOS_RATCHET_BASE"
 DEFAULT_BASE = "main"
@@ -252,6 +255,55 @@ def test_surface_approvals_file_is_valid():
 # ---- monotonicity against the base (SPEC §2.3) -------------------------------
 
 
+def _move_map():
+    spec = importlib.util.spec_from_file_location(
+        "move_map", ROOT / "tools" / "move_map.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _range_moves(base_ref: str) -> list[dict]:
+    """Moves recorded now but not at the base: those made since the base (OD9)."""
+    def entries(text):
+        data = yaml.safe_load(text) if text else None
+        return list((data or {}).get("moves") or [])
+    current = entries(MOVES_PATH.read_text(encoding="utf-8")
+                      if MOVES_PATH.is_file() else None)
+    base = entries(_git_show(base_ref, MOVES_PATH.relative_to(ROOT).as_posix()))
+    seen = {(m["from"], m["to"]) for m in base}
+    return [m for m in current if (m["from"], m["to"]) not in seen]
+
+
+def _translate_one(signature: str, move: dict) -> str:
+    """One recorded move applied to a base signature or ignore line.
+
+    A ledger entry is a file or package move (``tools/…/x.py``, ``tools/…/pkg/``)
+    or a definition move (``<file>::<name>`` to ``<file>::<name>``).
+    """
+    path, sep, rest = signature.partition("::")
+    if "::" in move["from"]:
+        prefix = move["from"] + "::"
+        if signature.startswith(prefix):
+            return move["to"] + "::" + signature[len(prefix):]
+        return signature
+    translate = _move_map().translate
+    if sep and "/" in path:
+        return translate([move], path) + sep + rest
+    left, arrow, right = signature.partition(" -> ")
+    if arrow:
+        return translate([move], left.strip()) + arrow + translate([move], right.strip())
+    return signature
+
+
+def _translated(signature: str, moves: list[dict]) -> str:
+    """A base signature or ignore line under the moves made since the base, in order."""
+    for move in moves:
+        signature = _translate_one(signature, move)
+    return signature
+
+
 def _ratchet_failures(base_data: dict | None,
                       current_data: dict) -> list[tuple[str, str, str]]:
     """SPEC §2.3 rule 2 as a pure check: ``(rule, subject, detail)`` per violation.
@@ -304,6 +356,11 @@ def test_ratchets_are_monotonic_vs_base(base_ref):
     current = _load_ratchets(RATCHETS_PATH)
     base_text = _git_show(base_ref, RATCHETS_PATH.relative_to(ROOT).as_posix())
     base = yaml.safe_load(base_text) if base_text is not None else None
+    moves = _range_moves(base_ref)
+    if base and moves:
+        for entries in (base.get("checks") or {}).values():
+            for entry in entries or []:
+                entry["signature"] = _translated(entry["signature"], moves)
     current_text = RATCHETS_PATH.read_text(encoding="utf-8")
     rel = RATCHETS_PATH.relative_to(ROOT).as_posix()
     failures = []
@@ -399,6 +456,36 @@ def test_fix_sentences_cover_a17_through_a19():
                           "and declare an owner for new state (PLAN A19).")
 
 
+def test_moved_entry_is_not_new_after_translation():
+    base = {"baselined": ["A3"], "checks": {"A3": [
+        {"signature": "tools/learning_os/old.py::f::substring::x",
+         "count": 1, "since": "baseline", "approved_by": None}]}}  # type: ignore[dict-item]
+    current = {"baselined": ["A3"], "checks": {"A3": [
+        {"signature": "tools/learning_os/bar/old.py::f::substring::x",
+         "count": 1, "since": "baseline", "approved_by": None}]}}  # type: ignore[dict-item]
+    moves = [{"from": "tools/learning_os/old.py",
+              "to": "tools/learning_os/bar/old.py"}]
+    for entries in (base.get("checks") or {}).values():
+        for entry in entries or []:
+            entry["signature"] = _translated(entry["signature"], moves)
+    assert _ratchet_failures(base, current) == []
+
+
+def test_new_entry_still_fails_after_translation():
+    base = {"baselined": ["A3"], "checks": {"A3": [
+        {"signature": "tools/learning_os/old.py::f::substring::x",
+         "count": 1, "since": "baseline", "approved_by": None}]}}  # type: ignore[dict-item]
+    current = {"baselined": ["A3"], "checks": {"A3": [
+        {"signature": "tools/learning_os/bar/old.py::f::substring::x",
+         "count": 2, "since": "baseline", "approved_by": None}]}}  # type: ignore[dict-item]
+    moves = [{"from": "tools/learning_os/old.py",
+              "to": "tools/learning_os/bar/old.py"}]
+    for entries in (base.get("checks") or {}).values():
+        for entry in entries or []:
+            entry["signature"] = _translated(entry["signature"], moves)
+    assert len(_ratchet_failures(base, current)) == 1
+
+
 def _ignore_imports_failures(base_lists: dict[str, list[str]],
                              current_lists: dict[str, list[str]],
                              approved: set[str]) -> list[str]:
@@ -423,6 +510,9 @@ def test_ignore_imports_are_a_subset_of_base(base_ref):
     current_lists = _ignore_lists(PYPROJECT_PATH.read_text(encoding="utf-8"))
     base_text = _git_show(base_ref, "pyproject.toml")
     base_lists = _ignore_lists(base_text) if base_text is not None else {}
+    moves = _range_moves(base_ref)
+    base_lists = {name: [_translated(line, moves) for line in lines]
+                  for name, lines in base_lists.items()}
     approved = {e["signature"] for e in
                 _load_ratchets(RATCHETS_PATH)["checks"].get("A1-layers-approved", [])
                 if e["since"] == "approved"}
