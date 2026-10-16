@@ -98,5 +98,3 @@ cases:
     request: {bundle: {notes: [{analysis: {id: note-scenario-batch-11, title: "Miss", path: "knowledge/notes/mathematics/note-scenario-batch-11.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}]}}
     artifact_ids: [note-scenario-batch-11]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/analysis.py:362", reason: "bundle not an object: argparse json_object and the gateway schema both require an object first"}

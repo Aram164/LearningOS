@@ -59,5 +59,3 @@ cases:
     request: {workspace: workspace-demo, unit: unit-demo-l01, stage: stage-demo, activity: "worked derivation", result: correct}
     artifact_ids: [workspace-demo]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/stage_result.py:61", reason: "no current study map: every rich_world unit has one, and no step can remove it"}

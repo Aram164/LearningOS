@@ -72,5 +72,4 @@ cases:
     artifact_ids: [workspace-demo]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/abilities.py:142", reason: "app confirmation binding: the harness seals channel operator, never ui"}
   - {site: learner.ability-observation.append.bad-app-confirmation, reason: fixture-inexpressible}

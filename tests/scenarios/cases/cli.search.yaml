@@ -92,7 +92,3 @@ untriggered:
   - {where: "tools/learning_os/ops/handlers/notes.py:1382", reason: "unreadable inbox: needs an OSError no step can arrange"}
   - {site: cli.search.read-failed, reason: os-error-only}
   - {site: cli.search.bad-encoding, reason: fixture-inexpressible}
-  - {where: "tools/learning_os/commands/query.py:421", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
-  - {where: "tools/learning_os/commands/reads.py:556", reason: "note path escapes its owner during content search: loaded fixture paths resolve in-tree"}
-  - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components in a note path during content search: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/reads.py:917", reason: "unreadable note records under content search: the fixture parses cleanly, and no step can break it"}

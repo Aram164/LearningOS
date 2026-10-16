@@ -110,7 +110,3 @@ cases:
     transport: cli
     argv: [note-analysis-prepare, --drafts, "<CASEDATA>/drafts.json", --out, ../materials/source-demo-book/book.pdf/x]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/analysis.py:555", reason: "staging-dir resolve failure: resolve with strict=False raises only on exotic filesystem errors such as symlink loops, which no case arranges"}
-  - {where: "tools/learning_os/commands/analysis.py:566", reason: "bodies path is not a directory: only prepare writes out-of-tree and it always makes a directory there"}
-  - {where: "tools/learning_os/commands/analysis.py:631", reason: "staging write failure after a successful check: staged ids passed the note pattern, so body paths stay files under bodies/"}

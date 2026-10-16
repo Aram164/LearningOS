@@ -126,25 +126,3 @@ cases:
     - ''
     expect:
       site: collection.entry.revise.bad-expected-revision
-untriggered:
-  - {where: "tools/learning_os/commands/collection_entry.py:46", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/collection_entry.py:50", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
-  - {where: "tools/learning_os/commands/collection_entry.py:84", reason: "unparseable collection: the fixture shelf parses; no step rewrites it mid-plan"}
-  - {where: "tools/learning_os/commands/collection_entry.py:86", reason: "non-mapping collection: the fixture shelf is a mapping"}
-  - {where: "tools/learning_os/commands/collection_entry.py:92", reason: "no entries list: the fixture shelf carries an entries list"}
-  - {where: "tools/learning_os/commands/collection_entry.py:94", reason: "entry position out of range: single-entry shelf, single-threaded plan"}
-  - {where: "tools/learning_os/commands/collection_entry.py:98", reason: "non-mapping entry: the fixture shelf entry is a mapping"}
-  - {where: "tools/learning_os/commands/collection_entry.py:103", reason: "no single why scalar: the fixture shelf entry carries one why scalar"}
-  - {where: "tools/learning_os/commands/collection_entry.py:108", reason: "source changed under revision: single-threaded plan over a fixed file"}
-  - {where: "tools/learning_os/commands/collection_entry.py:112", reason: "checked line gone: single-threaded plan over a fixed file"}
-  - {where: "tools/learning_os/commands/collection_entry.py:128", reason: "exotic block header: the fixture shelf is a plain block mapping"}
-  - {where: "tools/learning_os/commands/collection_entry.py:136", reason: "trailing content after why: the fixture shelf why is a plain scalar line"}
-  - {where: "tools/learning_os/commands/collection_entry.py:143", reason: "unserializable replacement: admitted one-line strings always dump inline"}
-  - {where: "tools/learning_os/commands/collection_entry.py:157", reason: "payload admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/collection_entry.py:180", reason: "no file origin: the loader always records the shelf origin"}
-  - {where: "tools/learning_os/commands/collection_entry.py:191", reason: "duplicate entries: the single-entry shelf names each source once, and no operation adds entries"}
-  - {where: "tools/learning_os/commands/collection_entry.py:202", reason: "non-string why: the fixture shelf why is a string, and no step rewrites it"}
-  - {where: "tools/learning_os/commands/collection_entry.py:212", reason: "re-read failure: the fixture shelf file exists and stays readable"}
-  - {where: "tools/learning_os/commands/collection_entry.py:218", reason: "splice parse failure: the spliced plain scalar always parses"}
-  - {where: "tools/learning_os/commands/collection_entry.py:225", reason: "splice verification failure: the single-scalar splice verifies (revise-success proves it)"}
-  - {where: "tools/learning_os/commands/collection_entry.py:230", reason: "collection contract failure: admitted one-line strings are always schema-valid"}

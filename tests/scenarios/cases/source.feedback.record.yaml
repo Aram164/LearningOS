@@ -83,5 +83,4 @@ cases:
     artifact_ids: []
     expect: {site: source.feedback.record.no-study-map}
 untriggered:
-  - {where: "tools/learning_os/commands/source.py:62", reason: "resource/source mismatch: rich_world has a single source, so a valid second source_id cannot be named"}
   - {site: source.feedback.record.wrong-source, reason: fixture-inexpressible}

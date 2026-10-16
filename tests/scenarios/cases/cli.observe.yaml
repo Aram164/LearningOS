@@ -42,4 +42,3 @@ untriggered:
   - {where: "tools/learning_os/ops/handlers/learner.py:1410", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world carries one valid target"}
   - {site: cli.observe.not-admitted, reason: fixture-inexpressible}
   - {site: cli.observe.invalid-target, reason: fixture-inexpressible}
-  - {where: "tools/learning_os/commands/observation.py:141", reason: "shared core, workspace scope: unreachable via observe, which only calls the core with a covering workspace (explicit ids are scope-checked at :330 first)"}

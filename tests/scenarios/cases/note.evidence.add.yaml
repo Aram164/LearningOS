@@ -57,5 +57,4 @@ cases:
     argv: [note-evidence, note-demo, derivation, "material://source-demo-book/book.pdf", --expected-revision, bogus]
     expect: {site: note.evidence.add.bad-expected-revision}
 untriggered:
-  - {where: "tools/learning_os/commands/note.py:148", reason: "unreadable note frontmatter: fixture notes parse cleanly, and no write path stores an unreadable one"}
   - {site: note.evidence.add.unreadable-frontmatter, reason: fixture-inexpressible}

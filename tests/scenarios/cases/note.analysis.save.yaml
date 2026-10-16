@@ -215,10 +215,3 @@ cases:
     request: {analysis: {id: note-scenario-save-29, title: "Miss", path: "knowledge/notes/mathematics/note-scenario-save-29.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
     artifact_ids: [note-scenario-save-29]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/analysis.py:68", reason: "symlink in the analysis path: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/analysis.py:154", reason: "URI target unresolvable with a non-material registered source: the only fixture source registers local material, and resolution falls back lexically instead"}
-  - {where: "tools/learning_os/commands/analysis.py:198", reason: "resolved source registers no local material: the only fixture source registers local material"}
-  - {where: "tools/learning_os/commands/analysis.py:206", reason: "resolved paths escape the materials tree: observe_local_material refuses outside-boundary spellings first, and in-tree spellings resolve in-tree"}
-  - {where: "tools/learning_os/commands/analysis.py:223", reason: "analysis not an object: argparse json_object and the gateway schema both require an object first"}
-  - {where: "tools/learning_os/commands/analysis.py:319", reason: "destination exists for an unregistered id: every fixture .md under knowledge/notes/ registers, and creating one registers it too"}

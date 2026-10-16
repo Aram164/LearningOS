@@ -72,5 +72,4 @@ cases:
     artifact_ids: []
     expect: {site: detour.create.no-study-map}
 untriggered:
-  - {where: "tools/learning_os/commands/detour.py:60", reason: "unknown classification: argparse choices and payload_to_namespace enforce the value set first"}
   - {site: detour.create.unknown-classification, reason: guarded-before-handler}

@@ -73,9 +73,6 @@ cases:
     expect:
       site: inbox.resolve.bad-expected-revision
 untriggered:
-  - {where: "tools/learning_os/commands/inbox.py:65", reason: "symlinks: the fixture inbox has none, and no step can create one"}
-  - {where: "tools/learning_os/commands/inbox.py:75", reason: "not a regular file or folder: needs a special file no step can create"}
-  - {where: "tools/learning_os/commands/inbox.py:84", reason: "empty folder: the fixture drops hold files, and no step can empty one without resolving it"}
   - {where: "tools/learning_os/ops/handlers/capture.py:755", reason: "archive collision: the archive starts empty and only this operation writes it, atomically with removal"}
   - {site: inbox.resolve.archive-collision, reason: fixture-inexpressible}
   - {site: inbox.resolve.read-failed, reason: os-error-only}

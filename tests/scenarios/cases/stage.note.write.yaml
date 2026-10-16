@@ -75,5 +75,4 @@ cases:
     artifact_ids: []
     expect: {site: stage.note.write.no-study-map}
 untriggered:
-  - {where: "tools/learning_os/commands/stage.py:46", reason: "no working_note: every rich_world stage carries one, and no operation clears it"}
   - {site: stage.note.write.no-working-note, reason: fixture-inexpressible}

@@ -44,7 +44,5 @@ cases:
     argv: [note-read, note-demo, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: cli.note-read.stale-snapshot}
 untriggered:
-  - {where: "tools/learning_os/commands/reads.py:556", reason: "note or garden path escapes its owner: loaded fixture paths resolve in-tree, and no step can move them"}
-  - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components in a note or garden path: the fixture carries none, and no step can create one"}
   - {site: cli.note-read.read-failed, reason: os-error-only}
   - {site: cli.note-read.bad-encoding, reason: fixture-inexpressible}

@@ -96,7 +96,3 @@ cases:
     request: {module_id: module-demo, check: true}
     artifact_ids: []
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/material.py:57", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
-  - {where: "tools/learning_os/commands/material.py:613", reason: "lossy compaction: the fixture mirror compacts losslessly (apply-success proves the round trip)"}
-  - {where: "tools/learning_os/commands/material.py:707", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}

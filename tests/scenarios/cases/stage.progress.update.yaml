@@ -83,5 +83,4 @@ cases:
     artifact_ids: [unit-demo-l01, study-map-demo-l01]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/stage.py:168", reason: "unknown status: argparse choices and payload_to_namespace enforce the value set first"}
   - {site: stage.progress.update.unknown-status, reason: guarded-before-handler}

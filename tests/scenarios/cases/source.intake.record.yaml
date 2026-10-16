@@ -472,13 +472,3 @@ cases:
     - ''
     expect:
       site: source.intake.record.bad-expected-revision
-untriggered:
-  - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:266", reason: "partition/group mismatch: the fixture registers no thematic groups, so the unregistered-group check fires for any gid first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:277", reason: "dead check: a missing partition trips the unclassified-partition check and a grouped one trips the mismatch check first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:307", reason: "non-mapping held identifiers: the fixture registry holds only mappings, and intake only writes mappings"}
-  - {where: "tools/learning_os/commands/source_catalog.py:352", reason: "shelf change without a new basis: needs a discovered source plus a registered group, and the fixture registers none"}
-  - {where: "tools/learning_os/commands/source_catalog.py:409", reason: "removed address still cited: the fixture cites no registry address in a second canonical file, and no step can plant one"}
-  - {where: "tools/learning_os/commands/source_catalog.py:467", reason: "registry re-read failure: the fixture registries read cleanly in a single-threaded run"}
-  - {where: "tools/learning_os/commands/source_catalog.py:469", reason: "non-registry partition file: the fixture's partition files are valid registries"}

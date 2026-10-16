@@ -84,8 +84,4 @@ cases:
     argv: [material-context, derivation, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.context.stale-snapshot}
 untriggered:
-  - {where: "tools/learning_os/commands/reads.py:1172", reason: "ambiguous concept: no two fixture concepts share an alias, and no step can add one"}
-  - {where: "tools/learning_os/commands/reads.py:1456", reason: "symlink escape in --material: the fixture materials tree has no symlinks, and no step can create one outside the fixture root"}
-  - {where: "tools/learning_os/commands/reads.py:1722", reason: "unreadable analysis notes: the fixture parses cleanly, and no step can break it"}
-  - {where: "tools/learning_os/commands/reads.py:1728", reason: "unreadable syntheses: the fixture parses cleanly, and no step can break it"}
   - {site: material.context.read-failed, reason: os-error-only}

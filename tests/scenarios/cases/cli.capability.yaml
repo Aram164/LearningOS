@@ -87,22 +87,3 @@ cases:
     transport: cli
     argv: [capability, stage.progress.update, --payload-file, "<CASEDATA>/refused-stage.json"]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/capability.py:992", reason: "non-v2 capability mismatch: non-v2 envelopes re-raise at :967 before the check"}
-  - {where: "tools/learning_os/commands/capability.py:1009", reason: "non-v2 unknown capability: non-v2 envelopes re-raise at :967 before the check"}
-  - {where: "tools/learning_os/commands/capability.py:1305", reason: "legacy dispatch tail: non-v2 envelopes re-raise at :967, so only v2 envelopes reach dispatch"}
-  - {where: "tools/learning_os/commands/capability.py:266", reason: "no declared payload schema: all 47 catalog commands carry one"}
-  - {where: "tools/learning_os/commands/capability.py:307", reason: "no CLI command to dispatch to: every catalog command declares one"}
-  - {where: "tools/learning_os/commands/capability.py:310", reason: "no bound handler: every named CLI command binds one"}
-  - {where: "tools/learning_os/commands/capability.py:351", reason: "success without a JSON result: fixture handlers answer JSON on success"}
-  - {where: "tools/learning_os/commands/capability.py:357", reason: "success with non-JSON output: fixture handlers answer JSON on success"}
-  - {where: "tools/learning_os/commands/capability.py:361", reason: "success with a non-object JSON result: fixture handlers answer objects on success"}
-  - {where: "tools/learning_os/commands/capability.py:1083", reason: "replay evidence error: needs a contradictory receipt no step can arrange"}
-  - {where: "tools/learning_os/commands/capability.py:1099", reason: "recovery conflict at replay: needs a stale crash journal no step can arrange"}
-  - {where: "tools/learning_os/commands/capability.py:1127", reason: "replay lookup failure: needs a failing transaction store in a fresh fixture"}
-  - {where: "tools/learning_os/commands/capability.py:1198", reason: "snapshot conflict before the write window: a single-threaded dispatch cannot race itself"}
-  - {where: "tools/learning_os/commands/capability.py:1213", reason: "projection failure: the fixture publishes, and no step can break it mid-dispatch"}
-  - {where: "tools/learning_os/commands/capability.py:1223", reason: "post-commit failure: needs a failing post-commit hook no step can arrange"}
-  - {where: "tools/learning_os/commands/capability.py:1236", reason: "recovery conflict at dispatch: the replay section reconciles first under the same lock"}
-  - {where: "tools/learning_os/commands/capability.py:1262", reason: "transaction failure or ValueError at dispatch: commit machinery does not fail in a fresh fixture, and no schema-valid payload mistranslates"}
-  - {where: "tools/learning_os/commands/capability.py:1268", reason: "unexpected exception: no fixture input raises outside the typed boundaries"}

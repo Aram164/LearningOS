@@ -323,20 +323,4 @@ cases:
     expect:
       site: module.plan.import.reviewed-report-invalid
 untriggered:
-  - {where: "tools/learning_os/commands/module.py:1931", reason: "promotion without approval: approved gateway envelopes always approve, and direct CLI refuses at needs-gateway first"}
-  - {where: "tools/learning_os/commands/module.py:1935", reason: "promotion without snapshot: approved gateway envelopes always bind the snapshot, and direct CLI refuses at needs-gateway first"}
-  - {where: "tools/learning_os/commands/module.py:1955", reason: "promotion revisions shape: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:1958", reason: "promotion revisions shape: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:1973", reason: "promotion candidate mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:1994", reason: "promotion content mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:2006", reason: "promotion revisions mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:2023", reason: "promotion preflight ordering: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:2032", reason: "promotion preflight routing: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
-  - {where: "tools/learning_os/commands/module.py:2381", reason: "dead check: the compact branch returns before this line"}
-  - {where: "tools/learning_os/commands/module.py:2455", reason: "registry splice failure: the fixture registry is block YAML with one id per line, and loader and text agree"}
-  - {where: "tools/learning_os/commands/module.py:2504", reason: "synthesis destination error: unknown units refuse at synthesis admission first, and the destination is then a pure path join"}
-  - {where: "tools/learning_os/commands/module.py:2615", reason: "validation crash: no authored input raises ValueError through the shadow validation; the fixture baseline is valid and no package path writes it"}
-  - {where: "tools/learning_os/commands/module.py:2655", reason: "inventory preflight: the fixture audit carries no inventory-v1 block, so the legacy path returns no problems"}
-  - {where: "tools/learning_os/commands/module.py:2669", reason: "check-report write failure: module-plan-import admits no --report-out flag, so the save path is unreachable"}
-  - {where: "tools/learning_os/commands/module.py:2704", reason: "import transaction failure: needs a seal/commit interleave, and the single-threaded harness cannot race itself"}
   - {"site": "module.plan.import.bad-expected-revision", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}

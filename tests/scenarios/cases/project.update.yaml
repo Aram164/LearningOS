@@ -177,7 +177,3 @@ cases:
         boundaries: {confidentiality: private, external_code_access: approved}
     artifact_ids: [project-demo]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/project.py:42", reason: "id/type change needs a registry file whose stored id or type differs from the request; the fixture project is valid and only this operation writes the registry, always with matching id and type project"}
-  - {where: "tools/learning_os/commands/project.py:68", reason: "project/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/project.py:71", reason: "project/file admission: the argparse required group and the payload oneOf enforce presence first"}

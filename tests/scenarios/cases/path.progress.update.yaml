@@ -63,5 +63,4 @@ cases:
     - bogus
     expect: {site: path.progress.update.bad-expected-revision}
 untriggered:
-  - {where: "tools/learning_os/commands/path.py:114", reason: "unknown status: argparse choices and payload_to_namespace enforce the value set first"}
   - {site: path.progress.update.unknown-status, reason: guarded-before-handler}

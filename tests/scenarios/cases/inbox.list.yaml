@@ -14,5 +14,3 @@ cases:
     argv: [inbox-list]
     observations: {now: "2026-10-16T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/query.py:447", reason: "unreadable inbox: needs an OSError no step can arrange"}
