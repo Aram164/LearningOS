@@ -5,9 +5,14 @@ from __future__ import annotations
 import dataclasses
 from pathlib import Path
 
-from learning_os.ai_actions import (
+from learning_os.ai_actions import AIActionService
+from learning_os.app.context import OpContext
+from learning_os.app.projection import _publish
+from learning_os.app.proposal import Result
+from learning_os.app.registry import register
+from learning_os.contracts.gateway import current_gateway_request
+from learning_os.domain.ai_errors import (
     AIActionError,
-    AIActionService,
     ConceptNotFound,
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
@@ -16,11 +21,6 @@ from learning_os.ai_actions import (
     RouteNotFound,
     StaleDeliveryError,
 )
-from learning_os.app.context import OpContext
-from learning_os.app.projection import _publish
-from learning_os.app.proposal import Result
-from learning_os.app.registry import register
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.domain.codes import IDEMPOTENCY_CONFLICT, OUT_OF_SCOPE, UNCONFIRMED
 from learning_os.domain.failures import (
     IdempotencyConflict,

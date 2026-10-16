@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .errors import ActionNotFound, ActionPolicyError
-from .support import _read_yaml
+from learning_os.domain.ai_errors import ActionNotFound, ActionPolicyError
+from learning_os.store.ai_actions.support import _read_yaml
 
 
 @dataclass(frozen=True)

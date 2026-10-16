@@ -16,42 +16,12 @@ if TYPE_CHECKING:
     from .service import AIActionService as AIActionService
 
 _EXPORTS = {
-    "MAX_DELIVERY_BYTES": (".errors", "MAX_DELIVERY_BYTES"),
-    "MAX_DELIVERY_ENTRIES": (".errors", "MAX_DELIVERY_ENTRIES"),
-    "ActionNotFoundError": (".errors", "ActionNotFoundError"),
-    "ActionPolicyError": (".errors", "ActionPolicyError"),
-    "AIActionError": (".errors", "AIActionError"),
-    "ConfidentialityError": (".errors", "ConfidentialityError"),
-    "ConceptNotFound": (".errors", "ConceptNotFound"),
-    "DeliveryBindingError": (".errors", "DeliveryBindingError"),
-    "DeliveryIdempotencyConflict": (".errors", "DeliveryIdempotencyConflict"),
-    "DeliveryRevisionConflict": (".errors", "DeliveryRevisionConflict"),
-    "DeliveryScopeError": (".errors", "DeliveryScopeError"),
-    "DeliveryValidationError": (".errors", "DeliveryValidationError"),
-    "RouteNotFound": (".errors", "RouteNotFound"),
-    "StaleDeliveryError": (".errors", "StaleDeliveryError"),
-    "TargetNotFoundError": (".errors", "TargetNotFoundError"),
-    "UnresolvedMaterialError": (".errors", "UnresolvedMaterialError"),
-    "ContinuationRefusedError": (".errors", "ContinuationRefusedError"),
     "manifest_ai_projection": (".projection", "manifest_ai_projection"),
     "ActionDefinition": (".registry", "ActionDefinition"),
     "ActionRegistry": (".registry", "ActionRegistry"),
     "AdapterDefinition": (".registry", "AdapterDefinition"),
     "AdapterRegistry": (".registry", "AdapterRegistry"),
     "AIActionService": (".service", "AIActionService"),
-    "FilesystemAIActionRepository": (
-        ".storage",
-        "FilesystemAIActionRepository",
-    ),
-    "parse_frontmatter_request_id": (
-        ".support",
-        "parse_frontmatter_request_id",
-    ),
-    "AIActionRequest": (".types", "AIActionRequest"),
-    "ApplyDeliveryResult": (".types", "ApplyDeliveryResult"),
-    "DeliveryRecord": (".types", "DeliveryRecord"),
-    "DeliveryValidationResult": (".types", "DeliveryValidationResult"),
-    "RequestStatus": (".types", "RequestStatus"),
 }
 
 __all__ = list(_EXPORTS)

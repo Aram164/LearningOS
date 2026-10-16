@@ -19,17 +19,17 @@ import pytest
 import yaml
 from jsonschema import Draft202012Validator
 
-from learning_os.ai_actions.binding import read_bound_delivery, validated_sha256
-from learning_os.ai_actions.errors import (
-    DeliveryBindingError,
-    DeliveryValidationError,
-)
-from learning_os.ai_actions.storage import FilesystemAIActionRepository
 from learning_os.app.handlers import platform as platform_handlers
 from learning_os.contracts.payloads import sha256_value
 from learning_os.domain import ids
+from learning_os.domain.ai_errors import (
+    DeliveryBindingError,
+    DeliveryValidationError,
+)
 from learning_os.domain.failures import MalformedId
 from learning_os.domain.ids import KINDS, Digest
+from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
+from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 
 ROOT = Path(__file__).resolve().parent.parent
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"

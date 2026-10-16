@@ -16,11 +16,6 @@ from pathlib import Path
 import pytest
 from test_ai_actions import apply_approved_delivery, make_delivery
 
-from learning_os.ai_actions.errors import (
-    DeliveryRevisionConflict,
-    DeliveryValidationError,
-    StaleDeliveryError,
-)
 from learning_os.app import commit as ops_commit
 from learning_os.app import outcomes as plumbing
 from learning_os.app.context import OpContext
@@ -30,6 +25,11 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_request_context,
 )
+from learning_os.domain.ai_errors import (
+    DeliveryRevisionConflict,
+    DeliveryValidationError,
+    StaleDeliveryError,
+)
 from learning_os.domain.codes import (
     IDEMPOTENCY_CONFLICT,
     REVISION_CONFLICT,
@@ -38,16 +38,14 @@ from learning_os.domain.codes import (
 from learning_os.domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
+    TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
+    TransactionSnapshotConflict,
     TransactionValidationFailure,
 )
 from learning_os.store import session_ledger as session_support
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
-from learning_os.store.transactions import (
-    TransactionConflict,
-    TransactionSnapshotConflict,
-)
 
 # Pinned from the pre-change capture (evidence/commit-kwarg-baseline.json).
 STANDARD_KEYS = [
@@ -516,7 +514,7 @@ def test_translate_none_re_raises_into_legacy_handling(
 def test_ai_translate_chain_semantics(mini_repo: Path, monkeypatch):
     """The service's own except chain as a translate: same types, from originals."""
     import learning_os.store.transactions as transaction_module
-    from learning_os.store.transactions import TransactionConflict as Conflict
+    from learning_os.domain.failures import TransactionConflict as Conflict
 
     def ai_translate(exc):
         try:

@@ -45,27 +45,31 @@ from learning_os.contracts.write_scopes import (
     scope_matches,
     write_target,
 )
-from learning_os.derive.evidence import (
-    _default_authority_root,
-    _idempotency_ledger_path,
-    _load_idempotency_entries,
-    verify_committed_evidence,
-)
 from learning_os.domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
     ReplayEvidenceError,
+    TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionRecoveryConflict,
     TransactionRollbackIncomplete,
+    TransactionScopeError,
+    TransactionSnapshotConflict,
     TransactionValidationFailure,
 )
+from learning_os.domain.transaction import TransactionResult
 from learning_os.store import observations
 from learning_os.store import revisions as revision_store
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
+from learning_os.store.evidence import (
+    _default_authority_root,
+    _idempotency_ledger_path,
+    _load_idempotency_entries,
+    replay_for_request,
+)
 
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
@@ -82,14 +86,10 @@ from learning_os.store.revisions import artifact_revision, load_revisions
 
 __all__ = [
     "ReplayEvidenceError",
-    "TransactionConflict",
     "TransactionFailure",
     "TransactionIdempotencyConflict",
     "TransactionRecoveryConflict",
-    "TransactionResult",
     "TransactionRollbackIncomplete",
-    "TransactionSnapshotConflict",
-    "TransactionScopeError",
     "TransactionValidationFailure",
     "TransactionService",
     "artifact_revision",
@@ -97,7 +97,6 @@ __all__ = [
     "load_revisions",
     "parse_expected_revisions",
     "reconcile_inflight_transactions",
-    "replay_for_request",
 ]
 
 _ENGINE_PHASE: contextvars.ContextVar[str | None] = contextvars.ContextVar(
@@ -115,50 +114,6 @@ def _engine_phase(name: str):
 
 def current_engine_phase() -> str | None:
     return _ENGINE_PHASE.get()
-
-
-class TransactionConflict(Exception):
-    """One or more expected artifact revisions are stale."""
-
-    def __init__(self, conflicts: Mapping[str, tuple[int, int]]):
-        self.conflicts = dict(conflicts)
-        detail = ", ".join(
-            f"{artifact}: expected {expected}, actual {actual}"
-            for artifact, (expected, actual) in sorted(self.conflicts.items())
-        )
-        super().__init__(f"artifact revision conflict ({detail})")
-
-
-class TransactionScopeError(TransactionFailure):
-    """A transaction target is unsafe or outside its declared capability."""
-
-
-class TransactionSnapshotConflict(TransactionFailure):
-    """The approved projection no longer names the canonical state."""
-
-    def __init__(self, expected: str, actual: str):
-        self.expected = expected
-        self.actual = actual
-        super().__init__(
-            "canonical snapshot conflict "
-            f"(expected {expected}, actual {actual})"
-        )
-
-
-@dataclass(frozen=True)
-class TransactionResult:
-    transaction_id: str
-    receipt_path: Path
-    revisions: dict[str, int]
-    snapshot_before: str
-    snapshot_after: str
-    replayed: bool = False
-    # Populated only for a replayed result: the exact validated receipt
-    # ``replay_for_request`` cross-bound against the idempotency ledger. A
-    # caller building the replay response or repairing session ownership must
-    # read this rather than reopening the receipt file through a separate,
-    # weaker helper — every field here has already been checked.
-    receipt: Mapping[str, object] | None = None
 
 
 def parse_expected_revisions(values: Sequence[str] | None) -> dict[str, int]:
@@ -192,37 +147,6 @@ def _dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
         sort_keys=False,
         allow_unicode=True,
         width=100,
-    )
-
-
-def replay_for_request(
-    root: Path,
-    request: GatewayRequestContext,
-    *,
-    authority_root: Path | None = None,
-) -> TransactionResult | None:
-    """Return the original committed receipt for an exact approved retry.
-
-    Verification itself lives in :mod:`learning_os.derive.evidence`, shared with
-    the Diagnostics resolver so the Gateway and Operations can never
-    disagree about what a receipt proves. ``None`` means only one thing:
-    no ledger row exists for this idempotency key at all — every other
-    outcome is either a validated replay or an exception. Nothing here
-    invokes a capability handler.
-    """
-    verified = verify_committed_evidence(
-        root, request, authority_root=authority_root)
-    if verified is None:
-        return None
-    receipt, row, receipt_path = verified
-    return TransactionResult(
-        transaction_id=str(row["transaction_id"]),
-        receipt_path=receipt_path,
-        revisions={str(key): int(value) for key, value in row["revisions"].items()},
-        snapshot_before=str(row["snapshot_before"]),
-        snapshot_after=str(row["snapshot_after"]),
-        replayed=True,
-        receipt=receipt,
     )
 
 

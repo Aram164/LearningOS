@@ -12,12 +12,7 @@ import pytest
 import yaml
 from repo_builders import copy_real_contracts
 
-from learning_os.ai_actions import (
-    ActionPolicyError,
-    AIActionService,
-    DeliveryValidationError,
-    StaleDeliveryError,
-)
+from learning_os.ai_actions import AIActionService
 from learning_os.app.commit import commit_proposal
 from learning_os.app.context import OpContext
 from learning_os.contracts import validate_contract
@@ -25,6 +20,11 @@ from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
     intent_sha256,
+)
+from learning_os.domain.ai_errors import (
+    ActionPolicyError,
+    DeliveryValidationError,
+    StaleDeliveryError,
 )
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.transactions import TransactionFailure, TransactionService, artifact_revision
@@ -761,7 +761,7 @@ def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
 
 def test_prepare_refuses_a_request_id_the_manifest_cannot_publish(ai_repo: Path):
     """A caller id outside the ai-request pattern is refused pre-persist (JF-08)."""
-    from learning_os.ai_actions.support import REQUEST_ID_PATTERN
+    from learning_os.store.ai_actions.support import REQUEST_ID_PATTERN
 
     app = service(ai_repo)
     requests_dir = ai_repo / "operations/ai-actions/requests"

@@ -32,32 +32,7 @@ from learning_os.contracts.manifest_contract import declared_version
 from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
-from learning_os.store import observations
-from learning_os.store.fingerprint import source_fingerprint
-from learning_os.store.loader import load_repo
-from learning_os.store.materials.slices import (
-    MAX_SLICE_BYTES_TOTAL,
-    SLICE_BUNDLE_PREFIX,
-    ContinuationError,
-    SliceResolutionError,
-    UnknownConceptIds,
-    build_unit_slices,
-    continuation_record_dict,
-    plan_continuation,
-    read_bundle_slice_index,
-    slice_index_entry,
-)
-from learning_os.store.transactions import (
-    TransactionConflict,
-    TransactionFailure,
-    TransactionIdempotencyConflict,
-    TransactionSnapshotConflict,
-    artifact_revision,
-    replay_for_request,
-)
-
-from .binding import read_bound_delivery, validated_sha256
-from .errors import (
+from learning_os.domain.ai_errors import (
     ActionPolicyError,
     AIActionError,
     ConceptNotFound,
@@ -73,9 +48,26 @@ from .errors import (
     TargetNotFoundError,
     UnresolvedMaterialError,
 )
-from .registry import ActionRegistry, AdapterRegistry
-from .storage import FilesystemAIActionRepository
-from .support import (
+from learning_os.domain.ai_types import (
+    AIActionRequest,
+    ApplyDeliveryResult,
+    DeliveryRecord,
+    DeliveryValidationResult,
+    GardenTarget,
+    OriginalArtifact,
+    RequestStatus,
+    ValidatedDelivery,
+)
+from learning_os.domain.failures import (
+    TransactionConflict,
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionSnapshotConflict,
+)
+from learning_os.store import observations
+from learning_os.store.ai_actions.binding import read_bound_delivery, validated_sha256
+from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
+from learning_os.store.ai_actions.support import (
     Clock,
     _atomic_text,
     _dump_yaml,
@@ -89,16 +81,24 @@ from .support import (
     check_request_id,
     parse_frontmatter_request_id,
 )
-from .types import (
-    AIActionRequest,
-    ApplyDeliveryResult,
-    DeliveryRecord,
-    DeliveryValidationResult,
-    GardenTarget,
-    OriginalArtifact,
-    RequestStatus,
-    ValidatedDelivery,
+from learning_os.store.evidence import replay_for_request
+from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.materials.slices import (
+    MAX_SLICE_BYTES_TOTAL,
+    SLICE_BUNDLE_PREFIX,
+    ContinuationError,
+    SliceResolutionError,
+    UnknownConceptIds,
+    build_unit_slices,
+    continuation_record_dict,
+    plan_continuation,
+    read_bundle_slice_index,
+    slice_index_entry,
 )
+from learning_os.store.revisions import artifact_revision
+
+from .registry import ActionRegistry, AdapterRegistry
 
 #: Bundle name for the unit-scoped source-map read view. Deliberately not
 #: the canonical filename: the view is a filtered projection for one unit,

@@ -81,3 +81,27 @@ moves:
   to: tools/learning_os/app/handlers/note_analysis.py::_prepare_out_dir
 - from: tools/learning_os/app/handlers/notes.py::note_analysis_prepare
   to: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare
+- from: tools/learning_os/derive/evidence.py
+  to: tools/learning_os/store/evidence.py
+- from: tools/learning_os/ai_actions/binding.py
+  to: tools/learning_os/store/ai_actions/binding.py
+- from: tools/learning_os/ai_actions/storage.py
+  to: tools/learning_os/store/ai_actions/storage.py
+- from: tools/learning_os/ai_actions/support.py
+  to: tools/learning_os/store/ai_actions/support.py
+- from: tools/learning_os/ai_actions/errors.py
+  to: tools/learning_os/domain/ai_errors.py
+- from: tools/learning_os/ai_actions/types.py
+  to: tools/learning_os/domain/ai_types.py
+- from: tools/learning_os/store/transactions.py::TransactionConflict
+  to: tools/learning_os/domain/failures.py::TransactionConflict
+- from: tools/learning_os/store/transactions.py::TransactionScopeError
+  to: tools/learning_os/domain/failures.py::TransactionScopeError
+- from: tools/learning_os/store/transactions.py::TransactionSnapshotConflict
+  to: tools/learning_os/domain/failures.py::TransactionSnapshotConflict
+- from: tools/learning_os/store/transactions.py::TransactionResult
+  to: tools/learning_os/domain/transaction.py::TransactionResult
+- from: tools/learning_os/store/transactions.py::replay_for_request
+  to: tools/learning_os/store/evidence.py::replay_for_request
+- from: tools/learning_os/store/ai_actions/support.py::_projection
+  to: tools/learning_os/ai_actions/projection.py::_projection

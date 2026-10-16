@@ -486,8 +486,8 @@ def _parses_for_row(row: dict):
         return lambda candidate: ids.is_valid(kind, candidate)
     owner = row.get("owner")
     if owner == "ai-delivery-exchange":
-        from learning_os.ai_actions.errors import DeliveryValidationError
-        from learning_os.ai_actions.storage import (
+        from learning_os.domain.ai_errors import DeliveryValidationError
+        from learning_os.store.ai_actions.storage import (
             FilesystemAIActionRepository,
         )
 
@@ -500,8 +500,8 @@ def _parses_for_row(row: dict):
 
         return exchange_grammar
     if owner == "ai-delivery-artifact-digests":
-        from learning_os.ai_actions.binding import validated_sha256
-        from learning_os.ai_actions.errors import DeliveryValidationError
+        from learning_os.domain.ai_errors import DeliveryValidationError
+        from learning_os.store.ai_actions.binding import validated_sha256
 
         def digest_grammar(candidate: str) -> bool:
             try:
@@ -968,7 +968,7 @@ def _cli_sequence_failure(operation: str, pointer: str, kind: str,
     anchors; the converted handler's own ``NotFound`` for every
     refused anchor), over the oracle's enumerated domain.
     """
-    from learning_os.ai_actions.errors import (
+    from learning_os.domain.ai_errors import (
         ConceptNotFound,
         RouteNotFound,
     )

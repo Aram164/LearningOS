@@ -100,18 +100,12 @@ ignore_imports = [
   # recorded baseline exceptions, one per line: "learning_os.x.y -> learning_os.z"
   "learning_os.backup_manifest -> learning_os.derive.projection",
   "learning_os.backup_manifest -> learning_os.derive.validation",
-  "learning_os.store.diagnostics.resolver -> learning_os.derive.evidence",
-  "learning_os.derive.evidence -> learning_os.ai_actions.binding",
-  "learning_os.derive.evidence -> learning_os.ai_actions.errors",
-  "learning_os.derive.evidence -> learning_os.ai_actions.storage",
   "learning_os.derive.projection.manifest -> learning_os.ai_actions.projection",
   "learning_os.derive.projection.projection.records_curriculum -> learning_os.app.synthesis.material_synthesis",
   "learning_os.derive.projection.projection.records_library -> learning_os.app.synthesis.material_synthesis",
   "learning_os.derive.health -> learning_os.app.admin.masters_planning",
   "learning_os.derive.health -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.derive.validation.projects -> learning_os.ai_actions.support",
   "learning_os.derive.semantics.scan -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.store.transactions -> learning_os.derive.evidence",
   "learning_os.store.validation_cache -> learning_os.derive.validation",
   "learning_os.store.validation_cache -> learning_os.derive.validation.advisories",
   "learning_os.store.validation_cache -> learning_os.derive.validation.common",
@@ -145,5 +139,4 @@ protected_modules = ["learning_os.store.transactions"]
 allowed_importers = ["learning_os.app"]
 unmatched_ignore_imports_alerting = "error"
 ignore_imports = [
-  "learning_os.ai_actions.service -> learning_os.store.transactions",
 ]

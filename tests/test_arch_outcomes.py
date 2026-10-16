@@ -13,7 +13,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from learning_os.ai_actions.errors import AIActionError, StaleDeliveryError
 from learning_os.app.admin.masters_planning import MastersPlanningError
 from learning_os.app.outcomes import (
     TABLE,
@@ -33,6 +32,7 @@ from learning_os.backup_manifest import BackupManifestError
 from learning_os.contracts.manifest_contract import ManifestContractError
 from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derive.health import HealthReportError
+from learning_os.domain.ai_errors import AIActionError, StaleDeliveryError
 from learning_os.domain.failures import (
     MalformedId,
     NotFound,
@@ -40,21 +40,19 @@ from learning_os.domain.failures import (
     ProjectionFailure,
     ReplayEvidenceError,
     StaleSnapshot,
+    TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionRecoveryConflict,
     TransactionRollbackIncomplete,
+    TransactionScopeError,
+    TransactionSnapshotConflict,
     TransactionValidationFailure,
     WriteRefused,
     _ReplayRecoveryError,
 )
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.legacy_archive import LegacyArchiveError
-from learning_os.store.transactions import (
-    TransactionConflict,
-    TransactionScopeError,
-    TransactionSnapshotConflict,
-)
 
 # ---------------------------------------------------------------------------
 # Old copies, pasted from git show main:… (S11 base, pre-A14 literals).

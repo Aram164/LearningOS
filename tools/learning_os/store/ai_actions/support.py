@@ -14,9 +14,8 @@ from typing import Any
 
 import yaml
 
+from learning_os.domain.ai_errors import DeliveryScopeError, DeliveryValidationError
 from learning_os.store import observations
-
-from .errors import DeliveryScopeError, DeliveryValidationError
 
 #: Request ids must match the manifest contract's `ai_actions/requests[]/id`
 #: pattern (system/contracts/manifest-v*.schema.json). A persisted bundle with
@@ -109,17 +108,3 @@ def parse_frontmatter_request_id(path: Path) -> str | None:
 
 
 Clock = Callable[[], dt.datetime]
-
-
-def _projection(*, garden_entries: list[dict[str, Any]], available: list[dict[str, Any]],
-                adapters: list[dict[str, Any]], requests: list[dict[str, Any]]) -> dict[str, Any]:
-    """The one place the manifest's AI shape is defined."""
-    return {
-        "garden_entries": garden_entries,
-        "ai_actions": {
-            "contract_version": 1,
-            "available": available,
-            "provider_adapters": adapters,
-            "requests": requests,
-        },
-    }

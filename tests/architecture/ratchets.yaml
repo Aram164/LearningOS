@@ -25,15 +25,15 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::os.replace
+  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::os.replace
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::unlink
+  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::unlink
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::write_text
+  - signature: tools/learning_os/store/ai_actions/support.py::_atomic_text::write_text
     count: 1
     since: baseline
     approved_by: null

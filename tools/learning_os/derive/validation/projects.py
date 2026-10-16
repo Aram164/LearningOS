@@ -139,7 +139,7 @@ class ChecksProjects:
         # The idempotency ledger is replay's only memory: an unreadable one
         # fails closed at commit time, but validate stayed silent over it
         # (JF-13/L2). A missing file is fine (no gateway writes yet).
-        from learning_os.derive.evidence import _load_idempotency_entries
+        from learning_os.store.evidence import _load_idempotency_entries
         try:
             _load_idempotency_entries(self.repo.root)
         except TransactionFailure as exc:
@@ -151,7 +151,7 @@ class ChecksProjects:
         receipt_file_issues(self)
 
     def check_ai_action_requests(self):
-        from learning_os.ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE
+        from learning_os.store.ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE
         directory = self.repo.root / "operations" / "ai-actions" / "requests"
         if not directory.is_dir():
             return

@@ -9,15 +9,7 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
-from learning_os.ai_actions import (
-    ActionPolicyError,
-    AIActionError,
-    AIActionService,
-    ConceptNotFound,
-    ContinuationRefusedError,
-    RouteNotFound,
-    UnresolvedMaterialError,
-)
+from learning_os.ai_actions import AIActionService
 from learning_os.app.synthesis.material_synthesis import (
     MaterialSynthesisError,
     current_unit_material_basis,
@@ -25,6 +17,14 @@ from learning_os.app.synthesis.material_synthesis import (
     inspected_pages_by_route,
     validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
+)
+from learning_os.domain.ai_errors import (
+    ActionPolicyError,
+    AIActionError,
+    ConceptNotFound,
+    ContinuationRefusedError,
+    RouteNotFound,
+    UnresolvedMaterialError,
 )
 from learning_os.domain.codes import INVALID_REQUEST
 from learning_os.domain.failures import NotFound, WriteRefused

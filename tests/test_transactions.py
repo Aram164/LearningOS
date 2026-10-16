@@ -34,17 +34,20 @@ from learning_os.contracts.json_schema import (
     validate_contract,
 )
 from learning_os.derive.validation.common import Issue
-from learning_os.domain.failures import StaleSnapshot, WriteRefused
+from learning_os.domain.failures import (
+    StaleSnapshot,
+    TransactionConflict,
+    TransactionSnapshotConflict,
+    WriteRefused,
+)
 from learning_os.store.fingerprint import source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.transactions import (
     PostCommitFailure,
     ProjectionFailure,
-    TransactionConflict,
     TransactionFailure,
     TransactionRecoveryConflict,
     TransactionService,
-    TransactionSnapshotConflict,
     artifact_revision,
     canonical_fingerprint,
 )

@@ -418,7 +418,7 @@ def test_missing_writer_and_excluded_and_rename(tmp_path):
          "paths": ["/w/operations/ai-actions/.x.tmp",
                    "/w/operations/ai-actions/x.yaml"],
          "mode": None, "phase": None,
-         "writer": "learning_os.ai_actions.storage",
+         "writer": "learning_os.store.ai_actions.storage",
          "writer_file": "/repo/tools/x.py", "writer_line": 7},
         {"event": "os.mkdir",
          "paths": ["/w/operations/transactions/.inflight"],

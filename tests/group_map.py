@@ -314,7 +314,7 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/learning_os/derive/projection/", None),
     ("tools/learning_os/store/transactions.py", None),
     ("tools/learning_os/store/revisions.py", None),
-    ("tools/learning_os/derive/evidence.py", None),
+    ("tools/learning_os/store/evidence.py", None),
     ("tools/learning_os/store/fingerprint.py", None),
     ("tools/learning_os/domain/failures.py", None),
     ("tools/learning_os/store/layout.py", None),

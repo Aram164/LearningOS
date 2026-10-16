@@ -28,7 +28,11 @@ from learning_os.app.proposal import TransactionProposal
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.validation import validate
 from learning_os.domain.codes import REVISION_CONFLICT
-from learning_os.domain.failures import WriteRefused
+from learning_os.domain.failures import (
+    TransactionConflict,
+    TransactionSnapshotConflict,
+    WriteRefused,
+)
 from learning_os.store.fingerprint import seed_source_fingerprint, source_fingerprint
 from learning_os.store.loader import load_repo
 from learning_os.store.session_ledger import (
@@ -38,10 +42,8 @@ from learning_os.store.session_ledger import (
 from learning_os.store.transactions import (
     PostCommitFailure,
     ProjectionFailure,
-    TransactionConflict,
     TransactionFailure,
     TransactionService,
-    TransactionSnapshotConflict,
 )
 
 

@@ -3364,7 +3364,7 @@ def test_control_imported_subtype_sites_are_declared():
 
 def test_control_resolve_failure_accepts_only_write_refused():
     """Domain or imported failure classes resolve; nothing else does (D5)."""
-    from learning_os.ai_actions.errors import (
+    from learning_os.domain.ai_errors import (
         ConceptNotFound,
         RouteNotFound,
     )

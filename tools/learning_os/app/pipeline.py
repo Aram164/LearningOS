@@ -58,11 +58,14 @@ from learning_os.domain.failures import (
     TransactionIdempotencyConflict,
     TransactionRecoveryConflict,
     TransactionRollbackIncomplete,
+    TransactionSnapshotConflict,
     WriteRefused,
     _ReplayRecoveryError,
 )
+from learning_os.domain.transaction import TransactionResult
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
+from learning_os.store.evidence import replay_for_request
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.session_ledger import (
     _current_session_id,
@@ -72,11 +75,6 @@ from learning_os.store.session_ledger import (
     _session_path_state,
     _stamp_session_row,
     _write_session_ledger,
-)
-from learning_os.store.transactions import (
-    TransactionResult,
-    TransactionSnapshotConflict,
-    replay_for_request,
 )
 
 

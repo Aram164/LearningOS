@@ -8,18 +8,31 @@ from typing import Any
 import yaml
 
 from learning_os.derive.garden import project_garden_entries
+from learning_os.domain.ai_errors import AIActionError
 from learning_os.domain.snapshot import Repo
+from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 from learning_os.store.loader import load_repo
 
-from .errors import AIActionError
 from .registry import (
     DEFAULT_ADAPTERS,
     ActionRegistry,
     AdapterDefinition,
     AdapterRegistry,
 )
-from .storage import FilesystemAIActionRepository
-from .support import _projection
+
+
+def _projection(*, garden_entries: list[dict[str, Any]], available: list[dict[str, Any]],
+                adapters: list[dict[str, Any]], requests: list[dict[str, Any]]) -> dict[str, Any]:
+    """The one place the manifest's AI shape is defined."""
+    return {
+        "garden_entries": garden_entries,
+        "ai_actions": {
+            "contract_version": 1,
+            "available": available,
+            "provider_adapters": adapters,
+            "requests": requests,
+        },
+    }
 
 
 def _empty_projection() -> dict[str, Any]:

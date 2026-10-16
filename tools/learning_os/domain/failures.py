@@ -311,3 +311,31 @@ class MalformedId(WriteRefused):
 
 class _ReplayRecoveryError(Exception):
     """The committed receipt cannot prove what the original call wrote."""
+
+
+class TransactionConflict(Exception):
+    """One or more expected artifact revisions are stale."""
+
+    def __init__(self, conflicts: Mapping[str, tuple[int, int]]):
+        self.conflicts = dict(conflicts)
+        detail = ", ".join(
+            f"{artifact}: expected {expected}, actual {actual}"
+            for artifact, (expected, actual) in sorted(self.conflicts.items())
+        )
+        super().__init__(f"artifact revision conflict ({detail})")
+
+
+class TransactionScopeError(TransactionFailure):
+    """A transaction target is unsafe or outside its declared capability."""
+
+
+class TransactionSnapshotConflict(TransactionFailure):
+    """The approved projection no longer names the canonical state."""
+
+    def __init__(self, expected: str, actual: str):
+        self.expected = expected
+        self.actual = actual
+        super().__init__(
+            "canonical snapshot conflict "
+            f"(expected {expected}, actual {actual})"
+        )

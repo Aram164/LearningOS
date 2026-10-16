@@ -59,12 +59,12 @@ from learning_os.app.synthesis.material_synthesis import (  # noqa: E402
     validate_unit_material_synthesis,
 )
 from learning_os.domain.failures import WriteRefused  # noqa: E402
+from learning_os.store.evidence import replay_for_request  # noqa: E402
 from learning_os.store.fingerprint import canonical_fingerprint  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 from learning_os.store.transactions import (  # noqa: E402
     TransactionFailure,
     TransactionIdempotencyConflict,
-    replay_for_request,
 )
 
 

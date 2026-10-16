@@ -7,7 +7,7 @@
 "tools/learning_os/store/diagnostics/**": cache
 "tools/learning_os/derive/projection/**": projection
 "tools/learning_os/contracts/doc_blocks.py": projection
-"tools/learning_os/ai_actions/storage.py": operational
+"tools/learning_os/store/ai_actions/storage.py": operational
 "tools/learning_os/backup_manifest.py": operational
 "tools/learning_os/store/session_ledger.py": operational
 "tools/learning_os/store/warning_baseline.py": operational

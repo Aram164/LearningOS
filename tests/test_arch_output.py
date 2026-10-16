@@ -929,8 +929,8 @@ def test_sweep_control_missing_registered_op_fails():
 
 def test_control_reconstruct_resolves_from_where_defined():
     """An ai_actions error reconstructs to its defining module's class."""
-    from learning_os.ai_actions.errors import TargetNotFoundError
     from learning_os.app.outcomes import exit_for
+    from learning_os.domain.ai_errors import TargetNotFoundError
 
     exc = _reconstruct("cli.ai-action-status", "TargetNotFoundError",
                        None)

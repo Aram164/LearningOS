@@ -9,9 +9,10 @@ import pytest
 import yaml
 
 from learning_os.derive.projection.outputs import write_outputs
+from learning_os.domain.failures import TransactionConflict
 from learning_os.store.loader import load_repo
 from learning_os.store.loading import yamlio
-from learning_os.store.transactions import TransactionConflict, TransactionService
+from learning_os.store.transactions import TransactionService
 
 
 @pytest.fixture(params=["installed", "python-fallback"])

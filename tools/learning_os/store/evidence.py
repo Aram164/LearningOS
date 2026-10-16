@@ -30,6 +30,7 @@ from learning_os.domain.failures import (
     TransactionFailure,
     TransactionIdempotencyConflict,
 )
+from learning_os.domain.transaction import TransactionResult
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.revisions import load_revisions
 
@@ -106,9 +107,9 @@ def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
             "delivery evidence to prove its delegated authority"
         )
 
-    from learning_os.ai_actions.binding import read_bound_delivery
-    from learning_os.ai_actions.errors import AIActionError
-    from learning_os.ai_actions.storage import FilesystemAIActionRepository
+    from learning_os.domain.ai_errors import AIActionError
+    from learning_os.store.ai_actions.binding import read_bound_delivery
+    from learning_os.store.ai_actions.storage import FilesystemAIActionRepository
 
     # Resolving the id is inside the guard too: the exchange-identifier rule is
     # stricter than the receipt schema's `safeArtifactId` (which accepts a
@@ -420,3 +421,34 @@ def verify_committed_evidence(
             )
 
     return receipt, row, receipt_path
+
+
+def replay_for_request(
+    root: Path,
+    request: GatewayRequestContext,
+    *,
+    authority_root: Path | None = None,
+) -> TransactionResult | None:
+    """Return the original committed receipt for an exact approved retry.
+
+    Verification itself lives in :mod:`learning_os.store.evidence`, shared with
+    the Diagnostics resolver so the Gateway and Operations can never
+    disagree about what a receipt proves. ``None`` means only one thing:
+    no ledger row exists for this idempotency key at all — every other
+    outcome is either a validated replay or an exception. Nothing here
+    invokes a capability handler.
+    """
+    verified = verify_committed_evidence(
+        root, request, authority_root=authority_root)
+    if verified is None:
+        return None
+    receipt, row, receipt_path = verified
+    return TransactionResult(
+        transaction_id=str(row["transaction_id"]),
+        receipt_path=receipt_path,
+        revisions={str(key): int(value) for key, value in row["revisions"].items()},
+        snapshot_before=str(row["snapshot_before"]),
+        snapshot_after=str(row["snapshot_after"]),
+        replayed=True,
+        receipt=receipt,
+    )
