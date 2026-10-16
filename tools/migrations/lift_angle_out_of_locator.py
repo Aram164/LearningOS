@@ -24,7 +24,7 @@ from pathlib import Path
 
 import yaml
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 
 
 def load(path: Path) -> dict:
