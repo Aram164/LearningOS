@@ -77,3 +77,7 @@ moves:
   to: tools/learning_os/app/handlers/routes.py::_execute_material_plan
 - from: tools/learning_os/app/handlers/plan.py::_explanation_snippets
   to: tools/learning_os/app/handlers/materials.py::_explanation_snippets
+- from: tools/learning_os/app/handlers/notes.py::_prepare_out_dir
+  to: tools/learning_os/app/handlers/note_analysis.py::_prepare_out_dir
+- from: tools/learning_os/app/handlers/notes.py::note_analysis_prepare
+  to: tools/learning_os/app/handlers/note_analysis.py::note_analysis_prepare

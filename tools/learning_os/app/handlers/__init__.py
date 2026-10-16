@@ -11,6 +11,7 @@ from learning_os.app.handlers import (
     learner,  # noqa: F401  (registration side effect)
     maps,  # noqa: F401  (registration side effect)
     materials,  # noqa: F401  (registration side effect)
+    note_analysis,  # noqa: F401  (registration side effect)
     notes,  # noqa: F401  (registration side effect)
     passthrough,  # noqa: F401  (registration side effect)
     plan,  # noqa: F401  (registration side effect)

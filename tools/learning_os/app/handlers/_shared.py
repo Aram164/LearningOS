@@ -21,6 +21,8 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store.revisions import artifact_revision
 
+NOTES_PREFIX = Path("knowledge/notes")
+
 
 def _guard_rows(root, artifacts):
     return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
