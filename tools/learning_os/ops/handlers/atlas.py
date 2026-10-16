@@ -29,25 +29,11 @@ from learning_os.ops._legacy_plumbing import (
     _snapshot,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_ascii, dumps_compact, dumps_unescaped
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
 from learning_os.transactions import parse_expected_revisions
-
-
-def _dumps_ability_context(payload: dict) -> str:
-    """The exact ability-context encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
-def _dumps_candidate(payload: dict) -> str:
-    """The exact candidate encoder: default separators, escaped."""
-    return json.dumps(payload)
-
-
-def _dumps_atlas(payload: dict) -> str:
-    """The exact atlas encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _on_commit_refused(errors: list) -> list[str]:
@@ -164,7 +150,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **result},
-            json_dumps=_dumps_ability_context,
+            json_dumps=dumps_compact,
         )
     except (OSError, ValueError) as exc:
         raise WriteRefused(
@@ -251,7 +237,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=_dumps_candidate,
+            json_dumps=dumps_ascii,
         )
     except (OSError, ValueError) as exc:
         raise WriteRefused(
@@ -376,7 +362,7 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=_dumps_atlas,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -459,7 +445,7 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=_dumps_atlas,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -505,5 +491,5 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
         {"schema_version": 1, "snapshot_id": snapshot,
          "relation_revision": artifact_revision(root, RELATION_ARTIFACT),
          "relations": rows, "questions": questions},
-        json_dumps=_dumps_atlas,
+        json_dumps=dumps_unescaped,
     )

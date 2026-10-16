@@ -15,6 +15,7 @@ from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_ascii
 from learning_os.ops.legacy import gesture_allowed
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -41,11 +42,6 @@ def _validate_ledger(root, data: dict) -> list[str]:
         key=str,
     )
     return [f"goal ledger: {error.message}" for error in errors]
-
-
-def _dumps_goal(payload: dict) -> str:
-    """The exact goal encoder: default separators, escaped."""
-    return json.dumps(payload)
 
 
 def _goal_on_commit_refused(errors: list) -> list[str]:
@@ -286,7 +282,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
             proposal=proposal,
             finish=finish,
             on_commit_refused=_goal_on_commit_refused,
-            json_dumps=_dumps_goal,
+            json_dumps=dumps_ascii,
             gesture=context,
         )
     expected = req.get("reviewed_sha256")
@@ -319,6 +315,6 @@ def goal(ctx: OpContext, req: dict) -> Result:
         proposal=proposal,
         finish=finish,
         on_commit_refused=_goal_on_commit_refused,
-        json_dumps=_dumps_goal,
+        json_dumps=dumps_ascii,
         gesture=context,
     )

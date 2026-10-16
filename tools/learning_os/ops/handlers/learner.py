@@ -42,6 +42,7 @@ from learning_os.ops._legacy_plumbing import (
     _read_content_bound_file,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_ascii, dumps_unescaped
 from learning_os.ops.handlers._shared import (
     require_path_or_error,
     require_stage,
@@ -56,19 +57,9 @@ from learning_os.transactions import parse_expected_revisions
 from learning_os.unit_notes import unit_note_marker
 
 
-def _dumps_stage(payload: dict) -> str:
-    """The exact stage encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
-
-
 def _on_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
     return list(errors[:12])
-
-
-def _dumps_plain(payload: dict) -> str:
-    """The exact runtime-ledger encoder: default separators, escaped."""
-    return json.dumps(payload)
 
 
 STAGE_RESULT_CAPABILITY = "learner.stage-result.append"
@@ -259,7 +250,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -311,7 +302,7 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -391,7 +382,7 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -441,7 +432,7 @@ def path_note(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -515,7 +506,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_path_progress_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -570,7 +561,7 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_path_attach_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -626,7 +617,7 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -682,7 +673,7 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -754,7 +745,7 @@ def source_feedback(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -890,7 +881,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=_dumps_stage,
+            json_dumps=dumps_unescaped,
         )
     except (OSError, WriteRefused) as exc:
         raise WriteRefused(
@@ -1050,7 +1041,7 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_stage,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -1136,7 +1127,7 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=_dumps_plain,
+            json_dumps=dumps_ascii,
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -1334,7 +1325,7 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=_dumps_plain,
+            json_dumps=dumps_ascii,
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -1482,7 +1473,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         core.payload,
         proposal=core.proposal,
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_plain,
+        json_dumps=dumps_ascii,
         gesture=context,
     )
 
@@ -1603,7 +1594,7 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=_dumps_plain,
+            json_dumps=dumps_ascii,
         )
     except (WriteRefused, OSError, ValueError) as exc:
         raise WriteRefused(

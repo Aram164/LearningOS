@@ -51,7 +51,6 @@ from learning_os.ops._legacy_plumbing import (
     _dump_yaml,
     _fresh_manifest,
     _inbox_search_rows,
-    _json_layout,
     _note_bytes,
     _read_content_bound_file,
     _read_structured_file,
@@ -60,6 +59,12 @@ from learning_os.ops._legacy_plumbing import (
     prepare_review_envelope,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import (
+    dumps_compact,
+    dumps_indented,
+    dumps_layout_sorted,
+    dumps_unescaped,
+)
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError
@@ -68,11 +73,6 @@ from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
 from learning_os.transactions import parse_expected_revisions
-
-
-def _dumps_evidence(payload: dict) -> str:
-    """The exact evidence encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _on_commit_refused_evidence(errors: list) -> list[str]:
@@ -171,13 +171,8 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused_evidence,
-        json_dumps=_dumps_evidence,
+        json_dumps=dumps_unescaped,
     )
-
-
-def _dumps_revise(payload: dict) -> str:
-    """The exact revise encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _on_commit_refused_revise(errors: list) -> list[str]:
@@ -263,7 +258,7 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused_revise,
-        json_dumps=_dumps_revise,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -502,11 +497,6 @@ def _resolve_note_create(root: Path, repo, note: dict,
     return note_id, path, _render_exact_note(meta, body), deprecations
 
 
-def _dumps_create(payload: dict) -> str:
-    """The exact create encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
-
-
 @register("note.create", kind="command")
 def note_create(ctx: OpContext, req: dict) -> Result:
     """Create one durable note from approved bytes.
@@ -552,13 +542,8 @@ def note_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=_dumps_create,
+        json_dumps=dumps_unescaped,
     )
-
-
-def _dumps_analysis_save(payload: dict) -> str:
-    """The exact analysis-save encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 @register("note.analysis.save", kind="command")
@@ -577,7 +562,7 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "replayed": True, "note_id": note_id,
              "note_path": path.relative_to(root).as_posix()},
-            json_dumps=_dumps_analysis_save,
+            json_dumps=dumps_unescaped,
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -593,7 +578,7 @@ def note_analysis_save(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=_dumps_analysis_save,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -646,11 +631,6 @@ def _read_batch_items(bundle: object) -> list[tuple[int, dict, dict, bytes]]:
     return prepared
 
 
-def _dumps_analysis_save_batch(payload: dict) -> str:
-    """The exact batch-save encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
-
-
 @register("note.analysis.save_batch", kind="command")
 def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
     """Preserve up to 20 source analyses atomically under one receipt."""
@@ -679,7 +659,7 @@ def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "replayed": True, "created_note_ids": [],
              "replayed_note_ids": replayed_ids, "note_paths": paths},
-            json_dumps=_dumps_analysis_save_batch,
+            json_dumps=dumps_unescaped,
         )
     # The envelope guards every batch id, but only new notes become
     # transaction artifacts: replayed notes keep their revision exactly
@@ -710,7 +690,7 @@ def note_analysis_save_batch(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_analysis_save_batch,
         after_commit="STANDARD",
-        json_dumps=_dumps_analysis_save_batch,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -1099,11 +1079,6 @@ def _prepare_out_dir(root: Path, value: object) -> Path:
     return resolved
 
 
-def _dumps_analysis_prepare(payload: dict) -> str:
-    """The exact prepare encoder: indented, unescaped."""
-    return json.dumps(payload, indent=2, ensure_ascii=False)
-
-
 @register("cli.note-analysis-prepare", kind="tool")
 def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
     """Drafts in, reviewable staging plus the exact envelope out.
@@ -1168,7 +1143,7 @@ def note_analysis_prepare(ctx: OpContext, req: dict) -> Result:
          "expected_snapshot": snapshot,
          "expected_revisions": revisions,
          "notes": report, "submit": submit},
-        json_dumps=_dumps_analysis_prepare,
+        json_dumps=dumps_indented,
     )
 
 
@@ -1185,11 +1160,6 @@ def _garden_notes(root):
     garden_root = root / "knowledge" / "garden"
     return [(garden_id(garden_root, note.path), note)
             for note in repo.garden_notes]
-
-
-def _dumps_read(payload: dict) -> str:
-    """The exact note-read JSON encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 @register("cli.note-read", kind="query")
@@ -1228,7 +1198,7 @@ def note_read(ctx: OpContext, req: dict) -> Result:
             _snapshot(root, snapshot)
             return Result(
                 {"schema_version": 1, "snapshot_id": snapshot, **payload},
-                json_dumps=_dumps_read,
+                json_dumps=dumps_compact,
             )
         raw = _note_bytes(root, note)
         content = raw.decode("utf-8")
@@ -1239,7 +1209,7 @@ def note_read(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=_dumps_read,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1364,7 +1334,7 @@ def _metadata_search_page(ctx: OpContext, req: dict) -> Result:
              "expand": {"next": _metadata_next_command(req, limit, next_offset, snapshot)
                         if next_offset is not None else None}},
             notices=tuple(notices),
-            json_dumps=_dumps_search_stable,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1625,7 +1595,7 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
              "total": len(matches),
              "next_offset": offset + limit if offset + limit < len(matches) else None},
             notices=tuple(notices),
-            json_dumps=_dumps_search_stable,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1648,17 +1618,6 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         ) from exc
-
-
-def _dumps_search_array(payload) -> str:
-    """The exact metadata-array encoder: layout, sorted keys, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True,
-                      ensure_ascii=False)
-
-
-def _dumps_search_stable(payload: dict) -> str:
-    """The exact stable-search encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 @register("cli.search", kind="query")
@@ -1710,5 +1669,5 @@ def search(ctx: OpContext, req: dict) -> Result:
     return Result(
         shown,
         notices=tuple(notices),
-        json_dumps=_dumps_search_array,
+        json_dumps=dumps_layout_sorted,
     )

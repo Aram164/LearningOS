@@ -46,13 +46,13 @@ from learning_os.ops._legacy_plumbing import (
     _evidence_label,
     _fresh_manifest,
     _inbox_search_rows,
-    _json_layout,
     _snapshot,
     _use_evidence,
     _window_values,
     ranked_scan,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_compact, dumps_layout_sorted, dumps_sorted
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_text_inside, resolved_inside
@@ -161,11 +161,6 @@ def _evidence(repo, source_ids) -> dict[str, str]:
     return evidence
 
 
-def _dumps_dossier(payload: dict) -> str:
-    """The exact dossier encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
 @register("cli.dossier", kind="porcelain")
 def dossier(ctx: OpContext, req: dict) -> Result:
     """Build, serve, or rebuild one unit's semantic dossier. Read-only."""
@@ -264,7 +259,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=_dumps_dossier,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -389,16 +384,6 @@ def _brief_deadlines(manifest: dict) -> list[dict]:
     return rows
 
 
-def _dumps_bootstrap(payload: dict) -> str:
-    """The exact brief/compact encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
-def _dumps_bootstrap_full(payload: dict) -> str:
-    """The exact full-bootstrap encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
 def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
     """Bounded summary pages with snapshot-bound continuation (R1 delegate)."""
     root = ctx.root
@@ -435,7 +420,7 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
                         "capabilities": "capabilities --compact --json",
                         "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT"},
              },
-            json_dumps=_dumps_bootstrap,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -558,7 +543,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
                                 for unit_id in owed],
              },
              },
-            json_dumps=_dumps_bootstrap,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -598,24 +583,14 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
-    return Result(payload, json_dumps=_dumps_bootstrap_full)
-
-
-def _dumps_program_list(payload) -> str:
-    """The exact program-list encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+    return Result(payload, json_dumps=dumps_layout_sorted)
 
 
 @register("cli.program-list", kind="query")
 def program_list(ctx: OpContext, req: dict) -> Result:
     """List programs as discovery rows."""
     manifest = _fresh_manifest(ctx.root)
-    return Result(manifest.get("programs", []), json_dumps=_dumps_program_list)
-
-
-def _dumps_status(payload: dict) -> str:
-    """The exact status encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
+    return Result(manifest.get("programs", []), json_dumps=dumps_layout_sorted)
 
 
 def _human_status(payload: dict) -> str:
@@ -751,7 +726,7 @@ def status(ctx: OpContext, req: dict) -> Result:
         "validation": {"skipped": True} if no_validate else {
             "errors": errors, "warnings": warnings, "ok": errors == 0},
     }
-    return Result(payload, json_dumps=_dumps_status,
+    return Result(payload, json_dumps=dumps_layout_sorted,
                   diagnostic_failed=bool(errors))
 
 
@@ -764,11 +739,6 @@ def _coerce(raw: str) -> object:
         return json.loads(raw)
     except (json.JSONDecodeError, ValueError):
         return raw
-
-
-def _dumps_semantic(payload) -> str:
-    """The exact semantic encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
 
 
 @register("cli.semantic", kind="tool")
@@ -785,7 +755,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
                 exit_code=2,
             ) from exc
         return Result({"class": req["recipe"], "recipes": rows},
-                      json_dumps=_dumps_semantic)
+                      json_dumps=dumps_layout_sorted)
     if req.get("list"):
         return Result(
             [{"name": name,
@@ -793,7 +763,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
               "authority": PREDICATES[name].authority,
               "description": PREDICATES[name].description}
              for name in sorted(PREDICATES)],
-            json_dumps=_dumps_semantic)
+            json_dumps=dumps_layout_sorted)
     name = req.get("predicate")
     if name not in PREDICATES:
         message = f"unknown semantic predicate: {name}"
@@ -828,7 +798,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
         ) from exc
     return Result({"predicate": name, "verdict": verdict,
                    "inputs": inputs},
-                  json_dumps=_dumps_semantic)
+                  json_dumps=dumps_layout_sorted)
 
 
 #: Brief cap: at most this many ranked groups, whatever the tiers hold. The
@@ -915,11 +885,6 @@ def _unique_feed_object(pairs: list[tuple[str, object]]) -> dict:
             raise FeedError(f"malformed feed: duplicate JSON key {key!r}")
         result[key] = value
     return result
-
-
-def _dumps_intelligence_scan(payload) -> str:
-    """The exact scan encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
 
 
 def _human_intelligence_scan(payload, view) -> str:
@@ -1038,7 +1003,7 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
         "evidence": {goal.goal_id: list(goal.evidence) for goal in goals},
         "hidden_count": hidden,
     }
-    return Result(payload, json_dumps=_dumps_intelligence_scan, human_view=view)
+    return Result(payload, json_dumps=dumps_layout_sorted, human_view=view)
 
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -1079,16 +1044,6 @@ def _capabilities(root: Path) -> dict:
     }
 
 
-def _dumps_capabilities_compact(payload) -> str:
-    """The exact name/compact encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
-def _dumps_capabilities(payload) -> str:
-    """The exact capabilities encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
 def _human_capabilities(payload, view) -> str:
     """The exact capabilities screen (SPEC (bu) 1).
 
@@ -1097,7 +1052,7 @@ def _human_capabilities(payload, view) -> str:
     branch. The default branch renders the five-line screen.
     """
     if view["branch"] in ("name", "compact"):
-        return _dumps_capabilities_compact(payload)
+        return dumps_compact(payload)
     return "\n".join(
         [f"LearningOS operator contract v{payload['contract_version']}",
          f"  gateway: {payload['gateway']}",
@@ -1147,15 +1102,15 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 ) from exc
             payload["payload_schema_path"] = relative
             payload["payload_schema"] = schema
-        return Result(payload, json_dumps=_dumps_capabilities_compact,
+        return Result(payload, json_dumps=dumps_compact,
                       human_view={"branch": "name"})
     if compact:
         for key in ("queries", "commands"):
             payload[key] = sorted(payload[key])
         payload["detail"] = "capabilities NAME --json"
-        return Result(payload, json_dumps=_dumps_capabilities_compact,
+        return Result(payload, json_dumps=dumps_compact,
                       human_view={"branch": "compact"})
-    return Result(payload, json_dumps=_dumps_capabilities,
+    return Result(payload, json_dumps=dumps_layout_sorted,
                   human_view={"branch": "screen"})
 
 
@@ -1324,11 +1279,6 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
             for _, _, _, rid in ranked]
 
 
-def _dumps_related(payload) -> str:
-    """The exact related encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
 @register("cli.related", kind="query")
 def related(ctx: OpContext, req: dict) -> Result:
     """Ranked one-hop connections for one record id."""
@@ -1348,7 +1298,7 @@ def related(ctx: OpContext, req: dict) -> Result:
     # so related skips the repo load on the reuse fast path (#83).
     out = related_records(manifest, resolved_id, None,
                           tallies=_use_evidence_from_manifest(manifest))
-    return Result(out, json_dumps=_dumps_related)
+    return Result(out, json_dumps=dumps_layout_sorted)
 
 
 def _live_observations(observations: list[dict]) -> list[dict]:
@@ -1965,11 +1915,6 @@ def _render(dossier, requirement, observations, open_items, sittings,
     return "\n".join(lines)
 
 
-def _dumps_resume(payload) -> str:
-    """The exact resume encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
 def _human_resume(payload, view) -> str:
     """The exact resume screen, rendered from the handler's view (SPEC (bu) 1)."""
     if view["screen"] == "study-menu":
@@ -2014,7 +1959,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         resolved, study_option = _study_option(repo, unit_id=req.get("unit"))
         if resolved is None:
             if isinstance(study_option, dict):
-                return Result(study_option, json_dumps=_dumps_resume,
+                return Result(study_option, json_dumps=dumps_layout_sorted,
                               human_view={"screen": "study-menu"})
             raise WriteRefused(
                 study_option,
@@ -2148,12 +2093,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         "stage_progress": stage_progress,
         "untargeted_section": untargeted_section,
     }
-    return Result(output, json_dumps=_dumps_resume, human_view=view)
-
-
-def _dumps_runtime_session(payload) -> str:
-    """The exact runtime-session encoder: sorted, unescaped, no layout."""
-    return json.dumps(payload, sort_keys=True, ensure_ascii=False)
+    return Result(output, json_dumps=dumps_layout_sorted, human_view=view)
 
 
 @register("cli.runtime-session", kind="porcelain")
@@ -2196,7 +2136,7 @@ def runtime_session(ctx: OpContext, req: dict) -> Result:
                 "snapshot changed during runtime read; retry",
                 site=f"{ctx.operation}.mid-read-stale",
             )
-        return Result(result, json_dumps=_dumps_runtime_session)
+        return Result(result, json_dumps=dumps_sorted)
     except (RuntimeInputError, ContractValidationError,
             json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(
@@ -2283,16 +2223,6 @@ def _filtered_units(manifest, req, operation):
     return rows
 
 
-def _dumps_unit_list(payload) -> str:
-    """The exact unit-list encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
-def _dumps_unit_list_compact(payload) -> str:
-    """The exact unit-list compact encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
 def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
     root = ctx.root
     try:
@@ -2322,7 +2252,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
              "items": items, "total": total,
              "next_offset": offset + limit if offset + limit < total else None,
              "detail": "inspect UNIT_ID"},
-            json_dumps=_dumps_unit_list_compact)
+            json_dumps=dumps_compact)
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
@@ -2353,13 +2283,7 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
         )
     manifest = _fresh_manifest(root)
     return Result(_filtered_units(manifest, req, ctx.operation),
-                  json_dumps=_dumps_unit_list)
-
-
-def _dumps_module_list(payload) -> str:
-    """The exact module-list encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True,
-                      ensure_ascii=False)
+                  json_dumps=dumps_layout_sorted)
 
 
 @register("cli.module-list", kind="query")
@@ -2372,4 +2296,4 @@ def module_list(ctx: OpContext, req: dict) -> Result:
         rows = [row for row in rows if row.get("area_id") == req["program_id"]]
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req["status"]]
-    return Result(rows, json_dumps=_dumps_module_list)
+    return Result(rows, json_dumps=dumps_layout_sorted)

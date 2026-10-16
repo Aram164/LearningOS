@@ -136,6 +136,13 @@ from learning_os.ops._plan_gate import (
 )
 from learning_os.ops.check import _staged_shadow
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import (
+    dumps_compact,
+    dumps_indented,
+    dumps_indented_sorted,
+    dumps_sorted,
+    dumps_unescaped,
+)
 from learning_os.ops.handlers._shared import apply_reviewed_envelope
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -164,11 +171,6 @@ from learning_os.semantics.restamp import (
 )
 from learning_os.transactions import parse_expected_revisions, transaction_artifacts
 from learning_os.warning_baseline import signatures_from_issues
-
-
-def _dumps_plan(payload: dict) -> str:
-    """The exact material-plan encoder: compact, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 def _require_unit(repo, unit_id):
@@ -406,7 +408,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
                 artifact_ids=sorted(artifacts),
                 validate_extra=_check_gate(root, writes),
             ),
-            json_dumps=_dumps_plan,
+            json_dumps=dumps_compact,
         )
     if not writes:
         raise WriteRefused("no material changes to apply",
@@ -425,7 +427,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
         return {**result, "ok": True, **confirmation}
 
     def refused_stdout(errors):
-        return _dumps_plan({**result, "ok": False,
+        return dumps_compact({**result, "ok": False,
                             **({"errors": list(map(str, errors))} if errors else {})})
 
     return Result(
@@ -440,7 +442,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
         finish=finish,
         after_commit=after_commit,
         refused_stdout=refused_stdout,
-        json_dumps=_dumps_plan,
+        json_dumps=dumps_compact,
     )
 
 
@@ -459,11 +461,6 @@ def module_materials_compact(ctx: OpContext, req: dict) -> Result:
     return _execute_material_plan(
         ctx, req, "module.materials.compact",
         lambda repo: compaction_plan(repo, req["module_id"]))
-
-
-def _dumps_indented(payload: dict) -> str:
-    """The exact revision encoder: indented, unescaped."""
-    return json.dumps(payload, indent=2, ensure_ascii=False)
 
 
 def _input_record(req: dict, label: str) -> dict:
@@ -705,7 +702,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=_dumps_indented,
+            json_dumps=dumps_indented,
         )
     if not req.get("approve"):
         message = "collection entry revision requires explicit approval"
@@ -755,7 +752,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
         return {"ok": True, **confirmation}
 
     def refused_stdout_collection_entry_revise(errors):
-        return _dumps_indented({
+        return dumps_indented({
             "ok": False,
             **({"errors": [str(error) for error in errors]} if errors else {}),
         })
@@ -770,13 +767,8 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_collection_entry_revise,
         refused_stdout=refused_stdout_collection_entry_revise,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
-
-
-def _dumps_compact(payload: dict) -> str:
-    """The exact stable-read encoder: compact, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 #: Batch reads serve at most this many routes: one snapshot, one load,
@@ -1340,7 +1332,7 @@ def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     _snapshot(root, snapshot)
     return Result(
         {"schema_version": 1, "snapshot_id": snapshot, **payload},
-        json_dumps=_dumps_compact,
+        json_dumps=dumps_compact,
     )
 
 
@@ -1527,7 +1519,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=_dumps_compact,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1545,11 +1537,6 @@ def material_span(ctx: OpContext, req: dict) -> Result:
             str(exc), site=f"{ctx.operation}.read-failed",
             prefixed=True, exit_code=2,
         ) from exc
-
-
-def _dumps_default(payload: dict) -> str:
-    """The exact response encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 PLAN_TEMPLATE_CONTRACT = "plan-template-v1"
@@ -1608,7 +1595,7 @@ def plan_template(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         ) from exc
-    return Result(response, json_dumps=_dumps_default)
+    return Result(response, json_dumps=dumps_unescaped)
 
 
 # ---------------------------------------------------------------------------
@@ -2235,7 +2222,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=_dumps_compact,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -2666,7 +2653,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=_dumps_indented,
+            json_dumps=dumps_indented,
         )
     if not req.get("approve"):
         message = "source intake requires explicit approval"
@@ -2716,7 +2703,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
         return {"ok": True, **confirmation}
 
     def refused_stdout_source_intake_record(errors):
-        return _dumps_indented({
+        return dumps_indented({
             "ok": False,
             **({"errors": [str(error) for error in errors]} if errors else {}),
         })
@@ -2731,7 +2718,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_source_intake_record,
         refused_stdout=refused_stdout_source_intake_record,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
@@ -3300,7 +3287,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=_dumps_indented,
+            json_dumps=dumps_indented,
         )
     if not req.get("approve"):
         message = "source revision requires explicit approval"
@@ -3358,7 +3345,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
         return {"ok": True, **confirmation}
 
     def refused_stdout_source_record_revise(errors):
-        return _dumps_indented({
+        return dumps_indented({
             "ok": False,
             **({"errors": [str(error) for error in errors]} if errors else {}),
         })
@@ -3373,7 +3360,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_source_record_revise,
         refused_stdout=refused_stdout_source_record_revise,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
@@ -3773,7 +3760,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                  for key in [req["unit_id"], str(data["id"])]
              },
              "diff": diff},
-            json_dumps=_dumps_default,
+            json_dumps=dumps_unescaped,
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -3798,7 +3785,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_unit_map_import,
         on_commit_refused=_on_commit_refused_unit_map_import,
-        json_dumps=_dumps_default,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -3838,7 +3825,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "check": True, "unit_id": req["unit_id"],
              "basis": basis},
-            json_dumps=_dumps_indented,
+            json_dumps=dumps_indented,
         )
     if not req.get("approve"):
         message = "unit material synthesis publication requires explicit approval"
@@ -3869,7 +3856,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         return {"ok": True, **confirmation}
 
     def refused_stdout_unit_material_synthesis_publish(errors):
-        return _dumps_indented({
+        return dumps_indented({
             "ok": False,
             **({"errors": [str(error) for error in errors]} if errors else {}),
         })
@@ -3884,18 +3871,13 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_unit_material_synthesis_publish,
         refused_stdout=refused_stdout_unit_material_synthesis_publish,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
 # ------------------------------------------- lineage.restamp (PLAN 4.1,
 # Task 75). Helpers moved verbatim from commands/lineage_restamp.py; the
 # handler converts cmd_lineage_restamp by SPEC 12.
-
-
-def _dumps_sorted(payload: dict) -> str:
-    """The exact lineage encoder: sorted, spaced, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
 
 def _canonical_list_bytes(claim_ids) -> bytes:
@@ -4025,7 +4007,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "mode": "check", "capability": "lineage.restamp",
              "expected_snapshot": snapshot, **analysis},
-            json_dumps=_dumps_sorted,
+            json_dumps=dumps_sorted,
         )
     if not claim_ids or not claims_sha256:
         raise WriteRefused(
@@ -4058,7 +4040,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
              "reviewed_file_sha256": claims_sha256,
              "gateway_envelope": prepare_review_envelope(
                  "lineage.restamp", payload, snapshot, revisions)},
-            json_dumps=_dumps_sorted,
+            json_dumps=dumps_sorted,
         )
     request = current_gateway_request()
     if request is None:
@@ -4112,7 +4094,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
                       "claims_count": len(ordered)},
         ),
         on_commit_refused=_lineage_restamp_commit_lines,
-        json_dumps=_dumps_sorted,
+        json_dumps=dumps_sorted,
     )
 
 # -------------------- module.plan.import / unit.plan.revise (PLAN 4.1,
@@ -4120,7 +4102,6 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
 # these helpers (repository reads, gateway context, report presentation)
 # moved verbatim from commands/module.py; the handlers convert the three
 # entries by SPEC 12 (R1 promotion/compact branches, R4 shared tail).
-
 
 
 _LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")
@@ -4399,9 +4380,6 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
     return dump_ledger(records)
 
 
-
-
-
 def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
     """Bind the observed material set to the preflight report.
 
@@ -4472,9 +4450,6 @@ def _verify_observed_material(root: Path, contract: dict,
         return ("relevant material changed since --check; re-run --check, "
                 "review the new report, then apply that report")
     return None
-
-
-
 
 
 def _drop_unchanged_writes(writes: dict[Path, str]) -> dict[Path, str]:
@@ -4657,14 +4632,6 @@ def _plan_refuse(ctx, message, slug, *, exit_code=2, extra=(), cls=WriteRefused)
     )
 
 
-def _dumps_plain(payload: dict) -> str:
-    return json.dumps(payload, ensure_ascii=False)
-
-
-def _dumps_indented_sort(payload: dict) -> str:
-    return json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
-
-
 def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
     root = ctx.root
     value = req.get("promotion")
@@ -4805,7 +4772,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
         finish=finish_promotion,
         after_commit=after_commit,
         on_commit_refused=refused_promotion,
-        json_dumps=_dumps_plain,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -5005,7 +4972,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         return Result(
             {"unit_id": basis_unit, "basis": basis,
              "package_sha256": package_sha, "validated": False},
-            json_dumps=_dumps_indented_sort,
+            json_dumps=dumps_indented_sorted,
         )
     if req.get("check") or current_gateway_request() is None:
         try:
@@ -5078,7 +5045,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                     exit_code=code,
                 )
             result = compact
-        return Result(result, json_dumps=_dumps_plain)
+        return Result(result, json_dumps=dumps_unescaped)
     if minimal_writes:
         artifact_ids = _minimal_artifact_ids(
             root, module_id, writes, synthesis_entries)
@@ -5129,7 +5096,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         finish=finish_plan_import,
         after_commit=after_commit,
         on_commit_refused=refused_plan_import,
-        json_dumps=_dumps_plain,
+        json_dumps=dumps_unescaped,
     )
 
 

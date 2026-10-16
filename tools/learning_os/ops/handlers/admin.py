@@ -5,13 +5,13 @@ from __future__ import annotations
 import copy
 import datetime as _dt
 import hashlib
-import json
 import re
 
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.ops._legacy_plumbing import _dump_yaml, _render_frontmatter
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_unescaped
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
@@ -27,11 +27,6 @@ ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
 _PLACEHOLDER_DIGEST = "sha256:" + "0" * 64
 
 _DIGEST_RE = re.compile(r"sha256:[a-f0-9]{64}")
-
-
-def _dumps_admin(payload: dict) -> str:
-    """The exact admin encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _refused_first_twelve(errors: list) -> list[str]:
@@ -144,7 +139,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_first_twelve,
-        json_dumps=_dumps_admin,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -217,7 +212,7 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_first_twelve,
-        json_dumps=_dumps_admin,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -325,7 +320,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             "expected_revisions": {"coordination": artifact_revision(
                 root, "coordination")},
             "write_paths": ["work/COORDINATION.md"],
-        }, json_dumps=_dumps_admin)
+        }, json_dumps=dumps_unescaped)
     try:
         expected_revisions = parse_expected_revisions(
             req.get("expected_revision"))
@@ -343,7 +338,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_all,
-        json_dumps=_dumps_admin,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -406,5 +401,5 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_next_action,
-        json_dumps=_dumps_admin,
+        json_dumps=dumps_unescaped,
     )

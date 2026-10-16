@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import dataclasses
-import json
 from pathlib import Path
 
 from learning_os.ai_actions import (
@@ -29,6 +28,7 @@ from learning_os.domain.failures import (
 )
 from learning_os.ops._legacy_plumbing import _publish
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import dumps_indented
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
 from learning_os.store.session_ledger import _record_touched
@@ -82,11 +82,6 @@ def _refusal(exc: AIActionError, operation: str) -> WriteRefused:
                  exit_code=2)
 
 
-def _dumps_delivery(payload: dict) -> str:
-    """The exact delivery encoder: indented, unescaped."""
-    return json.dumps(payload, indent=2, ensure_ascii=False)
-
-
 def _delivery_output(receipt: dict) -> dict:
     """The command's success JSON from the service's receipt."""
     return {
@@ -133,7 +128,7 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     if proposal is None:
         # A replay: nothing commits and nothing was touched.
         replayed.pop("touched_paths", [])
-        return Result(_delivery_output(replayed), json_dumps=_dumps_delivery)
+        return Result(_delivery_output(replayed), json_dumps=dumps_indented)
     prepared: dict = {}
 
     def translate(exc: BaseException) -> BaseException | None:
@@ -159,7 +154,7 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
         proposal=dataclasses.replace(proposal, translate=translate),
         after_commit=after_commit,
         finish=finish,
-        json_dumps=_dumps_delivery,
+        json_dumps=dumps_indented,
     )
 
 
@@ -168,7 +163,7 @@ def ai_action_list(ctx: OpContext, req: dict) -> Result:
     """List the provider-independent AI actions."""
     actions = AIActionService(ctx.root).list_actions()
     return Result({"ok": True, "actions": actions},
-                  json_dumps=_dumps_delivery)
+                  json_dumps=dumps_indented)
 
 
 @register("cli.ai-action-status", kind="tool")
@@ -176,7 +171,7 @@ def ai_action_status(ctx: OpContext, req: dict) -> Result:
     """Show one prepared request status."""
     request = AIActionService(ctx.root).request_status(req["request_id"])
     return Result({"ok": True, "request": request},
-                  json_dumps=_dumps_delivery)
+                  json_dumps=dumps_indented)
 
 
 @register("cli.ai-action-prepare", kind="porcelain")
@@ -195,7 +190,7 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
         "ok": True, "request": service.request_status(request["id"]),
         "bundle_path": service.repository.request_dir(
             request["id"]).relative_to(root).as_posix(),
-    }, json_dumps=_dumps_delivery)
+    }, json_dumps=dumps_indented)
 
 
 @register("cli.ai-action-append-slices", kind="porcelain")
@@ -219,14 +214,14 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
         raise
     _publish(root)
     return Result({"ok": True, "continuation": result},
-                  json_dumps=_dumps_delivery)
+                  json_dumps=dumps_indented)
 
 
 @register("cli.ai-action-validate-delivery", kind="tool")
 def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
     """Validate one imported delivery without applying it."""
     result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
-    return Result(result, json_dumps=_dumps_delivery)
+    return Result(result, json_dumps=dumps_indented)
 
 
 @register("cli.ai-action-import-delivery", kind="porcelain")
@@ -237,4 +232,4 @@ def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     delivery = service.import_delivery(Path(req["path"]))
     _publish(root)
     return Result({"ok": True, "delivery": delivery},
-                  json_dumps=_dumps_delivery)
+                  json_dumps=dumps_indented)

@@ -47,12 +47,17 @@ from learning_os.ops._legacy_plumbing import (
     _fresh_manifest,
     _fresh_manifest_and_repo,
     _input_record_values,
-    _json_layout,
     _read_structured_file,
     _require_gateway_v2,
     _snapshot,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import (
+    dumps_compact,
+    dumps_indented,
+    dumps_layout_sorted,
+    dumps_unescaped,
+)
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
@@ -257,16 +262,6 @@ def describe_unresolved_reference(manifest, record_id):
     return None
 
 
-def _dumps_single(payload: dict) -> str:
-    """The exact single-inspect encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
-
-
-def _dumps_batch(payload: dict) -> str:
-    """The exact batch-inspect encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-
-
 def _inspect_batch(ctx: OpContext, req: dict) -> Result:
     """Resolve a requested batch once; never return a partial or mixed read."""
     ids = [req["id"], *req["more_ids"]]
@@ -312,7 +307,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
             {"schema_version": 1, "snapshot_id": snapshot,
              "contract": "record-batch", "requested_ids": ids,
              "records": records},
-            json_dumps=_dumps_batch,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -355,7 +350,7 @@ def inspect(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         )
     payload = with_coordination_digests(root, payload)
-    return Result(payload, json_dumps=_dumps_single)
+    return Result(payload, json_dumps=dumps_layout_sorted)
 
 
 # ---------------------------------------------------------------------------
@@ -364,22 +359,6 @@ def inspect(ctx: OpContext, req: dict) -> Result:
 # _project_record and _project_write move with the units from commands.project
 # (SPEC §12). _project_write stages its write for the pipeline's commit
 # instead of calling _write_transaction itself.
-
-
-def _dumps_compact(payload: dict) -> str:
-    """The exact project-write encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
-
-
-def _dumps_rows(payload) -> str:
-    """The exact row-list encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True,
-                      ensure_ascii=False)
-
-
-def _dumps_indented(payload: dict) -> str:
-    """The exact vNext encoder: indented, unescaped."""
-    return json.dumps(payload, indent=2, ensure_ascii=False)
 
 
 def _project_commit_refused(errors: list) -> list[str]:
@@ -473,7 +452,7 @@ def project_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_project_commit_refused,
-        json_dumps=_dumps_compact,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -504,7 +483,7 @@ def project_update(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_project_commit_refused,
-        json_dumps=_dumps_compact,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -516,7 +495,7 @@ def project_list(ctx: OpContext, req: dict) -> Result:
     rows = manifest.get("projects", [])
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req.get("status")]
-    return Result(rows, json_dumps=_dumps_rows)
+    return Result(rows, json_dumps=dumps_layout_sorted)
 
 
 # ---------------------------------------------------------------------------
@@ -548,16 +527,16 @@ def backup_manifest(ctx: OpContext, req: dict) -> Result:
                     f"{label} root: {req.get('out')}")
         _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
         if req.get("stdout"):
-            return Result(manifest, json_dumps=_dumps_indented)
+            return Result(manifest, json_dumps=dumps_indented)
         return Result({
             "ok": True,
             "out": str(resolved),
             "roots": manifest["roots"],
             "entries": len(manifest["entries"]),
             "aggregate_sha256": manifest["aggregate_sha256"],
-        }, json_dumps=_dumps_indented)
+        }, json_dumps=dumps_indented)
     if req.get("stdout"):
-        return Result(manifest, json_dumps=_dumps_indented)
+        return Result(manifest, json_dumps=dumps_indented)
     size_kb = len(json.dumps(manifest, ensure_ascii=False).encode("utf-8")) / 1024
     raise BackupManifestError(
         f"backup-manifest prints nothing by default: the manifest holds "
@@ -580,7 +559,7 @@ def backup_verify(ctx: OpContext, req: dict) -> Result:
         restored_materials=Path(req["restored_materials"]).expanduser().resolve(),
     )
     return Result(result, diagnostic_failed=not result["ok"],
-                  json_dumps=_dumps_indented)
+                  json_dumps=dumps_indented)
 
 
 @register("cli.health-report", kind="tool")
@@ -589,7 +568,7 @@ def health_report(ctx: OpContext, req: dict) -> Result:
     """Build the repository health report."""
     # Attention is report data, not a transport failure: the UI must be able to
     # render the remedies even when one check is red.
-    return Result(build_health_report(ctx.root), json_dumps=_dumps_indented)
+    return Result(build_health_report(ctx.root), json_dumps=dumps_indented)
 
 
 @register("cli.legacy-archive-inspect", kind="tool")
@@ -601,7 +580,7 @@ def legacy_archive_inspect(ctx: OpContext, req: dict) -> Result:
     lock = inspect_legacy_archive(
         root, Path(req["archive_root"]).expanduser().resolve(), allowlist,
     )
-    return Result(lock, json_dumps=_dumps_indented)
+    return Result(lock, json_dumps=dumps_indented)
 
 
 @register("cli.legacy-archive-status", kind="tool")
@@ -617,7 +596,7 @@ def legacy_archive_status(ctx: OpContext, req: dict) -> Result:
         "lock": lock,
     }
     validate_contract(root, "legacy-archive-status.schema.json", value)
-    return Result(value, json_dumps=_dumps_indented)
+    return Result(value, json_dumps=dumps_indented)
 
 
 @register("cli.masters-planning-dashboard", kind="tool")
@@ -627,7 +606,7 @@ def masters_planning_dashboard(ctx: OpContext, req: dict) -> Result:
     value = masters_planning.masters_planning_dashboard(
         ctx.root, confirmed=bool(req.get("confirm_masters_planning")),
     )
-    return Result(value, json_dumps=_dumps_indented)
+    return Result(value, json_dumps=dumps_indented)
 
 
 # ---------------------------------------------------------------------------
@@ -953,11 +932,11 @@ def operations(ctx: OpContext, req: dict) -> Result:
                     {"error": message, "request_id": req["request_id"]}),
                 exit_code=2,
             )
-        return Result(detail, json_dumps=_dumps_indented)
+        return Result(detail, json_dumps=dumps_indented)
     limit = req.get("limit") or 20
     return Result(
         {"operations": list_operations(root, limit=min(limit, 50))},
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
@@ -972,7 +951,7 @@ def operations(ctx: OpContext, req: dict) -> Result:
 
 def _publish_refused_stdout(errors: list) -> str:
     """The exact publish refusal print: ok false plus the engine issues."""
-    return _dumps_indented({
+    return dumps_indented({
         "ok": False,
         **({"errors": [str(error) for error in errors]} if errors else {}),
     })
@@ -1010,7 +989,7 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         refused_stdout=_publish_refused_stdout,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
@@ -1050,7 +1029,7 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         refused_stdout=_publish_refused_stdout,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )
 
 
@@ -1092,5 +1071,5 @@ def masters_planning_comparison_publish(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         refused_stdout=_publish_refused_stdout,
-        json_dumps=_dumps_indented,
+        json_dumps=dumps_indented,
     )

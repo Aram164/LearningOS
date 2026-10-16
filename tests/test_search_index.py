@@ -17,6 +17,7 @@ import pytest
 import learning_os.ops.handlers.notes as notes_module
 import learning_os.search.index as search_index_module
 from learning_os.derived import DerivedError, Evaluation, NodeSpec
+from learning_os.ops.encoders import dumps_compact
 from learning_os.ops.handlers.notes import (
     _exhaustive_content_search,
     _indexed_content_search,
@@ -659,7 +660,7 @@ def _run_search(root: Path, query: str, *,
         return 3, "", f"los: {exc}\n"
     except WriteRefused as exc:
         return 2, "", f"los: {exc}\n"
-    out = notes_module._dumps_search_stable(result.payload)
+    out = dumps_compact(result.payload)
     err = "".join(f"{line}\n" for line in result.notices)
     return 0, out, err
 

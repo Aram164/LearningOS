@@ -21,22 +21,22 @@ from learning_os.ops._legacy_plumbing import (
     _discovery_row,
     _dump_study_map,
     _inbox_search_rows,
-    _json_layout,
     _read_content_bound_file,
     _snapshot,
     _window_values,
 )
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import (
+    dumps_ascii,
+    dumps_compact,
+    dumps_layout_sorted,
+    dumps_unescaped,
+)
 from learning_os.ops.handlers._shared import require_unit_map_or_error
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.transactions import parse_expected_revisions
 from learning_os.unit_notes import unit_note_sections
-
-
-def _dumps_capture(payload: dict) -> str:
-    """The exact capture encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _human_capture(payload: dict) -> str:
@@ -51,11 +51,6 @@ def _human_capture(payload: dict) -> str:
 def _on_commit_refused(errors: list) -> list[str]:
     """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
     return list(errors[:12])
-
-
-def _dumps_garden_seed(payload: dict) -> str:
-    """The exact garden-seed JSON encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _human_garden_seed(payload: dict) -> str:
@@ -166,7 +161,7 @@ def capture(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_capture,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -224,13 +219,8 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_garden_seed,
+        json_dumps=dumps_unescaped,
     )
-
-
-def _dumps_inbox_list(payload: list) -> str:
-    """The exact inbox-list JSON encoder: terminal layout, sorted, unescaped."""
-    return json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
 
 
 @register("cli.inbox-list", kind="tool")
@@ -257,12 +247,7 @@ def inbox_list(ctx: OpContext, req: dict) -> Result:
         except OSError:
             row["age_days"] = None
         out.append(row)
-    return Result(out, json_dumps=_dumps_inbox_list)
-
-
-def _dumps_inbox_read(payload: dict) -> str:
-    """The exact inbox-read JSON encoder: compact, unsorted, unescaped."""
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    return Result(out, json_dumps=dumps_layout_sorted)
 
 
 def _inbox_folder_envelope(root: Path, name: str) -> dict:
@@ -315,7 +300,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             _snapshot(root, snapshot)
             return Result(
                 {"schema_version": 1, "snapshot_id": snapshot, **payload},
-                json_dumps=_dumps_inbox_read,
+                json_dumps=dumps_compact,
             )
         if not target.is_symlink() and not target.is_file():
             raise WriteRefused(
@@ -344,7 +329,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=_dumps_inbox_read,
+            json_dumps=dumps_compact,
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -360,11 +345,6 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         ) from exc
-
-
-def _dumps_review_prepare(payload: dict) -> str:
-    """The exact review-prepare JSON encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _unit_note_packet_sections(root: Path, unit) -> list[dict]:
@@ -514,13 +494,8 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_review_prepare,
+        json_dumps=dumps_unescaped,
     )
-
-
-def _dumps_review_apply(payload: dict) -> str:
-    """The exact review-apply JSON encoder: default separators, unescaped."""
-    return json.dumps(payload, ensure_ascii=False)
 
 
 def _on_commit_refused_apply(errors: list) -> list[str]:
@@ -600,7 +575,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused_apply,
-        json_dumps=_dumps_review_apply,
+        json_dumps=dumps_unescaped,
     )
 
 
@@ -675,11 +650,6 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     if not files:
         raise ValueError(f"inbox item has no files to archive: {target.name}")
     return files
-
-
-def _dumps_inbox_resolve(payload: dict) -> str:
-    """The exact resolve encoder: default separators, escaped."""
-    return json.dumps(payload)
 
 
 @register("inbox.resolve", kind="command")
@@ -795,5 +765,5 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
         ),
         after_commit=after_commit,
         on_commit_refused=_on_commit_refused,
-        json_dumps=_dumps_inbox_resolve,
+        json_dumps=dumps_ascii,
     )
