@@ -21,6 +21,13 @@ from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.learning_runtime import requirement_id_for
 from learning_os.derive.routes import route_with_identity
+from learning_os.domain.curriculum.stages import (
+    PATH_ACTIONS,
+    STAGE_ACTIONS,
+    apply_path_action,
+    apply_stage_action,
+    progress_entry,
+)
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
 from learning_os.domain.unit_notes import unit_note_marker
@@ -109,46 +116,16 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
     _, unit, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     unit_data = copy.deepcopy(unit.data)
-    stages = data.get("stages", []) or []
     stage = require_stage(ctx, data, req["stage_id"])
     action = req["status"]
-    if action in {"active", "revisit"}:
-        for other in stages:
-            if other.get("status") in {"active", "paused"}:
-                other["status"] = "pending"
-        stage["status"] = "active"
-        stage.pop("completed", None)
-        data["current_stage"] = stage["id"]
-        data["status"] = "active"
-        unit_data["status"] = "active"
-    elif action == "paused":
-        stage["status"] = "paused"
-        data["current_stage"] = stage["id"]
-        data["status"] = "paused"
-        unit_data["status"] = "paused"
-    elif action in {"complete", "skipped"}:
-        if stage.get("status") != "active":
-            raise WriteRefused(
-                "complete/skip applies only to the active stage; activate it first",
-                site=f"{ctx.operation}.not-active",
-                prefixed=True,
-                exit_code=2,
-            )
-        stage["status"] = action
-        if action == "complete":
-            stage["completed"] = observations.today().isoformat()
-        following = next((row for row in stages[stages.index(stage) + 1:]
-                          if row.get("status") == "pending"), None)
-        if following:
-            following["status"] = "active"
-            data["current_stage"] = following["id"]
-            data["status"] = "active"
-            unit_data["status"] = "active"
-        else:
-            data["status"] = "ready-to-shelve"
-            data.setdefault("shelving", {})["state"] = "draft"
-            unit_data["status"] = "ready-to-shelve"
-    else:
+    if action in {"complete", "skipped"} and stage.get("status") != "active":
+        raise WriteRefused(
+            "complete/skip applies only to the active stage; activate it first",
+            site=f"{ctx.operation}.not-active",
+            prefixed=True,
+            exit_code=2,
+        )
+    if action not in STAGE_ACTIONS:
         # The gateway schema and payload_to_namespace refuse unknown
         # values first; this is the last backstop. An open `else` here
         # once recorded an unknown status as `skipped`.
@@ -159,6 +136,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
+    apply_stage_action(data, unit_data, stage, action, observations.today)
     summary = req.get("progress_summary")
     upcoming = req.get("progress_next")
     if summary is not None or upcoming is not None:
@@ -176,11 +154,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
                 prefixed=True,
                 exit_code=2,
             )
-        entry = {"updated": observations.today().isoformat(),
-                 "summary": summary.strip()}
-        if upcoming is not None:
-            entry["next"] = upcoming.strip()
-        stage["progress"] = entry
+        stage["progress"] = progress_entry(summary, upcoming, observations.today)
     # One rule for every branch: the destination is the stage this action
     # just made current. Activate or revisit and you return to it; pause it
     # and you return to the thing you paused, which is what pausing means;
@@ -410,7 +384,6 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
     ctx.require_snapshot(req.get("expected_snapshot"))
     _, learning_path = require_path_or_error(ctx, req["path_id"])
     data = learning_path.data
-    stages = data.get("stages", []) or []
     stage = require_stage(ctx, data, req["stage_id"])
     if req["status"] in {"complete", "skipped"} and stage.get("status") != "active":
         raise WriteRefused(
@@ -419,29 +392,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
-    if req["status"] == "active":
-        for other in stages:
-            if other.get("status") == "active":
-                other["status"] = "pending"
-        stage["status"] = "active"
-        stage.pop("completed", None)
-        data["current_stage"] = stage["id"]
-        data["status"] = "active"
-    elif req["status"] in {"complete", "skipped"}:
-        stage["status"] = req["status"]
-        if req["status"] == "complete":
-            stage["completed"] = observations.today().isoformat()
-        following = next((s for s in stages[stages.index(stage) + 1:]
-                          if s.get("status") == "pending"), None)
-        if following:
-            following["status"] = "active"
-            data["current_stage"] = following["id"]
-            data["status"] = "active"
-        else:
-            data["status"] = "ready-to-shelve"
-            shelving = data.setdefault("shelving", {})
-            shelving["state"] = "draft"
-    else:
+    if req["status"] not in PATH_ACTIONS:
         raise WriteRefused(
             f"unknown path status: {req['status']} "
             "(choose from active, complete, skipped)",
@@ -449,6 +400,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
+    apply_path_action(data, stage, req["status"], observations.today)
     data["updated"] = observations.today().isoformat()
     rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
     try:
