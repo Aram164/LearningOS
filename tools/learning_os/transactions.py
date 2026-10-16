@@ -26,7 +26,7 @@ import re
 import shutil
 import stat
 from collections.abc import Callable, Iterable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NoReturn
 
@@ -1101,6 +1101,48 @@ def _accepts_snapshot_seed(publish: Callable[..., str | None]) -> bool:
                for p in parameters)
 
 
+@dataclass
+class _CommitRun:
+    """The state one ``TransactionService.commit`` call carries between its phases."""
+
+    request: GatewayRequestContext | None
+    capability: str
+    delete_paths: list[Path] = field(default_factory=list)
+    relative_paths: dict[Path, str] = field(default_factory=dict)
+    normalized_writes: dict[Path, bytes] = field(default_factory=dict)
+    authority_by_path: dict[Path, str] = field(default_factory=dict)
+    artifacts: list[str] = field(default_factory=list)
+    revisions_before: dict[str, int] = field(default_factory=dict)
+    expected: dict[str, int] = field(default_factory=dict)
+    conflicts: dict[str, tuple[int, int]] = field(default_factory=dict)
+    revisions_after: dict[str, int] = field(default_factory=dict)
+    changed_revisions: dict[str, int] = field(default_factory=dict)
+    now: dt.datetime | None = None
+    transaction_id: str = ""
+    receipt_path: Path | None = None
+    owned_paths: set[Path] = field(default_factory=set)
+    authority_grants: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    ledger_path: Path | None = None
+    idempotency_path: Path | None = None
+    idempotency_relative: str | None = None
+    idempotency_entries: dict[str, dict] | None = None
+    backups: dict[Path, bytes | None] = field(default_factory=dict)
+    take_fingerprint: Callable[[], str] | None = None
+    snapshot_before: str = ""
+    snapshot_before_id: str = ""
+    inflight_parent: Path | None = None
+    staging_dir: Path | None = None
+    inflight_dir: Path | None = None
+    journal_published: bool = False
+    republication_defects: list[Exception] = field(default_factory=list)
+    commit_reached: bool = False
+    failed_stage: str = "core.commit"
+    use_combined: bool = False
+    pre_stat: str | None = None
+    snapshot_after_id: str | None = None
+    data_roots_after_id: str | None = None
+
+
 class TransactionService:
     """Commit one validated set of authored writes and one append-only receipt."""
 
@@ -1141,6 +1183,42 @@ class TransactionService:
         write_authorities: Mapping[Path, str] | None = None,
         gateway_request: GatewayRequestContext | None = None,
     ) -> TransactionResult:
+        request, replay = self._admit(capability, gateway_request)
+        if replay is not None:
+            return replay
+        run = _CommitRun(request=request, capability=capability)
+        self._normalize(run, writes, deletes, write_authorities, artifact_ids)
+        self._plan_revisions(run, expected_revisions)
+        self._allocate_identity(run, transaction_writes)
+        self._enforce_authority(run)
+        self._capture_prestate(run, fingerprint)
+        self._guard_snapshot(run, expected_snapshot)
+        run.inflight_parent = self.root / "operations" / "transactions" / ".inflight"
+        run.staging_dir = run.inflight_parent / f".preparing-{run.transaction_id}"
+        run.inflight_dir = run.inflight_parent / run.transaction_id
+        run.journal_published = False
+        # Content (non-OSError) failures re-publishing over proven pre-state.
+        # The defect pre-exists the write: canonical rollback completed, so
+        # the journal is removed and the refusal reports the pre-existing
+        # defect instead of an unknown outcome (JF-11).
+        run.republication_defects = []
+        try:
+            run.commit_reached = False
+            run.failed_stage = "core.commit"
+            self._publish_journal(run)
+            self._apply(run)
+            self._validate(run, validate_state, fingerprint)
+            self._publish_projection(run, publish)
+            self._record_idempotency(run)
+            self._write_receipt(run, metadata)
+            return self._finish(run, touched)
+        except Exception as exc:
+            failure = self._failure(run, exc, publish, rollback_publish)
+            if failure is None:
+                raise
+            raise failure from exc
+
+    def _admit(self, capability: str, gateway_request: GatewayRequestContext | None) -> tuple[GatewayRequestContext | None, TransactionResult | None]:
         if not capability or not capability.strip():
             raise TransactionFailure("transaction capability must be named")
         _bind_diag_store(self.root)
@@ -1171,103 +1249,108 @@ class TransactionService:
                 )
             replay = replay_for_request(self.root, request, authority_root=self.authority_root)
             if replay is not None:
-                return replay
+                return request, replay
+        return request, None
 
-        def target(raw_path: Path) -> tuple[Path, str]:
-            try:
-                return write_target(self.root, raw_path)
-            except WriteScopeError as exc:
-                raise TransactionScopeError(str(exc)) from exc
+    def _target(self, raw_path: Path) -> tuple[Path, str]:
+        try:
+            return write_target(self.root, raw_path)
+        except WriteScopeError as exc:
+            raise TransactionScopeError(str(exc)) from exc
 
-        delete_paths: list[Path] = []
-        relative_paths: dict[Path, str] = {}
+    def _normalize(self, run: _CommitRun, writes, deletes, write_authorities, artifact_ids) -> None:
+        run.delete_paths = []
+        run.relative_paths = {}
         for raw_path in deletes:
-            path, relative = target(Path(raw_path))
-            delete_paths.append(path)
-            relative_paths[path] = relative
-        if not writes and not delete_paths:
+            path, relative = self._target(Path(raw_path))
+            run.delete_paths.append(path)
+            run.relative_paths[path] = relative
+        if not writes and not run.delete_paths:
             raise TransactionFailure("transaction contains no writes")
 
-        normalized_writes: dict[Path, bytes] = {}
+        run.normalized_writes = {}
         for raw_path, value in writes.items():
-            path, relative = target(Path(raw_path))
-            relative_paths[path] = relative
-            normalized_writes[path] = value.encode("utf-8") if isinstance(value, str) else bytes(value)
+            path, relative = self._target(Path(raw_path))
+            run.relative_paths[path] = relative
+            run.normalized_writes[path] = value.encode("utf-8") if isinstance(value, str) else bytes(value)
 
-        for path in delete_paths:
-            if path in normalized_writes:
+        for path in run.delete_paths:
+            if path in run.normalized_writes:
                 raise TransactionFailure(f"transaction both writes and deletes {path}")
 
-        authority_by_path: dict[Path, str] = {}
+        run.authority_by_path = {}
         for raw_path, authority in (write_authorities or {}).items():
-            path, relative = target(Path(raw_path))
-            relative_paths.setdefault(path, relative)
+            path, relative = self._target(Path(raw_path))
+            run.relative_paths.setdefault(path, relative)
             if not isinstance(authority, str) or not authority.strip():
                 raise TransactionScopeError("write authority names must be non-empty")
-            existing = authority_by_path.get(path)
+            existing = run.authority_by_path.get(path)
             if existing is not None and existing != authority.strip():
                 raise TransactionScopeError(
                     f"transaction declares conflicting authorities for {_safe_relative(self.root, path)}"
                 )
-            authority_by_path[path] = authority.strip()
+            run.authority_by_path[path] = authority.strip()
 
-        artifacts = transaction_artifacts(
-            self.root, artifact_ids, normalized_writes, delete_paths)
+        run.artifacts = transaction_artifacts(
+            self.root, artifact_ids, run.normalized_writes, run.delete_paths)
 
-        revisions_before = load_revisions(self.root)
-        expected = dict(expected_revisions or {})
-        if request is not None and set(expected) != set(artifacts):
-            missing = sorted(set(artifacts) - set(expected))
-            unexpected = sorted(set(expected) - set(artifacts))
+    def _plan_revisions(self, run: _CommitRun, expected_revisions) -> None:
+        run.revisions_before = load_revisions(self.root)
+        run.expected = dict(expected_revisions or {})
+        if run.request is not None and set(run.expected) != set(run.artifacts):
+            missing = sorted(set(run.artifacts) - set(run.expected))
+            unexpected = sorted(set(run.expected) - set(run.artifacts))
             raise TransactionFailure(
                 "GatewayEnvelopeV2 expected_revisions must cover exactly every "
                 f"transaction artifact (missing={missing}, unexpected={unexpected}, "
-                f"artifacts={artifacts})"
+                f"artifacts={run.artifacts})"
             )
-        conflicts = {
-            artifact: (wanted, revisions_before.get(artifact, 0))
-            for artifact, wanted in expected.items()
-            if revisions_before.get(artifact, 0) != wanted
+        run.conflicts = {
+            artifact: (wanted, run.revisions_before.get(artifact, 0))
+            for artifact, wanted in run.expected.items()
+            if run.revisions_before.get(artifact, 0) != wanted
         }
-        revisions_after = dict(revisions_before)
-        changed_revisions: dict[str, int] = {}
-        for artifact in artifacts:
-            next_value = revisions_before.get(artifact, 0) + 1
-            revisions_after[artifact] = next_value
-            changed_revisions[artifact] = next_value
+        run.revisions_after = dict(run.revisions_before)
+        run.changed_revisions = {}
+        for artifact in run.artifacts:
+            next_value = run.revisions_before.get(artifact, 0) + 1
+            run.revisions_after[artifact] = next_value
+            run.changed_revisions[artifact] = next_value
 
+    def _allocate_identity(self, run: _CommitRun, transaction_writes) -> None:
         # Allocate the one shared transaction identity before finalising writes.
         # Some transactional bookkeeping (for example an AI request moving to
         # ``completed``) must record that identity in the same atomic commit as
         # the canonical change.  ``transaction_writes`` provides that without
         # inventing a second receipt or updating state after the commit.
-        now = self.clock().astimezone().replace(microsecond=0)
+        run.now = self.clock().astimezone().replace(microsecond=0)
         # Prove the service-owned transaction directory is not an indirection
         # before it is created or enumerated for the next receipt identity.
-        target(self.root / "operations" / "transactions" / ".authority-check")
-        transaction_id, receipt_path = _next_transaction_identity(self.root, now)
-        owned_paths: set[Path] = set()
+        self._target(self.root / "operations" / "transactions" / ".authority-check")
+        run.transaction_id, run.receipt_path = _next_transaction_identity(self.root, run.now)
+        run.owned_paths = set()
         if transaction_writes is not None:
             try:
-                owned_writes = transaction_writes(transaction_id)
+                owned_writes = transaction_writes(run.transaction_id)
             except Exception as exc:
                 raise TransactionFailure(
                     f"cannot prepare transaction-owned writes: {exc}"
                 ) from exc
             for raw_path, value in owned_writes.items():
-                path, relative = target(Path(raw_path))
-                relative_paths[path] = relative
-                owned_paths.add(path)
-                if path in delete_paths:
+                path, relative = self._target(Path(raw_path))
+                run.relative_paths[path] = relative
+                run.owned_paths.add(path)
+                if path in run.delete_paths:
                     raise TransactionFailure(f"transaction both writes and deletes {path}")
                 content = value.encode("utf-8") if isinstance(value, str) else bytes(value)
-                if path in normalized_writes and normalized_writes[path] != content:
+                if path in run.normalized_writes and run.normalized_writes[path] != content:
                     raise TransactionFailure(f"transaction defines conflicting writes for {path}")
-                normalized_writes[path] = content
+                run.normalized_writes[path] = content
 
+    def _enforce_authority(self, run: _CommitRun) -> None:
         # The declaration is enforced once, here, after every caller-owned and
         # transaction-owned destination is known and before any file changes.
-        authority_grants: dict[str, tuple[str, ...]] = {}
+        run.authority_grants = {}
         if self.authority_root is not None:
             from .contracts.capability_catalog import (
                 command_definitions,
@@ -1287,20 +1370,20 @@ class TransactionService:
                 ).items()
             })
             service_owned_scopes = ("operations/ai-actions/requests/**",)
-            authored_paths = set(normalized_writes) | set(delete_paths)
-            for path in sorted(authored_paths, key=lambda value: relative_paths[value]):
-                relative = relative_paths[path]
+            authored_paths = set(run.normalized_writes) | set(run.delete_paths)
+            for path in sorted(authored_paths, key=lambda value: run.relative_paths[value]):
+                relative = run.relative_paths[path]
                 scoped_relative = (
                     f"{self.scope_prefix}/{relative}" if self.scope_prefix else relative
                 )
-                authority = authority_by_path.get(path)
-                if path in owned_paths and authority is None:
+                authority = run.authority_by_path.get(path)
+                if path in run.owned_paths and authority is None:
                     if not any(scope_matches(relative, row) for row in service_owned_scopes):
                         raise TransactionScopeError(
                             f"transaction-owned write is not service-owned: {relative}"
                         )
                     continue
-                authority = authority or capability
+                authority = authority or run.capability
                 scopes = definitions.get(authority)
                 if scopes is None:
                     raise TransactionScopeError(
@@ -1310,561 +1393,563 @@ class TransactionService:
                     require_write_scope(authority, scoped_relative, scopes)
                 except WriteScopeError as exc:
                     raise TransactionScopeError(str(exc)) from exc
-                authority_grants[authority] = tuple(scopes)
-            unused = set(authority_by_path) - authored_paths
+                run.authority_grants[authority] = tuple(scopes)
+            unused = set(run.authority_by_path) - authored_paths
             if unused:
-                listing = ", ".join(sorted(relative_paths[path] for path in unused))
+                listing = ", ".join(sorted(run.relative_paths[path] for path in unused))
                 raise TransactionScopeError(
                     f"write authority declared for a path outside the transaction: {listing}"
                 )
-        elif authority_by_path:
+        elif run.authority_by_path:
             raise TransactionScopeError(
                 "write authorities were supplied without a capability catalogue"
             )
 
-        ledger_path, _ledger_relative = target(
+    def _capture_prestate(self, run: _CommitRun, fingerprint) -> None:
+        run.ledger_path, _ledger_relative = self._target(
             revision_store.revision_ledger_path(self.root)
         )
-        normalized_writes[ledger_path] = revision_store.dump_revisions(
-            revisions_after
+        run.normalized_writes[run.ledger_path] = revision_store.dump_revisions(
+            run.revisions_after
         ).encode("utf-8")
 
-        idempotency_path: Path | None = None
-        idempotency_entries: dict[str, dict] | None = None
-        if request is not None:
-            idempotency_path, _idempotency_relative = target(
+        run.idempotency_path = None
+        run.idempotency_entries = None
+        if run.request is not None:
+            run.idempotency_path, run.idempotency_relative = self._target(
                 _idempotency_ledger_path(self.root)
             )
-            idempotency_entries = _load_idempotency_entries(self.root)
+            run.idempotency_entries = _load_idempotency_entries(self.root)
 
-        all_paths = [*normalized_writes, *delete_paths]
-        if idempotency_path is not None:
-            all_paths.append(idempotency_path)
-        backups: dict[Path, bytes | None] = {
+        all_paths = [*run.normalized_writes, *run.delete_paths]
+        if run.idempotency_path is not None:
+            all_paths.append(run.idempotency_path)
+        run.backups = {
             path: path.read_bytes() if path.is_file() else None for path in all_paths
         }
         # A transaction service rooted somewhere without the canonical roots
         # would digest nothing and record a constant snapshot, which is worse
         # than none: it looks like a guard. Such callers may supply their own
         # digest over the artifacts they actually touch.
-        take_fingerprint = fingerprint or (lambda: canonical_fingerprint(self.root))
-        snapshot_before = take_fingerprint()
-        snapshot_before_id = f"sha256:{snapshot_before}"
+        run.take_fingerprint = fingerprint or (lambda: canonical_fingerprint(self.root))
+        run.snapshot_before = run.take_fingerprint()
+        run.snapshot_before_id = f"sha256:{run.snapshot_before}"
+
+    def _guard_snapshot(self, run: _CommitRun, expected_snapshot) -> None:
         approved_snapshot = expected_snapshot
-        if request is not None:
+        if run.request is not None:
             if approved_snapshot is not None \
-                    and request.expected_snapshot is not None \
-                    and approved_snapshot != request.expected_snapshot:
+                    and run.request.expected_snapshot is not None \
+                    and approved_snapshot != run.request.expected_snapshot:
                 raise TransactionFailure(
                     "transaction expected snapshot does not match its gateway approval"
                 )
-            approved_snapshot = approved_snapshot or request.expected_snapshot
-        if approved_snapshot is not None and approved_snapshot != snapshot_before_id:
+            approved_snapshot = approved_snapshot or run.request.expected_snapshot
+        if approved_snapshot is not None and approved_snapshot != run.snapshot_before_id:
             diag_tracer.emit_event(
                 diag_conventions.EVENT_STAGE_FAILED,
                 stage="core.snapshot_guard", status="error",
                 attrs={"error": "snapshot changed since approval"})
             raise TransactionSnapshotConflict(
                 approved_snapshot,
-                snapshot_before_id,
+                run.snapshot_before_id,
             )
         # Snapshot staleness is the broader approved-state conflict and keeps
         # its historical precedence when the same concurrent write also moved
         # an artifact revision.
-        if conflicts:
+        if run.conflicts:
             diag_tracer.emit_event(
                 diag_conventions.EVENT_STAGE_FAILED,
                 stage="core.revision_guard", status="error",
                 attrs={"error": "artifact revision moved",
-                       "artifacts": sorted(conflicts)})
-            raise TransactionConflict(conflicts)
+                       "artifacts": sorted(run.conflicts)})
+            raise TransactionConflict(run.conflicts)
 
-        inflight_parent = self.root / "operations" / "transactions" / ".inflight"
-        staging_dir = inflight_parent / f".preparing-{transaction_id}"
-        inflight_dir = inflight_parent / transaction_id
-        journal_published = False
-        # Content (non-OSError) failures re-publishing over proven pre-state.
-        # The defect pre-exists the write: canonical rollback completed, so
-        # the journal is removed and the refusal reports the pre-existing
-        # defect instead of an unknown outcome (JF-11).
-        republication_defects: list[Exception] = []
+    def _rollback(self, run: _CommitRun, publish, rollback_publish) -> list[str]:
+        """Unwind through the published journal, never from memory alone.
 
-        def rollback() -> list[str]:
-            """Unwind through the published journal, never from memory alone.
-
-            Live rollback and crash recovery execute the same
-            compare-and-undo engine against the same on-disk journal, so a
-            foreign write landing during validation or projection is
-            preserved and reported instead of blindly overwritten. On
-            ambiguity the journal stays for the next run and the caller
-            gets the unrestored paths, never a false success.
-            """
-            failures: list[str] = []
-            if os.path.lexists(receipt_path):
-                # Commit was not reached, so this transaction never wrote
-                # a receipt: anything here is foreign evidence. Report it;
-                # never delete it.
-                failures.append(_safe_relative(self.root, receipt_path))
-            if not journal_published:
-                # The journal never armed, so no canonical mutation could
-                # have happened. Verify live state still equals the
-                # pre-state snapshots and touch nothing — even here a
-                # blind memory restore could clobber a foreign write that
-                # landed while staging.
-                for path, old in backups.items():
-                    try:
-                        live = path.read_bytes() if path.is_file() else None
-                    except OSError:
-                        live = "<unreadable>"
-                    if live != old:
-                        failures.append(_safe_relative(self.root, path))
-                shutil.rmtree(staging_dir, ignore_errors=True)
-            else:
-                journal_rel = _safe_relative(self.root, inflight_dir)
+        Live rollback and crash recovery execute the same
+        compare-and-undo engine against the same on-disk journal, so a
+        foreign write landing during validation or projection is
+        preserved and reported instead of blindly overwritten. On
+        ambiguity the journal stays for the next run and the caller
+        gets the unrestored paths, never a false success.
+        """
+        failures: list[str] = []
+        if os.path.lexists(run.receipt_path):
+            # Commit was not reached, so this transaction never wrote
+            # a receipt: anything here is foreign evidence. Report it;
+            # never delete it.
+            failures.append(_safe_relative(self.root, run.receipt_path))
+        if not run.journal_published:
+            # The journal never armed, so no canonical mutation could
+            # have happened. Verify live state still equals the
+            # pre-state snapshots and touch nothing — even here a
+            # blind memory restore could clobber a foreign write that
+            # landed while staging.
+            for path, old in run.backups.items():
                 try:
-                    disk_intent = json.loads(
-                        (inflight_dir / "intent.json").read_text(
-                            encoding="utf-8"))
-                except (OSError, ValueError):
+                    live = path.read_bytes() if path.is_file() else None
+                except OSError:
+                    live = "<unreadable>"
+                if live != old:
+                    failures.append(_safe_relative(self.root, path))
+            shutil.rmtree(run.staging_dir, ignore_errors=True)
+        else:
+            journal_rel = _safe_relative(self.root, run.inflight_dir)
+            try:
+                disk_intent = json.loads(
+                    (run.inflight_dir / "intent.json").read_text(
+                        encoding="utf-8"))
+            except (OSError, ValueError):
+                failures.append(journal_rel)
+                disk_intent = None
+            if disk_intent is not None:
+                if not isinstance(disk_intent, dict):
                     failures.append(journal_rel)
-                    disk_intent = None
-                if disk_intent is not None:
-                    if not isinstance(disk_intent, dict):
-                        failures.append(journal_rel)
-                    else:
-                        try:
-                            _admit_v2_journal(self.root, inflight_dir,
-                                              disk_intent)
-                            _unwind_v2_entries(
-                                self.root, inflight_dir, disk_intent["paths"],
-                                transaction_id, journal_rel)
-                        except TransactionRecoveryConflict as exc:
-                            failures.extend(conflict["path"]
-                                            for conflict in exc.conflicts)
-            if not failures:
-                # Canonical unwind is proven complete: re-publish the
-                # projection from the restored pre-state as before.
-                restore_projection = rollback_publish or publish
-                if restore_projection is not None:
+                else:
                     try:
-                        restore_projection()
-                    except OSError:
-                        failures.append("<projection publication>")
-                    except Exception as exc:
-                        # Unwind only proves the write set was restored; a
-                        # concurrent foreign change elsewhere in the tree
-                        # (which the snapshot guard, not unwind, detects)
-                        # may be what breaks re-publication. Only a tree
-                        # that still equals the transaction's pre-state
-                        # proves the defect pre-exists this write — and
-                        # only then is this not a rollback failure (JF-11).
-                        try:
-                            prestate_intact = (
-                                take_fingerprint() == snapshot_before)
-                        except Exception:
-                            prestate_intact = False
-                        if prestate_intact:
-                            republication_defects.append(exc)
-                        else:
-                            failures.append("<projection publication>")
-            if failures or republication_defects:
-                # Canonical state is ambiguous — unwind proved nothing, or
-                # re-publication just failed over a proven tree — or the
-                # pre-state itself does not publish. Either way a manifest
-                # now would present uncertainty as current, so drop the
-                # marker instead: "projection unavailable" is the
-                # truthful state.
-                problem = _invalidate_projection(self.root)
-                if problem is not None:
-                    failures.append("generated/manifest.json")
-            if not failures:
-                if journal_published:
-                    try:
-                        _remove_journal(inflight_dir, transaction_id,
-                                        journal_rel)
+                        _admit_v2_journal(self.root, run.inflight_dir,
+                                          disk_intent)
+                        _unwind_v2_entries(
+                            self.root, run.inflight_dir, disk_intent["paths"],
+                            run.transaction_id, journal_rel)
                     except TransactionRecoveryConflict as exc:
                         failures.extend(conflict["path"]
                                         for conflict in exc.conflicts)
-                else:
-                    shutil.rmtree(staging_dir, ignore_errors=True)
-            return sorted(set(failures))
+        if not failures:
+            # Canonical unwind is proven complete: re-publish the
+            # projection from the restored pre-state as before.
+            restore_projection = rollback_publish or publish
+            if restore_projection is not None:
+                try:
+                    restore_projection()
+                except OSError:
+                    failures.append("<projection publication>")
+                except Exception as exc:
+                    # Unwind only proves the write set was restored; a
+                    # concurrent foreign change elsewhere in the tree
+                    # (which the snapshot guard, not unwind, detects)
+                    # may be what breaks re-publication. Only a tree
+                    # that still equals the transaction's pre-state
+                    # proves the defect pre-exists this write — and
+                    # only then is this not a rollback failure (JF-11).
+                    try:
+                        prestate_intact = (
+                            run.take_fingerprint() == run.snapshot_before)
+                    except Exception:
+                        prestate_intact = False
+                    if prestate_intact:
+                        run.republication_defects.append(exc)
+                    else:
+                        failures.append("<projection publication>")
+        if failures or run.republication_defects:
+            # Canonical state is ambiguous — unwind proved nothing, or
+            # re-publication just failed over a proven tree — or the
+            # pre-state itself does not publish. Either way a manifest
+            # now would present uncertainty as current, so drop the
+            # marker instead: "projection unavailable" is the
+            # truthful state.
+            problem = _invalidate_projection(self.root)
+            if problem is not None:
+                failures.append("generated/manifest.json")
+        if not failures:
+            if run.journal_published:
+                try:
+                    _remove_journal(run.inflight_dir, run.transaction_id,
+                                    journal_rel)
+                except TransactionRecoveryConflict as exc:
+                    failures.extend(conflict["path"]
+                                    for conflict in exc.conflicts)
+            else:
+                shutil.rmtree(run.staging_dir, ignore_errors=True)
+        return sorted(set(failures))
 
-        try:
-            commit_reached = False
-            failed_stage = "core.commit"
-            if os.path.lexists(inflight_dir):
-                raise TransactionFailure(
-                    f"transaction {transaction_id} cannot start: a recovery "
-                    f"journal with this identity already exists under "
-                    f"{_safe_relative(self.root, inflight_dir)}; reconcile it "
-                    f"before committing")
-            # Compare-and-undo journal (schema v2): for every mutated path,
-            # the pre-state (with its backup blob) AND the intended
-            # post-state hash. Recovery restores a path only while the live
-            # file still equals one of the two recorded sides; anything
-            # else is foreign state a later writer owns and must never be
-            # touched. The journal is staged whole under a `.preparing-`
-            # name and published by one atomic rename, fsynced with its
-            # parent, before the first canonical mutation below — so
-            # recovery can tell never-armed staging from a published
-            # journal that must be complete.
-            shutil.rmtree(staging_dir, ignore_errors=True)
-            staging_dir.mkdir(parents=True)
-            delete_set = set(delete_paths)
-            intent: dict = {
-                "schema_version": 2,
-                "transaction_id": transaction_id,
-                "receipt_path": _safe_relative(self.root, receipt_path),
-                "paths": [],
-            }
-            for i, (path, old) in enumerate(backups.items()):
-                if old is None:
-                    before: dict = {"kind": "absent"}
-                else:
-                    backup_id = f"backup-{i}"
-                    _atomic_write_bytes(staging_dir / backup_id, old)
-                    before = {
-                        "kind": "file",
-                        "sha256": f"sha256:{_sha256_bytes(old)}",
-                        "backup_id": backup_id,
-                    }
-                entry: dict = {
-                    "path": _safe_relative(self.root, path),
-                    "before": before,
+    def _publish_journal(self, run: _CommitRun) -> None:
+        if os.path.lexists(run.inflight_dir):
+            raise TransactionFailure(
+                f"transaction {run.transaction_id} cannot start: a recovery "
+                f"journal with this identity already exists under "
+                f"{_safe_relative(self.root, run.inflight_dir)}; reconcile it "
+                f"before committing")
+        # Compare-and-undo journal (schema v2): for every mutated path,
+        # the pre-state (with its backup blob) AND the intended
+        # post-state hash. Recovery restores a path only while the live
+        # file still equals one of the two recorded sides; anything
+        # else is foreign state a later writer owns and must never be
+        # touched. The journal is staged whole under a `.preparing-`
+        # name and published by one atomic rename, fsynced with its
+        # parent, before the first canonical mutation below — so
+        # recovery can tell never-armed staging from a published
+        # journal that must be complete.
+        shutil.rmtree(run.staging_dir, ignore_errors=True)
+        run.staging_dir.mkdir(parents=True)
+        delete_set = set(run.delete_paths)
+        intent: dict = {
+            "schema_version": 2,
+            "transaction_id": run.transaction_id,
+            "receipt_path": _safe_relative(self.root, run.receipt_path),
+            "paths": [],
+        }
+        for i, (path, old) in enumerate(run.backups.items()):
+            if old is None:
+                before: dict = {"kind": "absent"}
+            else:
+                backup_id = f"backup-{i}"
+                _atomic_write_bytes(run.staging_dir / backup_id, old)
+                before = {
+                    "kind": "file",
+                    "sha256": f"sha256:{_sha256_bytes(old)}",
+                    "backup_id": backup_id,
                 }
-                if path in delete_set:
-                    entry["after"] = {"kind": "absent"}
-                elif path in normalized_writes:
-                    entry["after"] = {
-                        "kind": "file",
-                        "sha256": f"sha256:{_sha256_bytes(normalized_writes[path])}",
-                    }
-                # Otherwise the entry carries no `after`: the idempotency
-                # ledger's after-image is computed after projection (it
-                # embeds snapshot_after) and completed by
-                # _update_intent_after before that write lands. Until then
-                # recovery treats anything but `before` as unprovable.
-                intent["paths"].append(entry)
-            _atomic_write_bytes(
-                staging_dir / "intent.json", json.dumps(intent).encode("utf-8"))
-            os.rename(staging_dir, inflight_dir)
-            journal_published = True
-            dir_fd = os.open(inflight_parent, os.O_RDONLY)
-            try:
-                os.fsync(dir_fd)
-            finally:
-                os.close(dir_fd)
+            entry: dict = {
+                "path": _safe_relative(self.root, path),
+                "before": before,
+            }
+            if path in delete_set:
+                entry["after"] = {"kind": "absent"}
+            elif path in run.normalized_writes:
+                entry["after"] = {
+                    "kind": "file",
+                    "sha256": f"sha256:{_sha256_bytes(run.normalized_writes[path])}",
+                }
+            # Otherwise the entry carries no `after`: the idempotency
+            # ledger's after-image is computed after projection (it
+            # embeds snapshot_after) and completed by
+            # _update_intent_after before that write lands. Until then
+            # recovery treats anything but `before` as unprovable.
+            intent["paths"].append(entry)
+        _atomic_write_bytes(
+            run.staging_dir / "intent.json", json.dumps(intent).encode("utf-8"))
+        os.rename(run.staging_dir, run.inflight_dir)
+        run.journal_published = True
+        dir_fd = os.open(run.inflight_parent, os.O_RDONLY)
+        try:
+            os.fsync(dir_fd)
+        finally:
+            os.close(dir_fd)
 
-            for path, content in normalized_writes.items():
-                # Compare with the bytes already captured for rollback. Keep
-                # scope/revision checks and receipt evidence for the complete
-                # approved write set, but avoid replacing identical files.
-                if backups[path] != content:
-                    with _engine_phase("apply"):
-                        _atomic_write_bytes(path, content)
-            for path in delete_paths:
-                if path.is_dir():
-                    raise TransactionFailure(f"transaction refuses to delete directory: {path}")
+    def _apply(self, run: _CommitRun) -> None:
+        for path, content in run.normalized_writes.items():
+            # Compare with the bytes already captured for rollback. Keep
+            # scope/revision checks and receipt evidence for the complete
+            # approved write set, but avoid replacing identical files.
+            if run.backups[path] != content:
                 with _engine_phase("apply"):
-                    path.unlink(missing_ok=True)
-            # Deduplicated post-commit fingerprint (#104 step 1): when the
-            # guard digest is the canonical walk (the overwhelmingly common
-            # path — no caller currently supplies a double), one traversal
-            # yields canonical, data-roots, and stat digests. The canonical
-            # value seeds the projection stamp so publish performs no second
-            # walk; the stat value guards the publication window without
-            # re-hashing bytes. Computed here, before validation, so the
-            # validated repo loads at least as fresh as the seed — any
-            # mutation between seed and post-publish check is caught below.
-            use_combined = fingerprint is None
-            if use_combined:
-                post_hex, data_hex, pre_stat = (
+                    _atomic_write_bytes(path, content)
+        for path in run.delete_paths:
+            if path.is_dir():
+                raise TransactionFailure(f"transaction refuses to delete directory: {path}")
+            with _engine_phase("apply"):
+                path.unlink(missing_ok=True)
+
+    def _validate(self, run: _CommitRun, validate_state, fingerprint) -> None:
+        # Deduplicated post-commit fingerprint (#104 step 1): when the
+        # guard digest is the canonical walk (the overwhelmingly common
+        # path — no caller currently supplies a double), one traversal
+        # yields canonical, data-roots, and stat digests. The canonical
+        # value seeds the projection stamp so publish performs no second
+        # walk; the stat value guards the publication window without
+        # re-hashing bytes. Computed here, before validation, so the
+        # validated repo loads at least as fresh as the seed — any
+        # mutation between seed and post-publish check is caught below.
+        run.use_combined = fingerprint is None
+        if run.use_combined:
+            post_hex, data_hex, run.pre_stat = (
+                canonical_data_and_stat_fingerprints(self.root)
+            )
+            run.snapshot_after_id = f"sha256:{post_hex}"
+            run.data_roots_after_id = f"sha256:{data_hex}"
+        else:
+            run.pre_stat = None
+        run.failed_stage = "core.validation"
+        if validate_state is not None:
+            errors = list(validate_state())
+            if errors:
+                preview = "; ".join(str(issue) for issue in errors[:6])
+                # Telemetry carries the tag and the count, never the
+                # preview: validator text may quote canonical prose. The
+                # detail still travels to the caller on the exception.
+                diag_tracer.emit_event(
+                    diag_conventions.EVENT_STAGE_FAILED,
+                    stage="core.validation", status="error",
+                    attrs={"error": "canonical validation failed",
+                           "issues": len(errors)})
+                raise TransactionValidationFailure(
+                    f"transaction failed canonical validation: {preview}"
+                )
+        diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
+
+    def _publish_projection(self, run: _CommitRun, publish) -> None:
+        run.failed_stage = "core.projection"
+        diag_tracer.emit_event(diag_conventions.EVENT_PROJECTION_STARTED)
+        if run.use_combined:
+            if publish is None:
+                projected_snapshot = None
+            else:
+                # Decided by signature, never by catching TypeError: a
+                # publisher's own TypeError must fail the projection, not
+                # re-run it unseeded.
+                projected_snapshot = (publish(run.snapshot_after_id)
+                                      if _accepts_snapshot_seed(publish)
+                                      else publish())
+        else:
+            projected_snapshot = publish() if publish is not None else None
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_PROJECTION_PUBLISHED,
+            attrs={"snapshot": projected_snapshot})
+
+        if run.use_combined:
+            post_stat = canonical_stat_digest(self.root)
+            if post_stat != run.pre_stat:
+                actual_hex, actual_data_hex, _ = (
                     canonical_data_and_stat_fingerprints(self.root)
                 )
-                snapshot_after_id = f"sha256:{post_hex}"
-                data_roots_after_id = f"sha256:{data_hex}"
-            else:
-                pre_stat = None
-            failed_stage = "core.validation"
-            if validate_state is not None:
-                errors = list(validate_state())
-                if errors:
-                    preview = "; ".join(str(issue) for issue in errors[:6])
-                    # Telemetry carries the tag and the count, never the
-                    # preview: validator text may quote canonical prose. The
-                    # detail still travels to the caller on the exception.
-                    diag_tracer.emit_event(
-                        diag_conventions.EVENT_STAGE_FAILED,
-                        stage="core.validation", status="error",
-                        attrs={"error": "canonical validation failed",
-                               "issues": len(errors)})
-                    raise TransactionValidationFailure(
-                        f"transaction failed canonical validation: {preview}"
-                    )
-            diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
-            failed_stage = "core.projection"
-            diag_tracer.emit_event(diag_conventions.EVENT_PROJECTION_STARTED)
-            if use_combined:
-                if publish is None:
-                    projected_snapshot = None
-                else:
-                    # Decided by signature, never by catching TypeError: a
-                    # publisher's own TypeError must fail the projection, not
-                    # re-run it unseeded.
-                    projected_snapshot = (publish(snapshot_after_id)
-                                          if _accepts_snapshot_seed(publish)
-                                          else publish())
-            else:
-                projected_snapshot = publish() if publish is not None else None
-            diag_tracer.emit_event(
-                diag_conventions.EVENT_PROJECTION_PUBLISHED,
-                attrs={"snapshot": projected_snapshot})
-
-            if use_combined:
-                post_stat = canonical_stat_digest(self.root)
-                if post_stat != pre_stat:
-                    actual_hex, actual_data_hex, _ = (
-                        canonical_data_and_stat_fingerprints(self.root)
-                    )
-                    actual_id = f"sha256:{actual_hex}"
-                    if projected_snapshot is not None \
-                            and projected_snapshot != actual_id:
-                        raise TransactionFailure(
-                            "canonical state changed during projection publication "
-                            f"(projected {projected_snapshot}, actual {actual_id})"
-                        )
-                    snapshot_after_id = actual_id
-                    data_roots_after_id = f"sha256:{actual_data_hex}"
-                elif projected_snapshot is not None \
-                        and projected_snapshot != snapshot_after_id:
-                    actual_hex = canonical_fingerprint(self.root)
-                    actual_id = f"sha256:{actual_hex}"
+                actual_id = f"sha256:{actual_hex}"
+                if projected_snapshot is not None \
+                        and projected_snapshot != actual_id:
                     raise TransactionFailure(
                         "canonical state changed during projection publication "
                         f"(projected {projected_snapshot}, actual {actual_id})"
                     )
-            else:
-                snapshot_after = take_fingerprint()
-                snapshot_after_id = f"sha256:{snapshot_after}"
-                # The authored-data half of the same post-commit tree, for
-                # read-only diagnostics: the resolver compares it against the
-                # current data roots to tell a contract-only move from data
-                # drift. Computed from disk even when the guard digest is a
-                # caller-supplied double — it records the tree, never the
-                # double — and it never guards a write.
-                data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
-                if projected_snapshot is not None \
-                        and projected_snapshot != snapshot_after_id:
-                    raise TransactionFailure(
-                        "canonical state changed during projection publication "
-                        f"(projected {projected_snapshot}, actual {snapshot_after_id})"
-                    )
-            failed_stage = "core.commit"
-            if request is not None and idempotency_path is not None \
-                    and idempotency_entries is not None:
-                idempotency_entries[request.idempotency_key] = {
-                    "request_id": request.request_id,
-                    "capability": capability,
-                    "channel": request.channel,
-                    "intent_sha256": request.intent_sha256,
-                    "transaction_id": transaction_id,
-                    "receipt_path": _safe_relative(self.root, receipt_path),
-                    "revisions": dict(changed_revisions),
-                    "snapshot_before": snapshot_before_id,
-                    "snapshot_after": snapshot_after_id,
+                run.snapshot_after_id = actual_id
+                run.data_roots_after_id = f"sha256:{actual_data_hex}"
+            elif projected_snapshot is not None \
+                    and projected_snapshot != run.snapshot_after_id:
+                actual_hex = canonical_fingerprint(self.root)
+                actual_id = f"sha256:{actual_hex}"
+                raise TransactionFailure(
+                    "canonical state changed during projection publication "
+                    f"(projected {projected_snapshot}, actual {actual_id})"
+                )
+        else:
+            snapshot_after = run.take_fingerprint()
+            run.snapshot_after_id = f"sha256:{snapshot_after}"
+            # The authored-data half of the same post-commit tree, for
+            # read-only diagnostics: the resolver compares it against the
+            # current data roots to tell a contract-only move from data
+            # drift. Computed from disk even when the guard digest is a
+            # caller-supplied double — it records the tree, never the
+            # double — and it never guards a write.
+            run.data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
+            if projected_snapshot is not None \
+                    and projected_snapshot != run.snapshot_after_id:
+                raise TransactionFailure(
+                    "canonical state changed during projection publication "
+                    f"(projected {projected_snapshot}, actual {run.snapshot_after_id})"
+                )
+
+    def _record_idempotency(self, run: _CommitRun) -> None:
+        run.failed_stage = "core.commit"
+        if run.request is not None and run.idempotency_path is not None \
+                and run.idempotency_entries is not None:
+            run.idempotency_entries[run.request.idempotency_key] = {
+                "request_id": run.request.request_id,
+                "capability": run.capability,
+                "channel": run.request.channel,
+                "intent_sha256": run.request.intent_sha256,
+                "transaction_id": run.transaction_id,
+                "receipt_path": _safe_relative(self.root, run.receipt_path),
+                "revisions": dict(run.changed_revisions),
+                "snapshot_before": run.snapshot_before_id,
+                "snapshot_after": run.snapshot_after_id,
+            }
+            idempotency_content = _dump_idempotency_entries(
+                run.idempotency_entries
+            ).encode("utf-8")
+            # The journal leads the mutation it describes: record the
+            # after-image before these bytes land.
+            _update_intent_after(
+                run.inflight_dir, run.idempotency_relative, idempotency_content)
+            _atomic_write_bytes(run.idempotency_path, idempotency_content)
+            run.normalized_writes[run.idempotency_path] = idempotency_content
+
+    def _write_receipt(self, run: _CommitRun, metadata) -> None:
+        run.failed_stage = "core.receipt"
+        rows = []
+        for path, after in run.normalized_writes.items():
+            if path == run.ledger_path or path == run.idempotency_path:
+                continue
+            before = run.backups.get(path)
+            rows.append({
+                "path": _safe_relative(self.root, path),
+                "sha256_before": _sha256_bytes(before),
+                "sha256_after": _sha256_bytes(after),
+                "created": before is None,
+            })
+        for path in run.delete_paths:
+            before = run.backups.get(path)
+            rows.append({
+                "path": _safe_relative(self.root, path),
+                "sha256_before": _sha256_bytes(before),
+                "sha256_after": None,
+                "created": False,
+            })
+        receipt = {
+            "schema_version": 2 if run.request is not None else 1,
+            "id": run.transaction_id,
+            "type": "transaction-receipt",
+            "status": "committed",
+            "capability": run.capability,
+            "committed_at": run.now.isoformat(),
+            "snapshot_before": run.snapshot_before_id,
+            "snapshot_after": run.snapshot_after_id,
+            "expected_revisions": run.expected,
+            "artifact_revisions": {
+                artifact: {
+                    "before": run.revisions_before.get(artifact, 0),
+                    "after": run.changed_revisions[artifact],
                 }
-                idempotency_content = _dump_idempotency_entries(
-                    idempotency_entries
-                ).encode("utf-8")
-                # The journal leads the mutation it describes: record the
-                # after-image before these bytes land.
-                _update_intent_after(
-                    inflight_dir, _idempotency_relative, idempotency_content)
-                _atomic_write_bytes(idempotency_path, idempotency_content)
-                normalized_writes[idempotency_path] = idempotency_content
-            failed_stage = "core.receipt"
-            rows = []
-            for path, after in normalized_writes.items():
-                if path == ledger_path or path == idempotency_path:
-                    continue
-                before = backups.get(path)
-                rows.append({
-                    "path": _safe_relative(self.root, path),
-                    "sha256_before": _sha256_bytes(before),
-                    "sha256_after": _sha256_bytes(after),
-                    "created": before is None,
-                })
-            for path in delete_paths:
-                before = backups.get(path)
-                rows.append({
-                    "path": _safe_relative(self.root, path),
-                    "sha256_before": _sha256_bytes(before),
-                    "sha256_after": None,
-                    "created": False,
-                })
-            receipt = {
-                "schema_version": 2 if request is not None else 1,
-                "id": transaction_id,
-                "type": "transaction-receipt",
-                "status": "committed",
-                "capability": capability,
-                "committed_at": now.isoformat(),
-                "snapshot_before": snapshot_before_id,
-                "snapshot_after": snapshot_after_id,
-                "expected_revisions": expected,
-                "artifact_revisions": {
-                    artifact: {
-                        "before": revisions_before.get(artifact, 0),
-                        "after": changed_revisions[artifact],
+                for artifact in run.artifacts
+            },
+            "writes": sorted(rows, key=lambda row: row["path"]),
+            "metadata": {
+                **dict(metadata or {}),
+                "data_roots_sha256": run.data_roots_after_id,
+                "fingerprint_definition": FINGERPRINT_DEFINITION_VERSION,
+            },
+        }
+        if run.request is not None:
+            receipt["authority"] = {
+                "capability_contract_version": 2,
+                "enforced": self.authority_root is not None,
+                "grants": [
+                    {
+                        "capability": authority,
+                        "declared_writes": list(run.authority_grants[authority]),
                     }
-                    for artifact in artifacts
-                },
-                "writes": sorted(rows, key=lambda row: row["path"]),
-                "metadata": {
-                    **dict(metadata or {}),
-                    "data_roots_sha256": data_roots_after_id,
-                    "fingerprint_definition": FINGERPRINT_DEFINITION_VERSION,
+                    for authority in sorted(run.authority_grants)
+                ],
+            }
+            receipt["request"] = {
+                "channel": run.request.channel,
+                "request_id": run.request.request_id,
+                "idempotency_key": run.request.idempotency_key,
+                "intent_sha256": run.request.intent_sha256,
+                "approval": {
+                    "kind": run.request.approval_kind,
+                    "subject_sha256": run.request.approval_subject_sha256,
                 },
             }
-            if request is not None:
-                receipt["authority"] = {
-                    "capability_contract_version": 2,
-                    "enforced": self.authority_root is not None,
-                    "grants": [
-                        {
-                            "capability": authority,
-                            "declared_writes": list(authority_grants[authority]),
-                        }
-                        for authority in sorted(authority_grants)
-                    ],
-                }
-                receipt["request"] = {
-                    "channel": request.channel,
-                    "request_id": request.request_id,
-                    "idempotency_key": request.idempotency_key,
-                    "intent_sha256": request.intent_sha256,
-                    "approval": {
-                        "kind": request.approval_kind,
-                        "subject_sha256": request.approval_subject_sha256,
-                    },
-                }
-            receipt_schema = json.loads(
-                (self.authority_root or self.root).joinpath(
-                    "system", "schema", "transaction-receipt.schema.json"
-                ).read_text(encoding="utf-8")
-            ) if (self.authority_root or self.root).joinpath(
+        receipt_schema = json.loads(
+            (self.authority_root or self.root).joinpath(
                 "system", "schema", "transaction-receipt.schema.json"
-            ).is_file() else None
-            if receipt_schema is not None:
-                receipt_errors = sorted(
-                    Draft202012Validator(receipt_schema).iter_errors(receipt),
-                    key=lambda error: list(error.path),
-                )
-                if receipt_errors:
-                    detail = "; ".join(
-                        f"/{'/'.join(str(part) for part in error.path)}: {error.message}"
-                        for error in receipt_errors[:4]
-                    )
-                    raise TransactionFailure(
-                        f"transaction receipt v{receipt['schema_version']} is invalid: {detail}"
-                    )
-            if receipt_path.exists():
-                raise TransactionFailure(f"receipt path already exists: {receipt_path}")
-            _atomic_write_bytes(receipt_path, _receipt_text(receipt).encode("utf-8"))
-            commit_reached = True
-            # The irrevocable point: receipt bytes are durable and the except
-            # path below no longer rolls back. `core.transaction.committed`
-            # names exactly this line, nothing earlier.
-            diag_tracer.emit_event(
-                diag_conventions.EVENT_CORE_TRANSACTION_COMMITTED,
-                attrs={"transaction_id": transaction_id,
-                       "snapshot_after": snapshot_after_id})
-            diag_tracer.emit_event(
-                diag_conventions.EVENT_RECEIPT_PERSISTED,
-                attrs={"receipt": _safe_relative(self.root, receipt_path)})
-
-            # The receipt above is already the commit boundary: it is
-            # irrevocable, and no failure below undoes it. Bookkeeping
-            # failure preserves canonical state and the receipt and raises
-            # PostCommitFailure; exact replay repairs the remaining
-            # bookkeeping.
-            if touched is not None:
-                touched([*normalized_writes, *delete_paths, receipt_path])
-
-            try:
-                shutil.rmtree(inflight_dir)
-            except OSError as exc:
-                raise TransactionFailure(f"transaction committed successfully but inflight journal cleanup failed: {exc}") from exc
-
-            return TransactionResult(
-                transaction_id=transaction_id,
-                receipt_path=receipt_path,
-                revisions=changed_revisions,
-                snapshot_before=snapshot_before_id,
-                snapshot_after=snapshot_after_id,
+            ).read_text(encoding="utf-8")
+        ) if (self.authority_root or self.root).joinpath(
+            "system", "schema", "transaction-receipt.schema.json"
+        ).is_file() else None
+        if receipt_schema is not None:
+            receipt_errors = sorted(
+                Draft202012Validator(receipt_schema).iter_errors(receipt),
+                key=lambda error: list(error.path),
             )
-        except Exception as exc:
-            if commit_reached:
-                diag_tracer.emit_event(
-                    diag_conventions.EVENT_STAGE_FAILED,
-                    stage="core.commit", status="error",
-                    attrs={"error": "post-commit hook failed after commit",
-                           "committed": True})
-                raise PostCommitFailure(
-                    f"transaction committed but post-commit hooks failed: {exc}",
-                    transaction_id=transaction_id,
-                    receipt_path=_safe_relative(self.root, receipt_path),
-                    snapshot_after=snapshot_after_id,
-                ) from exc
+            if receipt_errors:
+                detail = "; ".join(
+                    f"/{'/'.join(str(part) for part in error.path)}: {error.message}"
+                    for error in receipt_errors[:4]
+                )
+                raise TransactionFailure(
+                    f"transaction receipt v{receipt['schema_version']} is invalid: {detail}"
+                )
+        if run.receipt_path.exists():
+            raise TransactionFailure(f"receipt path already exists: {run.receipt_path}")
+        _atomic_write_bytes(run.receipt_path, _receipt_text(receipt).encode("utf-8"))
+        run.commit_reached = True
+        # The irrevocable point: receipt bytes are durable and the except
+        # path below no longer rolls back. `core.transaction.committed`
+        # names exactly this line, nothing earlier.
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_CORE_TRANSACTION_COMMITTED,
+            attrs={"transaction_id": run.transaction_id,
+                   "snapshot_after": run.snapshot_after_id})
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_RECEIPT_PERSISTED,
+            attrs={"receipt": _safe_relative(self.root, run.receipt_path)})
 
-            # Telemetry carries the exception kind, never its body: messages
-            # quote paths, errno text, and handler prose. The body still
-            # travels to the caller on the re-raised exception.
+    def _finish(self, run: _CommitRun, touched) -> TransactionResult:
+        # The receipt above is already the commit boundary: it is
+        # irrevocable, and no failure below undoes it. Bookkeeping
+        # failure preserves canonical state and the receipt and raises
+        # PostCommitFailure; exact replay repairs the remaining
+        # bookkeeping.
+        if touched is not None:
+            touched([*run.normalized_writes, *run.delete_paths, run.receipt_path])
+
+        try:
+            shutil.rmtree(run.inflight_dir)
+        except OSError as exc:
+            raise TransactionFailure(f"transaction committed successfully but inflight journal cleanup failed: {exc}") from exc
+
+        return TransactionResult(
+            transaction_id=run.transaction_id,
+            receipt_path=run.receipt_path,
+            revisions=run.changed_revisions,
+            snapshot_before=run.snapshot_before_id,
+            snapshot_after=run.snapshot_after_id,
+        )
+
+    def _failure(self, run: _CommitRun, exc: Exception, publish, rollback_publish) -> Exception | None:
+        if run.commit_reached:
             diag_tracer.emit_event(
                 diag_conventions.EVENT_STAGE_FAILED,
-                stage=failed_stage, status="error",
-                attrs={"error": type(exc).__name__})
-            diag_tracer.emit_event(diag_conventions.EVENT_ROLLBACK_STARTED)
-            rollback_failures = rollback()
-            diag_tracer.emit_event(
-                diag_conventions.EVENT_ROLLBACK_COMPLETED,
-                status="ok" if not rollback_failures else "error",
-                attrs={"failures": sorted(rollback_failures)})
-            if failed_stage == "core.projection":
-                # Typed projection provenance: the gateway classifies by
-                # subsystem and rollback outcome, never by exception prose.
-                # Message text stays byte-identical to the untyped path.
-                if rollback_failures:
-                    raise ProjectionFailure(
-                        f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
-                        rollback_complete=False,
-                    ) from exc
-                if republication_defects:
-                    # Fixed wording: the message names only the defect's
-                    # type, never its text (which may quote snapshots,
-                    # revisions, or canonical prose). The chained original
-                    # exception already carries the full defect.
-                    defect = type(republication_defects[0]).__name__
-                    raise ProjectionFailure(
-                        f"{exc}; rolled back completely but the restored pre-state "
-                        f"cannot be re-published ({defect}); the defect pre-exists "
-                        "this write",
-                        rollback_complete=True,
-                        pre_existing_defect=True,
-                    ) from exc
-                raise ProjectionFailure(str(exc), rollback_complete=True) from exc
+                stage="core.commit", status="error",
+                attrs={"error": "post-commit hook failed after commit",
+                       "committed": True})
+            return PostCommitFailure(
+                f"transaction committed but post-commit hooks failed: {exc}",
+                transaction_id=run.transaction_id,
+                receipt_path=_safe_relative(self.root, run.receipt_path),
+                snapshot_after=run.snapshot_after_id,
+            )
+
+        # Telemetry carries the exception kind, never its body: messages
+        # quote paths, errno text, and handler prose. The body still
+        # travels to the caller on the re-raised exception.
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_STAGE_FAILED,
+            stage=run.failed_stage, status="error",
+            attrs={"error": type(exc).__name__})
+        diag_tracer.emit_event(diag_conventions.EVENT_ROLLBACK_STARTED)
+        rollback_failures = self._rollback(run, publish, rollback_publish)
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_ROLLBACK_COMPLETED,
+            status="ok" if not rollback_failures else "error",
+            attrs={"failures": sorted(rollback_failures)})
+        if run.failed_stage == "core.projection":
+            # Typed projection provenance: the gateway classifies by
+            # subsystem and rollback outcome, never by exception prose.
+            # Message text stays byte-identical to the untyped path.
             if rollback_failures:
-                raise TransactionRollbackIncomplete(
-                    f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
-                ) from exc
-            if republication_defects:
-                defect = type(republication_defects[0]).__name__
-                raise TransactionFailure(
+                return ProjectionFailure(
+                    f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
+                    rollback_complete=False,
+                )
+            if run.republication_defects:
+                # Fixed wording: the message names only the defect's
+                # type, never its text (which may quote snapshots,
+                # revisions, or canonical prose). The chained original
+                # exception already carries the full defect.
+                defect = type(run.republication_defects[0]).__name__
+                return ProjectionFailure(
                     f"{exc}; rolled back completely but the restored pre-state "
                     f"cannot be re-published ({defect}); the defect pre-exists "
                     "this write",
+                    rollback_complete=True,
                     pre_existing_defect=True,
-                ) from exc
-            if isinstance(exc, TransactionFailure):
-                raise
-            raise TransactionFailure(str(exc)) from exc
+                )
+            return ProjectionFailure(str(exc), rollback_complete=True)
+        if rollback_failures:
+            return TransactionRollbackIncomplete(
+                f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
+            )
+        if run.republication_defects:
+            defect = type(run.republication_defects[0]).__name__
+            return TransactionFailure(
+                f"{exc}; rolled back completely but the restored pre-state "
+                f"cannot be re-published ({defect}); the defect pre-exists "
+                "this write",
+                pre_existing_defect=True,
+            )
+        if isinstance(exc, TransactionFailure):
+            return None
+        return TransactionFailure(str(exc))
