@@ -200,6 +200,7 @@ GROUPS: dict[str, list[str]] = {
         "test_digest_review.py",
         "test_deep_audit_repairs.py",
         "test_domain_failures.py",
+        "test_domain_stages.py",
         "test_external_urls.py",
         "test_failures_prefixed.py",
         "test_ops_encoders.py",
