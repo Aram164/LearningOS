@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from learning_os.domain.failures import WriteRefused
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_indented
 from learning_os.ops.proposal import CommandOutput, Result
 from learning_os.ops.registry import register
 from learning_os.ops.session import (
@@ -24,7 +23,7 @@ from learning_os.ops.session import (
 )
 
 
-@register("cli.session-end", kind="porcelain")
+@register("cli.session-end", kind="porcelain", json_formats=("indented",))
 def session_end_command(ctx: OpContext, req: dict) -> Result:
     """Validate, show exact session-owned files, optionally commit/push."""
     try:
@@ -71,4 +70,4 @@ def session_end_command(ctx: OpContext, req: dict) -> Result:
             prefixed=True, exit_code=2) from exc
     if isinstance(outcome, CommandOutput):
         return Result({}, command_output=outcome)
-    return Result(outcome, json_dumps=dumps_indented)
+    return Result(outcome, json_format="indented")

@@ -11,7 +11,6 @@ from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.ops._legacy_plumbing import _dump_yaml, _render_frontmatter
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_unescaped
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_bytes_inside
@@ -44,7 +43,7 @@ def _refused_next_action(errors: list) -> list[str]:
     return ["los: next-action update rejected by validation", *errors[:12]]
 
 
-@register("module.attempt.record", kind="command")
+@register("module.attempt.record", kind="command", json_formats=("unescaped",))
 def module_attempt(ctx: OpContext, req: dict) -> Result:
     """Record one exam attempt fact in the owning module's module.yaml."""
     if req["termin"] not in (1, 2, 3):
@@ -139,11 +138,11 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_first_twelve,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("module.sitting.update", kind="command")
+@register("module.sitting.update", kind="command", json_formats=("unescaped",))
 def module_sitting(ctx: OpContext, req: dict) -> Result:
     """Record one sitting's withdrawal deadline in the owning module.yaml."""
     if req["termin"] not in (1, 2, 3):
@@ -212,11 +211,11 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_first_twelve,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("coordination.section.revise", kind="command")
+@register("coordination.section.revise", kind="command", json_formats=("unescaped",))
 def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one reviewed coordination section, never a curriculum record."""
     root = ctx.root
@@ -320,7 +319,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             "expected_revisions": {"coordination": artifact_revision(
                 root, "coordination")},
             "write_paths": ["work/COORDINATION.md"],
-        }, json_dumps=dumps_unescaped)
+        }, json_format="unescaped")
     try:
         expected_revisions = parse_expected_revisions(
             req.get("expected_revision"))
@@ -338,11 +337,11 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_all,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("workspace.next-action.update", kind="command")
+@register("workspace.next-action.update", kind="command", json_formats=("unescaped",))
 def workspace_next_action(ctx: OpContext, req: dict) -> Result:
     """Replace one active workspace's Next Action section."""
     root = ctx.root
@@ -401,5 +400,5 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_refused_next_action,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )

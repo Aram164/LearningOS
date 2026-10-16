@@ -139,9 +139,6 @@ from learning_os.ops.context import OpContext
 from learning_os.ops.encoders import (
     dumps_compact,
     dumps_indented,
-    dumps_indented_sorted,
-    dumps_sorted,
-    dumps_unescaped,
 )
 from learning_os.ops.handlers._shared import apply_reviewed_envelope
 from learning_os.ops.proposal import Result, TransactionProposal
@@ -408,7 +405,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
                 artifact_ids=sorted(artifacts),
                 validate_extra=_check_gate(root, writes),
             ),
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     if not writes:
         raise WriteRefused("no material changes to apply",
@@ -442,11 +439,11 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
         finish=finish,
         after_commit=after_commit,
         refused_stdout=refused_stdout,
-        json_dumps=dumps_compact,
+        json_format="compact",
     )
 
 
-@register("route.patch", kind="command", render_check=_render_plan_check)
+@register("route.patch", kind="command", render_check=_render_plan_check, json_formats=("compact",))
 def route_patch(ctx: OpContext, req: dict) -> Result:
     """Patch one material route's declared fields, with its map mirrors."""
     return _execute_material_plan(ctx, req, "route.patch", lambda repo: route_patch_plan(
@@ -455,7 +452,7 @@ def route_patch(ctx: OpContext, req: dict) -> Result:
 
 
 @register("module.materials.compact", kind="command",
-          render_check=_render_plan_check)
+          render_check=_render_plan_check, json_formats=("compact",))
 def module_materials_compact(ctx: OpContext, req: dict) -> Result:
     """Share repeated stage material fields losslessly across one module's maps."""
     return _execute_material_plan(
@@ -678,7 +675,7 @@ def _plan_collection_entry_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("collection.entry.revise", kind="command")
+@register("collection.entry.revise", kind="command", json_formats=("indented",))
 def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one collection entry's `why`, atomically."""
     root = ctx.root
@@ -702,7 +699,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=dumps_indented,
+            json_format="indented",
         )
     if not req.get("approve"):
         message = "collection entry revision requires explicit approval"
@@ -767,7 +764,7 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_collection_entry_revise,
         refused_stdout=refused_stdout_collection_entry_revise,
-        json_dumps=dumps_indented,
+        json_format="indented",
     )
 
 
@@ -1227,8 +1224,8 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
     }
 
 
-@register("cli.plan-edit-context", kind="query")
-@register("plan.edit-context", kind="query")
+@register("cli.plan-edit-context", kind="query", json_formats=("compact",))
+@register("plan.edit-context", kind="query", json_formats=("compact",))
 def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     """Assemble one unit's edit context: map, routes, selections, audit."""
     root = ctx.root
@@ -1332,7 +1329,7 @@ def plan_edit_context(ctx: OpContext, req: dict) -> Result:
     _snapshot(root, snapshot)
     return Result(
         {"schema_version": 1, "snapshot_id": snapshot, **payload},
-        json_dumps=dumps_compact,
+        json_format="compact",
     )
 
 
@@ -1382,7 +1379,7 @@ def _placement_route(ctx, repo, unit, source_map, routes, route, req):
     return selected, f" --stage {stage_id} --resource-index {index}"
 
 
-@register("material.span", kind="query")
+@register("material.span", kind="query", json_formats=("compact",))
 def material_span(ctx: OpContext, req: dict) -> Result:
     """One common source-span description, with optional bounded local inspection."""
     root = ctx.root
@@ -1519,7 +1516,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -1553,8 +1550,8 @@ def _human_plan_template(payload: dict) -> str:
     ).removesuffix("\n")
 
 
-@register("cli.plan-template", kind="query", human=_human_plan_template)
-@register("plan.template", kind="query", human=_human_plan_template)
+@register("cli.plan-template", kind="query", human=_human_plan_template, json_formats=("unescaped",))
+@register("plan.template", kind="query", human=_human_plan_template, json_formats=("unescaped",))
 def plan_template(ctx: OpContext, req: dict) -> Result:
     """Read-only access to the single versioned study-map creation template."""
     root = ctx.root
@@ -1595,7 +1592,7 @@ def plan_template(ctx: OpContext, req: dict) -> Result:
             gateway_message=json.dumps({"ok": False, "error": message}),
             exit_code=2,
         ) from exc
-    return Result(response, json_dumps=dumps_unescaped)
+    return Result(response, json_format="unescaped")
 
 
 # ---------------------------------------------------------------------------
@@ -1924,7 +1921,7 @@ def _anchor_expansion_command(req, limit, snapshot, observed) -> str:
     return expansion(*parts)
 
 
-@register("material.context", kind="query")
+@register("material.context", kind="query", json_formats=("compact",))
 def material_context(ctx: OpContext, req: dict) -> Result:
     """Find saved explanations from an explanation need."""
     root = ctx.root
@@ -2222,7 +2219,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -2629,7 +2626,7 @@ def _plan_source_intake(root: Path, repo, items: Any) -> dict:
     }
 
 
-@register("source.intake.record", kind="command")
+@register("source.intake.record", kind="command", json_formats=("indented",))
 def source_intake_record(ctx: OpContext, req: dict) -> Result:
     """Create metadata-only sources or correct intake-owned fields, atomically."""
     root = ctx.root
@@ -2653,7 +2650,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=dumps_indented,
+            json_format="indented",
         )
     if not req.get("approve"):
         message = "source intake requires explicit approval"
@@ -2718,7 +2715,7 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_source_intake_record,
         refused_stdout=refused_stdout_source_intake_record,
-        json_dumps=dumps_indented,
+        json_format="indented",
     )
 
 
@@ -3263,7 +3260,7 @@ def _plan_source_record_revise(root: Path, repo, item: Any) -> dict:
     }
 
 
-@register("source.record.revise", kind="command")
+@register("source.record.revise", kind="command", json_formats=("indented",))
 def source_record_revise(ctx: OpContext, req: dict) -> Result:
     """Attach verified local material to one existing source, atomically."""
     root = ctx.root
@@ -3287,7 +3284,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
                 "expected_revisions": plan["expected_revisions"],
                 "artifact_ids": plan["artifact_ids"],
             },
-            json_dumps=dumps_indented,
+            json_format="indented",
         )
     if not req.get("approve"):
         message = "source revision requires explicit approval"
@@ -3360,7 +3357,7 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_source_record_revise,
         refused_stdout=refused_stdout_source_record_revise,
-        json_dumps=dumps_indented,
+        json_format="indented",
     )
 
 
@@ -3572,7 +3569,7 @@ def _on_commit_refused_unit_map_import(errors: list) -> list[str]:
             *(str(issue) for issue in errors[:12])]
 
 
-@register("unit.map.import", kind="command")
+@register("unit.map.import", kind="command", json_formats=("unescaped",))
 def unit_map_import(ctx: OpContext, req: dict) -> Result:
     """Create, or revise under preservation rules, the one current study map.
 
@@ -3760,7 +3757,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                  for key in [req["unit_id"], str(data["id"])]
              },
              "diff": diff},
-            json_dumps=dumps_unescaped,
+            json_format="unescaped",
         )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
@@ -3785,7 +3782,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_unit_map_import,
         on_commit_refused=_on_commit_refused_unit_map_import,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -3811,7 +3808,7 @@ def _validate_publication_synthesis(root, unit_id: str, value: dict) -> dict:
         ) from exc
 
 
-@register("unit.material-synthesis.publish", kind="command")
+@register("unit.material-synthesis.publish", kind="command", json_formats=("indented",))
 def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     """Publish one reviewed unit dossier, with lineage, atomically."""
     root = ctx.root
@@ -3825,7 +3822,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "check": True, "unit_id": req["unit_id"],
              "basis": basis},
-            json_dumps=dumps_indented,
+            json_format="indented",
         )
     if not req.get("approve"):
         message = "unit material synthesis publication requires explicit approval"
@@ -3871,7 +3868,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
         ),
         finish=finish_unit_material_synthesis_publish,
         refused_stdout=refused_stdout_unit_material_synthesis_publish,
-        json_dumps=dumps_indented,
+        json_format="indented",
     )
 
 
@@ -3941,7 +3938,7 @@ def _lineage_restamp_commit_lines(commit_errors: list) -> list[str]:
     return ["los: lineage re-stamp failed", *commit_errors[:12]]
 
 
-@register("lineage.restamp", kind="command")
+@register("lineage.restamp", kind="command", json_formats=("sorted",))
 def lineage_restamp(ctx: OpContext, req: dict) -> Result:
     """Narrow old coarse reads, never re-judge (#94)."""
     root = ctx.root
@@ -4007,7 +4004,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         return Result(
             {"ok": True, "mode": "check", "capability": "lineage.restamp",
              "expected_snapshot": snapshot, **analysis},
-            json_dumps=dumps_sorted,
+            json_format="sorted",
         )
     if not claim_ids or not claims_sha256:
         raise WriteRefused(
@@ -4040,7 +4037,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
              "reviewed_file_sha256": claims_sha256,
              "gateway_envelope": prepare_review_envelope(
                  "lineage.restamp", payload, snapshot, revisions)},
-            json_dumps=dumps_sorted,
+            json_format="sorted",
         )
     request = current_gateway_request()
     if request is None:
@@ -4094,7 +4091,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
                       "claims_count": len(ordered)},
         ),
         on_commit_refused=_lineage_restamp_commit_lines,
-        json_dumps=dumps_sorted,
+        json_format="sorted",
     )
 
 # -------------------- module.plan.import / unit.plan.revise (PLAN 4.1,
@@ -4705,8 +4702,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
     if req.get("check"):
         return Result(
             _master_promotion_check_result(root, req["module_id"], plan),
-            json_dumps=lambda payload: json.dumps(
-                payload, indent=2, ensure_ascii=False),
+            json_format="indented",
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:
@@ -4772,7 +4768,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
         finish=finish_promotion,
         after_commit=after_commit,
         on_commit_refused=refused_promotion,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -4972,7 +4968,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         return Result(
             {"unit_id": basis_unit, "basis": basis,
              "package_sha256": package_sha, "validated": False},
-            json_dumps=dumps_indented_sorted,
+            json_format="indented_sorted",
         )
     if req.get("check") or current_gateway_request() is None:
         try:
@@ -5045,7 +5041,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
                     exit_code=code,
                 )
             result = compact
-        return Result(result, json_dumps=dumps_unescaped)
+        return Result(result, json_format="unescaped")
     if minimal_writes:
         artifact_ids = _minimal_artifact_ids(
             root, module_id, writes, synthesis_entries)
@@ -5096,7 +5092,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         finish=finish_plan_import,
         after_commit=after_commit,
         on_commit_refused=refused_plan_import,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -5157,7 +5153,7 @@ def _compact_plan_import(ctx, req, root, source, revision_bytes, revision) -> Re
     )
 
 
-@register("module.plan.import", kind="command")
+@register("module.plan.import", kind="command", json_formats=("indented", "indented_sorted", "unescaped"))
 def module_plan_import(ctx: OpContext, req: dict) -> Result:
     """Apply one reviewable, module-scoped curriculum plan as a transaction.
 
@@ -5242,7 +5238,7 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("unit.plan.revise", kind="command")
+@register("unit.plan.revise", kind="command", json_formats=("indented_sorted", "unescaped"))
 def unit_plan_revise(ctx: OpContext, req: dict) -> Result:
     """Revise one existing lecture: compact patch in, one governed transaction out.
 

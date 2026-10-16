@@ -52,7 +52,7 @@ from learning_os.ops._legacy_plumbing import (
     ranked_scan,
 )
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_compact, dumps_layout_sorted, dumps_sorted
+from learning_os.ops.encoders import dumps_compact
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
 from learning_os.pathing import PathBoundaryError, read_text_inside, resolved_inside
@@ -161,7 +161,7 @@ def _evidence(repo, source_ids) -> dict[str, str]:
     return evidence
 
 
-@register("cli.dossier", kind="porcelain")
+@register("cli.dossier", kind="porcelain", json_formats=("compact",))
 def dossier(ctx: OpContext, req: dict) -> Result:
     """Build, serve, or rebuild one unit's semantic dossier. Read-only."""
     root = ctx.root
@@ -259,7 +259,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -420,7 +420,7 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
                         "capabilities": "capabilities --compact --json",
                         "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT"},
              },
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -543,7 +543,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
                                 for unit_id in owed],
              },
              },
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -561,8 +561,8 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.bootstrap", kind="query")
-@register("operator.bootstrap", kind="query")
+@register("cli.bootstrap", kind="query", json_formats=("compact", "layout_sorted"))
+@register("operator.bootstrap", kind="query", json_formats=("compact", "layout_sorted"))
 def bootstrap(ctx: OpContext, req: dict) -> Result:
     """Serve the operator bootstrap: full, brief, or compact pages."""
     if req.get("brief"):
@@ -583,14 +583,14 @@ def bootstrap(ctx: OpContext, req: dict) -> Result:
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
-    return Result(payload, json_dumps=dumps_layout_sorted)
+    return Result(payload, json_format="layout_sorted")
 
 
-@register("cli.program-list", kind="query")
+@register("cli.program-list", kind="query", json_formats=("layout_sorted",))
 def program_list(ctx: OpContext, req: dict) -> Result:
     """List programs as discovery rows."""
     manifest = _fresh_manifest(ctx.root)
-    return Result(manifest.get("programs", []), json_dumps=dumps_layout_sorted)
+    return Result(manifest.get("programs", []), json_format="layout_sorted")
 
 
 def _human_status(payload: dict) -> str:
@@ -633,7 +633,7 @@ def _human_status(payload: dict) -> str:
     return "\n".join(lines)
 
 
-@register("cli.status", kind="tool", human=_human_status)
+@register("cli.status", kind="tool", human=_human_status, json_formats=("layout_sorted",))
 def status(ctx: OpContext, req: dict) -> Result:
     """Serve the status screen: counts, exam spine, and validation."""
     root = ctx.root
@@ -726,7 +726,7 @@ def status(ctx: OpContext, req: dict) -> Result:
         "validation": {"skipped": True} if no_validate else {
             "errors": errors, "warnings": warnings, "ok": errors == 0},
     }
-    return Result(payload, json_dumps=dumps_layout_sorted,
+    return Result(payload, json_format="layout_sorted",
                   diagnostic_failed=bool(errors))
 
 
@@ -741,7 +741,7 @@ def _coerce(raw: str) -> object:
         return raw
 
 
-@register("cli.semantic", kind="tool")
+@register("cli.semantic", kind="tool", json_formats=("layout_sorted",))
 def semantic(ctx: OpContext, req: dict) -> Result:
     """Evaluate one predicate, list the registry, or serve a recipe."""
     if req.get("recipe"):
@@ -755,7 +755,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
                 exit_code=2,
             ) from exc
         return Result({"class": req["recipe"], "recipes": rows},
-                      json_dumps=dumps_layout_sorted)
+                      json_format="layout_sorted")
     if req.get("list"):
         return Result(
             [{"name": name,
@@ -763,7 +763,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
               "authority": PREDICATES[name].authority,
               "description": PREDICATES[name].description}
              for name in sorted(PREDICATES)],
-            json_dumps=dumps_layout_sorted)
+            json_format="layout_sorted")
     name = req.get("predicate")
     if name not in PREDICATES:
         message = f"unknown semantic predicate: {name}"
@@ -798,7 +798,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
         ) from exc
     return Result({"predicate": name, "verdict": verdict,
                    "inputs": inputs},
-                  json_dumps=dumps_layout_sorted)
+                  json_format="layout_sorted")
 
 
 #: Brief cap: at most this many ranked groups, whatever the tiers hold. The
@@ -923,7 +923,7 @@ def _human_intelligence_scan(payload, view) -> str:
     return "\n".join(lines)
 
 
-@register("cli.intelligence-scan", kind="tool", human=_human_intelligence_scan)
+@register("cli.intelligence-scan", kind="tool", human=_human_intelligence_scan, json_formats=("layout_sorted",))
 def intelligence_scan(ctx: OpContext, req: dict) -> Result:
     """Run one observation loop: observe, interpret, propose.
 
@@ -1003,7 +1003,7 @@ def intelligence_scan(ctx: OpContext, req: dict) -> Result:
         "evidence": {goal.goal_id: list(goal.evidence) for goal in goals},
         "hidden_count": hidden,
     }
-    return Result(payload, json_dumps=dumps_layout_sorted, human_view=view)
+    return Result(payload, json_format="layout_sorted", human_view=view)
 
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -1061,7 +1061,7 @@ def _human_capabilities(payload, view) -> str:
          "  every successful canonical write has one receipt"])
 
 
-@register("cli.capabilities", kind="tool", human=_human_capabilities)
+@register("cli.capabilities", kind="tool", human=_human_capabilities, json_formats=("compact", "layout_sorted"))
 def capabilities(ctx: OpContext, req: dict) -> Result:
     """Serve the machine discovery/read catalogue, in full or in part."""
     root = ctx.root
@@ -1102,15 +1102,15 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 ) from exc
             payload["payload_schema_path"] = relative
             payload["payload_schema"] = schema
-        return Result(payload, json_dumps=dumps_compact,
+        return Result(payload, json_format="compact",
                       human_view={"branch": "name"})
     if compact:
         for key in ("queries", "commands"):
             payload[key] = sorted(payload[key])
         payload["detail"] = "capabilities NAME --json"
-        return Result(payload, json_dumps=dumps_compact,
+        return Result(payload, json_format="compact",
                       human_view={"branch": "compact"})
-    return Result(payload, json_dumps=dumps_layout_sorted,
+    return Result(payload, json_format="layout_sorted",
                   human_view={"branch": "screen"})
 
 
@@ -1279,7 +1279,7 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
             for _, _, _, rid in ranked]
 
 
-@register("cli.related", kind="query")
+@register("cli.related", kind="query", json_formats=("layout_sorted",))
 def related(ctx: OpContext, req: dict) -> Result:
     """Ranked one-hop connections for one record id."""
     root = ctx.root
@@ -1298,7 +1298,7 @@ def related(ctx: OpContext, req: dict) -> Result:
     # so related skips the repo load on the reuse fast path (#83).
     out = related_records(manifest, resolved_id, None,
                           tallies=_use_evidence_from_manifest(manifest))
-    return Result(out, json_dumps=dumps_layout_sorted)
+    return Result(out, json_format="layout_sorted")
 
 
 def _live_observations(observations: list[dict]) -> list[dict]:
@@ -1949,7 +1949,7 @@ def _human_resume(payload, view) -> str:
     return rendered
 
 
-@register("cli.resume", kind="tool", human=_human_resume)
+@register("cli.resume", kind="tool", human=_human_resume, json_formats=("layout_sorted",))
 def resume(ctx: OpContext, req: dict) -> Result:
     """Compile and print the return-to-study screen. Read-only."""
     root = ctx.root
@@ -1959,7 +1959,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         resolved, study_option = _study_option(repo, unit_id=req.get("unit"))
         if resolved is None:
             if isinstance(study_option, dict):
-                return Result(study_option, json_dumps=dumps_layout_sorted,
+                return Result(study_option, json_format="layout_sorted",
                               human_view={"screen": "study-menu"})
             raise WriteRefused(
                 study_option,
@@ -2093,11 +2093,11 @@ def resume(ctx: OpContext, req: dict) -> Result:
         "stage_progress": stage_progress,
         "untargeted_section": untargeted_section,
     }
-    return Result(output, json_dumps=dumps_layout_sorted, human_view=view)
+    return Result(output, json_format="layout_sorted", human_view=view)
 
 
-@register("cli.runtime-session", kind="porcelain")
-@register("runtime.session", kind="porcelain")
+@register("cli.runtime-session", kind="porcelain", json_formats=("sorted",))
+@register("runtime.session", kind="porcelain", json_formats=("sorted",))
 def runtime_session(ctx: OpContext, req: dict) -> Result:
     """Propose (or repair) one runtime study session. Read-only."""
     root = ctx.root
@@ -2136,7 +2136,7 @@ def runtime_session(ctx: OpContext, req: dict) -> Result:
                 "snapshot changed during runtime read; retry",
                 site=f"{ctx.operation}.mid-read-stale",
             )
-        return Result(result, json_dumps=dumps_sorted)
+        return Result(result, json_format="sorted")
     except (RuntimeInputError, ContractValidationError,
             json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(
@@ -2252,7 +2252,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
              "items": items, "total": total,
              "next_offset": offset + limit if offset + limit < total else None,
              "detail": "inspect UNIT_ID"},
-            json_dumps=dumps_compact)
+            json_format="compact")
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc),
@@ -2267,7 +2267,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("cli.unit-list", kind="query")
+@register("cli.unit-list", kind="query", json_formats=("compact", "layout_sorted"))
 def unit_list(ctx: OpContext, req: dict) -> Result:
     """List units, optionally filtered; compact serves the summary page."""
     root = ctx.root
@@ -2283,10 +2283,10 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
         )
     manifest = _fresh_manifest(root)
     return Result(_filtered_units(manifest, req, ctx.operation),
-                  json_dumps=dumps_layout_sorted)
+                  json_format="layout_sorted")
 
 
-@register("cli.module-list", kind="query")
+@register("cli.module-list", kind="query", json_formats=("layout_sorted",))
 def module_list(ctx: OpContext, req: dict) -> Result:
     """List modules with optional program/status filters."""
     root = ctx.root
@@ -2296,4 +2296,4 @@ def module_list(ctx: OpContext, req: dict) -> Result:
         rows = [row for row in rows if row.get("area_id") == req["program_id"]]
     if req.get("status"):
         rows = [row for row in rows if row.get("status") == req["status"]]
-    return Result(rows, json_dumps=dumps_layout_sorted)
+    return Result(rows, json_format="layout_sorted")

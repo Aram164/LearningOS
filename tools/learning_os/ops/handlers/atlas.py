@@ -29,7 +29,6 @@ from learning_os.ops._legacy_plumbing import (
     _snapshot,
 )
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_ascii, dumps_compact, dumps_unescaped
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
 from learning_os.revisions import artifact_revision
@@ -41,7 +40,7 @@ def _on_commit_refused(errors: list) -> list[str]:
     return list(errors[:12])
 
 
-@register("ability.context", kind="porcelain")
+@register("ability.context", kind="porcelain", json_formats=("compact",))
 def ability_context(ctx: OpContext, req: dict) -> Result:
     """Snapshot-bound ability horizon and focused expansion."""
     root = ctx.root
@@ -150,7 +149,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **result},
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except (OSError, ValueError) as exc:
         raise WriteRefused(
@@ -160,7 +159,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("ability.candidate.append", kind="command")
+@register("ability.candidate.append", kind="command", json_formats=("ascii",))
 def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
     """Capture a tentative cross-ability connection; it never grants credit."""
     root = ctx.root
@@ -237,7 +236,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=dumps_ascii,
+            json_format="ascii",
         )
     except (OSError, ValueError) as exc:
         raise WriteRefused(
@@ -247,7 +246,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         ) from exc
 
 
-@register("atlas.question.save", kind="command")
+@register("atlas.question.save", kind="command", json_formats=("unescaped",))
 def atlas_question_save(ctx: OpContext, req: dict) -> Result:
     """Save or resolve an explicitly authored personal question."""
     root = ctx.root
@@ -362,11 +361,11 @@ def atlas_question_save(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("concept.relations.change", kind="command")
+@register("concept.relations.change", kind="command", json_formats=("unescaped",))
 def concept_relations_change(ctx: OpContext, req: dict) -> Result:
     """Apply only explicitly authored relation operations."""
     root = ctx.root
@@ -445,12 +444,12 @@ def concept_relations_change(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         after_commit="STANDARD",
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("cli.atlas-context", kind="porcelain")
-@register("atlas.context", kind="porcelain")
+@register("cli.atlas-context", kind="porcelain", json_formats=("unescaped",))
+@register("atlas.context", kind="porcelain", json_formats=("unescaped",))
 def atlas_context(ctx: OpContext, req: dict) -> Result:
     """Read connection editor guards and personal questions for one concept."""
     root = ctx.root
@@ -491,5 +490,5 @@ def atlas_context(ctx: OpContext, req: dict) -> Result:
         {"schema_version": 1, "snapshot_id": snapshot,
          "relation_revision": artifact_revision(root, RELATION_ARTIFACT),
          "relations": rows, "questions": questions},
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )

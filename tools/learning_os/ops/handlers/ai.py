@@ -28,7 +28,6 @@ from learning_os.domain.failures import (
 )
 from learning_os.ops._legacy_plumbing import _publish
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_indented
 from learning_os.ops.proposal import Result
 from learning_os.ops.registry import register
 from learning_os.store.session_ledger import _record_touched
@@ -95,7 +94,7 @@ def _delivery_output(receipt: dict) -> dict:
     }
 
 
-@register("ai-action.delivery.apply", kind="command")
+@register("ai-action.delivery.apply", kind="command", json_formats=("indented",))
 def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     """Apply an approved AI delivery in one receipted transaction."""
     root = ctx.root
@@ -128,7 +127,7 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
     if proposal is None:
         # A replay: nothing commits and nothing was touched.
         replayed.pop("touched_paths", [])
-        return Result(_delivery_output(replayed), json_dumps=dumps_indented)
+        return Result(_delivery_output(replayed), json_format="indented")
     prepared: dict = {}
 
     def translate(exc: BaseException) -> BaseException | None:
@@ -154,27 +153,27 @@ def ai_action_apply_delivery(ctx: OpContext, req: dict) -> Result:
         proposal=dataclasses.replace(proposal, translate=translate),
         after_commit=after_commit,
         finish=finish,
-        json_dumps=dumps_indented,
+        json_format="indented",
     )
 
 
-@register("cli.ai-action-list", kind="tool")
+@register("cli.ai-action-list", kind="tool", json_formats=("indented",))
 def ai_action_list(ctx: OpContext, req: dict) -> Result:
     """List the provider-independent AI actions."""
     actions = AIActionService(ctx.root).list_actions()
     return Result({"ok": True, "actions": actions},
-                  json_dumps=dumps_indented)
+                  json_format="indented")
 
 
-@register("cli.ai-action-status", kind="tool")
+@register("cli.ai-action-status", kind="tool", json_formats=("indented",))
 def ai_action_status(ctx: OpContext, req: dict) -> Result:
     """Show one prepared request status."""
     request = AIActionService(ctx.root).request_status(req["request_id"])
     return Result({"ok": True, "request": request},
-                  json_dumps=dumps_indented)
+                  json_format="indented")
 
 
-@register("cli.ai-action-prepare", kind="porcelain")
+@register("cli.ai-action-prepare", kind="porcelain", json_formats=("indented",))
 def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
     """Persist a bounded AI request bundle."""
     root = ctx.root
@@ -190,10 +189,10 @@ def ai_action_prepare(ctx: OpContext, req: dict) -> Result:
         "ok": True, "request": service.request_status(request["id"]),
         "bundle_path": service.repository.request_dir(
             request["id"]).relative_to(root).as_posix(),
-    }, json_dumps=dumps_indented)
+    }, json_format="indented")
 
 
-@register("cli.ai-action-append-slices", kind="porcelain")
+@register("cli.ai-action-append-slices", kind="porcelain", json_formats=("indented",))
 def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
     """Attach one targeted follow-up slice pass to a prepared request."""
     root = ctx.root
@@ -214,17 +213,17 @@ def ai_action_append_slices(ctx: OpContext, req: dict) -> Result:
         raise
     _publish(root)
     return Result({"ok": True, "continuation": result},
-                  json_dumps=dumps_indented)
+                  json_format="indented")
 
 
-@register("cli.ai-action-validate-delivery", kind="tool")
+@register("cli.ai-action-validate-delivery", kind="tool", json_formats=("indented",))
 def ai_action_validate_delivery(ctx: OpContext, req: dict) -> Result:
     """Validate one imported delivery without applying it."""
     result = AIActionService(ctx.root).validate_delivery(req["delivery_id"])
-    return Result(result, json_dumps=dumps_indented)
+    return Result(result, json_format="indented")
 
 
-@register("cli.ai-action-import-delivery", kind="porcelain")
+@register("cli.ai-action-import-delivery", kind="porcelain", json_formats=("indented",))
 def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     """Import and validate an approved delivery directory."""
     root = ctx.root
@@ -232,4 +231,4 @@ def ai_action_import_delivery(ctx: OpContext, req: dict) -> Result:
     delivery = service.import_delivery(Path(req["path"]))
     _publish(root)
     return Result({"ok": True, "delivery": delivery},
-                  json_dumps=dumps_indented)
+                  json_format="indented")

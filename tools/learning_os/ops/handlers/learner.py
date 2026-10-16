@@ -42,7 +42,6 @@ from learning_os.ops._legacy_plumbing import (
     _read_content_bound_file,
 )
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import dumps_ascii, dumps_unescaped
 from learning_os.ops.handlers._shared import (
     require_path_or_error,
     require_stage,
@@ -139,7 +138,7 @@ def _observe_offer(unit_id: str, stage: dict) -> dict:
     return offer
 
 
-@register("stage.progress.update", kind="command")
+@register("stage.progress.update", kind="command", json_formats=("unescaped",))
 def stage_progress(ctx: OpContext, req: dict) -> Result:
     """Move one stage's status and record progress against it."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -250,11 +249,11 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("stage.note.write", kind="command")
+@register("stage.note.write", kind="command", json_formats=("unescaped",))
 def stage_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a stage's working note."""
     root = ctx.root
@@ -302,7 +301,7 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -338,7 +337,7 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
         counter += 1
 
 
-@register("stage.attachment.add", kind="command")
+@register("stage.attachment.add", kind="command", json_formats=("unescaped",))
 def stage_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file beside a stage's working note."""
     root = ctx.root
@@ -382,11 +381,11 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("path.note.write", kind="command")
+@register("path.note.write", kind="command", json_formats=("unescaped",))
 def path_note(ctx: OpContext, req: dict) -> Result:
     """Append to (or replace) a learning-path stage note."""
     root = ctx.root
@@ -432,7 +431,7 @@ def path_note(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -441,7 +440,7 @@ def _on_path_progress_refused(errors: list) -> list[str]:
     return ["los: path update rejected by validation", *errors[:12]]
 
 
-@register("path.progress.update", kind="command")
+@register("path.progress.update", kind="command", json_formats=("unescaped",))
 def path_progress(ctx: OpContext, req: dict) -> Result:
     """Move one learning-path stage's status."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -506,7 +505,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_path_progress_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -515,7 +514,7 @@ def _on_path_attach_refused(errors: list) -> list[str]:
     return ["los: attachment rejected by validation", *errors[:12]]
 
 
-@register("path.attachment.add", kind="command")
+@register("path.attachment.add", kind="command", json_formats=("unescaped",))
 def path_attach(ctx: OpContext, req: dict) -> Result:
     """Attach a content-bound file to a learning-path stage."""
     root = ctx.root
@@ -561,11 +560,11 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_path_attach_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("detour.create", kind="command")
+@register("detour.create", kind="command", json_formats=("unescaped",))
 def detour_create(ctx: OpContext, req: dict) -> Result:
     """Open a scoped detour off one stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -617,7 +616,7 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -626,7 +625,7 @@ def _stage(data: dict, stage_id: str):
                  if isinstance(row, dict) and row.get("id") == stage_id), None)
 
 
-@register("detour.resolve", kind="command")
+@register("detour.resolve", kind="command", json_formats=("unescaped",))
 def detour_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve a detour and reactivate its return stage."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -673,11 +672,11 @@ def detour_resolve(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("source.feedback.record", kind="command")
+@register("source.feedback.record", kind="command", json_formats=("unescaped",))
 def source_feedback(ctx: OpContext, req: dict) -> Result:
     """Record source feedback against an exact unit/stage/source."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -745,7 +744,7 @@ def source_feedback(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -759,7 +758,7 @@ def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
     return target, rel
 
 
-@register("unit.note.append", kind="command")
+@register("unit.note.append", kind="command", json_formats=("unescaped",))
 def unit_note(ctx: OpContext, req: dict) -> Result:
     """Append one session-level section to the unit working note."""
     root = ctx.root
@@ -881,7 +880,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=dumps_unescaped,
+            json_format="unescaped",
         )
     except (OSError, WriteRefused) as exc:
         raise WriteRefused(
@@ -921,7 +920,7 @@ def _selection_used_by_current_map(repo, unit, route: dict, source_id: str,
     return False
 
 
-@register("unit.source-selection.set", kind="command")
+@register("unit.source-selection.set", kind="command", json_formats=("unescaped",))
 def unit_source_selection(ctx: OpContext, req: dict) -> Result:
     """Persist one learner choice without changing the complete material menu."""
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -1041,11 +1040,11 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("learner.stage-result.append", kind="command")
+@register("learner.stage-result.append", kind="command", json_formats=("ascii",))
 def stage_result(ctx: OpContext, req: dict) -> Result:
     """Append an untargeted learner result against a unit/stage."""
     root = ctx.root
@@ -1127,7 +1126,7 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=dumps_ascii,
+            json_format="ascii",
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -1240,7 +1239,7 @@ def _condition_notice(requirement: dict, obs: dict) -> dict:
     }
 
 
-@register("learner.observation.append", kind="command")
+@register("learner.observation.append", kind="command", json_formats=("ascii",))
 def observation_append(ctx: OpContext, req: dict) -> Result:
     """Append one immutable learner observation against a requirement."""
     root = ctx.root
@@ -1325,7 +1324,7 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=dumps_ascii,
+            json_format="ascii",
         )
     except (RuntimeInputError, OSError) as exc:
         raise WriteRefused(
@@ -1371,7 +1370,7 @@ def _resolve_observe_workspace(repo, requirement, explicit_id):
     return repo.workspaces[candidates[0]], ""
 
 
-@register("cli.observe", kind="command")
+@register("cli.observe", kind="command", json_formats=("ascii",))
 def cli_observe(ctx: OpContext, req: dict) -> Result:
     """Record Aram's own evidence directly; the terminal session is the approval."""
     root = ctx.root
@@ -1473,7 +1472,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         core.payload,
         proposal=core.proposal,
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_ascii,
+        json_format="ascii",
         gesture=context,
     )
 
@@ -1491,7 +1490,7 @@ def _valid_work_ref(value: str) -> bool:
     return True
 
 
-@register("learner.ability-observation.append", kind="command")
+@register("learner.ability-observation.append", kind="command", json_formats=("ascii",))
 def ability_observation_append(ctx: OpContext, req: dict) -> Result:
     """Record an exact learner-confirmed claim; the V2 approval binds payload."""
     root = ctx.root
@@ -1594,7 +1593,7 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
                 expected_revisions=expected_revisions,
             ),
             on_commit_refused=_on_commit_refused,
-            json_dumps=dumps_ascii,
+            json_format="ascii",
         )
     except (WriteRefused, OSError, ValueError) as exc:
         raise WriteRefused(

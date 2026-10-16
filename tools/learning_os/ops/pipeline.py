@@ -54,6 +54,7 @@ from learning_os.ops._legacy_plumbing import (
 from learning_os.ops.check import check_proposal
 from learning_os.ops.commit import commit_proposal
 from learning_os.ops.context import OpContext
+from learning_os.ops.encoders import encode_json
 from learning_os.ops.legacy import (
     _context_from_v2,
     _dispatch,
@@ -154,7 +155,7 @@ def _check_command_output_alone(operation: str, result) -> None:
     if result.proposal is not None:
         offenders.append("proposal")
     for name in ("finish", "on_commit_refused", "refused_stdout",
-                 "human_view", "json_dumps", "after_commit", "gesture"):
+                 "human_view", "json_format", "after_commit", "gesture"):
         if getattr(result, name) is not None:
             offenders.append(name)
     if result.notices:
@@ -309,8 +310,11 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
             else:
                 stdout = call_renderer(
                     operation, "human", entry.human, payload) + "\n"
-        elif result.json_dumps is not None:
-            stdout = result.json_dumps(payload) + "\n"
+        elif result.json_format is not None:
+            if result.json_format not in entry.json_formats:
+                raise TypeError(
+                    f"{operation}: undeclared JSON format {result.json_format!r}")
+            stdout = encode_json(payload, result.json_format) + "\n"
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
         if result.diagnostic_failed:

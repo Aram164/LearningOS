@@ -9,6 +9,11 @@ from typing import Literal
 
 from learning_os.contracts.gateway import GatewayRequestContext
 
+JsonFormat = Literal[
+    "ascii", "compact", "indented", "indented_sorted", "layout_sorted",
+    "sorted", "unescaped",
+]
+
 
 @dataclass(frozen=True)
 class TransactionProposal:
@@ -63,7 +68,7 @@ class Result:
     on_commit_refused: Callable[[list[str]], list[str]] | None = None  # stderr lines for commit refusals
     diagnostic_failed: bool = False                # exit 1, a result rather than a refusal
     after_commit: Callable[[int, list, dict], None] | Literal["STANDARD"] | None = None   # recipes R4/R8: a callable may raise a typed refusal; "STANDARD" is the shared legacy raise
-    json_dumps: Callable[[dict], str] | None = None  # SPEC (az) item 1: internal CLI JSON-format metadata; None = today's S13 encoder
+    json_format: JsonFormat | None = None
     refused_stdout: Callable[[list[str]], str] | None = None  # SPEC (bd): the legacy refusal print to stdout, without its newline
     human_view: dict | None = None  # SPEC (bu) 1: render-only data for the human renderer; --json ignores it
     notices: tuple[str, ...] = ()  # SPEC (bx) 2: success-path stderr lines; the CLI writes them verbatim, the gateway ignores them

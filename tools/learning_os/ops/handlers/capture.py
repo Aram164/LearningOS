@@ -26,12 +26,6 @@ from learning_os.ops._legacy_plumbing import (
     _window_values,
 )
 from learning_os.ops.context import OpContext
-from learning_os.ops.encoders import (
-    dumps_ascii,
-    dumps_compact,
-    dumps_layout_sorted,
-    dumps_unescaped,
-)
 from learning_os.ops.handlers._shared import require_unit_map_or_error
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import register
@@ -94,7 +88,7 @@ def _seed_content(text: str, title: str | None) -> str:
     return content if content.endswith("\n") else content + "\n"
 
 
-@register("capture.create", kind="command", human=_human_capture)
+@register("capture.create", kind="command", human=_human_capture, json_formats=("unescaped",))
 def capture(ctx: OpContext, req: dict) -> Result:
     """Judgment-free capture into work/inbox/ with a transaction receipt."""
     root = ctx.root
@@ -161,11 +155,11 @@ def capture(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("garden.seed.create", kind="command", human=_human_garden_seed)
+@register("garden.seed.create", kind="command", human=_human_garden_seed, json_formats=("unescaped",))
 def garden_seed_create(ctx: OpContext, req: dict) -> Result:
     """Create one free-form Markdown seed under knowledge/garden/."""
     root = ctx.root
@@ -219,12 +213,12 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
-@register("cli.inbox-list", kind="tool")
-@register("inbox.list", kind="tool")
+@register("cli.inbox-list", kind="tool", json_formats=("layout_sorted",))
+@register("inbox.list", kind="tool", json_formats=("layout_sorted",))
 def inbox_list(ctx: OpContext, req: dict) -> Result:
     """List work/inbox files by name, without reading bytes."""
     root = ctx.root
@@ -247,7 +241,7 @@ def inbox_list(ctx: OpContext, req: dict) -> Result:
         except OSError:
             row["age_days"] = None
         out.append(row)
-    return Result(out, json_dumps=dumps_layout_sorted)
+    return Result(out, json_format="layout_sorted")
 
 
 def _inbox_folder_envelope(root: Path, name: str) -> dict:
@@ -269,8 +263,8 @@ def _inbox_folder_envelope(root: Path, name: str) -> dict:
     }
 
 
-@register("cli.inbox-read", kind="query")
-@register("inbox.content", kind="query")
+@register("cli.inbox-read", kind="query", json_formats=("compact",))
+@register("inbox.content", kind="query", json_formats=("compact",))
 def inbox_read(ctx: OpContext, req: dict) -> Result:
     """Read a bounded segment of one work/inbox file by inbox-relative name.
 
@@ -300,7 +294,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             _snapshot(root, snapshot)
             return Result(
                 {"schema_version": 1, "snapshot_id": snapshot, **payload},
-                json_dumps=dumps_compact,
+                json_format="compact",
             )
         if not target.is_symlink() and not target.is_file():
             raise WriteRefused(
@@ -329,7 +323,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
         _snapshot(root, snapshot)
         return Result(
             {"schema_version": 1, "snapshot_id": snapshot, **payload},
-            json_dumps=dumps_compact,
+            json_format="compact",
         )
     except StaleSnapshot as exc:
         raise StaleSnapshot(
@@ -398,7 +392,7 @@ def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> li
     return lines
 
 
-@register("review.prepare", kind="command")
+@register("review.prepare", kind="command", json_formats=("unescaped",))
 def shelving_prepare(ctx: OpContext, req: dict) -> Result:
     """Prepare a review packet; never applies canonical changes."""
     root = ctx.root
@@ -494,7 +488,7 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -513,7 +507,7 @@ def _approved_destination(root: Path, item: dict) -> Path | None:
     return target
 
 
-@register("review.apply", kind="command")
+@register("review.apply", kind="command", json_formats=("unescaped",))
 def shelving_apply(ctx: OpContext, req: dict) -> Result:
     """Apply only explicitly approved proposal IDs."""
     if not req.get("approve"):
@@ -575,7 +569,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
             expected_revisions=expected_revisions,
         ),
         on_commit_refused=_on_commit_refused_apply,
-        json_dumps=dumps_unescaped,
+        json_format="unescaped",
     )
 
 
@@ -652,7 +646,7 @@ def _collect(inbox: Path, target: Path) -> dict[str, bytes]:
     return files
 
 
-@register("inbox.resolve", kind="command")
+@register("inbox.resolve", kind="command", json_formats=("ascii",))
 def inbox_resolve(ctx: OpContext, req: dict) -> Result:
     """Resolve one routed inbox drop to the archive.
 
@@ -765,5 +759,5 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
         ),
         after_commit=after_commit,
         on_commit_refused=_on_commit_refused,
-        json_dumps=dumps_ascii,
+        json_format="ascii",
     )
