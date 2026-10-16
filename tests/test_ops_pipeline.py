@@ -2106,7 +2106,7 @@ def test_cx_zero_exit_carrier_witnesses_nothing(
     {"on_commit_refused": lambda errors: []},
     {"refused_stdout": lambda errors: ""},
     {"human_view": {}},
-    {"json_dumps": lambda payload: "{}"},
+    {"json_format": "compact"},
     {"after_commit": lambda code, errors, confirmation: None},
     {"notices": ("note",)},
     {"diagnostic_failed": True},
@@ -2117,6 +2117,17 @@ def test_cx_carrier_composition_is_a_programming_error(
     pipe("porcelain", handler=_carrier_handler(**extra))
     with pytest.raises(TypeError, match="composes with nothing"):
         pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+
+
+def test_json_format_must_be_declared_by_operation(pipe, mini_repo):
+    """An undeclared Result json_format is a programming error (P6-02)."""
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, json_format="compact")
+
+    pipe("query", handler=handler)
+    with pytest.raises(TypeError, match="undeclared JSON format"):
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo, json=True))
 
 
 def test_cx_carrier_with_gesture_is_a_programming_error(
