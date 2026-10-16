@@ -26,10 +26,8 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.derive.validation import validate
-from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
+from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store import observations
-from learning_os.store.loader import load_repo
 
 BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
 
@@ -50,11 +48,6 @@ def signatures_from_issues(issues) -> tuple[Counter, list[str]]:
             continue
         signatures[(issue.code, issue.path)] += 1
     return signatures, errors
-
-
-def collect(root: Path) -> tuple[Counter, list[str]]:
-    """(signature counter, error strings) for the repository at ``root``."""
-    return signatures_from_issues(validate(load_repo(root), online=False))
 
 
 def load_baseline(root: Path) -> tuple[Counter, dict]:

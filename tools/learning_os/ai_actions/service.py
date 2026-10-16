@@ -11,15 +11,6 @@ from typing import Any, cast
 import yaml
 
 from learning_os.app.proposal import TransactionProposal
-from learning_os.app.synthesis.material_synthesis import (
-    current_unit_material_basis,
-    inspected_material_by_route,
-    inspected_pages_by_route,
-    publication_lineage,
-    synthesis_destination,
-    validate_synthesis_page_provenance,
-    validate_unit_material_synthesis,
-)
 from learning_os.contracts.capability_catalog import (
     domain_capability_definitions,
     load_capability_catalog,
@@ -31,6 +22,15 @@ from learning_os.contracts.gateway import (
 from learning_os.contracts.manifest_contract import declared_version
 from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.derive.garden import project_garden_entries
+from learning_os.derive.material_synthesis import (
+    current_unit_material_basis,
+    inspected_material_by_route,
+    inspected_pages_by_route,
+    publication_lineage,
+    synthesis_destination,
+    validate_synthesis_page_provenance,
+    validate_unit_material_synthesis,
+)
 from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
 from learning_os.domain.ai_errors import (
     ActionPolicyError,

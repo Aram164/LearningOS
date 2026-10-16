@@ -5,9 +5,9 @@ from __future__ import annotations
 import yaml
 
 from learning_os.derive.validation.advisories import workspace_neglect_issues
-from learning_os.derive.validation.common import REQUIRED_WORKSPACE_SECTIONS, id_list_items
 from learning_os.derive.validation.receipt_cache import receipt_file_issues
 from learning_os.domain.failures import TransactionFailure
+from learning_os.domain.validation import REQUIRED_WORKSPACE_SECTIONS, id_list_items
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.revisions import load_revisions
 

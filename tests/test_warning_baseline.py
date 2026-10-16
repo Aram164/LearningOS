@@ -178,7 +178,7 @@ def test_checked_in_baseline_loads_unchanged():
 
 def test_environmental_warnings_are_excluded_by_name():
     """They describe the machine, not the content, and differ per checkout."""
-    from learning_os.derive.validation.common import ENVIRONMENTAL_WARNINGS
+    from learning_os.domain.validation import ENVIRONMENTAL_WARNINGS
 
     for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS", "HYGIENE-LOCK",
                  "ANGLE-REVIEW-UNVERIFIED"):
@@ -187,7 +187,7 @@ def test_environmental_warnings_are_excluded_by_name():
 
 def test_baseline_exempt_union_is_exactly_the_two_named_sets():
     """No prefix, severity band, or path heuristic — an exact code union only."""
-    from learning_os.derive.validation.common import (
+    from learning_os.domain.validation import (
         BASELINE_EXEMPT_WARNINGS,
         DYNAMIC_ADVISORY_WARNINGS,
         ENVIRONMENTAL_WARNINGS,
@@ -206,7 +206,7 @@ def test_baseline_exempt_union_is_exactly_the_two_named_sets():
 
 
 def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
-    from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
+    from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 
     assert "TOTALLY-MADE-UP-WARNING-CODE" not in BASELINE_EXEMPT_WARNINGS
     before = Counter()
@@ -217,7 +217,7 @@ def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
 
 def test_angle_review_unverified_is_dropped_but_stale_is_managed():
     """The #86 split at the gate: only "the bytes changed" can regress."""
-    from learning_os.derive.validation.common import Issue
+    from learning_os.domain.validation import Issue
 
     issues = [Issue("W", "ANGLE-REVIEW-UNVERIFIED", "evidence not on this machine", "sm.yaml"),
               Issue("W", "ANGLE-REVIEW-STALE", "review no longer matches", "sm.yaml")]
@@ -456,7 +456,7 @@ def test_the_recorded_baseline_still_matches_this_repository(real_issues):
 
 @pytest.mark.full_repo
 def test_no_baseline_exempt_warning_reached_the_recorded_baseline():
-    from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
+    from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 
     baseline, _ = wb.load_baseline(ROOT)
     for code, _path in baseline:

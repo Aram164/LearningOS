@@ -294,7 +294,7 @@ def test_correction_with_changed_bytes_is_stale_when_mounted(mini_repo):
     """Online, bytes present and different is stale — and a baseline regression."""
     from collections import Counter
 
-    from learning_os.derive.validation.common import Issue
+    from learning_os.domain.validation import Issue
     from learning_os.store.warning_baseline import delta, signatures_from_issues
 
     checker, repo, route, stage, resource, resolved = _correction_case(mini_repo)

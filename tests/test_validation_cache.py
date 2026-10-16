@@ -15,10 +15,10 @@ import pytest
 from repo_builders import run_los
 
 import learning_os.store.validation_cache as vc
+from learning_os.app import validation_service
 from learning_os.derive.projection import generate_all, write_outputs
 from learning_os.derive.validation import validate
-from learning_os.derive.validation.advisories import NEGLECT_GIT_HISTORY_PREFIX
-from learning_os.derive.validation.common import Issue
+from learning_os.domain.validation import NEGLECT_GIT_HISTORY_PREFIX, Issue
 from learning_os.store.derived.store import read_state
 from learning_os.store.loader import load_repo
 
@@ -66,8 +66,8 @@ def test_status_issues_serves_static_from_cache_without_validating(
     def _boom(*args, **kwargs):
         raise AssertionError("cache hit must not re-validate")
 
-    monkeypatch.setattr(vc, "validate", _boom)
-    served = vc.status_issues(load_repo(mini_repo))
+    monkeypatch.setattr(validation_service, "validate", _boom)
+    served = validation_service.status_issues(load_repo(mini_repo))
     # Same multiset (advisories splice at the end; status counts only).
     assert Counter(str(i) for i in served) == Counter(str(i) for i in live)
 
@@ -94,11 +94,11 @@ def test_mtime_only_inbox_aging_is_served_live_on_a_hit(mini_repo):
     _stage_validation_producers(mini_repo)
     drop = mini_repo / "work/inbox/drop.md"
     drop.write_text("unrouted capture\n", encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))  # warm
+    validation_service.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
     past = time.time() - 16 * 86400
     os.utime(drop, (past, past))
-    issues = vc.status_issues(load_repo(mini_repo))
+    issues = validation_service.status_issues(load_repo(mini_repo))
     assert any(i.code == "INBOX-STALE" and "drop.md" in i.message
                for i in issues)
     # Pins still match: that warning came from the live splice, not a miss.
@@ -148,7 +148,7 @@ def test_garbage_cache_misses_discards_and_leaves_no_phantom(mini_repo):
     # A corrupt derived blob misses the same way: no phantom GEN-JSON
     # about the cache itself (blobs are extensionless, never scanned),
     # and the miss rewrites a valid entry.
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     state = read_state(mini_repo)[vc.VALIDATION_NODE_ID]
     blob = mini_repo / "generated" / "derived-state" / state.blob
@@ -183,11 +183,11 @@ def _republish_views(root: Path) -> None:
 ], ids=["generated-stray", "unparseable-receipt"])
 def test_non_canonical_validator_input_misses(mini_repo, mutation, code):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))  # warm
+    validation_service.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
     mutation(mini_repo)
     assert vc.read_cached_static_issues(mini_repo) is None
-    issues = vc.status_issues(load_repo(mini_repo))
+    issues = validation_service.status_issues(load_repo(mini_repo))
     assert any(i.code == code for i in issues), issues
 
 
@@ -217,11 +217,11 @@ def test_stale_index_lock_is_served_live_on_a_hit(mini_repo):
     subprocess.run(["git", "init", "-q", str(mini_repo)], check=True)
     lock = mini_repo / ".git" / "index.lock"
     lock.write_text("", encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))  # warm, lock still fresh
+    validation_service.status_issues(load_repo(mini_repo))  # warm, lock still fresh
     assert vc.read_cached_static_issues(mini_repo) is not None
     past = time.time() - 3600
     os.utime(lock, (past, past))
-    issues = vc.status_issues(load_repo(mini_repo))
+    issues = validation_service.status_issues(load_repo(mini_repo))
     assert any(i.code == "HYGIENE-LOCK" for i in issues), issues
     assert vc.read_cached_static_issues(mini_repo) is not None
     cached = vc.read_cached_static_issues(mini_repo)
@@ -241,10 +241,10 @@ def test_pins_are_observed_before_validation(mini_repo, monkeypatch):
         note.rename(note.with_name("renamed-demo.md"))  # lands mid-run
         return issues
 
-    monkeypatch.setattr(vc, "validate", racing)
-    first = vc.status_issues(load_repo(mini_repo))
+    monkeypatch.setattr(validation_service, "validate", racing)
+    first = validation_service.status_issues(load_repo(mini_repo))
     assert not any(i.severity == "E" for i in first)
-    monkeypatch.setattr(vc, "validate", real)
+    monkeypatch.setattr(validation_service, "validate", real)
     assert vc.read_cached_static_issues(mini_repo) is None
     proc = run_los(mini_repo, "status", "--json")
     assert _validation(proc)["errors"] == 1

@@ -14,12 +14,12 @@ import yaml
 
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
 from learning_os.app.check import _staged_shadow
-from learning_os.app.synthesis.material_synthesis import (
+from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
+from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
-from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.derive.validation import validate
 from learning_os.domain.plan_import import (
     _INVENTORY_ROW_DISPOSITIONS,
@@ -832,7 +832,7 @@ def _module_plan_check_report(root: Path, module_id: str, package: dict,
     Counts, diffs, freshness and learner-state preservation for exactly the
     touched units, computed from the live repository and one staged shadow.
     """
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         validate_unit_material_synthesis as _validate_dossier,
     )
 

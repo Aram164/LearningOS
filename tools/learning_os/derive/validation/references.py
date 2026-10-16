@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 from learning_os.derive.routes import exact_selection_matches, iter_route_references
-from learning_os.derive.validation.common import (
+from learning_os.domain.validation import (
     MD_LINK_RE,
     WORKSPACE_TOKEN_RE,
     id_list_items,

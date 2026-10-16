@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from test_compute_once import _commit_capture
 
+from learning_os.app import validation_service
 from learning_os.derive.validation import validate
 from learning_os.store import digests
 from learning_os.store.loader import load_repo
@@ -187,11 +188,11 @@ def test_nested_text_cache_input_edit_misses_status(
     target = mini_repo / f"generated/text-cache/demo/pages/unexpected.{suffix}"
     target.parent.mkdir(parents=True)
     target.write_text(initial)
-    cache.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert cache.read_cached_static_issues(mini_repo) is not None
     target.write_text(changed)
     assert cache.read_cached_static_issues(mini_repo) is None
-    assert any(i.code == code for i in cache.status_issues(load_repo(mini_repo)))
+    assert any(i.code == code for i in validation_service.status_issues(load_repo(mini_repo)))
 
 
 def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
@@ -203,11 +204,11 @@ def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
     blob = directory / "blob.txt"
     blob.write_text('{"_generated": {}}')
     (directory / "index.json").symlink_to(blob)
-    cache.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert cache.read_cached_static_issues(mini_repo) is not None
     blob.write_text("{broken")
     assert cache.read_cached_static_issues(mini_repo) is None
-    assert any(i.code == "GEN-JSON" for i in cache.status_issues(load_repo(mini_repo)))
+    assert any(i.code == "GEN-JSON" for i in validation_service.status_issues(load_repo(mini_repo)))
 
 
 def test_non_utf8_attachment_declaration_is_reported_and_excludes_nothing(mini_repo: Path):

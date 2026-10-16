@@ -26,7 +26,7 @@ def current_synthesis_freshness(repo: Repo, synthesis_id: str, dossier: dict) ->
     """
     # Local import avoids a package-initialization cycle: the synthesis module
     # is a domain service and this is a projection of its output.
-    from learning_os.app.synthesis.material_synthesis import material_synthesis_freshness
+    from learning_os.derive.material_synthesis import material_synthesis_freshness
 
     memo = getattr(repo, "_projected_synthesis_freshness", None)
     if memo is None:

@@ -24,21 +24,22 @@ from learning_os.app._plan_gate import (
     _module_plan_validation_errors,
     _plan_apply_gate,
 )
-from learning_os.app.admin.masters_planning import MastersPlanningError, prepare_master_promotion
+from learning_os.app.admin.masters_planning import prepare_master_promotion
 from learning_os.app.check import _staged_shadow
 from learning_os.app.context import OpContext
 from learning_os.app.gateway import _read_content_bound_file, prepare_review_envelope
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.app.synthesis.material_synthesis import (
+from learning_os.contracts import current_template_problems
+from learning_os.contracts.gateway import current_gateway_request
+from learning_os.derive.masters_catalog import MastersPlanningError
+from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     current_unit_material_basis,
     publication_lineage_record,
     synthesis_destination,
 )
-from learning_os.contracts import current_template_problems
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     NODE_CONTENT_PREFIX,

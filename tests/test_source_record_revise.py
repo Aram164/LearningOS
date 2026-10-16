@@ -173,7 +173,7 @@ def _write_dossier(unit_dir: Path, dossier: dict):
 def _staged_basis(root: Path, sid: str, record: dict):
     import copy as _copy
 
-    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.material_synthesis import current_unit_material_basis
     from learning_os.store.loader import load_repo
 
     repo = load_repo(root)
@@ -250,7 +250,7 @@ def _grinstead_shaped_unit(root: Path, screened: int = 28) -> Path:
 
 def _shaped_dossier(root: Path, screened: int = 28) -> dict:
     """Fresh approved dossier for the Grinstead-shaped unit, all screened."""
-    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.material_synthesis import current_unit_material_basis
 
     basis = current_unit_material_basis(root, "unit-demo-l01")
     basis["ai_provenance"] = {"request_id": "ai-request-shape-demo",
@@ -442,7 +442,7 @@ def _assert_dossier_lineage(root, dossier, response):
 
 def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
     unit_dir, live = _shaped_setup(mini_repo)
-    from learning_os.app.synthesis.material_synthesis import publication_lineage
+    from learning_os.derive.material_synthesis import publication_lineage
     from learning_os.derive.semantics.lineage import load_ledger, to_dict
 
     ledger = mini_repo / "operations/transactions/lineage.yaml"

@@ -20,7 +20,6 @@ from learning_os.derive.learning_runtime import (
     read_stage_results,
     runtime_review_fingerprint,
 )
-from learning_os.derive.validation.common import CANONICAL_TREES, Issue, _in_garden, _in_quarantine
 from learning_os.derive.validation.contract import ChecksContract
 from learning_os.derive.validation.curriculum import ChecksCurriculum
 from learning_os.derive.validation.generated import ChecksGenerated
@@ -32,6 +31,7 @@ from learning_os.derive.validation.references import ChecksReferences
 from learning_os.derive.validation.registries import ChecksRegistries
 from learning_os.derive.validation.structure import ChecksStructure
 from learning_os.domain.snapshot import Repo
+from learning_os.domain.validation import CANONICAL_TREES, Issue, _in_garden, _in_quarantine
 
 
 class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):

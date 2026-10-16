@@ -16,7 +16,7 @@ import yaml
 from gateway_helpers import approved_v2_cli, file_sha256
 from repo_builders import _compact_setup, add_curriculum, run_los, write_yaml
 
-from learning_os.app.synthesis.material_synthesis import synthesis_destination
+from learning_os.derive.material_synthesis import synthesis_destination
 
 ANALYSIS_BODY = """# Density intuition
 

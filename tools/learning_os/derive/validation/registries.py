@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from learning_os.derive.validation.common import (
+from learning_os.domain.validation import (
     COORDINATION_SECTIONS,
     ISO_DATE_RE,
     JUDGMENT_HEADERS,

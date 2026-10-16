@@ -53,7 +53,7 @@ from learning_os.app.gateway import (  # noqa: E402
     _validate_payload,
 )
 from learning_os.app.lock import _operator_lock  # noqa: E402
-from learning_os.app.synthesis.material_synthesis import (  # noqa: E402
+from learning_os.derive.material_synthesis import (  # noqa: E402
     MaterialSynthesisError,
     synthesis_destination,
     validate_unit_material_synthesis,

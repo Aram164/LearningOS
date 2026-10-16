@@ -25,7 +25,7 @@ import yaml
 from repo_builders import material_fixture, write_yaml
 
 from learning_os.app.render import call_renderer
-from learning_os.app.synthesis.material_synthesis import (
+from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     _analysis_ref_problem,
     current_unit_material_basis,

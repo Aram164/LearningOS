@@ -17,14 +17,14 @@ from learning_os.app.handlers._shared import (
 )
 from learning_os.app.proposal import Result, TransactionProposal
 from learning_os.app.registry import register
-from learning_os.app.synthesis.material_synthesis import (
+from learning_os.contracts.gateway import current_gateway_request
+from learning_os.derive.material_synthesis import (
     MaterialSynthesisUnitNotFound,
     current_unit_material_basis,
     publication_lineage,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
-from learning_os.contracts.gateway import current_gateway_request
 from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     LineageError,

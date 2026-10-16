@@ -231,7 +231,7 @@ def project_unit_material_syntheses(repo: Repo) -> list[dict]:
 
     # Local import avoids a package-initialization cycle: the synthesis module
     # is a domain service and this is a projection of its output.
-    from learning_os.app.synthesis.material_synthesis import material_synthesis_completeness
+    from learning_os.derive.material_synthesis import material_synthesis_completeness
     from learning_os.derive.projection.projection.records_library import current_synthesis_freshness
 
     return [

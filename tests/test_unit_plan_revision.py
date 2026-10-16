@@ -139,7 +139,7 @@ def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
 def test_stale_dossier_names_each_expected_basis_value(mini_repo: Path):
     from copy import deepcopy
 
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         MaterialSynthesisError,
         validate_unit_material_synthesis,
     )
@@ -162,7 +162,7 @@ def test_stale_dossier_names_each_expected_basis_value(mini_repo: Path):
 def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Path):
     from repo_builders import run_los, write_yaml
 
-    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.material_synthesis import current_unit_material_basis
 
     good = _compact_setup(mini_repo)
     live = current_unit_material_basis(mini_repo, "unit-demo-l01")
@@ -188,7 +188,7 @@ def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Pa
 
 def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
     """Adding a route without a replacement dossier must keep failing."""
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         MaterialSynthesisError,
         validate_unit_material_synthesis,
     )
@@ -205,7 +205,7 @@ def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
 
     from repo_builders import run_los
 
-    from learning_os.app.synthesis.material_synthesis import synthesis_destination
+    from learning_os.derive.material_synthesis import synthesis_destination
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(stale, sort_keys=False), encoding="utf-8")
     context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
@@ -230,12 +230,13 @@ def test_route_change_without_replacement_demands_a_dossier(mini_repo, tmp_path)
 
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
     good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.app.synthesis.material_synthesis import synthesis_destination
+    from learning_os.derive.material_synthesis import synthesis_destination
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
 
     audit_rel = _audit(mini_repo)
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     unit_data = yaml.safe_load(
         (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml")
@@ -261,7 +262,7 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         current_unit_material_basis,
         synthesis_destination,
     )
@@ -271,7 +272,8 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
     destination = synthesis_destination(mini_repo, "unit-demo-l01")
     destination.write_text(yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
     audit_rel = _audit(mini_repo)
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
 
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
@@ -384,7 +386,8 @@ def test_missing_dossier_does_not_require_replacement_for_route_addition(
     from repo_builders import run_los, write_yaml
 
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
     assert context.returncode == 0, context.stderr
@@ -615,7 +618,7 @@ def _acceptance_setup(mini_repo: Path):
     resume["stage_id"] = "stage-demo-intro"
     write_yaml(resume_path, resume)
     good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         current_unit_material_basis,
         synthesis_destination,
     )
@@ -638,7 +641,8 @@ def _acceptance_setup(mini_repo: Path):
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
     _audit(mini_repo)
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "acceptance fixture")
     return good
 
@@ -650,7 +654,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.material_synthesis import current_unit_material_basis
 
     _acceptance_setup(mini_repo)
     new_route = _sliced_route("route-demo-new", "lecture-01.pdf")
@@ -1065,7 +1069,7 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
     from repo_builders import run_los, write_yaml
 
     from learning_os.app.check import _staged_shadow
-    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.material_synthesis import current_unit_material_basis
     from learning_os.derive.semantics.lineage import load_ledger
     from learning_os.store.revisions import load_revisions
 
@@ -1185,7 +1189,8 @@ def test_report_out_ignores_unchanged_content_growth(mini_repo, tmp_path):
     for stage in study_map["stages"]:
         stage["objective"] = "UNCHANGED-PREFLIGHT-CONTEXT. " * 800
     write_yaml(live, study_map)
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "report-out volume fixture")
     revision = _compact_revision(
         mini_repo,

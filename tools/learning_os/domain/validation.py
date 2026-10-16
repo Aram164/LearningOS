@@ -139,3 +139,29 @@ class Issue:
     def __str__(self) -> str:
         loc = f" [{self.path}]" if self.path else ""
         return f"{self.severity} {self.code}: {self.message}{loc}"
+
+
+#: Clock-derived codes outside DYNAMIC_ADVISORY_WARNINGS. HYGIENE-LOCK stays
+#: out of that set on purpose: the set also exempts its members from the
+#: warning baseline, and a stale lock is a real finding, not elapsed time.
+_LIVE_HYGIENE_CODES = frozenset({"HYGIENE-LOCK"})
+
+
+#: Message prefix of the GIT-HISTORY error the neglect check raises when
+#: history is unreadable. Hygiene raises GIT-HISTORY too, for a different
+#: (cached) reason — the prefix is what tells the cache splice apart.
+NEGLECT_GIT_HISTORY_PREFIX = "cannot check workspace neglect: "
+
+
+def is_live_advisory(issue: Issue) -> bool:
+    """Whether the cache-hit path recomputes this issue live.
+
+    The dynamic codes and HYGIENE-LOCK, plus the neglect check's own GIT-HISTORY
+    error — which shares its code with hygiene's unrelated one and is
+    told apart by the message prefix this module constructs.
+    """
+    assert isinstance(issue, Issue)
+    if issue.code in DYNAMIC_ADVISORY_WARNINGS or issue.code in _LIVE_HYGIENE_CODES:
+        return True
+    return (issue.code == "GIT-HISTORY"
+            and issue.message.startswith(NEGLECT_GIT_HISTORY_PREFIX))

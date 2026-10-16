@@ -8,8 +8,8 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, rich_fixture, write_yaml
 
-from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 from learning_os.contracts.manifest_contract import check
+from learning_os.derive.material_synthesis import current_unit_material_basis
 from learning_os.derive.projection.manifest import build_manifest
 from learning_os.derive.validation import validate
 from learning_os.store.loader import load_repo

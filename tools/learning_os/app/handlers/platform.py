@@ -36,6 +36,7 @@ from learning_os.backup_manifest import (
 )
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
+from learning_os.derive import masters_catalog
 from learning_os.derive.health import build_health_report
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused
 from learning_os.domain.suggest import not_found, with_suggestions
@@ -1015,7 +1016,7 @@ def legacy_archive_lock_publish(ctx: OpContext, req: dict) -> Result:
 def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
     """Update the reviewed academic-only Master Planning catalog."""
     root = ctx.root
-    value = masters_planning.validate_master_catalog(
+    value = masters_catalog.validate_master_catalog(
         root,
         _input_record_values(
             req.get("record"), req.get("file"), "Master Planning catalog"),
@@ -1030,7 +1031,7 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
             exit_code=2,
         )
     _require_gateway_v2()
-    value = masters_planning.validate_master_catalog(root, value)
+    value = masters_catalog.validate_master_catalog(root, value)
     masters_planning.validate_catalog_revision(root, value)
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:
@@ -1041,7 +1042,7 @@ def masters_planning_catalog_update(ctx: OpContext, req: dict) -> Result:
         {"ok": True},
         proposal=TransactionProposal(
             capability="masters-planning.catalog.update",
-            writes={masters_planning.master_catalog_destination(root):
+            writes={masters_catalog.master_catalog_destination(root):
                     _dump_yaml(value)},
             artifact_ids=["master-planning-catalog"],
             expected_revisions=expected_revisions,

@@ -13,19 +13,9 @@ run and a cache hit can never disagree on what the advisories say.
 
 from __future__ import annotations
 
-from learning_os.derive.validation.common import DYNAMIC_ADVISORY_WARNINGS, STALE_LOCK_AGE_S, Issue
+from learning_os.domain.validation import NEGLECT_GIT_HISTORY_PREFIX, STALE_LOCK_AGE_S, Issue
 from learning_os.store import observations
 from learning_os.store.session.githistory import GitHistoryError, last_commit_timestamp
-
-#: Clock-derived codes outside DYNAMIC_ADVISORY_WARNINGS. HYGIENE-LOCK stays
-#: out of that set on purpose: the set also exempts its members from the
-#: warning baseline, and a stale lock is a real finding, not elapsed time.
-_LIVE_HYGIENE_CODES = frozenset({"HYGIENE-LOCK"})
-
-#: Message prefix of the GIT-HISTORY error the neglect check raises when
-#: history is unreadable. Hygiene raises GIT-HISTORY too, for a different
-#: (cached) reason — the prefix is what tells the cache splice apart.
-NEGLECT_GIT_HISTORY_PREFIX = "cannot check workspace neglect: "
 
 
 def workspace_neglect_issues(repo) -> list[Issue]:
@@ -108,17 +98,3 @@ def advisory_issues(repo) -> list[Issue]:
     """Every clock-derived advisory, in Validator.run order."""
     return (inbox_stale_issues(repo) + workspace_neglect_issues(repo)
             + stale_index_lock_issues(repo))
-
-
-def is_live_advisory(issue: Issue) -> bool:
-    """Whether the cache-hit path recomputes this issue live.
-
-    The dynamic codes and HYGIENE-LOCK, plus the neglect check's own GIT-HISTORY
-    error — which shares its code with hygiene's unrelated one and is
-    told apart by the message prefix this module constructs.
-    """
-    assert isinstance(issue, Issue)
-    if issue.code in DYNAMIC_ADVISORY_WARNINGS or issue.code in _LIVE_HYGIENE_CODES:
-        return True
-    return (issue.code == "GIT-HISTORY"
-            and issue.message.startswith(NEGLECT_GIT_HISTORY_PREFIX))

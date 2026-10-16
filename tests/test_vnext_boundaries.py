@@ -18,16 +18,9 @@ from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
 from learning_os.ai_actions import AIActionService
 from learning_os.app.admin.masters_planning import (
-    MastersPlanningError,
     candidate_set_checksum,
     masters_planning_dashboard,
     validate_candidate_comparison,
-    validate_master_catalog,
-)
-from learning_os.app.synthesis.material_synthesis import (
-    current_unit_material_basis,
-    material_synthesis_freshness,
-    validate_unit_material_synthesis,
 )
 from learning_os.backup_manifest import (
     BackupManifestError,
@@ -37,6 +30,12 @@ from learning_os.backup_manifest import (
     verify_restored_system,
 )
 from learning_os.contracts.gateway import intent_sha256
+from learning_os.derive.masters_catalog import MastersPlanningError, validate_master_catalog
+from learning_os.derive.material_synthesis import (
+    current_unit_material_basis,
+    material_synthesis_freshness,
+    validate_unit_material_synthesis,
+)
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.legacy_archive import LegacyArchiveError, inspect_legacy_archive
 from learning_os.store.transactions import artifact_revision
@@ -2039,10 +2038,8 @@ def test_populated_catalogue_leaves_normal_surfaces_byte_identical(mini_repo):
     in `_generated` moves, as it must — it attests every file, quarantine
     included.
     """
-    from learning_os.app.admin.masters_planning import (
-        master_catalog_destination,
-        masters_planning_dashboard,
-    )
+    from learning_os.app.admin.masters_planning import masters_planning_dashboard
+    from learning_os.derive.masters_catalog import master_catalog_destination
     from learning_os.derive.projection import build_manifest
     from learning_os.derive.validation import validate
     from learning_os.store.loader import load_repo

@@ -20,7 +20,8 @@ import yaml
 from repo_builders import _add_material_overview, add_curriculum
 
 from learning_os.app._plan_gate import _module_plan_validation_errors
-from learning_os.store.warning_baseline import collect, write_baseline
+from learning_os.app.validation_service import collect
+from learning_os.store.warning_baseline import write_baseline
 
 SOURCE_MAP = "curriculum/modules/module-demo/source-map.yaml"
 

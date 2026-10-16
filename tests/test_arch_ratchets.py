@@ -112,9 +112,9 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
         "unmatched_ignore_imports_alerting": "error",
         "layers": [
             "adapters",
-            "app : ai_actions",
+            "app : ai_actions : backup_manifest",
             "derive",
-            "store : contracts : backup_manifest",
+            "store : contracts",
             "domain : route_identity",
         ],
     },
@@ -566,9 +566,9 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions",
+  "app : ai_actions : backup_manifest",
   "derive",
-  "store : contracts : backup_manifest",
+  "store : contracts",
   "domain : route_identity",
 ]
 ignore_imports = []
@@ -601,9 +601,9 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions",
+  "app : ai_actions : backup_manifest",
   "derive",
-  "store : contracts : backup_manifest",
+  "store : contracts",
   "domain : route_identity",
 ]
 ignore_imports = []

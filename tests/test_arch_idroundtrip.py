@@ -643,8 +643,9 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
         return ("resolved", detail)
     if owner == "masters-candidate-module":
         from learning_os.app.admin import masters_planning
+        from learning_os.derive import masters_catalog
 
-        catalog = masters_planning.load_master_catalog(root)
+        catalog = masters_catalog.load_master_catalog(root)
         assert catalog is not None, (
             f"A6 {owner}: no catalog at the fixture root — {FIX}")
         modules = {row["id"]: row for row in catalog["candidate_modules"]}

@@ -91,26 +91,14 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "app : ai_actions",
+  "app : ai_actions : backup_manifest",
   "derive",
-  "store : contracts : backup_manifest",
+  "store : contracts",
   "domain : route_identity",
 ]
 ignore_imports = [
   # recorded baseline exceptions, one per line: "learning_os.x.y -> learning_os.z"
-  "learning_os.backup_manifest -> learning_os.derive.projection",
-  "learning_os.backup_manifest -> learning_os.derive.validation",
   "learning_os.derive.projection.manifest -> learning_os.ai_actions.projection",
-  "learning_os.derive.projection.projection.records_curriculum -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.derive.projection.projection.records_library -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.derive.health -> learning_os.app.admin.masters_planning",
-  "learning_os.derive.health -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.derive.semantics.scan -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.store.validation_cache -> learning_os.derive.validation",
-  "learning_os.store.validation_cache -> learning_os.derive.validation.advisories",
-  "learning_os.store.validation_cache -> learning_os.derive.validation.common",
-  "learning_os.store.warning_baseline -> learning_os.derive.validation",
-  "learning_os.store.warning_baseline -> learning_os.derive.validation.common",
 ]
 
 [[tool.importlinter.contracts]]
@@ -121,15 +109,6 @@ source_modules = ["learning_os.derive.validation", "learning_os.derive.projectio
                   "learning_os.derive.learning_runtime", "learning_os.derive.routes", "learning_os.domain"]
 forbidden_modules = ["learning_os.store.transactions"]
 ignore_imports = [
-  "learning_os.derive.projection -> learning_os.derive.projection.manifest",
-  "learning_os.derive.projection.manifest -> learning_os.derive.projection.projection",
-  "learning_os.derive.projection.projection -> learning_os.derive.projection.projection.records_curriculum",
-  "learning_os.derive.projection.projection.records_curriculum -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.derive.health -> learning_os.app.admin.masters_planning",
-  "learning_os.derive.health -> learning_os.app.synthesis.material_synthesis",
-  "learning_os.app.admin.masters_planning -> learning_os.store.transactions",
-  "learning_os.derive.validation.generated -> learning_os.derive.projection",
-  "learning_os.derive.semantics.scan -> learning_os.app.synthesis.material_synthesis",
 ]
 
 [[tool.importlinter.contracts]]

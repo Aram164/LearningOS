@@ -202,7 +202,8 @@ def _precise_locator_fixture(mini_repo: Path):
     """
     import yaml
 
-    from learning_os.store.warning_baseline import collect, write_baseline
+    from learning_os.app.validation_service import collect
+    from learning_os.store.warning_baseline import write_baseline
 
     repo, _, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id

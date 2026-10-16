@@ -10,10 +10,7 @@ from __future__ import annotations
 import pytest
 import yaml
 
-from learning_os.app.admin.masters_planning import (
-    MastersPlanningError,
-    validate_master_catalog,
-)
+from learning_os.derive.masters_catalog import MastersPlanningError, validate_master_catalog
 from learning_os.derive.validation import validate
 from learning_os.store.loader import load_repo
 

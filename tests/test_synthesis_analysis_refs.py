@@ -17,7 +17,7 @@ import pytest
 import yaml
 from repo_builders import _compact_setup, _valid_dossier
 
-from learning_os.app.synthesis.material_synthesis import (
+from learning_os.derive.material_synthesis import (
     ANALYSIS_REFS_STALE,
     MaterialSynthesisError,
     MaterialSynthesisUnitNotFound,
@@ -225,7 +225,7 @@ def test_unknown_unit_lookup_raises_the_structured_subclass(mini_repo):
 
 def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
     """SPEC (cq) 5: NotFound for the lookup; other errors pass through."""
-    import learning_os.app.synthesis.material_synthesis as synthesis_mod
+    import learning_os.derive.material_synthesis as synthesis_mod
     from learning_os.app.handlers.synthesis import _validate_publication_synthesis
     from learning_os.domain import suggest as suggest_mod
     from learning_os.domain.failures import NotFound

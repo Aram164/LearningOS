@@ -16,6 +16,7 @@ from conftest import build_mini_repo
 from scenario_fixtures import INITIAL_WARNING_SIGNATURES, rich_world
 
 from learning_os.app.handlers.routes import compaction_plan
+from learning_os.app.validation_service import collect
 from learning_os.derive.learning_runtime import collect_requirements
 from learning_os.derive.semantics.lineage import load_ledger
 from learning_os.domain.material_inventory import render_manifest
@@ -25,7 +26,7 @@ from learning_os.store.materials.resolution import (
     material_location,
     resolve_route_material_files,
 )
-from learning_os.store.warning_baseline import collect, load_baseline
+from learning_os.store.warning_baseline import load_baseline
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 

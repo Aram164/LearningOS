@@ -38,8 +38,8 @@ from learning_os.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.derive.validation.common import SUFFIX_RE
 from learning_os.domain.failures import WriteRefused
+from learning_os.domain.validation import SUFFIX_RE
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.loader import load_repo

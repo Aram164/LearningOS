@@ -17,7 +17,7 @@ import time as _time
 from pathlib import Path
 
 from learning_os.derive.validation import render_report, validate  # noqa: E402
-from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
+from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 from learning_os.store.fingerprint import seed_source_fingerprint  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 from learning_os.store.validation_cache import (  # noqa: E402

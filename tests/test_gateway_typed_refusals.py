@@ -37,7 +37,6 @@ from learning_os.contracts.gateway import (
     gateway_request_context,
 )
 from learning_os.contracts.write_scopes import WriteScopeError
-from learning_os.derive.validation.common import Issue
 from learning_os.domain.ai_errors import (
     DeliveryBindingError,
     DeliveryIdempotencyConflict,
@@ -57,6 +56,7 @@ from learning_os.domain.failures import (
     ValidationFailed,
     WriteRefused,
 )
+from learning_os.domain.validation import Issue
 from learning_os.store.layout import PathBoundaryError
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 from learning_os.store.transactions import (

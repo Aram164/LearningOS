@@ -69,11 +69,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from learning_os.contracts.local_attachments import local_paths
-from learning_os.derive.validation import validate
-from learning_os.derive.validation.advisories import advisory_issues, is_live_advisory
-from learning_os.derive.validation.common import Issue
 from learning_os.domain import generated_reads
 from learning_os.domain.failures import TransactionFailure
+from learning_os.domain.validation import Issue, is_live_advisory
 from learning_os.store.derived.engine import BuildContext, evaluate
 from learning_os.store.derived.identity import digest_code_identity, runtime_digest
 from learning_os.store.derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
@@ -84,7 +82,6 @@ from learning_os.store.manifest_identity import materials_digest, operations_dig
 if TYPE_CHECKING:
     from typing import Any
 
-    from learning_os.domain.snapshot import Repo
 
 #: Obsolete sidecar location (pre-4.3). Active reads/writes go through the
 #: derived node below; this path survives only so pre-migration leftovers
@@ -556,58 +553,3 @@ def write_static_cache(
             inputs=inputs)
     except (DerivedError, TransactionFailure, ValueError) as exc:
         raise OSError(f"validation-cache store failed: {exc}") from exc
-
-
-def status_issues(repo: Repo, pins: dict[str, str] | None = None) -> list[Issue]:
-    """Validation issues for `status`: cached static plus live advisories.
-
-    On a key match the static issues are served from the derived node and
-    only the clock-derived advisories are recomputed; on any miss the full
-    validator runs (once) and its static issues memoize the node
-    best-effort, under pins observed before it ran. Pass ``pins`` observed
-    before ``repo`` was loaded; None observes them now. Unobservable pins
-    or any cache-layer failure validates uncached, exactly as today: a
-    cache problem never becomes stale data or a new refusal.
-    """
-    if pins is None:
-        pins = observe_pins(repo.root)
-    if pins is None:
-        return validate(repo, online=False)
-    try:
-        inputs = _validation_inputs(pins)
-    except DerivedError:
-        return validate(repo, online=False)
-    captured: list[Any] = []
-
-    def _build(_ctx: BuildContext) -> Any:
-        frozen = _freeze_static(validate(repo, online=False))
-        captured.append(frozen)
-        return frozen
-
-    try:
-        evaluation = evaluate(
-            repo.root, VALIDATION_NODE_ID,
-            registry={VALIDATION_NODE_ID: (_validation_spec(), _build)},
-            inputs=inputs)
-    except OSError:
-        # The build may have succeeded before the store failed: serve its
-        # result (one validation, best-effort memoize, as before) rather
-        # than validating twice. Nothing captured means the failure came
-        # before or inside the build itself, so validate uncached.
-        if captured and _valid_static_value(captured[0]):
-            return _restore_static(captured[0]) + advisory_issues(repo)
-        return validate(repo, online=False)
-    except (DerivedError, TransactionFailure, ValueError):
-        return validate(repo, online=False)
-    if not _valid_static_value(evaluation.value):
-        try:
-            invalidate(repo.root, VALIDATION_NODE_ID)
-        except (OSError, TransactionFailure):
-            pass
-        issues = validate(repo, online=False)
-        try:
-            write_static_cache(repo.root, issues, pins)
-        except OSError:
-            pass
-        return issues
-    return _restore_static(evaluation.value) + advisory_issues(repo)

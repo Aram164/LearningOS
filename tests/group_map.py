@@ -249,7 +249,7 @@ ALL_GROUPS = frozenset(GROUPS)
 PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     # --- test files map to their own group (handled before prefix rules) ---
     # --- area production code ---
-    ("tools/learning_os/app/synthesis/material_synthesis.py", frozenset({"materials", "synthesis", "studyplan", "generation", "contracts"})),
+    ("tools/learning_os/derive/material_synthesis.py", frozenset({"materials", "synthesis", "studyplan", "generation", "contracts"})),
     ("tools/learning_os/store/material_analysis.py", frozenset({"materials", "synthesis", "studyplan", "generation", "contracts"})),
     ("tools/learning_os/material_", frozenset({"materials"})),
     ("tools/learning_os/materials_", frozenset({"materials"})),

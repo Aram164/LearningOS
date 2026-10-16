@@ -429,7 +429,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     mini_repo: Path, monkeypatch: pytest.MonkeyPatch
 ):
     """F13: many dossiers must not multiply repository loads or file hashes."""
-    from learning_os.app.synthesis import material_synthesis
+    from learning_os.derive import material_synthesis
     from learning_os.derive.projection import build_manifest
     from learning_os.derive.routes import deterministic_route_id
     from learning_os.store.loader import load_repo

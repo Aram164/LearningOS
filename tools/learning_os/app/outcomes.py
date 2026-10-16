@@ -13,12 +13,12 @@ import contextvars
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from learning_os.app.admin.masters_planning import MastersPlanningError
-from learning_os.app.synthesis.material_synthesis import MaterialSynthesisError
 from learning_os.backup_manifest import BackupManifestError
 from learning_os.contracts.manifest_contract import ManifestContractError
 from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derive.health import HealthReportError
+from learning_os.derive.masters_catalog import MastersPlanningError
+from learning_os.derive.material_synthesis import MaterialSynthesisError
 from learning_os.domain.ai_errors import AIActionError, StaleDeliveryError
 from learning_os.domain.codes import (
     IDEMPOTENCY_CONFLICT,

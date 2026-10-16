@@ -856,9 +856,9 @@ def _lookup_domain(ctx, operation: str, row: dict,
         return ordered, set(ordered)
     if owner == "masters-candidate-module":
         # Builder Task 78 ((cx) D-8): the loaded catalog module map.
-        from learning_os.app.admin import masters_planning
+        from learning_os.derive import masters_catalog
 
-        catalog = masters_planning.load_master_catalog(ctx.root)
+        catalog = masters_catalog.load_master_catalog(ctx.root)
         assert catalog is not None, (
             f"A5 {operation}::{row['pointer']}: no catalog — {FIX}")
         ordered = [str(row["id"]) for row in catalog["candidate_modules"]]

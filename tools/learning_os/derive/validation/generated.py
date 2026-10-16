@@ -6,7 +6,8 @@ import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-from learning_os.derive.validation.common import (
+from learning_os.domain import generated_reads
+from learning_os.domain.validation import (
     CANONICAL_TREES,
     GENERATED_ALLOWED,
     GENERATED_REPORT_PREFIXES,
@@ -14,7 +15,6 @@ from learning_os.derive.validation.common import (
     _in_garden,
     _in_quarantine,
 )
-from learning_os.domain import generated_reads
 
 
 def _collect_http_urls(value, urls: set[str] | None = None) -> set[str]:

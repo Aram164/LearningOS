@@ -13,12 +13,12 @@ from learning_os.app.context import OpContext
 from learning_os.app.handlers._shared import _guard_rows, _map_for_unit, _window_values
 from learning_os.app.proposal import Result
 from learning_os.app.registry import register
-from learning_os.app.synthesis.material_synthesis import material_synthesis_freshness
 from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
     stage_results_for,
 )
+from learning_os.derive.material_synthesis import material_synthesis_freshness
 from learning_os.derive.semantics.source_use import _evidence_label, _use_evidence
 from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, unreadable_refusal
 from learning_os.domain.material_refs import (
@@ -243,7 +243,7 @@ def _unit_audit(root, repo, unit) -> dict:
     (bs) item 3).
     """
     from learning_os.app._plan_gate import _match_key
-    from learning_os.app.synthesis.material_synthesis import (
+    from learning_os.derive.material_synthesis import (
         MaterialSynthesisError,
         synthesis_destination,
         validate_unit_material_synthesis,

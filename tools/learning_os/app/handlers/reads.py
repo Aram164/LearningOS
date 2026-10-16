@@ -13,6 +13,7 @@ from learning_os.app.projection import _fresh_manifest
 from learning_os.app.proposal import Result
 from learning_os.app.ranking import ranked_scan
 from learning_os.app.registry import register
+from learning_os.app.validation_service import status_issues
 from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.derive.learning_runtime import RuntimeInputError, collect_requirements
@@ -32,7 +33,7 @@ from learning_os.store.fingerprint import _snapshot
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.session.githistory import GitHistoryError
 from learning_os.store.session_ledger import SESSION_ID_ENV, _resolve_session_identity
-from learning_os.store.validation_cache import observe_pins, status_issues
+from learning_os.store.validation_cache import observe_pins
 
 
 def _domain_glance(manifest):

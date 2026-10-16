@@ -457,7 +457,7 @@ def live_evidence_digest(root: Path, key: str, manifest_files: dict, *, repo=Non
             return route_digests.get(key)
         return node_digests.get(key)
     if key.startswith("material-synthesis-basis:"):
-        from learning_os.app.synthesis.material_synthesis import (
+        from learning_os.derive.material_synthesis import (
             MaterialSynthesisError,
             current_unit_material_basis,
             material_basis_checksum,

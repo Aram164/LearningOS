@@ -76,9 +76,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # The policy itself lives in the package so the module-plan preflight applies
 # the same gate; this file is its command line. Re-exported here because the
 # tests and any existing caller address these names through this module.
+from learning_os.app.validation_service import collect  # noqa: E402,F401
 from learning_os.store.warning_baseline import (  # noqa: E402,F401
     BASELINE_RELATIVE,
-    collect,
     delta,
     load_baseline,
     ratchet,

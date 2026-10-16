@@ -105,3 +105,37 @@ moves:
   to: tools/learning_os/store/evidence.py::replay_for_request
 - from: tools/learning_os/store/ai_actions/support.py::_projection
   to: tools/learning_os/ai_actions/projection.py::_projection
+- from: tools/learning_os/app/synthesis/material_synthesis.py
+  to: tools/learning_os/derive/material_synthesis.py
+- from: tools/learning_os/derive/validation/common.py
+  to: tools/learning_os/domain/validation.py
+- from: tools/learning_os/derive/validation/advisories.py::_LIVE_HYGIENE_CODES
+  to: tools/learning_os/domain/validation.py::_LIVE_HYGIENE_CODES
+- from: tools/learning_os/derive/validation/advisories.py::NEGLECT_GIT_HISTORY_PREFIX
+  to: tools/learning_os/domain/validation.py::NEGLECT_GIT_HISTORY_PREFIX
+- from: tools/learning_os/derive/validation/advisories.py::is_live_advisory
+  to: tools/learning_os/domain/validation.py::is_live_advisory
+- from: tools/learning_os/store/validation_cache.py::status_issues
+  to: tools/learning_os/app/validation_service.py::status_issues
+- from: tools/learning_os/store/warning_baseline.py::collect
+  to: tools/learning_os/app/validation_service.py::collect
+- from: tools/learning_os/app/admin/masters_planning.py::MastersPlanningError
+  to: tools/learning_os/derive/masters_catalog.py::MastersPlanningError
+- from: tools/learning_os/app/admin/masters_planning.py::_FORBIDDEN_KEYS
+  to: tools/learning_os/derive/masters_catalog.py::_FORBIDDEN_KEYS
+- from: tools/learning_os/app/admin/masters_planning.py::_PERSONAL_LINK_HOSTS
+  to: tools/learning_os/derive/masters_catalog.py::_PERSONAL_LINK_HOSTS
+- from: tools/learning_os/app/admin/masters_planning.py::_assert_academic_only
+  to: tools/learning_os/derive/masters_catalog.py::_assert_academic_only
+- from: tools/learning_os/app/admin/masters_planning.py::_catalog_link_problem
+  to: tools/learning_os/derive/masters_catalog.py::_catalog_link_problem
+- from: tools/learning_os/app/admin/masters_planning.py::_read_yaml_object
+  to: tools/learning_os/derive/masters_catalog.py::_read_yaml_object
+- from: tools/learning_os/app/admin/masters_planning.py::_sanitized_file
+  to: tools/learning_os/derive/masters_catalog.py::_sanitized_file
+- from: tools/learning_os/app/admin/masters_planning.py::master_catalog_destination
+  to: tools/learning_os/derive/masters_catalog.py::master_catalog_destination
+- from: tools/learning_os/app/admin/masters_planning.py::validate_master_catalog
+  to: tools/learning_os/derive/masters_catalog.py::validate_master_catalog
+- from: tools/learning_os/app/admin/masters_planning.py::load_master_catalog
+  to: tools/learning_os/derive/masters_catalog.py::load_master_catalog

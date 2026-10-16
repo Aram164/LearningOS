@@ -13,8 +13,6 @@ from typing import Any
 
 import yaml
 
-from learning_os.app.admin.masters_planning import load_master_catalog
-from learning_os.app.synthesis.material_synthesis import material_synthesis_freshness
 from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.contracts.manifest_contract import (
@@ -24,6 +22,8 @@ from learning_os.contracts.manifest_contract import (
     declared_schema_sha256,
     declared_version,
 )
+from learning_os.derive.masters_catalog import load_master_catalog
+from learning_os.derive.material_synthesis import material_synthesis_freshness
 from learning_os.derive.projection import build_backlinks, build_manifest, stable_generated_at
 from learning_os.derive.validation import validate
 from learning_os.store import observations

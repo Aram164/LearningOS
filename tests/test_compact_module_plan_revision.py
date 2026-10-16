@@ -11,7 +11,8 @@ from pathlib import Path
 import yaml
 from repo_builders import _audit, _compact_setup, run_los, write_yaml
 
-from learning_os.store.warning_baseline import collect, write_baseline
+from learning_os.app.validation_service import collect
+from learning_os.store.warning_baseline import write_baseline
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -126,7 +127,7 @@ def test_receipt_verification_without_a_synthesis_disposition(mini_repo, tmp_pat
     then takes its expectation from the receipt instead of rejecting the evidence
     (synthetic authoring campaign D6: `invalid-evidence` on a committed module
     import), and still fails closed on a dossier the request did not write."""
-    from learning_os.app.synthesis.material_synthesis import synthesis_destination
+    from learning_os.derive.material_synthesis import synthesis_destination
 
     _two_units(mini_repo)
     draft = tmp_path / "compact.yaml"

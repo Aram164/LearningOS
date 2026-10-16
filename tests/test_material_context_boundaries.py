@@ -9,7 +9,7 @@ import yaml
 from repo_builders import _compact_setup, run_los, write_minimal_pdf
 from test_material_context import _binding, _context, _plant_note
 
-from learning_os.app.synthesis.material_synthesis import synthesis_destination
+from learning_os.derive.material_synthesis import synthesis_destination
 
 
 @pytest.mark.parametrize("change", ["unchanged", "changed", "removed", "restored"])

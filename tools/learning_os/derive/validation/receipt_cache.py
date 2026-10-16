@@ -27,8 +27,8 @@ from typing import TYPE_CHECKING, Any, Protocol
 
 import yaml
 
-from learning_os.derive.validation.common import Issue
 from learning_os.domain.failures import TransactionFailure
+from learning_os.domain.validation import Issue
 from learning_os.store.derived.engine import BuildContext, evaluate, evaluate_many
 from learning_os.store.derived.identity import (
     digest_code_identity,

@@ -6,9 +6,9 @@ import pytest
 
 from learning_os.derive.projection import generate_all
 from learning_os.derive.projection.common import _git_last_commit, stable_generated_at
-from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
 from learning_os.derive.validation.core import Validator
 from learning_os.domain.failures import TransactionFailure
+from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS
 from learning_os.store.loader import load_repo
 from learning_os.store.session import githistory
 

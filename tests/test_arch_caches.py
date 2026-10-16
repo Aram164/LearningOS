@@ -47,6 +47,7 @@ from test_material_text_cache import (
 import learning_os.derive.semantics.dossiers as dz
 import learning_os.derive.validation.receipt_cache as rc
 import learning_os.store.validation_cache as vc
+from learning_os.app import validation_service
 from learning_os.derive.validation import validate
 from learning_os.store import digests
 from learning_os.store.derived.store import read_state
@@ -120,13 +121,13 @@ def _frozen(issues) -> list:
 
 
 def _warm_validation(root: Path) -> list:
-    return _frozen(vc.status_issues(load_repo(root)))
+    return _frozen(validation_service.status_issues(load_repo(root)))
 
 
 def _fresh_validation(root: Path, monkeypatch: pytest.MonkeyPatch) -> list:
     monkeypatch.setenv("LOS_NO_CACHE", "1")
     try:
-        return _frozen(vc.status_issues(load_repo(root)))
+        return _frozen(validation_service.status_issues(load_repo(root)))
     finally:
         monkeypatch.delenv("LOS_NO_CACHE", raising=False)
 
@@ -248,7 +249,7 @@ def test_generated_findings_have_one_shared_implementation(tmp_path: Path):
 def test_obsolete_sidecars_stay_unwritten(mini_repo: Path):
     _stage_all_producers(mini_repo)
     _commit_capture(mini_repo, "a10-obs-a", "request-a10-obs-a")
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     validate(load_repo(mini_repo), online=False)
     assert not (mini_repo / vc.CACHE_RELATIVE).exists()
     assert not (mini_repo / rc.SIDECAR_RELATIVE).exists()
@@ -260,7 +261,7 @@ def test_obsolete_sidecars_stay_unwritten(mini_repo: Path):
 
 def test_validation_canonical_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
     note.write_text(note.read_text(encoding="utf-8") + "\nA10 canonical touch.\n",
@@ -271,7 +272,7 @@ def test_validation_canonical_mutation_matches_fresh(mini_repo: Path, monkeypatc
 
 def test_validation_code_identity_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     real = vc.digest_code_identity
     monkeypatch.setattr(vc, "digest_code_identity", lambda root: "f" * 64)
@@ -282,7 +283,7 @@ def test_validation_code_identity_mutation_matches_fresh(mini_repo: Path, monkey
 
 def test_validation_runtime_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     monkeypatch.setattr(vc, "runtime_digest", lambda: "e" * 64)
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -291,7 +292,7 @@ def test_validation_runtime_mutation_matches_fresh(mini_repo: Path, monkeypatch)
 
 def test_validation_materials_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     materials = mini_repo.parent / "materials"
     (materials / "a10-new-deck.pdf").write_bytes(b"%PDF-1.4 a10 bytes\n")
@@ -301,7 +302,7 @@ def test_validation_materials_mutation_matches_fresh(mini_repo: Path, monkeypatc
 
 def test_validation_operations_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     monkeypatch.setattr(vc, "operations_digest", lambda root: "d" * 64)
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -310,7 +311,7 @@ def test_validation_operations_mutation_matches_fresh(mini_repo: Path, monkeypat
 
 def test_validation_validator_inputs_mutation_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     (mini_repo / "generated/stray.txt").write_text("a10\n", encoding="utf-8")
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -325,7 +326,7 @@ def test_validation_validator_inputs_mutation_matches_fresh(mini_repo: Path, mon
 
 def test_validation_corrupt_blob_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     state = read_state(mini_repo)[vc.VALIDATION_NODE_ID]
     blob = mini_repo / "generated" / "derived-state" / state.blob
     blob.write_bytes(blob.read_bytes()[: len(blob.read_bytes()) // 2])
@@ -335,7 +336,7 @@ def test_validation_corrupt_blob_matches_fresh(mini_repo: Path, monkeypatch):
 
 def test_validation_unreadable_blob_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     state = read_state(mini_repo)[vc.VALIDATION_NODE_ID]
     blob = mini_repo / "generated" / "derived-state" / state.blob
@@ -356,17 +357,17 @@ def test_validation_in_run_write_matches_fresh(mini_repo: Path, monkeypatch):
         note.rename(note.with_name("a10-raced-demo.md"))
         return issues
 
-    monkeypatch.setattr(vc, "validate", racing)
-    first = vc.status_issues(load_repo(mini_repo))
+    monkeypatch.setattr(validation_service, "validate", racing)
+    first = validation_service.status_issues(load_repo(mini_repo))
     assert not any(sev == "E" for sev, _, _, _ in _frozen(first))
-    monkeypatch.setattr(vc, "validate", real)
+    monkeypatch.setattr(validation_service, "validate", real)
     assert vc.read_cached_static_issues(mini_repo) is None
     assert _warm_validation(mini_repo) == _fresh_validation(mini_repo, monkeypatch)
 
 
 def test_validation_online_run_does_not_poison(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     online = validate(load_repo(mini_repo), online=True)
     assert isinstance(online, list)
@@ -379,7 +380,7 @@ def test_validation_advisory_drift_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
     drop = mini_repo / "work/inbox/drop.md"
     drop.write_text("unrouted capture\n", encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     past = time.time() - 16 * 86400
     os.utime(drop, (past, past))
@@ -400,7 +401,7 @@ def test_validation_derived_state_extra_malformed_matches_fresh(mini_repo: Path,
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_text(json.dumps({"_generated": {"warning": "GENERATED x", "generator": "t"},
                                  "x": 1}), encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     extra.write_text("{ not json", encoding="utf-8")
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -415,7 +416,7 @@ def test_validation_derived_state_marker_change_matches_fresh(mini_repo: Path, m
     extra = mini_repo / "generated" / "derived-state" / "extra.md"
     extra.parent.mkdir(parents=True, exist_ok=True)
     extra.write_text("<!-- GENERATED file -->\n\nBody.\n", encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     extra.write_text("No marker here.\n", encoding="utf-8")
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -427,7 +428,7 @@ def test_validation_derived_state_marker_change_matches_fresh(mini_repo: Path, m
 
 def test_validation_derived_state_corruption_heals_and_matches_fresh(mini_repo: Path, monkeypatch):
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     state_path = mini_repo / "generated" / "derived-state" / "state-v1.json"
     good_bytes = state_path.read_bytes()
@@ -483,7 +484,7 @@ def test_validation_derived_state_extra_dir_matches_fresh(mini_repo: Path, monke
     the old walk descended into directories without pinning their
     finding, so warm served stale pre-directory issues)."""
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     extra = mini_repo / "generated" / "derived-state" / "extra.json"
     extra.mkdir(parents=True)
@@ -521,7 +522,7 @@ def test_validation_derived_state_file_to_dir_shape_matches_fresh(
     clean = json.dumps({"_generated": {"warning": "GENERATED x", "generator": "t"},
                         "x": 1})
     extra.write_text(clean, encoding="utf-8")
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     extra.unlink()
     extra.mkdir()
@@ -544,7 +545,7 @@ def test_validation_derived_state_broken_link_matches_fresh(mini_repo: Path, mon
     directory, file, and broken-link changes must each invalidate
     exactly when the fresh findings change."""
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     extra = mini_repo / "generated" / "derived-state" / "extra.json"
     extra.symlink_to(mini_repo / "generated" / "derived-state" / "nowhere.json")
@@ -564,7 +565,7 @@ def test_validation_unreadable_state_matches_fresh_by_raising(mini_repo: Path, m
     (`check_generated` has no OSError handling). Warm and fresh must raise
     the same way; this proves matching behavior, not cache recovery."""
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))
+    validation_service.status_issues(load_repo(mini_repo))
     assert vc.read_cached_static_issues(mini_repo) is not None
     state_path = mini_repo / "generated" / "derived-state" / "state-v1.json"
     state_path.chmod(0o000)

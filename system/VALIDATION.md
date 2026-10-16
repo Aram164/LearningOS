@@ -18,7 +18,7 @@ one. A signature rather than a total, because a total is gamed by trading one
 warning for another.
 
 Two exact, named sets are excluded from the baseline — `BASELINE_EXEMPT_WARNINGS`
-in `learning_os.derive.validation.common`, never a prefix, severity band, or path heuristic:
+in `learning_os.domain.validation`, never a prefix, severity band, or path heuristic:
 
 - **Environmental** (`ENVIRONMENTAL_WARNINGS`: `MATERIALS-OFFLINE`,
   `HYGIENE-VIEWS`, `HYGIENE-LOCK`, and the rest) describe the machine, not the

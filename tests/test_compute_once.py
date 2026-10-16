@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 from repo_builders import declare_scan
 
+from learning_os.app import validation_service
 from learning_os.store import digests
 
 
@@ -287,12 +288,12 @@ def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
 
     _stage_validation_producers(mini_repo)
     _text_cache_index(mini_repo)
-    vc.status_issues(load_repo(mini_repo))  # warm
+    validation_service.status_issues(load_repo(mini_repo))  # warm
     assert vc.read_cached_static_issues(mini_repo) is not None
     (mini_repo / "generated" / "text-cache" / ("ab" * 32) / "index.json").write_text(
         "{ not json\n", encoding="utf-8")
     assert vc.read_cached_static_issues(mini_repo) is None
-    issues = vc.status_issues(load_repo(mini_repo))
+    issues = validation_service.status_issues(load_repo(mini_repo))
     assert any(i.code == "GEN-JSON" and i.severity == "E" for i in issues)
 
 
@@ -301,7 +302,7 @@ def test_new_text_cache_entry_misses(mini_repo: Path):
     from learning_os.store.loader import load_repo
 
     _stage_validation_producers(mini_repo)
-    vc.status_issues(load_repo(mini_repo))  # warm, no text cache
+    validation_service.status_issues(load_repo(mini_repo))  # warm, no text cache
     assert vc.read_cached_static_issues(mini_repo) is not None
     _text_cache_index(mini_repo)
     assert vc.read_cached_static_issues(mini_repo) is None
@@ -316,13 +317,13 @@ def test_rewritten_scan_misses_and_revalidates(mini_repo: Path):
 
     _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
-    assert vc.status_issues(load_repo(mini_repo)) is not None
+    assert validation_service.status_issues(load_repo(mini_repo)) is not None
     assert vc.read_cached_static_issues(mini_repo) is not None
     # Same size, different bytes: the pin stats (size, mtime, ctime),
     # and the rewrite moves mtime and ctime.
     (mini_repo / SCAN_REL).write_bytes(b"%PDF SCAN\n")
     assert vc.read_cached_static_issues(mini_repo) is None
-    issues = vc.status_issues(load_repo(mini_repo))
+    issues = validation_service.status_issues(load_repo(mini_repo))
     assert any(i.code == "ATTACH-LOCAL-CHANGED" and i.severity == "E"
                for i in issues)
 
@@ -334,7 +335,7 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
     _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
     (mini_repo / SCAN_REL).unlink()
-    vc.status_issues(load_repo(mini_repo))  # warm, scan absent
+    validation_service.status_issues(load_repo(mini_repo))  # warm, scan absent
     assert vc.read_cached_static_issues(mini_repo) is not None
     (mini_repo / SCAN_REL).write_bytes(b"%PDF scan\n")
     assert vc.read_cached_static_issues(mini_repo) is None
