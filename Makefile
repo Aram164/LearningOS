@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean scrut hooks garden status plan-check projection-check system-check stress clean-derived
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean scrut hooks garden status plan-check projection-check system-check stress clean-derived commit-check
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -46,6 +46,7 @@ help:
 	@echo "make hooks  - install the canonical Core hooks and the paired pre-push gate"
 	@echo "make setup  - create .venv, install deps, install Git hooks (run once per clone/move)"
 	@echo "make setup-lean - runtime-only .venv for fresh clones (no pytest/ruff; see README)"
+	@echo "make commit-check - commit-stage gate: lint, contracts, warnings, arch tests, affected tests (OD13)"
 
 check:
 	$(PY) tools/validate.py
@@ -129,6 +130,15 @@ lint:
 
 code-check:
 	$(PY) tools/code_reachability.py
+
+# Commit-stage gate (OD13, 6.0.3): static checks, small tests and the
+# affected groups. Stops at the first failure; never replaces system-check.
+commit-check:
+	$(PY) -m ruff check tools tests
+	.venv/bin/lint-imports --no-cache
+	$(PY) tools/warning_baseline.py --check
+	$(PY) -m pytest -q tests/test_arch_layers.py tests/test_arch_ratchets.py tests/test_arch_surface.py tests/test_move_map.py
+	$(PY) -m pytest -q $$($(PY) tools/affected_tests.py --base main)
 
 projection-check:
 	$(PY) tools/generate.py --shadow-all
