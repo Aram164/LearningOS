@@ -2,7 +2,9 @@
 
 Applies a ``{old module -> new module}`` map to files, imports and
 path-keyed text in one operation. Structure only: the tool refuses a
-map whose text rewrites would touch a recording or canonical tree.
+map whose text rewrites would change a recording; mentions in canonical,
+generated and contract files are reported as frozen and never rewritten.
+--apply records each move in tests/architecture/moves.yaml.
 
 Usage:
   python tools/move_map.py --map MAP.yaml --check
@@ -33,6 +35,13 @@ FORBIDDEN_PREFIXES = (
 )
 TEXT_ROOTS = ("tools/", "tests/", "system/")
 TEXT_FILES = ("pyproject.toml", "Makefile")
+#: A move whose text would change a recording is not mechanical (A12): refuse it.
+RECORDING_PREFIX = "tests/scenarios/recorded/"
+#: Contract text is part of the canonical fingerprint (``fingerprint.CONTRACT_ROOTS``)
+#: and every scenario world copies it: report it, never rewrite it.
+FROZEN_TEXT_PREFIXES = ("system/schema/", "system/contracts/")
+#: The record of applied moves: appended by ``--apply``, never rewritten.
+MOVE_LEDGER = "tests/architecture/moves.yaml"
 
 
 class MoveError(ValueError):
@@ -94,21 +103,10 @@ def _is_direct_child(from_norm: str, is_dir: bool) -> bool:
     return parent == "tools/learning_os"
 
 
-def _load_moves(root: Path, map_path: Path) -> list[Move]:
-    try:
-        text = map_path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise MoveError(f"cannot read map {map_path}: {exc}") from exc
-    try:
-        data = yaml.safe_load(text)
-    except yaml.YAMLError as exc:
-        raise MoveError(f"invalid map YAML: {exc}") from exc
-    if not isinstance(data, dict) or not isinstance(data.get("moves"), list):
-        raise MoveError("map must be a mapping with a 'moves' list")
-    if not data["moves"]:
-        raise MoveError("map has no moves")
+def _moves_from_entries(entries: list) -> list[Move]:
+    """Validated moves from raw ``{from, to}`` entries."""
     moves: list[Move] = []
-    for index, entry in enumerate(data["moves"]):
+    for index, entry in enumerate(entries):
         if not isinstance(entry, dict):
             raise MoveError(f"move {index}: not a mapping")
         from_raw = entry.get("from")
@@ -133,6 +131,22 @@ def _load_moves(root: Path, map_path: Path) -> list[Move]:
                 to_norm if not is_dir else to_norm + "/__init__.py"),
         ))
     return moves
+
+
+def _load_moves(root: Path, map_path: Path) -> list[Move]:
+    try:
+        text = map_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise MoveError(f"cannot read map {map_path}: {exc}") from exc
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        raise MoveError(f"invalid map YAML: {exc}") from exc
+    if not isinstance(data, dict) or not isinstance(data.get("moves"), list):
+        raise MoveError("map must be a mapping with a 'moves' list")
+    if not data["moves"]:
+        raise MoveError("map has no moves")
+    return _moves_from_entries(data["moves"])
 
 
 def _is_package_move(move: Move) -> bool:
@@ -163,6 +177,14 @@ def _mapped_path(moves: list[Move], rel: str) -> str:
         elif rel == move.from_norm:
             return move.to_norm
     return rel
+
+
+def translate(entries: list, value: str) -> str:
+    """Name ``value`` (a repo-relative path or a dotted module) after ``entries``' moves."""
+    moves = _moves_from_entries(entries)
+    if "/" in value or value.endswith(".py"):
+        return _mapped_path(moves, value)
+    return _mapped_dotted(moves, value)
 
 
 def _contains(ancestor: str, path: str) -> bool:
@@ -360,7 +382,11 @@ def _plan_imports(
                 if new_base not in groups:
                     groups[new_base] = []
                     order.append(new_base)
-                groups[new_base].append((new_name, alias.asname))
+                # A renamed module keeps the name its importer binds.
+                asname = alias.asname
+                if asname is None and new_name not in (alias.name, "*"):
+                    asname = alias.name
+                groups[new_base].append((new_name, asname))
             needs = changed or (file_moved and node.level > 0)
             if node.level > 0 and changed:
                 needs = True
@@ -528,17 +554,22 @@ def _plan(
     """Compute (report lines, post-path -> new text, moved, imports, strings)."""
     patterns = _string_patterns(moves)
     forbidden_hits: list[str] = []
+    frozen_hits: list[str] = []
     for rel in tracked:
-        if not any(rel.startswith(p) for p in FORBIDDEN_PREFIXES):
+        canonical = any(rel.startswith(p) for p in FORBIDDEN_PREFIXES)
+        if not canonical and not rel.startswith(FROZEN_TEXT_PREFIXES):
             continue
         text = _read_text(root, rel)
         if text is None:
             continue
         if any(pattern.search(text) for pattern, _o, _n, _k in patterns):
-            forbidden_hits.append(rel)
+            if rel.startswith(RECORDING_PREFIX):
+                forbidden_hits.append(rel)
+            else:
+                frozen_hits.append(rel)
     if forbidden_hits:
         raise MoveError(
-            "move would rewrite forbidden files: "
+            "move would rewrite recorded behaviour: "
             + ", ".join(sorted(forbidden_hits)))
     py_files = [
         rel for rel in tracked
@@ -572,7 +603,8 @@ def _plan(
     text_files = [
         rel for rel in tracked
         if (any(rel.startswith(r) for r in TEXT_ROOTS) or rel in TEXT_FILES)
-        and not any(rel.startswith(p) for p in FORBIDDEN_PREFIXES)]
+        and not any(rel.startswith(p) for p in FORBIDDEN_PREFIXES)
+        and not rel.startswith(FROZEN_TEXT_PREFIXES) and rel != MOVE_LEDGER]
     for rel in sorted(text_files):
         post = _mapped_path(moves, rel)
         text = writes.get(post, contents.get(rel))
@@ -599,7 +631,8 @@ def _plan(
             files_moved += 1
             move_lines.append(
                 f"{move.from_norm}: {move.from_norm} -> {move.to_norm}")
-    lines = move_lines + import_lines + string_lines
+    frozen_lines = [f"{rel}: frozen, not rewritten" for rel in sorted(frozen_hits)]
+    lines = frozen_lines + move_lines + import_lines + string_lines
     return lines, writes, files_moved, imports_rewritten, strings_rewritten
 
 
@@ -643,6 +676,14 @@ def main(argv: list[str] | None = None) -> int:
             _git(root, "mv", move.from_norm, move.to_norm)
         for post, new_text in sorted(writes.items()):
             (root / post).write_text(new_text, encoding="utf-8")
+        ledger = root / MOVE_LEDGER
+        recorded = (yaml.safe_load(ledger.read_text(encoding="utf-8")) or {}
+                    if ledger.is_file() else {})
+        entries = list(recorded.get("moves") or [])
+        entries += [{"from": m.from_raw, "to": m.to_raw} for m in moves]
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text(yaml.safe_dump({"moves": entries}, sort_keys=False),
+                          encoding="utf-8")
     except (MoveError, OSError) as exc:
         print(f"move_map: {exc}", file=sys.stderr)
         return 2

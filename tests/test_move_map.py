@@ -209,3 +209,75 @@ def test_unmoved_imports_stay_byte_identical(tmp_path):
     assert result.returncode == 0, result.stderr
     assert (root / "tools/learning_os/untouched.py").read_bytes() == (
         untouched.encode("utf-8"))
+
+
+def test_canonical_and_contract_mentions_are_reported_frozen(tmp_path):
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    _write(root, "work/note.md", "learning_os.oldmod\n")
+    _write(root, "system/contracts/x.yaml", "learning_os.oldmod\n")
+    _commit(root)
+    result = _run(root, "moves:\n"
+                  "  - from: tools/learning_os/oldmod.py\n"
+                  "    to: tools/learning_os/bar/oldmod.py\n", "--apply")
+    assert result.returncode == 0, result.stderr
+    assert (root / "work/note.md").read_bytes() == b"learning_os.oldmod\n"
+    assert (root / "system/contracts/x.yaml").read_bytes() == b"learning_os.oldmod\n"
+    assert "work/note.md: frozen, not rewritten" in result.stdout
+    assert "system/contracts/x.yaml: frozen, not rewritten" in result.stdout
+
+
+def test_renamed_module_keeps_bound_name(tmp_path):
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    _write(root, "tools/learning_os/use.py",
+           "from learning_os import oldmod\nVALUE = oldmod.VALUE\n")
+    _commit(root)
+    result = _run(root, "moves:\n"
+                  "  - from: tools/learning_os/oldmod.py\n"
+                  "    to: tools/learning_os/bar/newmod.py\n", "--apply")
+    assert result.returncode == 0, result.stderr
+    assert "from learning_os.bar import newmod as oldmod" in (
+        root / "tools/learning_os/use.py").read_text(encoding="utf-8")
+
+
+def test_apply_records_moves_in_ledger(tmp_path):
+    import yaml as _yaml
+    root = _repo(tmp_path)
+    _write(root, "tools/learning_os/oldmod.py", "VALUE = 1\n")
+    _write(root, "tools/learning_os/other.py", "OTHER = 2\n")
+    _write(root, "tools/learning_os/bar/__init__.py", "")
+    _commit(root)
+    first = _run(root, "moves:\n"
+                 "  - from: tools/learning_os/oldmod.py\n"
+                 "    to: tools/learning_os/bar/oldmod.py\n", "--apply")
+    assert first.returncode == 0, first.stderr
+    second = _run(root, "moves:\n"
+                  "  - from: tools/learning_os/other.py\n"
+                  "    to: tools/learning_os/bar/other.py\n", "--apply")
+    assert second.returncode == 0, second.stderr
+    ledger = _yaml.safe_load(
+        (root / "tests/architecture/moves.yaml").read_text(encoding="utf-8"))
+    assert ledger == {"moves": [
+        {"from": "tools/learning_os/oldmod.py",
+         "to": "tools/learning_os/bar/oldmod.py"},
+        {"from": "tools/learning_os/other.py",
+         "to": "tools/learning_os/bar/other.py"}]}
+
+
+def test_translate_maps_paths_and_dotted_names(tmp_path):
+    import importlib.util
+    import sys
+    spec = importlib.util.spec_from_file_location("move_map_mod", TOOL)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    entries = [{"from": "tools/learning_os/oldpkg/",
+                "to": "tools/learning_os/bar/newpkg/"}]
+    assert module.translate(entries, "tools/learning_os/oldpkg/x.py") == (
+        "tools/learning_os/bar/newpkg/x.py")
+    assert module.translate(entries, "learning_os.oldpkg.x") == (
+        "learning_os.bar.newpkg.x")
+    assert module.translate(entries, "learning_os.other") == "learning_os.other"
