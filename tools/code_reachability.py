@@ -48,6 +48,7 @@ ENTRYPOINTS = (
     "material_toc.py",
     "material_summarize.py",
     "materials_manifest.py",
+    "move_map.py",
     "normalise_material_uris.py",
     "plan_write_audit.py",
     "refresh_amls_fixture.py",

@@ -40,6 +40,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
 | `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity — serving a durable analysis note first when one binds the exact source and range. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
+| `move_map.py` | supported maintenance | Applies a module move map to files, imports and path-keyed text (OD9); `--check` plans, `--apply` moves. |
 | `ingest_transcript.py` | bounded materials maintenance | Legacy caption import for already managed material; not the two-pass YouTube examination path, which uses Gemini Notebook on demand (WORKFLOWS §6a). Writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
