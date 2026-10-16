@@ -1532,7 +1532,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc), site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}", exit_code=3,
+            prefixed=True, exit_code=3,
         ) from exc
     except WriteRefused as exc:
         if exc.gateway_message is None:
@@ -1543,7 +1543,7 @@ def material_span(ctx: OpContext, req: dict) -> Result:
     except (OSError, ValueError) as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}", exit_code=2,
+            prefixed=True, exit_code=2,
         ) from exc
 
 
@@ -2240,7 +2240,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
     except StaleSnapshot as exc:
         raise StaleSnapshot(
             str(exc), site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}", exit_code=3,
+            prefixed=True, exit_code=3,
         ) from exc
     except WriteRefused as exc:
         if exc.gateway_message is None:
@@ -2251,7 +2251,7 @@ def material_context(ctx: OpContext, req: dict) -> Result:
     except (OSError, UnicodeError) as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}", exit_code=2,
+            prefixed=True, exit_code=2,
         ) from exc
 
 
@@ -3630,7 +3630,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.has-map",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -3640,7 +3640,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.bad-map",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     if not isinstance(data, dict) or data.get("unit_id") != req["unit_id"]:
@@ -3648,7 +3648,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.bad-map",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
 
@@ -3671,7 +3671,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     message,
                     site=f"{ctx.operation}.bad-flags",
-                    gateway_message=f"los: {message}",
+                    prefixed=True,
                     exit_code=2,
                 )
     else:
@@ -3681,7 +3681,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site=f"{ctx.operation}.bad-map",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         data, replacement_diff, problems = _plan_map_replacement(
@@ -3721,7 +3721,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.contract-failed",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     unit_data = dict(unit.data)
@@ -3969,7 +3969,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--check and --review-report are mutually exclusive",
             site=f"{ctx.operation}.check-and-review",
-            gateway_message="los: --check and --review-report are mutually exclusive",
+            prefixed=True,
             exit_code=2,
         )
     claim_ids = list(req.get("claim_ids") or [])
@@ -3979,9 +3979,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "reviewed apply needs --claim-ids and --claims-sha256 with --review-report",
                 site=f"{ctx.operation}.reviewed-needs-ids",
-                gateway_message=(
-                    "los: reviewed apply needs --claim-ids and --claims-sha256 "
-                    "with --review-report"),
+                prefixed=True,
                 exit_code=2,
             )
         try:
@@ -3989,14 +3987,14 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     "claims_sha256 does not bind these claim ids",
                     site=f"{ctx.operation}.reviewed-sha-mismatch",
-                    gateway_message="los: claims_sha256 does not bind these claim ids",
+                    prefixed=True,
                     exit_code=2,
                 )
         except LineageError as exc:
             raise WriteRefused(
                 str(exc),
                 site=f"{ctx.operation}.reviewed-sha-invalid",
-                gateway_message=f"los: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         return Result(
@@ -4019,7 +4017,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"re-stamp analysis failed: {exc}",
             site=f"{ctx.operation}.analysis-failed",
-            gateway_message=f"los: re-stamp analysis failed: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     snapshot = ctx.snapshot_id()
@@ -4034,9 +4032,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
             "lineage-restamp needs --claim-ids with --claims-sha256 (the reviewed list); "
             "--check alone recomputes eligibility",
             site=f"{ctx.operation}.needs-claim-ids",
-            gateway_message=(
-                "los: lineage-restamp needs --claim-ids with --claims-sha256 "
-                "(the reviewed list); --check alone recomputes eligibility"),
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -4045,7 +4041,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.unverified-claims",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     plan = {cid: dict(planned[cid]["new_reads"]) for cid in ordered}
@@ -4071,11 +4067,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
             "or a sealed GatewayEnvelopeV2 (`los capability lineage.restamp --payload-file "
             "ENVELOPE.json`); direct CLI application is disabled",
             site=f"{ctx.operation}.direct-apply-disabled",
-            gateway_message=(
-                "los: lineage-restamp applies only through its reviewed report "
-                "(--review-report) or a sealed GatewayEnvelopeV2 (`los capability "
-                "lineage.restamp --payload-file ENVELOPE.json`); direct CLI "
-                "application is disabled"),
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -4095,7 +4087,7 @@ def lineage_restamp(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.restamp-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     try:
@@ -4756,7 +4748,7 @@ def _master_promotion_import(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.bad-expected-revision",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     if expected_revisions != plan.expected_revisions:
@@ -5103,7 +5095,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.bad-expected-revision",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 

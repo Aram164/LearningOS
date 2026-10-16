@@ -46,35 +46,35 @@ def session_end_command(ctx: OpContext, req: dict) -> Result:
     except _SessionUsageError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.close-with-commit",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionChannelError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.unknown-channel",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionLedgerError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.unreadable-ledger",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionEmptyError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.nothing-touched",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionConflictError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.ownership-conflict",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionMismatchError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.review-invalidated",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionCommittedError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.already-committed",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     except _SessionHeadMovedError as exc:
         raise WriteRefused(
             str(exc), site=f"{ctx.operation}.head-changed",
-            gateway_message=f"los: {exc}", exit_code=2) from exc
+            prefixed=True, exit_code=2) from exc
     if isinstance(outcome, CommandOutput):
         return Result({}, command_output=outcome)
     return Result(outcome, json_dumps=_dumps_session)

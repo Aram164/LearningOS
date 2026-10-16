@@ -57,10 +57,7 @@ class OpContext:
             if request.expected_snapshot != expected:
                 raise StaleSnapshot(
                     "handler snapshot does not match the approved gateway intent",
-                    gateway_message=(
-                        "los: handler snapshot does not match "
-                        "the approved gateway intent"
-                    ),
+                    prefixed=True,
                 )
             # cmd_capability marks this only while it holds the same operator
             # lock through the complete handler dispatch.
@@ -73,10 +70,7 @@ class OpContext:
             raise WriteRefused(
                 "--expected-snapshot was empty; refusing to write without "
                 "a concurrency token",
-                gateway_message=(
-                    "los: --expected-snapshot was empty; refusing to write "
-                    "without a concurrency token"
-                ),
+                prefixed=True,
                 exit_code=3,
             )
         actual = self.snapshot_id()
@@ -95,7 +89,7 @@ class OpContext:
             )
             raise StaleSnapshot(
                 f"{line}\n{detail}",
-                gateway_message=f"los: {line}\n{detail}",
+                prefixed=True,
             )
         line = (
             "projection conflict — authored files changed since the app "
@@ -103,5 +97,5 @@ class OpContext:
         )
         raise StaleSnapshot(
             f"{line}\n{detail}",
-            gateway_message=f"los: {line}\n{detail}",
+            prefixed=True,
         )

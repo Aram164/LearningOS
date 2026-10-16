@@ -131,7 +131,7 @@ def capture(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "nothing to capture (empty input)",
                 site=f"{ctx.operation}.empty-input",
-                gateway_message="los: nothing to capture (empty input)",
+                prefixed=True,
                 exit_code=2,
             )
         slug = re.sub(r"[^a-z0-9]+", "-",
@@ -180,7 +180,7 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "Garden seed text is empty; nothing was written",
             site=f"{ctx.operation}.empty-text",
-            gateway_message="los: Garden seed text is empty; nothing was written",
+            prefixed=True,
             exit_code=2,
         )
 
@@ -244,7 +244,7 @@ def inbox_list(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"cannot list work/inbox: {exc}",
             site=f"{ctx.operation}.list-failed",
-            gateway_message=f"los: cannot list work/inbox: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     now = observations.epoch()
@@ -305,7 +305,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"inbox name must be relative to work/inbox: {name}",
                 site=f"{ctx.operation}.bad-name",
-                gateway_message=f"los: inbox name must be relative to work/inbox: {name}",
+                prefixed=True,
                 exit_code=2,
             )
         snapshot = _snapshot(root, req.get("expected_snapshot"))
@@ -321,7 +321,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"inbox item not found: {name}",
                 site=f"{ctx.operation}.unknown-item",
-                gateway_message=f"los: inbox item not found: {name}",
+                prefixed=True,
                 exit_code=2,
             )
         raw = _bytes_inside_owner(
@@ -334,9 +334,7 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"inbox item is not UTF-8 text and has no text read: {name}",
                 site=f"{ctx.operation}.not-utf8",
-                gateway_message=(
-                    f"los: inbox item is not UTF-8 text and has no text read: {name}"
-                ),
+                prefixed=True,
                 exit_code=2,
             ) from exc
         payload = _content_envelope(
@@ -352,14 +350,14 @@ def inbox_read(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -440,7 +438,7 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"cannot read shelving items: {exc}",
                 site=f"{ctx.operation}.bad-items-file",
-                gateway_message=f"los: cannot read shelving items: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         items = raw.get("items", raw) if isinstance(raw, dict) else raw
@@ -448,7 +446,7 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "shelving items file must contain a JSON list",
                 site=f"{ctx.operation}.items-not-list",
-                gateway_message="los: shelving items file must contain a JSON list",
+                prefixed=True,
                 exit_code=2,
             )
     proposal_path = study_map.path.parent / "shelving-proposal.md"
@@ -547,7 +545,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "shelving apply requires --approve and explicit selected proposal IDs",
             site=f"{ctx.operation}.needs-approve",
-            gateway_message="los: shelving apply requires --approve and explicit selected proposal IDs",
+            prefixed=True,
             exit_code=2,
         )
     root = ctx.root
@@ -562,7 +560,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "every selected ID must exist in the current proposal",
             site=f"{ctx.operation}.unknown-selected",
-            gateway_message="los: every selected ID must exist in the current proposal",
+            prefixed=True,
             exit_code=2,
         )
     writes: dict[Path, str] = {}
@@ -572,7 +570,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"unsafe or existing shelving destination: {item.get('destination')}",
                 site=f"{ctx.operation}.bad-destination",
-                gateway_message=f"los: unsafe or existing shelving destination: {item.get('destination')}",
+                prefixed=True,
                 exit_code=2,
             )
         content = item.get("content")
@@ -580,7 +578,7 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"proposal item {item.get('id')} has no reviewable content",
                 site=f"{ctx.operation}.empty-content",
-                gateway_message=f"los: proposal item {item.get('id')} has no reviewable content",
+                prefixed=True,
                 exit_code=2,
             )
         writes[target] = content.rstrip() + "\n"
@@ -702,7 +700,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="inbox.resolve.direct-cli",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -715,7 +713,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 str(exc),
                 site="inbox.resolve.bad-name",
-                gateway_message=f"los: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         if target.is_file():
@@ -729,7 +727,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="inbox.resolve.drop-changed",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         routed_to = [str(entry).strip() for entry in (req["routed_to"] or [])]
@@ -739,7 +737,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="inbox.resolve.missing-routed-to",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         year = str(observations.today().year)
@@ -755,7 +753,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     message,
                     site="inbox.resolve.archive-collision",
-                    gateway_message=f"los: {message}",
+                    prefixed=True,
                     exit_code=2,
                 )
             writes[destination] = data
@@ -764,7 +762,7 @@ def inbox_resolve(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="inbox.resolve.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     try:

@@ -82,7 +82,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "the direct goal path is not admitted",
             site="cli.goal.not-admitted",
-            gateway_message="los: the direct goal path is not admitted",
+            prefixed=True,
             exit_code=2,
         )
     supplied = req["goal_id"] if isinstance(req["goal_id"], list) else [req["goal_id"]]
@@ -93,7 +93,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "supply distinct exact goal ids, each one whitespace-free token; patterns are refused",
             site="cli.goal.bad-goal-ids",
-            gateway_message="los: supply distinct exact goal ids, each one whitespace-free token; patterns are refused",
+            prefixed=True,
             exit_code=2,
         )
     state = "rejected" if req.get("reject") else "deferred" if req.get("defer") else "closed"
@@ -103,7 +103,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "--revisit-on requires --defer",
                 site="cli.goal.revisit-needs-defer",
-                gateway_message="los: --revisit-on requires --defer",
+                prefixed=True,
                 exit_code=2,
             )
         try:
@@ -114,14 +114,14 @@ def goal(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "--revisit-on needs an ISO date (YYYY-MM-DD)",
                 site="cli.goal.bad-revisit",
-                gateway_message="los: --revisit-on needs an ISO date (YYYY-MM-DD)",
+                prefixed=True,
                 exit_code=2,
             ) from None
         if day <= observations.today():
             raise WriteRefused(
                 "--revisit-on must be a future date",
                 site="cli.goal.past-revisit",
-                gateway_message="los: --revisit-on must be a future date",
+                prefixed=True,
                 exit_code=2,
             )
     snapshot = ctx.snapshot_id()
@@ -134,7 +134,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"cannot read the goal ledger: {exc}",
             site="cli.goal.unreadable-ledger",
-            gateway_message=f"los: cannot read the goal ledger: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     if not raw.strip():
@@ -146,14 +146,14 @@ def goal(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"the goal ledger is malformed, refusing to clobber it: {exc}",
                 site="cli.goal.malformed-ledger",
-                gateway_message=f"los: the goal ledger is malformed, refusing to clobber it: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         if not isinstance(loaded, dict):
             raise WriteRefused(
                 "the goal ledger is malformed, refusing to clobber it",
                 site="cli.goal.malformed-ledger",
-                gateway_message="los: the goal ledger is malformed, refusing to clobber it",
+                prefixed=True,
                 exit_code=2,
             )
         data = loaded
@@ -162,7 +162,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "the goal ledger is malformed, refusing to clobber it",
             site="cli.goal.malformed-ledger",
-            gateway_message="los: the goal ledger is malformed, refusing to clobber it",
+            prefixed=True,
             exit_code=2,
         )
     # Only decidable ids: a goal in the current scan, or already in the
@@ -221,7 +221,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             problems[0],
             site="cli.goal.invalid-ledger",
-            gateway_message=f"los: {problems[0]}",
+            prefixed=True,
             exit_code=2,
         )
     payload = {
@@ -294,7 +294,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "batch apply needs the exact --check reviewed-sha256; changed ledger or decisions require a fresh review",
             site="cli.goal.batch-needs-review",
-            gateway_message="los: batch apply needs the exact --check reviewed-sha256; changed ledger or decisions require a fresh review",
+            prefixed=True,
             exit_code=3,
         )
     # The decision joins the caller's session, so session-end lists and
@@ -311,7 +311,7 @@ def goal(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 str(exc),
                 site="cli.goal.unreadable-session",
-                gateway_message=f"los: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
     return Result(

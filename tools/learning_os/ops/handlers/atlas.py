@@ -64,7 +64,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context limit must be 1..50",
                 site="ability.context.bad-limit",
-                gateway_message="los: ability-context limit must be 1..50",
+                prefixed=True,
                 exit_code=2,
             )
         brief = req.get("brief", False)
@@ -73,28 +73,21 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context --brief needs a named ability",
                 site="ability.context.brief-needs-id",
-                gateway_message=(
-                    "los: ability-context --brief needs a named ability"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         if section and not req["ability_id"]:
             raise WriteRefused(
                 "ability-context --section needs a named ability",
                 site="ability.context.section-needs-id",
-                gateway_message=(
-                    "los: ability-context --section needs a named ability"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         if brief and section:
             raise WriteRefused(
                 "ability-context takes --brief or --section evidence, not both",
                 site="ability.context.brief-and-section",
-                gateway_message=(
-                    "los: ability-context takes --brief or --section "
-                    "evidence, not both"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         offset = req.get("offset", 0) or 0
@@ -102,9 +95,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context offset must be nonnegative",
                 site="ability.context.negative-offset",
-                gateway_message=(
-                    "los: ability-context offset must be nonnegative"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         if req["ability_id"] and offset and not section:
@@ -112,10 +103,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
                 "ability-context --offset pages the global horizon or "
                 "--section evidence, not a focused ability",
                 site="ability.context.offset-needs-section",
-                gateway_message=(
-                    "los: ability-context --offset pages the global horizon "
-                    "or --section evidence, not a focused ability"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         if brief and req["limit"] != 12:
@@ -125,10 +113,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
                 "ability-context --brief is one summary; page evidence with "
                 "--section evidence",
                 site="ability.context.brief-with-limit",
-                gateway_message=(
-                    "los: ability-context --brief is one summary; page "
-                    "evidence with --section evidence"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         if offset and not req["expected_snapshot"]:
@@ -136,10 +121,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
                 "continuation requires --expected-snapshot from the previous "
                 "response",
                 site="ability.context.offset-needs-snapshot",
-                gateway_message=(
-                    "los: continuation requires --expected-snapshot from the "
-                    "previous response"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         snapshot = _snapshot(root, req["expected_snapshot"])
@@ -148,9 +130,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "ability-context refuses unreadable canonical records",
                 site="ability.context.unreadable-records",
-                gateway_message=(
-                    "los: ability-context refuses unreadable canonical records"
-                ),
+                prefixed=True,
                 exit_code=2,
             )
         payload = abilities.ability_context(
@@ -178,10 +158,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     "ability-context reason_codes must be parallel to reasons",
                     site="ability.context.reasons-not-parallel",
-                    gateway_message=(
-                        "los: ability-context reason_codes must be parallel "
-                        "to reasons"
-                    ),
+                    prefixed=True,
                     exit_code=2,
                 )
         _snapshot(root, snapshot)
@@ -192,7 +169,7 @@ def ability_context(ctx: OpContext, req: dict) -> Result:
     except (OSError, ValueError) as exc:
         raise WriteRefused(
             str(exc),
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -205,7 +182,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "ability candidates require GatewayEnvelopeV2",
             site="ability.candidate.append.gateway-required",
-            gateway_message="los: ability candidates require GatewayEnvelopeV2",
+            prefixed=True,
             exit_code=2,
         )
     ctx.require_snapshot(req["expected_snapshot"])
@@ -218,9 +195,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "candidate endpoints must be two active abilities",
             site="ability.candidate.append.bad-endpoints",
-            gateway_message=(
-                "los: candidate endpoints must be two active abilities"
-            ),
+            prefixed=True,
             exit_code=2,
         )
     if not req["source_ref"].startswith(
@@ -228,9 +203,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "candidate source-ref must identify the discovery",
             site="ability.candidate.append.bad-source-ref",
-            gateway_message=(
-                "los: candidate source-ref must identify the discovery"
-            ),
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -253,7 +226,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"ability candidate: {errors[0].message}",
                 site="ability.candidate.append.candidate-schema-refused",
-                gateway_message=f"los: ability candidate: {errors[0].message}",
+                prefixed=True,
                 exit_code=2,
             )
         old = path.read_text(encoding="utf-8") if path.exists() else ""
@@ -266,7 +239,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 str(exc),
                 site="ability.candidate.append.bad-expected-revision",
-                gateway_message=f"los: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         return Result(
@@ -283,7 +256,7 @@ def ability_candidate_append(ctx: OpContext, req: dict) -> Result:
     except (OSError, ValueError) as exc:
         raise WriteRefused(
             str(exc),
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 

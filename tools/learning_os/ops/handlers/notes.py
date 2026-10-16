@@ -138,7 +138,7 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"cannot read note frontmatter: {exc}",
             site=f"{ctx.operation}.unreadable-frontmatter",
-            gateway_message=f"los: cannot read note frontmatter: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     existing = list(meta.get("evidence") or [])
@@ -148,7 +148,7 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "that evidence is already recorded on this note",
             site=f"{ctx.operation}.already-recorded",
-            gateway_message="los: that evidence is already recorded on this note",
+            prefixed=True,
             exit_code=2,
         )
     meta["evidence"] = existing + [entry]
@@ -196,10 +196,7 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "note revision requires --approve after reviewing the full replacement",
             site=f"{ctx.operation}.needs-approve",
-            gateway_message=(
-                "los: note revision requires --approve after reviewing "
-                "the full replacement"
-            ),
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -213,7 +210,7 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"cannot read revised note: {exc}",
             site=f"{ctx.operation}.bad-file",
-            gateway_message=f"los: cannot read revised note: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -233,23 +230,21 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"invalid revised note: {exc}",
             site=f"{ctx.operation}.invalid-note",
-            gateway_message=f"los: invalid revised note: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     if meta.get("id") != req["note_id"] or meta.get("type") != "note":
         raise WriteRefused(
             "revised note must preserve the requested note id and type",
             site=f"{ctx.operation}.id-mismatch",
-            gateway_message=(
-                "los: revised note must preserve the requested note id and type"
-            ),
+            prefixed=True,
             exit_code=2,
         )
     if meta.get("role") != note.meta.get("role"):
         raise WriteRefused(
             "note-revise cannot change a note role",
             site=f"{ctx.operation}.role-change",
-            gateway_message="los: note-revise cannot change a note role",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -1250,21 +1245,21 @@ def note_read(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site="cli.note-read.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.note-read.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     except UnicodeError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.note-read.bad-encoding",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -1375,14 +1370,14 @@ def _metadata_search_page(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site="cli.search.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.search.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -1636,21 +1631,21 @@ def _content_search(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site="cli.search.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.search.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     except UnicodeError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.search.bad-encoding",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -1677,8 +1672,7 @@ def search(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "--page pages metadata search; --content already paginates",
                 site="cli.search.page-content",
-                gateway_message=("los: --page pages metadata search; "
-                                 "--content already paginates"),
+                prefixed=True,
                 exit_code=2,
             )
         return _content_search(ctx, req)
@@ -1694,14 +1688,14 @@ def search(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site="cli.search.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site="cli.search.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     notices = []

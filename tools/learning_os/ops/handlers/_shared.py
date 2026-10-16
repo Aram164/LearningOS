@@ -41,7 +41,7 @@ def require_unit_map_or_error(ctx: OpContext, unit_id: str):
         raise WriteRefused(
             f"unit has no current study map: {unit_id}",
             site=f"{ctx.operation}.no-study-map",
-            gateway_message=f"los: unit has no current study map: {unit_id}",
+            prefixed=True,
             exit_code=2,
         )
     return repo, unit, study_map
@@ -146,7 +146,7 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.reviewed-needs-report",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -168,7 +168,7 @@ def apply_reviewed_envelope(ctx: OpContext, *, capability_name: str,
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.reviewed-report-invalid",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     fd, tmp_name = tempfile.mkstemp(prefix="learningos-reviewed-", suffix=".json")

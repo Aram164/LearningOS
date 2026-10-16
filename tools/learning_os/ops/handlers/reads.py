@@ -177,7 +177,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "dossier refuses unreadable canonical records",
                 site=f"{ctx.operation}.unreadable-records",
-                gateway_message="los: dossier refuses unreadable canonical records",
+                prefixed=True,
                 exit_code=2,
             )
         unit = repo.units.get(req["unit_id"])
@@ -193,7 +193,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"unit {unit.id} has no module source map",
                 site=f"{ctx.operation}.no-source-map",
-                gateway_message=f"los: unit {unit.id} has no module source map",
+                prefixed=True,
                 exit_code=2,
             )
         source_map = repo.module_source_maps[unit.module_id]
@@ -203,7 +203,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"unit {unit.id} knowledge map is not a mapping",
                 site=f"{ctx.operation}.bad-knowledge-map",
-                gateway_message=f"los: unit {unit.id} knowledge map is not a mapping",
+                prefixed=True,
                 exit_code=2,
             )
         source_ids = {str(route["source_id"]) for route in routes
@@ -228,7 +228,7 @@ def dossier(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"cannot build dossier for {unit.id}: {exc}",
                 site=f"{ctx.operation}.build-failed",
-                gateway_message=f"los: cannot build dossier for {unit.id}: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         path = cache_path(root, fresh)
@@ -270,14 +270,14 @@ def dossier(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -441,14 +441,14 @@ def _compact_bootstrap(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -466,7 +466,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "bootstrap takes one of --brief, --compact",
             site=f"{ctx.operation}.brief-and-compact",
-            gateway_message="los: bootstrap takes one of --brief, --compact",
+            prefixed=True,
             exit_code=2,
         )
     if req.get("offset"):
@@ -474,8 +474,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
             "bootstrap --brief is a single page; "
             "page the collections with --compact instead",
             site=f"{ctx.operation}.brief-with-offset",
-            gateway_message=("los: bootstrap --brief is a single page; "
-                             "page the collections with --compact instead"),
+            prefixed=True,
             exit_code=2,
         )
     root = ctx.root
@@ -565,14 +564,14 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -675,7 +674,7 @@ def status(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site=f"{ctx.operation}.unreadable-records",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     # --no-validate skips validation but never the refusal above: an
@@ -782,7 +781,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 str(exc),
                 site=f"{ctx.operation}.bad-recipe",
-                gateway_message=f"los: {exc}",
+                prefixed=True,
                 exit_code=2,
             ) from exc
         return Result({"class": req["recipe"], "recipes": rows},
@@ -814,7 +813,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"--input takes k=v, got {item!r}",
                 site=f"{ctx.operation}.bad-input",
-                gateway_message=f"los: --input takes k=v, got {item!r}",
+                prefixed=True,
                 exit_code=2,
             )
         inputs[key.strip()] = _coerce(value)
@@ -824,7 +823,7 @@ def semantic(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"malformed inputs for {name}: {exc}",
             site=f"{ctx.operation}.malformed-inputs",
-            gateway_message=f"los: malformed inputs for {name}: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     return Result({"predicate": name, "verdict": verdict,
@@ -1118,7 +1117,7 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "choose --compact or one capability name",
             site=f"{ctx.operation}.compact-and-name",
-            gateway_message="los: choose --compact or one capability name",
+            prefixed=True,
             exit_code=2,
         )
     if name:
@@ -1127,7 +1126,7 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 f"unknown or non-public capability: {name}",
                 site=f"{ctx.operation}.unknown-capability",
-                gateway_message=f"los: unknown or non-public capability: {name}",
+                prefixed=True,
                 exit_code=2,
             )
         definition = payload[section][name]
@@ -1143,7 +1142,7 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     f"cannot read declared payload schema: {exc}",
                     site=f"{ctx.operation}.unreadable-payload-schema",
-                    gateway_message=f"los: cannot read declared payload schema: {exc}",
+                    prefixed=True,
                     exit_code=2,
                 ) from exc
             payload["payload_schema_path"] = relative
@@ -2020,14 +2019,14 @@ def resume(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 study_option,
                 site=f"{ctx.operation}.no-study-option",
-                gateway_message=f"los: {study_option}",
+                prefixed=True,
                 exit_code=2,
             )
     elif req.get("unit"):
         raise WriteRefused(
             "resume --unit needs --study",
             site=f"{ctx.operation}.unit-without-study",
-            gateway_message="los: resume --unit needs --study",
+            prefixed=True,
             exit_code=2,
         )
     else:
@@ -2036,7 +2035,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             resolved[1],
             site=f"{ctx.operation}.no-resumable-stage",
-            gateway_message=f"los: {resolved[1]}",
+            prefixed=True,
             exit_code=2,
         )
     via, module_id, unit_id, study_map_id, stage_id = resolved
@@ -2124,7 +2123,7 @@ def resume(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.dossier-build-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     output = {"key": dossier.key, "via": via,
@@ -2203,7 +2202,7 @@ def runtime_session(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.bad-input",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -2277,7 +2276,7 @@ def _filtered_units(manifest, req, operation):
             raise WriteRefused(
                 message,
                 site=f"{operation}.unknown-status",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         rows = [row for row in rows if row.get("status") == req["status"]]
@@ -2333,7 +2332,7 @@ def _unit_list_compact(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -2349,7 +2348,7 @@ def unit_list(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--offset/--limit/--expected-snapshot need --compact",
             site=f"{ctx.operation}.window-needs-compact",
-            gateway_message="los: --offset/--limit/--expected-snapshot need --compact",
+            prefixed=True,
             exit_code=2,
         )
     manifest = _fresh_manifest(root)

@@ -953,8 +953,7 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     if res.command_output is not None:
         raise WriteRefused(
             f"{operation}: a command-output result is CLI-only",
-            gateway_message=(
-                f"los: {operation}: a command-output result is CLI-only"),
+            prefixed=True,
             exit_code=2)
     if checking and res.proposal is not None:
         record = check_proposal(ctx, res.proposal)

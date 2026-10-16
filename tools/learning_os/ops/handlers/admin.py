@@ -57,7 +57,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.attempt.record.bad-termin",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     if req["result"] not in ATTEMPT_RESULTS:
@@ -66,7 +66,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.attempt.record.bad-result",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -77,7 +77,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.attempt.record.bad-date",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     grade = req.get("grade")
@@ -88,7 +88,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="module.attempt.record.bad-grade",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         grade = float(grade)
@@ -98,7 +98,7 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="module.attempt.record.grade-out-of-range",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -156,7 +156,7 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.sitting.update.bad-termin",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -167,7 +167,7 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.sitting.update.bad-deadline",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -196,7 +196,7 @@ def module_sitting(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="module.sitting.update.no-sitting",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     row["withdrawal_deadline"] = req["withdrawal_deadline"]
@@ -232,14 +232,14 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "unknown coordination section",
             site="coordination.section.revise.unknown-section",
-            gateway_message="los: unknown coordination section",
+            prefixed=True,
             exit_code=2,
         )
     if path.is_symlink() or not path.is_file():
         raise WriteRefused(
             "coordination must be an existing regular file",
             site="coordination.section.revise.no-coordination-file",
-            gateway_message="los: coordination must be an existing regular file",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -249,7 +249,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="coordination.section.revise.read-failed",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     digest = "sha256:" + hashlib.sha256(original).hexdigest()
@@ -261,7 +261,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="coordination.section.revise.missing-digest",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     if supplied is not None:
@@ -272,7 +272,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="coordination.section.revise.malformed-digest",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=2,
             )
         if supplied != digest:
@@ -283,7 +283,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
                 raise WriteRefused(
                     message,
                     site="coordination.section.revise.placeholder-digest",
-                    gateway_message=f"los: {message}",
+                    prefixed=True,
                     exit_code=2,
                 )
             message = ("reviewed coordination content changed before use: "
@@ -292,14 +292,14 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 message,
                 site="coordination.section.revise.content-changed",
-                gateway_message=f"los: {message}",
+                prefixed=True,
                 exit_code=3,
             )
     if not req["text"].strip():
         raise WriteRefused(
             "coordination section text must not be blank",
             site="coordination.section.revise.blank-text",
-            gateway_message="los: coordination section text must not be blank",
+            prefixed=True,
             exit_code=2,
         )
     _, injected = parse_sections(req["text"])
@@ -310,8 +310,7 @@ def coordination_section_revise(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "replace exactly one existing section; new section headings refuse",
             site="coordination.section.revise.new-heading",
-            gateway_message=("los: replace exactly one existing section; "
-                             "new section headings refuse"),
+            prefixed=True,
             exit_code=2,
         )
     revised = _replace_h2_section(original.decode("utf-8"), req["section"],
@@ -357,7 +356,7 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--next-action must not be blank",
             site="workspace.next-action.update.blank-action",
-            gateway_message="los: --next-action must not be blank",
+            prefixed=True,
             exit_code=2,
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -377,7 +376,7 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="workspace.next-action.update.workspace-not-active",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -386,7 +385,7 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="workspace.next-action.update.no-next-action",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     try:

@@ -177,8 +177,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "complete/skip applies only to the active stage; activate it first",
                 site=f"{ctx.operation}.not-active",
-                gateway_message=("los: complete/skip applies only to the active "
-                                 "stage; activate it first"),
+                prefixed=True,
                 exit_code=2,
             )
         stage["status"] = action
@@ -203,9 +202,7 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             f"unknown stage status: {action} "
             "(choose from active, paused, complete, skipped, revisit)",
             site=f"{ctx.operation}.unknown-status",
-            gateway_message=(f"los: unknown stage status: {action} "
-                             "(choose from active, paused, complete, skipped, "
-                             "revisit)"),
+            prefixed=True,
             exit_code=2,
         )
     summary = req.get("progress_summary")
@@ -215,14 +212,14 @@ def stage_progress(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "--progress-next needs --progress-summary",
                 site=f"{ctx.operation}.needs-summary",
-                gateway_message="los: --progress-next needs --progress-summary",
+                prefixed=True,
                 exit_code=2,
             )
         if upcoming is not None and not upcoming.strip():
             raise WriteRefused(
                 "--progress-next must not be blank",
                 site=f"{ctx.operation}.blank-next",
-                gateway_message="los: --progress-next must not be blank",
+                prefixed=True,
                 exit_code=2,
             )
         entry = {"updated": observations.today().isoformat(),
@@ -278,7 +275,7 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "stage has no working_note",
             site="stage.note.write.no-working-note",
-            gateway_message="los: stage has no working_note",
+            prefixed=True,
             exit_code=2,
         )
     value = req.get("text") if req.get("text") is not None else sys.stdin.read()
@@ -289,7 +286,7 @@ def stage_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "refusing to write an empty note — pass real text",
             site="stage.note.write.empty-note",
-            gateway_message="los: refusing to write an empty note — pass real text",
+            prefixed=True,
             exit_code=2,
         )
     old = target.read_text(encoding="utf-8") if target.is_file() else ""
@@ -364,7 +361,7 @@ def stage_attach(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="stage.attachment.add.bad-file",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -410,7 +407,7 @@ def path_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"stage has no notes_path: {req['stage_id']}",
             site="path.note.write.no-notes-path",
-            gateway_message=f"los: stage has no notes_path: {req['stage_id']}",
+            prefixed=True,
             exit_code=2,
         )
     text_value = req.get("text") if req.get("text") is not None else sys.stdin.read()
@@ -418,7 +415,7 @@ def path_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "refusing to write an empty note — pass real text",
             site="path.note.write.empty-note",
-            gateway_message="los: refusing to write an empty note — pass real text",
+            prefixed=True,
             exit_code=2,
         )
     target = root / str(note_ref)
@@ -465,8 +462,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "only the active stage can be completed or skipped; activate it first",
             site="path.progress.update.not-active",
-            gateway_message=("los: only the active stage can be completed or skipped; "
-                             "activate it first"),
+            prefixed=True,
             exit_code=2,
         )
     if req["status"] == "active":
@@ -496,8 +492,7 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
             f"unknown path status: {req['status']} "
             "(choose from active, complete, skipped)",
             site="path.progress.update.unknown-status",
-            gateway_message=(f"los: unknown path status: {req['status']} "
-                             "(choose from active, complete, skipped)"),
+            prefixed=True,
             exit_code=2,
         )
     data["updated"] = observations.today().isoformat()
@@ -543,7 +538,7 @@ def path_attach(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="path.attachment.add.bad-file",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -612,9 +607,7 @@ def detour_create(ctx: OpContext, req: dict) -> Result:
             "(choose from required-now, helpful-now, deferred, "
             "reference-only)",
             site="detour.create.unknown-classification",
-            gateway_message=(f"los: unknown detour classification: {req['classification']} "
-                             "(choose from required-now, helpful-now, deferred, "
-                             "reference-only)"),
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -738,8 +731,7 @@ def source_feedback(ctx: OpContext, req: dict) -> Result:
                 f"resource {resource_id} belongs to {declared}, "
                 f"not {req['source_id']}",
                 site="source.feedback.record.wrong-source",
-                gateway_message=(f"los: resource {resource_id} belongs to {declared}, "
-                                 f"not {req['source_id']}"),
+                prefixed=True,
                 exit_code=2,
             )
         entry["resource_id"] = resource_id
@@ -785,7 +777,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "refusing to write an empty unit note — pass real text",
             site="unit.note.append.empty-note",
-            gateway_message="los: refusing to write an empty unit note — pass real text",
+            prefixed=True,
             exit_code=2,
         )
     raw_sources = list(req.get("attachment") or [])
@@ -794,7 +786,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "--attachment-sha256 must be repeated once per --attachment",
             site="unit.note.append.attachment-sha-count",
-            gateway_message="los: --attachment-sha256 must be repeated once per --attachment",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -810,7 +802,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="unit.note.append.bad-file",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -836,7 +828,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="unit.note.append.note-outside-repo",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     old = target.read_text(encoding="utf-8") if target.is_file() else ""
@@ -904,7 +896,7 @@ def unit_note(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             f"cannot write unit note: {exc}",
             site="unit.note.append.write-failed",
-            gateway_message=f"los: cannot write unit note: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -983,8 +975,7 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             "selection must match one rich material route on this unit "
             f"({req['source_id']} · {req['locator']})",
             site="unit.source-selection.set.no-matching-route",
-            gateway_message=("los: selection must match one rich material route on this unit "
-                             f"({req['source_id']} · {req['locator']})"),
+            prefixed=True,
             exit_code=2,
         )
 
@@ -1003,7 +994,7 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             raise WriteRefused(
                 "a selected material needs a purpose",
                 site="unit.source-selection.set.missing-purpose",
-                gateway_message="los: a selected material needs a purpose",
+                prefixed=True,
                 exit_code=2,
             )
         replacement = {
@@ -1026,8 +1017,7 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
                 "this choice is used by the current study path; remove it "
                 "from those stages before removing the choice",
                 site="unit.source-selection.set.used-by-map",
-                gateway_message=("los: this choice is used by the current study path; remove it "
-                                 "from those stages before removing the choice"),
+                prefixed=True,
                 exit_code=2,
             )
         if index is not None:
@@ -1038,8 +1028,7 @@ def unit_source_selection(ctx: OpContext, req: dict) -> Result:
             f"unknown source-selection action: {req['action']} "
             "(choose from select, remove)",
             site="unit.source-selection.set.unknown-action",
-            gateway_message=(f"los: unknown source-selection action: {req['action']} "
-                             "(choose from select, remove)"),
+            prefixed=True,
             exit_code=2,
         )
 
@@ -1073,7 +1062,7 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "stage results require GatewayEnvelopeV2; direct CLI application is disabled",
             site="learner.stage-result.append.direct-cli",
-            gateway_message="los: stage results require GatewayEnvelopeV2; direct CLI application is disabled",
+            prefixed=True,
             exit_code=2,
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -1083,7 +1072,7 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "stage results require a registered active workspace",
             site="learner.stage-result.append.bad-workspace",
-            gateway_message="los: stage results require a registered active workspace",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -1153,7 +1142,7 @@ def stage_result(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="learner.stage-result.append.invalid-input",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -1268,7 +1257,7 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "observations require GatewayEnvelopeV2; direct CLI application is disabled",
             site="learner.observation.append.direct-cli",
-            gateway_message="los: observations require GatewayEnvelopeV2; direct CLI application is disabled",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -1282,7 +1271,7 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "observations require a registered active workspace",
             site="learner.observation.append.bad-workspace",
-            gateway_message="los: observations require a registered active workspace",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -1351,7 +1340,7 @@ def observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="learner.observation.append.invalid-input",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
@@ -1399,7 +1388,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "the direct observation path is not admitted",
             site="cli.observe.not-admitted",
-            gateway_message="los: the direct observation path is not admitted",
+            prefixed=True,
             exit_code=2,
         )
     snapshot = ctx.snapshot_id()
@@ -1410,7 +1399,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="cli.observe.invalid-target",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
     requirement = next((row for row in requirements
@@ -1421,7 +1410,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             message,
             site="cli.observe.unknown-requirement",
-            gateway_message=f"los: {message}",
+            prefixed=True,
             exit_code=2,
         )
     workspace, refusal = _resolve_observe_workspace(
@@ -1430,7 +1419,7 @@ def cli_observe(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             refusal,
             site="cli.observe.unresolved-workspace",
-            gateway_message=f"los: {refusal}",
+            prefixed=True,
             exit_code=2,
         )
     payload: dict = {
@@ -1520,7 +1509,7 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "ability observations require GatewayEnvelopeV2",
             site="learner.ability-observation.append.direct-cli",
-            gateway_message="los: ability observations require GatewayEnvelopeV2",
+            prefixed=True,
             exit_code=2,
         )
     ctx.require_snapshot(req.get("expected_snapshot"))
@@ -1530,7 +1519,7 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "a registered active workspace must own this work",
             site="learner.ability-observation.append.bad-workspace",
-            gateway_message="los: a registered active workspace must own this work",
+            prefixed=True,
             exit_code=2,
         )
     ability = repo.abilities.get(req["ability"])
@@ -1539,21 +1528,21 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "evidence requires an active reviewed ability identity",
             site="learner.ability-observation.append.unknown-ability",
-            gateway_message="los: evidence requires an active reviewed ability identity",
+            prefixed=True,
             exit_code=2,
         )
     if not _valid_work_ref(req["work_ref"]):
         raise WriteRefused(
             "work-ref must safely point to conversation, note, project, or curriculum work",
             site="learner.ability-observation.append.bad-work-ref",
-            gateway_message="los: work-ref must safely point to conversation, note, project, or curriculum work",
+            prefixed=True,
             exit_code=2,
         )
     if not req["confirmation_ref"].startswith(("conversation://", "note://")):
         raise Unconfirmed(
             "confirmation-ref must point to Aram's confirmation",
             site="learner.ability-observation.append.bad-confirmation-ref",
-            gateway_message="los: confirmation-ref must point to Aram's confirmation",
+            prefixed=True,
             exit_code=2,
         )
     if (request.channel == "ui" and req["confirmation_ref"] !=
@@ -1561,7 +1550,7 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
         raise Unconfirmed(
             "app confirmation-ref must name this exact request",
             site="learner.ability-observation.append.bad-app-confirmation",
-            gateway_message="los: app confirmation-ref must name this exact request",
+            prefixed=True,
             exit_code=2,
         )
     try:
@@ -1620,6 +1609,6 @@ def ability_observation_append(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             str(exc),
             site="learner.ability-observation.append.invalid-input",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc

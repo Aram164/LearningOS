@@ -190,8 +190,17 @@ class WriteRefused(Exception):
     def __init__(self, *args, site: str | None = None,
                  reason: str | None = None, remedy: str | None = None,
                  gateway_message: str | None = None,
+                 prefixed: bool = False,
                  exit_code: int | None = None,
                  extra_stderr: tuple[str, ...] = ()):
+        if prefixed:
+            if gateway_message is not None:
+                raise TypeError(
+                    "WriteRefused: prefixed and gateway_message are exclusive")
+            if len(args) != 1:
+                raise TypeError(
+                    "WriteRefused: prefixed needs exactly one message argument")
+            gateway_message = f"los: {args[0]}"
         super().__init__(*args)
         self.site = site
         self.reason = reason

@@ -274,7 +274,7 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         raise WriteRefused(
             "inspect accepts at most 20 IDs per batch",
             site=f"{ctx.operation}.too-many-ids",
-            gateway_message="los: inspect accepts at most 20 IDs per batch",
+            prefixed=True,
             exit_code=2,
         )
     root = ctx.root
@@ -318,14 +318,14 @@ def _inspect_batch(ctx: OpContext, req: dict) -> Result:
         raise StaleSnapshot(
             str(exc),
             site=f"{ctx.operation}.stale-snapshot",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=3,
         ) from exc
     except OSError as exc:
         raise WriteRefused(
             str(exc),
             site=f"{ctx.operation}.read-failed",
-            gateway_message=f"los: {exc}",
+            prefixed=True,
             exit_code=2,
         ) from exc
 
