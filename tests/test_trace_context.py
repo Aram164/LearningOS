@@ -31,14 +31,14 @@ from gateway_helpers import (
     request_artifact_id,
 )
 
-from learning_os.diagnostics import conventions
-from learning_os.diagnostics.context import (
+from learning_os.store.diagnostics import conventions
+from learning_os.store.diagnostics.context import (
     TraceContext,
     parse_traceparent,
     record_debug,
     trace_context_from_env,
 )
-from learning_os.fingerprint import canonical_fingerprint
+from learning_os.store.fingerprint import canonical_fingerprint
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 UI_ROOT = Path(__file__).resolve().parents[2] / "obsidian-ui"
@@ -255,7 +255,7 @@ def test_mismatched_marker_is_parent_only(mini_repo: Path, tmp_path: Path):
 
 def test_ownership_marker_rules():
     """Ownership requires an exact marker-to-trace match (JF-04)."""
-    from learning_os.diagnostics.context import is_learningos_owned
+    from learning_os.store.diagnostics.context import is_learningos_owned
 
     owned = TraceContext(trace_id=TRACE_ID, span_id=SPAN_ID)
     assert is_learningos_owned(

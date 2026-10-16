@@ -5,7 +5,7 @@ AST-scanned only, never imported by the (a) test: the
 counts exactly once as ``fixture.pos-hook::validate_extra``.
 """
 
-from learning_os.ops.proposal import TransactionProposal
+from learning_os.app.proposal import TransactionProposal
 
 
 def _extra(root, writes):

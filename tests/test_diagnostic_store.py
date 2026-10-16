@@ -19,13 +19,13 @@ from pathlib import Path
 
 from gateway_helpers import approved_v2_envelope
 
-from learning_os.diagnostics.resolver import collect_authority, resolve
-from learning_os.diagnostics.store import (
+from learning_os.store.diagnostics.resolver import collect_authority, resolve
+from learning_os.store.diagnostics.store import (
     prune_store,
     read_records,
     traces_path,
 )
-from learning_os.fingerprint import CANONICAL_ROOTS, canonical_fingerprint
+from learning_os.store.fingerprint import CANONICAL_ROOTS, canonical_fingerprint
 
 TOOLS = Path(__file__).resolve().parent.parent / "tools"
 LOS = TOOLS / "los.py"
@@ -80,7 +80,7 @@ def _read_in_fresh_process(mini: Path) -> list[dict]:
     """Restart simulation: a new interpreter reads the persisted store."""
     probe = (
         f"import json, sys; sys.path.insert(0, {str(TOOLS)!r}); "
-        "from learning_os.diagnostics.store import read_records; "
+        "from learning_os.store.diagnostics.store import read_records; "
         f"print(json.dumps(read_records({str(mini)!r})))")
     proc = subprocess.run([sys.executable, "-c", probe], capture_output=True,
                           text=True, timeout=120)
@@ -298,7 +298,7 @@ def test_missing_store_leaves_canonical_behavior_untouched(tmp_path: Path):
 
 
 def test_structurally_corrupt_trace_lines_do_not_break_operations(tmp_path: Path):
-    from learning_os.ops.handlers.platform import list_operations
+    from learning_os.app.handlers.platform import list_operations
 
     mini = _mini_with_curriculum(tmp_path, "store-shapes")
     proc = _stage_write(mini, "store-shapes-1")
@@ -455,7 +455,7 @@ def test_no_validation_body_reaches_the_store(tmp_path: Path):
     import pytest
 
     from learning_os.domain.failures import TransactionFailure
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     canary = "canary-validation-8b4f2d1e9a"
     root = tmp_path / "store-validation-privacy"
@@ -531,8 +531,8 @@ def test_no_exception_body_reaches_the_store(tmp_path: Path):
 def test_denied_root_disables_persistence(tmp_path: Path, monkeypatch):
     """Binding a denied root leaves the store unbound: persists are no-ops,
     while an allowed root still persists (JF-03)."""
-    from learning_os.diagnostics import conventions
-    from learning_os.diagnostics.store import bind_store, persist_record
+    from learning_os.store.diagnostics import conventions
+    from learning_os.store.diagnostics.store import bind_store, persist_record
 
     record = {"v": conventions.VOCAB_VERSION, "kind": "event",
               "name": "deny-probe", "op": "0" * 32, "span": "1" * 16}
@@ -560,8 +560,8 @@ def test_span_outside_deny_scope_survives(tmp_path: Path, monkeypatch):
     The old isolation truncated the live store after the suite; the deny
     mechanism must never modify any store, denied or not.
     """
-    from learning_os.diagnostics import conventions
-    from learning_os.diagnostics.store import bind_store, persist_record
+    from learning_os.store.diagnostics import conventions
+    from learning_os.store.diagnostics.store import bind_store, persist_record
 
     sentinel = '{"legitimate": "span"}\n'
     live = tmp_path / "live"
@@ -591,7 +591,7 @@ def test_span_outside_deny_scope_survives(tmp_path: Path, monkeypatch):
 def test_session_denies_persistence_for_repo_under_test():
     """The test session installs its own repository in the deny list, so
     rootless CLI runs cannot persist to the live store (JF-03)."""
-    from learning_os.diagnostics import conventions
+    from learning_os.store.diagnostics import conventions
 
     repo = Path(__file__).resolve().parent.parent.resolve()
     denied = [Path(entry).resolve()

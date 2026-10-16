@@ -5,7 +5,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from learning_os.ops.pipeline import run_cli
+from learning_os.app.pipeline import run_cli
 
 
 def invoke(args) -> int:

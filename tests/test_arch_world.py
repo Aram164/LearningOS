@@ -148,7 +148,7 @@ def _scratch_clone(dest: Path) -> Path:
 def test_candidate_projection_change_names_manifest_path(world: dict, tmp_path: Path):
     clone = _scratch_clone(tmp_path / "clone")
     baseline = _git(clone, "rev-parse", "HEAD").stdout.strip()
-    tallies = clone / "tools" / "learning_os" / "genout" / "projection" / "tallies.py"
+    tallies = clone / "tools" / "learning_os" / "derive" / "projection" / "projection" / "tallies.py"
     text = tallies.read_text(encoding="utf-8")
     old = '"inbox_items": inbox_items,'
     assert text.count(old) == 1

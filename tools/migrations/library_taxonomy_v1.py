@@ -286,7 +286,7 @@ def main() -> int:
     if refuse_retired_apply(retired, apply=args.apply):
         return 2 if args.apply else 0
 
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     repo = load_repo(ROOT)
     shelf_of: dict[str, list[str]] = {}

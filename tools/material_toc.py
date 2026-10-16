@@ -40,7 +40,7 @@ TOOLS = Path(__file__).resolve().parent
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from learning_os.materials_resolution import (  # noqa: E402
+from learning_os.store.materials.resolution import (  # noqa: E402
     PathBoundaryError,
     material_uri_authority,
     resolve_material_target,

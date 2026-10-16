@@ -396,5 +396,5 @@ cases:
     expect:
       site: unit.material-synthesis.publish.bad-expected-revision
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/plan.py:422", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:426", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/app/handlers/plan.py:422", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/app/handlers/plan.py:426", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}

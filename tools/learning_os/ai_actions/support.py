@@ -14,7 +14,8 @@ from typing import Any
 
 import yaml
 
-from .. import observations
+from learning_os.store import observations
+
 from .errors import DeliveryScopeError, DeliveryValidationError
 
 #: Request ids must match the manifest contract's `ai_actions/requests[]/id`
@@ -90,8 +91,8 @@ def _inside(root: Path, rel: str) -> Path:
 
 def _snapshot(root: Path) -> str:
     # Local import avoids a cycle when genout projects AI-action state.
-    from learning_os.fingerprint import source_fingerprint
-    from learning_os.loader import load_repo
+    from learning_os.store.fingerprint import source_fingerprint
+    from learning_os.store.loader import load_repo
 
     return f"sha256:{source_fingerprint(load_repo(root))}"
 

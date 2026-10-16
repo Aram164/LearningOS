@@ -255,9 +255,9 @@ from pathlib import Path
 
 sys.path.insert(0, %r)
 
-from learning_os.ops.pipeline import run_cli
-from learning_os.ops.proposal import Result
-from learning_os.ops.registry import REGISTRY, register
+from learning_os.app.pipeline import run_cli
+from learning_os.app.proposal import Result
+from learning_os.app.registry import REGISTRY, register
 
 OPERATION = %r
 

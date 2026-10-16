@@ -12,9 +12,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol
 
-from learning_os.material_analysis import observe_local_material
-from learning_os.materials_resolution import route_material_checksum
-from learning_os.revisions import artifact_revision
+from learning_os.store.material_analysis import observe_local_material
+from learning_os.store.materials.resolution import route_material_checksum
+from learning_os.store.revisions import artifact_revision
 
 
 class MaterialObservations(Protocol):

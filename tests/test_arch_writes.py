@@ -61,7 +61,7 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         func = node.func
-        if self._rel == "tools/learning_os/transactions.py" and isinstance(
+        if self._rel == "tools/learning_os/store/transactions.py" and isinstance(
                 func, ast.Name) and func.id == "_atomic_write_bytes":
             self.generic_visit(node)
             return

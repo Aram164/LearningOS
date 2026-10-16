@@ -24,17 +24,17 @@ from test_compact_module_plan_revision import _revision, _two_units
 
 import los
 from learning_os.adapters.capability import cmd_capability
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.loader import load_repo
-from learning_os.material_refs import unit_routes
-from learning_os.ops import pipeline as ops_pipeline
-from learning_os.ops.handlers.plan import route_patch_plan
-from learning_os.rules.core import Validator
+from learning_os.app import pipeline as ops_pipeline
+from learning_os.app.handlers.plan import route_patch_plan
+from learning_os.derive.validation.core import Validator
+from learning_os.domain.material_refs import unit_routes
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
 
 
 def cmd_module_plan_import(args) -> int:
     """Drive the converted handler through the real CLI pipeline (T82)."""
-    from learning_os.ops.pipeline import run_cli
+    from learning_os.app.pipeline import run_cli
 
     outcome = run_cli(Path(args.root), "module.plan.import", args)
     sys.stdout.write(outcome.stdout)
@@ -202,7 +202,7 @@ def _precise_locator_fixture(mini_repo: Path):
     """
     import yaml
 
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
 
     repo, _, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id

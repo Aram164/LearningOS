@@ -15,8 +15,8 @@ from gateway_helpers import (
     run_v2_capability,
 )
 
-from learning_os.genout import generate_all, write_outputs
-from learning_os.loader import load_repo
+from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.store.loader import load_repo
 
 
 def run_los(

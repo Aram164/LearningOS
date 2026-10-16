@@ -14,28 +14,28 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, write_yaml
 
-from learning_os.contracts.gateway import (
-    GatewayRequestContext,
-    gateway_request_context,
-    intent_sha256,
-)
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.genout import build_manifest
-from learning_os.loader import load_repo
-from learning_os.masters_planning import (
+from learning_os.app.admin.masters_planning import (
     MastersPlanningError,
     master_promotion_destination,
     prepare_master_promotion,
     promotion_package_sha256,
 )
-from learning_os.transactions import TransactionFailure
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    gateway_request_context,
+    intent_sha256,
+)
+from learning_os.derive.projection import build_manifest
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.transactions import TransactionFailure
 
 NOW = dt.datetime.now(dt.UTC).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def cmd_module_plan_import(args) -> int:
     """Drive the converted handler through the real CLI pipeline (T82)."""
-    from learning_os.ops.pipeline import run_cli
+    from learning_os.app.pipeline import run_cli
 
     outcome = run_cli(Path(args.root), "module.plan.import", args)
     sys.stdout.write(outcome.stdout)
@@ -519,8 +519,8 @@ def test_dynamic_advisory_warnings_do_not_block_master_promotion_preflight(
     old = time.time() - 20 * 86400
     os.utime(item, (old, old))
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     live_codes = {i.code for i in validate(load_repo(mini_repo)) if i.severity == "W"}
     assert "INBOX-STALE" in live_codes, "fixture must actually produce the warning"
@@ -547,7 +547,7 @@ def test_dynamic_advisory_warnings_do_not_block_master_promotion_preflight(
 
     # INBOX-STALE demonstrably reaches the shadow; WS-NEGLECT currently does
     # not, because the shadow copy never contains .git.
-    from learning_os.ops._plan_gate import _module_plan_validation_errors
+    from learning_os.app._plan_gate import _module_plan_validation_errors
 
     shadow_codes = {i.code for i in _module_plan_validation_errors(mini_repo, {})}
     assert "INBOX-STALE" not in shadow_codes
@@ -611,7 +611,7 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
     assert "candidate-module-" not in before_manifest
     assert "candidate-source-" not in before_manifest
 
-    import learning_os.transactions as transactions
+    import learning_os.store.transactions as transactions
 
     original_write = transactions._atomic_write_bytes
     failure_path = master_promotion_destination(mini_repo, package["id"])
@@ -733,7 +733,7 @@ def test_promotion_apply_validates_once(mini_repo, tmp_path, monkeypatch, capsys
     """F4: a Master Planning promotion apply runs the full validator once."""
     import los
     from learning_os.adapters.capability import cmd_capability
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     _existing_package, _comparison_bytes = _setup(mini_repo)
     package = _new_source_package(mini_repo)

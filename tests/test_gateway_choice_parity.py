@@ -24,7 +24,7 @@ from jsonschema import Draft202012Validator
 import los
 from learning_os.contracts.payloads import payload_to_namespace, subparsers
 from learning_os.domain.failures import WriteRefused
-from learning_os.fingerprint import canonical_fingerprint
+from learning_os.store.fingerprint import canonical_fingerprint
 
 SHA = "sha256:" + "0" * 64
 
@@ -304,9 +304,9 @@ def test_stage_handler_refuses_an_unknown_status(mini_repo: Path):
     """The handler backstop: no open `else` maps unknown input to a write."""
     from repo_builders import add_curriculum
 
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.learner import stage_progress
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers.learner import stage_progress
 
     add_curriculum(mini_repo)
     ctx = OpContext(root=mini_repo, operation="stage.progress.update",
@@ -319,9 +319,9 @@ def test_stage_handler_refuses_an_unknown_status(mini_repo: Path):
 
 
 def test_path_handler_refuses_an_unknown_status(mini_repo: Path):
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.learner import path_progress
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers.learner import path_progress
 
     path_file = (mini_repo / "work" / "active" / "workspace-demo"
                  / "paths" / "path-demo-probability.yaml")
@@ -354,9 +354,9 @@ def test_source_selection_handler_refuses_an_unknown_action(
         mini_repo: Path):
     from repo_builders import rich_fixture
 
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.learner import unit_source_selection
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers.learner import unit_source_selection
 
     rich_fixture(mini_repo)
     ctx = OpContext(root=mini_repo, operation="unit.source-selection.set",
@@ -375,9 +375,9 @@ def test_detour_handler_refuses_an_unknown_classification(
         mini_repo: Path):
     from repo_builders import add_curriculum
 
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.learner import detour_create
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers.learner import detour_create
 
     add_curriculum(mini_repo)
     ctx = OpContext(root=mini_repo, operation="detour.create",

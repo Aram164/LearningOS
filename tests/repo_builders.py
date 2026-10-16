@@ -21,9 +21,9 @@ from pathlib import Path
 import yaml
 
 from learning_os.contracts.local_attachments import LOCAL_ATTACHMENTS_RELATIVE
-from learning_os.loader import load_repo, parse_frontmatter
-from learning_os.routes import deterministic_route_id
-from learning_os.warning_baseline import collect, write_baseline
+from learning_os.derive.routes import deterministic_route_id
+from learning_os.store.loader import load_repo, parse_frontmatter
+from learning_os.store.warning_baseline import collect, write_baseline
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
@@ -46,8 +46,8 @@ def seed_live_goal_ids(root: Path, *names: str) -> list[str]:
     Returns the live scan's goal ids, sorted. ``los goal`` accepts these
     ids (and only these, plus ledger-known ones).
     """
-    from learning_os.semantics.lineage import dump_ledger, record_claim
-    from learning_os.semantics.scan import intelligence_scan
+    from learning_os.derive.semantics.lineage import dump_ledger, record_claim
+    from learning_os.derive.semantics.scan import intelligence_scan
 
     records = {}
     for name in names:
@@ -499,7 +499,7 @@ def _sliced_unit(root: Path, routes: list[dict]) -> None:
 
 
 def _valid_dossier(root: Path, route_id: str, locator: str) -> dict:
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 
     basis = current_unit_material_basis(root, "unit-demo-l01")
     basis = {**basis, "ai_provenance": {
@@ -600,7 +600,7 @@ def _compact_revision(mini_repo: Path, **overrides) -> dict:
 def _compact_setup(mini_repo: Path):
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
     good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
     _audit(mini_repo)

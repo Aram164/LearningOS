@@ -19,8 +19,8 @@ import pytest
 import yaml
 from jsonschema import Draft202012Validator
 
-import learning_os.ops.handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.registry import REGISTRY
+import learning_os.app.handlers  # noqa: F401  (registration side effect)
+from learning_os.app.registry import REGISTRY
 
 ROOT = Path(__file__).resolve().parent.parent
 CASES_DIR = ROOT / "tests/scenarios/cases"
@@ -443,7 +443,7 @@ def _exclusion_texts(root: Path) -> list[str]:
     without following symlinks. A candidate occurring anywhere is
     excluded, even in authored prose.
     """
-    from learning_os.fingerprint import DATA_ROOTS
+    from learning_os.store.fingerprint import DATA_ROOTS
 
     texts = []
     for top in (*DATA_ROOTS, "operations"):
@@ -571,7 +571,7 @@ def _inspect_membership(manifest: dict, ordered: list) -> set:
     actually resolves to an existing inspect record, through the
     existing resolution owner.
     """
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.app.handlers import platform as platform_handlers
 
     membership = set(ordered)
     for alias in (manifest.get("project_aliases") or {}):
@@ -615,7 +615,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
     over them (SPEC (cn) item 1). The ordered
     list feeds the complaint template in handler traversal order.
     """
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     kind = row.get("kind")
     owner = row.get("owner")
@@ -633,8 +633,8 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # ledger-only, exactly as the handler degrades.
         import yaml
 
-        from learning_os.ops.handlers.goals import LEDGER_RELATIVE
-        from learning_os.semantics.scan import intelligence_scan
+        from learning_os.app.handlers.goals import LEDGER_RELATIVE
+        from learning_os.derive.semantics.scan import intelligence_scan
 
         ledger_path = ctx.root / LEDGER_RELATIVE
         raw = ledger_path.read_text(encoding="utf-8") \
@@ -735,7 +735,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
                     ordered.append(str(route_row.get("id")))
         return ordered, set(ordered)
     if kind == "route":
-        from learning_os.material_refs import unit_routes
+        from learning_os.domain.material_refs import unit_routes
 
         repo = load_repo(ctx.root)
         unit = repo.units[request["unit_id"]]
@@ -751,7 +751,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # SPEC (cn) item 1: note_read looks up the note registry,
         # then the garden seeds, and refuses over both lists
         # (notes.py), through the same two loaders.
-        from learning_os.ops.handlers.notes import (
+        from learning_os.app.handlers.notes import (
             _garden_notes,
             _note_collection,
         )
@@ -783,7 +783,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
         # SPEC (cn) item 1: _filtered_units matches against the
         # manifest's module ids (reads.py), through the same
         # _fresh_manifest the handler reads.
-        from learning_os.ops.projection import _fresh_manifest
+        from learning_os.app.projection import _fresh_manifest
 
         manifest = _fresh_manifest(ctx.root)
         ordered = [row.get("id")
@@ -798,13 +798,13 @@ def _lookup_domain(ctx, operation: str, row: dict,
     if kind == "project":
         # SPEC (bv) item 1: the same _project_ids function the
         # converted handler passes to its NotFound (platform.py).
-        from learning_os.ops.handlers import platform as platform_handlers
+        from learning_os.app.handlers import platform as platform_handlers
 
         ordered = platform_handlers._project_ids(ctx.root)
         return ordered, set(ordered)
     if owner == "inspect-reference":
-        from learning_os.ops.handlers import platform as platform_handlers
-        from learning_os.ops.projection import _fresh_manifest_and_repo
+        from learning_os.app.handlers import platform as platform_handlers
+        from learning_os.app.projection import _fresh_manifest_and_repo
 
         manifest, repo = _fresh_manifest_and_repo(ctx.root)
         ordered = platform_handlers._inspect_candidates(manifest, repo)
@@ -849,14 +849,14 @@ def _lookup_domain(ctx, operation: str, row: dict,
         return ordered, set(ordered)
     if owner == "operations-trace-request":
         # Builder Task 78 ((cx) D-6): distinct ids in loaded traces.
-        from learning_os.ops.handlers import platform as platform_handlers
+        from learning_os.app.handlers import platform as platform_handlers
 
         _detail, ordered = platform_handlers._describe_operation(
             ctx.root, str(request.get("request_id", "")))
         return ordered, set(ordered)
     if owner == "masters-candidate-module":
         # Builder Task 78 ((cx) D-8): the loaded catalog module map.
-        from learning_os import masters_planning
+        from learning_os.app.admin import masters_planning
 
         catalog = masters_planning.load_master_catalog(ctx.root)
         assert catalog is not None, (
@@ -866,7 +866,7 @@ def _lookup_domain(ctx, operation: str, row: dict,
     if owner == "related-record":
         # Builder Task 78 ((cx) D-7): manifest record ids, as the
         # handler's heterogeneous owner probe enumerates them.
-        from learning_os.ops.projection import _fresh_manifest_and_repo
+        from learning_os.app.projection import _fresh_manifest_and_repo
 
         manifest, _repo = _fresh_manifest_and_repo(ctx.root)
         ordered = [str(row["id"]) for row in manifest["records"]
@@ -930,9 +930,9 @@ def _check_owner_inspect_miss(result: dict, *, miss: str, domain: list,
     """
     import scenario_harness as harness
 
+    from learning_os.app.handlers import platform as platform_handlers
+    from learning_os.app.pipeline import _cli_error_code
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers import platform as platform_handlers
-    from learning_os.ops.pipeline import _cli_error_code
 
     assert result["exit"] == want_exit, (
         f"A5 inspect miss exits {result['exit']}, want {want_exit} — {FIX}")
@@ -1950,10 +1950,10 @@ def test_lookup_domain_equals_handler_notfound_domain(
     """
     import scenario_harness as harness
 
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers import _shared as shared_handlers
+    from learning_os.app.handlers import learner as learner_handlers
     from learning_os.domain import failures as failures_module
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers import _shared as shared_handlers
-    from learning_os.ops.handlers import learner as learner_handlers
 
     rows = {row["pointer"]: row for row in _probe_rows()
             if row["operation"] == operation}
@@ -2203,7 +2203,7 @@ def _check_probe(result: dict, operation: str, row: dict, position,
             want_message=want_message, want_retryable=want_retryable)
         return
     if (operation, row["pointer"]) in _CLI_ANCHORED_POINTERS:
-        from learning_os.ops.pipeline import _cli_error_code
+        from learning_os.app.pipeline import _cli_error_code
 
         # (cd): exit and outcome from the anchor's last step; code
         # from the handler's failure class for that miss; message
@@ -2455,7 +2455,7 @@ def _aliased_manifest():
 
 def test_resolving_alias_expands_absence_membership():
     """A resolving alias joins the set, never the candidates (bg 2)."""
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.app.handlers import platform as platform_handlers
 
     manifest = _aliased_manifest()
     ordered = platform_handlers._inspect_candidates(manifest, None)
@@ -2466,7 +2466,7 @@ def test_resolving_alias_expands_absence_membership():
 
 def test_resolving_alias_cannot_be_selected_as_a_miss():
     """The membership blocks a resolving alias from miss selection (bg 2)."""
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.app.handlers import platform as platform_handlers
 
     manifest = _aliased_manifest()
     membership = _inspect_membership(manifest, ["aa"])
@@ -2484,7 +2484,7 @@ def test_resolving_alias_cannot_be_selected_as_a_miss():
 
 def test_nonresolving_alias_does_not_expand_the_domain():
     """An alias to a missing record stays out of the set (bg 2)."""
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.app.handlers import platform as platform_handlers
 
     manifest = {"records": [{"id": "aa", "type": "note"}],
                 "project_aliases": {"ab": "missing-id"}}

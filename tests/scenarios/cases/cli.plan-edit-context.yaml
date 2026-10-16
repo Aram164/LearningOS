@@ -145,9 +145,9 @@ cases:
     expect:
       site: cli.plan-edit-context.brief-has-audit
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/plan.py:821", reason: "empty batch: --route-ids takes nargs=+ and argparse refuses zero ids first"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:1207", reason: "two selectors at once: the argparse mutually-exclusive group refuses first"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:1246", reason: "unreadable stage results: the fixture ledgers are clean, and no step can damage them"}
+  - {where: "tools/learning_os/app/handlers/plan.py:821", reason: "empty batch: --route-ids takes nargs=+ and argparse refuses zero ids first"}
+  - {where: "tools/learning_os/app/handlers/plan.py:1207", reason: "two selectors at once: the argparse mutually-exclusive group refuses first"}
+  - {where: "tools/learning_os/app/handlers/plan.py:1246", reason: "unreadable stage results: the fixture ledgers are clean, and no step can damage them"}
   - {site: cli.plan-edit-context.empty-batch, reason: guarded-before-handler}
   - {site: cli.plan-edit-context.one-selector, reason: guarded-before-handler}
   - {site: cli.plan-edit-context.bad-stage-results, reason: fixture-inexpressible}

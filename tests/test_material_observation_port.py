@@ -24,19 +24,19 @@ import pytest
 import yaml
 from repo_builders import material_fixture, write_yaml
 
-from learning_os.loader import load_repo
-from learning_os.material_analysis import observe_local_material
-from learning_os.material_synthesis import (
+from learning_os.app.render import call_renderer
+from learning_os.app.synthesis.material_synthesis import (
     MaterialSynthesisError,
     _analysis_ref_problem,
     current_unit_material_basis,
 )
-from learning_os.ops.render import call_renderer
-from learning_os.revisions import artifact_revision
+from learning_os.store.loader import load_repo
+from learning_os.store.material_analysis import observe_local_material
 from learning_os.store.material_observations import (
     LiveMaterialObservations,
     MaterialObservations,
 )
+from learning_os.store.revisions import artifact_revision
 
 UNIT_ID = "unit-demo-l01"
 NOTE_ID = "note-ref-density"

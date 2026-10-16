@@ -11,9 +11,9 @@ import yaml
 from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
 from repo_builders import add_curriculum, run_los, write_yaml
 
-from learning_os.genout import adoption_counts, generate_all
-from learning_os.genout.modules_view import _academic_deadlines, _exam_spine_lines
-from learning_os.loader import load_repo
+from learning_os.derive.projection import adoption_counts, generate_all
+from learning_os.derive.projection.modules_view import _academic_deadlines, _exam_spine_lines
+from learning_os.store.loader import load_repo
 
 
 # ----------------------------------------------------------------- status
@@ -484,7 +484,7 @@ def test_root_error_still_prints_root_usage(mini_repo):
 # build_parser/_add_property against synthetic request trees. The
 # production binding count and baseline bytes are pinned below.
 
-_SYNTH_HANDLER = "learning_os.ops.handlers.passthrough.validate_command"
+_SYNTH_HANDLER = "learning_os.app.handlers.passthrough.validate_command"
 
 
 def _synth_cli(action, flags, default=None, required=False, type=None,

@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 from repo_builders import declare_scan
 
-from learning_os import digests
+from learning_os.store import digests
 
 
 def _counted_blocks(path: Path, calls: list):
@@ -129,7 +129,7 @@ def _declare_scan(root: Path, data: bytes = b"%PDF scan\n") -> None:
 
 
 def test_declared_scan_bytes_do_not_move_the_snapshot(mini_repo: Path):
-    from learning_os.fingerprint import (
+    from learning_os.store.fingerprint import (
         canonical_data_and_stat_fingerprints,
         canonical_fingerprint,
         canonical_stat_digest,
@@ -158,7 +158,7 @@ def test_declared_scan_bytes_do_not_move_the_snapshot(mini_repo: Path):
 
 
 def test_re_pinning_moves_the_snapshot_through_the_declaration(mini_repo: Path):
-    from learning_os.fingerprint import canonical_fingerprint, data_roots_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint, data_roots_fingerprint
 
     _declare_scan(mini_repo)
     digests.clear()
@@ -173,7 +173,7 @@ def test_re_pinning_moves_the_snapshot_through_the_declaration(mini_repo: Path):
 
 
 def test_definition_1_reproduces_the_scan_sensitive_digest(mini_repo: Path):
-    from learning_os.fingerprint import canonical_fingerprint, data_roots_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint, data_roots_fingerprint
 
     _declare_scan(mini_repo)
     digests.clear()
@@ -191,7 +191,7 @@ def test_absent_scans_leave_both_definitions_equal(mini_repo: Path):
     """A machine without the scans computes identical snapshots under
     either definition: the cutover moves nothing where the scans are
     absent (CI, fresh clones)."""
-    from learning_os.fingerprint import canonical_fingerprint, data_roots_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint, data_roots_fingerprint
 
     _declare_scan(mini_repo)
     (mini_repo / SCAN_REL).unlink()
@@ -207,7 +207,7 @@ def test_absent_scans_leave_both_definitions_equal(mini_repo: Path):
     "canonical_data_and_stat_fingerprints",
 ])
 def test_unknown_fingerprint_definition_fails_closed(mini_repo: Path, name: str):
-    import learning_os.fingerprint as fingerprint_module
+    import learning_os.store.fingerprint as fingerprint_module
 
     digests.clear()
     with pytest.raises(ValueError, match="unknown fingerprint definition"):
@@ -216,8 +216,8 @@ def test_unknown_fingerprint_definition_fails_closed(mini_repo: Path, name: str)
 
 def test_second_fingerprint_walk_reads_no_bytes_from_disk(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
-    import learning_os.fingerprint as fingerprint_module
-    from learning_os.fingerprint import canonical_fingerprint
+    import learning_os.store.fingerprint as fingerprint_module
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     _declare_scan(mini_repo)
     digests.clear()
@@ -241,7 +241,7 @@ def test_second_fingerprint_walk_reads_no_bytes_from_disk(
 # ------------------------------------------------- status-cache pins
 def _stage_validation_producers(root: Path) -> None:
     """Copy the real validation-node producer bytes under a mini root."""
-    import learning_os.validation_cache as vc
+    import learning_os.store.validation_cache as vc
 
     repo_root = Path(__file__).resolve().parent.parent
     for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
@@ -252,7 +252,7 @@ def _stage_validation_producers(root: Path) -> None:
 
 def _stage_receipt_producers(root: Path) -> None:
     """Copy the real receipt-node producer bytes under a mini root."""
-    import learning_os.rules.receipt_cache as rc
+    import learning_os.derive.validation.receipt_cache as rc
 
     repo_root = Path(__file__).resolve().parent.parent
     for rel in dict.fromkeys(rc.RECEIPT_PRODUCER_FILES):
@@ -262,7 +262,7 @@ def _stage_receipt_producers(root: Path) -> None:
 
 
 def _receipt_node_count(root: Path) -> int:
-    from learning_os.derived.store import read_state
+    from learning_os.store.derived.store import read_state
 
     return sum(1 for node_id in read_state(root) if node_id.startswith("cache.receipt:"))
 
@@ -282,8 +282,8 @@ def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
     """GEN-JSON parses each text-cache index, so a corrupted one must
     miss the status cache (the #103 patch pinned the cache by name
     only and would have served the pre-corruption issues)."""
-    import learning_os.validation_cache as vc
-    from learning_os.loader import load_repo
+    import learning_os.store.validation_cache as vc
+    from learning_os.store.loader import load_repo
 
     _stage_validation_producers(mini_repo)
     _text_cache_index(mini_repo)
@@ -297,8 +297,8 @@ def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
 
 
 def test_new_text_cache_entry_misses(mini_repo: Path):
-    import learning_os.validation_cache as vc
-    from learning_os.loader import load_repo
+    import learning_os.store.validation_cache as vc
+    from learning_os.store.loader import load_repo
 
     _stage_validation_producers(mini_repo)
     vc.status_issues(load_repo(mini_repo))  # warm, no text cache
@@ -311,8 +311,8 @@ def test_rewritten_scan_misses_and_revalidates(mini_repo: Path):
     """Definition 2 took the scans out of the content fingerprint: the
     validator-inputs pin stats them instead, so a rewrite misses rather
     than serving the pre-rewrite issues."""
-    import learning_os.validation_cache as vc
-    from learning_os.loader import load_repo
+    import learning_os.store.validation_cache as vc
+    from learning_os.store.loader import load_repo
 
     _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
@@ -328,8 +328,8 @@ def test_rewritten_scan_misses_and_revalidates(mini_repo: Path):
 
 
 def test_absent_then_present_scan_misses(mini_repo: Path):
-    import learning_os.validation_cache as vc
-    from learning_os.loader import load_repo
+    import learning_os.store.validation_cache as vc
+    from learning_os.store.loader import load_repo
 
     _stage_validation_producers(mini_repo)
     _declare_scan(mini_repo)
@@ -352,14 +352,14 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
     ("generated without the slash", False),
 ])
 def test_generated_reference_predicate(text: str, expected: bool):
-    from learning_os.rules.registries import _references_generated
+    from learning_os.derive.validation.registries import _references_generated
 
     assert _references_generated(text) is expected
 
 
 def test_gen_input_still_flags_a_canonical_reference(mini_repo: Path):
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     note.write_text(
@@ -375,12 +375,12 @@ def test_validate_py_performs_one_canonical_walk(
     """The validate.py flow (pins, load, seed, validate) walks the
     canonical content once; the unseeded flow walks it twice for
     identical issues."""
-    import learning_os.fingerprint as fm
-    import learning_os.validation_cache as vc
-    from learning_os.fingerprint import seed_source_fingerprint
-    from learning_os.genout import generate_all, write_outputs
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.store.fingerprint as fm
+    import learning_os.store.validation_cache as vc
+    from learning_os.derive.projection import generate_all, write_outputs
+    from learning_os.derive.validation import validate
+    from learning_os.store.fingerprint import seed_source_fingerprint
+    from learning_os.store.loader import load_repo
 
     repo_built = load_repo(mini_repo)
     write_outputs(repo_built, generate_all(repo_built))
@@ -431,7 +431,7 @@ def test_validate_py_performs_one_canonical_walk(
 def _commit_capture(root: Path, key: str, request_id: str):
     """One genuine v2 commit (receipt + ledger row)."""
     from learning_os.contracts.gateway import GatewayRequestContext
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     target = root / f"work/inbox/{key}.md"
     context = GatewayRequestContext(
@@ -457,7 +457,7 @@ def _frozen(issues) -> list:
 def test_new_receipts_record_the_fingerprint_definition(mini_repo: Path):
     import yaml
 
-    from learning_os.fingerprint import FINGERPRINT_DEFINITION_VERSION
+    from learning_os.store.fingerprint import FINGERPRINT_DEFINITION_VERSION
 
     result = _commit_capture(mini_repo, "defrec-a", "request-defrec-a")
     receipt = yaml.safe_load(
@@ -467,9 +467,9 @@ def test_new_receipts_record_the_fingerprint_definition(mini_repo: Path):
 
 
 def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):
-    import learning_os.rules.receipt_cache as rc
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.derive.validation.receipt_cache as rc
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "warm-a", "request-warm-a")
@@ -484,9 +484,9 @@ def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):
 
 def test_receipt_sidecar_validates_only_new_receipts_when_warm(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
-    import learning_os.rules.receipt_cache as rc
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.derive.validation.receipt_cache as rc
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "fresh-a", "request-fresh-a")
@@ -509,9 +509,9 @@ def test_receipt_sidecar_validates_only_new_receipts_when_warm(
 def test_receipt_sidecar_revalidates_a_changed_receipt(mini_repo: Path):
     import yaml
 
-    import learning_os.rules.receipt_cache as rc
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.derive.validation.receipt_cache as rc
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "changed-a", "request-changed-a")
@@ -534,8 +534,8 @@ def test_receipt_sidecar_revalidates_a_changed_receipt(mini_repo: Path):
 def test_receipt_sidecar_duplicate_key_matches_cold_and_warm(mini_repo: Path):
     import yaml
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "dup-a", "request-dup-a")
@@ -555,8 +555,8 @@ def test_receipt_sidecar_duplicate_key_matches_cold_and_warm(mini_repo: Path):
 def test_receipt_sidecar_duplicate_id_matches_cold_and_warm(mini_repo: Path):
     import yaml
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     result_a = _commit_capture(mini_repo, "idt-a", "request-idt-a")
@@ -576,10 +576,10 @@ def test_receipt_sidecar_duplicate_id_matches_cold_and_warm(mini_repo: Path):
 
 
 def test_corrupt_receipt_sidecar_falls_back_to_the_full_pass(mini_repo: Path):
-    import learning_os.rules.receipt_cache as rc
-    from learning_os.derived.store import read_state
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.derive.validation.receipt_cache as rc
+    from learning_os.derive.validation import validate
+    from learning_os.store.derived.store import read_state
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "corrupt-a", "request-corrupt-a")
@@ -602,9 +602,9 @@ def test_receipt_sidecar_hash_settles_mtime_only_changes(
     import os
     import time
 
-    import learning_os.rules.receipt_cache as rc
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    import learning_os.derive.validation.receipt_cache as rc
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "mtime-a", "request-mtime-a")

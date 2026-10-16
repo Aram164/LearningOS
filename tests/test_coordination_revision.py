@@ -10,7 +10,7 @@ import yaml
 from gateway_helpers import approved_v2_envelope, file_sha256, run_v2_capability
 from repo_builders import run_los
 
-from learning_os.render import parse_sections
+from learning_os.domain.render import parse_sections
 
 PATH = "work/COORDINATION.md"
 TEXT = "AMLS is deferred to the next course run. See the owning module record."

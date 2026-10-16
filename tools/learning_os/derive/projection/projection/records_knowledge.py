@@ -1,0 +1,60 @@
+"""Record projection for knowledge/: notes and concepts."""
+
+from __future__ import annotations
+
+from learning_os.derive.projection.common import _first_para, _strip_headings
+from learning_os.store.loader import Repo
+
+
+def project_notes(repo: Repo) -> list[dict]:
+    records = []
+    for note in sorted(repo.notes.values(), key=lambda n: n.id):
+        rel = note.path.relative_to(repo.root)
+        records.append({
+            "id": note.id, "type": "note",
+            "title": note.meta.get("title", ""),
+            "path": str(rel),
+            "domain": rel.parent.name if rel.parent.name != "notes" else "",
+            "summary": _first_para(_strip_headings(note.body))[:400],
+            "role": note.meta.get("role", "synthesis"),
+            "state": note.meta.get("state"),
+            "authorship": note.meta.get("authorship"),
+            "concepts": sorted(note.meta.get("concepts", []) or []),
+            "sources": sorted(note.meta.get("sources", []) or []),
+            "contexts": sorted(note.meta.get("contexts", []) or []),
+            "attachments": list(note.meta.get("attachments", []) or []),
+            "evidence": list(note.meta.get("evidence", []) or []),
+            "supersedes": sorted(note.meta.get("supersedes", []) or []),
+            "reviewed": note.meta.get("reviewed"),
+            # The note-life axis: how the text got here and whether its meaning
+            # has been checked. Both are schema fields (v3) and both are
+            # authored today; omitting them meant the provenance of a
+            # transcribed note stopped at the repository boundary.
+            "transcription": note.meta.get("transcription"),
+            "semantic_review": note.meta.get("semantic_review"),
+            # A question Aram has recorded against a concept or an authored
+            # relation (ADR-017). It rides the note it is stored on rather than
+            # becoming a second store, and it is projected for the same reason
+            # the two fields above are: an interface cannot show a question it
+            # never receives, and a question nobody can find is not persisted.
+            "atlas_question": note.meta.get("atlas_question"),
+            # The provenance binding of a durable source-chapter analysis.
+            # Projected for the same reason: retrieval and review interfaces
+            # cannot show bindings they never receive.
+            "material_analysis": note.meta.get("material_analysis"),
+        })
+    return records
+
+
+def project_concepts(repo: Repo) -> list[dict]:
+    records = []
+    for cid in sorted(repo.concepts):
+        c = repo.concepts[cid]
+        records.append({
+            "id": cid, "type": "concept", "title": c.get("label", ""),
+            "path": str(repo.concept_origins.get(cid, "").relative_to(repo.root))
+            if repo.concept_origins.get(cid) else "knowledge/concepts.yaml",
+            "aliases": sorted(c.get("aliases", []) or []),
+            "deprecated": bool(c.get("deprecated", False)),
+        })
+    return records

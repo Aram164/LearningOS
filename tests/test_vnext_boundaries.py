@@ -17,6 +17,18 @@ import yaml
 from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
 from learning_os.ai_actions import AIActionService
+from learning_os.app.admin.masters_planning import (
+    MastersPlanningError,
+    candidate_set_checksum,
+    masters_planning_dashboard,
+    validate_candidate_comparison,
+    validate_master_catalog,
+)
+from learning_os.app.synthesis.material_synthesis import (
+    current_unit_material_basis,
+    material_synthesis_freshness,
+    validate_unit_material_synthesis,
+)
 from learning_os.backup_manifest import (
     BackupManifestError,
     build_backup_manifest,
@@ -25,21 +37,9 @@ from learning_os.backup_manifest import (
     verify_restored_system,
 )
 from learning_os.contracts.gateway import intent_sha256
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.legacy_archive import LegacyArchiveError, inspect_legacy_archive
-from learning_os.masters_planning import (
-    MastersPlanningError,
-    candidate_set_checksum,
-    masters_planning_dashboard,
-    validate_candidate_comparison,
-    validate_master_catalog,
-)
-from learning_os.material_synthesis import (
-    current_unit_material_basis,
-    material_synthesis_freshness,
-    validate_unit_material_synthesis,
-)
-from learning_os.transactions import artifact_revision
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.legacy_archive import LegacyArchiveError, inspect_legacy_archive
+from learning_os.store.transactions import artifact_revision
 
 
 def _add_routed_unit(root: Path) -> None:
@@ -160,7 +160,7 @@ def test_material_synthesis_covers_routes_and_derives_staleness(mini_repo):
     # the module's logical revision. The dossier must survive that too: the
     # old compared-revision guard staled every dossier in the module at this
     # point, including units the edit never touched.
-    from learning_os.revisions import (
+    from learning_os.store.revisions import (
         dump_revisions,
         load_revisions,
         revision_ledger_path,
@@ -190,7 +190,7 @@ def test_material_basis_refuses_an_unclassified_route_field():
     again; silently dropping it could hide a real evidential change. Neither is
     a decision this module gets to make on its own.
     """
-    from learning_os.materials_resolution import evidential_route_projection
+    from learning_os.store.materials.resolution import evidential_route_projection
 
     route = {"id": "route-demo", "source_id": "source-demo", "locator": "a.pdf",
              "covers": ["knowledge-demo"], "scope": "current", "angle": "prose"}
@@ -376,8 +376,12 @@ def test_multi_pass_dossier_publishes_exactly_one_synthesis(
     assert (unit_dir / "material-synthesis.yaml").is_file()
     assert [path.name for path in unit_dir.glob("material-synthesis*.yaml")] == [
         "material-synthesis.yaml"]
-    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import (
+        CONTRACT_VERSION,
+        effective_statuses,
+        load_ledger,
+    )
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     records = load_ledger(mini_repo)
     claim = records[f"dossier:{synthesis['id']}"]
@@ -1967,8 +1971,8 @@ def test_a_restore_still_resolves_the_thematic_groups_its_modules_name(mini_repo
     Thematic groups are explicit canonical metadata that nothing may infer, so a
     restore that dropped the registry leaves its modules pointing at nothing.
     """
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     _with_thematic_group(mini_repo)
     ui = tmp_path / "ui"
@@ -2035,13 +2039,13 @@ def test_populated_catalogue_leaves_normal_surfaces_byte_identical(mini_repo):
     in `_generated` moves, as it must — it attests every file, quarantine
     included.
     """
-    from learning_os.genout import build_manifest
-    from learning_os.loader import load_repo
-    from learning_os.masters_planning import (
+    from learning_os.app.admin.masters_planning import (
         master_catalog_destination,
         masters_planning_dashboard,
     )
-    from learning_os.rules import validate
+    from learning_os.derive.projection import build_manifest
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     def snapshot():
         repo = load_repo(mini_repo)

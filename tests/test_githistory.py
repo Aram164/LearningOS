@@ -4,13 +4,13 @@ import subprocess
 
 import pytest
 
-from learning_os import githistory
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.common import _git_last_commit, stable_generated_at
+from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
+from learning_os.derive.validation.core import Validator
 from learning_os.domain.failures import TransactionFailure
-from learning_os.genout import generate_all
-from learning_os.genout.common import _git_last_commit, stable_generated_at
-from learning_os.loader import load_repo
-from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
-from learning_os.rules.core import Validator
+from learning_os.store.loader import load_repo
+from learning_os.store.session import githistory
 
 
 @pytest.fixture(autouse=True)
@@ -160,7 +160,7 @@ def test_stamp_spells_utc_one_way_whatever_git_prints(tmp_path, monkeypatch):
     Git 2.42 prints a UTC ``%cI`` as ``+00:00``; 2.54 and 2.55 print ``Z``.
     This pins the normalisation on every machine, whichever Git it has.
     """
-    from learning_os.genout import common
+    from learning_os.derive.projection import common
 
     init_repo(tmp_path)
     monkeypatch.setattr(common, "read_history",

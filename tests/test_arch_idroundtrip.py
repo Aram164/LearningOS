@@ -25,11 +25,11 @@ from learning_os.ai_actions.errors import (
     DeliveryValidationError,
 )
 from learning_os.ai_actions.storage import FilesystemAIActionRepository
+from learning_os.app.handlers import platform as platform_handlers
 from learning_os.contracts.payloads import sha256_value
 from learning_os.domain import ids
 from learning_os.domain.failures import MalformedId
 from learning_os.domain.ids import KINDS, Digest
-from learning_os.ops.handlers import platform as platform_handlers
 
 ROOT = Path(__file__).resolve().parent.parent
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
@@ -143,7 +143,7 @@ def test_generic_patterns_match_schemas():
 
 def test_goal_alternation_matches_scan_detectors():
     assert KINDS["goal"].pattern.pattern == EXPECTED_GOAL_PATTERN
-    tree = ast.parse((ROOT / "tools/learning_os/semantics/scan.py").read_text(
+    tree = ast.parse((ROOT / "tools/learning_os/derive/semantics/scan.py").read_text(
         encoding="utf-8"))
     detectors = {
         node.args[1].value
@@ -642,7 +642,7 @@ def check_owner_value(owner: str, sub_pointer: str, value: object, *,
                            message="unknown request_id")
         return ("resolved", detail)
     if owner == "masters-candidate-module":
-        from learning_os import masters_planning
+        from learning_os.app.admin import masters_planning
 
         catalog = masters_planning.load_master_catalog(root)
         assert catalog is not None, (
@@ -1012,7 +1012,7 @@ def _tree_inventory(root):
 
 def _mapped_refusal(exc):
     """The converted pipeline's (code, retryable, exit) for a delivery failure."""
-    from learning_os.ops.handlers import ai as ai_handler
+    from learning_os.app.handlers import ai as ai_handler
 
     typed = ai_handler._refusal(exc, "ai-action.delivery.apply")
     return (typed.gateway_code, typed.gateway_retryable, typed.exit_code)
@@ -1209,10 +1209,10 @@ def test_inspect_owner_on_a_real_fixture_keeps_handler_refusals(mini_repo):
     """The real inspect handler on a fixture: order, miss, no effects."""
     from scenario_fixtures import rich_world
 
+    from learning_os.app.context import OpContext
+    from learning_os.app.projection import _fresh_manifest_and_repo
     from learning_os.domain.failures import WriteRefused
-    from learning_os.fingerprint import canonical_fingerprint
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.projection import _fresh_manifest_and_repo
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     named = rich_world(mini_repo)
     assert named, f"A6 rich_world returned no named ids — {FIX}"

@@ -14,9 +14,9 @@ from types import SimpleNamespace
 import pytest
 from repo_builders import run_los
 
-from learning_os import fingerprint
-from learning_os.loader import load_repo
-from learning_os.ops.encoders import _json_layout
+from learning_os.app.encoders import _json_layout
+from learning_os.store import fingerprint
+from learning_os.store.loader import load_repo
 
 
 def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
@@ -151,7 +151,7 @@ def test_named_query_preserves_definition_without_inventing_a_write_schema(mini_
 def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
     mini_repo, monkeypatch, command,
 ):
-    from learning_os.loading import yamlio
+    from learning_os.store.loading import yamlio
 
     repo = load_repo(mini_repo)
     note = next(iter(repo.notes.values()))
@@ -164,7 +164,7 @@ def test_note_queries_parse_only_notes_but_guard_the_whole_snapshot(
 
     monkeypatch.setattr(yamlio, "_safe_yaml", tracked_parse)
     import los
-    from learning_os.ops.pipeline import run_cli
+    from learning_os.app.pipeline import run_cli
 
     parser = los.build_parser()
     if command == "cmd_note_read":
@@ -245,8 +245,8 @@ def test_batch_matches_single_reads_and_preserves_requested_order(mini_repo):
 
 
 def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers import platform as platform_handlers
 
     calls = []
 
@@ -267,10 +267,10 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch):
 
 
 def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch):
-    from learning_os import fingerprint as plumbing
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers import platform as platform_handlers
     from learning_os.domain.failures import StaleSnapshot
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers import platform as platform_handlers
+    from learning_os.store import fingerprint as plumbing
 
     monkeypatch.setattr(platform_handlers, "_fresh_manifest_and_repo",
                         lambda root, **kwargs: ({"records": [{"id": "a"}]}, None))
@@ -283,8 +283,8 @@ def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monke
 
 
 def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, monkeypatch):
-    from learning_os.ops.handlers import platform as platform_handlers
-    from learning_os.ops.pipeline import run_cli
+    from learning_os.app.handlers import platform as platform_handlers
+    from learning_os.app.pipeline import run_cli
 
     class Terminal(StringIO):
         def isatty(self):
@@ -313,7 +313,7 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
 def test_bounded_read_hashes_thrice_with_seeded_manifest(
     mini_repo, monkeypatch, capsys, command,
 ):
-    from learning_os.ops import projection as plumbing
+    from learning_os.app import projection as plumbing
 
     original = fingerprint.canonical_fingerprint
     calls = []
@@ -325,7 +325,7 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
     monkeypatch.setattr(plumbing, "canonical_fingerprint", counted)
     monkeypatch.setattr(fingerprint, "canonical_fingerprint", counted)
     if command == "inspect":
-        from learning_os.ops.pipeline import run_cli
+        from learning_os.app.pipeline import run_cli
 
         repo = load_repo(mini_repo)
         args = SimpleNamespace(root=str(mini_repo), id=next(iter(repo.notes)),
@@ -334,7 +334,7 @@ def test_bounded_read_hashes_thrice_with_seeded_manifest(
         assert outcome.exit_code == 0, outcome.stderr
         payload = json.loads(outcome.stdout)
     else:
-        from learning_os.ops.pipeline import run_cli
+        from learning_os.app.pipeline import run_cli
 
         args = SimpleNamespace(root=str(mini_repo), brief=(command == "brief"),
                                compact=(command == "compact"),

@@ -6,6 +6,7 @@ fields the exceptions behave exactly as before the move.
 
 from __future__ import annotations
 
+from learning_os.app import pipeline as ops_pipeline
 from learning_os.domain import failures, suggest
 from learning_os.domain.codes import (
     AMBIGUOUS_MIGRATION,
@@ -14,7 +15,6 @@ from learning_os.domain.codes import (
     UNCONFIRMED,
     VALIDATION_FAILED,
 )
-from learning_os.ops import pipeline as ops_pipeline
 
 
 def test_write_refused_defaults_are_unset():

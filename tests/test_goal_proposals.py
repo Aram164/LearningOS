@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.semantics import (
+from learning_os.derive.semantics import (
     GoalError,
     detect_claims_needing_review,
     detect_covering_routes_stale,

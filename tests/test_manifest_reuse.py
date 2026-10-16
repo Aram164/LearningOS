@@ -22,22 +22,22 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_yaml
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.genout import generate_all, write_outputs
-from learning_os.loader import load_repo
-from learning_os.manifest_identity import (
+from learning_os.app import projection as plumbing
+from learning_os.app.handlers.reads import (
+    _use_evidence_from_manifest,
+    related_records,
+)
+from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.derive.semantics.source_use import _use_evidence
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.manifest_identity import (
     IDENTITY_FILENAME,
     build_identity,
     check_identity,
     materials_digest,
     operations_digest,
 )
-from learning_os.ops import projection as plumbing
-from learning_os.ops.handlers.reads import (
-    _use_evidence_from_manifest,
-    related_records,
-)
-from learning_os.semantics.source_use import _use_evidence
 
 
 def _generate(root) -> dict:
@@ -144,7 +144,7 @@ def test_code_edit_invalidates_in_a_fixture(mini_repo, monkeypatch):
     manifest = _generate(mini_repo)
     identity = _stored_identity(mini_repo)
     monkeypatch.setattr(
-        "learning_os.manifest_identity.digest_code_identity",
+        "learning_os.store.manifest_identity.digest_code_identity",
         lambda root: "0" * 64)
     ok, reason = check_identity(
         mini_repo, manifest, identity, live_snapshot=_live_snapshot(mini_repo))
@@ -313,7 +313,7 @@ def test_a_manifest_the_sidecar_does_not_describe_is_rebuilt(mini_repo, monkeypa
     code-only change leaves a sidecar beside a manifest it does not
     describe. Both carry the same snapshot stamp, so only the pinned bytes
     can tell them apart: the pair must rebuild, never serve the old bytes."""
-    from learning_os.manifest_identity import manifest_text
+    from learning_os.store.manifest_identity import manifest_text
 
     _generate(mini_repo)
     stored = _stored_manifest(mini_repo)

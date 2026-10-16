@@ -19,14 +19,14 @@ import yaml
 from gateway_helpers import approved_v2_call
 from repo_builders import add_curriculum, run_los, write_yaml
 
-from learning_os.learning_runtime import (
+from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
     read_observations,
     read_stage_results,
     stage_results_for,
 )
-from learning_os.loader import load_repo, parse_frontmatter
+from learning_os.store.loader import load_repo, parse_frontmatter
 
 MAP = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
 UNIT = "unit-demo-l01"

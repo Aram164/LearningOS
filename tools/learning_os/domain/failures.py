@@ -2,7 +2,7 @@
 
 Dependency-light exception types: leaf packages raise these errors without
 importing the transaction engine. The public compatibility surface remains
-``learning_os.transactions``; this module exists to keep projection,
+``learning_os.store.transactions``; this module exists to keep projection,
 validation and refusal code below orchestration in the dependency graph.
 """
 

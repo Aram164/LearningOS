@@ -27,12 +27,25 @@ from learning_os.ai_actions import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
+from learning_os.app import commit as ops_commit
+from learning_os.app.context import OpContext
+from learning_os.app.handlers import ai as ai_handler
+from learning_os.app.handlers.ai import _ai_refusal
+from learning_os.app.handlers.reads import _render as _render_resume
+from learning_os.app.lock import _operator_lock
+from learning_os.app.outcomes import (
+    _refusal_from_failure,
+    _take_gateway_refusal,
+)
+from learning_os.app.pipeline import _classify_failure, _v2_exit_code, run_cli
+from learning_os.app.proposal import TransactionProposal
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
     gateway_request_context,
 )
 from learning_os.contracts.write_scopes import WriteScopeError
+from learning_os.derive.validation.common import Issue
 from learning_os.domain.failures import (
     AmbiguousMigration,
     StaleSnapshot,
@@ -41,22 +54,9 @@ from learning_os.domain.failures import (
     ValidationFailed,
     WriteRefused,
 )
-from learning_os.ops import commit as ops_commit
-from learning_os.ops.context import OpContext
-from learning_os.ops.handlers import ai as ai_handler
-from learning_os.ops.handlers.ai import _ai_refusal
-from learning_os.ops.handlers.reads import _render as _render_resume
-from learning_os.ops.lock import _operator_lock
-from learning_os.ops.outcomes import (
-    _refusal_from_failure,
-    _take_gateway_refusal,
-)
-from learning_os.ops.pipeline import _classify_failure, _v2_exit_code, run_cli
-from learning_os.ops.proposal import TransactionProposal
-from learning_os.pathing import PathBoundaryError
-from learning_os.rules.common import Issue
+from learning_os.store.layout import PathBoundaryError
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
-from learning_os.transactions import (
+from learning_os.store.transactions import (
     ReplayEvidenceError,
     TransactionConflict,
     TransactionIdempotencyConflict,
@@ -437,7 +437,7 @@ def test_write_transaction_records_a_validation_refusal(
     mini_repo: Path, monkeypatch
 ):
     """A validation failure crosses the (code, errors) channel typed."""
-    from learning_os.ops import commit as commit_module
+    from learning_os.app import commit as commit_module
 
     key = "typed-validation-write-001"
     request_artifact = f"capture-request:{key}"

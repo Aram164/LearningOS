@@ -15,9 +15,9 @@ import pytest
 import yaml
 from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
-from learning_os.learning_runtime import runtime_review_fingerprint
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.learning_runtime import runtime_review_fingerprint
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 MAP = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
 

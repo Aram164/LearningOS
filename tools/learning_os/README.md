@@ -59,8 +59,8 @@ unit-level flows exist.
   JSON, exit codes, optimistic-concurrency behavior, and receipts.
 - Canonical validation and generation: `tools/validate.py` and
   `tools/generate.py`; `los validate`/`los generate` delegate to them.
-- Package facade: `learning_os.loader`, `learning_os.rules`, and
-  `learning_os.genout` retain established import surfaces for repository tools
+- Package facade: `learning_os.store.loader`, `learning_os.derive.validation`, and
+  `learning_os.derive.projection` retain established import surfaces for repository tools
   and tests.  Other modules are implementation details unless a contract says
   otherwise.
 - Separate presentation helper: `tools/materials_index/` is not part of the

@@ -112,31 +112,31 @@ EXPECTED_CONTRACTS: dict[str, dict] = {
         "unmatched_ignore_imports_alerting": "error",
         "layers": [
             "adapters",
-            "ops : ai_actions : masters_planning : material_synthesis",
-            "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
-            "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-            "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
+            "app : ai_actions",
+            "derive",
+            "store : contracts : backup_manifest",
+            "domain : route_identity",
         ],
     },
     "A1 transaction writer access (PLAN A2, D4)": {
         "type": "forbidden",
         "source_modules": [
-            "learning_os.rules",
-            "learning_os.genout",
-            "learning_os.semantics",
-            "learning_os.search",
-            "learning_os.health",
-            "learning_os.abilities",
-            "learning_os.learning_runtime",
-            "learning_os.routes",
+            "learning_os.derive.validation",
+            "learning_os.derive.projection",
+            "learning_os.derive.semantics",
+            "learning_os.derive.search",
+            "learning_os.derive.health",
+            "learning_os.derive.abilities",
+            "learning_os.derive.learning_runtime",
+            "learning_os.derive.routes",
             "learning_os.domain",
         ],
-        "forbidden_modules": ["learning_os.transactions"],
+        "forbidden_modules": ["learning_os.store.transactions"],
     },
     "A1 transaction service protected (PLAN A1, D14)": {
         "type": "protected",
-        "protected_modules": ["learning_os.transactions"],
-        "allowed_importers": ["learning_os.ops"],
+        "protected_modules": ["learning_os.store.transactions"],
+        "allowed_importers": ["learning_os.app"],
         "unmatched_ignore_imports_alerting": "error",
     },
 }
@@ -566,25 +566,25 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "ops : ai_actions : masters_planning : material_synthesis",
-  "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
-  "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
+  "app : ai_actions",
+  "derive",
+  "store : contracts : backup_manifest",
+  "domain : route_identity",
 ]
 ignore_imports = []
 
 [[tool.importlinter.contracts]]
 name = "A1 transaction writer access (PLAN A2, D4)"
 type = "forbidden"
-source_modules = ["learning_os.rules", "learning_os.genout", "learning_os.semantics", "learning_os.search", "learning_os.health", "learning_os.abilities", "learning_os.learning_runtime", "learning_os.routes", "learning_os.domain"]
-forbidden_modules = ["learning_os.transactions"]
+source_modules = ["learning_os.derive.validation", "learning_os.derive.projection", "learning_os.derive.semantics", "learning_os.derive.search", "learning_os.derive.health", "learning_os.derive.abilities", "learning_os.derive.learning_runtime", "learning_os.derive.routes", "learning_os.domain"]
+forbidden_modules = ["learning_os.store.transactions"]
 ignore_imports = []
 
 [[tool.importlinter.contracts]]
 name = "A1 transaction service protected (PLAN A1, D14)"
 type = "protected"
-protected_modules = ["learning_os.transactions"]
-allowed_importers = ["learning_os.ops"]
+protected_modules = ["learning_os.store.transactions"]
+allowed_importers = ["learning_os.app"]
 unmatched_ignore_imports_alerting = "error"
 ignore_imports = []
 """
@@ -601,18 +601,18 @@ exhaustive = true
 unmatched_ignore_imports_alerting = "error"
 layers = [
   "adapters",
-  "ops : ai_actions : masters_planning : material_synthesis",
-  "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
-  "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
-  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",
+  "app : ai_actions",
+  "derive",
+  "store : contracts : backup_manifest",
+  "domain : route_identity",
 ]
 ignore_imports = []
 
 [[tool.importlinter.contracts]]
 name = "A1 transaction writer access (PLAN A2, D4)"
 type = "forbidden"
-source_modules = ["learning_os.rules", "learning_os.genout", "learning_os.semantics", "learning_os.search", "learning_os.health", "learning_os.abilities", "learning_os.learning_runtime", "learning_os.routes", "learning_os.domain"]
-forbidden_modules = ["learning_os.transactions"]
+source_modules = ["learning_os.derive.validation", "learning_os.derive.projection", "learning_os.derive.semantics", "learning_os.derive.search", "learning_os.derive.health", "learning_os.derive.abilities", "learning_os.derive.learning_runtime", "learning_os.derive.routes", "learning_os.domain"]
+forbidden_modules = ["learning_os.store.transactions"]
 ignore_imports = []
 """
 
@@ -646,7 +646,7 @@ def test_contract_weakened_exhaustive_fails():
 
 def test_contract_weakened_layer_removed_fails():
     weakened = _TOML_THREE_CONTRACTS.replace(
-        '\n  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render",',
+        '\n  "domain : route_identity",',
         "", 1)
     failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
     assert failures, "a removed layer must fail"
@@ -655,8 +655,8 @@ def test_contract_weakened_layer_removed_fails():
 
 def test_contract_weakened_allowed_importers_fails():
     weakened = _TOML_THREE_CONTRACTS.replace(
-        'allowed_importers = ["learning_os.ops"]',
-        'allowed_importers = ["learning_os.ops", "learning_os.commands"]', 1)
+        'allowed_importers = ["learning_os.app"]',
+        'allowed_importers = ["learning_os.app", "learning_os.commands"]', 1)
     failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
     assert failures, "widened allowed_importers must fail"
     assert any("differs from SPEC" in f for f in failures)

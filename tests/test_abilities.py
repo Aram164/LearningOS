@@ -12,15 +12,15 @@ import yaml
 from gateway_helpers import approved_v2_call
 from repo_builders import run_los
 
-from learning_os.abilities import (
+from learning_os.derive.abilities import (
     ability_context,
     ability_fingerprint,
     bridge_source_freshness,
     read_ability_observations,
     validate_ability_registry,
 )
-from learning_os.learning_runtime import RuntimeInputError
-from learning_os.loader import load_repo
+from learning_os.derive.learning_runtime import RuntimeInputError
+from learning_os.store.loader import load_repo
 
 
 @pytest.fixture
@@ -229,7 +229,7 @@ def test_reason_codes_cover_transfer_and_nearby(ability_root: Path):
 def test_ability_context_refuses_malformed_producer_codes(
         ability_root: Path, monkeypatch, capsys, malformation: str, focus: str | None):
     import los
-    from learning_os import abilities as producer
+    from learning_os.derive import abilities as producer
 
     produce = producer.ability_context
 
@@ -341,7 +341,7 @@ def test_unicode_line_separators_round_trip_in_both_ledgers(ability_root: Path):
                 "conditions": [], "source_ref": "conversation://test/discovery",
                 "created_at": "2026-09-23T10:00:00Z", "state": "candidate",
             }, ensure_ascii=False) + "\n")
-    from learning_os.abilities import read_ability_candidates
+    from learning_os.derive.abilities import read_ability_candidates
     assert len(read_ability_candidates(load_repo(ability_root))) == 3
 
 

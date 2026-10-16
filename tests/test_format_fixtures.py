@@ -25,8 +25,8 @@ from pathlib import Path
 import pytest
 from repo_builders import copy_real_contracts
 
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 FORMATS = [
     path.name
@@ -154,7 +154,7 @@ def test_every_schema_is_classified(repo_root):
 def test_nothing_the_validator_applies_to_records_is_an_artifact(
     repo_root, mini_repo, monkeypatch
 ):
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     applied: set[str] = set()
     original = Validator._schema_check

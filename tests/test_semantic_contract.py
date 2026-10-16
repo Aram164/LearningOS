@@ -11,8 +11,8 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.genout.projection.records_curriculum import _needs_study_map
-from learning_os.semantics import (
+from learning_os.derive.projection.projection.records_curriculum import _needs_study_map
+from learning_os.derive.semantics import (
     CONTRACT_VERSION,
     PREDICATES,
     evaluate,

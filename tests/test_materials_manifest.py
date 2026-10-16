@@ -16,9 +16,9 @@ import materials_manifest as mm
 import pytest
 import yaml
 
-from learning_os.loader import load_repo
-from learning_os.rules import validate
-from learning_os.rules.materials import _uris_in
+from learning_os.derive.validation import validate
+from learning_os.derive.validation.materials import _uris_in
+from learning_os.store.loader import load_repo
 
 
 def codes(issues, severity=None):
@@ -373,7 +373,7 @@ def test_symlinked_materials_root_keeps_inner_aliases_inside_its_target(mini_rep
 
 
 def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypatch):
-    from learning_os.rules import materials
+    from learning_os.derive.validation import materials
 
     link = mini_repo.parent / "materials"
     link.rmdir()
@@ -430,7 +430,7 @@ def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypa
     ],
 )
 def test_a_material_reference_extends_as_far_as_its_field_says(text, expected, why):
-    from learning_os.rules.materials import _uris_in
+    from learning_os.derive.validation.materials import _uris_in
 
     assert expected in _uris_in(text), why
 
@@ -445,7 +445,7 @@ def test_one_filename_in_two_normal_forms_is_one_filename():
     """
     import unicodedata
 
-    from learning_os.rules.materials import _nfc
+    from learning_os.derive.validation.materials import _nfc
 
     name = "machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 02 .pdf"
     decomposed = unicodedata.normalize("NFD", name)

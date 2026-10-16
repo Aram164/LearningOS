@@ -22,6 +22,6 @@ def _render_frontmatter(meta: dict, body: str) -> str:
 
 
 def _dump_study_map(study_map, data: dict) -> str:
-    from learning_os.material_refs import preserve_map_refs
+    from learning_os.domain.material_refs import preserve_map_refs
 
     return _dump_yaml(preserve_map_refs(study_map, data))

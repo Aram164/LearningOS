@@ -15,7 +15,7 @@ from pathlib import Path
 
 from gateway_helpers import approved_v2_call
 
-from learning_os.loader import EVIDENCE_SCHEMES, load_repo, parse_frontmatter
+from learning_os.store.loader import EVIDENCE_SCHEMES, load_repo, parse_frontmatter
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 

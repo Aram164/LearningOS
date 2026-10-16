@@ -15,13 +15,13 @@ import json
 import pytest
 from repo_builders import run_los
 
-from learning_os.semantics import ScanInput, scan_observations
-from learning_os.semantics.goals import (
+from learning_os.derive.semantics import ScanInput, scan_observations
+from learning_os.derive.semantics.goals import (
     DETECTOR_PRECEDENCE,
     GoalCluster,
     rank_clusters,
 )
-from learning_os.semantics.session_counts import (
+from learning_os.derive.semantics.session_counts import (
     FeedError,
     SessionCounts,
     feed_is_empty,

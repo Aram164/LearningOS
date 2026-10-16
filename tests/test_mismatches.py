@@ -17,8 +17,8 @@ from gateway_helpers import approved_v2_call, approved_v2_envelope, run_v2_capab
 from repo_builders import run_los, write_yaml
 from scenario_fixtures import rich_world
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.loader import load_repo
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
 
 
 def _world(tmp_path: Path) -> Path:

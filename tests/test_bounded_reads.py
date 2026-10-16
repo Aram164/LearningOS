@@ -5,7 +5,7 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_yaml
 
-from learning_os.loader import load_repo
+from learning_os.store.loader import load_repo
 
 
 def test_note_segments_reconstruct_exact_bytes_and_refuse_stale_continuation(mini_repo):
@@ -91,7 +91,7 @@ def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
 
 
 def test_domain_glance_keeps_empty_future_and_unbucketed_domains():
-    from learning_os.ops.handlers.reads import _domain_glance
+    from learning_os.app.handlers.reads import _domain_glance
 
     records = [
         {"type": "note", "domain": "future", "role": "crosswalk"},
@@ -149,7 +149,7 @@ def _two_route_context(mini_repo):
     import yaml
     from repo_builders import material_fixture, write_yaml
 
-    from learning_os.material_refs import unit_routes
+    from learning_os.domain.material_refs import unit_routes
 
     repo, first_id, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id
@@ -270,8 +270,8 @@ def test_route_batch_cli_parsing_rejects_empty_and_mixed_selectors(mini_repo):
 
 def test_route_batch_uses_one_repository_load(mini_repo, monkeypatch):
     import los
-    from learning_os.ops import context as context_module
-    from learning_os.ops import pipeline as ops_pipeline
+    from learning_os.app import context as context_module
+    from learning_os.app import pipeline as ops_pipeline
 
     unit_id, (first, second) = _two_route_context(mini_repo)
     loads = []
@@ -297,8 +297,8 @@ def test_route_batch_snapshot_conflict_refuses_whole_response(
     mini_repo, monkeypatch, capsys,
 ):
     import los
-    from learning_os import fingerprint as plumbing
-    from learning_os.ops import pipeline as ops_pipeline
+    from learning_os.app import pipeline as ops_pipeline
+    from learning_os.store import fingerprint as plumbing
 
     unit_id, (first, second) = _two_route_context(mini_repo)
     real_fingerprint = plumbing.canonical_fingerprint
@@ -332,7 +332,7 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
     import yaml
     from repo_builders import material_fixture, write_yaml
 
-    from learning_os.material_refs import unit_routes
+    from learning_os.domain.material_refs import unit_routes
 
     repo, _, smid = material_fixture(mini_repo)
     unit_id = repo.study_maps[smid].unit_id
@@ -358,9 +358,9 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
 
 
 def test_route_helper_refuses_unknown_and_ambiguous_ids():
+    from learning_os.app.handlers.plan import _require_route
     from learning_os.domain.failures import NotFound, WriteRefused
     from learning_os.domain.suggest import suggestions, with_suggestions
-    from learning_os.ops.handlers.plan import _require_route
 
     rows = [{"id": "route-a"}, {"id": "route-a"}, {"id": "route-b"}]
     ids = [row["id"] for row in rows]
@@ -556,7 +556,7 @@ def test_brief_pointer_invalid_matches_missing(mini_repo):
 
 
 def test_search_surfaces_garden_seeds_and_inbox_filenames(mini_repo):
-    from learning_os.garden import garden_id
+    from learning_os.derive.garden import garden_id
 
     garden = mini_repo / "knowledge/garden"
     garden.mkdir(parents=True, exist_ok=True)
@@ -581,7 +581,7 @@ def test_search_surfaces_garden_seeds_and_inbox_filenames(mini_repo):
 
 
 def test_note_read_resolves_a_garden_seed(mini_repo):
-    from learning_os.garden import garden_id
+    from learning_os.derive.garden import garden_id
 
     garden = mini_repo / "knowledge/garden"
     garden.mkdir(parents=True, exist_ok=True)
@@ -929,7 +929,7 @@ def test_compact_unit_list_empty_result_shape(mini_repo):
 
 
 def test_compact_unit_list_keeps_nulls_and_drops_absent(mini_repo):
-    from learning_os.ops.handlers.reads import _unit_summary
+    from learning_os.app.handlers.reads import _unit_summary
 
     assert _unit_summary({"id": "u", "component_id": None}) == {
         "id": "u", "component_id": None}

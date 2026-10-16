@@ -51,7 +51,7 @@ still appeared locally valid.
 7. **Honest rollback reporting.** If restoration itself fails, the transaction
    reports every unrestored path and does not claim a clean rollback.
 8. **Layered fingerprint ownership.** Canonical and loaded-repository digest
-   functions live in `learning_os.fingerprint`; validation does not depend on
+   functions live in `learning_os.store.fingerprint`; validation does not depend on
    generated-view modules, and `genout` exports no private helpers.
 
 ## Consequences

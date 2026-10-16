@@ -26,20 +26,20 @@ from repo_builders import (
     write_yaml,
 )
 
-from learning_os.abilities import ability_fingerprint
-from learning_os.loader import load_repo
-from learning_os.material_inventory import render_manifest
-from learning_os.material_refs import MATERIAL_FIELDS, unit_routes
-from learning_os.materials_resolution import (
-    project_material_resource,
-    resolve_route_material_files,
-)
-from learning_os.semantics.lineage import (
+from learning_os.derive.abilities import ability_fingerprint
+from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     dump_ledger,
     emit_route_covers,
 )
-from learning_os.warning_baseline import write_baseline
+from learning_os.domain.material_inventory import render_manifest
+from learning_os.domain.material_refs import MATERIAL_FIELDS, unit_routes
+from learning_os.store.loader import load_repo
+from learning_os.store.materials.resolution import (
+    project_material_resource,
+    resolve_route_material_files,
+)
+from learning_os.store.warning_baseline import write_baseline
 
 PENDING_STAGE_ID = "stage-demo-pending"
 SECOND_WORKSPACE_ID = "workspace-second"
@@ -556,7 +556,7 @@ def _add_warning_baseline(root: Path) -> None:
     # measured counter. Only the date observation is fixed, inside this
     # call; the patch restores the function on exit.
     fixed = datetime.date(2026, 9, 20)
-    with patch("learning_os.warning_baseline.observations.today",
+    with patch("learning_os.store.warning_baseline.observations.today",
                return_value=fixed):
         write_baseline(
             root, INITIAL_WARNING_SIGNATURES,

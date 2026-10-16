@@ -218,8 +218,8 @@ def _assert_cli_command_only_handler_rebound(key: str, fname: str,
         if field != "handler":
             assert new_cmd[field] == old_cmd[field], (key, field)
     operation = fname.removesuffix(".schema.json")
-    import learning_os.ops.handlers  # noqa: F401  (registration side effect)
-    from learning_os.ops.registry import REGISTRY
+    import learning_os.app.handlers  # noqa: F401  (registration side effect)
+    from learning_os.app.registry import REGISTRY
 
     if operation == "cli.capability":
         assert new_cmd["handler"] == "learning_os.adapters.capability.cmd_capability", (key, new_cmd)

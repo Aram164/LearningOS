@@ -19,7 +19,7 @@ from pathlib import Path
 import arch_audit_hook
 import arch_effects
 
-from learning_os.fingerprint import CANONICAL_ROOTS
+from learning_os.store.fingerprint import CANONICAL_ROOTS
 
 _ARCH_SITE = Path(__file__).resolve().parent / "arch_site"
 
@@ -119,7 +119,7 @@ def _write_journal_v2(root: Path, tx_id: str, entries: list) -> Path:
 
 
 def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
-    import learning_os.ops.lock as plumbing
+    import learning_os.app.lock as plumbing
 
     tmp_path = Path(tmp_path)
     root = _build_root(tmp_path, "a2-f1")
@@ -182,7 +182,7 @@ def fixture_2_unproven_restore(tmp_path: Path) -> None:
 
 
 def _callback_case(tmp_path: Path, name: str, kind: str) -> None:
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     root = _build_root(tmp_path, name)
     legit = root / "work" / "inbox" / f"{kind}-legit.md"
@@ -579,7 +579,7 @@ def fixture_10_logging_failure(tmp_path: Path) -> None:
 
 
 def fixture_11_concurrent_threads(tmp_path: Path) -> None:
-    import learning_os.transactions as transactions
+    import learning_os.store.transactions as transactions
 
     tmp_path = Path(tmp_path)
     root = _build_root(tmp_path, "a2-f11")

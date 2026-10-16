@@ -38,17 +38,17 @@ from learning_os.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )
+from learning_os.derive.validation.common import SUFFIX_RE
 from learning_os.domain.failures import WriteRefused
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.loader import load_repo
-from learning_os.material_analysis import observe_local_material
-from learning_os.materials_resolution import (
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.layout import PathBoundaryError
+from learning_os.store.loader import load_repo
+from learning_os.store.material_analysis import observe_local_material
+from learning_os.store.materials.resolution import (
     material_location,
     material_uri_authority,
 )
-from learning_os.pathing import PathBoundaryError
-from learning_os.rules.common import SUFFIX_RE
-from learning_os.transactions import artifact_revision
+from learning_os.store.transactions import artifact_revision
 
 MIGRATION_ID = "summaries-to-notes-v1"
 SUPPORTED_THROUGH = 35

@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.semantics import POLICY_RULES, PolicyDecision, query
-from learning_os.semantics.predicates import CONTRACT_VERSION, PREDICATES
+from learning_os.derive.semantics import POLICY_RULES, PolicyDecision, query
+from learning_os.derive.semantics.predicates import CONTRACT_VERSION, PREDICATES
 
 
 def test_the_rule_set_is_pinned():

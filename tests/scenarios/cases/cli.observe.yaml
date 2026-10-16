@@ -38,7 +38,7 @@ cases:
     argv: [observe, req-demo-l01-demo, --activity, exercise, --result, partial, --supersedes, observation-nope]
     expect: {site: learner.observation.append.invalid-input}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/learner.py:1399", reason: "gesture not admitted: static allowlist admits the gesture in this tree"}
-  - {where: "tools/learning_os/ops/handlers/learner.py:1410", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world carries one valid target"}
+  - {where: "tools/learning_os/app/handlers/learner.py:1399", reason: "gesture not admitted: static allowlist admits the gesture in this tree"}
+  - {where: "tools/learning_os/app/handlers/learner.py:1410", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world carries one valid target"}
   - {site: cli.observe.not-admitted, reason: fixture-inexpressible}
   - {site: cli.observe.invalid-target, reason: fixture-inexpressible}

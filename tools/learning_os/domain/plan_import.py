@@ -14,8 +14,8 @@ from typing import Any
 
 import yaml  # type: ignore[import-untyped]
 
+from learning_os.domain.material_refs import MaterialReferenceError, expand_map
 from learning_os.domain.suggest import not_found
-from learning_os.material_refs import MaterialReferenceError, expand_map
 
 _COMPACT_STAGE_FIELDS = frozenset({
     "title", "objective", "done_when", "exam_critical", "concepts",

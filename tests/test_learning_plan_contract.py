@@ -113,8 +113,8 @@ def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root:
 
     import los
     from learning_os.adapters.cli import invoke
+    from learning_os.app.registry import REGISTRY
     from learning_os.contracts.payloads import subparsers
-    from learning_os.ops.registry import REGISTRY
 
     parser = subparsers(los.build_parser()).get("plan-template")
     assert parser is not None, "the declared query has no executable CLI route"

@@ -25,7 +25,7 @@ TOOLS_DIR = Path(__file__).resolve().parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from learning_os.fingerprint import DATA_ROOTS  # noqa: E402
+from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 
 WORLD_DATA_ROOTS = tuple(DATA_ROOTS) + ("operations",)
 
@@ -207,7 +207,7 @@ _FINGERPRINT_SNIPPET = (
     "import sys",
     "sys.path.insert(0, sys.argv[1])",
     "from pathlib import Path",
-    "from learning_os.fingerprint import canonical_fingerprint",
+    "from learning_os.store.fingerprint import canonical_fingerprint",
     "print(canonical_fingerprint(Path(sys.argv[2])))",
 )
 

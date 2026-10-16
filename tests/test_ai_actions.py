@@ -18,16 +18,16 @@ from learning_os.ai_actions import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
+from learning_os.app.commit import commit_proposal
+from learning_os.app.context import OpContext
 from learning_os.contracts import validate_contract
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
     intent_sha256,
 )
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops.commit import commit_proposal
-from learning_os.ops.context import OpContext
-from learning_os.transactions import TransactionFailure, TransactionService, artifact_revision
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.transactions import TransactionFailure, TransactionService, artifact_revision
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXED = datetime(2026, 8, 4, 1, 0, tzinfo=UTC)
@@ -849,8 +849,8 @@ def test_missing_delivery_identities_name_their_fields(ai_repo: Path, tmp_path: 
 
 def test_validator_names_a_persisted_bundle_with_a_bad_request_id(ai_repo: Path):
     """A hand-made bundle id outside the pattern is an error naming it (JF-08)."""
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     bundle = ai_repo / "operations/ai-actions/requests/my-request-1/request.yaml"
     write_yaml(bundle, {"id": "my-request-1", "type": "ai-action-request"})

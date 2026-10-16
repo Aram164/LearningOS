@@ -14,12 +14,14 @@ from gateway_helpers import approved_v2_envelope
 from repo_builders import add_curriculum
 
 import learning_os.ai_actions.projection as ai_projection
-import learning_os.fingerprint as fingerprint_module
-import learning_os.ops.commit as ops_commit
-import learning_os.ops.context as context_module
-import learning_os.ops.lock as plumbing_support
+import learning_os.app.commit as ops_commit
+import learning_os.app.context as context_module
+import learning_os.app.lock as plumbing_support
+import learning_os.store.fingerprint as fingerprint_module
 import learning_os.store.session_ledger as session_support
-import learning_os.transactions as transaction_module
+import learning_os.store.transactions as transaction_module
+from learning_os.app.context import OpContext
+from learning_os.app.proposal import TransactionProposal
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
@@ -31,13 +33,11 @@ from learning_os.contracts.json_schema import (
     ContractValidationError,
     validate_contract,
 )
+from learning_os.derive.validation.common import Issue
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
-from learning_os.fingerprint import source_fingerprint
-from learning_os.loader import load_repo
-from learning_os.ops.context import OpContext
-from learning_os.ops.proposal import TransactionProposal
-from learning_os.rules.common import Issue
-from learning_os.transactions import (
+from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.transactions import (
     PostCommitFailure,
     ProjectionFailure,
     TransactionConflict,
@@ -128,7 +128,7 @@ def test_only_one_module_declares_the_canonical_root_list():
             if roots <= literal:
                 declaring.append(path.relative_to(TOOLS).as_posix())
                 break
-    assert declaring == ["learning_os/fingerprint.py"], (
+    assert declaring == ["learning_os/store/fingerprint.py"], (
         f"the canonical root list is declared in more than one place: {declaring}"
     )
 
@@ -157,7 +157,7 @@ def test_source_fingerprint_cache_does_not_mutate_the_loaded_repo(
 
 def test_combined_fingerprints_match_separate_walks(mini_repo: Path):
     """#104: one traversal yields byte-identical canonical and data digests."""
-    from learning_os.fingerprint import (
+    from learning_os.store.fingerprint import (
         canonical_data_and_stat_fingerprints,
         canonical_fingerprint,
         data_roots_fingerprint,
@@ -178,7 +178,7 @@ def test_transaction_walks_twice_but_reads_each_file_once(
     the pre walk's reads. The cache starts cold so the transaction's own
     pre-walk reads are counted too.
     """
-    from learning_os import digests
+    from learning_os.store import digests
 
     digests.clear()
     expected = f"sha256:{canonical_fingerprint(mini_repo)}"
@@ -584,7 +584,7 @@ def test_each_commit_has_exactly_one_append_only_receipt(tmp_path: Path):
 
 
 def test_each_commit_records_the_post_commit_data_roots_digest(tmp_path: Path):
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     root = tmp_path
     target = root / "projects/registry/project-demo.yaml"
@@ -1066,7 +1066,7 @@ from pathlib import Path
 TOOLS_DIR = Path(__file__).parent.parent.parent / "tools"
 sys.path.insert(0, str(TOOLS_DIR))
 
-from learning_os import transactions
+from learning_os.store import transactions
 import los
 
 original_write = transactions._atomic_write_bytes

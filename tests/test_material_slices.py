@@ -9,7 +9,6 @@ import pytest
 import yaml
 from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
-from learning_os import material_slices
 from learning_os.ai_actions import (
     ActionPolicyError,
     AIActionError,
@@ -19,10 +18,20 @@ from learning_os.ai_actions import (
     RouteNotFound,
     UnresolvedMaterialError,
 )
+from learning_os.app.synthesis.material_synthesis import (
+    MaterialSynthesisError,
+    current_unit_material_basis,
+    inspected_material_by_route,
+    inspected_pages_by_route,
+    validate_synthesis_page_provenance,
+    validate_unit_material_synthesis,
+)
 from learning_os.domain.codes import INVALID_REQUEST
 from learning_os.domain.failures import NotFound, WriteRefused
-from learning_os.loader import load_repo
-from learning_os.material_slices import (
+from learning_os.store.loader import load_repo
+from learning_os.store.materials import slices as material_slices
+from learning_os.store.materials.resolution import resolve_route_material_files
+from learning_os.store.materials.slices import (
     MAX_SLICE_PAGES,
     MAX_SLICE_PASSES,
     ContinuationError,
@@ -33,15 +42,6 @@ from learning_os.material_slices import (
     parse_locator_page_ranges,
     plan_continuation,
 )
-from learning_os.material_synthesis import (
-    MaterialSynthesisError,
-    current_unit_material_basis,
-    inspected_material_by_route,
-    inspected_pages_by_route,
-    validate_synthesis_page_provenance,
-    validate_unit_material_synthesis,
-)
-from learning_os.materials_resolution import resolve_route_material_files
 
 
 def _add_sliced_unit(root: Path, routes: list[dict], files: dict[str, list[str] | bytes]) -> None:
@@ -1055,8 +1055,8 @@ def test_unknown_concept_ids_keeps_complaint_order_and_domain():
 
 def test_typed_misses_keep_invalid_request_and_exit_one(mini_repo):
     """Both typed misses classify exactly like their legacy legs."""
-    from learning_os.ops.outcomes import classify, resolve
-    from learning_os.ops.pipeline import _cli_error_code
+    from learning_os.app.outcomes import classify, resolve
+    from learning_os.app.pipeline import _cli_error_code
 
     app, _ = _prepared_long_route(mini_repo)
     with pytest.raises(RouteNotFound) as route_caught:
@@ -1145,9 +1145,9 @@ def test_handler_sites_only_the_two_lookup_misses(mini_repo, tmp_path,
     import arch_audit_hook
     from arch_audit_hook import SITE_WITNESS_ENV
 
-    import learning_os.ops.handlers  # noqa: F401  (registration side effect)
+    import learning_os.app.handlers  # noqa: F401  (registration side effect)
     import los
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.app import pipeline as pipeline_module
 
     _prepared_long_route(mini_repo, request_id="ai-request-sites")
     log = tmp_path / "audit.jsonl"

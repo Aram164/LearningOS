@@ -754,7 +754,7 @@ def _observe(mini: Path) -> str | None:
 
 
 def _resolve_row(row: dict, debug: Path) -> None:
-    from learning_os.diagnostics.resolver import collect_authority, resolve
+    from learning_os.store.diagnostics.resolver import collect_authority, resolve
 
     mini = row.pop("_mini")
     records = []

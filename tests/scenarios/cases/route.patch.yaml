@@ -79,10 +79,10 @@ cases:
     artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/plan.py:194", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:57", reason: "unit without a module source map: every fixture unit's module carries one"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:82", reason: "ambiguous route in module: the fixture carries each route id once per module"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:100", reason: "ambiguous legacy selection: every fixture selection sharing a locator links its exact route or matches one route"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:198", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:207", reason: "plan hash mismatch: neither the route.patch schema nor the route-patch parser admits plan_sha256; the site serves compact only"}
-  - {where: "tools/learning_os/ops/handlers/plan.py:236", reason: "malformed expected revision: the gateway passes the envelope's schema-validated expected_revisions, and no direct-CLI case supplies one"}
+  - {where: "tools/learning_os/app/handlers/plan.py:194", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/app/handlers/plan.py:57", reason: "unit without a module source map: every fixture unit's module carries one"}
+  - {where: "tools/learning_os/app/handlers/plan.py:82", reason: "ambiguous route in module: the fixture carries each route id once per module"}
+  - {where: "tools/learning_os/app/handlers/plan.py:100", reason: "ambiguous legacy selection: every fixture selection sharing a locator links its exact route or matches one route"}
+  - {where: "tools/learning_os/app/handlers/plan.py:198", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}
+  - {where: "tools/learning_os/app/handlers/plan.py:207", reason: "plan hash mismatch: neither the route.patch schema nor the route-patch parser admits plan_sha256; the site serves compact only"}
+  - {where: "tools/learning_os/app/handlers/plan.py:236", reason: "malformed expected revision: the gateway passes the envelope's schema-validated expected_revisions, and no direct-CLI case supplies one"}

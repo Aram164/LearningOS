@@ -17,9 +17,9 @@ from pathlib import Path
 import yaml
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.learning_runtime import requirement_fingerprint
-from learning_os.semantics import ScanInput, scan_observations
-from learning_os.semantics.goals import stale_observations
+from learning_os.derive.learning_runtime import requirement_fingerprint
+from learning_os.derive.semantics import ScanInput, scan_observations
+from learning_os.derive.semantics.goals import stale_observations
 
 MAP = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
 REQUIREMENT = "req-demo-l01-demo"

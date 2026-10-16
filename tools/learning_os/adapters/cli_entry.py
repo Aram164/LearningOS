@@ -5,8 +5,8 @@ from __future__ import annotations
 import os
 import sys
 
-from learning_os.ops.lock import LOS_LOCK_TIMEOUT_ENV
-from learning_os.ops.outcomes import classify, resolve
+from learning_os.app.lock import LOS_LOCK_TIMEOUT_ENV
+from learning_os.app.outcomes import classify, resolve
 
 
 def run(args) -> int:

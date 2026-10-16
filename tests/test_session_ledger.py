@@ -21,8 +21,8 @@ from repo_builders import run_los, seed_live_goal_ids
 
 from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.domain.failures import WriteRefused
-from learning_os.fingerprint import canonical_fingerprint
 from learning_os.store import session_ledger as session_store
+from learning_os.store.fingerprint import canonical_fingerprint
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 

@@ -23,12 +23,12 @@ import pytest
 import yaml
 from jsonschema import Draft202012Validator
 
-import learning_os.ops.handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.registry import REGISTRY
+import learning_os.app.handlers  # noqa: F401  (registration side effect)
+from learning_os.app.registry import REGISTRY
 
 ROOT = Path(__file__).resolve().parent.parent
 CASES_DIR = ROOT / "tests/scenarios/cases"
-HANDLERS_DIR = ROOT / "tools/learning_os/ops/handlers"
+HANDLERS_DIR = ROOT / "tools/learning_os/app/handlers"
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
 REQUESTS_DIR = ROOT / "system/schema/requests"
 RECORDED_DIR = ROOT / "tests/scenarios/recorded"
@@ -302,7 +302,7 @@ def _check_live_exit(label: str, transport: str, recorded_exit: int,
     null site, and recorded/live/witnessed exits all agree, with no
     ``exit_for`` class. No line, or more than one, fails.
     """
-    from learning_os.ops.outcomes import exit_for
+    from learning_os.app.outcomes import exit_for
 
     assert transport in _CONTEXT, (
         f"A7 {label}: transport {transport!r} has no outcomes context — {FIX}")
@@ -401,7 +401,7 @@ def _handler_module_has_refused_stdout(operation: str) -> bool:
     A ``None`` value passes nothing, as in the A18 population rule.
     """
     module = REGISTRY[operation].handler.__module__
-    assert module.startswith("learning_os.ops.handlers."), module
+    assert module.startswith("learning_os.app.handlers."), module
     path = HANDLERS_DIR / (module.rsplit(".", 1)[1] + ".py")
     tree = ast.parse(path.read_text(encoding="utf-8"))
     for node in ast.walk(tree):
@@ -930,7 +930,7 @@ def test_sweep_control_missing_registered_op_fails():
 def test_control_reconstruct_resolves_from_where_defined():
     """An ai_actions error reconstructs to its defining module's class."""
     from learning_os.ai_actions.errors import TargetNotFoundError
-    from learning_os.ops.outcomes import exit_for
+    from learning_os.app.outcomes import exit_for
 
     exc = _reconstruct("cli.ai-action-status", "TargetNotFoundError",
                        None)

@@ -862,7 +862,7 @@ A route describes a material's general contribution; a placement may narrow
 that purpose for one stage. Preserve that distinction after reviewing both
 texts. The optional resource `angle_review` records `kind: refinement`, the
 actual reviewer, date, rationale, and `angle_review_fingerprint` from
-`learning_os.rules.plan_rigor`. It is canonical operator evidence; the manifest
+`learning_os.derive.validation.plan_rigor`. It is canonical operator evidence; the manifest
 continues to publish the descriptions under its existing interface contract.
 A refinement attests only to the relationship between those descriptions.
 

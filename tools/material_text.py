@@ -49,14 +49,14 @@ from materials_manifest import (  # noqa: E402
     sha256,
 )
 
-from learning_os.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
-from learning_os.derived.model import (  # noqa: E402
+from learning_os.domain.failures import TransactionFailure  # noqa: E402
+from learning_os.store.derived.engine import BuildContext, evaluate, evaluate_many  # noqa: E402
+from learning_os.store.derived.model import (  # noqa: E402
     DERIVED_SUBSTRATE_FILES,
     DerivedError,
     NodeSpec,
 )
-from learning_os.derived.store import invalidate  # noqa: E402
-from learning_os.domain.failures import TransactionFailure  # noqa: E402
+from learning_os.store.derived.store import invalidate  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 CACHE_DIR = REPO / "generated" / "text-cache"

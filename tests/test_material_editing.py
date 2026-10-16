@@ -15,20 +15,20 @@ from gateway_helpers import (
 )
 from repo_builders import material_fixture, run_los, write_yaml
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.genout import build_manifest
-from learning_os.loader import load_repo
-from learning_os.material_refs import (
+from learning_os.app.handlers.plan import (
+    compaction_plan,
+    route_patch_plan,
+    unit_map_import,
+)
+from learning_os.derive.projection import build_manifest
+from learning_os.domain.material_refs import (
     MaterialReferenceError,
     compact_map,
     expand_map,
     preserve_map_refs,
 )
-from learning_os.ops.handlers.plan import (
-    compaction_plan,
-    route_patch_plan,
-    unit_map_import,
-)
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
 
 
 def compact_via_gateway(root):
@@ -187,9 +187,9 @@ def test_compact_edit_context_reconstructs_plan_and_preserves_explicit_edits(min
 def test_map_import_missing_unit_is_typed_with_the_legacy_complaint(
         mini_repo, tmp_path):
     """SPEC (cq) 4: only the class changes; message, site, exit, effects stay."""
+    from learning_os.app.context import OpContext
     from learning_os.domain.failures import NotFound
     from learning_os.domain.suggest import not_found, suggestions
-    from learning_os.ops.context import OpContext
 
     repo, _, _ = material_fixture(mini_repo)
     draft = tmp_path / "reviewed-map.yaml"

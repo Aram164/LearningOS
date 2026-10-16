@@ -19,8 +19,8 @@ from migrations.job_quarantine_collapse import (
     verify_plan_inputs,
 )
 
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 ROOT = Path(__file__).resolve().parent.parent
 MIGRATION = ROOT / "tools/migrations/job_quarantine_collapse.py"

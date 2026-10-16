@@ -10,12 +10,12 @@ from __future__ import annotations
 import pytest
 import yaml
 
-from learning_os.loader import load_repo
-from learning_os.masters_planning import (
+from learning_os.app.admin.masters_planning import (
     MastersPlanningError,
     validate_master_catalog,
 )
-from learning_os.rules import validate
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 
 def codes(issues, severity=None):

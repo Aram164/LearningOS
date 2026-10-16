@@ -5,8 +5,8 @@ from __future__ import annotations
 import urllib.error
 from types import SimpleNamespace
 
-from learning_os.rules import generated
-from learning_os.rules.generated import (
+from learning_os.derive.validation import generated
+from learning_os.derive.validation.generated import (
     ChecksGenerated,
     _collect_http_urls,
     _probe_external_url,

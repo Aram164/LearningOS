@@ -9,8 +9,8 @@ from pathlib import Path
 import pytest
 
 from learning_os.contracts import local_attachments
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 SCAN = "knowledge/attachments/note-demo/scan.pdf"
 SCAN_BYTES = b"%PDF-1.4 handwritten pages\n"

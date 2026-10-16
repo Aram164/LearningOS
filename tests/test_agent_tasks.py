@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.semantics import (
+from learning_os.derive.semantics import (
     TaskError,
     TaskIR,
     TaskStep,

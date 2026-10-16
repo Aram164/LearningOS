@@ -74,7 +74,7 @@ def _verify(root: Path, report_file: Path, *extra: str):
 
 
 def _angle(root: Path) -> str:
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     live_map = load_repo(root).module_source_maps["module-demo"]
     return next(r for s in live_map["sources"] for r in s["unit_routes"]
                 if r.get("id") == "route-demo-book")["angle"]
@@ -107,7 +107,7 @@ def test_lost_response_resolves_identity_from_report(mini_repo, tmp_path):
 
 
 def test_receipt_verifies_when_no_synthesis_was_required(mini_repo, tmp_path):
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
 
     _compact_setup(mini_repo)
     synthesis_destination(mini_repo, "unit-demo-l01").unlink()
@@ -127,7 +127,7 @@ def test_receipt_verifies_when_no_synthesis_was_required(mini_repo, tmp_path):
 
 
 def test_receipt_refuses_missing_or_stale_expected_synthesis(mini_repo, tmp_path):
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
 
     _compact_setup(mini_repo)
     revision_file = _revision_file(mini_repo, tmp_path, "Dossier expected.", "rev.yaml")

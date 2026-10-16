@@ -121,8 +121,8 @@ def test_list_diagnoses_only_the_requested_recent_operations(tmp_path, monkeypat
     Five traced operations with limit=1 must return the newest row while
     loading the receipt inventory exactly once; limit=0 loads nothing.
     """
-    from learning_os.diagnostics.store import traces_path
-    from learning_os.ops.handlers import platform as ops_surface
+    from learning_os.app.handlers import platform as ops_surface
+    from learning_os.store.diagnostics.store import traces_path
 
     root = tmp_path / "ops-shared"
     path = traces_path(root)
@@ -164,7 +164,7 @@ def test_malformed_authority_leaves_unrelated_operations_inspectable(tmp_path: P
     import pytest
     import yaml
 
-    from learning_os.diagnostics.resolver import collect_authority
+    from learning_os.store.diagnostics.resolver import collect_authority
 
     mini = _mini_with_curriculum(tmp_path, "ops-badauthority")
     _write(mini, "ops-badauthority-ok")
@@ -196,7 +196,7 @@ def test_malformed_authority_leaves_unrelated_operations_inspectable(tmp_path: P
 def test_operations_is_read_only(tmp_path: Path):
     mini = _mini_with_curriculum(tmp_path, "ops-readonly")
     _write(mini, "ops-readonly-1")
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     before = canonical_fingerprint(mini)
     store_before = (mini / "operations" / "diagnostics" / "traces.jsonl").read_bytes()
@@ -209,7 +209,7 @@ def test_operations_is_read_only(tmp_path: Path):
 
 
 def test_wrongly_shaped_and_duplicate_authority_is_reported(tmp_path: Path):
-    from learning_os.diagnostics.resolver import load_authority_files
+    from learning_os.store.diagnostics.resolver import load_authority_files
 
     mini = _mini_with_curriculum(tmp_path, "ops-shapes")
     _write(mini, "ops-shapes-ok")

@@ -7,7 +7,7 @@ still reach a terminal one.
 
 from __future__ import annotations
 
-from learning_os.semantics.goals import STATES, TERMINAL_STATES, TRANSITIONS
+from learning_os.derive.semantics.goals import STATES, TERMINAL_STATES, TRANSITIONS
 
 
 def _reachable(start: str) -> set[str]:

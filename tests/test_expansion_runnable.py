@@ -16,8 +16,8 @@ from pathlib import Path
 import yaml
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.abilities import ability_fingerprint
-from learning_os.loader import load_repo
+from learning_os.derive.abilities import ability_fingerprint
+from learning_os.store.loader import load_repo
 
 ANALYSIS_BODY = """# Density intuition
 

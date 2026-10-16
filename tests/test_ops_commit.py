@@ -21,6 +21,10 @@ from learning_os.ai_actions.errors import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
+from learning_os.app import commit as ops_commit
+from learning_os.app import outcomes as plumbing
+from learning_os.app.context import OpContext
+from learning_os.app.proposal import TransactionProposal
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
@@ -38,13 +42,9 @@ from learning_os.domain.failures import (
     TransactionIdempotencyConflict,
     TransactionValidationFailure,
 )
-from learning_os.ops import commit as ops_commit
-from learning_os.ops import outcomes as plumbing
-from learning_os.ops.context import OpContext
-from learning_os.ops.proposal import TransactionProposal
 from learning_os.store import session_ledger as session_support
 from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
-from learning_os.transactions import (
+from learning_os.store.transactions import (
     TransactionConflict,
     TransactionSnapshotConflict,
 )
@@ -190,7 +190,7 @@ def test_legacy_wrapper_without_gateway_names_operator_channel(
 
 
 def test_standard_shape_kwargs_and_constructor(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     captured: dict = {}
     init_kwargs: dict = {}
@@ -237,7 +237,7 @@ def test_standard_shape_kwargs_and_constructor(mini_repo: Path, monkeypatch):
 
 
 def test_ai_shape_kwargs_constructor_and_omissions(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     captured: dict = {}
     init_kwargs: dict = {}
@@ -309,7 +309,7 @@ def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monk
     engine call, so the live call is captured there; AI_KEYS and the clock-only
     constructor are the pre-conversion call's shape.
     """
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     for rel in ("operations/ai-actions/requests",
                 "operations/ai-actions/deliveries",
@@ -395,7 +395,7 @@ def test_ai_shape_matches_the_live_ai_call(mini_repo: Path, tmp_path: Path, monk
 
 def test_conflict_returns_3_with_legacy_lines_and_refusal(
         mini_repo: Path, monkeypatch, capsys):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     def raising_commit(self, *args, **kwargs):
         raise TransactionConflict({"a:1": (0, 1)})
@@ -424,7 +424,7 @@ def test_conflict_returns_3_with_legacy_lines_and_refusal(
 ])
 def test_typed_engine_failures_propagate(
         mini_repo: Path, monkeypatch, failure, snapshot):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     def raising_commit(self, *args, **kwargs):
         raise failure
@@ -447,7 +447,7 @@ def test_typed_engine_failures_propagate(
 ])
 def test_transaction_failures_return_2_with_optional_refusal(
         mini_repo: Path, monkeypatch, failure, recorded):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     def raising_commit(self, *args, **kwargs):
         raise failure
@@ -466,7 +466,7 @@ def test_transaction_failures_return_2_with_optional_refusal(
 
 
 def test_translate_runs_before_legacy_catches(mini_repo: Path, monkeypatch, capsys):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     original = TransactionConflict({"a:1": (0, 1)})
     translated = DeliveryRevisionConflict("delivery raced")
@@ -492,7 +492,7 @@ def test_translate_runs_before_legacy_catches(mini_repo: Path, monkeypatch, caps
 
 def test_translate_none_re_raises_into_legacy_handling(
         mini_repo: Path, monkeypatch, capsys):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     original = TransactionConflict({"a:1": (0, 1)})
 
@@ -515,8 +515,8 @@ def test_translate_none_re_raises_into_legacy_handling(
 
 def test_ai_translate_chain_semantics(mini_repo: Path, monkeypatch):
     """The service's own except chain as a translate: same types, from originals."""
-    import learning_os.transactions as transaction_module
-    from learning_os.transactions import TransactionConflict as Conflict
+    import learning_os.store.transactions as transaction_module
+    from learning_os.store.transactions import TransactionConflict as Conflict
 
     def ai_translate(exc):
         try:
@@ -555,7 +555,7 @@ def test_ai_translate_chain_semantics(mini_repo: Path, monkeypatch):
 
 
 def test_standard_hooks_wire_validation_publish_and_touched(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     captured: dict = {}
 
@@ -616,7 +616,7 @@ def test_standard_hooks_wire_validation_publish_and_touched(mini_repo: Path, mon
 
 
 def test_none_hooks_are_omitted(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     captured: dict = {}
 
@@ -641,7 +641,7 @@ def test_none_hooks_are_omitted(mini_repo: Path, monkeypatch):
 
 
 def test_non_regular_file_precheck_skips_commit(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     calls: list = []
 
@@ -664,7 +664,7 @@ def test_non_regular_file_precheck_skips_commit(mini_repo: Path, monkeypatch):
 
 
 def test_deletes_normalize_to_paths(mini_repo: Path, monkeypatch):
-    import learning_os.transactions as transaction_module
+    import learning_os.store.transactions as transaction_module
 
     captured: dict = {}
 

@@ -30,7 +30,7 @@ from pathlib import Path
 
 import yaml
 
-from ..digests import file_sha256
+from learning_os.store.digests import file_sha256
 
 LOCAL_ATTACHMENTS_RELATIVE = "system/contracts/local-attachments.yaml"
 CONTRACT_MARKER = "learningos-local-attachments"

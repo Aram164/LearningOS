@@ -99,7 +99,7 @@ def _durable_match(repo_root: Path, material: str, digest: str,
     refuses. Loader or read failures fall through to the cache path.
     """
     try:
-        from learning_os.loader import load_repo
+        from learning_os.store.loader import load_repo
     except ImportError:
         return None
     try:

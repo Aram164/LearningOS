@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import yaml
 from repo_builders import add_curriculum, add_manifest_fixtures, run_los, write_yaml
 
-from learning_os.ops.handlers.platform import structural_payload
+from learning_os.app.handlers.platform import structural_payload
 
 
 def _manifest(stages=(), study_maps=(), records=()):

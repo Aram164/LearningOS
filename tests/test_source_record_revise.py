@@ -173,8 +173,8 @@ def _write_dossier(unit_dir: Path, dossier: dict):
 def _staged_basis(root: Path, sid: str, record: dict):
     import copy as _copy
 
-    from learning_os.loader import load_repo
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.store.loader import load_repo
 
     repo = load_repo(root)
     staged = _copy.copy(repo)
@@ -250,7 +250,7 @@ def _grinstead_shaped_unit(root: Path, screened: int = 28) -> Path:
 
 def _shaped_dossier(root: Path, screened: int = 28) -> dict:
     """Fresh approved dossier for the Grinstead-shaped unit, all screened."""
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 
     basis = current_unit_material_basis(root, "unit-demo-l01")
     basis["ai_provenance"] = {"request_id": "ai-request-shape-demo",
@@ -420,8 +420,12 @@ def _shaped_setup(mini_repo: Path):
 
 
 def _assert_dossier_lineage(root, dossier, response):
-    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import (
+        CONTRACT_VERSION,
+        effective_statuses,
+        load_ledger,
+    )
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     records = load_ledger(root)
     claim_id = f"dossier:{dossier['id']}"
@@ -438,8 +442,8 @@ def _assert_dossier_lineage(root, dossier, response):
 
 def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
     unit_dir, live = _shaped_setup(mini_repo)
-    from learning_os.material_synthesis import publication_lineage
-    from learning_os.semantics.lineage import load_ledger, to_dict
+    from learning_os.app.synthesis.material_synthesis import publication_lineage
+    from learning_os.derive.semantics.lineage import load_ledger, to_dict
 
     ledger = mini_repo / "operations/transactions/lineage.yaml"
     ledger.parent.mkdir(parents=True, exist_ok=True)
@@ -600,7 +604,7 @@ def test_rebase_refuses_recycled_provenance(mini_repo, tmp_path):
 
 
 def test_rebase_guard_rejects_a_second_moved_basis_field():
-    from learning_os.ops.handlers.plan import _rebase_routes_or_refuse
+    from learning_os.app.handlers.plan import _rebase_routes_or_refuse
 
     live = {"source_map_checksum": "sha256:" + "a" * 64,
             "route_set_checksum": "sha256:" + "b" * 64,
@@ -675,7 +679,7 @@ def test_malformed_evaluations_refuse_cleanly(mini_repo, tmp_path):
 
 
 def test_canonical_material_uri_spellings():
-    from learning_os.materials_resolution import canonical_material_uri
+    from learning_os.store.materials.resolution import canonical_material_uri
 
     assert canonical_material_uri(URI) == URI
     assert canonical_material_uri(
@@ -883,7 +887,7 @@ def test_dossier_lineage_failure_rolls_back_source_and_dossier(
         mini_repo, tmp_path, monkeypatch, mode):
     from gateway_helpers import approved_v2_envelope
 
-    import learning_os.transactions as transactions
+    import learning_os.store.transactions as transactions
     import los
 
     if mode == "rebase":

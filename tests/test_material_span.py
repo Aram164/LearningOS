@@ -17,9 +17,9 @@ from repo_builders import (
     write_yaml,
 )
 
-from learning_os.loader import load_repo
-from learning_os.material_refs import unit_routes
-from learning_os.material_slices import SliceResolutionError, _read_pdf_part
+from learning_os.domain.material_refs import unit_routes
+from learning_os.store.loader import load_repo
+from learning_os.store.materials.slices import SliceResolutionError, _read_pdf_part
 
 
 def _route(root: Path) -> str:
@@ -216,7 +216,7 @@ def test_stage_span_refuses_a_source_mismatch(mini_repo):
 
 def _placement_parts(root: Path):
     """Direct-call fixtures for ``_placement_route`` sibling tests."""
-    from learning_os.ops.context import OpContext
+    from learning_os.app.context import OpContext
 
     repo = load_repo(root)
     unit = repo.units["unit-demo-l01"]
@@ -230,9 +230,9 @@ def _placement_parts(root: Path):
 
 def test_zero_matching_stage_is_a_typed_notfound(mini_repo):
     """SPEC (cq) 3: only the zero-stage branch is typed."""
+    from learning_os.app.handlers.plan import _map_for_unit, _placement_route
     from learning_os.domain import suggest as suggest_mod
     from learning_os.domain.failures import NotFound
-    from learning_os.ops.handlers.plan import _map_for_unit, _placement_route
 
     _placement_setup(mini_repo)
     ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
@@ -259,8 +259,8 @@ def test_zero_matching_stage_is_a_typed_notfound(mini_repo):
                                     "index-past-end"])
 def test_duplicate_stage_and_bad_index_stay_untyped(mini_repo, mutate):
     """SPEC (cq) 3: the sibling branches keep the plain refusal."""
+    from learning_os.app.handlers.plan import _map_for_unit, _placement_route
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.plan import _map_for_unit, _placement_route
 
     _placement_setup(mini_repo)
     ctx, repo, unit, source_map, routes, route = _placement_parts(mini_repo)
@@ -285,8 +285,8 @@ def test_duplicate_stage_and_bad_index_stay_untyped(mini_repo, mutate):
 
 def test_foreign_placement_and_source_mismatch_stay_distinct(mini_repo):
     """SPEC (cq) 3: the later sibling guards keep site and message."""
+    from learning_os.app.handlers.plan import _placement_route
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.plan import _placement_route
 
     _placement_setup(mini_repo)
     study_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"

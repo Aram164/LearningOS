@@ -34,7 +34,7 @@ Refinements made to the proposal as submitted:
    every `.md` under `knowledge/` for link integrity, ownership, and URLs, so
    free-form notes would have raised `LINK-BROKEN`/URI errors and broken the
    green bar. `knowledge/garden/` is now exempted from those three
-   canonical-tree sweeps (`tools/learning_os/rules.py` `_in_garden`) and
+   canonical-tree sweeps (`tools/learning_os/derive/validation.py` `_in_garden`) and
    `nebula.md` is allowlisted — this is what actually makes the Garden "exempt
    from `make check`" as promised. Stray non-Markdown there is still flagged
    (the Garden stays text-only).
@@ -98,7 +98,7 @@ Refinements made to the proposal as submitted:
 >
 > ## 3. Implementation Plan (Code‑Level)
 >
-> ### 3.1 Loader (`tools/learning_os/loader.py`)
+> ### 3.1 Loader (`tools/learning_os/store/loader.py`)
 > **Changes**:
 > 1. Add a new dataclass `GardenNote` to represent unstructured notes.
 > 2. Add a `garden_notes` field to the `Repo` dataclass.
@@ -108,7 +108,7 @@ Refinements made to the proposal as submitted:
 >
 > **Benefits**: The validator iterates only over `repo.notes` (the fortress), so garden notes are completely ignored by `make check`.
 >
-> ### 3.2 Generator (`tools/learning_os/genout.py`)
+> ### 3.2 Generator (`tools/learning_os/derive/projection.py`)
 > **Changes**:
 > 1. Add a new function `build_nebula(repo, generated_at)`.
 > 2. This function groups garden notes by their extracted tags.
@@ -146,8 +146,8 @@ Refinements made to the proposal as submitted:
 >
 > | File | Change | Line Impact |
 > | :--- | :--- | :--- |
-> | `tools/learning_os/loader.py` | Add `GardenNote`, `garden_notes`, scan `knowledge/garden/` | ~20 lines added |
-> | `tools/learning_os/genout.py` | Add `build_nebula()` and include it in `generate_all` | ~30 lines added |
+> | `tools/learning_os/store/loader.py` | Add `GardenNote`, `garden_notes`, scan `knowledge/garden/` | ~20 lines added |
+> | `tools/learning_os/derive/projection.py` | Add `build_nebula()` and include it in `generate_all` | ~30 lines added |
 > | `CLAUDE.md` | Add §14 describing the Garden & Harvest routine | ~25 lines added |
 > | `Makefile` (optional) | Add `make nebula` target | ~3 lines added |
 >

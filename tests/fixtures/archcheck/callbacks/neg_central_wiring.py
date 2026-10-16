@@ -6,7 +6,7 @@ exclusion covers it; the forwarded ``None``/``"STANDARD"`` values
 and the hookless call never count.
 """
 
-from learning_os.ops.proposal import TransactionProposal
+from learning_os.app.proposal import TransactionProposal
 
 
 def _hook(root, writes):

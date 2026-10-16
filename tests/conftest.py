@@ -14,7 +14,7 @@ import yaml
 from arch_audit_hook import SITE_WITNESS_ENV
 from repo_builders import copy_real_contracts
 
-from learning_os.diagnostics.conventions import TRACE_STORE_DENY_ENV
+from learning_os.store.diagnostics.conventions import TRACE_STORE_DENY_ENV
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -50,7 +50,7 @@ def _unbind_diagnostic_store_between_tests():
     """
     yield
     try:
-        from learning_os.diagnostics.store import bind_store
+        from learning_os.store.diagnostics.store import bind_store
     except ImportError:
         pass
     else:
@@ -126,7 +126,7 @@ def real_repo():
     every ``full_repo`` test can share one loaded snapshot instead of each
     paying ``load_repo`` again. Same assertions, one load.
     """
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     return load_repo(REPO_ROOT)
 
@@ -134,7 +134,7 @@ def real_repo():
 @pytest.fixture(scope="session")
 def real_issues(real_repo):
     """``validate()`` over the checked-in repository, computed once."""
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
 
     return validate(real_repo)
 
@@ -142,7 +142,7 @@ def real_issues(real_repo):
 @pytest.fixture(scope="session")
 def real_generated(real_repo):
     """``generate_all()`` over the checked-in repository, computed once."""
-    from learning_os.genout import generate_all
+    from learning_os.derive.projection import generate_all
 
     return generate_all(real_repo, generated_at=SHARED_GENERATED_AT)
 

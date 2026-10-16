@@ -29,9 +29,9 @@ from learning_os.contracts.manifest_contract import (
     enforce,
     shape_of,
 )
-from learning_os.genout import generate_all
-from learning_os.genout.manifest import build_manifest
-from learning_os.loader import load_repo
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.manifest import build_manifest
+from learning_os.store.loader import load_repo
 
 
 def _manifest(root, enforce_contract: bool = True) -> dict:
@@ -279,8 +279,8 @@ def test_supersedes_and_mention_edges_stay_projectable(mini_repo):
     text = text.replace(marker, "sources: [source-demo-book]\nsupersedes: [note-old]\n---")
     demo.write_text(text + "\nSee note://note-old for the earlier version.\n",
                     encoding="utf-8")
-    from learning_os.genout.concepts import build_backlinks
-    from learning_os.loader import load_repo
+    from learning_os.derive.projection.concepts import build_backlinks
+    from learning_os.store.loader import load_repo
 
     repo = load_repo(mini_repo)
     manifest = build_manifest(repo, "T1", build_backlinks(repo, "T1"))

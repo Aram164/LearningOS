@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from learning_os.rules.plan_rigor import (
+from learning_os.derive.validation.plan_rigor import (
     ChecksPlanRigor,
     _has_unquoted_hedge,
     angle_review_fingerprint,
@@ -202,7 +202,7 @@ def test_reviewed_refinement_preserves_stage_specific_description():
 
 
 def test_projection_preserves_description_and_keeps_review_in_its_canonical_owner():
-    from learning_os.materials_resolution import project_material_resource
+    from learning_os.store.materials.resolution import project_material_resource
 
     _, _, _, resource = _angle_case()
     # An already-resolved row still passes through the metadata boundary.
@@ -255,9 +255,9 @@ def _correction_case(mini_repo):
     """A correction review over a sliced unit, with its evidence bytes on disk."""
     from repo_builders import _sliced_route, _sliced_unit
 
-    from learning_os.loader import load_repo
-    from learning_os.material_refs import unit_routes
-    from learning_os.materials_resolution import resolve_route_material_files, sha256_file
+    from learning_os.domain.material_refs import unit_routes
+    from learning_os.store.loader import load_repo
+    from learning_os.store.materials.resolution import resolve_route_material_files, sha256_file
 
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
     repo = load_repo(mini_repo)
@@ -277,7 +277,7 @@ def _correction_case(mini_repo):
 def test_correction_requires_the_named_sources_current_bytes(mini_repo):
     from pathlib import Path
 
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     checker, _, route, stage, resource, resolved = _correction_case(mini_repo)
     assert checker._angle_review_current(route, stage, resource) == "current"
@@ -294,8 +294,8 @@ def test_correction_with_changed_bytes_is_stale_when_mounted(mini_repo):
     """Online, bytes present and different is stale — and a baseline regression."""
     from collections import Counter
 
-    from learning_os.rules.common import Issue
-    from learning_os.warning_baseline import delta, signatures_from_issues
+    from learning_os.derive.validation.common import Issue
+    from learning_os.store.warning_baseline import delta, signatures_from_issues
 
     checker, repo, route, stage, resource, resolved = _correction_case(mini_repo)
     assert checker._angle_review_current(route, stage, resource) == "current"

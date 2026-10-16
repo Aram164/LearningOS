@@ -17,14 +17,14 @@ import pytest
 import yaml
 from repo_builders import run_los, seed_goal_ledger, seed_live_goal_ids
 
-from learning_os.semantics import ScanInput, scan_observations
-from learning_os.semantics.goals import (
+from learning_os.derive.semantics import ScanInput, scan_observations
+from learning_os.derive.semantics.goals import (
     CandidateGoal,
     GoalCluster,
     cluster_goals,
     rank_clusters,
 )
-from learning_os.semantics.scan import _read_goal_ledger, collect_observations
+from learning_os.derive.semantics.scan import _read_goal_ledger, collect_observations
 
 
 def _goal(goal_id: str, detector: str, evidence=()) -> CandidateGoal:
@@ -155,10 +155,10 @@ def test_goal_unknown_carries_typed_details(mini_repo: Path):
 
 def test_goal_scan_failure_degrades_to_ledger_only(mini_repo: Path, monkeypatch):
     """SPEC (cq) 6: scan diagnostics and ledger-only behavior preserved."""
-    import learning_os.ops.handlers.goals as goals_mod
+    import learning_os.app.handlers.goals as goals_mod
+    from learning_os.app.context import OpContext
     from learning_os.domain.failures import NotFound
     from learning_os.domain.suggest import not_found, suggestions
-    from learning_os.ops.context import OpContext
 
     seed_goal_ledger(mini_repo, {"g-ledger": "rejected"})
 

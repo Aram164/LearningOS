@@ -17,9 +17,9 @@ from pathlib import Path
 import pytest
 from gateway_helpers import approved_v2_envelope
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops.proposal import Result
-from learning_os.ops.registry import REGISTRY
+from learning_os.app.proposal import Result
+from learning_os.app.registry import REGISTRY
+from learning_os.store.fingerprint import canonical_fingerprint
 
 SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
 # Default text-in/JSON-out probe for seal-path tests. Phase3 registered
@@ -266,7 +266,7 @@ def check_pipe(mini_repo, monkeypatch):
     import yaml
 
     import los
-    from learning_os.ops.registry import REGISTRY, register
+    from learning_os.app.registry import REGISTRY, register
 
     catalog = mini_repo / "system/contracts/capabilities.yaml"
     data = yaml.safe_load(catalog.read_text(encoding="utf-8"))
@@ -348,7 +348,7 @@ def _seal_in_process(root: Path, out: Path, *, capability: str,
 
 
 def _journey_proposal(mini_repo: Path):
-    from learning_os.ops.proposal import TransactionProposal
+    from learning_os.app.proposal import TransactionProposal
 
     target = mini_repo / "work/inbox/journey.md"
     return TransactionProposal(
@@ -395,11 +395,11 @@ def test_registered_journey_applies_with_exactly_two_validations(
         check_pipe, mini_repo: Path, tmp_path: Path, monkeypatch, capsys):
     """check-out, seal from the record, apply: one validate per check/apply."""
 
-    from learning_os import rules as rules_module
     from learning_os.adapters.capability import cmd_capability
-    from learning_os.ops import check as check_module
-    from learning_os.ops import commit as commit_module
-    from learning_os.rules import core as rules_core
+    from learning_os.app import check as check_module
+    from learning_os.app import commit as commit_module
+    from learning_os.derive import validation as rules_module
+    from learning_os.derive.validation import core as rules_core
 
     def handler(ctx, req):
         return Result({"echo": "x"},
@@ -516,7 +516,7 @@ def test_registered_failed_check_writes_the_record_then_refuses(
         check_pipe, mini_repo: Path, tmp_path: Path, capsys):
     """A failed check still produces its record for the reviewer."""
 
-    from learning_os.ops.proposal import TransactionProposal
+    from learning_os.app.proposal import TransactionProposal
 
     def handler(ctx, req):
         proposal = _journey_proposal(mini_repo)
@@ -591,7 +591,7 @@ def test_registered_check_mode_renders_without_committing(
 # ---------------------------------------------------------------------------
 
 def _file_guard_ctx(mini_repo: Path):
-    from learning_os.ops.context import OpContext
+    from learning_os.app.context import OpContext
 
     return OpContext(root=mini_repo, operation=TEST_OP, channel="operator",
                      invocation="check", gateway=None)
@@ -602,9 +602,9 @@ def test_check_proposal_guards_touched_files_when_no_ids_are_declared(
     """Empty artifact_ids: writes+deletes become file: guards, live values."""
     import datetime
 
-    from learning_os.ops.check import check_proposal
-    from learning_os.ops.proposal import TransactionProposal
-    from learning_os.revisions import dump_revisions, revision_ledger_path
+    from learning_os.app.check import check_proposal
+    from learning_os.app.proposal import TransactionProposal
+    from learning_os.store.revisions import dump_revisions, revision_ledger_path
 
     year = str(datetime.date.today().year)
     drop = mini_repo / "work/inbox/guard-drop.md"
@@ -639,8 +639,8 @@ def test_check_proposal_guards_touched_files_when_no_ids_are_declared(
 def test_check_proposal_declared_ids_win_over_touched_paths(
         mini_repo: Path):
     """Declared artifact_ids keep precedence: no file: guards are added."""
-    from learning_os.ops.check import check_proposal
-    from learning_os.ops.proposal import TransactionProposal
+    from learning_os.app.check import check_proposal
+    from learning_os.app.proposal import TransactionProposal
 
     proposal = TransactionProposal(
         capability=TEST_OP,

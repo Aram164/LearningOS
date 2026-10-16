@@ -5,9 +5,9 @@ from __future__ import annotations
 import json
 
 from learning_os.ai_actions import AIActionService
-from learning_os.garden import garden_id
-from learning_os.genout import generate_all
-from learning_os.loader import load_repo
+from learning_os.derive.garden import garden_id
+from learning_os.derive.projection import generate_all
+from learning_os.store.loader import load_repo
 
 
 def test_core_projects_garden_without_ai_state(mini_repo):

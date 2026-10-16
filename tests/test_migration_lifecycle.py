@@ -13,7 +13,7 @@ from learning_os.contracts.migration_lifecycle import (
     MigrationLifecycleError,
     retired_migration,
 )
-from learning_os.fingerprint import canonical_fingerprint
+from learning_os.store.fingerprint import canonical_fingerprint
 
 
 def test_pre_contract_fixture_can_replay_a_pre_contract_migration(tmp_path: Path):

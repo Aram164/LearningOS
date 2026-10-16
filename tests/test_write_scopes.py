@@ -11,7 +11,7 @@ from learning_os.contracts.write_scopes import (
     scope_matches,
     write_target,
 )
-from learning_os.transactions import TransactionScopeError, TransactionService
+from learning_os.store.transactions import TransactionScopeError, TransactionService
 
 
 @pytest.mark.parametrize(

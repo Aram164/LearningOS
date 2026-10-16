@@ -13,7 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from learning_os import githistory, observations
+from learning_os.store import observations
+from learning_os.store.session import githistory
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TOOLS = REPO_ROOT / "tools"
@@ -153,7 +154,7 @@ def test_new_hex_random_without_override(monkeypatch):
 
 _CHILD = (
     f"import sys; sys.path.insert(0, {str(TOOLS)!r});"
-    "from learning_os import observations;"
+    "from learning_os.store import observations;"
     "print(observations.new_hex())"
 )
 

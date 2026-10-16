@@ -36,7 +36,7 @@ discussion); **no new canonical entity, no schema change, no legacy rework**:
    counts by role, crosswalk hubs, shelves with entry counts and their
    *canonical* `description:` fields (harvested, never authored in the view),
    plus a "deliberately excluded strata" section with live counts. Built by
-   `tools/learning_os/genout.py::build_domain_atlas`; the shelf→domain map is
+   `tools/learning_os/derive/projection.py::build_domain_atlas`; the shelf→domain map is
    view-level presentation (same pattern as the materials indexer), with a
    `cross-domain` fallback so new shelves are never dropped.
 2. **(2D)** Hybrid bootstrap: the atlas opens with an **At a glance** block
@@ -73,6 +73,6 @@ discussion); **no new canonical entity, no schema change, no legacy rework**:
   schemas, same workflows. Everything added is disposable and regenerable.
 - The 82/228 concept-wiring number gives "confined scope" a measurable,
   passively shrinking definition — no backlog, no bulk project.
-- Touched: `tools/learning_os/genout.py`, `tools/build_materials_index.py`,
+- Touched: `tools/learning_os/derive/projection.py`, `tools/build_materials_index.py`,
   `system/CLAUDE.md` §2+§7, `system/WORKFLOWS.md` §6a, `system/ARCHITECTURE.md`
   §2.5, `README.md`. Tests cover the new outputs in `tests/test_generation.py`.

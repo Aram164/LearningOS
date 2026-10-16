@@ -66,5 +66,5 @@ cases:
     approval_kind: approved-delivery
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/ai.py:69", reason: "revision-conflict record: needs a revision change between seal and commit; the harness seals live guards under one lock"}
-  - {where: "tools/learning_os/ops/handlers/ai.py:69", reason: "stale-snapshot record: same seal/commit interleave, unexpressible in a step"}
+  - {where: "tools/learning_os/app/handlers/ai.py:69", reason: "revision-conflict record: needs a revision change between seal and commit; the harness seals live guards under one lock"}
+  - {where: "tools/learning_os/app/handlers/ai.py:69", reason: "stale-snapshot record: same seal/commit interleave, unexpressible in a step"}

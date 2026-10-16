@@ -69,8 +69,8 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 
 def test_gateway_refuses_smuggled_approval(mini_repo: Path):
     """A hand-built V2 payload containing `approve` must be refused."""
+    from learning_os.app.gateway import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.ops.gateway import _dispatch
 
     definitions = command_definitions(mini_repo)
     definition = definitions["capture.create"]
@@ -98,7 +98,7 @@ def test_gateway_refuses_smuggled_approval(mini_repo: Path):
 
 def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
     """An undeclared wrapper sibling must fail `--check`, not just live apply."""
-    from learning_os.ops._plan_gate import _module_plan_validation_errors
+    from learning_os.app._plan_gate import _module_plan_validation_errors
 
     wrapper = mini_repo.parent
     for anchor in ("obsidian-ui", "workbench", "archive"):
@@ -139,7 +139,7 @@ def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
 def test_stale_dossier_names_each_expected_basis_value(mini_repo: Path):
     from copy import deepcopy
 
-    from learning_os.material_synthesis import (
+    from learning_os.app.synthesis.material_synthesis import (
         MaterialSynthesisError,
         validate_unit_material_synthesis,
     )
@@ -162,7 +162,7 @@ def test_stale_dossier_names_each_expected_basis_value(mini_repo: Path):
 def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Path):
     from repo_builders import run_los, write_yaml
 
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 
     good = _compact_setup(mini_repo)
     live = current_unit_material_basis(mini_repo, "unit-demo-l01")
@@ -188,7 +188,7 @@ def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Pa
 
 def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
     """Adding a route without a replacement dossier must keep failing."""
-    from learning_os.material_synthesis import (
+    from learning_os.app.synthesis.material_synthesis import (
         MaterialSynthesisError,
         validate_unit_material_synthesis,
     )
@@ -205,7 +205,7 @@ def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
 
     from repo_builders import run_los
 
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(stale, sort_keys=False), encoding="utf-8")
     context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
@@ -230,12 +230,12 @@ def test_route_change_without_replacement_demands_a_dossier(mini_repo, tmp_path)
 
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
     good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
 
     audit_rel = _audit(mini_repo)
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     unit_data = yaml.safe_load(
         (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml")
@@ -261,7 +261,7 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.material_synthesis import (
+    from learning_os.app.synthesis.material_synthesis import (
         current_unit_material_basis,
         synthesis_destination,
     )
@@ -271,7 +271,7 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
     destination = synthesis_destination(mini_repo, "unit-demo-l01")
     destination.write_text(yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
     audit_rel = _audit(mini_repo)
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
 
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
@@ -322,8 +322,12 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
 
     from gateway_helpers import approved_v2_call, file_sha256
 
-    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import (
+        CONTRACT_VERSION,
+        effective_statuses,
+        load_ledger,
+    )
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
     applied = approved_v2_call(
@@ -380,7 +384,7 @@ def test_missing_dossier_does_not_require_replacement_for_route_addition(
     from repo_builders import run_los, write_yaml
 
     _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
     assert context.returncode == 0, context.stderr
@@ -456,7 +460,7 @@ def test_compact_revision_applies_through_the_gateway(mini_repo, tmp_path):
     # the revision; the unit artifact is untouched — no false churn.
     assert response["result"]["artifact_revisions"]["module-demo"] == 1
     assert "unit-demo-l01" not in response["result"]["artifact_revisions"]
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     live_map = load_repo(mini_repo).module_source_maps["module-demo"]
     row = next(r for s in live_map["sources"] for r in s["unit_routes"]
                if r.get("id") == "route-demo-book")
@@ -503,7 +507,7 @@ def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
     grants = [g["capability"] for g in receipt["authority"]["grants"]]
     assert grants == ["unit.plan.revise"]
     assert response["snapshot_after"] == receipt["snapshot_after"]
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     live_map = load_repo(mini_repo).module_source_maps["module-demo"]
     row = next(r for s in live_map["sources"] for r in s["unit_routes"]
                if r.get("id") == "route-demo-book")
@@ -611,7 +615,7 @@ def _acceptance_setup(mini_repo: Path):
     resume["stage_id"] = "stage-demo-intro"
     write_yaml(resume_path, resume)
     good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.material_synthesis import (
+    from learning_os.app.synthesis.material_synthesis import (
         current_unit_material_basis,
         synthesis_destination,
     )
@@ -634,7 +638,7 @@ def _acceptance_setup(mini_repo: Path):
     synthesis_destination(mini_repo, "unit-demo-l01").write_text(
         yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
     _audit(mini_repo)
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "acceptance fixture")
     return good
 
@@ -646,7 +650,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 
     _acceptance_setup(mini_repo)
     new_route = _sliced_route("route-demo-new", "lecture-01.pdf")
@@ -744,7 +748,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
     assert response["ok"] is True
     after = {p.name for p in (mini_repo / "operations" / "transactions").glob("transaction-*.yaml")}
     assert len(after - before) == 1
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     live_map = load_repo(mini_repo).module_source_maps["module-demo"]
     live_ids = sorted(r.get("id") for s in live_map["sources"]
                       for r in s["unit_routes"])
@@ -799,7 +803,7 @@ def _reviewed_fixture(mini_repo, tmp_path, *, structural=False):
     if structural:
         import copy
 
-        from learning_os.loader import load_repo
+        from learning_os.store.loader import load_repo
 
         repo = load_repo(mini_repo)
         source_map = copy.deepcopy(repo.module_source_maps["module-demo"])
@@ -840,7 +844,7 @@ def test_reviewed_request_retries_exactly_once(mini_repo, tmp_path, structural):
 def test_reviewed_request_refuses_intervening_changes(mini_repo, tmp_path, structural):
     from repo_builders import run_los
 
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     _, _, _, args = _reviewed_fixture(mini_repo, tmp_path, structural=structural)
     (mini_repo / "work/inbox/intervening.md").write_text("New learner input.\n", encoding="utf-8")
@@ -854,7 +858,7 @@ def test_reviewed_request_refuses_intervening_changes(mini_repo, tmp_path, struc
 
 def test_reviewed_apply_uses_only_the_verified_read(mini_repo, tmp_path, monkeypatch):
     import los
-    from learning_os.ops.handlers import plan as module
+    from learning_os.app.handlers import plan as module
 
     _, _, revision_file, args = _reviewed_fixture(mini_repo, tmp_path)
     original = module._read_content_bound_file
@@ -871,7 +875,7 @@ def test_reviewed_apply_uses_only_the_verified_read(mini_repo, tmp_path, monkeyp
     namespace = los.build_parser().parse_args(["--root", str(mini_repo), *args])
     assert namespace.func(namespace) == 0
     assert len(calls) == 1
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     route = load_repo(mini_repo).module_source_maps["module-demo"]["sources"][0]["unit_routes"][0]
     assert route["angle"] == "Reviewed precise explanation."
 
@@ -896,7 +900,7 @@ def test_removed_stage_is_refused_even_with_acknowledgment(mini_repo, tmp_path):
 def test_resource_evidence_preservation_is_per_stage_and_occurrence(change):
     import copy
 
-    from learning_os.ops._plan_gate import _unit_semantic_diff
+    from learning_os.app._plan_gate import _unit_semantic_diff
 
     before = _live_study_map()
     resource = before["stages"][0]["resources"][0]
@@ -919,7 +923,7 @@ def test_resource_evidence_preservation_is_per_stage_and_occurrence(change):
 def test_advanced_promotion_uses_staged_routes_and_every_placement(change):
     import copy
 
-    from learning_os.ops._plan_gate import _unit_semantic_diff
+    from learning_os.app._plan_gate import _unit_semantic_diff
 
     route = _sliced_route("route-demo-book", "lecture-01.pdf")
     route["depth"] = "advanced-reference"
@@ -1031,8 +1035,8 @@ def test_check_python_accepts_the_running_interpreter(repo_root):
 
 def test_reviewed_apply_rolls_back_all_writes_on_publish_failure(mini_repo, tmp_path, monkeypatch):
     import los
-    from learning_os.fingerprint import canonical_fingerprint
-    from learning_os.ops import commit as commit_module
+    from learning_os.app import commit as commit_module
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     _, _, _, args = _reviewed_fixture(mini_repo, tmp_path)
     before = canonical_fingerprint(mini_repo)
@@ -1060,10 +1064,10 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
 
     from repo_builders import run_los, write_yaml
 
-    from learning_os.material_synthesis import current_unit_material_basis
-    from learning_os.ops.check import _staged_shadow
-    from learning_os.revisions import load_revisions
-    from learning_os.semantics.lineage import load_ledger
+    from learning_os.app.check import _staged_shadow
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+    from learning_os.derive.semantics.lineage import load_ledger
+    from learning_os.store.revisions import load_revisions
 
     good = _compact_setup(mini_repo)
     map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
@@ -1105,8 +1109,8 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
     assert "node-content:knowledge-demo-outcomes" in hashes
     records = load_ledger(mini_repo)
     assert f"dossier:{dossier['id']}" in records
-    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import CONTRACT_VERSION, effective_statuses
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     dossier_claim = records[f"dossier:{dossier['id']}"]
     hashes = {key: live_evidence_digest(mini_repo, key, {})
@@ -1181,7 +1185,7 @@ def test_report_out_ignores_unchanged_content_growth(mini_repo, tmp_path):
     for stage in study_map["stages"]:
         stage["objective"] = "UNCHANGED-PREFLIGHT-CONTEXT. " * 800
     write_yaml(live, study_map)
-    from learning_os.warning_baseline import collect, write_baseline
+    from learning_os.store.warning_baseline import collect, write_baseline
     write_baseline(mini_repo, collect(mini_repo)[0], "report-out volume fixture")
     revision = _compact_revision(
         mini_repo,
@@ -1209,8 +1213,8 @@ def test_report_out_saved_report_applies_retries_and_refuses_tamper(mini_repo, t
     from gateway_helpers import file_sha256
     from repo_builders import run_los
 
-    from learning_os.fingerprint import canonical_fingerprint
-    from learning_os.loader import load_repo
+    from learning_os.store.fingerprint import canonical_fingerprint
+    from learning_os.store.loader import load_repo
 
     draft = _report_out_revision(mini_repo, tmp_path)
     saved_path = tmp_path / "check.json"
@@ -1269,7 +1273,7 @@ def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path
     from gateway_helpers import file_sha256
     from repo_builders import run_los
 
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     draft = _report_out_revision(mini_repo, tmp_path)
     before = canonical_fingerprint(mini_repo)
@@ -1325,9 +1329,9 @@ def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path
 def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     """The CLI-only output flag is not part of the unit.plan.revise contract."""
     import los
+    from learning_os.app.gateway import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payloads import payload_schema
-    from learning_os.ops.gateway import _dispatch
 
     repo_root = Path(__file__).resolve().parent.parent
     assert "report_out" not in payload_schema(

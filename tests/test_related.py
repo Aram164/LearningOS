@@ -16,7 +16,7 @@ from types import SimpleNamespace
 import yaml
 from repo_builders import run_los
 
-from learning_os.ops.handlers.reads import related_records
+from learning_os.app.handlers.reads import related_records
 
 
 def _record(rid, rtype="note", **fields):

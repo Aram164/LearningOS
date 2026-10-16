@@ -65,6 +65,6 @@ cases:
     a5_base: true
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/plan.py:1324", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
+  - {where: "tools/learning_os/app/handlers/plan.py:1324", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
   - {site: material.span.placement-source-mismatch, reason: fixture-inexpressible}
   - {site: material.span.read-failed, reason: os-error-only}

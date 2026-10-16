@@ -13,7 +13,7 @@ import dataclasses
 import pytest
 import yaml
 
-from learning_os.semantics import (
+from learning_os.derive.semantics import (
     CONTRACT_VERSION,
     LineageError,
     contest,
@@ -33,7 +33,7 @@ from learning_os.semantics import (
     supersede,
     withdraw,
 )
-from learning_os.semantics.lineage import (
+from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     from_dict,
     to_dict,

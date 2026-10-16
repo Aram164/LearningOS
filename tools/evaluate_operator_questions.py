@@ -64,7 +64,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.semantics import PREDICATES, evaluate
+from learning_os.derive.semantics import PREDICATES, evaluate
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TRIALS = ROOT / "tests/fixtures/verified_operator_questions"

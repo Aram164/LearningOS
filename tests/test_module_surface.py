@@ -24,10 +24,10 @@ import pytest
 
 PACKAGES = [
     "learning_os.ai_actions",
-    "learning_os.derived",
-    "learning_os.genout",
-    "learning_os.rules",
-    "learning_os.search",
+    "learning_os.store.derived",
+    "learning_os.derive.projection",
+    "learning_os.derive.validation",
+    "learning_os.derive.search",
     "materials_index",
 ]
 
@@ -98,8 +98,8 @@ def test_read_only_ai_projection_does_not_import_the_write_orchestrator():
         "import sys; "
         "import learning_os.ai_actions.projection; "
         "assert 'learning_os.ai_actions.service' not in sys.modules; "
-        "assert 'learning_os.transactions' not in sys.modules; "
-        "assert 'learning_os.genout' not in sys.modules"
+        "assert 'learning_os.store.transactions' not in sys.modules; "
+        "assert 'learning_os.derive.projection' not in sys.modules"
     )
     result = subprocess.run(
         [sys.executable, "-c", script],
@@ -113,9 +113,9 @@ def test_read_only_ai_projection_does_not_import_the_write_orchestrator():
 def test_transaction_import_does_not_initialize_domain_loaders():
     script = (
         "import sys; "
-        "import learning_os.transactions; "
-        "assert 'learning_os.loading.curriculum' not in sys.modules; "
-        "assert 'learning_os.loading.knowledge' not in sys.modules"
+        "import learning_os.store.transactions; "
+        "assert 'learning_os.store.loading.curriculum' not in sys.modules; "
+        "assert 'learning_os.store.loading.knowledge' not in sys.modules"
     )
     result = subprocess.run(
         [sys.executable, "-c", script],

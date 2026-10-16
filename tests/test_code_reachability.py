@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.mark.parametrize(("source", "regression"), [
-    ("material_synthesis.py", "test_synthesis_analysis_refs.py"),
-    ("material_analysis.py", "test_synthesis_analysis_refs.py"),
+    ("app/synthesis/material_synthesis.py", "test_synthesis_analysis_refs.py"),
+    ("store/material_analysis.py", "test_synthesis_analysis_refs.py"),
     ("commands/analysis.py", "test_material_analysis_save.py"),
     ("commands/reads.py", "test_material_context.py"),
     ("commands/material.py", "test_plan_edit_brief.py"),

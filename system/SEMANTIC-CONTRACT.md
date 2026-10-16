@@ -13,7 +13,7 @@ This layer is **interpretation, not stored truth**:
 - Nothing here writes canonical data, touches rebuilt views, or calls
   gateway capabilities. Semantic mutation proposals carry evidence and are
   validated before admission; only Aram authorizes them.
-- The evaluator lives at `tools/learning_os/semantics/`. The producer
+- The evaluator lives at `tools/learning_os/derive/semantics/`. The producer
   (`genout.projection`) keeps answering derivations per row; the contract
   owns their meaning so agents read one declared layer.
 
@@ -60,7 +60,7 @@ layer reverts cleanly — canonical data is untouched by every phase.
 
 ## Policy queries (Phase 1.5)
 
-Predicates own judgments; `tools/learning_os/semantics/policy.py` owns the
+Predicates own judgments; `tools/learning_os/derive/semantics/policy.py` owns the
 query surface agents program against: one rule name in, one structured
 `PolicyDecision` out — a normalized verdict (`allow`, `deny`, `defer`,
 `needs-review`) plus the reasons behind it. `defer` is not `deny`: a
@@ -98,7 +98,7 @@ prospective claims are bound at admission: a `module.plan.import` or
 per-claim evidence or refuses before apply. The gateway persists the admitted records
 (`admitted_by` request binding, `supersedes` repair chain) in the same
 transaction as the canonical mutation. Readers:
-`tools/learning_os/semantics/lineage.py`, proven by
+`tools/learning_os/derive/semantics/lineage.py`, proven by
 `tests/test_semantic_lineage.py`.
 
 For prospective covers claims, stored revisions describe post-apply
@@ -135,7 +135,7 @@ sharing one cause print as one cluster (`cluster_goals`), ordered by a
 hand-written exam-proximity sort refined by detector precedence
 (`rank_clusters`: belief risk before fan-out size, `DETECTOR_PRECEDENCE`
 as tunable data) — a Select step, not a learned cost model. Readers:
-`tools/learning_os/semantics/goals.py`, proven by
+`tools/learning_os/derive/semantics/goals.py`, proven by
 `tests/test_goal_proposals.py` and `tests/test_goal_select.py`.
 
 ## Agent tasks (Phase 4, amended: no tracking, no costs)
@@ -158,7 +158,7 @@ Static dispatch applies policy vetoes — unpublished material never leaves
 the repository, model-only steps refuse deterministic executors — and the
 first feasible executor wins. No prices, no telemetry, no learning:
 nothing here tracks what tasks cost or how models perform. Readers:
-`tools/learning_os/semantics/tasks.py`, proven by
+`tools/learning_os/derive/semantics/tasks.py`, proven by
 `tests/test_agent_tasks.py`.
 
 ## Context dossiers (Phase 5)
@@ -179,11 +179,11 @@ sitting, and the single top-ranked goal cluster (best-effort, read-only;
 seeing it files nothing) as `context://<unit-id>/resume-dossier@<digest>`,
 resolved from the pointer, the last result, or the last touch, in that
 labeled order.
-The resume builder is `tools/learning_os/genout/resume_dossier.py`, proven by
+The resume builder is `tools/learning_os/derive/projection/resume_dossier.py`, proven by
 `tests/test_resume_dossier.py`; `los resume` renders its result without storing
 a cache file. Semantic dossiers live under `generated/dossiers/`, covered by
 the existing no-hand-edit path — no canonical file may reference them. Readers:
-`tools/learning_os/semantics/dossiers.py`, proven by
+`tools/learning_os/derive/semantics/dossiers.py`, proven by
 `tests/test_context_dossiers.py`. Served by the read-only
 `los dossier UNIT_ID` caller (`tools/learning_os/commands/dossier.py`,
 proven by `tests/test_unit_dossier_command.py`).
@@ -213,7 +213,7 @@ overwrite.
 Conflicting writes cannot both succeed: the second read loses its
 snapshot race by construction. The gateway still applies; the envelope
 is preflight, and the snapshot guard stays the final word. Readers:
-`tools/learning_os/semantics/changes.py`, proven by
+`tools/learning_os/derive/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
 
 <!-- los:reference {"kind": "command", "text": "los observe"} -->
@@ -279,7 +279,7 @@ caller-fed: a live caller counts ephemerally
 (`session_counts.SessionCounts`, in memory only, never persisted) and
 hands the counts via `--feed` or `ScanInput` fields; an empty feed
 behaves exactly like no feed. Readers:
-`tools/learning_os/semantics/scan.py`, proven by
+`tools/learning_os/derive/semantics/scan.py`, proven by
 `tests/test_intelligence_scan.py`.
 
 The scan also checks declared `file:` evidence against current in-repository
@@ -313,7 +313,7 @@ procedures outside the adjudicated set remain `unadjudicated`.
 
 ## Contract version
 
-`CONTRACT_VERSION` in `tools/learning_os/semantics/predicates.py` is
+`CONTRACT_VERSION` in `tools/learning_os/derive/semantics/predicates.py` is
 currently **2**. Lineage sidecars (Phase 2) cite it so "what goes stale if
 the contract changes" stays answerable. A bump must be a deliberate diff
 with updated predicates, fixtures, and lineage.

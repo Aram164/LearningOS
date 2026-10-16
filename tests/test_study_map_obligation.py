@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.genout.projection.records_curriculum import _needs_study_map
+from learning_os.derive.projection.projection.records_curriculum import _needs_study_map
 
 
 @pytest.mark.parametrize(

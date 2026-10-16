@@ -17,7 +17,7 @@ import pytest
 import yaml
 from repo_builders import _compact_setup, _valid_dossier
 
-from learning_os.material_synthesis import (
+from learning_os.app.synthesis.material_synthesis import (
     ANALYSIS_REFS_STALE,
     MaterialSynthesisError,
     MaterialSynthesisUnitNotFound,
@@ -206,7 +206,7 @@ def test_malformed_ref_fails_schema(mini_repo):
 
 def test_unknown_unit_lookup_raises_the_structured_subclass(mini_repo):
     """SPEC (cq) 5: the genuine lookup carries id and actual candidates."""
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     dossier = _seed(mini_repo, None)
     dossier["unit_id"] = "unit-nope"
@@ -225,11 +225,11 @@ def test_unknown_unit_lookup_raises_the_structured_subclass(mini_repo):
 
 def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
     """SPEC (cq) 5: NotFound for the lookup; other errors pass through."""
-    import learning_os.material_synthesis as synthesis_mod
+    import learning_os.app.synthesis.material_synthesis as synthesis_mod
+    from learning_os.app.handlers.plan import _validate_publication_synthesis
     from learning_os.domain import suggest as suggest_mod
     from learning_os.domain.failures import NotFound
-    from learning_os.loader import load_repo
-    from learning_os.ops.handlers.plan import _validate_publication_synthesis
+    from learning_os.store.loader import load_repo
 
     dossier = _seed(mini_repo, None)
     miss = "unit-nope"
@@ -270,13 +270,13 @@ def test_publication_helper_types_only_the_subclass(mini_repo, monkeypatch):
 
 def test_publication_validations_route_through_the_helper(mini_repo, monkeypatch):
     """SPEC (cq) 5: both publication validations translate the lookup."""
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers import plan as plan_handlers
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
         gateway_request_context,
     )
     from learning_os.domain.failures import NotFound
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers import plan as plan_handlers
 
     dossier = _seed(mini_repo, None)
     miss = "unit-nope"
@@ -322,10 +322,10 @@ def test_publication_validations_route_through_the_helper(mini_repo, monkeypatch
 
 
 def test_ref_rides_projection(mini_repo):
-    from learning_os.genout.projection.records_curriculum import (
+    from learning_os.derive.projection.projection.records_curriculum import (
         project_unit_material_syntheses,
     )
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
 
     _seed(mini_repo, "valid")
     projected = project_unit_material_syntheses(load_repo(mini_repo))

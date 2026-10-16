@@ -266,7 +266,7 @@ it *can* — the planner is still reachable and reported `ready` after the
 Rule 3 permits measurements under an open point. What landed since it was
 written, verified in the working tree rather than taken from the commit message:
 
-- `4f12646` — the two renderers became one. `learning_os.material_inventory
+- `4f12646` — the two renderers became one. `learning_os.domain.material_inventory
   .render_manifest` owns wrap width and key ordering;
   `tools/migrations/job_quarantine_collapse.py:30` imports it and calls it at
   `:1143`, so the planner and `make inventory` can no longer disagree about the

@@ -126,7 +126,7 @@ the drafted stage, and each drafted row.
 $ export MAT_SHA && $LOS_REPO/.venv/bin/python - <<'EOF'
 > import os, sys, yaml
 > sys.path.insert(0, os.environ["LOS_REPO"] + "/tools")
-> from learning_os.rules.plan_rigor import angle_review_fingerprint
+> from learning_os.derive.validation.plan_rigor import angle_review_fingerprint
 > mat = os.environ["MAT_SHA"]
 > sm = yaml.safe_load(open("curriculum/modules/module-demo/source-map.yaml"))
 > route = None

@@ -17,9 +17,9 @@ import time
 
 import yaml
 
-from learning_os.genout import generate_all, mermaid_node_ids, write_outputs
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.projection import generate_all, mermaid_node_ids, write_outputs
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 
 def codes(issues, severity=None):

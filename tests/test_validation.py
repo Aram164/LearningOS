@@ -7,9 +7,9 @@ import textwrap
 import pytest
 import yaml
 
-from learning_os.loader import load_repo
-from learning_os.rules import validate
-from learning_os.rules.references import classify_markdown_link, parse_reference_uri
+from learning_os.derive.validation import validate
+from learning_os.derive.validation.references import classify_markdown_link, parse_reference_uri
+from learning_os.store.loader import load_repo
 
 
 def codes(issues, severity=None):
@@ -123,7 +123,7 @@ def test_schema_error_in_a_registry_partition_names_that_partition(mini_repo):
 def test_a_crash_on_schema_valid_input_stays_loud(mini_repo, monkeypatch):
     """The schema gate contains only crashes on input already reported as
     schema-invalid; anywhere else a crash is a validator defect."""
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     def broken(self):
         raise TypeError("defect in a validation pass")

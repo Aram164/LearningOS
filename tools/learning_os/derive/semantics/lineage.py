@@ -1,0 +1,895 @@
+"""Phase-2 semantic lineage: why a derived claim is believed.
+
+A predicate answers; lineage remembers the answer's basis. Every high-value
+derived claim carries what it read (artifact revisions, source hashes,
+evidence locators), the contract version it was judged under, who judged
+and who reviewed it, and a status that moves supported → stale →
+supported as the world changes underneath it.
+
+Storage is a receipt-adjacent sidecar, never a canonical edit and never a
+projection: ``operations/transactions/lineage.yaml`` follows the
+``revisions.yaml`` precedent (one ledger file, schema-validated on load).
+A generated projection would evaporate on rebuild; the point of lineage is
+surviving one. Backfill is lazy — records are created when a claim is
+judged, never bulk-migrated — and only three high-value claim families
+earn records (route covers edges, scope-authority judgments, dossier
+freshness). Staleness itself delegates to the ``ClaimStale`` predicate, so
+there is exactly one definition of stale in the system.
+
+Retraction (Phase 10) layers assumption tracking on top: each record
+names the other derived claims it assumed. Invalidating a claim
+withdraws everything that assumed it, recursively, in the sidecar only —
+canonical data is never touched and nothing re-derives itself.
+``retraction_impact`` answers the blast radius before ``withdraw``
+applies it. Tracking is forward-only: records judged before this layer
+carry no assumptions and cascade only to themselves.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, replace
+from pathlib import Path
+
+import yaml
+from jsonschema import Draft202012Validator
+
+from learning_os.derive.semantics.predicates import CONTRACT_VERSION, claim_stale
+from learning_os.route_identity import route_with_identity
+
+#: The receipt-adjacent sidecar. Canonical records never carry lineage;
+#: the manifest never projects it.
+LEDGER_RELATIVE = "operations/transactions/lineage.yaml"
+SCHEMA_RELATIVE = "system/contracts/semantic-lineage-ledger.schema.json"
+
+LEDGER_SCHEMA_VERSION = 2
+LEDGER_TYPE = "semantic-lineage-ledger"
+
+#: The only claim families that earn lineage. Everything else is either
+#: cheap to recompute or not believed in the first place.
+CLAIM_KINDS = ("route-covers", "scope-authority", "dossier-freshness")
+
+#: Lineage statuses. ``contested`` needs a reviewer, not a recompute;
+#: ``withdrawn`` needs a fresh judgment, never a recompute.
+STATUSES = ("supported", "stale", "contested", "withdrawn")
+
+#: Source-hash namespaces pinning what a route-covers judgment actually
+#: read: the route row itself plus each covered knowledge node — never
+#: the module revision, never co-imported units, never learner state.
+#: Records judged before these namespaces keep their revision reads and
+#: today's behaviour until a fresh judgment replaces them.
+ROUTE_CONTENT_PREFIX = "route-content:"
+NODE_CONTENT_PREFIX = "node-content:"
+
+
+def _canonical_bytes(value: Mapping) -> bytes:
+    return json.dumps(
+        dict(value),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
+
+
+def route_content_digest(*, module_id: str, source_id: str, route: Mapping) -> str:
+    """Content identity of one source-map route row, as judged.
+
+    The row as :func:`route_with_identity` returns it (stable id filled
+    in) plus its owning source: any descriptive edit, re-cover, or move
+    changes the digest, while edits to sibling routes, other units, or
+    the module record leave it alone.
+    """
+    if not isinstance(route, Mapping):
+        raise LineageError("a route content digest needs the route row mapping")
+    row = {**route_with_identity(module_id, source_id, dict(route)),
+           "source_id": source_id}
+    return "sha256:" + hashlib.sha256(_canonical_bytes(row)).hexdigest()
+
+
+def node_content_digest(node: Mapping) -> str:
+    """Content identity of one knowledge-map node row, as judged."""
+    if not isinstance(node, Mapping):
+        raise LineageError("a node content digest needs the node row mapping")
+    return "sha256:" + hashlib.sha256(_canonical_bytes(node)).hexdigest()
+
+
+class LineageError(ValueError):
+    """A lineage record or ledger cannot be read as written."""
+
+
+@dataclass(frozen=True)
+class DerivedFrom:
+    """Everything a claim's verdict depended on."""
+
+    contract_version: int
+    revisions: tuple[tuple[str, int], ...] = ()
+    source_hashes: tuple[tuple[str, str], ...] = ()
+    evidence: tuple[str, ...] = ()
+    assumes: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class AdmittedBy:
+    """Which admitted gesture this record rides on.
+
+    Both halves are known before apply and stable across idempotent
+    replay, unlike the time-based transaction id the service mints
+    inside the commit — so the binding survives a replayed apply while
+    the receipt still ties it to the concrete transaction.
+    """
+
+    request_id: str
+    idempotency_key: str
+
+
+@dataclass(frozen=True)
+class ClaimLineage:
+    """Why one derived claim is believed, and whether it still is."""
+
+    claim_id: str
+    claim_kind: str
+    statement: str
+    derived_from: DerivedFrom
+    judged_by: str
+    admitted_by: AdmittedBy
+    status: str = "supported"
+    reviewed_by: str = ""
+    contested_by: str = ""
+    contest_reason: str = ""
+    supersedes: Mapping[str, object] | None = None
+    restamped_by: str = ""
+    restamped_on: str = ""
+
+
+@dataclass(frozen=True)
+class EffectiveStatus:
+    """One claim's ledger-wide verdict, computed never stored.
+
+    In-memory only: ``status`` reuses the existing lineage states and
+    ``blocked_by`` names the nearest assumed claims that are not
+    effectively supported (empty when the claim stands on its own reads
+    or carries its own explicit state).
+    """
+
+    claim_id: str
+    status: str
+    blocked_by: tuple[str, ...] = ()
+
+
+def _reads(lineage: ClaimLineage) -> dict[str, int]:
+    return dict(lineage.derived_from.revisions)
+
+
+def _hashes(lineage: ClaimLineage) -> dict[str, str]:
+    return dict(lineage.derived_from.source_hashes)
+
+
+def _fresh(
+    lineage: ClaimLineage,
+    current_contract_version: int,
+    current_revisions: Mapping[str, int],
+    current_source_hashes: Mapping[str, str],
+) -> bool:
+    """True while every read still matches. Total: malformed maps are stale."""
+    if claim_stale(
+        read_contract_version=lineage.derived_from.contract_version,
+        current_contract_version=current_contract_version,
+        read_revisions=_reads(lineage),
+        current_revisions=current_revisions,
+    ):
+        return False
+    if not isinstance(current_source_hashes, Mapping):
+        return False
+    current = current_source_hashes
+    try:
+        return all(
+            key in current and current[key] == digest
+            for key, digest in _hashes(lineage).items()
+        )
+    except TypeError:
+        return False
+
+
+def record_claim(
+    *,
+    claim_id: str,
+    claim_kind: str,
+    statement: str,
+    contract_version: int = CONTRACT_VERSION,
+    revisions: Mapping[str, int] | None = None,
+    source_hashes: Mapping[str, str] | None = None,
+    evidence: Sequence[str] = (),
+    assumes: Sequence[str] = (),
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+    supersedes: Mapping[str, object] | None = None,
+) -> ClaimLineage:
+    """Judge a claim now: record what was read, by whom, as supported.
+
+    Prospective records always name their admission — an unbound record
+    cannot enter the ledger through a gateway, so construction refuses
+    one. Repairs pass the prior record as ``supersedes``; the old state
+    rides along instead of being erased.
+    """
+    if not isinstance(claim_id, str) or not claim_id.strip():
+        raise LineageError("a lineage record needs a non-empty claim id")
+    if claim_kind not in CLAIM_KINDS:
+        raise LineageError(
+            f"claim kind {claim_kind!r} earns no lineage; "
+            f"high-value kinds are {', '.join(CLAIM_KINDS)}"
+        )
+    if not isinstance(statement, str) or not statement.strip():
+        raise LineageError("a lineage record needs the claim in words")
+    if not isinstance(judged_by, str) or not judged_by.strip():
+        raise LineageError("a lineage record needs its judge")
+    try:
+        admission = AdmittedBy(
+            request_id=str(admitted_by["request_id"]),
+            idempotency_key=str(admitted_by["idempotency_key"]),
+        )
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        raise LineageError(
+            f"a lineage record needs its admission (request_id + "
+            f"idempotency_key): {exc}"
+        ) from exc
+    if not admission.request_id.strip() or not admission.idempotency_key.strip():
+        raise LineageError("a lineage record needs a non-empty admission")
+    prior: Mapping[str, object] | None = None
+    if supersedes is not None:
+        if not isinstance(supersedes, Mapping):
+            raise LineageError("supersedes must be the prior record mapping")
+        for key in ("claim_id", "claim_kind", "statement"):
+            if not isinstance(supersedes.get(key), str) or not str(supersedes[key]).strip():
+                raise LineageError(
+                    f"supersedes names no prior {key} for {claim_id!r}")
+        prior = dict(supersedes)
+    try:
+        revision_pairs = tuple(
+            sorted((str(key), int(value)) for key, value in (revisions or {}).items())
+        )
+        hash_pairs = tuple(
+            sorted((str(key), str(value)) for key, value in (source_hashes or {}).items())
+        )
+        trails = tuple(str(locator) for locator in evidence)
+    except (TypeError, ValueError) as exc:
+        raise LineageError(f"malformed reads for {claim_id!r}: {exc}") from exc
+    if isinstance(assumes, str) or not isinstance(assumes, Sequence):
+        raise LineageError(f"malformed assumptions for {claim_id!r}")
+    dependencies = tuple(str(claim) for claim in assumes)
+    if any(not dep.strip() for dep in dependencies):
+        raise LineageError(f"assumptions name claims for {claim_id!r}")
+    if claim_id in dependencies:
+        raise LineageError(f"a claim cannot assume itself: {claim_id!r}")
+    return ClaimLineage(
+        claim_id=claim_id,
+        claim_kind=claim_kind,
+        statement=statement,
+        derived_from=DerivedFrom(
+            contract_version=contract_version,
+            revisions=revision_pairs,
+            source_hashes=hash_pairs,
+            evidence=trails,
+            assumes=dependencies,
+        ),
+        judged_by=judged_by,
+        admitted_by=admission,
+        status="supported",
+        supersedes=prior,
+    )
+
+
+def supersede(
+    prior: ClaimLineage,
+    *,
+    statement: str,
+    revisions: Mapping[str, int] | None = None,
+    source_hashes: Mapping[str, str] | None = None,
+    evidence: Sequence[str] = (),
+    assumes: Sequence[str] = (),
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+) -> ClaimLineage:
+    """Repair a claim without destroying why the old state existed.
+
+    The fresh judgment carries the prior record as ``supersedes``; the
+    prior fields are preserved, not withdrawn — withdrawal stays for
+    genuine invalidation with its assumption cascade.
+    """
+    return record_claim(
+        claim_id=prior.claim_id,
+        claim_kind=prior.claim_kind,
+        statement=statement,
+        revisions=revisions,
+        source_hashes=source_hashes,
+        evidence=evidence,
+        assumes=assumes,
+        judged_by=judged_by,
+        admitted_by=admitted_by,
+        supersedes=to_dict(prior),
+    )
+
+
+def restamp_claim(
+    prior: ClaimLineage,
+    *,
+    source_hashes: Mapping[str, str],
+    restamped_by: str,
+    restamped_on: str,
+) -> ClaimLineage:
+    """Narrow one route-covers claim's reads to per-row content digests.
+
+    The governed re-stamp (#94): the coarse revision pins are dropped,
+    the given route-content/node-content digests join the kept evidence
+    hashes, and evidence trails, judge, admission, status and review
+    state pass through untouched. The prior record rides as
+    ``supersedes`` instead of being erased, and the stamping is
+    attributed with ``restamped_by``/``restamped_on``.
+
+    A re-stamp is not a re-judgment and never endorses: anything but a
+    supported old-shape route-covers claim refuses — a withdrawn claim
+    returns only through fresh judgment, a contested one needs its
+    reviewer, and an already-stamped claim is never stamped twice.
+    """
+    if prior.claim_kind != "route-covers":
+        raise LineageError(
+            f"claim {prior.claim_id!r} is not a route-covers claim; "
+            "only route coverage earns a re-stamp")
+    if prior.status != "supported":
+        raise LineageError(
+            f"claim {prior.claim_id!r} is {prior.status}, not supported; "
+            "a re-stamp narrows reads, never lifts an explicit state")
+    if not isinstance(restamped_by, str) or not restamped_by.strip():
+        raise LineageError(
+            f"claim {prior.claim_id!r} needs who re-stamped it")
+    if not isinstance(restamped_on, str) or not restamped_on.strip():
+        raise LineageError(
+            f"claim {prior.claim_id!r} needs when it was re-stamped")
+    kept = dict(prior.derived_from.source_hashes)
+    if any(key.startswith(ROUTE_CONTENT_PREFIX) or key.startswith(NODE_CONTENT_PREFIX)
+           for key in kept):
+        raise LineageError(
+            f"claim {prior.claim_id!r} already carries narrowed reads; "
+            "a re-stamp never stamps twice")
+    route_id, nodes = parse_covers_statement(prior.claim_id, prior.statement)
+    try:
+        fresh = {str(key): str(value) for key, value in dict(source_hashes).items()}
+    except (TypeError, ValueError) as exc:
+        raise LineageError(
+            f"malformed narrowed reads for {prior.claim_id!r}: {exc}") from exc
+    missing = [ROUTE_CONTENT_PREFIX + route_id] + sorted(
+        NODE_CONTENT_PREFIX + node for node in set(nodes))
+    absent = [key for key in missing if key not in fresh]
+    if absent:
+        raise LineageError(
+            f"claim {prior.claim_id!r} narrows reads without "
+            f"{', '.join(absent)}")
+    return ClaimLineage(
+        claim_id=prior.claim_id,
+        claim_kind=prior.claim_kind,
+        statement=prior.statement,
+        derived_from=DerivedFrom(
+            contract_version=prior.derived_from.contract_version,
+            revisions=(),
+            source_hashes=tuple(sorted({**kept, **fresh}.items())),
+            evidence=prior.derived_from.evidence,
+            assumes=prior.derived_from.assumes,
+        ),
+        judged_by=prior.judged_by,
+        admitted_by=prior.admitted_by,
+        status=prior.status,
+        reviewed_by=prior.reviewed_by,
+        contested_by=prior.contested_by,
+        contest_reason=prior.contest_reason,
+        supersedes=to_dict(prior),
+        restamped_by=restamped_by,
+        restamped_on=restamped_on,
+    )
+
+
+def refresh(
+    lineage: ClaimLineage,
+    current_contract_version: int,
+    current_revisions: Mapping[str, int],
+    current_source_hashes: Mapping[str, str] | None = None,
+) -> ClaimLineage:
+    """Re-examine a claim against the current world.
+
+    A contested claim stays contested — disagreement needs a reviewer, not
+    a recompute. A withdrawn claim stays withdrawn — invalidation is a
+    judgment, and only a fresh judgment lifts it. Otherwise the status
+    follows the reads: supported while everything matches, stale the
+    moment anything moved.
+
+    Single-claim scope: only this claim's own reads are examined. A claim
+    that is fresh here can still be stale ledger-wide through its
+    assumptions — use ``effective_statuses`` for the transitive verdict.
+    """
+    if lineage.status in ("contested", "withdrawn"):
+        return lineage
+    fresh = _fresh(
+        lineage, current_contract_version,
+        current_revisions, current_source_hashes or {},
+    )
+    status = "supported" if fresh else "stale"
+    return replace(lineage, status=status)
+
+
+def _assumption_order(records: Mapping[str, ClaimLineage]) -> tuple[str, ...]:
+    """Claim ids with assumptions before dependents, deterministic.
+
+    Kahn's algorithm over validated edges — ``check_assumptions`` has
+    already refused missing references and cycles — drawing from a sorted
+    ready set so the order, and everything computed from it, is stable.
+    """
+    remaining = {
+        claim_id: sorted(lineage.derived_from.assumes)
+        for claim_id, lineage in records.items()
+    }
+    dependents: dict[str, list[str]] = {}
+    for claim_id, deps in remaining.items():
+        for dep in deps:
+            dependents.setdefault(dep, []).append(claim_id)
+    ready = sorted(
+        claim_id for claim_id, deps in remaining.items() if not deps)
+    order: list[str] = []
+    while ready:
+        node = ready.pop(0)
+        order.append(node)
+        for dependent in sorted(dependents.get(node, ())):
+            remaining[dependent].remove(node)
+            if not remaining[dependent]:
+                ready.append(dependent)
+        ready.sort()
+    return tuple(order)
+
+
+def effective_statuses(
+    records: Mapping[str, ClaimLineage],
+    current_contract_version: int,
+    current_revisions: Mapping[str, int],
+    current_source_hashes: Mapping[str, str] | None = None,
+) -> dict[str, EffectiveStatus]:
+    """Ledger-wide freshness over the validated assumption DAG. Pure.
+
+    Direct freshness comes from the existing single-claim logic; a claim
+    whose required assumptions are not effectively supported is stale no
+    matter what its own reads say, with the blocking assumptions named.
+    Explicit ``contested``/``withdrawn`` states are preserved as-is — this
+    never withdraws anything and changes no canonical data. Recomputed
+    from scratch on every call, so a fresh root restores a merely derived
+    stale verdict while explicit withdrawal still needs fresh judgment.
+    Missing references and cycles raise ``LineageError`` through
+    ``check_assumptions``.
+    """
+    check_assumptions(records)
+    hashes = current_source_hashes or {}
+    direct = {
+        claim_id: refresh(
+            lineage, current_contract_version, current_revisions, hashes,
+        ).status
+        for claim_id, lineage in records.items()
+    }
+    verdicts: dict[str, EffectiveStatus] = {}
+    for claim_id in _assumption_order(records):
+        lineage = records[claim_id]
+        if lineage.status in ("contested", "withdrawn"):
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, lineage.status, ())
+            continue
+        blockers = sorted(
+            dep for dep in lineage.derived_from.assumes
+            if verdicts[dep].status != "supported"
+        )
+        if blockers:
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, "stale", tuple(blockers))
+        else:
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, direct[claim_id], ())
+    return verdicts
+
+
+def contest(
+    lineage: ClaimLineage, *, contested_by: str, reason: str,
+) -> ClaimLineage:
+    """Mark disagreement: a reviewer disputes the verdict itself."""
+    if lineage.status == "withdrawn":
+        raise LineageError("a withdrawn claim needs re-judgment, not contest")
+    if not isinstance(contested_by, str) or not contested_by.strip():
+        raise LineageError("a contest needs its reviewer")
+    if not isinstance(reason, str) or not reason.strip():
+        raise LineageError("a contest needs its reason")
+    return replace(
+        lineage,
+        status="contested",
+        contested_by=contested_by,
+        contest_reason=reason,
+    )
+
+
+def endorse(lineage: ClaimLineage, *, reviewer: str) -> ClaimLineage:
+    """A reviewer re-examines and stands behind the claim: supported."""
+    if lineage.status == "withdrawn":
+        raise LineageError(
+            "a withdrawn claim needs re-judgment, not endorsement")
+    if not isinstance(reviewer, str) or not reviewer.strip():
+        raise LineageError("an endorsement needs its reviewer")
+    return replace(
+        lineage,
+        status="supported",
+        reviewed_by=reviewer,
+        contested_by="",
+        contest_reason="",
+    )
+
+
+def impacted(
+    lineages: Sequence[ClaimLineage],
+    current_contract_version: int,
+    current_revisions: Mapping[str, int],
+    current_source_hashes: Mapping[str, str] | None = None,
+) -> tuple[str, ...]:
+    """Which claims go stale under the current world: the impact query.
+
+    Answers "what depends on node-rev X / source-hash Y" by re-examining
+    every record: contested and withdrawn claims are reported as-is (they
+    already need a human), everything else exactly when its reads moved.
+    """
+    hashes = current_source_hashes or {}
+    return tuple(
+        lineage.claim_id
+        for lineage in lineages
+        if lineage.status in ("contested", "withdrawn")
+        or refresh(
+            lineage, current_contract_version, current_revisions, hashes,
+        ).status == "stale"
+    )
+
+
+def retraction_impact(
+    lineages: Sequence[ClaimLineage],
+    claim_id: str,
+) -> tuple[str, ...]:
+    """The full retraction cascade for invalidating one claim, root first.
+
+    Breadth-first over assumption edges: the claim, its direct
+    dependents, then theirs. Neighbors sort for determinism. Read-only:
+    nothing is marked. Records judged before assumption tracking carry
+    no assumptions and cascade only to themselves — the forward-only
+    limit, stated plainly.
+    """
+    known = {lineage.claim_id for lineage in lineages}
+    if claim_id not in known:
+        raise LineageError(f"no lineage for claim {claim_id!r}")
+    dependents: dict[str, list[str]] = {}
+    for lineage in lineages:
+        for assumption in lineage.derived_from.assumes:
+            dependents.setdefault(assumption, []).append(lineage.claim_id)
+    cascade = [claim_id]
+    seen = {claim_id}
+    queue = [claim_id]
+    while queue:
+        for dependent in sorted(set(dependents.get(queue.pop(0), ()))):
+            if dependent not in seen:
+                seen.add(dependent)
+                cascade.append(dependent)
+                queue.append(dependent)
+    return tuple(cascade)
+
+
+def withdraw(
+    lineages: Sequence[ClaimLineage],
+    claim_id: str,
+) -> tuple[ClaimLineage, ...]:
+    """Invalidate a claim and everything that assumed it, recursively.
+
+    Marks the full ``retraction_impact`` cascade withdrawn, preserving
+    every other field; input order holds. Idempotent: withdrawing twice
+    changes nothing the second time, and withdrawing A then B equals
+    withdrawing B then A. The sidecar only: canonical data is untouched,
+    nothing re-derives, and a withdrawn claim returns only through a
+    fresh judgment.
+    """
+    cascade = set(retraction_impact(lineages, claim_id))
+    return tuple(
+        replace(lineage, status="withdrawn")
+        if lineage.claim_id in cascade
+        else lineage
+        for lineage in lineages
+    )
+
+
+# ---- emission: the three high-value claim families --------------------------
+
+
+def parse_covers_statement(claim_id: str, statement: str) -> tuple[str, tuple[str, ...]]:
+    """The route and covered nodes a route-covers statement names.
+
+    Inverse of :func:`emit_route_covers`' statement shape
+    (``"<route> covers a, b"`` or ``"<route> covers nothing"``). Raises
+    ``LineageError`` when the statement does not name the claim's own
+    route — a re-stamp parses the judged node set from these words, so
+    an unparsable statement refuses rather than guesses.
+    """
+    if not claim_id.startswith("covers:"):
+        raise LineageError(f"claim {claim_id!r} is not a route-covers claim")
+    route_id = claim_id[len("covers:"):]
+    if not route_id:
+        raise LineageError(f"claim {claim_id!r} names no route")
+    if statement == f"{route_id} covers nothing":
+        return route_id, ()
+    prefix = f"{route_id} covers "
+    if not statement.startswith(prefix):
+        raise LineageError(
+            f"claim {claim_id!r} carries an unparsable statement: {statement!r}")
+    nodes = tuple(part.strip() for part in statement[len(prefix):].split(","))
+    if not nodes or any(not node for node in nodes):
+        raise LineageError(
+            f"claim {claim_id!r} carries an unparsable statement: {statement!r}")
+    return route_id, nodes
+
+
+def emit_route_covers(
+    *,
+    route_id: str,
+    covers: Sequence[str],
+    read_revisions: Mapping[str, int],
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+    evidence: Sequence[str] = (),
+    assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
+    source_hashes: Mapping[str, str] | None = None,
+) -> ClaimLineage:
+    """Lineage for a route `covers` edge: which nodes, read from what."""
+    try:
+        nodes = ", ".join(sorted(set(str(node) for node in covers)))
+    except TypeError as exc:
+        raise LineageError(f"malformed covers edge for {route_id!r}") from exc
+    return record_claim(
+        claim_id=f"covers:{route_id}",
+        claim_kind="route-covers",
+        statement=f"{route_id} covers {nodes}" if nodes else f"{route_id} covers nothing",
+        revisions=read_revisions,
+        source_hashes=source_hashes,
+        judged_by=judged_by,
+        admitted_by=admitted_by,
+        evidence=evidence,
+        assumes=assumes,
+        supersedes=supersedes,
+    )
+
+
+def emit_scope_authority(
+    *,
+    fact_kind: str,
+    owner: str,
+    read_revisions: Mapping[str, int],
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+    evidence: Sequence[str] = (),
+    assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
+) -> ClaimLineage:
+    """Lineage for a scope-authority judgment: who owns this fact."""
+    return record_claim(
+        claim_id=f"scope:{fact_kind}:{owner}",
+        claim_kind="scope-authority",
+        statement=f"{fact_kind} is owned by {owner}",
+        revisions=read_revisions,
+        judged_by=judged_by,
+        admitted_by=admitted_by,
+        evidence=evidence,
+        assumes=assumes,
+        supersedes=supersedes,
+    )
+
+
+def emit_dossier_freshness(
+    *,
+    dossier_key: str,
+    hashes: Mapping[str, str],
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+    assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
+) -> ClaimLineage:
+    """Lineage for a dossier-freshness judgment: fresh at these hashes."""
+    return record_claim(
+        claim_id=f"dossier:{dossier_key}",
+        claim_kind="dossier-freshness",
+        statement=f"{dossier_key} is fresh",
+        source_hashes=hashes,
+        judged_by=judged_by,
+        admitted_by=admitted_by,
+        assumes=assumes,
+        supersedes=supersedes,
+    )
+
+
+# ---- sidecar ledger ---------------------------------------------------------
+
+
+def to_dict(lineage: ClaimLineage) -> dict:
+    """The sidecar shape, validated by the ledger schema on load."""
+    record: dict = {
+        "claim_id": lineage.claim_id,
+        "claim_kind": lineage.claim_kind,
+        "statement": lineage.statement,
+        "derived_from": {
+            "contract_version": lineage.derived_from.contract_version,
+            "revisions": dict(lineage.derived_from.revisions),
+            "source_hashes": dict(lineage.derived_from.source_hashes),
+            "evidence": list(lineage.derived_from.evidence),
+            "assumes": list(lineage.derived_from.assumes),
+        },
+        "judged_by": lineage.judged_by,
+        "admitted_by": {
+            "request_id": lineage.admitted_by.request_id,
+            "idempotency_key": lineage.admitted_by.idempotency_key,
+        },
+        "reviewed_by": lineage.reviewed_by,
+        "status": lineage.status,
+    }
+    if lineage.supersedes is not None:
+        record["supersedes"] = dict(lineage.supersedes)
+    if lineage.status == "contested":
+        record["contest"] = {
+            "by": lineage.contested_by,
+            "reason": lineage.contest_reason,
+        }
+    if lineage.restamped_by:
+        record["restamped_by"] = lineage.restamped_by
+    if lineage.restamped_on:
+        record["restamped_on"] = lineage.restamped_on
+    return record
+
+
+def from_dict(record: dict) -> ClaimLineage:
+    """Rebuild a record the sidecar shape guarantees. Raises LineageError."""
+    try:
+        derived = record["derived_from"]
+        contest = record.get("contest") or {}
+        admission = record["admitted_by"]
+        prior = record.get("supersedes")
+        if prior is not None:
+            if not isinstance(prior, dict):
+                raise LineageError("supersedes must be the prior record mapping")
+            for key in ("claim_id", "claim_kind", "statement"):
+                if not isinstance(prior.get(key), str) or not str(prior[key]).strip():
+                    raise LineageError(f"supersedes names no prior {key}")
+        return ClaimLineage(
+            claim_id=str(record["claim_id"]),
+            claim_kind=str(record["claim_kind"]),
+            statement=str(record["statement"]),
+            derived_from=DerivedFrom(
+                contract_version=int(derived["contract_version"]),
+                revisions=tuple(sorted(
+                    (str(key), int(value))
+                    for key, value in dict(derived["revisions"]).items()
+                )),
+                source_hashes=tuple(sorted(
+                    (str(key), str(value))
+                    for key, value in dict(derived["source_hashes"]).items()
+                )),
+                evidence=tuple(
+                    str(locator) for locator in derived["evidence"]
+                ),
+                assumes=tuple(
+                    str(claim) for claim in (derived.get("assumes") or ())
+                ),
+            ),
+            judged_by=str(record["judged_by"]),
+            admitted_by=AdmittedBy(
+                request_id=str(admission["request_id"]),
+                idempotency_key=str(admission["idempotency_key"]),
+            ),
+            status=str(record.get("status") or "supported"),
+            reviewed_by=str(record.get("reviewed_by") or ""),
+            contested_by=str(contest.get("by") or ""),
+            contest_reason=str(contest.get("reason") or ""),
+            supersedes=dict(prior) if prior is not None else None,
+            restamped_by=str(record.get("restamped_by") or ""),
+            restamped_on=str(record.get("restamped_on") or ""),
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise LineageError(f"malformed lineage record: {exc}") from exc
+
+
+def _schema(root: Path) -> dict:
+    path = root / SCHEMA_RELATIVE
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise LineageError(f"cannot read {SCHEMA_RELATIVE}: {exc}") from exc
+
+
+def check_assumptions(records: Mapping[str, ClaimLineage]) -> None:
+    """Validate cross-record assumption integrity. Raises LineageError.
+
+    Every assumption must name a claim in the same ledger
+    (LINEAGE-ASSUMPTION-MISSING), and the assumption graph must be
+    acyclic (LINEAGE-ASSUMPTION-CYCLE) — a cycle would make every
+    cascade infinite and every blast radius the whole ledger.
+    Single-record construction cannot check this; the ledger load must.
+    """
+    for claim_id, lineage in records.items():
+        for assumption in lineage.derived_from.assumes:
+            if assumption not in records:
+                raise LineageError(
+                    f"LINEAGE-ASSUMPTION-MISSING: claim {claim_id!r} "
+                    f"assumes unknown {assumption!r}")
+    visiting: set[str] = set()
+    settled: set[str] = set()
+
+    def visit(node: str) -> bool:
+        if node in settled:
+            return False
+        if node in visiting:
+            return True
+        visiting.add(node)
+        if any(visit(dep) for dep in records[node].derived_from.assumes):
+            return True
+        visiting.discard(node)
+        settled.add(node)
+        return False
+
+    for claim_id in records:
+        if visit(claim_id):
+            raise LineageError(
+                "LINEAGE-ASSUMPTION-CYCLE: assumption edges cycle; "
+                f"no order satisfies them (at {claim_id!r})")
+
+
+def load_ledger(root: Path) -> dict[str, ClaimLineage]:
+    """Read the sidecar. A missing ledger is an empty one — lazy backfill."""
+    path = root / LEDGER_RELATIVE
+    if not path.is_file():
+        return {}
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise LineageError(f"cannot read {LEDGER_RELATIVE}: {exc}") from exc
+    if not isinstance(raw, dict):
+        raise LineageError(f"{LEDGER_RELATIVE} is not a mapping")
+    errors = sorted(
+        Draft202012Validator(_schema(root)).iter_errors(raw),
+        key=lambda error: [str(part) for part in error.absolute_path],
+    )
+    if errors:
+        first = errors[0]
+        location = "/".join(str(part) for part in first.absolute_path)
+        raise LineageError(
+            f"{LEDGER_RELATIVE} violates its schema at {location or '<root>'}: "
+            f"{first.message}"
+        )
+    records = {}
+    for claim_id, record in raw["records"].items():
+        lineage = from_dict(record)
+        if lineage.claim_id != claim_id:
+            raise LineageError(
+                f"{LEDGER_RELATIVE} renames claim {claim_id!r} "
+                f"to {lineage.claim_id!r}"
+            )
+        records[claim_id] = lineage
+    check_assumptions(records)
+    return records
+
+
+def dump_ledger(records: Mapping[str, ClaimLineage]) -> str:
+    """Render the sidecar. The caller writes; this module never touches disk."""
+    return yaml.safe_dump(
+        {
+            "schema_version": LEDGER_SCHEMA_VERSION,
+            "type": LEDGER_TYPE,
+            "records": {
+                claim_id: to_dict(records[claim_id])
+                for claim_id in sorted(records)
+            },
+        },
+        sort_keys=False,
+        allow_unicode=True,
+    )

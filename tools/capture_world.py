@@ -26,7 +26,7 @@ TOOLS_DIR = Path(__file__).resolve().parent
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from learning_os.fingerprint import DATA_ROOTS  # noqa: E402
+from learning_os.store.fingerprint import DATA_ROOTS  # noqa: E402
 
 WORLD_DATA_ROOTS = tuple(DATA_ROOTS) + ("operations",)
 
@@ -72,7 +72,8 @@ def _git(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
 
 def _capture_observations(root: Path) -> dict:
     """The §4 observation object, read live with any override disabled."""
-    from learning_os import githistory, observations
+    from learning_os.store import observations
+    from learning_os.store.session import githistory
 
     saved = os.environ.pop(observations.OVERRIDE_ENV, None)
     try:
@@ -176,13 +177,13 @@ def _material_entry(materials_root: Path, rel: str, exists: bool) -> dict:
 
 def _capture_materials(root: Path, out: Path) -> tuple[list[dict] | None, str | None]:
     """The reference inventory (SPEC §6, amendments (ah) and (n))."""
-    from learning_os.loader import load_repo
-    from learning_os.materials_resolution import (
+    from learning_os.derive.validation.materials import _uris_in
+    from learning_os.store.loader import load_repo
+    from learning_os.store.materials.resolution import (
         MATERIAL_SCHEME,
         material_location,
         resolve_route_material_files,
     )
-    from learning_os.rules.materials import _uris_in
 
     data_dir = out / "data"
     probe = out / "probe"

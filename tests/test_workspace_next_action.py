@@ -14,7 +14,7 @@ import sys
 from gateway_helpers import LOS, approved_v2_cli
 from repo_builders import add_curriculum, run_los
 
-from learning_os.loader import load_repo
+from learning_os.store.loader import load_repo
 
 CONTEXT = "work/active/workspace-demo/CONTEXT.md"
 ACTION = "Finish the variance derivation closed-book, then shelve."

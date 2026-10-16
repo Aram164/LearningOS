@@ -15,18 +15,21 @@ from gateway_helpers import approved_v2_envelope, run_v2_capability
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.json_schema import ContractValidationError
-from learning_os.genout import generate_all
-from learning_os.genout.learner_interpreter import _collect_and_interpret, interpret_observations
-from learning_os.genout.session_compiler import compile_session, replan_session
-from learning_os.learning_runtime import (
+from learning_os.derive.learning_runtime import (
     RuntimeInputError,
     activity_fingerprint,
     collect_requirements,
     read_observations,
     requirement_fingerprint,
 )
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.learner_interpreter import (
+    _collect_and_interpret,
+    interpret_observations,
+)
+from learning_os.derive.projection.session_compiler import compile_session, replan_session
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 TARGET = {
     "concept": "concept-expected-value",

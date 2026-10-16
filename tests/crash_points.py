@@ -75,7 +75,7 @@ if GATE_DIR:
             raise RuntimeError("crash gate timed out waiting for a receipt")
         time.sleep(0.05)
 
-from learning_os import transactions  # noqa: E402
+from learning_os.store import transactions  # noqa: E402
 import los  # noqa: E402
 
 

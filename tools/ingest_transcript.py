@@ -55,7 +55,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from learning_os.loader import load_repo  # noqa: E402
+from learning_os.store.loader import load_repo  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 MATERIALS = REPO.parent / "materials"

@@ -11,7 +11,7 @@ import json
 
 from repo_builders import run_los
 
-from learning_os.ops.handlers.notes import empty_search_hint
+from learning_os.app.handlers.notes import empty_search_hint
 
 
 def test_record_search_names_the_eliminating_term(mini_repo):

@@ -12,9 +12,9 @@ from pathlib import Path
 import yaml
 from repo_builders import add_curriculum, write_minimal_pdf, write_yaml
 
-from learning_os.genout.projection.records_library import project_sources
-from learning_os.loader import load_repo
-from learning_os.material_synthesis import current_unit_material_basis
+from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
+from learning_os.derive.projection.projection.records_library import project_sources
+from learning_os.store.loader import load_repo
 
 
 def _routed_unit(root: Path) -> None:

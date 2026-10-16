@@ -12,7 +12,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
 COMMANDS_DIR = ROOT / "tools/learning_os/commands"
-HANDLERS_DIR = ROOT / "tools/learning_os/ops/handlers"
+HANDLERS_DIR = ROOT / "tools/learning_os/app/handlers"
 
 FIX = "Handlers get the snapshot and lock from the pipeline (PLAN D20)."
 
@@ -152,8 +152,8 @@ def scan_commands(root: Path) -> list[Hit]:
 
 
 def scan_handlers(root: Path) -> list[Hit]:
-    """Every flagged construct in tools/learning_os/ops/handlers/**/*.py."""
-    handlers = root / "tools/learning_os/ops/handlers"
+    """Every flagged construct in tools/learning_os/app/handlers/**/*.py."""
+    handlers = root / "tools/learning_os/app/handlers"
     if not handlers.is_dir():
         return []
     hits: list[Hit] = []
@@ -258,8 +258,8 @@ def scan_commands2(root: Path) -> list[Hit]:
 
 
 def scan_handlers2(root: Path) -> list[Hit]:
-    """Every §3.7 item 4 construct in tools/learning_os/ops/handlers/**/*.py."""
-    handlers = root / "tools/learning_os/ops/handlers"
+    """Every §3.7 item 4 construct in tools/learning_os/app/handlers/**/*.py."""
+    handlers = root / "tools/learning_os/app/handlers"
     if not handlers.is_dir():
         return []
     hits: list[Hit] = []

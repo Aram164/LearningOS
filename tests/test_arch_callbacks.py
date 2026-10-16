@@ -22,13 +22,13 @@ import pytest
 import yaml
 from scenario_harness import render_violations
 
-import learning_os.ops.handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.registry import REGISTRY
+import learning_os.app.handlers  # noqa: F401  (registration side effect)
+from learning_os.app.registry import REGISTRY
 
 ROOT = Path(__file__).resolve().parent.parent
 LEARNING_OS_DIR = ROOT / "tools/learning_os"
 TOOLS_DIR = ROOT / "tools"
-HANDLERS_DIR = LEARNING_OS_DIR / "ops/handlers"
+HANDLERS_DIR = LEARNING_OS_DIR / "app/handlers"
 CALLBACKS_DIR = ROOT / "tests/fixtures/archcheck/callbacks"
 RATCHETS_PATH = ROOT / "tests/architecture/ratchets.yaml"
 
@@ -56,12 +56,12 @@ _HOOKS = frozenset({
 
 #: Whole files the scan skips: the engine (SPEC §3.5a).
 _EXCLUDED_FILES = frozenset({
-    "tools/learning_os/transactions.py",
+    "tools/learning_os/store/transactions.py",
 })
 
 #: (file, function) the scan skips: the central wiring (SPEC §3.5a).
 _EXCLUDED_FUNCS = frozenset({
-    ("tools/learning_os/ops/commit.py", "commit_proposal"),
+    ("tools/learning_os/app/commit.py", "commit_proposal"),
 })
 
 
@@ -166,9 +166,9 @@ def test_population_matches_the_baseline():
 
 
 def test_exclusions_are_the_spec_pair():
-    assert _EXCLUDED_FILES == {"tools/learning_os/transactions.py"}
+    assert _EXCLUDED_FILES == {"tools/learning_os/store/transactions.py"}
     assert _EXCLUDED_FUNCS == {
-        ("tools/learning_os/ops/commit.py", "commit_proposal")}
+        ("tools/learning_os/app/commit.py", "commit_proposal")}
 
 
 def test_pos_hook_fixture_is_counted():
@@ -204,7 +204,7 @@ def test_replace_fixture_is_counted_but_str_replace_is_not():
 
 def test_bespoke_after_commit_is_counted():
     """R8 control: a callable ``after_commit`` counts once (SPEC (bp) 1)."""
-    rel = "tools/learning_os/ops/handlers/r8control.py"
+    rel = "tools/learning_os/app/handlers/r8control.py"
     counts, _ = _scan_source(
         rel,
         "def handler(ctx, req):\n"
@@ -215,7 +215,7 @@ def test_bespoke_after_commit_is_counted():
 
 def test_standard_after_commit_is_not_counted():
     """R8 control: ``after_commit="STANDARD"`` counts nothing (SPEC (bp) 1)."""
-    rel = "tools/learning_os/ops/handlers/r8control.py"
+    rel = "tools/learning_os/app/handlers/r8control.py"
     counts, _ = _scan_source(
         rel,
         "def handler(ctx, req):\n"
@@ -242,7 +242,7 @@ def _serving_modules() -> dict[str, set[str]]:
     serving: dict[str, set[str]] = {}
     for operation, entry in REGISTRY.items():
         module = entry.handler.__module__
-        assert module.startswith("learning_os.ops.handlers."), module
+        assert module.startswith("learning_os.app.handlers."), module
         serving.setdefault(module.rsplit(".", 1)[1] + ".py",
                            set()).add(operation)
     importers: set[str] = set()
@@ -250,7 +250,7 @@ def _serving_modules() -> dict[str, set[str]]:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if (isinstance(node, ast.ImportFrom)
-                    and node.module == "learning_os.ops.handlers._shared"):
+                    and node.module == "learning_os.app.handlers._shared"):
                 importers.add(path.name)
     shared_ops: set[str] = set()
     for name in importers:
@@ -596,12 +596,12 @@ def apipe(mini_repo):
     _write_test_schema(mini_repo)
 
     def make(kind="query", handler=None, human=None, render_check=None):
-        from learning_os.ops.proposal import Result
+        from learning_os.app.proposal import Result
 
         def default_handler(ctx, req):
             return Result({"echo": req.get("alpha"), "n": req.get("beta")})
 
-        from learning_os.ops.registry import register
+        from learning_os.app.registry import register
 
         register(TEST_OP, kind=kind, human=human,
                  render_check=render_check)(handler or default_handler)
@@ -627,8 +627,8 @@ def _load_fixture_renderer(name: str):
 
 def _run_finish_with_audit(mini_repo, tmp_path, render):
     """Run ``finish=render`` through run_cli under the installed hook."""
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.proposal import Result
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.proposal import Result
 
     _write_test_schema(mini_repo)
     log = tmp_path / "audit.jsonl"
@@ -636,7 +636,7 @@ def _run_finish_with_audit(mini_repo, tmp_path, render):
     def handler(ctx, req):
         return Result({"echo": "x"}, finish=render)
 
-    from learning_os.ops.registry import register
+    from learning_os.app.registry import register
 
     register(TEST_OP, kind="query")(handler)
     try:
@@ -658,7 +658,7 @@ def test_registry_has_no_leaked_callbacks_operation():
 
 def test_runtime_file_read_fails(mini_repo, tmp_path, monkeypatch):
     """The file-read fixture is audited live, not only flagged."""
-    from learning_os.ops.render import current_render
+    from learning_os.app.render import current_render
 
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     outcome, violations = _run_finish_with_audit(
@@ -671,7 +671,7 @@ def test_runtime_file_read_fails(mini_repo, tmp_path, monkeypatch):
 
 def test_runtime_observation_fails(mini_repo, tmp_path, monkeypatch):
     """The observation fixture is audited live, not only flagged."""
-    from learning_os.ops.render import current_render
+    from learning_os.app.render import current_render
 
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     outcome, violations = _run_finish_with_audit(
@@ -685,8 +685,8 @@ def test_runtime_observation_fails(mini_repo, tmp_path, monkeypatch):
 
 def test_runtime_captured_context_fails(mini_repo, tmp_path, monkeypatch):
     """The captured-context fixture loads the repo live, audited."""
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.render import current_render
+    from learning_os.app.context import OpContext
+    from learning_os.app.render import current_render
 
     module = _load_fixture_module("pos_render_captures_ctx.py")
     module.ctx = OpContext(root=mini_repo, operation=TEST_OP,
@@ -702,9 +702,9 @@ def test_runtime_captured_context_fails(mini_repo, tmp_path, monkeypatch):
 
 def test_runtime_nondeterminism_fails(apipe, mini_repo, monkeypatch):
     """The nondeterminism fixture raises through the real run_cli path."""
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.proposal import Result
-    from learning_os.ops.render import RenderPurityError, current_render
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.proposal import Result
+    from learning_os.app.render import RenderPurityError, current_render
 
     render = _load_fixture_renderer("pos_render_nondeterministic.py")
 
@@ -721,9 +721,9 @@ def test_runtime_nondeterminism_fails(apipe, mini_repo, monkeypatch):
 
 def test_runtime_mutation_fails(apipe, mini_repo, monkeypatch):
     """The mutation fixture raises through the real run_cli path."""
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.proposal import Result
-    from learning_os.ops.render import RenderPurityError, current_render
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.proposal import Result
+    from learning_os.app.render import RenderPurityError, current_render
 
     render = _load_fixture_renderer("pos_render_mutates_arg.py")
 
@@ -740,9 +740,9 @@ def test_runtime_mutation_fails(apipe, mini_repo, monkeypatch):
 
 def test_runtime_nested_false_to_zero_fails(apipe, mini_repo, monkeypatch):
     """A nested False→0 mutation fails through the human path (SPEC (az))."""
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.proposal import Result
-    from learning_os.ops.render import RenderPurityError, current_render
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.proposal import Result
+    from learning_os.app.render import RenderPurityError, current_render
 
     def nested_mutator(payload):
         payload["nested"]["flag"] = 0
@@ -761,7 +761,7 @@ def test_runtime_nested_false_to_zero_fails(apipe, mini_repo, monkeypatch):
 
 def test_runtime_pure_fixture_passes_clean(mini_repo, tmp_path, monkeypatch):
     """The pure fixture runs with no violation and no purity error."""
-    from learning_os.ops.render import current_render
+    from learning_os.app.render import current_render
 
     monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
     outcome, violations = _run_finish_with_audit(

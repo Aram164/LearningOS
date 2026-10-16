@@ -11,11 +11,11 @@ from __future__ import annotations
 import json
 from functools import partial
 
-from learning_os.garden import project_garden_entries
-from learning_os.genout import generate_all
-from learning_os.genout.concepts import build_backlinks
-from learning_os.genout.coordination import adoption_counts
-from learning_os.genout.manifest import (
+from learning_os.derive.garden import project_garden_entries
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.concepts import build_backlinks
+from learning_os.derive.projection.coordination import adoption_counts
+from learning_os.derive.projection.manifest import (
     _projected_revision,
     assemble_manifest_semantic_payload,
     build_manifest,
@@ -30,15 +30,15 @@ from learning_os.genout.manifest import (
     project_manifest_records,
     publish_manifest_metadata,
 )
-from learning_os.genout.modules_view import _academic_deadlines
-from learning_os.genout.projection import (
+from learning_os.derive.projection.modules_view import _academic_deadlines
+from learning_os.derive.projection.projection import (
     build_counts,
     build_indexes,
     build_module_concept_edges,
     build_progress,
 )
-from learning_os.genout.review import build_review_items
-from learning_os.loader import load_repo
+from learning_os.derive.projection.review import build_review_items
+from learning_os.store.loader import load_repo
 
 
 def _serialize_manifest(payload: dict) -> str:

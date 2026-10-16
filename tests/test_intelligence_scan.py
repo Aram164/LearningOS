@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.semantics import ScanInput, intelligence_scan, scan_observations
+from learning_os.derive.semantics import ScanInput, intelligence_scan, scan_observations
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
@@ -198,8 +198,8 @@ def test_intelligence_scan_reads_a_quiet_repo_directly(mini_repo):
 def test_live_scan_detects_changed_missing_and_unknown_evidence(mini_repo):
     import hashlib
 
-    from learning_os.semantics.lineage import dump_ledger, record_claim
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.lineage import dump_ledger, record_claim
+    from learning_os.derive.semantics.scan import collect_observations
 
     evidence = mini_repo / "work/evidence.md"
     evidence.write_text("reviewed version", encoding="utf-8")
@@ -241,12 +241,12 @@ def test_scan_compares_stored_digests_not_file_membership(mini_repo, monkeypatch
     pinning it. No Git history is read at any point: staleness is a
     digest comparison, so even a poisoned GIT_DIR changes nothing.
     """
-    from learning_os.semantics.lineage import (
+    from learning_os.derive.semantics.lineage import (
         dump_ledger,
         emit_route_covers,
         load_ledger,
     )
-    from learning_os.semantics.scan import collect_observations, scan_observations
+    from learning_os.derive.semantics.scan import collect_observations, scan_observations
 
     route_a, route_b = _two_unit_scoped_world(mini_repo)
     admission = {"request_id": "scan-fixture", "idempotency_key": "scan-fixture"}
@@ -320,9 +320,9 @@ def test_scan_proposes_dependent_revalidation_after_evidence_moves(
     """
     import hashlib
 
-    from learning_os.semantics import scan as scan_module
-    from learning_os.semantics.lineage import dump_ledger, record_claim
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics import scan as scan_module
+    from learning_os.derive.semantics.lineage import dump_ledger, record_claim
+    from learning_os.derive.semantics.scan import collect_observations
 
     for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
         monkeypatch.delenv(name, raising=False)
@@ -388,9 +388,9 @@ def test_missing_evidence_resolves_once_for_all_claims_sharing_it(
     """Examination finding 3: three claims pinning one missing key attempt
     the resolver once per collection — and all three still go stale, so
     the collection stays fail-closed."""
-    from learning_os.semantics import scan as scan_module
-    from learning_os.semantics.lineage import dump_ledger, record_claim
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics import scan as scan_module
+    from learning_os.derive.semantics.lineage import dump_ledger, record_claim
+    from learning_os.derive.semantics.scan import collect_observations
 
     for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
         monkeypatch.delenv(name, raising=False)
@@ -494,14 +494,14 @@ def _two_unit_scoped_world(mini_repo):
     import yaml
     from repo_builders import add_curriculum, write_yaml
 
-    from learning_os.revisions import dump_revisions
-    from learning_os.route_identity import route_with_identity
-    from learning_os.semantics.lineage import (
+    from learning_os.derive.semantics.lineage import (
         dump_ledger,
         emit_route_covers,
         node_content_digest,
         route_content_digest,
     )
+    from learning_os.route_identity import route_with_identity
+    from learning_os.store.revisions import dump_revisions
 
     add_curriculum(mini_repo)
     module_dir = mini_repo / "curriculum/modules/module-demo"
@@ -567,7 +567,7 @@ def _two_unit_scoped_world(mini_repo):
 
 
 def _rewrite_revision(mini_repo, artifact, revision):
-    from learning_os.revisions import dump_revisions, load_revisions
+    from learning_os.store.revisions import dump_revisions, load_revisions
 
     current = load_revisions(mini_repo)
     current[artifact] = revision
@@ -601,7 +601,7 @@ def _rewrite_node(mini_repo, unit_id, node_id, **fields):
 
 
 def test_scoped_batch_claims_start_supported(mini_repo):
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.scan import collect_observations
 
     route_a, route_b = _two_unit_scoped_world(mini_repo)
     assert dict(collect_observations(mini_repo, days=0).stale_claims) == {}
@@ -611,8 +611,8 @@ def test_withdrawn_claims_stay_out_of_row_detectors(mini_repo):
     """A withdrawn claim needs a fresh judgment: even when its own
     route row and covered node both move, no re-examination or
     revalidation goal fires for it."""
-    from learning_os.semantics.lineage import dump_ledger, load_ledger, withdraw
-    from learning_os.semantics.scan import collect_observations, scan_observations
+    from learning_os.derive.semantics.lineage import dump_ledger, load_ledger, withdraw
+    from learning_os.derive.semantics.scan import collect_observations, scan_observations
 
     route_a, _route_b = _two_unit_scoped_world(mini_repo)
     ledger_path = mini_repo / "operations/transactions/lineage.yaml"
@@ -634,7 +634,7 @@ def test_withdrawn_claims_stay_out_of_row_detectors(mini_repo):
 def test_route_patch_in_sibling_unit_stales_only_that_routes_claim(mini_repo):
     """A route.patch bumps module + owning unit: with scoped reads only the
     patched route's claim stales, never the batch sibling's."""
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.scan import collect_observations
 
     route_a, route_b = _two_unit_scoped_world(mini_repo)
     _rewrite_route(mini_repo, route_b, angle="Beta angle, revised.")
@@ -648,7 +648,7 @@ def test_route_patch_in_sibling_unit_stales_only_that_routes_claim(mini_repo):
 def test_progress_write_in_own_unit_leaves_route_claim_supported(mini_repo):
     """stage.progress.update bumps the unit revision: learner state is not a
     coverage read, so the unit's route claims stay supported."""
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.scan import collect_observations
 
     _two_unit_scoped_world(mini_repo)
     _rewrite_revision(mini_repo, "unit-demo-l01", 3)
@@ -657,7 +657,7 @@ def test_progress_write_in_own_unit_leaves_route_claim_supported(mini_repo):
 
 
 def test_own_route_row_edit_stales_exactly_that_claim(mini_repo):
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.scan import collect_observations
 
     route_a, _route_b = _two_unit_scoped_world(mini_repo)
     _rewrite_route(mini_repo, route_a, angle="Alpha angle, revised.")
@@ -666,7 +666,7 @@ def test_own_route_row_edit_stales_exactly_that_claim(mini_repo):
 
 
 def test_covered_node_edit_stales_exactly_the_covering_claim(mini_repo):
-    from learning_os.semantics.scan import collect_observations
+    from learning_os.derive.semantics.scan import collect_observations
 
     route_a, _route_b = _two_unit_scoped_world(mini_repo)
     _rewrite_node(mini_repo, "unit-demo-l01", "knowledge-demo-alpha",

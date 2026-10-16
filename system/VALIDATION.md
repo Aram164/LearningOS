@@ -18,7 +18,7 @@ one. A signature rather than a total, because a total is gamed by trading one
 warning for another.
 
 Two exact, named sets are excluded from the baseline — `BASELINE_EXEMPT_WARNINGS`
-in `learning_os.rules.common`, never a prefix, severity band, or path heuristic:
+in `learning_os.derive.validation.common`, never a prefix, severity band, or path heuristic:
 
 - **Environmental** (`ENVIRONMENTAL_WARNINGS`: `MATERIALS-OFFLINE`,
   `HYGIENE-VIEWS`, `HYGIENE-LOCK`, and the rest) describe the machine, not the
@@ -252,7 +252,7 @@ the contents but a statement that a check could not be made at all.
 
 - **E** `GIT-HISTORY` — Git history could not be read, so a check that depends
   on it (`HYGIENE-VIEWS`, `WS-NEGLECT`) reached no conclusion. Raised by
-  `learning_os.githistory`, which distinguishes a tree that genuinely has no
+  `learning_os.store.session.githistory`, which distinguishes a tree that genuinely has no
   history — an export, an unborn branch, an empty repository — from a Git that
   failed to answer. The first is still an ordinary empty result; only the second
   is this error. It is an error rather than a warning because the alternative is

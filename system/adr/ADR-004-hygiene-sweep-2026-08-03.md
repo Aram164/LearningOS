@@ -14,7 +14,7 @@ system robust against everyday human mess (duplicates, misfiled files) without
 ## Decision
 
 Move mess-policing from the operator's judgment into the validator, as four
-deterministic **warning** checks (`tools/learning_os/rules.py::check_hygiene`,
+deterministic **warning** checks (`tools/learning_os/derive/validation.py::check_hygiene`,
 codes `HYGIENE-*`, documented in VALIDATION.md). Warnings nag but never block;
 they run free at every `make check`, every pre-commit, and in CI.
 

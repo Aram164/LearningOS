@@ -11,8 +11,8 @@ from pathlib import Path
 from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.contracts.payloads import payload_fields, subparsers
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.transactions import artifact_revision
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.transactions import artifact_revision
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 

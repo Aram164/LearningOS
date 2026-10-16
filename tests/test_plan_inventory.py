@@ -149,7 +149,7 @@ def test_changed_material_refuses_reviewed_apply(mini_repo, tmp_path):
                       "--review-report", str(report_file))
     assert applied.returncode == 2
     assert "inventory digest differs from observed bytes" in applied.stderr
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     live_map = load_repo(mini_repo).module_source_maps["module-demo"]
     row = next(r for s in live_map["sources"] for r in s["unit_routes"]
                if r.get("id") == "route-demo-book")

@@ -16,7 +16,7 @@ from pathlib import Path
 import arch_engine_cases
 import pytest
 
-from learning_os.transactions import (
+from learning_os.store.transactions import (
     _engine_phase,
     current_engine_phase,
 )
@@ -52,7 +52,7 @@ def test_callbacks_see_no_phase(tmp_path: Path):
     """(b) Caller callbacks run outside any marked region."""
     import arch_engine_cases as cases
 
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     seen: dict[str, object] = {}
 
@@ -96,7 +96,7 @@ def test_rollback_publish_sees_no_phase(tmp_path: Path):
     """(b) Rollback republication runs outside any marked region."""
     import arch_engine_cases as cases
 
-    from learning_os.transactions import TransactionFailure, TransactionService
+    from learning_os.store.transactions import TransactionFailure, TransactionService
 
     seen: dict[str, object] = {}
 

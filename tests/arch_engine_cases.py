@@ -241,7 +241,7 @@ def _finish_case(name: str, root: Path, normalizer: _Normalizer,
 
 
 def case_apply_writes_and_deletes(tmp_path: Path) -> dict:
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     name = "apply-writes-and-deletes"
     with _pinned_tz():
@@ -270,7 +270,7 @@ def case_apply_writes_and_deletes(tmp_path: Path) -> dict:
 
 
 def case_rollback_complete(tmp_path: Path) -> dict:
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     name = "rollback-complete"
     with _pinned_tz():
@@ -297,8 +297,8 @@ def case_rollback_complete(tmp_path: Path) -> dict:
 
 
 def case_rollback_incomplete(tmp_path: Path) -> dict:
-    import learning_os.transactions as tx_module
-    from learning_os.transactions import TransactionFailure, TransactionService
+    import learning_os.store.transactions as tx_module
+    from learning_os.store.transactions import TransactionFailure, TransactionService
 
     name = "rollback-incomplete"
     with _pinned_tz():
@@ -348,8 +348,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-import learning_os.transactions as tx
-from learning_os.transactions import TransactionService
+import learning_os.store.transactions as tx
+from learning_os.store.transactions import TransactionService
 
 original_write = tx._atomic_write_bytes
 call_count = 0
@@ -375,7 +375,7 @@ TransactionService(root, clock=lambda: clock_dt).commit(
 
 
 def case_crash_recovery(tmp_path: Path) -> dict:
-    import learning_os.ops.lock as plumbing
+    import learning_os.app.lock as plumbing
 
     name = "crash-recovery"
     with _pinned_tz():
@@ -408,8 +408,8 @@ def case_crash_recovery(tmp_path: Path) -> dict:
 
 
 def case_sink_exception(tmp_path: Path) -> dict:
-    import learning_os.transactions as tx_module
-    from learning_os.transactions import TransactionService
+    import learning_os.store.transactions as tx_module
+    from learning_os.store.transactions import TransactionService
 
     name = "sink-exception"
     with _pinned_tz():
@@ -449,7 +449,7 @@ def case_sink_exception(tmp_path: Path) -> dict:
 
 
 def case_post_receipt_callback_failure(tmp_path: Path) -> dict:
-    from learning_os.transactions import TransactionService
+    from learning_os.store.transactions import TransactionService
 
     name = "post-receipt-callback-failure"
     with _pinned_tz():

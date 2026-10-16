@@ -17,8 +17,8 @@ import yaml
 from gateway_helpers import approved_v2_call
 from repo_builders import run_los, write_yaml
 
-from learning_os.genout import generate_all
-from learning_os.loader import load_repo
+from learning_os.derive.projection import generate_all
+from learning_os.store.loader import load_repo
 
 HEADER = "# Curated demo shelf.\n"
 OLD_WHY = "The demo book — download never landed."

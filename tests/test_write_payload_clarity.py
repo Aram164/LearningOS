@@ -28,15 +28,15 @@ from repo_builders import (
 )
 from test_learning_paths import add_path
 
+from learning_os.app.handlers.notes import NOTE_FIELDS
 from learning_os.contracts.batch_notes import ANALYSIS_FIELDS
 from learning_os.domain.failures import WriteRefused
-from learning_os.ops.handlers.notes import NOTE_FIELDS
 
 # ------------------------------------------------------------------ #100
 
 
 def test_note_precheck_names_the_unknown_fields():
-    from learning_os.ops.handlers.notes import _precheck_note
+    from learning_os.app.handlers.notes import _precheck_note
 
     with pytest.raises(WriteRefused) as refused:
         _precheck_note(
@@ -53,7 +53,7 @@ def test_note_precheck_names_the_unknown_fields():
 
 
 def test_note_precheck_gives_a_missing_id_its_own_message():
-    from learning_os.ops.handlers.notes import _precheck_note
+    from learning_os.app.handlers.notes import _precheck_note
 
     with pytest.raises(WriteRefused, match="^note needs a string id$"):
         _precheck_note({"title": "T"}, b"body")
@@ -64,7 +64,7 @@ def test_note_precheck_gives_a_missing_id_its_own_message():
 
 
 def test_analysis_precheck_names_the_unknown_fields():
-    from learning_os.ops.handlers.notes import _precheck_analysis
+    from learning_os.app.handlers.notes import _precheck_analysis
 
     with pytest.raises(WriteRefused) as refused:
         _precheck_analysis({"id": "note-x", "title": "T", "domain": "math"}, b"body")
@@ -75,7 +75,7 @@ def test_analysis_precheck_names_the_unknown_fields():
 
 
 def test_analysis_precheck_gives_a_missing_id_its_own_message():
-    from learning_os.ops.handlers.notes import _precheck_analysis
+    from learning_os.app.handlers.notes import _precheck_analysis
 
     with pytest.raises(WriteRefused, match="^analysis needs a string id$"):
         _precheck_analysis({"title": "T"}, b"body")
@@ -171,8 +171,8 @@ def test_note_and_analysis_shapes_mirror_their_handlers(repo_root):
 
 
 def test_intake_revise_and_collection_shapes_mirror_their_handlers(repo_root):
-    from learning_os.ops.handlers.plan import COLLECTION_REVISE_FIELDS as COLLECTION_FIELDS
-    from learning_os.ops.handlers.plan import (
+    from learning_os.app.handlers.plan import COLLECTION_REVISE_FIELDS as COLLECTION_FIELDS
+    from learning_os.app.handlers.plan import (
         CORRECT_FIELDS,
         CREATE_FIELDS,
         REVISE_FIELDS,
@@ -198,7 +198,7 @@ def test_intake_revise_and_collection_shapes_mirror_their_handlers(repo_root):
 
 
 def test_route_concept_review_and_unit_shapes_mirror_their_handlers(repo_root):
-    from learning_os.material_refs import PATCH_FIELDS
+    from learning_os.domain.material_refs import PATCH_FIELDS
 
     changes = _capability_schema(repo_root, "route.patch")["properties"]["changes"]
     assert changes["additionalProperties"] is False

@@ -25,7 +25,7 @@ All evidence below is reproducible from the frozen baseline.
   (35 files Core, 29 files UI) are feature work, reported as context only.
 - Track-2 boundary inventory: manifest (this prototype) → `operations.ts`
   (193 lines, next candidate) → `gateway-v2.ts` (429 lines, structural
-  portion only, later) → `tools/learning_os/diagnostics/` causal rules
+  portion only, later) → `tools/learning_os/store/diagnostics/` causal rules
   (behavioral, NEVER generated).
 - Baseline `make system-check`: green before any prototype file existed.
 

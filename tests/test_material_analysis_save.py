@@ -25,9 +25,9 @@ from gateway_helpers import (
     run_v2_capability,
 )
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.loader import load_repo
-from learning_os.material_analysis import binding_consistent, observe_local_material
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.material_analysis import binding_consistent, observe_local_material
 
 NOTE_ID = "note-analysis-demo-pp1-3"
 NOTE_PATH = "knowledge/notes/mathematics/note-analysis-demo-pp1-3.md"
@@ -453,10 +453,10 @@ def test_batch_fully_replayed_makes_no_write(mini_repo):
 
 def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
     import los
+    from learning_os.app import pipeline as pipeline_module
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.diagnostics import tracer as diag_tracer
-    from learning_os.diagnostics.store import bind_store as _bind_diag_store
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.store.diagnostics import tracer as diag_tracer
+    from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
     entries = [_batch_entry("txa", "transaction analysis a"),
                _batch_entry("txb", "transaction analysis b")]
@@ -526,8 +526,8 @@ def test_batch_bounds_refuse(mini_repo):
 
 
 def test_batch_handler_bounds_refuse_directly():
+    from learning_os.app.handlers.notes import _read_batch_items
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.notes import _read_batch_items
 
     with pytest.raises(WriteRefused, match="non-empty notes list"):
         _read_batch_items({"notes": []})
@@ -610,13 +610,13 @@ def test_batch_retry_returns_the_same_breakdown(mini_repo):
 
 def test_batch_shape_has_one_source_of_truth(repo_root):
     import los
+    from learning_os.app.handlers import notes as notes_handlers
     from learning_os.contracts import batch_notes
     from learning_os.contracts.payloads import (
         payload_fields,
         payload_schema,
         subparsers,
     )
-    from learning_os.ops.handlers import notes as notes_handlers
 
     command_parser = subparsers(los.build_parser())["note-analysis-save-batch"]
     fresh = payload_schema("note.analysis.save_batch", repo_root)
@@ -1084,8 +1084,8 @@ def _normalize_repo(tmp_path, sources, *, flat=False):
 
 def test_uri_relocation_resolves_canonical_through_the_flat_tree(tmp_path):
     """F8: a canonical URI resolves through .flat to the physical path."""
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain import ids
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     uri = "material://source-x/deck.pdf"
     assert ids.is_valid("material-uri", uri)
@@ -1105,7 +1105,7 @@ def test_uri_relocation_falls_back_to_the_registered_folder(tmp_path):
     """F8: an unresolvable canonical URI normalizes lexically under the
     source's registered material folder (a registered file counts by its
     parent folder)."""
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(
         tmp_path, {"source-x": {"material": "material://demo/"}})
@@ -1124,8 +1124,8 @@ def test_uri_relocation_falls_back_to_the_registered_folder(tmp_path):
 def test_uri_relocation_keeps_legacy_non_source_authorities(tmp_path):
     """F8: authorities outside the canonical kind skip canonical parsing
     and keep the legacy resolution path."""
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain import ids
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     assert not ids.is_valid("material-uri", "material://demo/deck.pdf")
     assert not ids.is_valid("material-uri", "material://Folder/book.pdf")
@@ -1146,9 +1146,9 @@ def test_uri_relocation_unsafe_uris_refuse_before_recognition(tmp_path):
     """F8: '..' and backslash URIs keep the legacy safety diagnostic. The
     kind pattern itself is not a validator: it recognizes the '..' form,
     but the legacy guards run first."""
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain import ids
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     dotdot = "material://source-x/../escape.pdf"
     assert ids.is_valid("material-uri", dotdot)
@@ -1172,8 +1172,8 @@ def test_uri_relocation_unsafe_uris_refuse_before_recognition(tmp_path):
 def test_uri_relocation_missing_file_and_source_diagnostics(tmp_path):
     """F8: the no-file, no-source and authority-mismatch refusals keep
     their exact legacy messages."""
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(
         tmp_path, {"source-x": {"material": "material://demo/"}})
@@ -1202,8 +1202,8 @@ def test_uri_relocation_missing_file_and_source_diagnostics(tmp_path):
 def test_uri_relocation_source_without_registered_material(tmp_path):
     """F8: an unregistered source, or one registering no local material,
     keeps the exact legacy diagnostic echoing the input URI."""
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     uri = "material://source-x/deck.pdf"
     expected = (
@@ -1219,7 +1219,7 @@ def test_uri_relocation_source_without_registered_material(tmp_path):
 
 def test_uri_relocation_passes_non_uri_bindings_through(tmp_path):
     """F8: bindings that are not material:// URIs return unchanged."""
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
 
     repo, _ = _normalize_repo(tmp_path, {})
     for material in ("demo/deck.pdf", None, 123):
@@ -1232,9 +1232,9 @@ def test_uri_relocation_parser_return_feeds_resolution(
     """F8: the parsed URI — not the input spelling — feeds both the
     resolver input and the lexical fallback. ``is_valid`` delegates to
     ``parse``, so recognition is isolated while parse is mocked."""
+    from learning_os.app.handlers import notes as notes_handlers
+    from learning_os.app.handlers.notes import _normalize_binding_material_uri
     from learning_os.domain import ids
-    from learning_os.ops.handlers import notes as notes_handlers
-    from learning_os.ops.handlers.notes import _normalize_binding_material_uri
 
     canary = "material://source-x/canary/deep.pdf"
     seen = {}

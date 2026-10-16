@@ -27,8 +27,8 @@ from learning_os.contracts.migration_lifecycle import (
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.routes import ROUTE_ID_RE, deterministic_route_id
+from learning_os.derive.routes import ROUTE_ID_RE, deterministic_route_id
+from learning_os.store.fingerprint import canonical_fingerprint
 
 REVIEW_SCHEMA_VERSION = 1
 REVIEW_ACTIONS = frozenset({

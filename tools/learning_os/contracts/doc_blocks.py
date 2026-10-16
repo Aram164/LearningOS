@@ -233,7 +233,7 @@ def collect(root: Path, *, predicate_names: Iterable[str],
     if not procedures:
         raise DocBlockError("procedure index contains no procedures", INDEX)
     return BlockValues(len(catalog.get("commands", {})), len(catalog.get("queries", {})),
-                       _names(predicate_names, "tools/learning_os/semantics/predicates.py"),
+                       _names(predicate_names, "tools/learning_os/derive/semantics/predicates.py"),
                        names, tuple(procedures))
 
 

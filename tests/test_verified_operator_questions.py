@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.semantics import PREDICATES, evaluate
+from learning_os.derive.semantics import PREDICATES, evaluate
 
 FIXTURE_DIR = Path(__file__).resolve().parent / "fixtures" / "verified_operator_questions"
 
@@ -25,8 +25,8 @@ EXPECTED_OPS = ("equals", "is_true", "is_false", "contains")
 #: Every place a held-out id must never appear. This file itself is listed:
 #: the eval below discovers held-out questions by split, never by name.
 NO_LEAK_PATHS = (
-    Path("tools/learning_os/semantics/predicates.py"),
-    Path("tools/learning_os/semantics/__init__.py"),
+    Path("tools/learning_os/derive/semantics/predicates.py"),
+    Path("tools/learning_os/derive/semantics/__init__.py"),
     Path("system/SEMANTIC-CONTRACT.md"),
     Path("tests/test_semantic_contract.py"),
     Path(__file__).resolve().parent / "test_verified_operator_questions.py",
@@ -147,7 +147,7 @@ def test_recipe_output_for_every_class_contains_no_held_out_id(voqs):
     in any class's recipe output, however the loader is asked."""
     import json
 
-    from learning_os.semantics.recipes import recipe_classes, recipes_for
+    from learning_os.derive.semantics.recipes import recipe_classes, recipes_for
 
     heldout_ids = [voq["id"] for voq in voqs if voq["split"] == "heldout"]
     assert len(heldout_ids) == 5
@@ -162,7 +162,7 @@ def test_recipe_output_for_every_class_contains_no_held_out_id(voqs):
 def test_recipe_serves_worked_procedures_and_refuses_unknown_class():
     import pytest
 
-    from learning_os.semantics.recipes import RecipeError, recipes_for
+    from learning_os.derive.semantics.recipes import RecipeError, recipes_for
 
     rows = recipes_for("scope-authority")
     assert rows, "the scope-authority class must have an example recipe"
@@ -181,7 +181,7 @@ def test_recipe_command_serves_examples_only(mini_repo):
 
     from repo_builders import run_los
 
-    from learning_os.semantics.recipes import recipes_for
+    from learning_os.derive.semantics.recipes import recipes_for
 
     proc = run_los(mini_repo, "semantic", "--recipe", "scope-authority")
     assert proc.returncode == 0, proc.stderr

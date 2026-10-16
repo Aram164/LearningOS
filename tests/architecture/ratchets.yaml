@@ -65,19 +65,19 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-08: well unblock it so phase 2 work can continue seemlesly"
-  - signature: tools/learning_os/ops/handlers/notes.py::_prepare_out_dir::shutil.rmtree
+  - signature: tools/learning_os/app/handlers/notes.py::_prepare_out_dir::shutil.rmtree
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/ops/handlers/notes.py::note_analysis_prepare::write_bytes
+  - signature: tools/learning_os/app/handlers/notes.py::note_analysis_prepare::write_bytes
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/ops/handlers/notes.py::note_analysis_prepare::write_text
+  - signature: tools/learning_os/app/handlers/notes.py::note_analysis_prepare::write_text
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/semantics/dossiers.py::store_dossier::write_text
+  - signature: tools/learning_os/derive/semantics/dossiers.py::store_dossier::write_text
     count: 1
     since: baseline
     approved_by: null
@@ -89,15 +89,15 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
-  - signature: tools/learning_os/ops/handlers/_shared.py::apply_reviewed_envelope::open
+  - signature: tools/learning_os/app/handlers/_shared.py::apply_reviewed_envelope::open
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
-  - signature: tools/learning_os/ops/handlers/_shared.py::apply_reviewed_envelope::unlink
+  - signature: tools/learning_os/app/handlers/_shared.py::apply_reviewed_envelope::unlink
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
-  - signature: tools/learning_os/ops/handlers/plan.py::_save_check_report_and_compact::unlink
+  - signature: tools/learning_os/app/handlers/plan.py::_save_check_report_and_compact::unlink
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: take over phase 4 work and finish it as fast as possible"
@@ -114,36 +114,36 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/genout/common.py::_git_state::substring::fatal:
+  - signature: 'tools/learning_os/derive/projection/common.py::_git_state::substring::fatal:
       not a git repository'
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/health.py::_time_machine_check::regex::(?im)^\s*(?:Encryption|Encrypted)\s*[:=]
+  - signature: tools/learning_os/derive/health.py::_time_machine_check::regex::(?im)^\s*(?:Encryption|Encrypted)\s*[:=]
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/materials_resolution.py::leading_material_locator::substring::
+  - signature: 'tools/learning_os/store/materials/resolution.py::leading_material_locator::substring::
 
       '
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/materials_resolution.py::leading_material_locator::substring::\
+  - signature: tools/learning_os/store/materials/resolution.py::leading_material_locator::substring::\
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/rules/contract.py::check_contract_documentation::method::
+  - signature: 'tools/learning_os/derive/validation/contract.py::check_contract_documentation::method::
 
       '
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/rules/materials.py::_referenced_materials::substring::material://
+  - signature: tools/learning_os/derive/validation/materials.py::_referenced_materials::substring::material://
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/rules/registries.py::_references_generated::substring::generated/
+  - signature: tools/learning_os/derive/validation/registries.py::_references_generated::substring::generated/
     count: 1
     since: baseline
     approved_by: null
@@ -157,45 +157,45 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: 'tools/learning_os/ops/handlers/notes.py::_match_verified::method::
+  - signature: 'tools/learning_os/app/handlers/notes.py::_match_verified::method::
 
       '
     count: 3
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: 'tools/learning_os/ops/handlers/plan.py::_explanation_snippets::method::
+  - signature: 'tools/learning_os/app/handlers/plan.py::_explanation_snippets::method::
 
       '
     count: 3
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
   A3-prose-2:
-  - signature: tools/learning_os/derived/store.py::read_state::regex::[0-9a-f]{64}
+  - signature: tools/learning_os/store/derived/store.py::read_state::regex::[0-9a-f]{64}
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/health.py::_time_machine_check::regex::(?<!\d)(\d{4}-\d{2}-\d{2}-\d{6})(?!\d)
+  - signature: tools/learning_os/derive/health.py::_time_machine_check::regex::(?<!\d)(\d{4}-\d{2}-\d{2}-\d{6})(?!\d)
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/health.py::_time_machine_check::substring::No destinations
+  - signature: tools/learning_os/derive/health.py::_time_machine_check::substring::No destinations
       configured
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/materials_resolution.py::leading_material_locator::regex::\.(?:ipynb|md|pdf|pptx?)(?=$|[\s,;+()])
+  - signature: tools/learning_os/store/materials/resolution.py::leading_material_locator::regex::\.(?:ipynb|md|pdf|pptx?)(?=$|[\s,;+()])
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/rules/contract.py::check_contract_documentation::regex::\bmanifest(?:\s+contract)?\s+v\d+\b|data
+  - signature: tools/learning_os/derive/validation/contract.py::check_contract_documentation::regex::\bmanifest(?:\s+contract)?\s+v\d+\b|data
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/rules/materials.py::_uris_in::regex::material://([^\s`)\]\"'<>,;]+)
+  - signature: tools/learning_os/derive/validation/materials.py::_uris_in::regex::material://([^\s`)\]\"'<>,;]+)
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/rules/registries.py::_references_generated::regex::(?<![\w/])generated/
+  - signature: tools/learning_os/derive/validation/registries.py::_references_generated::regex::(?<![\w/])generated/
     count: 1
     since: baseline
     approved_by: null
@@ -315,39 +315,39 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/handlers/plan.py::_execute_plan_import::validate_extra
+  - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::validate_extra
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
-  - signature: tools/learning_os/ops/handlers/ai.py::ai_action_apply_delivery::after_commit
+  - signature: tools/learning_os/app/handlers/ai.py::ai_action_apply_delivery::after_commit
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/handlers/ai.py::ai_action_apply_delivery::translate
+  - signature: tools/learning_os/app/handlers/ai.py::ai_action_apply_delivery::translate
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/handlers/capture.py::inbox_resolve::after_commit
+  - signature: tools/learning_os/app/handlers/capture.py::inbox_resolve::after_commit
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/ops/handlers/plan.py::_execute_material_plan::after_commit
+  - signature: tools/learning_os/app/handlers/plan.py::_execute_material_plan::after_commit
     count: 1
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/handlers/plan.py::_execute_material_plan::validate_extra
+  - signature: tools/learning_os/app/handlers/plan.py::_execute_material_plan::validate_extra
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/ops/handlers/goals.py::goal::touched
+  - signature: tools/learning_os/app/handlers/goals.py::goal::touched
     count: 1
     since: approved
     approved_by: "Aram 2026-10-10: you take open desicions"
-  - signature: tools/learning_os/ops/handlers/plan.py::_execute_plan_import::after_commit
+  - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::after_commit
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"
-  - signature: tools/learning_os/ops/handlers/plan.py::_master_promotion_import::after_commit
+  - signature: tools/learning_os/app/handlers/plan.py::_master_promotion_import::after_commit
     count: 1
     since: approved
     approved_by: "Aram 2026-10-13: Make routine technical decisions yourself and continue through completion; Codex ruling limited to exact inherited R4 carriers and source relocations"

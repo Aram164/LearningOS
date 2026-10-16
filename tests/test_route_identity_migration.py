@@ -11,8 +11,8 @@ import yaml
 from migrations.route_identity_v13 import plan_migration, plan_sha256
 from repo_builders import write_yaml
 
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.routes import deterministic_route_id
+from learning_os.derive.routes import deterministic_route_id
+from learning_os.store.fingerprint import canonical_fingerprint
 
 ROOT = Path(__file__).resolve().parent.parent
 MIGRATION = ROOT / "tools/migrations/route_identity_v13.py"

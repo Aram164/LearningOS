@@ -43,7 +43,7 @@ def _seed_material(root: Path, name: str, data: bytes) -> str:
 
 
 def _seed_unit(root: Path):
-    from learning_os.material_synthesis import current_unit_material_basis
+    from learning_os.app.synthesis.material_synthesis import current_unit_material_basis
 
     add_curriculum(root)
     digest = _seed_material(root, "source-demo-book/deck.pdf", b"%PDF brief\n")

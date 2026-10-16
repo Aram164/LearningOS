@@ -8,10 +8,10 @@ from copy import deepcopy
 import pytest
 import yaml
 
-from learning_os.genout.outputs import write_outputs
-from learning_os.loader import load_repo
-from learning_os.loading import yamlio
-from learning_os.transactions import TransactionConflict, TransactionService
+from learning_os.derive.projection.outputs import write_outputs
+from learning_os.store.loader import load_repo
+from learning_os.store.loading import yamlio
+from learning_os.store.transactions import TransactionConflict, TransactionService
 
 
 @pytest.fixture(params=["installed", "python-fallback"])
@@ -22,7 +22,7 @@ def safe_loader(request, monkeypatch):
     # loader used by the rest of the suite.
     monkeypatch.delattr(yaml, "CSafeLoader", raising=False)
     spec = importlib.util.spec_from_file_location(
-        "learning_os.loading._fallback_yamlio", yamlio.__file__,
+        "learning_os.store.loading._fallback_yamlio", yamlio.__file__,
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -54,7 +54,7 @@ def test_safe_loader_preserves_merges_scalars_and_unicode(safe_loader):
 
 
 def test_unchanged_outputs_keep_identity_and_repair_only_changed_bytes(mini_repo, monkeypatch):
-    import learning_os.genout.outputs as publisher
+    import learning_os.derive.projection.outputs as publisher
 
     repo = load_repo(mini_repo)
     outputs = {"manifest.json": "{}\n", "concept-index.md": "GENERATED\n"}
@@ -115,8 +115,8 @@ def test_identical_canonical_write_preserves_inode_but_checks_revisions(tmp_path
 def test_routes_resolve_once_per_build_and_refresh_material_existence(mini_repo, monkeypatch):
     from repo_builders import rich_fixture
 
-    from learning_os.genout.manifest import build_manifest
-    from learning_os.genout.projection import records_curriculum
+    from learning_os.derive.projection.manifest import build_manifest
+    from learning_os.derive.projection.projection import records_curriculum
 
     route_id, route = rich_fixture(mini_repo)
     repo = load_repo(mini_repo)
@@ -168,7 +168,7 @@ def test_one_validator_per_schema_is_built_and_reused(mini_repo):
     does not mutate it — but only if the cache is keyed by schema name and a
     *missing* schema is never cached, because that is reported per instance.
     """
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     repo = load_repo(mini_repo)
     validator = Validator(repo, online=False)
@@ -196,7 +196,7 @@ def test_transaction_receipts_read_through_the_shared_yaml_loader(mini_repo):
     applies the same duplicate-key rule; a file it refuses must surface as a
     reported unparseable receipt, not as an exception out of `validate`.
     """
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     directory = mini_repo / "operations/transactions"
     directory.mkdir(parents=True, exist_ok=True)

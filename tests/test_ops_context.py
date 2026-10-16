@@ -5,6 +5,9 @@ from __future__ import annotations
 import contextlib
 import dataclasses
 
+from learning_os.app.context import OpContext
+from learning_os.app.outcomes import _take_gateway_refusal, exit_for
+from learning_os.app.registry import REGISTRY, register
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
@@ -12,10 +15,7 @@ from learning_os.contracts.gateway import (
 )
 from learning_os.domain.codes import INVALID_REQUEST, STALE_SNAPSHOT
 from learning_os.domain.failures import StaleSnapshot, WriteRefused
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops.context import OpContext
-from learning_os.ops.outcomes import _take_gateway_refusal, exit_for
-from learning_os.ops.registry import REGISTRY, register
+from learning_os.store.fingerprint import canonical_fingerprint
 
 STALE = "sha256:" + "0" * 64
 
@@ -95,7 +95,7 @@ def test_members_are_exactly_the_spec_list():
 
 def test_repo_and_snapshot_id_load_once_per_context(mini_repo, monkeypatch):
     calls = {"load": 0, "walk": 0}
-    import learning_os.ops.context as context_module
+    import learning_os.app.context as context_module
 
     def counted_load(root):
         calls["load"] += 1
@@ -154,7 +154,7 @@ def test_empty_token_carries_an_explicit_exit_3(mini_repo):
 
 
 def test_verified_gateway_shortcut_never_walks(mini_repo, capsys, monkeypatch):
-    import learning_os.ops.context as context_module
+    import learning_os.app.context as context_module
 
     def no_walk(root):
         raise AssertionError("walked on the verified shortcut")

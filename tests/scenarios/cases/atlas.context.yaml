@@ -14,4 +14,4 @@ cases:
     argv: [atlas-context, concept-nope]
     expect: {site: cli.atlas-context.unknown-concept}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/atlas.py:524", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
+  - {where: "tools/learning_os/app/handlers/atlas.py:524", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}

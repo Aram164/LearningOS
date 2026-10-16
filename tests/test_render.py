@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from learning_os.render import parse_sections, replace_h2_section
+from learning_os.domain.render import parse_sections, replace_h2_section
 
 BODY = (
     "## Objective\n\nold objective\n\n"

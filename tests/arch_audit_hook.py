@@ -254,7 +254,7 @@ def _is_write_open(mode, flags) -> bool:
 
 def _current_phase():
     try:
-        from learning_os.transactions import current_engine_phase
+        from learning_os.store.transactions import current_engine_phase
 
         return current_engine_phase()
     except Exception:
@@ -303,7 +303,7 @@ def _current_render():
     global _RENDER_FN
     if _RENDER_FN is None:
         try:
-            from learning_os.ops.render import current_render
+            from learning_os.app.render import current_render
         except Exception:
             return None
         _RENDER_FN = current_render

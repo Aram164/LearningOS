@@ -73,6 +73,6 @@ cases:
     expect:
       site: inbox.resolve.bad-expected-revision
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/capture.py:755", reason: "archive collision: the archive starts empty and only this operation writes it, atomically with removal"}
+  - {where: "tools/learning_os/app/handlers/capture.py:755", reason: "archive collision: the archive starts empty and only this operation writes it, atomically with removal"}
   - {site: inbox.resolve.archive-collision, reason: fixture-inexpressible}
   - {site: inbox.resolve.read-failed, reason: os-error-only}

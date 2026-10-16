@@ -48,7 +48,7 @@ BUNDLES = {
         "Makefile",
         "pyproject.toml",
         "tools/learning_os/__init__.py",
-        "tools/learning_os/material_inventory.py",
+        "tools/learning_os/domain/material_inventory.py",
         "tools/materials_manifest.py",
     ),
     "plan_write_audit": (

@@ -22,11 +22,11 @@ from gateway_helpers import (
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.manifest_contract import declared_version
-from learning_os.fingerprint import source_fingerprint
-from learning_os.genout import generate_all, write_outputs
-from learning_os.loader import load_repo, parse_frontmatter
-from learning_os.routes import deterministic_route_id
-from learning_os.rules import validate
+from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.derive.routes import deterministic_route_id
+from learning_os.derive.validation import validate
+from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.loader import load_repo, parse_frontmatter
 
 ROOT = Path(__file__).resolve().parent.parent
 MIGRATE = ROOT / "tools" / "migrations" / "curriculum_v2.py"
@@ -51,7 +51,7 @@ def _set_workspace_status(root: Path, status: str, workspace: str = "workspace-d
 
 
 def test_rich_material_route_projects_semantics_and_resolved_local_file(mini_repo):
-    from learning_os.genout import build_manifest
+    from learning_os.derive.projection import build_manifest
 
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)
@@ -350,7 +350,7 @@ def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch
     import datetime as _dt
     from types import SimpleNamespace
 
-    from learning_os.genout import modules_view
+    from learning_os.derive.projection import modules_view
 
     add_curriculum(mini_repo)
     module = _read_demo_module(mini_repo)
@@ -679,7 +679,7 @@ def test_stage_progress_offers_the_observation_verb(mini_repo):
     """Completing a stage with an authored requirement names the exact
     ``los observe`` invocation — a suggestion in the receipt, never a
     second write."""
-    from learning_os.ops.handlers.learner import _observe_offer
+    from learning_os.app.handlers.learner import _observe_offer
 
     add_curriculum(mini_repo)
     assert _observe_offer("unit-demo-l01", {"id": "stage-demo"}) == {}
@@ -1680,8 +1680,8 @@ def _material_projection_fixture(
         resources,
         existing_files=()):
     """Project one synthetic study-map resource set through the real core."""
-    from learning_os.genout import build_manifest
-    from learning_os.loader import load_repo
+    from learning_os.derive.projection import build_manifest
+    from learning_os.store.loader import load_repo
 
     add_curriculum(mini_repo)
 
@@ -2025,8 +2025,8 @@ def test_stage_resource_inherits_its_unique_exact_unit_route_target(mini_repo):
     lecture-slides directory.  The stable source-id + route-title pair already
     identifies the exact route, so the projection should reuse its target.
     """
-    from learning_os.genout import build_manifest
-    from learning_os.loader import load_repo
+    from learning_os.derive.projection import build_manifest
+    from learning_os.store.loader import load_repo
 
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)
@@ -2092,8 +2092,8 @@ def test_stage_resource_inherits_its_unique_exact_unit_route_target(mini_repo):
 def test_stage_resource_does_not_inherit_an_ambiguous_or_missing_route(
         mini_repo):
     """A collection or range is not silently presented as one openable file."""
-    from learning_os.genout import build_manifest
-    from learning_os.loader import load_repo
+    from learning_os.derive.projection import build_manifest
+    from learning_os.store.loader import load_repo
 
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)
@@ -2406,7 +2406,7 @@ def test_library_view_reports_unclassified_rather_than_hiding_it(real_repo):
     enumerated — which the tree must satisfy for ALL sources, not a sample,
     because a folder tree's whole claim is that nothing is missing.
     """
-    from learning_os.genout import build_library
+    from learning_os.derive.projection import build_library
     repo = real_repo
     view = build_library(repo, "T1")
 

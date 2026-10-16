@@ -15,13 +15,13 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.app.handlers.plan import _phaseB_ledger_text, _phaseB_validate
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
 )
-from learning_os.ops.handlers.plan import _phaseB_ledger_text, _phaseB_validate
-from learning_os.revisions import dump_revisions
-from learning_os.semantics.lineage import load_ledger
+from learning_os.derive.semantics.lineage import load_ledger
+from learning_os.store.revisions import dump_revisions
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -185,7 +185,7 @@ def test_manifest_evidence_binds_its_digest(tmp_path):
                                    changed, evidence, live)
     records = load_ledger(_write_ledger_text(tmp_path, text))
     record = records["covers:route-keep"]
-    from learning_os.semantics.lineage import route_content_digest
+    from learning_os.derive.semantics.lineage import route_content_digest
 
     package_route = package["source_map"]["sources"][0]["unit_routes"][0]
     assert dict(record.derived_from.source_hashes) == {
@@ -370,7 +370,7 @@ def test_end_to_end_apply_persists_lineage_atomically(mini_repo, tmp_path):
 
 
 def test_removed_routes_withdraw_cascade(tmp_path):
-    from learning_os.semantics.lineage import dump_ledger, emit_route_covers
+    from learning_os.derive.semantics.lineage import dump_ledger, emit_route_covers
     root = _root_with_revisions(tmp_path, REVS)
     old = emit_route_covers(
         route_id="route-drop", covers=["n2"],
@@ -429,8 +429,8 @@ def _apply_in_process(mini_repo, package, key, request_id):
     from gateway_helpers import file_sha256
 
     import los
-    from learning_os.fingerprint import canonical_fingerprint
-    from learning_os.revisions import load_revisions
+    from learning_os.store.fingerprint import canonical_fingerprint
+    from learning_os.store.revisions import load_revisions
 
     revisions = load_revisions(mini_repo)
     snapshot = f"sha256:{canonical_fingerprint(mini_repo)}"
@@ -455,7 +455,7 @@ def _apply_in_process(mini_repo, package, key, request_id):
         expected_snapshot=snapshot,
     )
     with gateway_request_context(request):
-        from learning_os.ops.pipeline import run_cli
+        from learning_os.app.pipeline import run_cli
 
         outcome = run_cli(mini_repo, "module.plan.import", args)
         sys.stdout.write(outcome.stdout)
@@ -465,7 +465,7 @@ def _apply_in_process(mini_repo, package, key, request_id):
 
 def test_mid_commit_failure_rolls_back_lineage_and_canonical(
         mini_repo, tmp_path, monkeypatch, capsys):
-    import learning_os.transactions as transactions
+    import learning_os.store.transactions as transactions
 
     package, _ = _write_demo_plan(mini_repo, tmp_path)
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
@@ -499,8 +499,8 @@ def test_mid_commit_failure_rolls_back_lineage_and_canonical(
 
 
 def test_new_claim_supported_immediately_after_own_commit(tmp_path):
-    from learning_os.semantics.lineage import refresh, route_content_digest
-    from learning_os.semantics.predicates import CONTRACT_VERSION
+    from learning_os.derive.semantics.lineage import refresh, route_content_digest
+    from learning_os.derive.semantics.predicates import CONTRACT_VERSION
 
     root = _root_with_revisions(tmp_path, REVS)
     package = _package(_changed_map(), _evidence_for(
@@ -552,7 +552,7 @@ def test_touched_units_are_not_stamped(tmp_path):
 
 
 def test_package_units_are_not_stamped_but_their_nodes_are_pinned(tmp_path):
-    from learning_os.semantics.lineage import (
+    from learning_os.derive.semantics.lineage import (
         node_content_digest,
         route_content_digest,
     )
@@ -590,7 +590,7 @@ def _route_in(unit_id, rid, covers, locator="Ch 1, the only section"):
 
 
 def test_batch_import_scopes_each_claim_to_its_own_route(tmp_path):
-    from learning_os.semantics.lineage import (
+    from learning_os.derive.semantics.lineage import (
         node_content_digest,
         route_content_digest,
     )
@@ -646,9 +646,9 @@ def test_batch_import_scopes_each_claim_to_its_own_route(tmp_path):
 
 def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
 
-    from learning_os.semantics.lineage import refresh
-    from learning_os.semantics.predicates import CONTRACT_VERSION
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import refresh
+    from learning_os.derive.semantics.predicates import CONTRACT_VERSION
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     root = _root_with_revisions(tmp_path, REVS)
     (root / "records").mkdir(parents=True, exist_ok=True)
@@ -674,7 +674,7 @@ def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
     assert len(route_live) == 1
 
     def _live():
-        from learning_os.semantics.scan import _scan_manifest_files
+        from learning_os.derive.semantics.scan import _scan_manifest_files
 
         files = _scan_manifest_files(root)
         digest = live_evidence_digest(root, "manifest:book/demo.pdf", files)
@@ -697,9 +697,9 @@ def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
 def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
     import hashlib as _hashlib
 
-    from learning_os.semantics.lineage import refresh
-    from learning_os.semantics.predicates import CONTRACT_VERSION
-    from learning_os.semantics.scan import live_evidence_digest
+    from learning_os.derive.semantics.lineage import refresh
+    from learning_os.derive.semantics.predicates import CONTRACT_VERSION
+    from learning_os.derive.semantics.scan import live_evidence_digest
 
     root = _root_with_revisions(tmp_path, REVS)
     target = root / "work" / "evidence.md"
@@ -728,7 +728,7 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
     post = {"module-demo": 4, "unit-demo-l01": 2}
 
     def _live_for(key):
-        from learning_os.semantics.scan import _scan_manifest_files
+        from learning_os.derive.semantics.scan import _scan_manifest_files
 
         digest = live_evidence_digest(root, key, _scan_manifest_files(root))
         live = dict(route_live)
@@ -768,8 +768,8 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
 
 
 def test_deleted_edge_withdraw_spares_new_claim_post_apply(tmp_path):
-    from learning_os.semantics.lineage import dump_ledger, emit_route_covers, refresh
-    from learning_os.semantics.predicates import CONTRACT_VERSION
+    from learning_os.derive.semantics.lineage import dump_ledger, emit_route_covers, refresh
+    from learning_os.derive.semantics.predicates import CONTRACT_VERSION
 
     root = _root_with_revisions(tmp_path, REVS)
     old = emit_route_covers(
@@ -804,10 +804,10 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
 
     from gateway_helpers import approved_v2_cli, file_sha256
 
-    from learning_os.revisions import load_revisions
-    from learning_os.semantics.lineage import load_ledger as _load_ledger
-    from learning_os.semantics.lineage import refresh as _refresh
-    from learning_os.semantics.predicates import CONTRACT_VERSION as _CONTRACT
+    from learning_os.derive.semantics.lineage import load_ledger as _load_ledger
+    from learning_os.derive.semantics.lineage import refresh as _refresh
+    from learning_os.derive.semantics.predicates import CONTRACT_VERSION as _CONTRACT
+    from learning_os.store.revisions import load_revisions
 
     package, _ = _write_demo_plan(mini_repo, tmp_path)
     applied = approved_v2_cli(

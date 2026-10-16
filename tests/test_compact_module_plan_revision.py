@@ -11,7 +11,7 @@ from pathlib import Path
 import yaml
 from repo_builders import _audit, _compact_setup, run_los, write_yaml
 
-from learning_os.warning_baseline import collect, write_baseline
+from learning_os.store.warning_baseline import collect, write_baseline
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -101,7 +101,7 @@ def test_compact_batch_reviews_and_commits_both_units_atomically(mini_repo, tmp_
                       "--file", str(draft), "--review-report", str(review),
                       "--apply-reviewed-sha256", report["reviewed_file_sha256"])
     assert applied.returncode == 0, applied.stderr
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     repo = load_repo(mini_repo)
     routes = {route["id"]: route for source in repo.module_source_maps["module-demo"]["sources"]
               for route in source["unit_routes"]}
@@ -126,7 +126,7 @@ def test_receipt_verification_without_a_synthesis_disposition(mini_repo, tmp_pat
     then takes its expectation from the receipt instead of rejecting the evidence
     (synthetic authoring campaign D6: `invalid-evidence` on a committed module
     import), and still fails closed on a dossier the request did not write."""
-    from learning_os.material_synthesis import synthesis_destination
+    from learning_os.app.synthesis.material_synthesis import synthesis_destination
 
     _two_units(mini_repo)
     draft = tmp_path / "compact.yaml"
@@ -223,7 +223,7 @@ def test_unit_diff_covers_a_unit_without_a_study_map():
     the review summary and the acknowledgment checks built on it (synthetic
     authoring campaign D13: the preflight showed `unit_id: ""` and 0 -> 0 routes
     for a unit the package added a route to)."""
-    from learning_os.ops._plan_gate import _unit_semantic_diff
+    from learning_os.app._plan_gate import _unit_semantic_diff
 
     kept = {"id": "route-x-kept", "unit_id": "unit-demo-x", "scope": "current",
             "covers": ["knowledge-x"], "locator": "Section 1"}
@@ -305,7 +305,7 @@ def test_source_join_adds_routes_and_patches_atomically(mini_repo, tmp_path):
                       "--file", str(draft), "--review-report", str(review),
                       "--apply-reviewed-sha256", report["reviewed_file_sha256"])
     assert applied.returncode == 0, applied.stderr
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     repo = load_repo(mini_repo)
     entries = {entry["source_id"]: entry
                for entry in repo.module_source_maps["module-demo"]["sources"]}
@@ -490,7 +490,7 @@ def test_resources_append_adds_one_row_without_copying_old_ones(mini_repo, tmp_p
             / "study-map.yaml").read_bytes() == before_l02
     assert (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes() == before_map
     assert (mini_repo / "curriculum/resume.yaml").read_bytes() == before_resume
-    from learning_os.loader import load_repo
+    from learning_os.store.loader import load_repo
     effective = load_repo(mini_repo).study_maps["study-map-demo-l01"].data
     added = effective["stages"][0]["resources"][23]
     assert added["label"] == "Route route-demo-book"
@@ -624,7 +624,7 @@ def test_resources_append_refusals(mini_repo, tmp_path):
 
 def test_resources_append_apply_refuses_edited_and_stale_state(mini_repo, tmp_path):
     """Edited drafts and moved snapshots cannot ride a saved append review."""
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     _append_fixture(mini_repo)
     draft_data = _append_draft(mini_repo, [{"stage_id": "stage-demo",

@@ -29,5 +29,5 @@ cases:
     argv: [plan-template, curriculum, --title, "Scenario Template", --json]
     expect: {site: cli.plan-template.bad-template}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/plan.py:1543", reason: "response violates its own schema: the producer-owned shape validates for every fixture input"}
+  - {where: "tools/learning_os/app/handlers/plan.py:1543", reason: "response violates its own schema: the producer-owned shape validates for every fixture input"}
   - {site: cli.plan-template.bad-response, reason: fixture-inexpressible}

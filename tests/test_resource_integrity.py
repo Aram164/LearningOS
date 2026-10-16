@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 
 import pytest
 
-from learning_os.genout.materials import _safe_material_locator
+from learning_os.derive.projection.materials import _safe_material_locator
 
 _FILE_SHAPED = re.compile(r"^[^./][^/]*\.[^./]+$")
 

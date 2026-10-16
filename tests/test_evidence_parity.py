@@ -1,6 +1,6 @@
 """Gateway replay and Operations must judge committed evidence identically.
 
-Both call the shared verifier in ``learning_os.evidence``. Each tamper
+Both call the shared verifier in ``learning_os.derive.evidence``. Each tamper
 below breaks one binding of a genuine committed receipt; the Gateway
 replay and the Operations authority verdict must reject it with the same
 failure, and the untampered control must pass on both sides.
@@ -14,9 +14,9 @@ import pytest
 import yaml
 
 from learning_os.contracts.gateway import GatewayRequestContext
-from learning_os.diagnostics.resolver import collect_authority, resolve
 from learning_os.domain.failures import ReplayEvidenceError
-from learning_os.transactions import TransactionService, replay_for_request
+from learning_os.store.diagnostics.resolver import collect_authority, resolve
+from learning_os.store.transactions import TransactionService, replay_for_request
 
 
 def _commit(mini_repo: Path, key: str):

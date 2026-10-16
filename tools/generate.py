@@ -16,10 +16,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from learning_os.genout import generate_all, write_outputs  # noqa: E402
-from learning_os.learning_runtime import RuntimeInputError  # noqa: E402
-from learning_os.loader import load_repo  # noqa: E402
-from learning_os.transactions import TransactionFailure  # noqa: E402
+from learning_os.derive.learning_runtime import RuntimeInputError  # noqa: E402
+from learning_os.derive.projection import generate_all, write_outputs  # noqa: E402
+from learning_os.store.loader import load_repo  # noqa: E402
+from learning_os.store.transactions import TransactionFailure  # noqa: E402
 
 
 def build_parser() -> argparse.ArgumentParser:

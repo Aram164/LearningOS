@@ -15,18 +15,18 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from learning_os.contracts.capability_catalog import command_definitions
-from learning_os.diagnostics import tracer as diag_tracer
-from learning_os.diagnostics.context import record_debug, trace_context_from_env
-from learning_os.diagnostics.store import bind_store as _bind_diag_store
-from learning_os.domain.failures import WriteRefused
-from learning_os.ops.gateway import (
+from learning_os.app.gateway import (
     _context_from_v2,
     _dispatch,
     _read_structured_file,
     _validate_capability_envelope,
 )
-from learning_os.ops.pipeline import _close_attempt, run_gateway
+from learning_os.app.pipeline import _close_attempt, run_gateway
+from learning_os.contracts.capability_catalog import command_definitions
+from learning_os.domain.failures import WriteRefused
+from learning_os.store.diagnostics import tracer as diag_tracer
+from learning_os.store.diagnostics.context import record_debug, trace_context_from_env
+from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
 
 def _root(args: argparse.Namespace) -> Path:

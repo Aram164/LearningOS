@@ -5,11 +5,11 @@ excluded:
   - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
   - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}
 entries:
-  - {glob: "operations/transactions/transaction-*.yaml", sink: module, owner: learning_os.transactions}
-  - {glob: "operations/transactions/revisions.yaml", sink: module, owner: learning_os.transactions}
-  - {glob: "operations/transactions/idempotency.yaml", sink: module, owner: learning_os.transactions}
-  - {glob: "operations/transactions/.inflight/**", sink: module, owner: learning_os.transactions}
-  - {glob: "operations/transactions/.authority-check", sink: module, owner: learning_os.transactions}
+  - {glob: "operations/transactions/transaction-*.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/revisions.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/idempotency.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/.inflight/**", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/.authority-check", sink: module, owner: learning_os.store.transactions}
   # Corrected by Builder Task 79 (conductor decision): P4-PREP section 4
   # measures four engine writers of lineage.yaml, not the two the SPEC
   # table assumed. The SPEC table row is amended by this declaration.
@@ -20,5 +20,5 @@ entries:
   - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
   - {glob: "operations/migrations/**", sink: module, owner: migrations}
   - {glob: "<STATE>/learningos-*-touched.json", sink: module, owner: learning_os.store.session_ledger}
-  - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.ops.lock}
-  - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.ops.lock}
+  - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.app.lock}
+  - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.app.lock}

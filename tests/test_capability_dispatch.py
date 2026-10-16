@@ -16,12 +16,12 @@ from pathlib import Path
 import pytest
 from gateway_helpers import approved_v2_envelope
 
-from learning_os.contracts.capability_catalog import command_definitions
-from learning_os.domain.failures import WriteRefused
-from learning_os.ops.gateway import (
+from learning_os.app.gateway import (
     _dispatch,
     _validate_capability_envelope,
 )
+from learning_os.contracts.capability_catalog import command_definitions
+from learning_os.domain.failures import WriteRefused
 
 SCHEMA_DIR = Path("system/schema/capabilities")
 

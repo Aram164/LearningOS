@@ -43,8 +43,8 @@ from learning_os.contracts.manifest_contract import (  # noqa: E402
     check,
     shape_of,
 )
-from learning_os.genout.manifest import build_manifest  # noqa: E402
-from learning_os.loader import load_repo  # noqa: E402
+from learning_os.derive.projection.manifest import build_manifest  # noqa: E402
+from learning_os.store.loader import load_repo  # noqa: E402
 
 
 def _manifest(root: Path, enforce_contract: bool) -> dict:

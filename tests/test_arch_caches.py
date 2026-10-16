@@ -44,13 +44,13 @@ from test_material_text_cache import (
     _material_text as _load_material_text,
 )
 
-import learning_os.rules.receipt_cache as rc
-import learning_os.semantics.dossiers as dz
-import learning_os.validation_cache as vc
-from learning_os import digests
-from learning_os.derived.store import read_state
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+import learning_os.derive.semantics.dossiers as dz
+import learning_os.derive.validation.receipt_cache as rc
+import learning_os.store.validation_cache as vc
+from learning_os.derive.validation import validate
+from learning_os.store import digests
+from learning_os.store.derived.store import read_state
+from learning_os.store.loader import load_repo
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -168,12 +168,12 @@ def _no_receipt_errors(frozen_list: list) -> bool:
 def test_node_specs_cover_the_independent_inventory():
     assert vc.VALIDATION_NODE_ID == "cache.validation-static"
     assert vc.VALIDATION_NODE_VERSION == 1
-    assert "tools/learning_os/validation_cache.py" in vc.VALIDATION_PRODUCER_FILES
+    assert "tools/learning_os/store/validation_cache.py" in vc.VALIDATION_PRODUCER_FILES
     spec = vc._validation_spec()
     assert spec.id == "cache.validation-static" and spec.version == 1
     assert len(spec.direct_inputs) == len(VALIDATION_INPUTS) == 6
     assert rc.RECEIPT_NODE_VERSION == 1
-    assert "tools/learning_os/rules/receipt_cache.py" in rc.RECEIPT_PRODUCER_FILES
+    assert "tools/learning_os/derive/validation/receipt_cache.py" in rc.RECEIPT_PRODUCER_FILES
     rel = "operations/transactions/transaction-x.yaml"
     rspec = rc._receipt_spec(rel)
     assert rspec.id == f"cache.receipt:{rel}" and rspec.version == 1
@@ -182,7 +182,7 @@ def test_node_specs_cover_the_independent_inventory():
 
 
 def test_live_pin_functions_match_the_independent_inventory(mini_repo: Path):
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     assert set(vc.cache_pins(mini_repo)) == set(VALIDATION_INPUTS)
     pins = rc._current_pins(Validator(load_repo(mini_repo)))
@@ -197,8 +197,8 @@ def test_generated_findings_have_one_shared_implementation(tmp_path: Path):
     neither keeps a copy); this battery pins its codes, messages, and
     raise behavior on every shape.
     """
+    import learning_os.derive.validation.generated as validator_module
     import learning_os.domain.generated_reads as shared
-    import learning_os.rules.generated as validator_module
 
     assert validator_module.generated_reads is shared
     assert vc.generated_reads is shared
@@ -758,7 +758,7 @@ def _fresh_dossier(monkeypatch: pytest.MonkeyPatch, **kwargs):
 
 def test_dossier_spec_covers_the_independent_inventory():
     assert dz.DOSSIER_NODE_VERSION == 1
-    assert "tools/learning_os/semantics/dossiers.py" in dz.DOSSIER_PRODUCER_FILES
+    assert "tools/learning_os/derive/semantics/dossiers.py" in dz.DOSSIER_PRODUCER_FILES
     assert tuple(dz.DEPENDENCIES) == DOSSIER_INPUTS
     spec = dz._dossier_spec("unit-x")
     assert spec.id == "cache.dossier:unit-x" and spec.version == 1
@@ -1055,7 +1055,7 @@ def test_text_producer_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatc
 
 @needs_pdftotext
 def test_text_runtime_mutation_matches_fresh(tmp_path: Path, capsys, monkeypatch):
-    import learning_os.derived.engine as engine_module
+    import learning_os.store.derived.engine as engine_module
 
     mt = _load_material_text()
     spec = {"deck-a.pdf": _tiny_pdf("Runtime text")}
@@ -1190,7 +1190,7 @@ def test_text_custom_cache_stays_file_only(tmp_path: Path, capsys, monkeypatch):
 @needs_pdftotext
 def test_text_warm_run_uses_one_shared_session(tmp_path: Path, capsys, monkeypatch):
     """Warm lookups batch into one session: N materials, one identity."""
-    import learning_os.derived.engine as engine_module
+    import learning_os.store.derived.engine as engine_module
 
     mt = _load_material_text()
     spec = {"deck-a.pdf": _tiny_pdf("Session text A"),
@@ -1301,7 +1301,7 @@ def test_text_default_writes_stay_in_default_cache_and_repo(
     assert (mt.CACHE_DIR / digest / "index.json").is_file()
     assert _text_nodes(fake) != {}
     # The real repository is untouched: no text node beside this root.
-    from learning_os.derived.store import read_state as real_read_state
+    from learning_os.store.derived.store import read_state as real_read_state
 
     assert [name for name in real_read_state(REPO_ROOT)
             if name.startswith("cache.text:")] == []

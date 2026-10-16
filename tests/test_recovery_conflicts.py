@@ -22,8 +22,8 @@ import pytest
 import yaml
 
 from learning_os.contracts.gateway import GatewayRequestContext
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.transactions import (
+from learning_os.store.fingerprint import canonical_fingerprint
+from learning_os.store.transactions import (
     TransactionFailure,
     TransactionRecoveryConflict,
     TransactionService,
@@ -118,7 +118,7 @@ def test_reads_agree_on_pre_state_after_a_crash(tmp_path: Path):
 
     from repo_builders import run_los
 
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     mini = _mini_with_curriculum(tmp_path, "reads-agree")
     unit_file = mini / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
@@ -866,7 +866,7 @@ def test_live_rollback_drops_projection_when_unwind_is_ambiguous(
 
 def test_live_rollback_still_republishes_after_clean_unwind(tmp_path: Path):
     """Proven-complete unwind keeps the regenerate-on-rollback behavior."""
-    from learning_os.transactions import ProjectionFailure
+    from learning_os.store.transactions import ProjectionFailure
 
     root = tmp_path / "live-clean"
     target = root / "work" / "mod.md"
@@ -894,7 +894,7 @@ def test_live_rollback_still_republishes_after_clean_unwind(tmp_path: Path):
 def test_live_rollback_drops_projection_when_republish_fails(
         tmp_path: Path):
     """A failed re-publication cannot leave a half-written manifest behind."""
-    from learning_os.transactions import ProjectionFailure
+    from learning_os.store.transactions import ProjectionFailure
 
     root = tmp_path / "live-republish-fail"
     target = root / "work" / "mod.md"

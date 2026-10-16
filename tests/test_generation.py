@@ -14,11 +14,11 @@ from types import SimpleNamespace
 import pytest
 from stress_check import _generation_stress
 
+from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS
+from learning_os.derive.projection.projection.stages import project_stages
 from learning_os.domain.failures import TransactionFailure
-from learning_os.genout import generate_all, write_outputs
-from learning_os.genout.outputs import _KEEP_TOP_DIRS
-from learning_os.genout.projection.stages import project_stages
-from learning_os.loader import load_repo
+from learning_os.store.loader import load_repo
 
 TIMESTAMP_LINE = re.compile(r"^> Generated: .*$", re.MULTILINE)
 
@@ -43,7 +43,7 @@ def test_generation_deterministic_except_timestamps(mini_repo):
     assert set(a) == set(b)
     for name in a:
         assert strip_timestamps(a[name], name) == strip_timestamps(b[name], name), name
-    from learning_os.manifest_identity import bytes_sha256
+    from learning_os.store.manifest_identity import bytes_sha256
     for run in (a, b):
         identity = json.loads(run["manifest.identity.json"])
         assert identity["manifest_sha256"] == bytes_sha256(
@@ -198,7 +198,7 @@ def test_real_repo_generates_and_selector_views_present(real_generated):
 
 def test_coordination_view_names_module_files_not_frozen_snapshot(mini_repo):
     # #114 item 7: the exam spine comes from each module's module.yaml.
-    from learning_os.genout.coordination import build_coordination_view
+    from learning_os.derive.projection.coordination import build_coordination_view
 
     view = build_coordination_view(load_repo(mini_repo), "test")
     header = next(line for line in view.splitlines()
@@ -262,7 +262,7 @@ def test_real_manifest_reports_missing_records_and_drops_retired_rows(
     "2026-10-08", "2026-10-09", "2026-10-10",
 ])
 def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day):
-    from learning_os.genout import modules_view
+    from learning_os.derive.projection import modules_view
 
     # Freeze only this producer's clock; the loaded authored records are read
     # unchanged, and the shared generated-manifest fixture is never replaced.
@@ -467,7 +467,7 @@ def test_non_git_tree_generates_with_null_revision(mini_repo, monkeypatch):
 @pytest.mark.parametrize("status, dirty", [("", False), (" M knowledge/concepts.yaml\n", True)])
 def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, dirty):
     (tmp_path / ".git").mkdir(exist_ok=True)
-    from learning_os.genout.common import _git_state
+    from learning_os.derive.projection.common import _git_state
 
     def run(args, **kwargs):
         return subprocess.CompletedProcess(args, 0,
@@ -479,7 +479,7 @@ def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, di
 
 def test_git_state_reads_without_refreshing_index_or_leaving_lock(tmp_path):
     """A stat-only change stays clean without a read-side Git index write."""
-    from learning_os.genout.common import _git_state
+    from learning_os.derive.projection.common import _git_state
 
     subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
     subprocess.run(["git", "config", "user.name", "Test"], cwd=tmp_path, check=True)
@@ -537,7 +537,7 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, contin
     ("<!--\nOnly a multi-line comment.\n-->", ""),
 ])
 def test_note_summary_drops_html_comments(body, expected):
-    from learning_os.genout.common import _first_para, _strip_headings
+    from learning_os.derive.projection.common import _first_para, _strip_headings
 
     assert _first_para(_strip_headings(body)) == expected
 
@@ -608,8 +608,8 @@ def test_nested_export_boundaries(mini_repo):
     assert manifest["_generated"]["source_revision"] is None
 
 def test_boundary_functions_agree(mini_repo):
-    from learning_os.genout.common import _git_state, stable_generated_at
-    from learning_os.githistory import read_history
+    from learning_os.derive.projection.common import _git_state, stable_generated_at
+    from learning_os.store.session.githistory import read_history
     rev, dirty = _git_state(mini_repo)
     assert rev is None
     
@@ -682,7 +682,7 @@ def test_source_index_renders_one_useful_section_pair_as_one_line(mini_repo):
     """
     import yaml
 
-    from learning_os.genout.sources import build_source_index
+    from learning_os.derive.projection.sources import build_source_index
 
     path = mini_repo / "sources" / "sources.yaml"
     data = yaml.safe_load(path.read_text(encoding="utf-8"))

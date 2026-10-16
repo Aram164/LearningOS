@@ -20,10 +20,10 @@ import json
 import yaml
 from repo_builders import _add_material_overview, add_curriculum
 
-from learning_os.genout import generate_all
-from learning_os.genout.projection import module_lifecycle
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.projection import generate_all
+from learning_os.derive.projection.projection import module_lifecycle
+from learning_os.derive.validation import validate
+from learning_os.store.loader import load_repo
 
 
 def _academic(status: str) -> dict:

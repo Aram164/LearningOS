@@ -17,7 +17,7 @@ from datetime import date
 
 from gateway_helpers import LOS, approved_v2_cli, file_sha256
 
-from learning_os.loader import load_repo
+from learning_os.store.loader import load_repo
 
 NOTE_ID = "note-create-demo"
 NOTE_PATH = "knowledge/notes/mathematics/note-create-demo.md"

@@ -8,17 +8,17 @@ from types import SimpleNamespace
 
 import pytest
 
-from learning_os.genout import common as genout_common
-from learning_os.genout.materials import _material_location, _safe_material_locator
-from learning_os.genout.outputs import write_outputs
-from learning_os.genout.projection.records_curriculum import project_units
-from learning_os.genout.projection.stages import project_stages
-from learning_os.loader import load_repo
-from learning_os.loading.model import Repo, Unit
-from learning_os.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
-from learning_os.rules import validate
+from learning_os.derive.projection import common as genout_common
+from learning_os.derive.projection.materials import _material_location, _safe_material_locator
+from learning_os.derive.projection.outputs import write_outputs
+from learning_os.derive.projection.projection.records_curriculum import project_units
+from learning_os.derive.projection.projection.stages import project_stages
+from learning_os.derive.validation import validate
 from learning_os.store import session_ledger as plumbing_support
-from learning_os.transactions import TransactionFailure, load_revisions
+from learning_os.store.loader import load_repo
+from learning_os.store.loading.model import Repo, Unit
+from learning_os.store.loading.yamlio import LoaderError, _load_yaml, parse_frontmatter
+from learning_os.store.transactions import TransactionFailure, load_revisions
 
 
 def issue_codes(root: Path, severity: str = "E") -> list[str]:

@@ -6,7 +6,7 @@ The clock value is discarded, so the result stays deterministic.
 Runs through a test-only registered operation.
 """
 
-from learning_os import observations
+from learning_os.store import observations
 
 
 def render(payload):

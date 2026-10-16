@@ -65,8 +65,8 @@ MANIFEST_NODES = [
 
 def _install_timers() -> dict:
     """Wrap projector functions in place; returns the shared timing table."""
-    import learning_os.genout.manifest as manifest_mod
-    import learning_os.genout.outputs as outputs_mod
+    import learning_os.derive.projection.manifest as manifest_mod
+    import learning_os.derive.projection.outputs as outputs_mod
 
     table: dict[str, dict] = {}
 
@@ -107,9 +107,9 @@ def _sha_map(outputs: dict[str, str]) -> tuple[dict[str, str], dict[str, int]]:
 
 def cold_sample() -> dict:
     """One cold sample on the live repo: fresh process, in-memory only."""
-    from learning_os.genout import generate_all
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.projection import generate_all
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     started = time.perf_counter()
     repo = load_repo(ROOT)
@@ -227,8 +227,8 @@ def _yaml_mutation(rel: str, description: str,
 
 def _mutation_b4_observation(scratch: Path):
     """First learner observation appears in a workspace ledger."""
-    from learning_os.learning_runtime import collect_requirements
-    from learning_os.loader import load_repo
+    from learning_os.derive.learning_runtime import collect_requirements
+    from learning_os.store.loader import load_repo
 
     repo = load_repo(scratch)
     if not repo.workspaces:
@@ -293,8 +293,8 @@ MUTATIONS = [
 
 
 def mutation_worker() -> dict:
-    from learning_os.genout import generate_all
-    from learning_os.loader import load_repo
+    from learning_os.derive.projection import generate_all
+    from learning_os.store.loader import load_repo
 
     def ignore(directory: str, names: list[str]) -> set[str]:
         return {

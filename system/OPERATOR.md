@@ -37,7 +37,7 @@ compares the current warning signatures against
 so a total that stays level while one warning is traded for another is still a
 failure. The warnings carried today are the measured content debt of
 CRITIQUE-POINTS §1, deferred deliberately. A small named set of operational and
-clock-derived advisories (`learning_os.rules.common.BASELINE_EXEMPT_WARNINGS`;
+clock-derived advisories (`learning_os.derive.validation.common.BASELINE_EXEMPT_WARNINGS`;
 see `system/VALIDATION.md`) stays visible in every run but is exempt from this
 gate by exact code, never by heuristic. A baseline-managed signature that
 shrinks is a repair and passes; it is never restored merely to match the old

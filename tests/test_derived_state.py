@@ -16,7 +16,8 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.derived import (
+from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS, _remove_stale
+from learning_os.store.derived import (
     DERIVED_TOP_DIR,
     DerivedError,
     InputRef,
@@ -40,7 +41,6 @@ from learning_os.derived import (
     store_node,
     sweep_unreferenced_blobs,
 )
-from learning_os.genout.outputs import _KEEP_TOP_DIRS, _remove_stale
 
 PRODUCER = "p" * 64
 INPUT = InputRef(id="knowledge.notes", digest="a" * 64)
@@ -171,7 +171,7 @@ def test_digest_paths_is_order_independent_and_missing_aware(tmp_path: Path):
 
 
 def test_digest_matching_files_covers_paths_and_bytes(tmp_path: Path):
-    from learning_os.derived import digest_matching_files
+    from learning_os.store.derived import digest_matching_files
 
     first = tmp_path / "a.md"
     second = tmp_path / "sub" / "b.md"
@@ -189,7 +189,7 @@ def test_digest_matching_files_covers_paths_and_bytes(tmp_path: Path):
 
 
 def test_digest_matching_files_distinguishes_absence(tmp_path: Path):
-    from learning_os.derived import digest_matching_files
+    from learning_os.store.derived import digest_matching_files
 
     present = tmp_path / "a.md"
     present.write_text("x", encoding="utf-8")
@@ -200,7 +200,7 @@ def test_digest_matching_files_distinguishes_absence(tmp_path: Path):
 
 
 def test_digest_matching_files_rejects_escape(tmp_path: Path):
-    from learning_os.derived import digest_matching_files
+    from learning_os.store.derived import digest_matching_files
 
     with pytest.raises(DerivedError):
         digest_matching_files(tmp_path, [tmp_path / ".." / "outside.md"])
@@ -447,7 +447,7 @@ def test_digest_code_tree_without_a_tree_is_stable_and_distinct(tmp_path: Path):
 
 
 def test_runtime_digest_is_stable_and_version_sensitive(monkeypatch):
-    import learning_os.derived.identity as identity_module
+    import learning_os.store.derived.identity as identity_module
 
     assert runtime_digest() == runtime_digest()
     monkeypatch.setattr(
@@ -512,7 +512,7 @@ def test_sweep_crash_between_blob_and_state_keeps_referenced(tmp_path: Path):
 
 
 def test_commit_staging_collects_superseded_blobs(tmp_path: Path):
-    from learning_os.derived import Staging
+    from learning_os.store.derived import Staging
 
     first = store_node(tmp_path, "n", node_key="k1", value={"v": 1})
     staging = Staging(pending={"n": ("k2", {"v": 2})})
@@ -549,7 +549,7 @@ def test_sweep_skips_symlinks_and_non_blob_names(tmp_path: Path):
 # ---------------------------------------------------------------------------
 
 def test_stage_then_publish_round_trip(tmp_path: Path):
-    from learning_os.derived.store import publish_staged_states, stage_node_blob
+    from learning_os.store.derived.store import publish_staged_states, stage_node_blob
 
     first = stage_node_blob(tmp_path, "a", node_key="k1", value={"v": 1})
     second = stage_node_blob(tmp_path, "b", node_key="k2", value={"v": 2})
@@ -562,7 +562,7 @@ def test_stage_then_publish_round_trip(tmp_path: Path):
 
 
 def test_publish_merges_without_clobbering_unrelated(tmp_path: Path):
-    from learning_os.derived.store import publish_staged_states, stage_node_blob
+    from learning_os.store.derived.store import publish_staged_states, stage_node_blob
 
     store_node(tmp_path, "keep", node_key="k", value={"v": "keep"})
     staged = stage_node_blob(tmp_path, "new", node_key="k2", value={"v": "new"})
@@ -575,14 +575,14 @@ def test_publish_merges_without_clobbering_unrelated(tmp_path: Path):
 
 
 def test_publish_empty_creates_nothing(tmp_path: Path):
-    from learning_os.derived.store import publish_staged_states
+    from learning_os.store.derived.store import publish_staged_states
 
     publish_staged_states(tmp_path, {})
     assert not derived_dir(tmp_path).exists()
 
 
 def test_unpublished_stage_is_a_collectable_orphan(tmp_path: Path):
-    from learning_os.derived.store import stage_node_blob
+    from learning_os.store.derived.store import stage_node_blob
 
     stage_node_blob(tmp_path, "n", node_key="k", value={"v": 1})
     assert lookup(tmp_path, "n") is None

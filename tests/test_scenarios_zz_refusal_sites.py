@@ -26,12 +26,12 @@ from pathlib import Path
 import pytest
 from arch_audit_hook import SITE_WITNESS_ENV
 
-import learning_os.ops.handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.registry import REGISTRY
+import learning_os.app.handlers  # noqa: F401  (registration side effect)
+from learning_os.app.registry import REGISTRY
 
 ROOT = Path(__file__).resolve().parent.parent
 CASES_DIR = ROOT / "tests/scenarios/cases"
-HANDLERS_DIR = ROOT / "tools/learning_os/ops/handlers"
+HANDLERS_DIR = ROOT / "tools/learning_os/app/handlers"
 
 CHECK_ID = "A9-refusal-sites"
 FIX = "Add a scenario that triggers this site and asserts its effects."
@@ -48,7 +48,7 @@ def _serving_ops() -> dict[str, set[str]]:
     serving: dict[str, set[str]] = {}
     for operation, entry in REGISTRY.items():
         module = entry.handler.__module__
-        assert module.startswith("learning_os.ops.handlers."), module
+        assert module.startswith("learning_os.app.handlers."), module
         serving.setdefault(module.rsplit(".", 1)[1] + ".py",
                            set()).add(operation)
     importers: set[str] = set()
@@ -56,7 +56,7 @@ def _serving_ops() -> dict[str, set[str]]:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if (isinstance(node, ast.ImportFrom)
-                    and node.module == "learning_os.ops.handlers._shared"):
+                    and node.module == "learning_os.app.handlers._shared"):
                 importers.add(path.name)
     shared_ops: set[str] = set()
     for name in importers:
@@ -214,7 +214,7 @@ def _handler_calls_twin(operation: str, twin_module: str,
     """
     handler = REGISTRY[operation].handler
     module = handler.__module__
-    assert module.startswith("learning_os.ops.handlers."), module
+    assert module.startswith("learning_os.app.handlers."), module
     stem = module.rsplit(".", 1)[1]
     if (stem, handler.__name__) == (twin_module, twin_func):
         return True
@@ -245,7 +245,7 @@ def _resolve_failure(stem: str, name: object):
     cls = getattr(failures, name, None)
     if isinstance(cls, type) and issubclass(cls, failures.WriteRefused):
         return cls
-    module = sys.modules.get(f"learning_os.ops.handlers.{stem}")
+    module = sys.modules.get(f"learning_os.app.handlers.{stem}")
     cls = getattr(module, name, None) if module is not None else None
     if isinstance(cls, type) and issubclass(cls, failures.WriteRefused):
         return cls
@@ -660,11 +660,11 @@ def _prove_cli_read_failed(mini_repo: Path, tmp_path: Path,
     """
     import arch_audit_hook
 
-    import learning_os.ops.handlers.platform as platform
+    import learning_os.app.handlers.platform as platform
     import los
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.outcomes import exit_for
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
@@ -702,12 +702,12 @@ def _prove_cli_stale_snapshot(mini_repo: Path, tmp_path: Path,
     """
     import arch_audit_hook
 
-    import learning_os.fingerprint as plumbing
-    import learning_os.ops.handlers.platform as platform
+    import learning_os.app.handlers.platform as platform
+    import learning_os.store.fingerprint as plumbing
     import los
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.outcomes import exit_for
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
@@ -754,12 +754,12 @@ def _prove_stage_unknown_status_guarded(mini_repo: Path, tmp_path: Path,
     from gateway_helpers import approved_v2_envelope
 
     import los
+    from learning_os.app import pipeline as pipeline_module
+    from learning_os.app.gateway import prepare_dispatch
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.diagnostics import tracer as diag_tracer
-    from learning_os.diagnostics.store import bind_store as _bind_diag_store
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops import pipeline as pipeline_module
-    from learning_os.ops.gateway import prepare_dispatch
+    from learning_os.store.diagnostics import tracer as diag_tracer
+    from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
     site = "stage.progress.update.unknown-status"
     with pytest.raises(SystemExit) as status:
@@ -840,13 +840,13 @@ def _a9_run_gateway(root: Path, operation: str, payload: dict,
     from gateway_helpers import approved_v2_envelope
 
     import los
+    from learning_os.app import pipeline as pipeline_module
     from learning_os.contracts.capability_catalog import (
         command_definitions,
     )
     from learning_os.contracts.gateway import intent_sha256
-    from learning_os.diagnostics import tracer as diag_tracer
-    from learning_os.diagnostics.store import bind_store as _bind_diag_store
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.store.diagnostics import tracer as diag_tracer
+    from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
@@ -884,9 +884,9 @@ def _prove_guarded_enum(mini_repo: Path, tmp_path: Path, monkeypatch, *,
     from gateway_helpers import approved_v2_envelope
 
     import los
+    from learning_os.app.gateway import prepare_dispatch
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.gateway import prepare_dispatch
 
     with pytest.raises(SystemExit) as refused:
         los.build_parser().parse_args(cli_argv)
@@ -973,8 +973,8 @@ def _prove_stage_no_working_note(mini_repo: Path, tmp_path: Path,
     """
     import yaml
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("stage.note.write", "append-note", tmp_path)
     root = ctx.root
@@ -1013,8 +1013,8 @@ def _prove_feedback_wrong_source(mini_repo: Path, tmp_path: Path,
     """
     import yaml
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("source.feedback.record", "record-feedback",
                     tmp_path)
@@ -1064,8 +1064,8 @@ def _prove_unit_note_outside_repo(mini_repo: Path, tmp_path: Path,
     """
     import yaml
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("unit.note.append", "append-note", tmp_path)
     root = ctx.root
@@ -1098,8 +1098,8 @@ def _prove_ability_bad_app_confirmation(mini_repo: Path, tmp_path: Path,
     gate; the proof drives the gateway directly with a ui-channel
     envelope and asserts the witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import Unconfirmed
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("learner.ability-observation.append",
                     "append-observation", tmp_path)
@@ -1137,10 +1137,10 @@ def _prove_evidence_unreadable_frontmatter(mini_repo: Path, tmp_path: Path,
     the handler's own frontmatter re-read and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.notes as notes_handlers
+    import learning_os.app.handlers.notes as notes_handlers
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.loader import LoaderError
-    from learning_os.ops.outcomes import exit_for
+    from learning_os.store.loader import LoaderError
 
     ctx = _a9_world("note.evidence.add", "add-evidence", tmp_path)
     root = ctx.root
@@ -1264,8 +1264,8 @@ def _prove_coordination_no_file(mini_repo: Path, tmp_path: Path,
     direct tree surgery and asserts the witness line, the class and
     the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("coordination.section.revise", "revise-commitments",
                     tmp_path)
@@ -1298,9 +1298,9 @@ def _prove_coordination_read_failed(mini_repo: Path, tmp_path: Path,
     the gate; the proof injects the OSError and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.admin as admin
+    import learning_os.app.handlers.admin as admin
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("coordination.section.revise", "revise-commitments",
                     tmp_path)
@@ -1335,8 +1335,8 @@ def _prove_workspace_not_active(mini_repo: Path, tmp_path: Path,
     pauses workspace-demo by direct tree surgery and asserts the
     witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("workspace.next-action.update", "update-action",
                     tmp_path)
@@ -1373,8 +1373,8 @@ def _prove_workspace_no_next_action(mini_repo: Path, tmp_path: Path,
     proof drops the section by direct tree surgery and asserts the
     witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("workspace.next-action.update", "update-action",
                     tmp_path)
@@ -1423,7 +1423,7 @@ def _a9_run_cli(root: Path, operation: str, argv: list,
     import arch_audit_hook
 
     import los
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.app import pipeline as pipeline_module
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
@@ -1445,9 +1445,9 @@ def _prove_inbox_list_failed(mini_repo: Path, tmp_path: Path,
     the gate; the proof injects the OSError and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.capture as capture
+    import learning_os.app.handlers.capture as capture
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.inbox-list", "list-drops", tmp_path)
     root = ctx.root
@@ -1474,9 +1474,9 @@ def _prove_inbox_read_failed(mini_repo: Path, tmp_path: Path,
     the gate; the proof injects the OSError and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.capture as capture
+    import learning_os.app.handlers.capture as capture
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.inbox-read", "read-file", tmp_path)
     root = ctx.root
@@ -1505,8 +1505,8 @@ def _prove_inbox_archive_collision(mini_repo: Path, tmp_path: Path,
     the proof pre-creates the destination by direct tree surgery and
     asserts the witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("inbox.resolve", "resolve-file", tmp_path)
     root = ctx.root
@@ -1540,8 +1540,8 @@ def _prove_inbox_resolve_read_failed(mini_repo: Path, tmp_path: Path,
     """
     import os
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("inbox.resolve", "resolve-file", tmp_path)
     root = ctx.root
@@ -1609,8 +1609,8 @@ def _prove_note_destination_exists(mini_repo: Path, tmp_path: Path,
     gate; the proof pre-creates the destination by direct tree
     surgery and asserts the witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("note.create", "create-note", tmp_path)
     root = ctx.root
@@ -1645,8 +1645,8 @@ def _prove_note_symlink_path(mini_repo: Path, tmp_path: Path,
     direct tree surgery and asserts the witness line, the class and
     the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("note.create", "create-note", tmp_path)
     root = ctx.root
@@ -1683,10 +1683,10 @@ def _prove_note_unreadable_superseded(mini_repo: Path, tmp_path: Path,
     injects the loader failure and asserts the witness line, the
     class and the exit.
     """
-    import learning_os.ops.handlers.notes as notes
+    import learning_os.app.handlers.notes as notes
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.loader import LoaderError
-    from learning_os.ops.outcomes import exit_for
+    from learning_os.store.loader import LoaderError
 
     ctx = _a9_world("note.create", "create-note", tmp_path)
     root = ctx.root
@@ -1720,9 +1720,9 @@ def _prove_note_read_failed(mini_repo: Path, tmp_path: Path,
     the gate; the proof injects the OSError and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.notes as notes
+    import learning_os.app.handlers.notes as notes
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.note-read", "read-note", tmp_path)
     root = ctx.root
@@ -1750,9 +1750,9 @@ def _prove_note_read_bad_encoding(mini_repo: Path, tmp_path: Path,
     bytes and no case input reaches the gate; the proof injects the
     bad bytes and asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.notes as notes
+    import learning_os.app.handlers.notes as notes
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.note-read", "read-note", tmp_path)
     root = ctx.root
@@ -1781,9 +1781,9 @@ def _prove_search_read_failed(mini_repo: Path, tmp_path: Path,
     witness line, the class and the exit. It fires the content arm;
     the entry pins the metadata arm's identical raise.
     """
-    import learning_os.ops.handlers.notes as notes
+    import learning_os.app.handlers.notes as notes
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.search", "content", tmp_path)
     root = ctx.root
@@ -1811,9 +1811,9 @@ def _prove_search_bad_encoding(mini_repo: Path, tmp_path: Path,
     bytes and no case input reaches the gate; the proof injects the
     bad bytes and asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.notes as notes
+    import learning_os.app.handlers.notes as notes
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.search", "content", tmp_path)
     root = ctx.root
@@ -1842,8 +1842,8 @@ def _prove_goal_malformed_ledger(mini_repo: Path, tmp_path: Path,
     ledger by direct tree surgery and asserts the witness line, the
     class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.goal", "close-goal", tmp_path)
     root = ctx.root
@@ -1871,8 +1871,8 @@ def _prove_goal_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     """
     import os
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.goal", "close-goal", tmp_path)
     root = ctx.root
@@ -1902,9 +1902,9 @@ def _prove_goal_unreadable_session(mini_repo: Path, tmp_path: Path,
     the proof injects the load failure and asserts the witness line,
     the class and the exit.
     """
-    import learning_os.ops.handlers.goals as goals
+    import learning_os.app.handlers.goals as goals
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.goal", "close-goal", tmp_path)
     root = ctx.root
@@ -1937,9 +1937,9 @@ def _prove_goal_not_admitted(mini_repo: Path, tmp_path: Path,
     closes the gate by direct injection and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.goals as goals
+    import learning_os.app.handlers.goals as goals
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.goal", "close-goal", tmp_path)
     root = ctx.root
@@ -1965,10 +1965,10 @@ def _prove_observe_invalid_target(mini_repo: Path, tmp_path: Path,
     the proof injects the collection failure and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.learner as learner
+    import learning_os.app.handlers.learner as learner
+    from learning_os.app.outcomes import exit_for
+    from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
-    from learning_os.learning_runtime import RuntimeInputError
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
     root = ctx.root
@@ -1999,9 +1999,9 @@ def _prove_observe_not_admitted(mini_repo: Path, tmp_path: Path,
     closes the gate by direct injection and asserts the witness
     line, the class and the exit.
     """
-    import learning_os.ops.handlers.learner as learner
+    import learning_os.app.handlers.learner as learner
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.observe", "record-evidence", tmp_path)
     root = ctx.root
@@ -2085,8 +2085,8 @@ def _prove_dossier_unreadable_records(mini_repo: Path, tmp_path: Path,
     note by direct tree surgery and asserts the witness line, the
     class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2110,8 +2110,8 @@ def _prove_dossier_no_source_map(mini_repo: Path, tmp_path: Path,
     the map by direct tree surgery and asserts the witness line,
     the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2140,8 +2140,8 @@ def _prove_dossier_bad_knowledge_map(mini_repo: Path, tmp_path: Path,
     """
     import yaml
 
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2172,10 +2172,10 @@ def _prove_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     builder failure and asserts the witness line, the class and the
     exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
+    from learning_os.derive.semantics.dossiers import DossierError
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
-    from learning_os.semantics.dossiers import DossierError
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2202,9 +2202,9 @@ def _prove_dossier_stale_snapshot(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the mid-read change and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2236,9 +2236,9 @@ def _prove_dossier_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.dossier", "serve-l01", tmp_path)
     root = ctx.root
@@ -2265,9 +2265,9 @@ def _prove_bootstrap_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.bootstrap", "compact", tmp_path)
     root = ctx.root
@@ -2295,8 +2295,8 @@ def _prove_status_unreadable_records(mini_repo: Path, tmp_path: Path,
     tree surgery and asserts the witness line, the class and the
     exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.status", "screen", tmp_path)
     root = ctx.root
@@ -2319,10 +2319,10 @@ def _prove_intelligence_git_history(mini_repo: Path, tmp_path: Path,
     the history failure and asserts the witness line, the class and
     the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.githistory import GitHistoryError
-    from learning_os.ops.outcomes import exit_for
+    from learning_os.store.session.githistory import GitHistoryError
 
     ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
     root = ctx.root
@@ -2350,9 +2350,9 @@ def _prove_intelligence_unrankable_queue(mini_repo: Path, tmp_path: Path,
     the gate; the proof injects the rank failure and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.intelligence-scan", "scan-text", tmp_path)
     root = ctx.root
@@ -2380,9 +2380,9 @@ def _prove_resume_no_resumable_stage(mini_repo: Path, tmp_path: Path,
     case input reaches the gate; the proof injects the resolution
     failure and asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.resume", "screen", tmp_path)
     root = ctx.root
@@ -2409,10 +2409,10 @@ def _prove_resume_dossier_build_failed(mini_repo: Path, tmp_path: Path,
     proof injects the builder failure and asserts the witness line,
     the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
+    from learning_os.derive.projection.resume_dossier import ResumeDossierError
     from learning_os.domain.failures import WriteRefused
-    from learning_os.genout.resume_dossier import ResumeDossierError
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.resume", "screen", tmp_path)
     root = ctx.root
@@ -2438,9 +2438,9 @@ def _prove_runtime_mid_read_stale(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the mid-read change and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import StaleSnapshot
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.runtime-session", "propose", tmp_path)
     root = ctx.root
@@ -2469,8 +2469,8 @@ def _prove_capabilities_unreadable_schema(mini_repo: Path, tmp_path: Path,
     by direct tree surgery and asserts the witness line, the class
     and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.capabilities", "one-command", tmp_path)
     root = ctx.root
@@ -2496,9 +2496,9 @@ def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.reads as reads
+    import learning_os.app.handlers.reads as reads
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.unit-list", "filter-module", tmp_path)
     root = ctx.root
@@ -2527,8 +2527,8 @@ def _prove_ability_unreadable_records(mini_repo: Path, tmp_path: Path,
     one note by direct tree surgery and asserts the witness line,
     the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("ability.context", "horizon", tmp_path)
     root = ctx.root
@@ -2551,9 +2551,9 @@ def _prove_ability_reasons_not_parallel(mini_repo: Path, tmp_path: Path,
     input reaches the gate; the proof injects ragged rows and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.atlas as atlas
+    import learning_os.app.handlers.atlas as atlas
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("ability.context", "horizon", tmp_path)
     root = ctx.root
@@ -2583,9 +2583,9 @@ def _prove_atlas_snapshot_changed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the mid-read change and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.atlas as atlas
+    import learning_os.app.handlers.atlas as atlas
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.atlas-context", "editor-read", tmp_path)
     root = ctx.root
@@ -2636,10 +2636,10 @@ def _prove_edit_bad_stage_results(mini_repo: Path, tmp_path: Path,
     so no case input reaches the gate; the proof injects the read
     failure and asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.plan as plan
+    import learning_os.app.handlers.plan as plan
+    from learning_os.app.outcomes import exit_for
+    from learning_os.derive.learning_runtime import RuntimeInputError
     from learning_os.domain.failures import WriteRefused
-    from learning_os.learning_runtime import RuntimeInputError
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.plan-edit-context", "stage", tmp_path)
     root = ctx.root
@@ -2669,10 +2669,10 @@ def _prove_template_bad_response(mini_repo: Path, tmp_path: Path,
     validator's failure and asserts the witness line, the class and
     the exit.
     """
-    import learning_os.ops.handlers.plan as plan
+    import learning_os.app.handlers.plan as plan
+    from learning_os.app.outcomes import exit_for
     from learning_os.contracts.json_schema import ContractValidationError
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.plan-template", "yaml", tmp_path)
     root = ctx.root
@@ -2708,10 +2708,10 @@ def _prove_span_placement_mismatch(mini_repo: Path, tmp_path: Path,
     belonging use plus a flipped loaded source by direct injection
     and asserts the witness line, the class and the exit.
     """
-    import learning_os.loading.curriculum as curriculum
-    import learning_os.ops.handlers.plan as plan
+    import learning_os.app.handlers.plan as plan
+    import learning_os.store.loading.curriculum as curriculum
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("material.span", "span", tmp_path)
     root = ctx.root
@@ -2756,9 +2756,9 @@ def _prove_span_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.plan as plan
+    import learning_os.app.handlers.plan as plan
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("material.span", "span", tmp_path)
     root = ctx.root
@@ -2786,9 +2786,9 @@ def _prove_material_context_read_failed(mini_repo: Path, tmp_path: Path,
     reaches the gate; the proof injects the OSError and asserts the
     witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.plan as plan
+    import learning_os.app.handlers.plan as plan
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("material.context", "query-hit", tmp_path)
     root = ctx.root
@@ -2816,9 +2816,9 @@ def _prove_project_create_unknown_project(mini_repo: Path, tmp_path: Path,
     writer with the update capability by direct injection and
     asserts the witness line, the class and the exit.
     """
-    import learning_os.ops.handlers.platform as platform
+    import learning_os.app.handlers.platform as platform
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import NotFound
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("project.create", "create-project", tmp_path)
     root = ctx.root
@@ -2890,8 +2890,8 @@ def _prove_goal_invalid_ledger(mini_repo: Path, tmp_path: Path,
     proof plants a pre-existing invalid row by direct tree surgery
     and asserts the witness line, the class and the exit.
     """
+    from learning_os.app.outcomes import exit_for
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.outcomes import exit_for
 
     ctx = _a9_world("cli.goal", "close-goal", tmp_path)
     root = ctx.root
@@ -2927,7 +2927,7 @@ def _prove_session_unreadable_ledger(mini_repo: Path, tmp_path: Path,
     import arch_audit_hook
 
     import los
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.app import pipeline as pipeline_module
     from learning_os.store.session_ledger import _session_ledger
 
     for command in (["git", "init", "-q"],
@@ -2964,7 +2964,7 @@ def _prove_session_ownership_conflict(mini_repo: Path, tmp_path: Path,
     import arch_audit_hook
 
     import los
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.app import pipeline as pipeline_module
     from learning_os.store.session_ledger import _record_touched
 
     for command in (["git", "init", "-q"],
@@ -3008,7 +3008,7 @@ def _prove_session_head_changed(mini_repo: Path, tmp_path: Path,
     import arch_audit_hook
 
     import los
-    from learning_os.ops import pipeline as pipeline_module
+    from learning_os.app import pipeline as pipeline_module
     from learning_os.store.session_ledger import _record_touched
 
     for command in (["git", "init", "-q"],
@@ -3073,8 +3073,8 @@ def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
 
     import scenario_harness as harness
 
-    import learning_os.ops.handlers.plan as plan
-    from learning_os.semantics.lineage import LineageError
+    import learning_os.app.handlers.plan as plan
+    from learning_os.derive.semantics.lineage import LineageError
 
     operation, slug = site.rsplit(".", 1)
     if operation == "lineage.restamp":
@@ -3337,7 +3337,7 @@ def test_control_site_entry_with_where_fails(tmp_path, monkeypatch):
         "operation": "cli.inspect",
         "untriggered": [{
             "site": "cli.inspect.read-failed",
-            "where": "tools/learning_os/ops/handlers/platform.py:325",
+            "where": "tools/learning_os/app/handlers/platform.py:325",
             "reason": "os-error-only",
         }],
     }), encoding="utf-8")
@@ -3771,7 +3771,7 @@ def test_control_direct_audit_helper_emits_the_exact_line(
     """The helper plus hook write exactly the (bg) 1 line shape."""
     import arch_audit_hook
 
-    from learning_os.ops.pipeline import _audit_direct_refused
+    from learning_os.app.pipeline import _audit_direct_refused
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"
@@ -3840,7 +3840,7 @@ def test_control_pipeline_witness_adds_no_a2_entry():
             "checks"].get(test_arch_writes.RULE, [])
     recorded = {entry["signature"]: entry["count"]
                 for entry in recorded_entries}
-    rel = "tools/learning_os/ops/pipeline.py"
+    rel = "tools/learning_os/app/pipeline.py"
     for signature, count in sorted(current.items()):
         if not signature.startswith(rel + "::"):
             continue

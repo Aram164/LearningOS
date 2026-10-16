@@ -25,7 +25,7 @@ from learning_os.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
+from learning_os.store.loader import load_repo, parse_frontmatter  # noqa: E402
 
 TODAY = "2026-08-03"
 

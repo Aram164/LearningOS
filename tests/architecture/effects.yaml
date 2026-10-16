@@ -1,15 +1,15 @@
 # Effect classification for the A2 static lint (SPEC §3.2d).
 # Path glob -> effect. Only these globs; anything else is an A2-static exception.
-"tools/learning_os/transactions.py": canonical-engine
-"tools/learning_os/derived/**": cache
-"tools/learning_os/validation_cache.py": cache
-"tools/learning_os/rules/receipt_cache.py": cache
-"tools/learning_os/diagnostics/**": cache
-"tools/learning_os/genout/**": projection
+"tools/learning_os/store/transactions.py": canonical-engine
+"tools/learning_os/store/derived/**": cache
+"tools/learning_os/store/validation_cache.py": cache
+"tools/learning_os/derive/validation/receipt_cache.py": cache
+"tools/learning_os/store/diagnostics/**": cache
+"tools/learning_os/derive/projection/**": projection
 "tools/learning_os/contracts/doc_blocks.py": projection
 "tools/learning_os/ai_actions/storage.py": operational
 "tools/learning_os/backup_manifest.py": operational
 "tools/learning_os/store/session_ledger.py": operational
-"tools/learning_os/warning_baseline.py": operational
+"tools/learning_os/store/warning_baseline.py": operational
 "tools/migrations/**": migration
 "tools/*.py": tooling

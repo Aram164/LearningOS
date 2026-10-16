@@ -16,9 +16,9 @@ from typing import Any
 
 import yaml
 
-from learning_os import observations
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.contracts.manifest_contract import declared_version
+from learning_os.store import observations
 
 
 class BackupManifestError(ValueError):
@@ -420,8 +420,8 @@ def undeclared_canonical_inputs(root: Path) -> list[str]:
     instrument. A path this reports is a file the system could not be rebuilt
     without and a backup would not contain.
     """
-    from learning_os.loader import load_repo
-    from learning_os.loading import yamlio
+    from learning_os.store.loader import load_repo
+    from learning_os.store.loading import yamlio
 
     root = root.resolve()
     contract = _load_contract(root)
@@ -684,9 +684,9 @@ def verify_restored_system(
         _rebuild_materials_alias_layer(manifest, restored_materials, restored_core))
 
     try:
-        from learning_os.genout import generate_all, write_outputs
-        from learning_os.loader import load_repo
-        from learning_os.rules import validate
+        from learning_os.derive.projection import generate_all, write_outputs
+        from learning_os.derive.validation import validate
+        from learning_os.store.loader import load_repo
 
         repo = load_repo(restored_core)
         errors = [str(issue) for issue in validate(repo, online=False) if issue.severity == "E"]

@@ -25,10 +25,10 @@ from learning_os.contracts.migration_lifecycle import (  # noqa: E402
     refuse_retired_apply,
     retired_migration,
 )
-from learning_os.genout import generate_all, write_outputs  # noqa: E402
-from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
-from learning_os.rules import validate  # noqa: E402
-from learning_os.transactions import TransactionFailure, TransactionService  # noqa: E402
+from learning_os.derive.projection import generate_all, write_outputs  # noqa: E402
+from learning_os.derive.validation import validate  # noqa: E402
+from learning_os.store.loader import load_repo, parse_frontmatter  # noqa: E402
+from learning_os.store.transactions import TransactionFailure, TransactionService  # noqa: E402
 
 MIGRATION = "projects-v1"
 OLD_MODULE_ID = "module-project-bachelor-thesis"
@@ -54,7 +54,7 @@ def lock(root: Path):
     # The shared operator lock, not a second implementation of it: a
     # temp-dir lock of its own would no longer exclude the
     # repository-anchored one.
-    from learning_os.ops.lock import _operator_lock
+    from learning_os.app.lock import _operator_lock
 
     with _operator_lock(root):
         yield

@@ -8,9 +8,9 @@ import re
 import sys
 from pathlib import Path
 
-from learning_os.ops import encoders, handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.proposal import Result
-from learning_os.ops.registry import REGISTRY
+from learning_os.app import encoders, handlers  # noqa: F401  (registration side effect)
+from learning_os.app.proposal import Result
+from learning_os.app.registry import REGISTRY
 
 ROOT = Path(__file__).resolve().parent.parent
 

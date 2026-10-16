@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 from gateway_helpers import file_sha256, run_v2_capability
 
-from learning_os.fingerprint import canonical_fingerprint
+from learning_os.store.fingerprint import canonical_fingerprint
 
 SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
 
@@ -189,7 +189,7 @@ def test_guard_derivation_intercepts_every_commit_path(mini_repo: Path,
     import seal_envelope
 
     import los
-    from learning_os import transactions
+    from learning_os.store import transactions
 
     real_build_parser = los.build_parser
     real_commit = transactions.TransactionService.commit
@@ -295,9 +295,9 @@ def test_registered_guards_auto_pins_read_costs(
     import seal_envelope
     from repo_builders import material_fixture
 
-    import learning_os.fingerprint as fingerprint_module
-    import learning_os.loader as loader_module
-    from learning_os.rules.core import Validator
+    import learning_os.store.fingerprint as fingerprint_module
+    import learning_os.store.loader as loader_module
+    from learning_os.derive.validation.core import Validator
 
     material_fixture(mini_repo)
     before = canonical_fingerprint(mini_repo)
@@ -440,9 +440,9 @@ def test_public_module_plan_guards_auto_preserves_guard_derivation(
     import yaml
     from repo_builders import add_curriculum
 
-    import learning_os.fingerprint as fingerprint_module
-    import learning_os.loader as loader_module
-    from learning_os.rules.core import Validator
+    import learning_os.store.fingerprint as fingerprint_module
+    import learning_os.store.loader as loader_module
+    from learning_os.derive.validation.core import Validator
 
     add_curriculum(mini_repo)
     audit_rel = "work/active/workspace-demo/outputs/demo-coverage-audit.md"

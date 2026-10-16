@@ -89,6 +89,6 @@ cases:
     argv: [search, "", --content]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/ops/handlers/notes.py:1382", reason: "unreadable inbox: needs an OSError no step can arrange"}
+  - {where: "tools/learning_os/app/handlers/notes.py:1382", reason: "unreadable inbox: needs an OSError no step can arrange"}
   - {site: cli.search.read-failed, reason: os-error-only}
   - {site: cli.search.bad-encoding, reason: fixture-inexpressible}

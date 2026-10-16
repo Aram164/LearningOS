@@ -152,7 +152,7 @@ def test_malformed_document_is_named(tmp_path, content):
 def test_cli_and_plan_preflight_report_same_refusal(mini_repo, monkeypatch, capsys, mode, rows):
     import sys
 
-    from learning_os.ops._plan_gate import _module_plan_validation_errors
+    from learning_os.app._plan_gate import _module_plan_validation_errors
 
     path = mini_repo / wb.BASELINE_RELATIVE
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -178,7 +178,7 @@ def test_checked_in_baseline_loads_unchanged():
 
 def test_environmental_warnings_are_excluded_by_name():
     """They describe the machine, not the content, and differ per checkout."""
-    from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
+    from learning_os.derive.validation.common import ENVIRONMENTAL_WARNINGS
 
     for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS", "HYGIENE-LOCK",
                  "ANGLE-REVIEW-UNVERIFIED"):
@@ -187,7 +187,7 @@ def test_environmental_warnings_are_excluded_by_name():
 
 def test_baseline_exempt_union_is_exactly_the_two_named_sets():
     """No prefix, severity band, or path heuristic — an exact code union only."""
-    from learning_os.rules.common import (
+    from learning_os.derive.validation.common import (
         BASELINE_EXEMPT_WARNINGS,
         DYNAMIC_ADVISORY_WARNINGS,
         ENVIRONMENTAL_WARNINGS,
@@ -206,7 +206,7 @@ def test_baseline_exempt_union_is_exactly_the_two_named_sets():
 
 
 def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
-    from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
+    from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
 
     assert "TOTALLY-MADE-UP-WARNING-CODE" not in BASELINE_EXEMPT_WARNINGS
     before = Counter()
@@ -217,7 +217,7 @@ def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
 
 def test_angle_review_unverified_is_dropped_but_stale_is_managed():
     """The #86 split at the gate: only "the bytes changed" can regress."""
-    from learning_os.rules.common import Issue
+    from learning_os.derive.validation.common import Issue
 
     issues = [Issue("W", "ANGLE-REVIEW-UNVERIFIED", "evidence not on this machine", "sm.yaml"),
               Issue("W", "ANGLE-REVIEW-STALE", "review no longer matches", "sm.yaml")]
@@ -245,8 +245,8 @@ def test_hygiene_lock_is_visible_but_baseline_exempt(mini_repo):
     old = time.time() - 3600
     os.utime(lock, (old, old))
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     issues = validate(load_repo(mini_repo))
     assert any(i.code == "HYGIENE-LOCK" for i in issues), "must remain visible"
@@ -265,8 +265,8 @@ def test_inbox_stale_is_visible_but_baseline_exempt(mini_repo):
     old = time.time() - 20 * 86400
     os.utime(item, (old, old))
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     issues = validate(load_repo(mini_repo))
     assert any(i.code == "INBOX-STALE" for i in issues), "must remain visible"
@@ -293,8 +293,8 @@ def test_ws_neglect_is_visible_but_baseline_exempt(mini_repo):
     subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=mini_repo,
                    check=True, env=env)
 
-    from learning_os.loader import load_repo
-    from learning_os.rules import validate
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
 
     issues = validate(load_repo(mini_repo))
     assert any(i.code == "WS-NEGLECT" for i in issues), "must remain visible"
@@ -456,7 +456,7 @@ def test_the_recorded_baseline_still_matches_this_repository(real_issues):
 
 @pytest.mark.full_repo
 def test_no_baseline_exempt_warning_reached_the_recorded_baseline():
-    from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
+    from learning_os.derive.validation.common import BASELINE_EXEMPT_WARNINGS
 
     baseline, _ = wb.load_baseline(ROOT)
     for code, _path in baseline:

@@ -19,8 +19,7 @@ from conftest import build_mini_repo
 from gateway_helpers import approved_v2_call
 from repo_builders import rich_fixture, run_los, write_yaml
 
-from learning_os import githistory
-from learning_os.semantics import (
+from learning_os.derive.semantics import (
     LineageError,
     emit_route_covers,
     emit_scope_authority,
@@ -28,20 +27,21 @@ from learning_os.semantics import (
     restamp_claim,
     withdraw,
 )
-from learning_os.semantics.lineage import (
+from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     SCHEMA_RELATIVE,
     dump_ledger,
     from_dict,
     to_dict,
 )
-from learning_os.semantics.restamp import (
+from learning_os.derive.semantics.restamp import (
     _attribute_bundled_patch as attribute_bundled_patch,
 )
-from learning_os.semantics.restamp import (
+from learning_os.derive.semantics.restamp import (
     analyze,
     claims_list_sha256,
 )
+from learning_os.store.session import githistory
 
 
 def _admission():
@@ -359,7 +359,7 @@ def test_reviewed_apply_narrows_exactly_the_named_claim(tmp_path):
     assert confirmation["mode"] == "apply"
     assert confirmation["claim_ids"] == [claim_id]
 
-    from learning_os.semantics.lineage import load_ledger
+    from learning_os.derive.semantics.lineage import load_ledger
 
     stamped = load_ledger(root)[claim_id]
     assert dict(stamped.derived_from.revisions) == {}

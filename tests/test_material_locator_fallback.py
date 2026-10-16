@@ -27,8 +27,8 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.loader import load_repo
-from learning_os.materials_resolution import (
+from learning_os.store.loader import load_repo
+from learning_os.store.materials.resolution import (
     leading_material_locator,
     project_material_resource,
     safe_material_locator,

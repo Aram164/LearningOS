@@ -407,7 +407,7 @@ def test_score_headline_names_every_verdict_class(tmp_path):
 def test_score_handles_equals_and_contains_ops(tmp_path, monkeypatch):
     import types
 
-    from learning_os.semantics import PREDICATES
+    from learning_os.derive.semantics import PREDICATES
 
     fake = types.SimpleNamespace(
         function=lambda **inputs: "hello world")
@@ -443,7 +443,7 @@ def test_real_heldout_set_scores_end_to_end(tmp_path):
     import subprocess
     import sys
 
-    from learning_os.semantics import evaluate
+    from learning_os.derive.semantics import evaluate
 
     records = evalq.load_trials(REAL_TRIALS)
     assert len(records) == 5

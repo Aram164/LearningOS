@@ -293,7 +293,7 @@ refactor — it is maintainability debt, not urgent correctness.
 
 ## 15. Core maintainability hotspot — the loader
 
-`tools/learning_os/loader.py` is ~35 KB and a lot of Core semantics flows through
+`tools/learning_os/store/loader.py` is ~35 KB and a lot of Core semantics flows through
 it. Not automatically a problem; a loader for a filesystem-backed domain
 naturally becomes substantial. Split it only along real responsibility seams
 (curriculum / source / knowledge / project loaders) with independent

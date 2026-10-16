@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.rules.core import Validator
+from learning_os.derive.validation.core import Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTER_RELATIVE = "system/contracts/contract-register.yaml"

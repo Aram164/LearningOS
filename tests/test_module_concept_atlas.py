@@ -11,7 +11,7 @@ import json
 
 import pytest
 
-from learning_os.genout.projection.atlas import (
+from learning_os.derive.projection.projection.atlas import (
     build_module_concept_edges,
     cross_module_concepts,
 )
@@ -169,8 +169,8 @@ def test_cross_module_concepts_are_exactly_those_in_more_than_one_module():
 
 @pytest.mark.full_repo
 def test_the_live_projection_is_deterministic_and_fully_evidenced(real_repo, real_manifest):
-    from learning_os.genout.manifest import build_manifest
-    from learning_os.genout.outputs import build_backlinks
+    from learning_os.derive.projection.manifest import build_manifest
+    from learning_os.derive.projection.outputs import build_backlinks
 
     # The shared snapshot is the first build; determinism still needs a second
     # independent build with the same stamp, read back from the first.

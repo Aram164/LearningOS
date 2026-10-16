@@ -23,13 +23,13 @@ from pathlib import Path
 import pytest
 
 from learning_os.contracts.gateway import GatewayRequestContext
-from learning_os.diagnostics import conventions
-from learning_os.diagnostics.resolver import (
+from learning_os.store.diagnostics import conventions
+from learning_os.store.diagnostics.resolver import (
     AuthorityEvidence,
     collect_authority,
     resolve,
 )
-from learning_os.transactions import TransactionService
+from learning_os.store.transactions import TransactionService
 
 TESTS = Path(__file__).resolve().parent
 UI_CONTRACT = TESTS.parents[1] / "obsidian-ui" / "src" / "contracts" / "gateway-v2.ts"
@@ -253,7 +253,7 @@ def test_collector_reads_only(mini_repo: Path, tmp_path: Path):
 
 def test_manifest_covers_receipt_positions_the_live_manifest():
     """Settlement is positional: at-or-past the commit settles (JF-19)."""
-    from learning_os.diagnostics.resolver import manifest_covers_receipt
+    from learning_os.store.diagnostics.resolver import manifest_covers_receipt
 
     receipts = [
         {"id": "transaction-20260101-000001-001", "snapshot_after": "sha256:aaa"},
@@ -301,8 +301,8 @@ def test_contract_only_drift_settles_without_exact_observation():
 
 def test_contract_only_drift_receipt_needs_unchained_manifest_and_digest(
         tmp_path: Path):
-    from learning_os.diagnostics.resolver import contract_only_drift_receipt
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.diagnostics.resolver import contract_only_drift_receipt
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     recorded = f"sha256:{data_roots_fingerprint(tmp_path)}"
     receipts = [{"id": "transaction-20260101-000001-001",
@@ -322,7 +322,7 @@ def test_contract_only_drift_receipt_needs_unchained_manifest_and_digest(
 
 def test_data_roots_digest_ignores_contract_moves_but_follows_data(
         mini_repo: Path):
-    from learning_os.fingerprint import (
+    from learning_os.store.fingerprint import (
         canonical_fingerprint,
         data_roots_fingerprint,
     )
@@ -343,7 +343,7 @@ def test_data_roots_digest_ignores_contract_moves_but_follows_data(
 
 
 def _live_snapshot(root: Path) -> str:
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     return f"sha256:{canonical_fingerprint(root)}"
 
@@ -478,7 +478,7 @@ def test_shared_drift_cache_walks_the_data_roots_once(mini_repo: Path,
                                                       monkeypatch):
     """Diagnosing many operations against one authority load walks the
     authored-data roots once, not once per row (Operations lists 20)."""
-    from learning_os.diagnostics import resolver
+    from learning_os.store.diagnostics import resolver
 
     _, result = _commit_capture_v2(mini_repo, "drift-cache", "request-cache")
     contracts = mini_repo / "system/contracts/capabilities.yaml"
@@ -509,7 +509,7 @@ SCAN_REL = "knowledge/attachments/note-demo/scan.pdf"
 def _pre_exclusion_receipt(root: Path) -> dict:
     """A newest receipt as the cutover left it: a definition-1
     data-roots digest and no recorded definition."""
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     return {"id": "transaction-20260101-000001-001",
             "snapshot_after": "sha256:aaa",
@@ -521,10 +521,10 @@ def test_definition_transition_receipt_needs_old_definition_and_digest(
         mini_repo: Path):
     from repo_builders import declare_scan
 
-    from learning_os.diagnostics.resolver import (
+    from learning_os.store.diagnostics.resolver import (
         fingerprint_definition_transition_receipt,
     )
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     declare_scan(mini_repo, SCAN_REL)
     receipts = [_pre_exclusion_receipt(mini_repo)]
@@ -588,7 +588,7 @@ def _rewrite_newest_receipt_as_pre_exclusion(mini_repo: Path, receipt_path: Path
     data-roots digest and loses its recorded definition."""
     import yaml
 
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
     receipt["metadata"] = {

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.fingerprint import CANONICAL_ROOTS
+from learning_os.store.fingerprint import CANONICAL_ROOTS
 
 
 def capture_tree(root: Path) -> dict[str, str]:

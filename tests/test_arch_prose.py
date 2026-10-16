@@ -402,7 +402,7 @@ def test_negative_fixtures_are_clean():
 
 
 def test_classify_failure_is_not_flagged():
-    rel = "tools/learning_os/ops/outcomes.py"
+    rel = "tools/learning_os/app/outcomes.py"
     hits = [hit for hit in scan_file(ROOT / rel, rel)
             if "::classify::" in hit.signature]
     assert hits == [], (

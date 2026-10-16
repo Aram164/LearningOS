@@ -20,19 +20,19 @@ import pytest
 from gateway_helpers import approved_v2_envelope
 from scenario_harness import check_render_purity_error, render_violations
 
-from learning_os import observations as observations_module
 from learning_os.adapters import cli as cli_adapter
 from learning_os.adapters.cli_parser import _repository_root
+from learning_os.app import lock as plumbing
+from learning_os.app import pipeline as pipeline_module
+from learning_os.app.proposal import CommandOutput, Result, TransactionProposal
+from learning_os.app.registry import REGISTRY, register
+from learning_os.app.render import RenderPurityError, call_renderer, current_render
 from learning_os.domain.failures import (
     StaleSnapshot,
     TransactionFailure,
     WriteRefused,
 )
-from learning_os.ops import lock as plumbing
-from learning_os.ops import pipeline as pipeline_module
-from learning_os.ops.proposal import CommandOutput, Result, TransactionProposal
-from learning_os.ops.registry import REGISTRY, register
-from learning_os.ops.render import RenderPurityError, call_renderer, current_render
+from learning_os.store import observations as observations_module
 
 TEST_OP = "test-only.pipe"
 
@@ -497,8 +497,8 @@ def test_cli_proposal_runs_after_commit_then_finish(pipe, mini_repo):
 
 def _pipe_gesture(ctx, capability: str):
     """The (br) R7 handler-built context, exactly as `los observe` builds it."""
-    from learning_os import observations
     from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
+    from learning_os.store import observations
 
     snapshot = ctx.snapshot_id()
     subject = intent_sha256({
@@ -597,8 +597,8 @@ def test_cli_gesture_under_a_gateway_request_is_a_programming_error(
 def test_cli_gesture_handler_refuses_a_non_admitted_capability(
         pipe, mini_repo):
     """SPEC (br) R7: the handler refuses before any write unless admitted."""
+    from learning_os.app.admission import gesture_allowed
     from learning_os.contracts.gateway import current_gateway_request
-    from learning_os.ops.admission import gesture_allowed
 
     def handler(ctx, req):
         if not gesture_allowed(TEST_OP):
@@ -622,9 +622,9 @@ def test_cli_gesture_handler_refuses_a_non_admitted_capability(
 def test_observation_core_without_a_context_keeps_the_direct_cli_guard(
         mini_repo):
     """SPEC (br) R7: without a gesture the observe core refuses directly."""
+    from learning_os.app.context import OpContext
+    from learning_os.app.handlers.learner import observation_append
     from learning_os.contracts.gateway import current_gateway_request
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.handlers.learner import observation_append
 
     assert current_gateway_request() is None
     ctx = OpContext(
@@ -865,8 +865,8 @@ def _test_parser_factory():
 
 def _run_test_gateway(mini_repo, envelope, *, key="k1-001"):
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.diagnostics import tracer as diag_tracer
-    from learning_os.diagnostics.store import bind_store as _bind_diag_store
+    from learning_os.store.diagnostics import tracer as diag_tracer
+    from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 
     if envelope is None:
         envelope = approved_v2_envelope(
@@ -884,7 +884,7 @@ def test_gateway_refuses_malformed_payload_with_todays_message(
         pipe, mini_repo):
     """The K1 malformed-payload refusal carries the dispatch message."""
 
-    from learning_os.ops.gateway import prepare_dispatch
+    from learning_os.app.gateway import prepare_dispatch
 
     definitions = _write_gateway_wiring(mini_repo)
     pipe("command")
@@ -924,7 +924,7 @@ def test_gateway_receives_envelope_guards_in_req(pipe, mini_repo):
     """The envelope's snapshot and revisions arrive in req."""
 
     from learning_os.contracts.gateway import intent_sha256
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     _write_gateway_wiring(mini_repo)
     calls = pipe("command")
@@ -943,7 +943,7 @@ def test_gateway_receives_envelope_guards_in_req(pipe, mini_repo):
 def test_gateway_refuses_approve_in_v2_payload(pipe, mini_repo):
     """An approve key in a V2 payload is refused before validation."""
 
-    from learning_os.ops.gateway import prepare_dispatch
+    from learning_os.app.gateway import prepare_dispatch
 
     definitions = _write_gateway_wiring(mini_repo)
     pipe("command")
@@ -966,7 +966,7 @@ def test_gateway_refuses_approve_in_v2_payload(pipe, mini_repo):
 
 def test_cli_check_validates_once_with_prepared_render_data(
         pipe, mini_repo, monkeypatch):
-    from learning_os.ops import check as check_module
+    from learning_os.app import check as check_module
 
     schema_path = mini_repo / "system/schema/requests" / f"{TEST_OP}.schema.json"
     schema = json.loads(schema_path.read_text())
@@ -1076,7 +1076,7 @@ def test_cli_receipt_and_replay_survive_finish_without_receipt_fields(
 
 def test_cli_post_commit_failure_carries_actual_durable_receipt(
         pipe, mini_repo, monkeypatch):
-    from learning_os.ops import commit as commit_module
+    from learning_os.app import commit as commit_module
 
     _write_gateway_wiring(mini_repo)
 
@@ -1196,7 +1196,7 @@ def test_call_renderer_marks_and_resets(monkeypatch):
 
 def test_audit_hook_marks_render_io(tmp_path):
     """With the marker set, reads/listings/observations are logged as render."""
-    from learning_os.ops.render import _RENDER
+    from learning_os.app.render import _RENDER
 
     log = tmp_path / "audit.jsonl"
     probe = tmp_path / "probe.txt"
@@ -1654,7 +1654,7 @@ def test_control_diagnostic_audit_helper_emits_the_exact_line(
     """The helper plus hook write exactly the (ct) 1 line shape."""
     from arch_audit_hook import SITE_WITNESS_ENV
 
-    from learning_os.ops.pipeline import _audit_diagnostic_failed
+    from learning_os.app.pipeline import _audit_diagnostic_failed
 
     log = tmp_path / "audit.jsonl"
     witness = tmp_path / "sites.jsonl"

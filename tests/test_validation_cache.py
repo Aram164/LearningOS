@@ -14,13 +14,13 @@ from pathlib import Path
 import pytest
 from repo_builders import run_los
 
-import learning_os.validation_cache as vc
-from learning_os.derived.store import read_state
-from learning_os.genout import generate_all, write_outputs
-from learning_os.loader import load_repo
-from learning_os.rules import validate
-from learning_os.rules.advisories import NEGLECT_GIT_HISTORY_PREFIX
-from learning_os.rules.common import Issue
+import learning_os.store.validation_cache as vc
+from learning_os.derive.projection import generate_all, write_outputs
+from learning_os.derive.validation import validate
+from learning_os.derive.validation.advisories import NEGLECT_GIT_HISTORY_PREFIX
+from learning_os.derive.validation.common import Issue
+from learning_os.store.derived.store import read_state
+from learning_os.store.loader import load_repo
 
 CACHE = vc.CACHE_RELATIVE
 REPO_ROOT = Path(__file__).resolve().parent.parent

@@ -123,7 +123,7 @@ def build_surface(root: Path | str) -> dict:
     from learning_os.contracts.payloads import subparsers
 
     try:
-        from learning_os.ops.context import OpContext
+        from learning_os.app.context import OpContext
     except ImportError:
         OpContext = None
 

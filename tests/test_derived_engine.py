@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-import learning_os.derived.model as model_module
-from learning_os.derived import (
+import learning_os.store.derived.model as model_module
+from learning_os.store.derived import (
     DerivedError,
     NodeSpec,
     Staging,
@@ -321,7 +321,7 @@ def test_discarded_staging_leaves_the_store_empty(tmp_path: Path):
 
 
 def test_one_session_reads_the_state_index_once(tmp_path: Path, monkeypatch):
-    import learning_os.derived.engine as engine_module
+    import learning_os.store.derived.engine as engine_module
 
     producer = _producer(tmp_path)
     registry = {
@@ -423,7 +423,7 @@ def test_no_cache_other_values_still_hit(tmp_path: Path, monkeypatch):
 # ---------------------------------------------------------------------------
 
 def test_session_memoizes_identical_producer_hashes(tmp_path: Path, monkeypatch):
-    import learning_os.derived.engine as engine_module
+    import learning_os.store.derived.engine as engine_module
 
     first = _producer(tmp_path, "one.py")
     second = _producer(tmp_path, "two.py")
@@ -475,7 +475,7 @@ def test_distinct_producers_invalidate_independently(tmp_path: Path):
 
 
 def test_evaluate_many_publishes_one_index_write(tmp_path: Path, monkeypatch):
-    import learning_os.derived.store as store_module
+    import learning_os.store.derived.store as store_module
 
     producer = _producer(tmp_path)
     registry = {
@@ -520,7 +520,7 @@ def test_evaluate_many_all_hits_writes_nothing(tmp_path: Path):
 
 
 def test_evaluate_many_batch_merges_concurrent_entries(tmp_path: Path):
-    from learning_os.derived import store_node
+    from learning_os.store.derived import store_node
 
     producer = _producer(tmp_path)
 
@@ -540,7 +540,7 @@ def test_evaluate_many_batch_merges_concurrent_entries(tmp_path: Path):
 
 
 def test_evaluate_many_failure_publishes_nothing_new(tmp_path: Path):
-    from learning_os.derived import lookup
+    from learning_os.store.derived import lookup
 
     producer = _producer(tmp_path)
 

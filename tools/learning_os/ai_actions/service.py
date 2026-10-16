@@ -10,7 +10,16 @@ from typing import Any, cast
 
 import yaml
 
-from learning_os import observations
+from learning_os.app.proposal import TransactionProposal
+from learning_os.app.synthesis.material_synthesis import (
+    current_unit_material_basis,
+    inspected_material_by_route,
+    inspected_pages_by_route,
+    publication_lineage,
+    synthesis_destination,
+    validate_synthesis_page_provenance,
+    validate_unit_material_synthesis,
+)
 from learning_os.contracts.capability_catalog import (
     domain_capability_definitions,
     load_capability_catalog,
@@ -21,10 +30,12 @@ from learning_os.contracts.gateway import (
 )
 from learning_os.contracts.manifest_contract import declared_version
 from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
-from learning_os.fingerprint import source_fingerprint
-from learning_os.garden import project_garden_entries
-from learning_os.loader import load_repo
-from learning_os.material_slices import (
+from learning_os.derive.garden import project_garden_entries
+from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
+from learning_os.store import observations
+from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.materials.slices import (
     MAX_SLICE_BYTES_TOTAL,
     SLICE_BUNDLE_PREFIX,
     ContinuationError,
@@ -36,18 +47,7 @@ from learning_os.material_slices import (
     read_bundle_slice_index,
     slice_index_entry,
 )
-from learning_os.material_synthesis import (
-    current_unit_material_basis,
-    inspected_material_by_route,
-    inspected_pages_by_route,
-    publication_lineage,
-    synthesis_destination,
-    validate_synthesis_page_provenance,
-    validate_unit_material_synthesis,
-)
-from learning_os.ops.proposal import TransactionProposal
-from learning_os.semantics.lineage import LEDGER_RELATIVE
-from learning_os.transactions import (
+from learning_os.store.transactions import (
     TransactionConflict,
     TransactionFailure,
     TransactionIdempotencyConflict,
@@ -1010,7 +1010,7 @@ class AIActionService:
 
         def validation_errors() -> list:
             nonlocal validated_repo
-            from learning_os.rules import validate
+            from learning_os.derive.validation import validate
 
             validated_repo = load_repo(self.root)
             return [
@@ -1020,8 +1020,8 @@ class AIActionService:
 
         def publish(snapshot_after_id: str | None = None) -> str:
             nonlocal validated_repo
-            from learning_os.fingerprint import seed_source_fingerprint
-            from learning_os.genout import generate_all, write_outputs
+            from learning_os.derive.projection import generate_all, write_outputs
+            from learning_os.store.fingerprint import seed_source_fingerprint
 
             repo = validated_repo or load_repo(self.root)
             if snapshot_after_id is not None:
@@ -1032,7 +1032,7 @@ class AIActionService:
             return projected_snapshot
 
         def rollback_publish() -> None:
-            from learning_os.genout import generate_all, write_outputs
+            from learning_os.derive.projection import generate_all, write_outputs
 
             repo = load_repo(self.root)
             write_outputs(repo, generate_all(repo))

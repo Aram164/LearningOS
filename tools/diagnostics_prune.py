@@ -30,7 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from learning_os.diagnostics.store import (  # noqa: E402
+from learning_os.store.diagnostics.store import (  # noqa: E402
     DEFAULT_KEEP_LAST,
     prune_store,
     traces_path,
@@ -63,8 +63,8 @@ def main() -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     if args.derived_state:
-        from learning_os.derived.store import sweep_unreferenced_blobs  # noqa: E402
-        from learning_os.ops.lock import _operator_lock
+        from learning_os.app.lock import _operator_lock
+        from learning_os.store.derived.store import sweep_unreferenced_blobs  # noqa: E402
 
         # Pre-4.3 cache sidecars, retired from active use (SPEC §14 step 3).
         # Their families now live in derived-state; reclaim the files here

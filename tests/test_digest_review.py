@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 from test_compute_once import _commit_capture
 
-from learning_os import digests
-from learning_os.loader import load_repo
-from learning_os.rules import validate
+from learning_os.derive.validation import validate
+from learning_os.store import digests
+from learning_os.store.loader import load_repo
 
 
 def _receipt_errors(root: Path):
@@ -19,7 +19,7 @@ def _receipt_errors(root: Path):
 
 def _stage_receipt_producers(root: Path) -> None:
     """Copy the real receipt-node producer bytes under a mini root."""
-    import learning_os.rules.receipt_cache as rc
+    import learning_os.derive.validation.receipt_cache as rc
 
     repo_root = Path(__file__).resolve().parent.parent
     for rel in dict.fromkeys(rc.RECEIPT_PRODUCER_FILES):
@@ -49,7 +49,7 @@ def test_preserved_mtime_receipt_tampering_cannot_reuse_verdict(mini_repo: Path)
 
 
 def test_receipt_rewrite_after_parse_cannot_bless_new_bytes(mini_repo: Path, monkeypatch):
-    import learning_os.rules.receipt_cache as cache
+    import learning_os.derive.validation.receipt_cache as cache
 
     _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "parse-race", "request-parse-race")
@@ -70,8 +70,8 @@ def test_receipt_rewrite_after_parse_cannot_bless_new_bytes(mini_repo: Path, mon
 
 
 def test_changed_sidecar_verdict_is_discarded(mini_repo: Path):
-    import learning_os.rules.receipt_cache as cache
-    from learning_os.derived.store import read_state
+    import learning_os.derive.validation.receipt_cache as cache
+    from learning_os.store.derived.store import read_state
 
     _stage_receipt_producers(mini_repo)
     result = _commit_capture(mini_repo, "cache-corrupt", "request-cache-corrupt")
@@ -91,7 +91,7 @@ def test_changed_sidecar_verdict_is_discarded(mini_repo: Path):
 
 
 def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "schema-race", "request-schema-race")
@@ -109,7 +109,7 @@ def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
 
 
 def test_receipt_cache_invalidates_changed_external_schema_ref(mini_repo: Path):
-    from learning_os.rules.core import Validator
+    from learning_os.derive.validation.core import Validator
 
     _stage_receipt_producers(mini_repo)
     _commit_capture(mini_repo, "schema-ref", "request-schema-ref")
@@ -132,7 +132,7 @@ def test_receipt_cache_invalidates_changed_external_schema_ref(mini_repo: Path):
 
 
 def test_warm_boundary_digest_refuses_retarget_to_external_hardlink(tmp_path: Path):
-    from learning_os.derived.identity import digest_file
+    from learning_os.store.derived.identity import digest_file
 
     root = tmp_path / "root"
     root.mkdir()
@@ -155,8 +155,8 @@ def test_warm_boundary_digest_refuses_retarget_to_external_hardlink(tmp_path: Pa
 
 @pytest.mark.parametrize("definition", [True, False, 1.0, 2.0, 9])
 def test_unsupported_definition_cannot_settle_contract_drift(mini_repo: Path, definition):
-    from learning_os.diagnostics.resolver import contract_only_drift_receipt
-    from learning_os.fingerprint import data_roots_fingerprint
+    from learning_os.store.diagnostics.resolver import contract_only_drift_receipt
+    from learning_os.store.fingerprint import data_roots_fingerprint
 
     receipt = {"id": "transaction-20260101-000001-001", "snapshot_after": "sha256:old",
                "metadata": {"fingerprint_definition": definition,
@@ -166,7 +166,7 @@ def test_unsupported_definition_cannot_settle_contract_drift(mini_repo: Path, de
 
 def _stage_validation_producers(root: Path) -> None:
     """Copy the real validation-node producer bytes under a mini root."""
-    import learning_os.validation_cache as vc
+    import learning_os.store.validation_cache as vc
 
     repo_root = Path(__file__).resolve().parent.parent
     for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
@@ -181,7 +181,7 @@ def _stage_validation_producers(root: Path) -> None:
 ])
 def test_nested_text_cache_input_edit_misses_status(
         mini_repo: Path, suffix, initial, changed, code):
-    import learning_os.validation_cache as cache
+    import learning_os.store.validation_cache as cache
 
     _stage_validation_producers(mini_repo)
     target = mini_repo / f"generated/text-cache/demo/pages/unexpected.{suffix}"
@@ -195,7 +195,7 @@ def test_nested_text_cache_input_edit_misses_status(
 
 
 def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
-    import learning_os.validation_cache as cache
+    import learning_os.store.validation_cache as cache
 
     _stage_validation_producers(mini_repo)
     directory = mini_repo / "generated/text-cache/demo"
@@ -212,7 +212,7 @@ def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
 
 def test_non_utf8_attachment_declaration_is_reported_and_excludes_nothing(mini_repo: Path):
     from learning_os.contracts.local_attachments import check, local_paths
-    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.store.fingerprint import canonical_fingerprint
 
     declaration = mini_repo / "system/contracts/local-attachments.yaml"
     declaration.write_bytes(b"\xffnot UTF-8")

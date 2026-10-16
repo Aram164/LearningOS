@@ -12,7 +12,7 @@ import json
 
 import pytest
 
-from learning_os.semantics import (
+from learning_os.derive.semantics import (
     DossierError,
     build_dossier,
     cache_path,
@@ -21,7 +21,7 @@ from learning_os.semantics import (
     load_dossier,
     store_dossier,
 )
-from learning_os.semantics.dossiers import DOSSIER_PRODUCER_FILES
+from learning_os.derive.semantics.dossiers import DOSSIER_PRODUCER_FILES
 
 VERSIONS = {"semantic-contract": "2", "operator-contract": "operator-v1"}
 
@@ -185,7 +185,7 @@ def test_store_persists_derived_node_when_producers_present(tmp_path):
     above) the file alone serves, exactly as before migration."""
     from pathlib import Path
 
-    from learning_os.derived.store import read_state
+    from learning_os.store.derived.store import read_state
 
     repo_root = Path(__file__).resolve().parent.parent
     for rel in dict.fromkeys(DOSSIER_PRODUCER_FILES):

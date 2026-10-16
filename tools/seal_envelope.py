@@ -21,15 +21,15 @@ import secrets
 import sys
 from pathlib import Path
 
+from learning_os.app import handlers  # noqa: F401  (registration side effect)
+from learning_os.app.registry import REGISTRY
 from learning_os.contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
     GATEWAY_SCHEMA_VERSION,
     intent_sha256,
 )
-from learning_os.fingerprint import canonical_fingerprint
-from learning_os.ops import handlers  # noqa: F401  (registration side effect)
-from learning_os.ops.registry import REGISTRY
+from learning_os.store.fingerprint import canonical_fingerprint
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
 REQUEST_ID_MAX = 128
@@ -98,6 +98,8 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     envelope passes through every gateway guard unchanged.
     """
     import los  # noqa: E402  (imports the parser, not a command)
+    from learning_os.app.gateway import _dispatch
+    from learning_os.app.lock import _operator_lock
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -105,10 +107,8 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         verified_gateway_snapshot,
     )
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.gateway import _dispatch
-    from learning_os.ops.lock import _operator_lock
-    from learning_os.revisions import load_revisions
-    from learning_os.transactions import transaction_artifacts
+    from learning_os.store.revisions import load_revisions
+    from learning_os.store.transactions import transaction_artifacts
 
     definitions = command_definitions(root)
     if capability not in definitions:
@@ -126,11 +126,11 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
 
     # Intercept at the class, not at one module's import of it: a handler
     # may commit through ``support._write_transaction`` or through its own
-    # ``from learning_os.transactions import TransactionService`` (the AI
+    # ``from learning_os.store.transactions import TransactionService`` (the AI
     # delivery path does). Patching one module's name would let the second
     # kind reach the real ``commit`` — with this dry run's placeholder
     # approval — so the boundary is the method every instance shares.
-    from learning_os import transactions as _transactions
+    from learning_os.store import transactions as _transactions
 
     real_commit = _transactions.TransactionService.commit
 
@@ -226,6 +226,10 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     fails, so the reviewer reads the refusal. No transaction interception:
     a registered handler returns its proposal rather than committing.
     """
+    from learning_os.app.check import check_proposal
+    from learning_os.app.context import OpContext
+    from learning_os.app.gateway import prepare_dispatch
+    from learning_os.app.lock import _operator_lock
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.gateway import (
         GatewayRequestContext,
@@ -234,10 +238,6 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
     )
     from learning_os.contracts.requests import request_schema
     from learning_os.domain.failures import WriteRefused
-    from learning_os.ops.check import check_proposal
-    from learning_os.ops.context import OpContext
-    from learning_os.ops.gateway import prepare_dispatch
-    from learning_os.ops.lock import _operator_lock
 
     if parser_factory is None:
         import los  # noqa: E402  (imports the parser, not a command)

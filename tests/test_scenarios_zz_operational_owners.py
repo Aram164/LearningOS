@@ -378,17 +378,17 @@ def test_rogue_writer_is_a_violation(tmp_path):
 
 def test_undeclared_destination_fails_closed(tmp_path):
     sigs = _signatures(tmp_path, [_write_record(
-        "/w/operations/new-state.yaml", "learning_os.transactions")])
+        "/w/operations/new-state.yaml", "learning_os.store.transactions")])
     assert sigs == {"operations/new-state.yaml::undeclared"}
 
 
 def test_module_owner_and_temp_sibling_pass(tmp_path):
     assert _signatures(tmp_path, [
         _write_record("/w/operations/transactions/revisions.yaml",
-                      "learning_os.transactions.engine"),
+                      "learning_os.store.transactions.engine"),
         _write_record(
             "/w/operations/transactions/.revisions.yaml.tmp-123",
-            "learning_os.transactions.engine"),
+            "learning_os.store.transactions.engine"),
     ]) == set()
 
 
@@ -397,12 +397,12 @@ def test_engine_apply_needs_declared_capability_receipt(tmp_path):
     good = {"capability": "lineage.restamp",
             "writes": [{"path": "operations/transactions/lineage.yaml"}]}
     assert _signatures(tmp_path, [
-        _write_record(path, "learning_os.transactions", phase="apply"),
+        _write_record(path, "learning_os.store.transactions", phase="apply"),
     ], receipts=good) == set()
     wrong = {"capability": "goal.decision.record",
              "writes": [{"path": "operations/transactions/lineage.yaml"}]}
     sigs = _signatures(tmp_path, [
-        _write_record(path, "learning_os.transactions", phase="apply"),
+        _write_record(path, "learning_os.store.transactions", phase="apply"),
     ], receipts=wrong)
     assert len(sigs) == 1 and "lineage.yaml" in next(iter(sigs))
 
@@ -439,7 +439,7 @@ def test_corrupt_log_fails_closed(tmp_path):
 
 def test_shadow_world_writes_do_not_become_durable_owners(tmp_path):
     assert _signatures(tmp_path, [_write_record(
-        "/disposable/shadow/operations/new-state.yaml", "learning_os.ops.check")]) == set()
+        "/disposable/shadow/operations/new-state.yaml", "learning_os.app.check")]) == set()
 
 
 def test_truncate_and_copy_destinations_are_checked(tmp_path):
@@ -460,12 +460,12 @@ def test_preexisting_receipt_cannot_claim_an_engine_write(tmp_path):
     root = tmp_path / "world"
     root.mkdir()
     log = _write_log(tmp_path, "baseline", [_write_record(
-        "/w/operations/transactions/lineage.yaml", "learning_os.transactions", phase="apply")], root)
+        "/w/operations/transactions/lineage.yaml", "learning_os.store.transactions", phase="apply")], root)
     assert _violations_in_log(log, _load_owners())
 
 
 def test_unresolved_write_fails_closed(tmp_path):
-    assert _signatures(tmp_path, [{"event": "open", "paths": [9], "mode": "w", "writer": "learning_os.transactions"}])
+    assert _signatures(tmp_path, [{"event": "open", "paths": [9], "mode": "w", "writer": "learning_os.store.transactions"}])
 
 
 def test_child_captures_only_new_receipt_bytes(tmp_path):
@@ -543,7 +543,7 @@ def test_unbound_world_cannot_credit_an_unresolved_descriptor(tmp_path):
     root = tmp_path / "world"
     root.mkdir()
     log = _write_log(tmp_path, "unbound", [{"event": "open", "paths": [9],
-                     "resolved_paths": [None], "mode": "w", "writer": "learning_os.transactions"}], root)
+                     "resolved_paths": [None], "mode": "w", "writer": "learning_os.store.transactions"}], root)
     rows = [json.loads(line) for line in log.read_text().splitlines()]
     rows[1]["root"] = None
     rows[1]["argv"] = ["-c"]

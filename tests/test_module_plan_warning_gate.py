@@ -7,7 +7,7 @@ unsatisfiable, because the 535 baselined warnings of CRITIQUE-POINTS §1 live in
 the source maps. One module's plan import failed on another module's deferred
 locators, and the failure was indistinguishable from a real defect in the plan.
 
-The policy the rest of the repository runs on is in `learning_os.warning_baseline`
+The policy the rest of the repository runs on is in `learning_os.store.warning_baseline`
 and in CLAUDE.md hard rule 9: zero errors, warnings stay visible and never
 block, no NEW warning signature and no existing signature that grows. These
 tests pin that the preflight now enforces exactly that — still refusing a plan
@@ -19,8 +19,8 @@ from __future__ import annotations
 import yaml
 from repo_builders import _add_material_overview, add_curriculum
 
-from learning_os.ops._plan_gate import _module_plan_validation_errors
-from learning_os.warning_baseline import collect, write_baseline
+from learning_os.app._plan_gate import _module_plan_validation_errors
+from learning_os.store.warning_baseline import collect, write_baseline
 
 SOURCE_MAP = "curriculum/modules/module-demo/source-map.yaml"
 

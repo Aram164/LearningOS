@@ -14,16 +14,15 @@ from pathlib import Path
 
 import pytest
 
-import learning_os.ops.handlers.notes as notes_module
-import learning_os.search.index as search_index_module
-from learning_os.derived import DerivedError, Evaluation, NodeSpec
-from learning_os.ops.encoders import dumps_compact
-from learning_os.ops.handlers.notes import (
+import learning_os.app.handlers.notes as notes_module
+import learning_os.derive.search.index as search_index_module
+from learning_os.app.encoders import dumps_compact
+from learning_os.app.handlers.notes import (
     _exhaustive_content_search,
     _indexed_content_search,
     _note_collection,
 )
-from learning_os.search.index import (
+from learning_os.derive.search.index import (
     NoteBlob,
     build_postings,
     build_registry,
@@ -31,7 +30,7 @@ from learning_os.search.index import (
     postings_spec,
     segment_spec,
 )
-from learning_os.search.model import (
+from learning_os.derive.search.model import (
     INDEX_FORMAT_VERSION,
     POSTINGS_NODE_ID,
     POSTINGS_PRODUCER_FILES,
@@ -40,8 +39,9 @@ from learning_os.search.model import (
     valid_postings,
     valid_segment,
 )
-from learning_os.search.normalize import is_ascii, note_grams, term_grams
-from learning_os.search.query import candidates
+from learning_os.derive.search.normalize import is_ascii, note_grams, term_grams
+from learning_os.derive.search.query import candidates
+from learning_os.store.derived import DerivedError, Evaluation, NodeSpec
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -137,7 +137,7 @@ def test_valid_segment_rejects_wrong_shapes():
 # ---------------------------------------------------------------------------
 
 def _postings_ctx(*segments, root=None):
-    from learning_os.derived import BuildContext
+    from learning_os.store.derived import BuildContext
 
     root = root or Path("/nonexistent")
     dependencies = {
@@ -178,7 +178,7 @@ def test_build_postings_is_order_independent():
 
 
 def test_build_postings_rejects_misshapen_segments(tmp_path: Path):
-    from learning_os.derived import BuildContext
+    from learning_os.store.derived import BuildContext
 
     ctx = BuildContext(
         root=tmp_path,
@@ -494,7 +494,7 @@ def test_changed_note_id_rebuilds_one_segment(tmp_path: Path, monkeypatch):
 
 
 def test_indexer_version_bump_rebuilds_everything(tmp_path: Path, monkeypatch):
-    import learning_os.search.model as search_model
+    import learning_os.derive.search.model as search_model
 
     counts = _warm_corpus(tmp_path, monkeypatch)
     # A coherent bump moves builders and validators together.
@@ -590,7 +590,7 @@ def test_wrongly_shaped_postings_self_heals(tmp_path: Path):
     import hashlib
     import json
 
-    from learning_os.derived import canonical_bytes, read_state
+    from learning_os.store.derived import canonical_bytes, read_state
 
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
@@ -617,7 +617,7 @@ def test_wrongly_shaped_segment_self_heals(tmp_path: Path):
     import hashlib
     import json
 
-    from learning_os.derived import canonical_bytes, read_state
+    from learning_os.store.derived import canonical_bytes, read_state
 
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
@@ -647,8 +647,8 @@ def test_wrongly_shaped_segment_self_heals(tmp_path: Path):
 
 def _run_search(root: Path, query: str, *,
                 offset=0, limit=100, expected_snapshot=None, type_="note"):
+    from learning_os.app.context import OpContext
     from learning_os.domain.failures import StaleSnapshot, WriteRefused
-    from learning_os.ops.context import OpContext
 
     ctx = OpContext(root=root, operation="cli.search", channel="cli",
                     invocation="query", gateway=None)

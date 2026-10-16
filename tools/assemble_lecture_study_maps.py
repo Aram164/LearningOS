@@ -38,9 +38,9 @@ from learning_os.contracts import (
     require_current_template,
     validate_contract,
 )
-from learning_os.genout import build_backlinks, build_manifest
-from learning_os.loader import load_repo
-from learning_os.material_refs import compact_map
+from learning_os.derive.projection import build_backlinks, build_manifest
+from learning_os.domain.material_refs import compact_map
+from learning_os.store.loader import load_repo
 
 REPO = Path(__file__).resolve().parents[1]
 

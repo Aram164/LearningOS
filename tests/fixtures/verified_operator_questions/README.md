@@ -13,7 +13,7 @@ split: example                      # example | heldout
 class: scope-authority               # one of the six classes below
 question: "..."                      # the operator question, in words
 procedure:
-  predicate: ScopeAuthority          # registered in tools/learning_os/semantics/
+  predicate: ScopeAuthority          # registered in tools/learning_os/derive/semantics/
   inputs: {...}                      # predicate kwargs
 expected:
   equals: ...                        # exactly one of: equals, is_true, is_false, contains
