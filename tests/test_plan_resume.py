@@ -220,9 +220,14 @@ def test_canonical_drift_fails_verification_without_new_mutation(mini_repo, tmp_
         "state: committed-but-verification-failed"
     assert "never permission to issue a new mutation" in verify.stderr
     before = sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    # Re-running the same reviewed apply is an exact replay (PLAN-CREATION-SOP
+    # Gate 5): it answers with the original commit and issues no new mutation,
+    # although a later revision has since moved the plan on.
     replayed = _apply(mini_repo, revision_file, report, report_file)
-    assert replayed.returncode == 2
-    assert "changed since its recorded transaction" in replayed.stdout
+    assert replayed.returncode == 0, replayed.stderr
+    response = json.loads(replayed.stdout)
+    assert response["replayed"] is True
+    assert response["transaction_id"] == json.loads(applied.stdout)["transaction_id"]
     after = sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
     assert after == before
     assert _angle(mini_repo) == "Drift angle."
