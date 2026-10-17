@@ -8,15 +8,25 @@ from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import file_sha256, request_artifact_id
+from gateway_helpers import approved_v2_envelope, file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
+from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.pipeline import _classify_failure, _projection_error
 from learning_os.domain.failures import StaleSnapshot
-from learning_os.store.contracts.gateway import GatewayRequestContext, intent_sha256
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    gateway_request_context,
+    intent_sha256,
+)
 from learning_os.store.fingerprint import canonical_fingerprint
-from learning_os.store.session_ledger import session_ledger as _session_ledger
+from learning_os.store.session_ledger import (
+    load_session_ledger as _load_session_ledger,
+)
+from learning_os.store.session_ledger import (
+    session_ledger as _session_ledger,
+)
 from learning_os.store.transactions import (
     ProjectionFailure,
     TransactionFailure,
@@ -1619,3 +1629,199 @@ def test_seal_envelope_helper_mints_a_fresh_bounded_request_id(repo_root, mini_r
     applied = _run(repo_root, mini_repo, tmp_path / "apply.json", envelopes[1])
     assert applied.returncode == 0, applied.stdout
     assert json.loads(applied.stdout)["request_id"] == second
+
+
+def test_replay_succeeds_when_later_write_in_same_session_updated_file(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Defect A (replay): an exact replay of an already-committed envelope
+    succeeds when a later gateway write in the same open session changed or
+    moved a path the original receipt wrote. The session ledger proves the
+    live bytes and the session ledger row for that file still equals the
+    later write's post-state.
+    """
+    body1 = tmp_path / "body-a1-1.md"
+    body1.write_text("Hello note initial\n", encoding="utf-8")
+    note_rel = "knowledge/notes/mathematics/note-replay-a1.md"
+    e1 = approved_v2_envelope(
+        mini_repo,
+        capability="note.create",
+        payload={
+            "note": {"id": "note-replay-a1", "title": "Replay Note A1", "path": note_rel},
+            "body_file": str(body1),
+            "body_file_sha256": file_sha256(body1),
+        },
+        artifact_ids=["note-replay-a1"],
+        idempotency_key="note-a1-create",
+    )
+    res1 = _run(repo_root, mini_repo, tmp_path / "a1-req1.json", e1)
+    assert res1.returncode == 0, res1.stderr or res1.stdout
+    resp1 = json.loads(res1.stdout)
+    assert resp1["ok"] is True
+    assert resp1["replayed"] is False
+
+    body2 = tmp_path / "body-a1-2.md"
+    body2.write_text(
+        "---\n"
+        "id: note-replay-a1\n"
+        "type: note\n"
+        "title: Replay Note A1 Revised\n"
+        "created: 2026-10-17\n"
+        "role: synthesis\n"
+        "---\n\n"
+        "Hello note revised\n",
+        encoding="utf-8",
+    )
+    e2 = approved_v2_envelope(
+        mini_repo,
+        capability="note.revise",
+        payload={
+            "note_id": "note-replay-a1",
+            "file": str(body2),
+            "file_sha256": file_sha256(body2),
+        },
+        artifact_ids=["note-replay-a1"],
+        idempotency_key="note-a1-revise",
+    )
+    res2 = _run(repo_root, mini_repo, tmp_path / "a1-req2.json", e2)
+    assert res2.returncode == 0, res2.stderr or res2.stdout
+    assert json.loads(res2.stdout)["ok"] is True
+
+    ledger_after_e2 = _load_session_ledger(mini_repo)
+    row_e2 = ledger_after_e2["paths"][note_rel]
+
+    replay = _run(repo_root, mini_repo, tmp_path / "a1-replay.json", e1, replay_only=True)
+    assert replay.returncode == 0, replay.stderr or replay.stdout
+    resp_replay = json.loads(replay.stdout)
+    assert resp_replay["ok"] is True
+    assert resp_replay["replayed"] is True
+    assert resp_replay["transaction_id"] == resp1["transaction_id"]
+
+    ledger_after_replay = _load_session_ledger(mini_repo)
+    assert ledger_after_replay["paths"][note_rel] == row_e2
+
+
+def test_replay_succeeds_after_session_end_commit_message_with_later_write(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Defect A (replay): exact replay succeeds after session-end --commit-message
+    already committed the receipt to Git HEAD, even if later transactions
+    changed its paths.
+    """
+    _git_init(mini_repo)
+    body1 = tmp_path / "body-a2-1.md"
+    body1.write_text("Hello note initial A2\n", encoding="utf-8")
+    note_rel = "knowledge/notes/mathematics/note-replay-a2.md"
+    e1 = approved_v2_envelope(
+        mini_repo,
+        capability="note.create",
+        payload={
+            "note": {"id": "note-replay-a2", "title": "Replay Note A2", "path": note_rel},
+            "body_file": str(body1),
+            "body_file_sha256": file_sha256(body1),
+        },
+        artifact_ids=["note-replay-a2"],
+        idempotency_key="note-a2-create",
+    )
+    res1 = _run(repo_root, mini_repo, tmp_path / "a2-req1.json", e1)
+    assert res1.returncode == 0, res1.stderr or res1.stdout
+    resp1 = json.loads(res1.stdout)
+    assert resp1["ok"] is True
+
+    body2 = tmp_path / "body-a2-2.md"
+    body2.write_text(
+        "---\n"
+        "id: note-replay-a2\n"
+        "type: note\n"
+        "title: Replay Note A2 Revised\n"
+        "created: 2026-10-17\n"
+        "role: synthesis\n"
+        "---\n\n"
+        "Hello note revised A2\n",
+        encoding="utf-8",
+    )
+    e2 = approved_v2_envelope(
+        mini_repo,
+        capability="note.revise",
+        payload={
+            "note_id": "note-replay-a2",
+            "file": str(body2),
+            "file_sha256": file_sha256(body2),
+        },
+        artifact_ids=["note-replay-a2"],
+        idempotency_key="note-a2-revise",
+    )
+    res2 = _run(repo_root, mini_repo, tmp_path / "a2-req2.json", e2)
+    assert res2.returncode == 0, res2.stderr or res2.stdout
+
+    ended = subprocess.run(
+        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo),
+         "session-end", "--commit-message", "session committed after E2"],
+        cwd=repo_root, text=True, capture_output=True,
+    )
+    assert ended.returncode == 0, ended.stderr or ended.stdout
+
+    replay = _run(repo_root, mini_repo, tmp_path / "a2-replay.json", e1, replay_only=True)
+    assert replay.returncode == 0, replay.stderr or replay.stdout
+    resp_replay = json.loads(replay.stdout)
+    assert resp_replay["ok"] is True
+    assert resp_replay["replayed"] is True
+    assert resp_replay["transaction_id"] == resp1["transaction_id"]
+
+
+def test_replay_succeeds_after_session_end_close_released_receipt(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Defect A (replay): exact replay succeeds after session-end --close
+    released the session. The released record names E1's receipt path and no
+    session ledger file is recreated.
+    """
+    e1, resp1, _ = _committed(repo_root, mini_repo, tmp_path, "capture-a3-close-001")
+    receipt_path = resp1["receipt_path"]
+
+    ended = subprocess.run(
+        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo),
+         "session-end", "--close"],
+        cwd=repo_root, text=True, capture_output=True,
+    )
+    assert ended.returncode == 0, ended.stderr or ended.stdout
+
+    from learning_os.store.session_ledger import released_receipts_path as _released_receipts_path
+    rel_path = _released_receipts_path(mini_repo)
+    assert rel_path.is_file()
+    released_data = json.loads(rel_path.read_text(encoding="utf-8"))
+    assert receipt_path in released_data["receipts"]
+
+    replay = _run(repo_root, mini_repo, tmp_path / "a3-replay.json", e1, replay_only=True)
+    assert replay.returncode == 0, replay.stderr or replay.stdout
+    resp_replay = json.loads(replay.stdout)
+    assert resp_replay["ok"] is True
+    assert resp_replay["replayed"] is True
+    assert resp_replay["transaction_id"] == resp1["transaction_id"]
+    assert not _session_ledger(mini_repo).is_file()
+
+
+def test_prepare_review_envelope_seals_active_gateway_channel_or_operator():
+    """Defect B (envelope channel): prepare_review_envelope seals the active
+    gateway request's channel, else 'operator' (DEFAULT_SESSION_CHANNEL),
+    instead of the hardcoded 'codex'.
+    """
+    outside = prepare_review_envelope(
+        "note.revise", {"test": True}, "sha256:" + "0" * 64, {},
+    )
+    assert outside["channel"] == "operator"
+
+    context = GatewayRequestContext(
+        request_id="request-b1-ui-context",
+        idempotency_key="key-b1-ui-context",
+        capability="plan.template",
+        channel="ui",
+        intent_sha256="sha256:" + "1" * 64,
+        approval_kind="direct-user-gesture",
+        approval_subject_sha256="sha256:" + "1" * 64,
+    )
+    with gateway_request_context(context):
+        inside = prepare_review_envelope(
+            "note.revise", {"test": True}, "sha256:" + "0" * 64, {},
+        )
+        assert inside["channel"] == "ui"

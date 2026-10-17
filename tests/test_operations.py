@@ -269,3 +269,51 @@ def test_reused_request_id_names_every_distinct_request(tmp_path: Path):
     assert second["transaction_id"] in blob, blob
     assert any("reused across 2 idempotency keys" in reason
                for reason in detail["diagnosis"]["reasons"]), blob
+
+
+def test_reused_request_id_stale_first_attempt_and_committed_retry(tmp_path: Path):
+    """Defect D (operations): when one request_id spans multiple idempotency keys,
+    describe_operation diagnoses the key whose receipt verifies and names the
+    others in diagnosis.reasons. A STALE_SNAPSHOT first attempt plus a committed
+    retry under a fresh key resolves COMMITTED and agrees with list_operations.
+    """
+    from learning_os.app.handlers.platform import describe_operation, list_operations
+    from learning_os.store.diagnostics.store import read_records
+
+    mini = _mini_with_curriculum(tmp_path, "ops-reused-stale-retry").resolve()
+    req_id = "request-d1-stale-then-commit"
+    k1 = "key-d1-stale"
+    k2 = "key-d1-commit"
+
+    # Attempt 1: K1 refused STALE_SNAPSHOT
+    first = _write(mini, k1, request_id=req_id, expected_snapshot="sha256:" + "0" * 64)
+    assert first is not None and not first.get("ok"), first
+
+    # Attempt 2: K2 commits
+    second = _write(mini, k2, request_id=req_id)
+    assert second is not None and second.get("ok"), second
+
+    detail = describe_operation(mini, req_id)
+    assert detail is not None
+    diagnosis = detail["diagnosis"]
+    assert diagnosis["canonical_outcome"] == "COMMITTED"
+    assert any(
+        "request_id reused across 2 idempotency keys" in reason and k1 in reason
+        for reason in diagnosis["reasons"]
+    ), diagnosis["reasons"]
+
+    # Agree with list_operations(root) row for K2's trace
+    records = read_records(mini)
+    k2_traces = [
+        r["op"] for r in records
+        if (r.get("attrs") or {}).get("idempotency_key") == k2 and r.get("op")
+    ]
+    assert k2_traces
+    k2_trace = k2_traces[0]
+
+    ops = list_operations(mini)
+    k2_row = next((row for row in ops if row.get("trace_id") == k2_trace), None)
+    assert k2_row is not None
+    assert k2_row["canonical_outcome"] == diagnosis["canonical_outcome"]
+    assert k2_row["recovery_requirement"] == diagnosis["recovery_requirement"]
+    assert k2_row["first_failure_stage"] == diagnosis["first_failure_stage"]

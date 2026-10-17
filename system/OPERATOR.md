@@ -213,9 +213,12 @@ relevant stages. `stage-note` remains a compatibility command for existing
 stage-owned scratch files.
 
 An explicitly reviewed semantic replacement of one existing durable note uses
-the `note.revise` capability (named command `note-revise NOTE_ID --file
-REVISED.md`). It preserves the note's ID, path, and role; moves, merges, splits,
-and role changes remain outside this capability.
+the `note.revise` capability. Running `note-revise NOTE_ID --file REVISED.md`
+without `--approve` is refused, and with `--approve` the direct CLI write is
+disabled; a revision is applied through a sealed GatewayEnvelopeV2 for
+`note.revise` (see [write envelopes](procedures/build-write-envelope.md)). It
+preserves the note's ID, path, and role; moves, merges, splits, and role
+changes remain outside this capability.
 
 A stage owns its working note, attachments, exact resources, source-use
 feedback, and optional detour relationship. A detour records its originating

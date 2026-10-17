@@ -1254,3 +1254,52 @@ def test_uri_relocation_parser_return_feeds_resolution(
                "source_id": "source-x"})
     assert seen["ref"] == canary
     assert out["material"] == "demo/canary/deep.pdf"
+
+
+def test_material_binding_under_source_authority_root_accepted(mini_repo: Path):
+    """Defect C (material scope): note_analysis accepts a binding whose material
+    lies under the source's material-URI authority root, not only under the
+    registered file or folder. A material under another source's authority root
+    is still refused.
+    """
+    body = BODY.encode("utf-8")
+    _register_material(mini_repo, "material://source-demo-book/lecture-slides")
+
+    materials = mini_repo.parent / "materials"
+    older = materials / "source-demo-book" / "older-lecture-slides" / "deck.pdf"
+    older.parent.mkdir(parents=True, exist_ok=True)
+    older_bytes = b"older slides content for defect C"
+    older.write_bytes(older_bytes)
+    older_digest = hashlib.sha256(older_bytes).hexdigest()
+
+    other = materials / "other-source" / "older-lecture-slides" / "deck.pdf"
+    other.parent.mkdir(parents=True, exist_ok=True)
+    other_bytes = b"other source slides content"
+    other.write_bytes(other_bytes)
+    other_digest = hashlib.sha256(other_bytes).hexdigest()
+
+    # Binding under the source's authority root (older-lecture-slides next to lecture-slides):
+    binding_ok = _binding(
+        resolution="resolved",
+        source_id="source-demo-book",
+        material="source-demo-book/older-lecture-slides/deck.pdf",
+        recorded_source_digest=older_digest,
+        live_source_digest=older_digest,
+    )
+    res_ok = _save(mini_repo, body, binding_ok, "c1-authority-scope-ok")
+    assert res_ok.returncode == 0, res_ok.stderr or res_ok.stdout
+    assert json.loads(res_ok.stdout)["ok"] is True
+
+    # Binding under a different source's authority root:
+    binding_other = _binding(
+        resolution="resolved",
+        source_id="source-demo-book",
+        material="other-source/older-lecture-slides/deck.pdf",
+        recorded_source_digest=other_digest,
+        live_source_digest=other_digest,
+    )
+    res_bad = _save(mini_repo, body, binding_other, "c1-authority-scope-bad")
+    assert res_bad.returncode != 0
+    assert "is not the source's registered file or under its registered directory" in (
+        res_bad.stdout + res_bad.stderr
+    )

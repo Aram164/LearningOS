@@ -83,14 +83,14 @@ Decide which read answers the question before reading:
   and revision guards. Reach for the unit `--brief` only for unit
   coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
-  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A lone
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. On
+  `material-span`, a stage's narrower file or page selection uses
+  `--stage STAGE_ID --resource-index N` (the zero-based canonical resource
+  position; both selectors are required). On `material-context`, a lone
   `--concept` asks what explains it: notes match by their own tags or as
   route-direct evidence (same file, overlapping pages) for a route placed on a
   stage that tags the concept, named in `match.concept_via`; a shared source
-  alone never joins. A stage's
-  narrower file or page selection uses `--stage STAGE_ID --resource-index N`
-  (the zero-based canonical resource position); both selectors are required.
-  With `--unit`,
+  alone never joins. With `--unit`,
   default results are route-direct only; `--include-related` appends
   same-source notes labelled `related`, and `--material PATH` filters notes
   and assessments to one exact materials file. Analysis anchors preview
