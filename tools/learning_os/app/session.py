@@ -19,6 +19,7 @@ from learning_os.app.validation import validation_run
 from learning_os.domain.failures import ToolFailure, WriteRefused
 from learning_os.store import observations
 from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
+from learning_os.store.evidence import shared_ledgers_proven_since
 from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import delete_session_ledger as _delete_session_ledger
@@ -33,6 +34,11 @@ from learning_os.store.session_ledger import session_path_state as _session_path
 from learning_os.store.session_ledger import write_session_ledger as _write_session_ledger
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
+
+_SHARED_TRANSACTION_LEDGERS = frozenset({
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/idempotency.yaml",
+})
 
 #: Environment variable naming the Core client and its build, stamped by the
 #: interface on every Core child it spawns (`obsidian-ui/<build>`). An
@@ -114,6 +120,65 @@ def _persist_review(root: Path, own_session: str, envelope: dict | None,
         commit_sha=None)
 
 
+def _witness_states_match(
+    root: Path,
+    witness_states: dict[str, dict[str, str | None]],
+    current_states: dict[str, dict[str, str | None]],
+) -> bool:
+    if witness_states == current_states:
+        return True
+    if witness_states.keys() != current_states.keys():
+        return False
+    shared_proven: bool | None = None
+    for path, expected in witness_states.items():
+        if current_states.get(path) == expected:
+            continue
+        if path not in _SHARED_TRANSACTION_LEDGERS:
+            return False
+        if shared_proven is None:
+            shared_proven = shared_ledgers_proven_since(
+                root,
+                revisions_sha256=(
+                    witness_states.get("operations/transactions/revisions.yaml") or {}
+                ).get("sha256"),
+                idempotency_sha256=(
+                    witness_states.get("operations/transactions/idempotency.yaml") or {}
+                ).get("sha256"),
+            )
+        if not shared_proven:
+            return False
+    return True
+
+
+def _ownership_conflicts(
+    root: Path, touched: list[str], recorded: dict[str, dict]
+) -> list[str]:
+    shared_proven: bool | None = None
+    conflicts: list[str] = []
+    for path in touched:
+        if _session_path_state(root, path) == _row_proven_state(recorded[path]):
+            continue
+        if path in _SHARED_TRANSACTION_LEDGERS:
+            if shared_proven is None:
+                shared_proven = shared_ledgers_proven_since(
+                    root,
+                    revisions_sha256=_row_proven_state(
+                        recorded["operations/transactions/revisions.yaml"]
+                    ).get("sha256")
+                    if "operations/transactions/revisions.yaml" in recorded
+                    else None,
+                    idempotency_sha256=_row_proven_state(
+                        recorded["operations/transactions/idempotency.yaml"]
+                    ).get("sha256")
+                    if "operations/transactions/idempotency.yaml" in recorded
+                    else None,
+                )
+            if shared_proven:
+                continue
+        conflicts.append(path)
+    return conflicts
+
+
 def _verify_witness(root: Path, envelope: dict | None, touched: list[str]) -> None:
     """Refuse a commit whose witness no longer matches (SPEC §13).
 
@@ -125,8 +190,9 @@ def _verify_witness(root: Path, envelope: dict | None, touched: list[str]) -> No
     if review is None:
         return
     version = envelope["version"] if envelope is not None else 0
-    if review["version"] != version \
-            or review["states"] != _witness_states(root, touched):
+    if review["version"] != version or not _witness_states_match(
+        root, review["states"], _witness_states(root, touched)
+    ):
         raise SessionMismatchError(
             "the session changed after review — run session-end again")
 
@@ -194,10 +260,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     # reported under `other_sessions` and never staged, and stale own rows
     # need the explicit opt-in.
     touched = sorted(fresh + stale_paths) if include_stale else fresh
-    ownership_conflicts = [
-        path for path in touched
-        if _session_path_state(root, path) != _row_proven_state(recorded[path])
-    ]
+    ownership_conflicts = _ownership_conflicts(root, touched, recorded)
     # Validate the repository this session touched, in process. A failed
     # close prints its issues; a clean one names where the baselined
     # warnings are listed, as `validate.py --compact` does.
@@ -258,17 +321,32 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
     if not touched:
         raise SessionEmptyError(
             "no files were touched through this learning session")
-    ownership_conflicts = [
-        path for path in touched
-        if _session_path_state(root, path) != _row_proven_state(recorded[path])
-    ]
+    ownership_conflicts = _ownership_conflicts(root, touched, recorded)
     payload["ownership_conflicts"] = ownership_conflicts
     if ownership_conflicts:
         raise SessionConflictError(
             "refusing to stage files changed after their recorded LearningOS "
             "transaction: " + ", ".join(ownership_conflicts))
     _verify_witness(root, envelope, touched)
-    subprocess.run(["git", "add", "--", *touched], cwd=root, check=True, timeout=30)
+    changed_paths = {line[3:] for line in all_changed}
+    stage_paths = [
+        path for path in touched
+        if (root / path).exists() or path in changed_paths
+    ]
+    if stage_paths:
+        added = subprocess.run(
+            ["git", "add", "--", *stage_paths],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if added.returncode != 0:
+            raise ToolFailure(
+                stdout=added.stdout,
+                stderr=added.stderr,
+                exit_code=added.returncode,
+            )
     commit = subprocess.run(["git", "commit", "-m", commit_message], cwd=root,
                             capture_output=True, text=True, timeout=180)
     if commit.returncode != 0:

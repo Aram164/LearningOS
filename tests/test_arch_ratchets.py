@@ -972,14 +972,20 @@ def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
     assert len(mapping) == 40 and len(set(mapping.values())) == 40
     for old_name, new_name in mapping.items():
         rel = f"system/schema/requests/{old_name}.schema.json"
-        old = json.loads(_git_show(base_ref, rel))
-        new = json.loads((ROOT / f"system/schema/requests/{new_name}.schema.json").read_text())
-        old["$id"] = "learningos/requests/" + new_name
-        old["x-los-cli-command"]["handler"] = "learning_os.adapters.cli.invoke:" + new_name
-        if new_name in {"backup.manifest", "health.report", "legacy.archive.inspect", "legacy.archive.status", "masters-planning.dashboard"}:
-            old["x-los-cli-command"]["operation_kind"] = "tool"
-        if new_name in {"repository.validate", "projection.generate"}:
-            old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
+        new_rel = f"system/schema/requests/{new_name}.schema.json"
+        old_text = _git_show(base_ref, rel)
+        new = json.loads((ROOT / new_rel).read_text())
+        if old_text is None:
+            assert not (ROOT / rel).exists(), rel
+            old = json.loads(_git_show(base_ref, new_rel))
+        else:
+            old = json.loads(old_text)
+            old["$id"] = "learningos/requests/" + new_name
+            old["x-los-cli-command"]["handler"] = "learning_os.adapters.cli.invoke:" + new_name
+            if new_name in {"backup.manifest", "health.report", "legacy.archive.inspect", "legacy.archive.status", "masters-planning.dashboard"}:
+                old["x-los-cli-command"]["operation_kind"] = "tool"
+            if new_name in {"repository.validate", "projection.generate"}:
+                old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
         new = _restore_phase6_descriptions(new_name, old, new)
         assert new == old, new_name
 

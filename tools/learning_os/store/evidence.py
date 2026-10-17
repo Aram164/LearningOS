@@ -16,6 +16,7 @@ always has.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Mapping
 from pathlib import Path
@@ -32,11 +33,25 @@ from learning_os.domain.transaction import TransactionResult
 from learning_os.store.contracts.gateway import GatewayRequestContext
 from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matches, write_target
 from learning_os.store.layout import PathBoundaryError, read_text_inside
-from learning_os.store.revisions import load_revisions
+from learning_os.store.revisions import dump_revisions, load_revisions, revision_ledger_path
 
 
 def idempotency_ledger_path(root: Path) -> Path:
     return root / "operations" / "transactions" / "idempotency.yaml"
+
+
+def dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
+    return yaml.safe_dump(
+        {
+            "schema_version": 1,
+            "type": "transaction-idempotency-ledger",
+            "entries": {key: dict(entries[key]) for key in sorted(entries)},
+        },
+        sort_keys=False,
+        allow_unicode=True,
+        width=100,
+    )
+
 
 
 def load_idempotency_entries(root: Path) -> dict[str, dict]:
@@ -452,3 +467,114 @@ def replay_for_request(
         replayed=True,
         receipt=receipt,
     )
+
+
+def shared_ledgers_canonical(root: Path) -> bool:
+    """Return True iff live revisions.yaml and idempotency.yaml are canonically serialized."""
+    try:
+        rev_path = revision_ledger_path(root)
+        idem_path = idempotency_ledger_path(root)
+        revisions = load_revisions(root)
+        entries = load_idempotency_entries(root)
+        if rev_path.is_file() and rev_path.read_bytes() != dump_revisions(revisions).encode("utf-8"):
+            return False
+        if idem_path.is_file() and idem_path.read_bytes() != dump_idempotency_entries(entries).encode("utf-8"):
+            return False
+    except (OSError, TransactionFailure):
+        return False
+    return True
+
+
+def shared_ledgers_proven_since(
+    root: Path,
+    *,
+    revisions_sha256: str | None = None,
+    idempotency_sha256: str | None = None,
+) -> bool:
+    """Prove live revisions.yaml/idempotency.yaml advanced from recorded hashes only via committed receipts."""
+    if revisions_sha256 is None and idempotency_sha256 is None:
+        return False
+    try:
+        rev_path = revision_ledger_path(root)
+        idem_path = idempotency_ledger_path(root)
+        revisions = dict(load_revisions(root))
+        entries = {key: dict(value) for key, value in load_idempotency_entries(root).items()}
+        if rev_path.is_file() and rev_path.read_bytes() != dump_revisions(revisions).encode("utf-8"):
+            return False
+        if idem_path.is_file() and idem_path.read_bytes() != dump_idempotency_entries(entries).encode("utf-8"):
+            return False
+    except (OSError, TransactionFailure):
+        return False
+
+    def _matches(cur_revisions: dict[str, int], cur_entries: dict[str, dict]) -> bool:
+        if revisions_sha256 is not None:
+            rev_digest = hashlib.sha256(dump_revisions(cur_revisions).encode("utf-8")).hexdigest()
+            if rev_digest != revisions_sha256:
+                return False
+        if idempotency_sha256 is not None:
+            idem_digest = hashlib.sha256(
+                dump_idempotency_entries(cur_entries).encode("utf-8")
+            ).hexdigest()
+            if idem_digest != idempotency_sha256:
+                return False
+        return True
+
+    if _matches(revisions, entries):
+        return True
+
+    from learning_os.store.loading.yamlio import UniqueKeySafeLoader
+
+    schema_root = default_authority_root(root) or root
+    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
+    try:
+        validator = (
+            Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8")))
+            if schema_path.is_file()
+            else None
+        )
+    except (OSError, ValueError):
+        return False
+
+    tx_dir = root / "operations" / "transactions"
+    if not tx_dir.is_dir():
+        return False
+    for receipt_path in sorted(tx_dir.glob("transaction-*.yaml"), reverse=True):
+        if receipt_path.is_symlink():
+            return False
+        try:
+            receipt = yaml.load(read_text_inside(root, receipt_path), Loader=UniqueKeySafeLoader)
+        except (OSError, PathBoundaryError, yaml.YAMLError):
+            return False
+        if not isinstance(receipt, dict):
+            return False
+        if validator is not None and any(validator.iter_errors(receipt)):
+            return False
+        if receipt.get("id") != receipt_path.stem or receipt.get("status") != "committed":
+            return False
+        artifact_revisions = receipt.get("artifact_revisions")
+        if not isinstance(artifact_revisions, dict) or not artifact_revisions:
+            return False
+        idem_key: str | None = None
+        if receipt.get("schema_version") == 2:
+            req = receipt.get("request")
+            if not isinstance(req, dict) or not isinstance(req.get("idempotency_key"), str):
+                return False
+            idem_key = req["idempotency_key"]
+            row = entries.get(idem_key)
+            if row is None or row.get("transaction_id") != receipt.get("id"):
+                return False
+        for artifact, bounds in artifact_revisions.items():
+            if not isinstance(bounds, dict) or revisions.get(artifact, 0) != bounds.get("after"):
+                return False
+        for artifact, bounds in artifact_revisions.items():
+            before = bounds.get("before", 0)
+            if before == 0:
+                revisions.pop(artifact, None)
+            else:
+                revisions[artifact] = int(before)
+        if idem_key is not None:
+            entries.pop(idem_key, None)
+        if _matches(revisions, entries):
+            return True
+    return False
+

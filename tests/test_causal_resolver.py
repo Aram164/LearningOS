@@ -262,6 +262,10 @@ def test_manifest_covers_receipt_positions_the_live_manifest():
     assert manifest_covers_receipt(receipts, "sha256:aaa", "sha256:aaa")
     assert manifest_covers_receipt(receipts, "sha256:bbb", "sha256:aaa")
     assert not manifest_covers_receipt(receipts, "sha256:aaa", "sha256:bbb")
+    recurring = receipts + [
+        {"id": "transaction-20260101-000003-001", "snapshot_after": "sha256:aaa"},
+    ]
+    assert manifest_covers_receipt(recurring, "sha256:aaa", "sha256:bbb")
     assert not manifest_covers_receipt(receipts, "sha256:hand-made", "sha256:aaa")
     assert not manifest_covers_receipt(receipts, None, "sha256:aaa")
     assert not manifest_covers_receipt([], "sha256:bbb", "sha256:aaa")

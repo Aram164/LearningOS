@@ -142,7 +142,7 @@ def manifest_covers_receipt(receipts: list[dict], manifest_snapshot: str | None,
         str(receipt.get("id", "")) for receipt in receipts
         if receipt.get("snapshot_after") == snapshot_after)
     return bool(manifest_ids) and bool(write_ids) \
-        and manifest_ids[0] >= write_ids[-1]
+        and manifest_ids[-1] >= write_ids[-1]
 
 
 def newest_receipt(receipts: list[dict]) -> dict | None:
@@ -325,7 +325,9 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                 verified_receipt["_path"] = verified[1]["receipt_path"]
     error = (response or {}).get("error") or {}
     codes = list(response_codes) if response_codes is not None else [error.get("code")]
-    snapshot_after = (response or {}).get("snapshot_after")
+    snapshot_after = (response or {}).get("snapshot_after") or (
+        (verified_receipt or {}).get("snapshot_after")
+    )
     # The contract-only check walks every authored-data root once. A caller
     # diagnosing several operations against one shared ``authority_files``
     # passes one ``drift_cache`` so the walk happens once per invocation,

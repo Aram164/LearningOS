@@ -405,11 +405,18 @@ def _assert_every_subcommand_is_a_b_or_c(base: str, new_cli: dict[str, str]) -> 
         has_flag = "--json" in subparser._option_string_actions
         if has_flag:
             assert "json" in live["properties"], sub
-            base_doc = json.loads(_git_show(base, f"system/schema/requests/{_historical_primary(fname)}"))
+            hist_text = _git_show_optional(
+                base, f"system/schema/requests/{_historical_primary(fname)}"
+            )
+            base_doc = json.loads(
+                hist_text
+                if hist_text is not None
+                else _git_show(base, f"system/schema/requests/{fname}")
+            )
             had = "json" in base_doc["properties"]
             if sub in C_SUBCOMMANDS:
                 # B1 adds JSON to these two former human-only child tools.
-                assert not had and sub not in b, sub
+                assert (not had if hist_text is not None else had) and sub not in b, sub
                 _, reference = _schema_for_subcommand("health-report")
                 assert live["properties"]["json"] == reference["properties"]["json"], sub
             else:

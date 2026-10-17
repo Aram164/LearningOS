@@ -680,6 +680,12 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
     neither stays unverified.
     """
     if snapshot_after is None:
+        for record in records:
+            attrs = record.get("attrs") or {}
+            if record.get("name") == conventions.EVENT_RECOVERY_SETTLED \
+                    and attrs.get("observed") is True \
+                    and isinstance(attrs.get("snapshot_after"), str):
+                return attrs["snapshot_after"]
         return manifest_snapshot
     if manifest_snapshot == snapshot_after:
         return manifest_snapshot
@@ -702,6 +708,16 @@ def _evidence_for(root: Path, records: list[dict],
     request_id, idempotency_key, capability = _identity(records)
     summaries = sorted(_summaries(records), key=lambda row: row.get("ts", 0))
     response = _response_from_summary(summaries[-1] if summaries else None)
+    snapshot_after = (response or {}).get("snapshot_after") or next(
+        (
+            (row.get("attrs") or {}).get("snapshot_after")
+            for row in reversed(summaries)
+            if (row.get("attrs") or {}).get("snapshot_after")
+        ),
+        None,
+    )
+    if response is not None and response.get("snapshot_after") is None and snapshot_after is not None:
+        response = {**response, "snapshot_after": snapshot_after}
     codes: list = []
     for summary in summaries:
         attrs = summary.get("attrs") or {}
@@ -713,7 +729,7 @@ def _evidence_for(root: Path, records: list[dict],
         response=response,
         response_codes=codes,
         observed_snapshot=_observed_for(
-            records, (response or {}).get("snapshot_after"), observed),
+            records, snapshot_after, observed),
         # `observed` is the live manifest snapshot itself: the supersession
         # check positions it against the receipt inventory (JF-19).
         manifest_snapshot=observed,

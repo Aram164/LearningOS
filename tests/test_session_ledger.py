@@ -898,3 +898,89 @@ def test_v2_ledger_review_then_commit_through_the_cli(mini_repo, monkeypatch):
     assert committed.returncode == 0, committed.stderr
     assert json.loads(committed.stdout)["committed"] is True
     assert not ledger.exists()
+
+
+def test_session_end_commits_when_within_session_file_was_moved_and_replays_cleanly(
+    mini_repo, monkeypatch
+):
+    """Within-session absent path does not crash git add (HM-B6) and post-close replay succeeds (HM-B1)."""
+    monkeypatch.setenv("LOS_SESSION_ID", "fixture-move-session")
+    _git_init(mini_repo)
+    sealed_path = mini_repo.parent / "sealed-move.json"
+    sealed = subprocess.run(
+        [
+            sys.executable,
+            str(LOS.parent / "seal_envelope.py"),
+            "--root",
+            str(mini_repo),
+            "--capability",
+            "capture.create",
+            "--session-id",
+            "fixture-move-session",
+            "--key",
+            "move-cap-001",
+            "--guards",
+            "auto",
+            "--payload",
+            json.dumps({"text": "drop before move"}),
+            "--out",
+            str(sealed_path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert sealed.returncode == 0, sealed.stderr
+    applied = subprocess.run(
+        [
+            sys.executable,
+            str(LOS),
+            "--root",
+            str(mini_repo),
+            "capability",
+            "capture.create",
+            "--payload-file",
+            str(sealed_path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    [drop] = [
+        p
+        for p in (mini_repo / "work" / "inbox").glob("*.md")
+        if "drop-before-move" in p.name
+    ]
+    rel_drop = drop.relative_to(mini_repo).as_posix()
+    drop_bytes = drop.read_bytes()
+    # Simulate a second transaction in the same session that moves/deletes the untracked drop
+    archived = mini_repo / "work" / "notes.md"
+    archived.write_bytes(drop_bytes)
+    drop.unlink()
+    session_store.record_touched(
+        mini_repo, [drop, archived], session_id="fixture-move-session"
+    )
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    committed = _session_end(mini_repo, "--commit-message", "close after move")
+    assert committed.returncode == 0, committed.stderr
+    assert json.loads(committed.stdout)["committed"] is True
+    # Restore drop to match the first transaction's receipt and commit so post-close replay sees committed receipt + matching authored bytes
+    drop.write_bytes(drop_bytes)
+    subprocess.run(["git", "add", "--", rel_drop], cwd=mini_repo, check=True)
+    subprocess.run(["git", "commit", "-m", "restore drop"], cwd=mini_repo, check=True)
+    replayed = subprocess.run(
+        [
+            sys.executable,
+            str(LOS),
+            "--root",
+            str(mini_repo),
+            "capability",
+            "capture.create",
+            "--payload-file",
+            str(sealed_path),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert replayed.returncode == 0, replayed.stdout + replayed.stderr
+    assert json.loads(replayed.stdout)["replayed"] is True

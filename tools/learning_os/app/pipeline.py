@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -69,7 +71,11 @@ from learning_os.store.contracts.gateway import (
 from learning_os.store.contracts.requests import request_schema
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
-from learning_os.store.evidence import replay_for_request
+from learning_os.store.evidence import (
+    replay_for_request,
+    shared_ledgers_canonical,
+    shared_ledgers_proven_since,
+)
 from learning_os.store.fingerprint import canonical_fingerprint
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import load_session_ledger as _load_session_ledger
@@ -338,14 +344,14 @@ def _cli_error_code(exc: Exception) -> tuple[str, bool]:
 
 def _cli_refusal(exc: Exception, *, entry=None, args=None,
                  commit="none", receipt=None, replayed=False) -> Outcome:
-    """Registered-operation CLI refusal rendering (SPEC 9.4, D16).
+    """Registered-operation CLI refusal rendering (SPEC 9.4, D16, OD4b).
 
-    stderr carries `los: <CODE>: <message>`, then one `  did you mean:
-    <id>` line per suggestion not already contained in the message, then
-    `  next: <remedy>` when present. R2-style extra_stderr lines, if any,
-    print verbatim last. With --json on a JSON-default command, stdout
-    also carries {"error": <error object>}. Unregistered commands keep
-    their current output (they never reach this path).
+    Without --json, stderr carries `los: <CODE>: <message>`, then one `  did
+    you mean: <id>` line per suggestion not already contained in the message,
+    then `  next: <remedy>` when present; R2-style extra_stderr lines, if any,
+    print verbatim last. With --json, stderr carries {"error": <error object>}
+    and stdout is empty. Unregistered commands keep their current output (they
+    never reach this path).
     """
 
     row = classify(exc, "cli")
@@ -630,6 +636,25 @@ _UNPROVABLE_AGGREGATE_LEDGERS = (
 )
 
 
+def _is_receipt_committed_in_head(root: Path, receipt_relative: str,
+                                  receipt_bytes: bytes) -> bool:
+    if not (root / ".git").exists():
+        return False
+    env = {
+        key: value for key, value in os.environ.items()
+        if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}
+    }
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "cat-file", "-p", f"HEAD:{receipt_relative}"],
+            capture_output=True, timeout=10,
+            env={**env, "GIT_OPTIONAL_LOCKS": "0"},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0 and proc.stdout == receipt_bytes
+
+
 def _repair_replayed_session_ownership(root: Path,
                                        replay: TransactionResult,
                                        session_id: str | None = None) -> None:
@@ -698,6 +723,13 @@ def _repair_replayed_session_ownership(root: Path,
         "state": "file", "sha256": hashlib.sha256(receipt_bytes).hexdigest(),
     }
 
+    for relative, state in authored.items():
+        if _session_path_state(root, relative) != _row_proven_state(state):
+            raise _ReplayRecoveryError(
+                "cannot repair session ownership: "
+                f"{relative} changed since its recorded transaction"
+            )
+
     # The repair runs outside any gateway request context, so ambient
     # session resolution would land in the default channel's ledger — not
     # the one the original write recorded. The replayed envelope's sealed
@@ -711,17 +743,18 @@ def _repair_replayed_session_ownership(root: Path,
         origin = None
     session = _current_session_id(channel=origin, explicit=session_id)
 
-    # A lost session ledger is reconciled by hand, never reconstructed.
-    #
-    # Rebuilding one from scratch would mean deciding what this session owns
-    # with no prior record to check against, and the shared revision and
-    # idempotency ledgers make that undecidable: their bytes carry rows for
-    # many transactions while this receipt proves only its own. Adopting them
-    # would launder an unrelated edit into this session's authorship; omitting
-    # them would let `session-end` commit an authored file while leaving the
-    # revision bump that belongs to it out of the same commit. So a missing
-    # ledger fails closed instead.
+    # When session-end --commit-message already committed this receipt to Git
+    # HEAD and closed the session ledger, ownership was already retired into
+    # Git history; verify the shared ledgers remain canonically serialized and
+    # leave the closed session closed.
     if not _session_ledger(root, session).is_file():
+        if _is_receipt_committed_in_head(root, receipt_relative, receipt_bytes):
+            if not shared_ledgers_canonical(root):
+                raise _ReplayRecoveryError(
+                    "cannot repair session ownership: "
+                    "operations/transactions/revisions.yaml changed since its recorded transaction"
+                )
+            return
         raise _ReplayRecoveryError(
             "cannot repair session ownership: the session ledger is gone, and this "
             "receipt cannot prove the bytes of the shared revision and idempotency "
@@ -736,20 +769,39 @@ def _repair_replayed_session_ownership(root: Path,
     assert envelope is not None  # the missing ledger failed closed above
     existing = envelope["paths"]
 
+    if (
+        receipt_relative not in existing
+        and _is_receipt_committed_in_head(root, receipt_relative, receipt_bytes)
+        and shared_ledgers_canonical(root)
+    ):
+        return
+
+    actor = origin or "unknown"
+    shared_proven = shared_ledgers_proven_since(
+        root,
+        revisions_sha256=(existing.get("operations/transactions/revisions.yaml") or {}).get("sha256"),
+        idempotency_sha256=(existing.get("operations/transactions/idempotency.yaml") or {}).get("sha256"),
+    )
     for ledger_relative in _UNPROVABLE_AGGREGATE_LEDGERS:
         proven = existing.get(ledger_relative)
         if proven is not None:
-            # Carried forward as *previously proven*, then re-checked against
-            # the live file below. Never re-observed: a fresh hash taken here
-            # is exactly the laundering this function exists to prevent.
-            authored[ledger_relative] = proven
-        # A row this session never held is left unclaimed rather than invented.
-        # Not every write path claims these ledgers — an approved AI delivery
-        # records only the files it staged — so a missing row is ordinary, and
-        # the one thing that must not happen is adopting their current bytes.
+            if (
+                _session_path_state(root, ledger_relative) != _row_proven_state(proven)
+                and shared_proven
+            ):
+                if receipt_relative not in existing:
+                    authored[ledger_relative] = _stamp_session_row(
+                        root, ledger_relative, actor
+                    )
+                else:
+                    authored[ledger_relative] = proven
+            else:
+                authored[ledger_relative] = proven
 
     for relative, state in authored.items():
         if _session_path_state(root, relative) != _row_proven_state(state):
+            if relative in _UNPROVABLE_AGGREGATE_LEDGERS and shared_proven:
+                continue
             raise _ReplayRecoveryError(
                 "cannot repair session ownership: "
                 f"{relative} changed since its recorded transaction"
@@ -757,12 +809,6 @@ def _repair_replayed_session_ownership(root: Path,
 
     merged = dict(existing)
     merged.update(authored)
-    # The repaired rows are stamped, not bare: a receipt-derived row takes
-    # its provenance from the receipt's own recorded channel, with the claim
-    # time set to this repair — that is when this session took ownership of
-    # the recovered write. Rows that already carry a stamp (carried-forward
-    # aggregate claims) keep it.
-    actor = origin or "unknown"
     for relative, state in merged.items():
         if state.get("channel") and state.get("recorded_at"):
             continue
@@ -1089,123 +1135,119 @@ def run_gateway(root: Path, envelope: dict, *, requested: str, definitions,
         # is still committing. Exactly this function owns the lock: neither
         # helper below acquires it again, so there is no re-entrant deadlock.
         replay: TransactionResult | None = None
-        try:
-            with _operator_lock(root):
-                replay = replay_for_request(root, context)
-                if replay is not None:
-                    response = _replay_response(root, envelope, replay)
-                    _validate_capability_envelope(root, response, kind="result")
-                    _repair_replayed_session_ownership(
-                        root, replay,
-                        session_id=envelope.get("session_id"))
-        except TransactionIdempotencyConflict as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(IDEMPOTENCY_CONFLICT, str(exc), retryable=False),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                          status="error", attrs={"outcome": "conflict"})
-            return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                           stdout=stdout, stderr=stderr, response=response)
-        except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            # Fail closed. Evidence is contradictory or the original write
-            # already happened; rerunning the handler here would risk
-            # duplicating it, and answering with a guessed path would be a lie
-            # about canonical state. Never retryable: the fix is manual
-            # reconciliation, not a client resend.
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(INTERNAL_FAILURE, str(exc), retryable=False),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                          status="error", attrs={"outcome": "evidence-error"})
-            return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                           stdout=stdout, stderr=stderr, response=response)
-        except TransactionRecoveryConflict as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            # A stale crash journal names paths the lookup cannot prove
-            # transaction-owned. Nothing was modified and the journal was
-            # preserved; the operator reconciles by hand. Never retryable
-            # and never definitive: the fix is manual reconciliation, and
-            # the request itself was never attempted.
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    INTERNAL_FAILURE, str(exc), retryable=False,
-                    details={
-                        "transaction_id": exc.transaction_id,
-                        "conflicting_paths": [
-                            entry.get("path") for entry in exc.conflicts
-                        ],
-                        "reasons": sorted({
-                            entry.get("reason") for entry in exc.conflicts
-                            if entry.get("reason")
-                        }),
-                    },
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                          status="error", attrs={"outcome": "recovery-conflict"})
-            return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                           stdout=stdout, stderr=stderr, response=response)
-        except TransactionFailure as exc:
-            _audit_failure(envelope.get("capability"), exc)
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(INTERNAL_FAILURE, str(exc), retryable=True),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                          status="error", attrs={"outcome": "lookup-failed"})
-            return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                           stdout=stdout, stderr=stderr, response=response)
-        attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
-                      attrs={"outcome": "hit" if replay is not None else "miss"})
-        # The three D20 replay branches: an exact replay answers from the
-        # committed receipt; replay-only without one is unconfirmed; a miss
-        # falls through to fresh dispatch below.
-        if replay is not None:
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            return _finish(attempt, 0, "ok", {"replayed": True},
-                           stdout=stdout, stderr=stderr, response=response)
-        if replay_only:
-            _audit_direct_refused(envelope.get("capability"), 2)
-            # A persisted UI confirmation is only untrusted settings JSON until
-            # Core proves that this exact approved intent is present in the
-            # idempotency ledger with a valid Receipt V2.  This probe must never
-            # turn a forged or corrupt confirmation into a new canonical write.
-            response = _v2_response(
-                envelope,
-                ok=False,
-                error=error_object(
-                    UNCONFIRMED,
-                    "no committed receipt exists for this exact request",
-                    retryable=False,
-                ),
-            )
-            _validate_capability_envelope(root, response, kind="result")
-            stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
-            return _finish(attempt, 2, "error", {"stage": "core.replay"},
-                           stdout=stdout, stderr=stderr, response=response)
         failure: BaseException | None = None
         try:
-            # One lock spans the approved-state comparison and the handler.
-            # Named handlers reuse this lock, so their historical in-lock
-            # preflight remains safe without taking the same digest twice.
             with _operator_lock(root):
+                try:
+                    replay = replay_for_request(root, context)
+                    if replay is not None:
+                        response = _replay_response(root, envelope, replay)
+                        _validate_capability_envelope(root, response, kind="result")
+                        _repair_replayed_session_ownership(
+                            root, replay,
+                            session_id=envelope.get("session_id"))
+                except TransactionIdempotencyConflict as exc:
+                    _audit_failure(envelope.get("capability"), exc)
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=error_object(IDEMPOTENCY_CONFLICT, str(exc), retryable=False),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                                  status="error", attrs={"outcome": "conflict"})
+                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
+                                   stdout=stdout, stderr=stderr, response=response)
+                except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
+                    _audit_failure(envelope.get("capability"), exc)
+                    # Fail closed. Evidence is contradictory or the original write
+                    # already happened; rerunning the handler here would risk
+                    # duplicating it, and answering with a guessed path would be a lie
+                    # about canonical state. Never retryable: the fix is manual
+                    # reconciliation, not a client resend.
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=error_object(INTERNAL_FAILURE, str(exc), retryable=False),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                                  status="error", attrs={"outcome": "evidence-error"})
+                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
+                                   stdout=stdout, stderr=stderr, response=response)
+                except TransactionRecoveryConflict as exc:
+                    _audit_failure(envelope.get("capability"), exc)
+                    # A stale crash journal names paths the lookup cannot prove
+                    # transaction-owned. Nothing was modified and the journal was
+                    # preserved; the operator reconciles by hand. Never retryable
+                    # and never definitive: the fix is manual reconciliation, and
+                    # the request itself was never attempted.
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=error_object(
+                            INTERNAL_FAILURE, str(exc), retryable=False,
+                            details={
+                                "transaction_id": exc.transaction_id,
+                                "conflicting_paths": [
+                                    entry.get("path") for entry in exc.conflicts
+                                ],
+                                "reasons": sorted({
+                                    entry.get("reason") for entry in exc.conflicts
+                                    if entry.get("reason")
+                                }),
+                            },
+                        ),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                                  status="error", attrs={"outcome": "recovery-conflict"})
+                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
+                                   stdout=stdout, stderr=stderr, response=response)
+                except TransactionFailure as exc:
+                    _audit_failure(envelope.get("capability"), exc)
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=error_object(INTERNAL_FAILURE, str(exc), retryable=True),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                                  status="error", attrs={"outcome": "lookup-failed"})
+                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
+                                   stdout=stdout, stderr=stderr, response=response)
+                attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                              attrs={"outcome": "hit" if replay is not None else "miss"})
+                # The three D20 replay branches: an exact replay answers from the
+                # committed receipt; replay-only without one is unconfirmed; a miss
+                # falls through to fresh dispatch below.
+                if replay is not None:
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    return _finish(attempt, 0, "ok", {"replayed": True},
+                                   stdout=stdout, stderr=stderr, response=response)
+                if replay_only:
+                    _audit_direct_refused(envelope.get("capability"), 2)
+                    # A persisted UI confirmation is only untrusted settings JSON until
+                    # Core proves that this exact approved intent is present in the
+                    # idempotency ledger with a valid Receipt V2.  This probe must never
+                    # turn a forged or corrupt confirmation into a new canonical write.
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=error_object(
+                            UNCONFIRMED,
+                            "no committed receipt exists for this exact request",
+                            retryable=False,
+                        ),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    stdout.append(json.dumps(response, indent=2, ensure_ascii=False) + "\n")
+                    return _finish(attempt, 2, "error", {"stage": "core.replay"},
+                                   stdout=stdout, stderr=stderr, response=response)
                 actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
                 if envelope["expected_snapshot"] != actual_snapshot:
                     _audit_direct_refused(envelope.get("capability"), 3)
