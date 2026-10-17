@@ -363,7 +363,7 @@ def test_reviewed_apply_narrows_exactly_the_named_claim(tmp_path):
 
     stamped = load_ledger(root)[claim_id]
     assert dict(stamped.derived_from.revisions) == {}
-    assert stamped.restamped_by == "codex/operator-approval"
+    assert stamped.restamped_by == "operator/operator-approval"
     assert stamped.restamped_on
     assert stamped.judged_by == "operator/operator-approval"
     assert stamped.admitted_by.request_id == "request-demo"

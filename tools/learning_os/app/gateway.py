@@ -23,6 +23,7 @@ from learning_os.store.contracts.gateway import (
 )
 from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
+from learning_os.store.session_ledger import DEFAULT_SESSION_CHANNEL
 
 
 def read_content_bound_file(
@@ -112,13 +113,22 @@ def read_structured_file(
 
 def prepare_review_envelope(capability_name: str, payload: dict,
                             snapshot: str, revisions: dict) -> dict:
-    """Prepare a recoverable request during preflight, while its lock is held."""
+    """Prepare a recoverable request during preflight, while its lock is held.
+
+    The envelope names the channel whose session ledger the reviewed write
+    joins: the active gateway request's channel, else the operator default
+    a bare `session-end` resolves. A fixed agent channel split one
+    operator's writes across two ledgers, so `session-end --commit-message`
+    committed the shared ledgers without the receipt and note they name.
+    """
+    request = current_gateway_request()
+    channel = request.channel if request is not None else DEFAULT_SESSION_CHANNEL
     envelope = {
         "schema_version": 2,
         "request_id": f"request-reviewed-{observations.new_hex()}",
         "idempotency_key": f"reviewed-{observations.new_hex()}",
         "capability": capability_name,
-        "channel": "codex",
+        "channel": channel,
         "expected_snapshot": snapshot,
         "expected_revisions": revisions,
         "payload": payload,

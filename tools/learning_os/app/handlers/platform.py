@@ -882,6 +882,51 @@ def _note_request_id_reuse(records: list[dict], authority, diagnosis) -> None:
         f"explanation covers {covered} only — also: {', '.join(others)}")
 
 
+def _covered_records(root: Path, records: list[dict],
+                     observed: str | None) -> list[dict]:
+    """The traces one request-id explanation diagnoses (WORKFLOWS §28).
+
+    A reused request id can span distinct idempotency keys, each its own
+    request. The explanation covers the first key over the merged traces,
+    as documented, and `_note_request_id_reuse` names the others. Only when
+    the first key's receipt does not verify and a later key's does — a
+    refused attempt retried under a fresh key — would the merged traces
+    contradict themselves: the retry's commit, read against the refused
+    key's authority, came out AMBIGUOUS while the list said COMMITTED. Then
+    the explanation covers that later key's traces alone (with any traces
+    that never named a key).
+    """
+    by_op: dict[str, list[dict]] = {}
+    for record in records:
+        by_op.setdefault(record["op"], []).append(record)
+    key_of: dict[str, str | None] = {}
+    keys: list[str] = []
+    for op, op_records in by_op.items():
+        key = _identity(op_records)[1]
+        key_of[op] = key
+        if key and key not in keys:
+            keys.append(key)
+    if len(keys) < 2:
+        return records
+    groups = {key: [record for record in records
+                    if key_of[record["op"]] in (key, None)]
+              for key in keys}
+    shared = load_authority_files(root)
+    drift_cache: dict = {}
+
+    def verified(key: str) -> bool:
+        return bool(_evidence_for(root, groups[key], observed,
+                                  authority_files=shared,
+                                  drift_cache=drift_cache).verified_receipt)
+
+    if verified(keys[0]):
+        return records
+    for key in keys[1:]:
+        if verified(key):
+            return groups[key]
+    return records
+
+
 def _describe_operation(root: Path, request_id: str) -> tuple[dict | None, list[str]]:
     """Diagnosis plus the distinct traced request ids, from one load.
 
@@ -913,8 +958,9 @@ def _describe_from_records(root: Path, request_id: str,
     if not records:
         return None
     observed = _observed_snapshot(root)
-    authority = _evidence_for(root, records, observed)
-    diagnosis = resolve(records, authority)
+    covered = _covered_records(root, records, observed)
+    authority = _evidence_for(root, covered, observed)
+    diagnosis = resolve(covered, authority)
     _note_request_id_reuse(records, authority, diagnosis)
     receipt = authority.verified_receipt or {}
     if diagnosis.canonical_outcome == "COMMITTED" \
@@ -929,7 +975,7 @@ def _describe_from_records(root: Path, request_id: str,
         "request_id": request_id,
         "capability": authority.capability,
         "diagnosis": diagnosis.to_dict(),
-        "timeline": build_timeline(records, diagnosis),
+        "timeline": build_timeline(covered, diagnosis),
         "observed_snapshot": observed,
         "ui_outcome": ui_outcome,
         "facts": {

@@ -577,4 +577,3 @@ def shared_ledgers_proven_since(
         if _matches(revisions, entries):
             return True
     return False
-

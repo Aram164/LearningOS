@@ -79,9 +79,11 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 5. **Approval.** `channel` is `operator` and `approval.kind` is
    `operator-approval` on the operator path; the review preparers
    (`module-plan-import --check`, `unit-plan-revise --check`,
-   `note-analysis-prepare`) seal `channel: codex` with the same approval
-   kind, which is admitted too (`direct-user-gesture` is
-   admitted only for a closed UI-originated allowlist).
+   `note-analysis-prepare`) seal the same approval kind with the
+   caller's channel — the active gateway request's channel, else
+   `operator` — so the reviewed write joins the caller's session ledger
+   (`direct-user-gesture` is admitted only for a closed UI-originated
+   allowlist).
    `approval.subject_sha256` must equal `intent_sha256(envelope)`,
    computed as below **after** every other field is final — any later
    edit invalidates it and the write is refused as `UNCONFIRMED`.

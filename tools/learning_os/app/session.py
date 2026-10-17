@@ -21,6 +21,7 @@ from learning_os.store import observations
 from learning_os.store.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.store.evidence import shared_ledgers_proven_since
 from learning_os.store.session_ledger import SESSION_LEDGER_STALE_HOURS
+from learning_os.store.session_ledger import close_session_ledger as _close_session_ledger
 from learning_os.store.session_ledger import current_session_id as _current_session_id
 from learning_os.store.session_ledger import delete_session_ledger as _delete_session_ledger
 from learning_os.store.session_ledger import (
@@ -311,7 +312,7 @@ def session_end(root: Path, *, channel: str | None, session_id: str | None,
         # either way, so closing here never wipes another session's (or the
         # UI's) unclaimed rows. Running a review twice shows the same list.
         if close:
-            _delete_session_ledger(root, own_session)
+            _close_session_ledger(root, own_session)
             payload["session_closed"] = True
         else:
             if not unpushed:

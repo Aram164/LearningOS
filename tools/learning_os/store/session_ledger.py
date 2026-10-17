@@ -389,6 +389,68 @@ def delete_session_ledger(root: Path, session_id: str | None = None) -> None:
     session_ledger(root, session_id).unlink(missing_ok=True)
 
 
+#: Receipt rows a closed window owned live under this prefix.
+_RECEIPT_PREFIX = "operations/transactions/transaction-"
+
+
+def released_receipts_path(root: Path, session_id: str | None = None) -> Path:
+    """Where `session-end --close` remembers the receipts it released."""
+    ledger = session_ledger(root, session_id)
+    return ledger.with_name(
+        ledger.name[:-len("-touched.json")] + "-released.json")
+
+
+def _load_released(path: Path) -> dict[str, str]:
+    """The released receipt digests, or {} when absent or unreadable.
+
+    Fail closed: an unreadable record releases nothing, so a replay falls
+    back to the reconcile-by-hand refusal it would have given anyway.
+    """
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    receipts = data.get("receipts") if isinstance(data, dict) else None
+    if not isinstance(receipts, dict):
+        return {}
+    return {relative: digest for relative, digest in receipts.items()
+            if isinstance(relative, str) and isinstance(digest, str)}
+
+
+def close_session_ledger(root: Path, session_id: str | None = None) -> None:
+    """End this session's ownership window without a commit (`--close`).
+
+    The window's ledger is deleted as `delete_session_ledger` does, after
+    the transaction receipts it owned are remembered by digest. An exact
+    replay of one of them can then tell a window the operator deliberately
+    released (nothing left to repair) from a crash that never recorded the
+    write (which still needs reconciliation by hand).
+    """
+    envelope = load_session_ledger(root, session_id)
+    released = {
+        relative: row["sha256"]
+        for relative, row in (envelope or {}).get("paths", {}).items()
+        if relative.startswith(_RECEIPT_PREFIX)
+        and row.get("state") == "file" and isinstance(row.get("sha256"), str)
+    }
+    if released:
+        path = released_receipts_path(root, session_id)
+        merged = {**_load_released(path), **released}
+        _atomic_text(path, json.dumps({
+            "schema_version": 1,
+            "session_id": current_session_id(explicit=session_id),
+            "receipts": dict(sorted(merged.items())),
+        }, indent=2, sort_keys=True) + "\n")
+    delete_session_ledger(root, session_id)
+
+
+def receipt_released(root: Path, session_id: str | None,
+                     receipt_relative: str, receipt_sha256: str) -> bool:
+    """Whether `--close` released exactly these receipt bytes."""
+    released = _load_released(released_receipts_path(root, session_id))
+    return released.get(receipt_relative) == receipt_sha256
+
+
 def record_touched(root: Path, paths, channel: str | None = None, *,
                     session_id: str | None = None) -> None:
     """Stamp post-write rows into the caller's session ledger.

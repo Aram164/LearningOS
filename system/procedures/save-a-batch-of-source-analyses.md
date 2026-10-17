@@ -143,7 +143,7 @@ Alpha analysis of the inspected page.
 
 ```scrut
 $ cat "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["capability"], d["channel"], d["expected_snapshot"]); [print(n["analysis"]["id"], n["analysis"]["path"], n["body_file_sha256"]) for n in d["payload"]["bundle"]["notes"]]'
-note.analysis.save_batch codex sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707
+note.analysis.save_batch operator sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md sha256:aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md sha256:472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
 ```

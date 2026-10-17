@@ -334,18 +334,27 @@ def _verify_resolved_material(root: Path, repo, binding: dict) -> None:
             f"{binding.get('material')!r} (expected a path under materials/ "
             "without a leading '/' or '..')")
     registered = (repo.sources.get(binding.get("source_id")) or {}).get("material")
-    if material_uri_authority(registered) is None:
+    authority = material_uri_authority(registered)
+    if authority is None:
         raise WriteRefused("resolved source registers no local material")
+    # A route's locator resolves under the registered URI's authority
+    # (`project_material_resource` builds material://AUTHORITY/LOCATOR), so a
+    # span `material-span` binds may sit beside the registered file or folder
+    # (older-lecture-slides/ next to lecture-slides/). The authority tree is
+    # the source's material, exactly as route projection reads it.
     try:
         boundary = materials.resolve()
         base = (repo.materials_root / str(registered)[len(MATERIAL_SCHEME):]).resolve()
+        scope = (repo.materials_root / authority).resolve()
         target = (materials / str(binding.get("material"))).resolve()
         base.relative_to(boundary)
+        scope.relative_to(boundary)
         target.relative_to(boundary)
     except (OSError, ValueError):
         raise WriteRefused(
             "resolved material escapes the materials tree") from None
-    if target != base and base not in target.parents:
+    if target != base and base not in target.parents \
+            and scope not in target.parents:
         raise WriteRefused(
             "resolved material is not the source's registered file or "
             "under its registered directory")
