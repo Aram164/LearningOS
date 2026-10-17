@@ -32,6 +32,7 @@ import arch_surface
 import pytest
 import yaml
 from arch_schema_deltas import (
+    _restore_phase6_descriptions,
     _strip_approved_owner_metadata,
     _strip_bf_description_updates,
 )
@@ -263,6 +264,7 @@ def _assert_only_json_added_to_request_schemas(
             old["$id"] = "learningos/requests/" + operation
         old, new = _strip_approved_owner_metadata(operation, old, new)
         old, new = _strip_bf_description_updates(operation, old, new)
+        new = _restore_phase6_descriptions(operation, old, new)
         assert set(new) == set(old), (key, set(new) ^ set(old))
         for top in old:
             if top == "x-los-cli-command":
