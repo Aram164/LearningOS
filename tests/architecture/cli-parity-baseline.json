@@ -2605,7 +2605,7 @@
           "type": null,
           "choices": null,
           "required": true,
-          "help": null,
+          "help": "The registered write capability to invoke through GatewayEnvelopeV2.",
           "metavar": null,
           "action": "store"
         },
@@ -2620,7 +2620,7 @@
           "type": null,
           "choices": null,
           "required": true,
-          "help": null,
+          "help": "Path to the reviewed GatewayEnvelopeV2 JSON envelope to apply.",
           "metavar": null,
           "action": "store"
         },
@@ -5891,7 +5891,7 @@
           "type": null,
           "choices": null,
           "required": true,
-          "help": null,
+          "help": "The module whose material source map and units this plan updates.",
           "metavar": null,
           "action": "store"
         },
@@ -6011,7 +6011,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": null,
+          "help": "Expected canonical snapshot for this reviewed module plan.",
           "metavar": null,
           "action": "store"
         },
@@ -6412,7 +6412,7 @@
           "type": null,
           "choices": null,
           "required": true,
-          "help": null,
+          "help": "The existing unit whose reviewed material plan is revised.",
           "metavar": null,
           "action": "store"
         },
@@ -6517,7 +6517,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": null,
+          "help": "Expected canonical snapshot for this reviewed unit revision.",
           "metavar": null,
           "action": "store"
         },
@@ -6666,7 +6666,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": null,
+          "help": "Require the current canonical snapshot to equal this snapshot before restamping.",
           "metavar": null,
           "action": "store"
         },
@@ -10167,7 +10167,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": null,
+          "help": "Commit this session's owned changes with this message.",
           "metavar": null,
           "action": "store"
         },
@@ -10197,7 +10197,7 @@
           "type": null,
           "choices": null,
           "required": false,
-          "help": null,
+          "help": "Push this session's commit after committing owned changes when requested.",
           "metavar": null,
           "action": "store_true"
         },

@@ -500,3 +500,23 @@ def _strip_bf_description_updates(operation: str, old: dict, new: dict
 
 # Exact SPEC (cx) D6-D9 metadata transitions; every other delta remains visible.
 PHASE4_METADATA_CHANGES = {'ai-action.append-slices': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.prepare': {('properties', 'action_id', 'x-los-id-owner'): (None, 'ai-action-registry', False), ('properties', 'action_id', 'x-los-lookup'): (None, True, False), ('properties', 'request_id', 'x-los-lookup'): (None, False, False), ('properties', 'target_id', 'x-los-id-owner'): (None, 'ai-action-target', False), ('properties', 'target_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.status': {('properties', 'request_id', 'x-los-id-owner'): (None, 'ai-request-store', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'ai-action.delivery.validate': {('properties', 'delivery_id', 'x-los-id-owner'): (None, 'ai-delivery-store', False), ('properties', 'delivery_id', 'x-los-lookup'): (None, True, False)}, 'operations.read': {('properties', 'request_id', 'x-los-id-owner'): (None, 'operations-trace-request', False), ('properties', 'request_id', 'x-los-lookup'): (None, True, False)}, 'related.read': {('properties', 'id', 'x-los-id-owner'): (None, 'related-record', False), ('properties', 'id', 'x-los-lookup'): (None, True, False)}, 'masters-planning.comparison.publish': {('properties', 'candidate_module_id', 'x-los-id-owner'): (None, 'masters-candidate-module', False), ('properties', 'candidate_module_id', 'x-los-lookup'): (None, True, False)}, 'session.end': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}, 'goal.decide': {('properties', 'session_id', 'x-los-lookup'): (None, False, False)}}
+
+
+def _restore_phase6_descriptions(operation: str, old: dict, new: dict) -> dict:
+    """Compare through the nine literal descriptions Aram approved on 17 October."""
+    import json
+    from pathlib import Path
+
+    table = json.loads((Path(__file__).parent / "architecture" /
+                        "phase6-description-updates.json").read_text())
+    restored = copy.deepcopy(new)
+    for change in table["changes"]:
+        if change["schema"] != f"system/schema/requests/{operation}.schema.json":
+            continue
+        before, after = old, restored
+        for part in change["pointer"].split("/")[1:-1]:
+            before, after = before[part], after[part]
+        assert before["description"] in (change["old"], change["new"])
+        assert after["description"] == change["new"]
+        after["description"] = before["description"]
+    return restored

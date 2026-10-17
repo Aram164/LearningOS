@@ -28,6 +28,7 @@ import arch_surface
 import pytest
 import yaml
 from arch_schema_deltas import (
+    _restore_phase6_descriptions,
     _strip_approved_owner_metadata,
     _strip_bf_description_updates,
 )
@@ -979,6 +980,7 @@ def test_request_schema_aliases_are_byte_identical_to_base(base_ref):
             old["x-los-cli-command"]["operation_kind"] = "tool"
         if new_name in {"repository.validate", "projection.generate"}:
             old["properties"]["json"] = json.loads(_git_show(base_ref, "system/schema/requests/cli.health-report.schema.json"))["properties"]["json"]
+        new = _restore_phase6_descriptions(new_name, old, new)
         assert new == old, new_name
 
 
@@ -1289,3 +1291,25 @@ def test_operation_move_changes_only_the_declared_identifier():
     assert _translate_one("cli.health-report-other::diagnostic", move) == "cli.health-report-other::diagnostic"
     assert _translate_one("health.report::diagnostic", move) == "health.report::diagnostic"
     assert _translate_one("tools/x.py::cli.health-report", move) == "tools/x.py::cli.health-report"
+
+
+@pytest.mark.parametrize("index", range(9))
+@pytest.mark.parametrize("mutation", ["description", "constraint", "metadata"])
+def test_phase6_description_allowance_preserves_all_other_schema_guards(index, mutation):
+    table = json.loads((ARCH / "phase6-description-updates.json").read_text())
+    change = table["changes"][index]
+    operation = Path(change["schema"]).name.removesuffix(".schema.json")
+    before = json.loads((ROOT / change["schema"]).read_text())
+    after = copy.deepcopy(before)
+    old_node, new_node = before, after
+    for part in change["pointer"].split("/")[1:-1]:
+        old_node, new_node = old_node[part], new_node[part]
+    old_node["description"] = change["old"]
+    assert _restore_phase6_descriptions(operation, before, after) == before
+    if mutation == "description":
+        new_node["description"] += " unauthorized"
+        with pytest.raises(AssertionError):
+            _restore_phase6_descriptions(operation, before, after)
+    else:
+        new_node["maxLength" if mutation == "constraint" else "x-los-id-owner"] = 100 if mutation == "constraint" else "different-owner"
+        assert _restore_phase6_descriptions(operation, before, after) != before

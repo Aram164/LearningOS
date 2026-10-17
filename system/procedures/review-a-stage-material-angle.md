@@ -67,7 +67,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s29-vault.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3a1493f9d67044b7c6cc7fdc68a7890c3ded4ecd77ecdcee006f94751f95cb33",
+  "snapshot_after": "sha256:c3ca5d3b3434031ad0eca03a3e2737253e901cf796efc496a281fc0d6d2ed29b",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -97,7 +97,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s29-vault.json"
       "module-demo": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:3a1493f9d67044b7c6cc7fdc68a7890c3ded4ecd77ecdcee006f94751f95cb33",
+    "snapshot_after": "sha256:c3ca5d3b3434031ad0eca03a3e2737253e901cf796efc496a281fc0d6d2ed29b",
     "replayed": false
   },
   "error": null
@@ -224,7 +224,7 @@ $ los capability unit.map.import --payload-file "$TMPDIR/s29-replace.json" | $LO
 True apply transaction-20261001-090000-002
 study-map-demo-l01 True
 {"study-map-demo-l01": 1, "unit-demo-l01": 5}
-sha256:a6ef0e149d7611812fbda081c12db730a67bfc273b47b395e9a8505c5565aea8
+sha256:747bd8a6235881492ed30e0d8f603954a3958fe7ac900b381113424693de6e17
 ```
 
 ## The newest receipt names the capability

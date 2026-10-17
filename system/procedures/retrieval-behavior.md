@@ -84,7 +84,7 @@ $ los search Erwartungswert
 
 ```scrut
 $ los inspect concept-expected-value
-{"id":"concept-expected-value","type":"concept","title":"Expected value","path":"knowledge/concepts.yaml","aliases":["Erwartungswert"],"deprecated":false}
+{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}
 ```
 
 ## Relate it with reasoned edges
@@ -159,7 +159,7 @@ confirmed unit-demo-l01
 
 ```scrut
 $ los inspect coordination
-{"id":"coordination","type":"coordination","path":"work/COORDINATION.md","sections":{"Commitments":"(none)","Priorities":"(none)","Dependencies":"(none)","Deferrals":"- Demo module deferred to 2. Termin (date lives in records/modules.yaml)"},"content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","section_sha256":{"Commitments":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Priorities":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Dependencies":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Deferrals":"sha256:c7fd808ba806ad0f53559df2a76f3f3afb32b3cd79e3227ed0d6133abdc962b2"}}
+{"id":"coordination","path":"work/COORDINATION.md","sections":{"Commitments":"(none)","Deferrals":"- Demo module deferred to 2. Termin (date lives in records/modules.yaml)","Dependencies":"(none)","Priorities":"(none)"},"type":"coordination","content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","section_sha256":{"Commitments":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Deferrals":"sha256:c7fd808ba806ad0f53559df2a76f3f3afb32b3cd79e3227ed0d6133abdc962b2","Dependencies":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a","Priorities":"sha256:552e423045fcbd949252397b4bee754f0b8f99b1bbbe41edc9b25dbfc81b146a"}}
 ```
 
 ## The generated fallbacks are absent from the fixture

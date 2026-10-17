@@ -77,7 +77,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "Require the current canonical snapshot to equal this snapshot before restamping.",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

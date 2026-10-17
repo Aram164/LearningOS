@@ -8,7 +8,7 @@
   "properties": {
     "commit_message": {
       "type": "string",
-      "description": "commit_message (no description in the parser yet)",
+      "description": "Commit this session's owned changes with this message.",
       "x-los-cli": {
         "flags": [
           "--commit-message"
@@ -50,7 +50,7 @@
     },
     "push": {
       "type": "boolean",
-      "description": "push (no description in the parser yet)",
+      "description": "Push this session's commit after committing owned changes when requested.",
       "x-los-cli": {
         "flags": [
           "--push"

@@ -11,7 +11,7 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "name (no description in the parser yet)",
+      "description": "The registered write capability to invoke through GatewayEnvelopeV2.",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -30,7 +30,7 @@
     },
     "payload_file": {
       "type": "string",
-      "description": "payload_file (no description in the parser yet)",
+      "description": "Path to the reviewed GatewayEnvelopeV2 JSON envelope to apply.",
       "x-los-cli": {
         "flags": [
           "--payload-file"

@@ -10,7 +10,7 @@
   "properties": {
     "unit_id": {
       "type": "string",
-      "description": "unit_id (no description in the parser yet)",
+      "description": "The existing unit whose reviewed material plan is revised.",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -160,7 +160,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "Expected canonical snapshot for this reviewed unit revision.",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"

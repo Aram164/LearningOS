@@ -19,20 +19,20 @@ checks:
   A2-static:
   - signature: tools/learning_os/store/contracts/data_contract.py::write_contract::write_text
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/manifest_contract.py::bump::write_text
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/perimeter.py::write_block::write_text
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/tree_contract.py::write_block::write_text
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/fs.py::atomic_text::os.replace
     count: 1
     since: approved
@@ -59,8 +59,8 @@ checks:
     approved_by: 'Aram 2026-10-10: you take open desicions'
   - signature: tools/learning_os/derive/semantics/dossiers.py::store_dossier::write_text
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/adapters/capability.py::reviewed_envelope_apply::open
     count: 1
     since: approved
@@ -85,55 +85,55 @@ checks:
       source relocations'
   - signature: tools/learning_os/store/contracts/perimeter.py::_block_bounds::method::-->
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/contracts/tree_contract.py::_block_bounds::method::-->
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: 'tools/learning_os/derive/projection/common.py::git_state::substring::fatal:
       not a git repository'
     count: 2
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/health.py::_time_machine_check::regex::(?im)^\s*(?:Encryption|Encrypted)\s*[:=]
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: 'tools/learning_os/store/materials/resolution.py::leading_material_locator::substring::
 
       '
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/materials/resolution.py::leading_material_locator::substring::\
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: 'tools/learning_os/derive/validation/contract.py::check_contract_documentation::method::
 
       '
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/validation/materials.py::_referenced_materials::substring::material://
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/validation/registries.py::_references_generated::substring::generated/
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: 'tools/library_reconciliation.py::_flow::method::
 
       ...'
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/normalise_material_uris.py::main::substring::material://
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: 'tools/learning_os/app/handlers/notes.py::_match_verified::method::
 
       '
@@ -149,48 +149,48 @@ checks:
   A3-prose-2:
   - signature: tools/learning_os/store/derived/store.py::read_state::regex::[0-9a-f]{64}
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/health.py::_time_machine_check::regex::(?<!\d)(\d{4}-\d{2}-\d{2}-\d{6})(?!\d)
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/health.py::_time_machine_check::substring::No
       destinations configured
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/store/materials/resolution.py::leading_material_locator::regex::\.(?:ipynb|md|pdf|pptx?)(?=$|[\s,;+()])
     count: 2
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/validation/contract.py::check_contract_documentation::regex::\bmanifest(?:\s+contract)?\s+v\d+\b|data
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/validation/materials.py::uris_in::regex::material://([^\s`)\]\"'<>,;]+)
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/derive/validation/registries.py::_references_generated::regex::(?<![\w/])generated/
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   A4-plumbing: []
   A4-plumbing-2: []
   A8-transcripts:
   - signature: system/WORKFLOWS.md::## 23. Process a lecture
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: system/WORKFLOWS.md::## 24. Turn the semester
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: system/WORKFLOWS.md::## 27. Promote a future Master's module
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   A8-doc-commands: []
   A14-vocabulary: []
   A6-idroundtrip:
@@ -198,48 +198,12 @@ checks:
     count: 1
     since: approved
     approved_by: 'Aram 2026-10-08: i approve you decide the best course of action'
-  A13-request-schemas:
-  - signature: cli.capability::name::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.capability::payload_file::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: session.end::commit_message::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: session.end::push::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: lineage.restamp::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::module_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.plan.revise::expected_snapshot::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.plan.revise::unit_id::description
-    count: 1
-    since: baseline
-    approved_by: null
+  A13-request-schemas: []
   A5-suggestions:
   - signature: cli.capability::*
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: unit.list::/properties/component_id::no-base
     count: 1
     since: approved
@@ -261,35 +225,35 @@ checks:
   A7-output:
   - signature: cli.capability::*
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   A9-refusal-sites: []
   A19-owners: []
   A18-callbacks:
   - signature: ai-action.delivery.apply::publish
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: ai-action.delivery.apply::rollback_publish
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: ai-action.delivery.apply::transaction_writes
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: ai-action.delivery.apply::translate
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: ai-action.delivery.apply::validate_state
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: module.plan.import::validate_extra
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/app/handlers/plan.py::_execute_plan_import::validate_extra
     count: 1
     since: approved
@@ -298,12 +262,12 @@ checks:
       source relocations'
   - signature: tools/learning_os/app/handlers/ai.py::ai_action_apply_delivery::translate
     count: 1
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/app/handlers/routes.py::_execute_material_plan::validate_extra
     count: 2
-    since: baseline
-    approved_by: null
+    since: approved
+    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: tools/learning_os/app/handlers/goals.py::goal::touched
     count: 1
     since: approved

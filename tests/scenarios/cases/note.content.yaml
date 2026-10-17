@@ -110,7 +110,7 @@ cases:
   - --limit
   - 20
   - --expected-snapshot
-  - sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e
+  - sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707
   expect:
     site: null
 - id: cli-unknown-note

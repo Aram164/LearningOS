@@ -82,7 +82,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:60b6564062116c9391a95802a2202e3594d402cb60d26f538049e801fd6ebc49",
+  "snapshot_after": "sha256:2383ca4af8e6fc717c30a1c3ced2d95fd65ac3b8c7adffc58c96cdad5b59e039",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -116,7 +116,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:60b6564062116c9391a95802a2202e3594d402cb60d26f538049e801fd6ebc49",
+    "snapshot_after": "sha256:2383ca4af8e6fc717c30a1c3ced2d95fd65ac3b8c7adffc58c96cdad5b59e039",
     "replayed": false
   },
   "error": null
@@ -177,7 +177,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.j
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:61db0f0c696594a2c105bc60a9e1577107da6415d7c5fd53b9c9adae2f44ddb7",
+  "snapshot_after": "sha256:e3da1b4d51199fdeefd9f8542bb08c319346811ebab968da665c3635de2705d9",
   "result": {
     "schema_version": 1,
     "module_id": "module-demo",
@@ -205,7 +205,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.j
       "study-map-demo-l01": 2,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:61db0f0c696594a2c105bc60a9e1577107da6415d7c5fd53b9c9adae2f44ddb7",
+    "snapshot_after": "sha256:e3da1b4d51199fdeefd9f8542bb08c319346811ebab968da665c3635de2705d9",
     "replayed": false
   },
   "error": null
@@ -346,7 +346,7 @@ $ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:7a3c80931853621472dc833a4539e3f455cf02d1e429d88e85c2e1d02f8e6ad6",
+  "snapshot_after": "sha256:38da82018a9d2e4569cf73306dcb5e86a1dbcddbba84c24b1790f01e8fe8c4fd",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -358,7 +358,7 @@ $ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
     "artifact_revisions": {
       "module-demo": 3
     },
-    "snapshot_after": "sha256:7a3c80931853621472dc833a4539e3f455cf02d1e429d88e85c2e1d02f8e6ad6",
+    "snapshot_after": "sha256:38da82018a9d2e4569cf73306dcb5e86a1dbcddbba84c24b1790f01e8fe8c4fd",
     "replayed": false
   },
   "error": null
@@ -405,7 +405,7 @@ $ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:f94dfcd3003f3471a0a2e6b88535b2eb91107b7bc982e45b5a1d701caaaf63b9",
+  "snapshot_after": "sha256:96f7e226f126e586ccfb2d83a9b55a8b3057434fa1e61d4ebf8ca6e76da39762",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -419,7 +419,7 @@ $ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
     "artifact_revisions": {
       "module-demo": 4
     },
-    "snapshot_after": "sha256:f94dfcd3003f3471a0a2e6b88535b2eb91107b7bc982e45b5a1d701caaaf63b9",
+    "snapshot_after": "sha256:96f7e226f126e586ccfb2d83a9b55a8b3057434fa1e61d4ebf8ca6e76da39762",
     "replayed": false
   },
   "error": null
@@ -500,7 +500,7 @@ $ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-005",
   "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-  "snapshot_after": "sha256:f85a7b36ab5ac2a0322b9b6ea6422ffc9e4fffb5f159f2047f73457f35a6c625",
+  "snapshot_after": "sha256:b6e325fa1eb4b1d0a60177862f39a3a6d651a40d3b72d33874652300843b26b5",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -596,7 +596,7 @@ $ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
       "study-map-demo-l02": 1,
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:f85a7b36ab5ac2a0322b9b6ea6422ffc9e4fffb5f159f2047f73457f35a6c625",
+    "snapshot_after": "sha256:b6e325fa1eb4b1d0a60177862f39a3a6d651a40d3b72d33874652300843b26b5",
     "replayed": false
   },
   "error": null

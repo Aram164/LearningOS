@@ -104,7 +104,7 @@ export PAYLOAD_SCHEMA='{"$schema": "https://json-schema.org/draft/2020-12/schema
 
 ```scrut
 $ eval "$(los bootstrap --compact | $H/los-bind SNAP '$.snapshot_id')" && echo "$SNAP"
-sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e
+sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707
 ```
 
 ## The bare mutating command refuses by design
@@ -125,14 +125,14 @@ seal_envelope: guards auto: capture-request:envelope-capture-a=0
 ## The sealed envelope's sha256, before submission
 
 ```scrut
-$ $H/los-assert-file "$TMPDIR/capture-a.json" --sha256 732faffc784b44ce653fd5eb2208c96564dccdfb60f7359fdfd7e0799310e784
+$ $H/los-assert-file "$TMPDIR/capture-a.json" --sha256 d0895cddb477edcd226a26f6d9ff3ead76c3140ab6c5fa2ce565ada30206ff2c
 ```
 
 ## The envelope carries the bound snapshot
 
 ```scrut
 $ cat "$TMPDIR/capture-a.json" | $H/los-bind EXPECTED '$.expected_snapshot'
-export EXPECTED=sha256:e99d65a2ec2e016babf6e0a177099505c324a0b3104612ad393e779691b9d06e
+export EXPECTED=sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707
 ```
 
 ## Step 5: the approval subject is the intent hash
@@ -179,7 +179,7 @@ approval = "sha256:" + hashlib.sha256(json.dumps(
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c "import hashlib,json,os; e=json.load(open(os.path.join(os.environ['TMPDIR'],'capture-a.json'))); s={k:e[k] for k in ('schema_version','capability','channel','expected_snapshot','expected_revisions','payload')}; h='sha256:'+hashlib.sha256(json.dumps(s,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest(); assert h==e['approval']['subject_sha256'],h; print(h)"
-sha256:f73bf35daa8a2f36e59ac7d59f323372508ad157e786cae27c09f6293ba41ce2
+sha256:6c256b94d293b2a2420e30108b8f362bd430ef174b906877deea9cd99f764e2b
 ```
 
 ## Step 6: submit the envelope
@@ -195,7 +195,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3269bfc12819b2a3e94e2aa25d446e898a6a599f84d17d8588afd9c2c0f95931",
+  "snapshot_after": "sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md",
@@ -204,7 +204,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
     "artifact_revisions": {
       "capture-request:envelope-capture-a": 1
     },
-    "snapshot_after": "sha256:3269bfc12819b2a3e94e2aa25d446e898a6a599f84d17d8588afd9c2c0f95931",
+    "snapshot_after": "sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e",
     "replayed": false
   },
   "error": null
@@ -236,14 +236,14 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
   "replayed": true,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3269bfc12819b2a3e94e2aa25d446e898a6a599f84d17d8588afd9c2c0f95931",
+  "snapshot_after": "sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e",
   "result": {
     "transaction_id": "transaction-20261001-090000-001",
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
     "artifact_revisions": {
       "capture-request:envelope-capture-a": 1
     },
-    "snapshot_after": "sha256:3269bfc12819b2a3e94e2aa25d446e898a6a599f84d17d8588afd9c2c0f95931",
+    "snapshot_after": "sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e",
     "replayed": true,
     "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md"
   },
@@ -278,7 +278,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:91b58fb4ef52bcff630683e175dbde5511a630ca6f4b16c8f0f1b6d567ead3c0",
+  "snapshot_after": "sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-a-second-capture-that-moves-the-snapshot.md",
@@ -287,7 +287,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
     "artifact_revisions": {
       "capture-request:envelope-capture-b": 1
     },
-    "snapshot_after": "sha256:91b58fb4ef52bcff630683e175dbde5511a630ca6f4b16c8f0f1b6d567ead3c0",
+    "snapshot_after": "sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac",
     "replayed": false
   },
   "error": null
@@ -314,8 +314,8 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-c.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:3269bfc12819b2a3e94e2aa25d446e898a6a599f84d17d8588afd9c2c0f95931",
-      "actual": "sha256:91b58fb4ef52bcff630683e175dbde5511a630ca6f4b16c8f0f1b6d567ead3c0"
+      "expected": "sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e",
+      "actual": "sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac"
     }
   }
 }

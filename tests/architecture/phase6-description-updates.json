@@ -1,0 +1,60 @@
+{
+  "approved_by": "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)",
+  "packet_sha256": "6fe1d4d957400f84cb6c01031b0087eff01fbb3e5b81544e0efa7fd73187b54f",
+  "changes": [
+    {
+      "schema": "system/schema/requests/cli.capability.schema.json",
+      "pointer": "/properties/name/description",
+      "old": "name (no description in the parser yet)",
+      "new": "The registered write capability to invoke through GatewayEnvelopeV2."
+    },
+    {
+      "schema": "system/schema/requests/cli.capability.schema.json",
+      "pointer": "/properties/payload_file/description",
+      "old": "payload_file (no description in the parser yet)",
+      "new": "Path to the reviewed GatewayEnvelopeV2 JSON envelope to apply."
+    },
+    {
+      "schema": "system/schema/requests/session.end.schema.json",
+      "pointer": "/properties/commit_message/description",
+      "old": "commit_message (no description in the parser yet)",
+      "new": "Commit this session's owned changes with this message."
+    },
+    {
+      "schema": "system/schema/requests/session.end.schema.json",
+      "pointer": "/properties/push/description",
+      "old": "push (no description in the parser yet)",
+      "new": "Push this session's commit after committing owned changes when requested."
+    },
+    {
+      "schema": "system/schema/requests/lineage.restamp.schema.json",
+      "pointer": "/properties/expected_snapshot/description",
+      "old": "expected_snapshot (no description in the parser yet)",
+      "new": "Require the current canonical snapshot to equal this snapshot before restamping."
+    },
+    {
+      "schema": "system/schema/requests/module.plan.import.schema.json",
+      "pointer": "/properties/expected_snapshot/description",
+      "old": "expected_snapshot (no description in the parser yet)",
+      "new": "Expected canonical snapshot for this reviewed module plan."
+    },
+    {
+      "schema": "system/schema/requests/module.plan.import.schema.json",
+      "pointer": "/properties/module_id/description",
+      "old": "module_id (no description in the parser yet)",
+      "new": "The module whose material source map and units this plan updates."
+    },
+    {
+      "schema": "system/schema/requests/unit.plan.revise.schema.json",
+      "pointer": "/properties/expected_snapshot/description",
+      "old": "expected_snapshot (no description in the parser yet)",
+      "new": "Expected canonical snapshot for this reviewed unit revision."
+    },
+    {
+      "schema": "system/schema/requests/unit.plan.revise.schema.json",
+      "pointer": "/properties/unit_id/description",
+      "old": "unit_id (no description in the parser yet)",
+      "new": "The existing unit whose reviewed material plan is revised."
+    }
+  ]
+}

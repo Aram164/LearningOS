@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "[{\"schema_version\":1,\"id\":\"project-demo\",\"type\":\"project\",\"title\":\"Demo project\",\"project_type\":\"software\",\"status\":\"active\",\"root_uri\":\"project://demo\",\"objective\":\"Demonstrate the shadow graph.\",\"milestone_ids\":[],\"linked_module_ids\":[\"module-demo\"],\"unit_ids\":[\"unit-demo-l01\"],\"workspace_ids\":[\"workspace-demo\"],\"thematic_group_ids\":[],\"boundaries\":{\"confidentiality\":\"private\",\"external_code_access\":\"approved\"},\"revision\":0,\"path\":\"projects/registry/project-demo.yaml\",\"relationship_ids\":[\"relationship-demo\"]}]\n",
+  "stdout": "[{\"boundaries\":{\"confidentiality\":\"private\",\"external_code_access\":\"approved\"},\"id\":\"project-demo\",\"linked_module_ids\":[\"module-demo\"],\"milestone_ids\":[],\"objective\":\"Demonstrate the shadow graph.\",\"path\":\"projects/registry/project-demo.yaml\",\"project_type\":\"software\",\"relationship_ids\":[\"relationship-demo\"],\"revision\":0,\"root_uri\":\"project://demo\",\"schema_version\":1,\"status\":\"active\",\"thematic_group_ids\":[],\"title\":\"Demo project\",\"type\":\"project\",\"unit_ids\":[\"unit-demo-l01\"],\"workspace_ids\":[\"workspace-demo\"]}]\n",
   "stdout_json": [
     {
       "boundaries": {

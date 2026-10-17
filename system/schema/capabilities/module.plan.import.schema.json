@@ -23,7 +23,8 @@
       "description": "SHA-256 of the exact module-plan file bytes approved for import"
     },
     "module_id": {
-      "type": "string"
+      "type": "string",
+      "description": "The module whose material source map and units this plan updates."
     },
     "package_sha256": {
       "type": "string",

@@ -74,7 +74,8 @@
       "description": "with --check, print the post-revision dossier basis without writing"
     },
     "unit_id": {
-      "type": "string"
+      "type": "string",
+      "description": "The existing unit whose reviewed material plan is revised."
     }
   },
   "oneOf": [

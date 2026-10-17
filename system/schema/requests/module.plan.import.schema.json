@@ -10,7 +10,7 @@
   "properties": {
     "module_id": {
       "type": "string",
-      "description": "module_id (no description in the parser yet)",
+      "description": "The module whose material source map and units this plan updates.",
       "x-los-cli": {
         "flags": [],
         "position": 0,
@@ -183,7 +183,7 @@
     },
     "expected_snapshot": {
       "type": "string",
-      "description": "expected_snapshot (no description in the parser yet)",
+      "description": "Expected canonical snapshot for this reviewed module plan.",
       "x-los-cli": {
         "flags": [
           "--expected-snapshot"
