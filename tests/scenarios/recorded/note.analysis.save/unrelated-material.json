@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"resolved material is not the source's registered file or under its registered directory\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['note-scenario-save-8'], unexpected=[], artifacts=['note-scenario-save-8'])\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
   "stdout_json": {
     "capability": "note.analysis.save",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "resolved material is not the source's registered file or under its registered directory",
+      "message": "GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['note-scenario-save-8'], unexpected=[], artifacts=['note-scenario-save-8'])",
       "retryable": false
     },
     "idempotency_key": "KEY2",
