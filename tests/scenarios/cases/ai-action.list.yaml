@@ -1,0 +1,26 @@
+operation: ai-action.list
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: list
+  kind: success
+  transport: cli
+  argv:
+  - ai-action-list
+  expect:
+    site: null
+- id: list-json
+  kind: success
+  transport: cli
+  argv:
+  - ai-action-list
+  - --json
+  expect:
+    site: null
+untriggered: []

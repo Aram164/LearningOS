@@ -1,0 +1,146 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY1": {
+          "capability": "goal.decision.record",
+          "channel": "operator",
+          "intent_sha256": "sha256:d69d70910aeba9dfd2059ba7cc0753520e1cf982d8147a6141fd80ef1f48997f",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "file:operations/goal-ledger.yaml": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP1",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "file:operations/goal-ledger.yaml": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "goal.decision.record",
+            "declared_writes": [
+              "operations/goal-ledger.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "goal.decision.record",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "file:operations/goal-ledger.yaml": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:7d83fda3a0689813d4e5721f73abd6183f50adee3e8c8363fa818cec49f24200",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "direct-user-gesture",
+          "subject_sha256": "sha256:d69d70910aeba9dfd2059ba7cc0753520e1cf982d8147a6141fd80ef1f48997f"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY1",
+        "intent_sha256": "sha256:d69d70910aeba9dfd2059ba7cc0753520e1cf982d8147a6141fd80ef1f48997f",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP1",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "operations/goal-ledger.yaml",
+          "sha256_after": "da993bcdfbed968d33538a4d665b4fe0b7d838c18ab5fad0c6f2aa9a5ec37e0d",
+          "sha256_before": "eb3d9638be9378e8254a9848d56f844cb0d4ce4213ce31bcfc6053db35c6a1b5"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "file:operations/goal-ledger.yaml": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "operations/goal-ledger.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "da993bcdfbed968d33538a4d665b4fe0b7d838c18ab5fad0c6f2aa9a5ec37e0d",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "2ce992e455c2f1dbd812dca76f9e76c7511aa9584c1034f41c1dc3e1e5d1f723",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "b6295863c988dec591124c75bb69a59bdcc43e436ca3c4ef7bb2d8822ea94bdd",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "4e5eb1a6c1f8f059b5fc34020ffb2128b4cca742b000ef97812b20e6a57f20d1",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"state\":\"rejected\",\"goal_ids\":[\"goal-demo-deferred\",\"goal-demo-rejected\"]}\n",
+  "stdout_json": {
+    "goal_ids": [
+      "goal-demo-deferred",
+      "goal-demo-rejected"
+    ],
+    "ok": true,
+    "state": "rejected"
+  }
+}

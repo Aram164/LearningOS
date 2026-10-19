@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/path.attachment.add.schema.json",
+  "title": "payload for capability path.attachment.add",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "path_id",
+    "stage_id"
+  ],
+  "properties": {
+    "file": {
+      "type": "string",
+      "description": "local file to attach inside the path stage (bytes bound by --file-sha256)"
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact attachment bytes approved for this request"
+    },
+    "label": {
+      "type": "string",
+      "description": "optional attachment label; the file name stem when omitted"
+    },
+    "path_id": {
+      "type": "string",
+      "description": "learning path whose stage gains the attachment"
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "stage of the learning path the file attaches to"
+    }
+  },
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
+  }
+}

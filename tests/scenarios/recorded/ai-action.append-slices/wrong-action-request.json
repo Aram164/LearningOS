@@ -1,0 +1,75 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "ai-request-append-garden"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"ai-request-append-garden\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/ai-request-append-garden\"},\"bundle_path\":\"operations/ai-actions/requests/ai-request-append-garden\"}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/ai-request-append-garden",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/ai-request-append-garden",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "ai-request-append-garden",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-append-slices",
+        "--request-id",
+        "ai-request-append-garden",
+        "--route-id",
+        "route-x",
+        "--start",
+        "1",
+        "--end",
+        "2",
+        "--kind",
+        "example",
+        "--reason",
+        "cover the worked example on pp. 1-2"
+      ],
+      "canonical_changed": {},
+      "exit": 1,
+      "idempotency_changed": {},
+      "outcome": "diagnostic-failure",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: continuations only amend unit.compare-materials requests: ai-request-append-garden\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/ability-candidate",
+  "title": "Tentative conversation-derived ability connection",
+  "x-governs": "record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "from", "to", "kind", "carries", "changes", "conditions", "source_ref", "created_at", "state"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^ability-candidate-[a-f0-9]{32}$"},
+    "from": {"type": "string", "pattern": "^ability-[a-z0-9-]+$"},
+    "to": {"type": "string", "pattern": "^ability-[a-z0-9-]+$"},
+    "kind": {"enum": ["equivalence", "extension", "connection"]},
+    "carries": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "changes": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "conditions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "source_ref": {"type": "string", "pattern": "^(conversation|note|project)://\\S+$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "state": {"const": "candidate"}
+  }
+}

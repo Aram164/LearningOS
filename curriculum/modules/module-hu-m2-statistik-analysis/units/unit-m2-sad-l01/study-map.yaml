@@ -1,0 +1,558 @@
+id: study-map-m2-sad-l01
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l01
+status: not-started
+current_stage: stage-sad-l01-data-questions
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l01-data-questions
+  number: 1
+  title: One dataset, several legitimate questions
+  status: pending
+  objective: A statistic is useful only relative to a question; totals, typical cases, likely cases, and
+    decisions can require different summaries of the same observations.
+  done_when:
+  - 'Reproduce without notes: A statistic is useful only relative to a question; totals, typical cases,
+    likely cases, and decisions can require different summaries of the same observations.'
+  - Work Blatt 1, Aufgabe 1 — data summaries in the opening dataset, then the remaining 1, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 3-8
+    angle: The current lecture's focused reading for one dataset, several legitimate questions.
+    angle_detail: Read physical PDF pages 3-8 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'One dataset, several
+        legitimate questions'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:8d87b79855fbb9343831e55787f884186d80d2f4dec6066148a2e7ba4941dc63
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
+  - material_ref:
+      route_id: route-2dcce50c3bcf099f1f475c2b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2dcce50c3bcf099f1f475c2b
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-data-questions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-location
+  number: 2
+  title: Mean, median, mode, and robustness
+  status: pending
+  objective: Central-tendency summaries answer different questions, while outliers move the mean much
+    more strongly than the median or mode.
+  done_when:
+  - 'Reproduce without notes: Central-tendency summaries answer different questions, while outliers move
+    the mean much more strongly than the median or mode.'
+  - Work Blatt 1, Aufgabe 1 — data summaries in the opening dataset, then the remaining 2, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 4-6
+    angle: The current lecture's focused reading for mean, median, mode, and robustness.
+    angle_detail: Read physical PDF pages 4-6 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Mean, median, mode,
+        and robustness'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:adf3019934fd66e929e3092537117364f206a0b2cd42a30c86178ef36131dd82
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
+  - material_ref:
+      route_id: route-19d82d10ef563326bb01cfed
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-19d82d10ef563326bb01cfed
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
+  - material_ref:
+      route_id: route-e7123fb830406d6679364c7f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-e7123fb830406d6679364c7f
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-location/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-distributions
+  number: 3
+  title: Frequencies, histograms, and empirical distributions
+  status: pending
+  objective: Counts become relative frequencies and distributions, making samples of different sizes and
+    ranges comparable without pretending that the sample is the population.
+  done_when:
+  - 'Reproduce without notes: Counts become relative frequencies and distributions, making samples of
+    different sizes and ranges comparable without pretending that the sample is the population.'
+  - Work Arbeitsbuch Chapter 2 — descriptive warm-ups, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 6,9-10
+    angle: The current lecture's focused reading for frequencies, histograms, and empirical distributions.
+    angle_detail: Read physical PDF pages 6,9-10 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Frequencies, histograms,
+        and empirical distributions'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4c2dfb8aa9d1414691bbcaa61cc2410985dcd91ab83c9438786c9b3a92079659
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
+  - material_ref:
+      route_id: route-19d82d10ef563326bb01cfed
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-19d82d10ef563326bb01cfed
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-distributions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-sampling-context
+  number: 4
+  title: Samples, populations, and context
+  status: pending
+  objective: A result changes with the sampled group; the same-looking numbers can describe different
+    populations, and comparison requires attention to selection and context.
+  done_when:
+  - 'Reproduce without notes: A result changes with the sampled group; the same-looking numbers can describe
+    different populations, and comparison requires attention to selection and context.'
+  - Work Blatt 1, Aufgabe 1 — data summaries in the opening dataset, then the remaining 2, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-sampling-bias
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 7-10
+    angle: The current lecture's focused reading for samples, populations, and context.
+    angle_detail: Read physical PDF pages 7-10 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Samples, populations,
+        and context'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:dfb346244a6b07636f10d939fb6aec4788a8efe08ae4edf21a410231c3a03a45
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
+  - material_ref:
+      route_id: route-2dcce50c3bcf099f1f475c2b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2dcce50c3bcf099f1f475c2b
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-sampling-context/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-classification
+  number: 5
+  title: Confusion matrices and classification metrics
+  status: pending
+  objective: True/false positives and negatives support accuracy, precision, recall, sensitivity, and
+    specificity; the useful metric depends on the error costs and class prevalence.
+  done_when:
+  - 'Reproduce without notes: True/false positives and negatives support accuracy, precision, recall,
+    sensitivity, and specificity; the useful metric depends on the error costs and class prevalence.'
+  - Work FAU pp. 4 and 22 — origin/base-rate table with solution, and record every miss with the step
+    it failed at.
+  exam_critical: true
+  concepts:
+  - concept-classification-metrics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 19-22
+    angle: The current lecture's focused reading for confusion matrices and classification metrics.
+    angle_detail: Read physical PDF pages 19-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Confusion matrices
+        and classification metrics'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f4f45e081259a2f8e8563296e58c5cfc9602f20e8ce97e0b957cc84dc191574b
+  - material_ref:
+      route_id: route-66d61878473ae7da314c77a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-66d61878473ae7da314c77a8
+  - material_ref:
+      route_id: route-e97efca7d5fa214453f7b0d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-e97efca7d5fa214453f7b0d0
+  - material_ref:
+      route_id: route-989d14e47fcce3d89ecc119e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-989d14e47fcce3d89ecc119e
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-base-rates
+  number: 6
+  title: Base rates and Bayes by counting
+  status: pending
+  objective: Medical-test and classification examples expose why a high sensitivity need not imply a high
+    posterior probability when the positive class is rare.
+  done_when:
+  - 'Reproduce without notes: Medical-test and classification examples expose why a high sensitivity need
+    not imply a high posterior probability when the positive class is rare.'
+  - Work FAU pp. 4 and 22 — origin/base-rate table with solution, and record every miss with the step
+    it failed at.
+  exam_critical: true
+  concepts:
+  - concept-combinatorics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 12-18,23-24
+    angle: The current lecture's focused reading for base rates and bayes by counting.
+    angle_detail: Read physical PDF pages 12-18,23-24 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Base rates and
+        Bayes by counting'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:937060beb8fda801816ab826274e64d21dfe6cb5e6ccec4bc783a315b8c1f465
+  - material_ref:
+      route_id: route-66d61878473ae7da314c77a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-66d61878473ae7da314c77a8
+  - material_ref:
+      route_id: route-989d14e47fcce3d89ecc119e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-989d14e47fcce3d89ecc119e
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-course-map
+  number: 7
+  title: From description to inference and prediction
+  status: pending
+  objective: Descriptive statistics summarize observed data; probability models uncertainty; inference
+    reasons about populations; data science and machine learning use the resulting structure to predict.
+  done_when:
+  - 'Reproduce without notes: Descriptive statistics summarize observed data; probability models uncertainty;
+    inference reasons about populations; data science and machine learning use the resulting structure
+    to predict.'
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 2,26-34,37-40
+    angle: The current lecture's focused reading for from description to inference and prediction.
+    angle_detail: Read physical PDF pages 2,26-34,37-40 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
+    scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'From description
+        to inference and prediction'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:0fda16c1e35a28c43b16cacf03f3b8bab0e53217be465398309b79884815879e
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md
+  attachments: []
+  source_feedback: []

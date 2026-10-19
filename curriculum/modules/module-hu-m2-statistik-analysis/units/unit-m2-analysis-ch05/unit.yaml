@@ -1,0 +1,73 @@
+id: unit-m2-analysis-ch05
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 5 — Differentialrechnung I
+order: 105
+scope: 'Script Chapter 5 ''Differentialrechnung I'', printed pp. 98-136 (PDF pp. 108-146). Despite the
+  title the chapter contains no derivatives: it is function limits, continuity, the theorems on compact
+  intervals, the exponential and logarithm, and uniform convergence. Current HU practice reaches §5.5
+  and stops there — Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4. §5.8 (Potenzreihen) is an Exkurs.'
+status: ready
+knowledge_map:
+  summary: 'Chapter 5 carries the definition of a limit of a function through sequences, which is why
+    Chapter 3 had to come first, and then spends itself on continuity and its three consequences on a
+    closed bounded interval: the intermediate value theorem, the extreme value theorem, and the existence
+    of a continuous inverse. It is the last chapter with current HU exercises, and the theorems here are
+    the ones the external Klausuren ask to be stated with complete hypotheses.'
+  nodes:
+  - id: knowledge-m2-analysis-ch05-funktionsgrenzwerte
+    title: Grenzwerte bei Funktionen (§5.1)
+    summary: The limit of a function at an accumulation point, defined both directly and through the sequence
+      criterion. Serie 08.4 asks for one limit proved both ways, which is the clearest signal of what
+      the course wants here.
+  - id: knowledge-m2-analysis-ch05-einseitige-grenzwerte
+    title: Uneigentliche und einseitige Grenzwerte (§5.2)
+    summary: One-sided limits, limits at infinity and infinite limits, and the discipline of falling back
+      to one-sided limits when the two-sided one fails to exist.
+    builds_on:
+    - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+  - id: knowledge-m2-analysis-ch05-stetigkeit
+    title: Stetige Funktionen (§5.3)
+    summary: Continuity at a point and on a set, the epsilon-delta and sequence formulations, and the
+      rules for sums, products, quotients and compositions. Proving continuity at exactly one point is
+      a recurring exam shape.
+    builds_on:
+    - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+  - id: knowledge-m2-analysis-ch05-zwischenwertsatz
+    title: Zwischenwertsatz, Umkehrfunktion und Extrempunkte (§5.4)
+    summary: The intermediate value theorem with its hypotheses stated exactly, the existence and continuity
+      of inverse functions on intervals, and extreme points. WV1.4 asks for the statement first and the
+      application second, in that order.
+    builds_on:
+    - knowledge-m2-analysis-ch05-stetigkeit
+  - id: knowledge-m2-analysis-ch05-kompakte-intervalle
+    title: Besonderheiten stetiger Funktionen auf abgeschlossenen, beschränkten Intervallen (§5.5)
+    summary: Boundedness, attained maximum and minimum, and uniform continuity on a compact interval.
+      Short in the script and heavily used afterwards — several external Klausur tasks are this theorem
+      in disguise.
+    builds_on:
+    - knowledge-m2-analysis-ch05-zwischenwertsatz
+  - id: knowledge-m2-analysis-ch05-exponentialfunktion
+    title: Exponentialfunktion und Logarithmen (§5.6)
+    summary: 'The exponential series, the functional equation, the logarithm as its inverse and the general
+      power. Kept computational: the laws must be usable, the construction need not be reproduced.'
+    builds_on:
+    - knowledge-m2-analysis-ch05-stetigkeit
+  - id: knowledge-m2-analysis-ch05-gleichmaessige-konvergenz
+    title: Gleichmäßige Konvergenz von Funktionenfolgen (§5.7)
+    summary: Pointwise versus uniform convergence of a sequence of functions, and what uniform convergence
+      preserves that pointwise does not. Two script pages and no HU sheet, which is exactly why it is
+      easy to arrive at the exam never having practised it.
+    builds_on:
+    - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 5, printed pp. 98-136 (PDF pp. 108-146); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch05

@@ -1,0 +1,702 @@
+{
+  "baseline_source": "../../performance/claim-reads/baseline/repository",
+  "candidate_source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository",
+  "commands": {
+    "brief": [
+      "plan-edit-context",
+      "unit-m2-sad-l04",
+      "--brief"
+    ],
+    "dossier": [
+      "dossier",
+      "unit-m2-sad-l04",
+      "--json"
+    ],
+    "route": [
+      "plan-edit-context",
+      "unit-m2-sad-l04",
+      "--route-id",
+      "route-78ae1df0aa949bb2a8a872dc"
+    ]
+  },
+  "samples": {
+    "brief": {
+      "baseline": [
+        {
+          "seconds": 1.7091786670061992,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.657909749992541,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.7198971250036266,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6920202500041341,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6728139579936396,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.7300738329940941,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.738696375003201,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.693159292000928,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6867590000038035,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.693998458009446,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6851136249897536,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.663608375005424,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.7014157500088913,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6522896249953192,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6680794170097215,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6803586250025546,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.648057541999151,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6438796250004089,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6816160419984953,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        },
+        {
+          "seconds": 1.6732360419991892,
+          "stderr_bytes": 0,
+          "stdout_bytes": 9427
+        }
+      ],
+      "candidate": [
+        {
+          "seconds": 1.6786856669932604,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6428827089985134,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6744595829950413,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.644023750006454,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.7236648749967571,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6850536669953726,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6447908749978524,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6196455830067862,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6925702919979813,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6715400000102818,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6558283329941332,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6647484999994049,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.666295542003354,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6675662089983234,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6553617919998942,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6443737910012715,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6211896669992711,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.61818829200638,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.6511076250026235,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        },
+        {
+          "seconds": 1.7065840419963934,
+          "stderr_bytes": 0,
+          "stdout_bytes": 10669
+        }
+      ]
+    },
+    "dossier": {
+      "baseline": [
+        {
+          "seconds": 1.097597375002806,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0776362500037067,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1206506669986993,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1266082920046756,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0892019579914631,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.09905274999619,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1082121670042397,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0914102920069126,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1124160000035772,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1061639999970794,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1193099999945844,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0767848329996923,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0706015000032494,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.128649291000329,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1196418340114178,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1344431659963448,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0892925410007592,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0897269999986747,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.1230805000086548,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        },
+        {
+          "seconds": 1.0913722919940483,
+          "stderr_bytes": 0,
+          "stdout_bytes": 720734
+        }
+      ],
+      "candidate": [
+        {
+          "seconds": 1.0854444169963244,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0586689170013415,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.103852584012202,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.1067580000089947,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.1061141249956563,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.073685374998604,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0943141659954563,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.1011824999877717,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.1259430420032004,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.109643749994575,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.1074200410075719,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0897033750079572,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0882874579983763,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.127012958007981,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0842995420098305,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0983784160052892,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0667782910022652,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0598333750094753,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0830950840027072,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        },
+        {
+          "seconds": 1.0935564579995116,
+          "stderr_bytes": 0,
+          "stdout_bytes": 721976
+        }
+      ]
+    },
+    "route": {
+      "baseline": [
+        {
+          "seconds": 0.923226082988549,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9470371249917662,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.965333540996653,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9312702500028536,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9130348329927074,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.927596084002289,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9094734999962384,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9023487079975894,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9022064580058213,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.8941862500068964,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9268460419989424,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9396130000095582,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.909642917002202,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.8983833749953192,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.8943613750016084,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9445569169911323,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9421832079970045,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9598724169918569,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9458787909970852,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        },
+        {
+          "seconds": 0.9000468750018626,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3416
+        }
+      ],
+      "candidate": [
+        {
+          "seconds": 0.921583917006501,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.921633040998131,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.950823916005902,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9461979170009727,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.89046637499996,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8965179170045303,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9280381249991478,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8990819590108003,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8966031250020023,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8923981249972712,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9491037080006208,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9324744579935214,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9134329580119811,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8925522089994047,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.8898477079928853,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9088535420014523,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9313549590006005,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9389287499943748,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.90897175000282,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        },
+        {
+          "seconds": 0.9098349169944413,
+          "stderr_bytes": 0,
+          "stdout_bytes": 3929
+        }
+      ]
+    }
+  },
+  "summary": {
+    "brief": {
+      "allowed_increase_seconds": 0.25951107494911413,
+      "baseline": {
+        "median_seconds": 1.6833648334941245,
+        "p95_seconds": 1.7300738329940941,
+        "stdout_bytes": [
+          9427
+        ]
+      },
+      "budget_met": true,
+      "candidate": {
+        "median_seconds": 1.660288416496769,
+        "p95_seconds": 1.7065840419963934,
+        "stdout_bytes": [
+          10669
+        ]
+      },
+      "p95_increase_seconds": -0.023489790997700766
+    },
+    "dossier": {
+      "allowed_increase_seconds": 0.16929739365004934,
+      "baseline": {
+        "median_seconds": 1.1026083749966347,
+        "p95_seconds": 1.128649291000329,
+        "stdout_bytes": [
+          720734
+        ]
+      },
+      "budget_met": true,
+      "candidate": {
+        "median_seconds": 1.093935311997484,
+        "p95_seconds": 1.1259430420032004,
+        "stdout_bytes": [
+          721976
+        ]
+      },
+      "p95_increase_seconds": -0.0027062489971285686
+    },
+    "route": {
+      "allowed_increase_seconds": 0.14398086254877854,
+      "baseline": {
+        "median_seconds": 0.9250360624937457,
+        "p95_seconds": 0.9598724169918569,
+        "stdout_bytes": [
+          3416
+        ]
+      },
+      "budget_met": true,
+      "candidate": {
+        "median_seconds": 0.9116339375032112,
+        "p95_seconds": 0.9491037080006208,
+        "stdout_bytes": [
+          3929
+        ]
+      },
+      "p95_increase_seconds": -0.010768708991236053
+    }
+  },
+  "world": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/world"
+}

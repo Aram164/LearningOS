@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260903-172118-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-03T17:21:18+02:00'
+snapshot_before: sha256:48114c54b048563ac39b6d9d35274451593b32d1e5d3d715fdc355a12e201f88
+snapshot_after: sha256:04acb350ea1bc25c9d565b26a4032a46d0aa5dfcbde9da0bb8de16ac3cc6cc0e
+expected_revisions:
+  unit-job-polars-pandas-fluency: 6
+  study-map-job-polars-pandas-fluency: 5
+artifact_revisions:
+  study-map-job-polars-pandas-fluency:
+    before: 5
+    after: 6
+  unit-job-polars-pandas-fluency:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-check.py
+  sha256_before: null
+  sha256_after: b8bb4c439cc0905ea3d5d93d8702170fc24bb6d60c5f000332ed83d67282a2f5
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  sha256_before: e0fa151768e0c7f8d6c320af2c241c75baa26cc359d3cacaa02468de8d4871d3
+  sha256_after: 115f9e84b92b8749423f436fc5e50cface775f6d231f37a7f7c9566ad61d8f10
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-polars-sheet-s02-check-20260903
+  idempotency_key: polars-sheet-s02-check-20260903
+  intent_sha256: sha256:66b8d0d7e3f4f07fe864b3dcc5cea3a210718638a518828d02f2c0a09298951c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:66b8d0d7e3f4f07fe864b3dcc5cea3a210718638a518828d02f2c0a09298951c

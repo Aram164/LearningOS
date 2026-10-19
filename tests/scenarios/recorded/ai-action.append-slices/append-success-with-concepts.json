@@ -1,0 +1,92 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "unit.compare-materials",
+        "--target-kind",
+        "unit",
+        "--target-id",
+        "unit-demo-l01",
+        "--request-id",
+        "KEY1"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"unit.compare-materials\",\"target\":{\"kind\":\"unit\",\"id\":\"unit-demo-l01\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/KEY1",
+        "ok": true,
+        "request": {
+          "action_id": "unit.compare-materials",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "KEY1",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "unit-demo-l01",
+            "kind": "unit"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-append-slices",
+        "--request-id",
+        "KEY1",
+        "--route-id",
+        "route-b2f1f80014860a929a3af0bc",
+        "--start",
+        "21",
+        "--end",
+        "24",
+        "--kind",
+        "example",
+        "--concept-id",
+        "concept-expected-value",
+        "--reason",
+        "cover the worked example on pp. 21-24"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"continuation\":{\"request_id\":\"KEY1\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"pass\":2,\"bundle_path\":\"attachments/slices/route-b2f1f80014860a929a3af0bc--pass2.md\",\"pages\":[21,22,23,24],\"page_total\":24}}\n",
+      "stdout_json": {
+        "continuation": {
+          "bundle_path": "attachments/slices/route-b2f1f80014860a929a3af0bc--pass2.md",
+          "page_total": 24,
+          "pages": [
+            21,
+            22,
+            23,
+            24
+          ],
+          "pass": 2,
+          "request_id": "KEY1",
+          "route_id": "route-b2f1f80014860a929a3af0bc"
+        },
+        "ok": true
+      },
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

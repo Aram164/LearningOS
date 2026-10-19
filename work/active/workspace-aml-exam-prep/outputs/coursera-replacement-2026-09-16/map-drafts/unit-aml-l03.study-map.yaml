@@ -1,0 +1,916 @@
+id: study-map-aml-l03
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l03
+status: not-started
+current_stage: stage-aml-l03-problem
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l03-problem
+  number: 1
+  title: Regression problem and hypothesis
+  status: pending
+  objective: Real-valued targets, a line parameterized by intercept and slope, predictions, and residuals.
+  done_when:
+  - 'Reproduce without notes: Real-valued targets, a line parameterized by intercept and slope, predictions,
+    and residuals.'
+  - Work Bonusblatt 02 — linear-regression task, then the remaining 1, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3fd95ab2e612f27020ad178f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-43d3ea3a42b06a9f17c6a63c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-problem/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l03-loss
+  number: 2
+  title: Mean-squared-error objective
+  status: pending
+  objective: Squared residuals, averaging conventions, differentiability, and what minimizing MSE means
+    geometrically.
+  done_when:
+  - 'Reproduce without notes: Squared residuals, averaging conventions, differentiability, and what minimizing
+    MSE means geometrically.'
+  - Work Übung 03 — vectorization and linear regression, then the remaining 4, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-mean-squared-error
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3fd95ab2e612f27020ad178f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-43d3ea3a42b06a9f17c6a63c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-loss/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l03-solution
+  number: 3
+  title: Closed-form least-squares solution
+  status: pending
+  objective: Partial derivatives set to zero, the optimal slope/intercept formulas, and their assumptions.
+  done_when:
+  - 'Reproduce without notes: Partial derivatives set to zero, the optimal slope/intercept formulas, and
+    their assumptions.'
+  - Work Bonusblatt 02 — linear-regression task, then the remaining 4, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  - concept-normal-equation
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2fc647972ce02f232134aedb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e9424e18b5dcd231637f8eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-solution/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l03-linear-algebra
+  number: 4
+  title: Linear-algebra refresher
+  status: pending
+  objective: Vectors, transposes, dot products, matrix-vector/matrix-matrix products, shapes, and inverses.
+  done_when:
+  - 'Reproduce without notes: Vectors, transposes, dot products, matrix-vector/matrix-matrix products,
+    shapes, and inverses.'
+  - Work Übung 03 — vectorization and linear regression, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-algebra
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d71822ce9022bf399076c135
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-97cc2ca7b7f2eb7ae6158b39
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-5e9424e18b5dcd231637f8eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-linear-algebra/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l03-vectorization
+  number: 5
+  title: Vectorization and design matrix
+  status: pending
+  objective: Adding the intercept feature, stacking examples, and expressing prediction and loss as matrix
+    operations.
+  done_when:
+  - 'Reproduce without notes: Adding the intercept feature, stacking examples, and expressing prediction
+    and loss as matrix operations.'
+  - Work Übung 03 — vectorization and linear regression, then the remaining 3, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-algebra
+  - concept-linear-regression
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d71822ce9022bf399076c135
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-97cc2ca7b7f2eb7ae6158b39
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-vectorization/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l03-probabilistic
+  number: 6
+  title: Probabilistic interpretation
+  status: pending
+  objective: Optional bridge showing why Gaussian noise plus maximum likelihood produces the squared-error
+    objective.
+  done_when:
+  - 'Reproduce without notes: Optional bridge showing why Gaussian noise plus maximum likelihood produces
+    the squared-error objective.'
+  - Work CS229 practice midterm — Bayesian linear regression, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-maximum-likelihood
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c67a99b0cdc7f85ce29bece8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2fc647972ce02f232134aedb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-probabilistic/notes.md
+  attachments: []
+  source_feedback: []

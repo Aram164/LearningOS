@@ -1,0 +1,264 @@
+"""Filesystem repository for requests, bundles and deliveries."""
+
+from __future__ import annotations
+
+import contextlib
+import os
+import re
+import shutil
+import tempfile
+from pathlib import Path
+from typing import cast
+
+import yaml
+
+from learning_os.domain.ai_errors import (
+    MAX_DELIVERY_BYTES,
+    MAX_DELIVERY_ENTRIES,
+    DeliveryNotFound,
+    DeliveryValidationError,
+    RequestNotFound,
+)
+from learning_os.domain.ai_types import AIActionRequest, DeliveryRecord, RequestStatus
+from learning_os.store.ai_actions.support import dump_yaml as _dump_yaml
+from learning_os.store.ai_actions.support import inside as _inside
+from learning_os.store.ai_actions.support import read_yaml as _read_yaml
+
+
+def atomic_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+    try:
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, path)
+    finally:
+        with contextlib.suppress(OSError):
+            tmp.unlink(missing_ok=True)
+
+
+class FilesystemAIActionRepository:
+    def __init__(self, root: Path):
+        self.root = root
+        self.base = root / "operations" / "ai-actions"
+        self.requests = self.base / "requests"
+        self.deliveries = self.base / "deliveries"
+        self.garden_state = self.base / "garden-state"
+        self.quarantine = self.base / "incoming"
+
+    @staticmethod
+    def _id(value: str) -> str:
+        if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{2,127}", str(value)):
+            raise DeliveryValidationError(f"unsafe exchange identifier: {value}")
+        return str(value)
+
+    def request_dir(self, request_id: str) -> Path:
+        return self.requests / self._id(request_id)
+
+    def request_path(self, request_id: str) -> Path:
+        return self.request_dir(request_id) / "request.yaml"
+
+    def delivery_dir(self, delivery_id: str) -> Path:
+        return self.deliveries / self._id(delivery_id)
+
+    def state_path(self, target_id: str) -> Path:
+        return self.garden_state / f"{self._id(target_id)}.yaml"
+
+    def save_request(self, request: AIActionRequest, bundle_files: dict[str, bytes]) -> None:
+        destination = self.request_dir(str(request["id"]))
+        if destination.exists():
+            raise DeliveryValidationError(f"request already exists: {request['id']}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        temp = Path(tempfile.mkdtemp(prefix=f".{destination.name}-", dir=destination.parent))
+        try:
+            atomic_text(temp / "request.yaml", _dump_yaml(request))
+            for rel, content in bundle_files.items():
+                target = _inside(temp, rel)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
+            os.replace(temp, destination)
+        except Exception:
+            shutil.rmtree(temp, ignore_errors=True)
+            raise
+
+    def get_request(self, request_id: str) -> AIActionRequest:
+        path = self.request_path(request_id)
+        value = _read_yaml(path)
+        if not isinstance(value, dict):
+            # Miss-only inventory ((cx) D-8): the happy path above keeps
+            # its single-file read; only a miss enumerates the same store.
+            candidates = [str(row["id"]) for row in self.request_projections()
+                          if row.get("id")]
+            raise RequestNotFound(
+                "request", request_id, candidates,
+                message=f"AI action request not found: {request_id}")
+        return cast(AIActionRequest, value)
+
+    def update_request(self, request: AIActionRequest) -> None:
+        atomic_text(self.request_path(str(request["id"])), _dump_yaml(request))
+
+    def stage_delivery_directory(self, source: Path) -> tuple[DeliveryRecord, Path]:
+        """Copy untrusted provider output into a quarantine directory.
+
+        Nothing lands at its published path until validation has passed, so a
+        rejected delivery never occupies a canonical-looking location even
+        momentarily.
+        """
+        source = source.expanduser().resolve()
+        if not source.is_dir() or not (source / "delivery.yaml").is_file():
+            raise DeliveryValidationError(
+                "delivery import requires a directory containing delivery.yaml")
+        total_bytes = 0
+        for entries, path in enumerate(source.rglob("*"), start=1):
+            if path.is_symlink():
+                raise DeliveryValidationError("delivery bundles may not contain symbolic links")
+            if entries > MAX_DELIVERY_ENTRIES:
+                raise DeliveryValidationError(
+                    f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries")
+            if path.is_file():
+                total_bytes += path.stat().st_size
+                if total_bytes > MAX_DELIVERY_BYTES:
+                    raise DeliveryValidationError(
+                        f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes")
+        try:
+            delivery = _read_yaml(source / "delivery.yaml")
+        except yaml.YAMLError as exc:
+            # Provider output is untrusted: a malformed file is a named refusal,
+            # never a parser traceback citing "<unicode string>".
+            raise DeliveryValidationError(
+                f"{source / 'delivery.yaml'} is not valid YAML: {exc}") from None
+        if not isinstance(delivery, dict):
+            raise DeliveryValidationError("delivery.yaml must contain a mapping")
+        if not str(delivery.get("id", "")).strip():
+            raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
+        destination = self.delivery_dir(str(delivery.get("id", "")))
+        if destination.exists():
+            raise DeliveryValidationError(f"delivery already exists: {delivery.get('id')}")
+        self.quarantine.mkdir(parents=True, exist_ok=True)
+        temp = Path(tempfile.mkdtemp(prefix=f"{destination.name}-", dir=self.quarantine))
+        staged = temp / "bundle"
+        try:
+            # Preserve links as links so the post-copy admission pass can see
+            # and reject a source that changed during the copy window.
+            shutil.copytree(source, staged, symlinks=True)
+            staged_bytes = 0
+            for entries, path in enumerate(staged.rglob("*"), start=1):
+                if path.is_symlink():
+                    raise DeliveryValidationError(
+                        "delivery bundles may not contain symbolic links"
+                    )
+                if entries > MAX_DELIVERY_ENTRIES:
+                    raise DeliveryValidationError(
+                        f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries"
+                    )
+                if path.is_file():
+                    staged_bytes += path.stat().st_size
+                    if staged_bytes > MAX_DELIVERY_BYTES:
+                        raise DeliveryValidationError(
+                            f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes"
+                        )
+            delivery = _read_yaml(staged / "delivery.yaml")
+            if not isinstance(delivery, dict):
+                raise DeliveryValidationError("delivery.yaml must contain a mapping")
+            if not str(delivery.get("id", "")).strip():
+                raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
+            destination = self.delivery_dir(str(delivery.get("id", "")))
+            if destination.exists():
+                raise DeliveryValidationError(
+                    f"delivery already exists: {delivery.get('id')}"
+                )
+        except Exception:
+            shutil.rmtree(temp, ignore_errors=True)
+            raise
+        return cast(DeliveryRecord, delivery), staged
+
+    def commit_delivery_import(
+        self,
+        staged: Path,
+        delivery_id: str,
+        request: AIActionRequest,
+    ) -> Path:
+        """Publish a delivery and its request-state transition as one unit."""
+        request_path = self.request_path(str(request["id"]))
+        try:
+            previous_request = request_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            shutil.rmtree(staged.parent, ignore_errors=True)
+            raise DeliveryValidationError(
+                f"cannot preserve AI request before delivery import: {exc}"
+            ) from exc
+        destination: Path | None = None
+        try:
+            destination = self.publish_delivery(staged, delivery_id)
+            self.update_request(request)
+            return destination
+        except Exception as exc:
+            if destination is not None:
+                shutil.rmtree(destination, ignore_errors=True)
+            try:
+                atomic_text(request_path, previous_request)
+            except Exception as rollback_exc:
+                raise DeliveryValidationError(
+                    "delivery import failed and request rollback also failed"
+                ) from rollback_exc
+            raise exc
+
+    def publish_delivery(self, staged: Path, delivery_id: str) -> Path:
+        destination = self.delivery_dir(delivery_id)
+        try:
+            if destination.exists():
+                raise DeliveryValidationError(f"delivery already exists: {delivery_id}")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(staged, destination)
+        except Exception:
+            # Never leave quarantined bytes behind, whatever went wrong.
+            shutil.rmtree(staged.parent, ignore_errors=True)
+            raise
+        shutil.rmtree(staged.parent, ignore_errors=True)
+        return destination
+
+    def delivery_ids(self) -> list[str]:
+        """Every imported delivery id, from directory names only."""
+        if not self.deliveries.is_dir():
+            return []
+        return sorted(path.name for path in self.deliveries.iterdir()
+                      if path.is_dir())
+
+    def get_delivery(self, delivery_id: str) -> tuple[DeliveryRecord, Path]:
+        directory = self.delivery_dir(delivery_id)
+        delivery = _read_yaml(directory / "delivery.yaml")
+        if not isinstance(delivery, dict):
+            # Miss-only inventory ((cx) D-8), as in get_request above.
+            raise DeliveryNotFound(
+                "delivery", delivery_id, self.delivery_ids(),
+                message=f"AI delivery not found: {delivery_id}")
+        return cast(DeliveryRecord, delivery), directory
+
+    def request_projections(self) -> list[RequestStatus]:
+        rows: list[RequestStatus] = []
+        if not self.requests.is_dir():
+            return rows
+        for path in sorted(self.requests.glob("*/request.yaml")):
+            request = _read_yaml(path)
+            if not isinstance(request, dict):
+                continue
+            rows.append({
+                "id": request.get("id"),
+                "action_id": request.get("action_id"),
+                "target": request.get("target"),
+                "provider": (request.get("provider") or {}).get("preferred"),
+                "status": request.get("status"),
+                "created_at": request.get("created_at"),
+                "delivery_id": request.get("delivery_id"),
+                "receipt_id": request.get("receipt_id"),
+                "bundle_path": path.parent.relative_to(self.root).as_posix(),
+            })
+        return rows
+
+
+    def write_bundle_slice(self, request_id: str, relative: str, body: bytes) -> None:
+        target = self.request_dir(request_id) / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(body)
+
+    def discard_staged_delivery(self, staged: Path) -> None:
+        shutil.rmtree(staged.parent, ignore_errors=True)

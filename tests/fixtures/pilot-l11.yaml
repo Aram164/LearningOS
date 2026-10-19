@@ -1,0 +1,82 @@
+digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+deck_pages: 49
+draft_dir: work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries
+record: work/active/workspace-m2-exam-prep/outputs/sad-l11-angle-verification-2026-09-20.md
+model: muse-spark 2026-09
+chapters:
+- pages:
+  - 3
+  - 11
+  draft: ch-b-pp03-11.md
+  grade: accept
+  source_chars: 3495
+  source_bytes: 3670
+  draft_chars: 1542
+  draft_bytes: 1562
+- pages:
+  - 12
+  - 20
+  draft: ch-c-pp12-20.md
+  grade: accept
+  source_chars: 4897
+  source_bytes: 5134
+  draft_chars: 1518
+  draft_bytes: 1533
+- pages:
+  - 21
+  - 32
+  draft: ch-d-pp21-32.md
+  grade: accept
+  source_chars: 6946
+  source_bytes: 7619
+  draft_chars: 2277
+  draft_bytes: 2299
+- pages:
+  - 33
+  - 38
+  draft: ch-e-pp33-38.md
+  grade: accept
+  source_chars: 3347
+  source_bytes: 3715
+  draft_chars: 1119
+  draft_bytes: 1138
+- pages:
+  - 39
+  - 46
+  draft: ch-f-pp39-46.md
+  grade: accept
+  source_chars: 4208
+  source_bytes: 4360
+  draft_chars: 1424
+  draft_bytes: 1447
+- pages:
+  - 47
+  - 49
+  draft: ch-g-pp47-49.md
+  grade: reject, verified safe by full spot-read
+  source_chars: 2203
+  source_bytes: 2291
+  draft_chars: 725
+  draft_bytes: 750
+direct_reads:
+- pages:
+  - 1
+  - 2
+  reason: title + quiz admin; 202 bytes below the promote window
+  source_chars: 196
+  source_bytes: 202
+excluded: []
+receipts:
+- path: operations/transactions/transaction-20260920-025624-001.yaml
+  status: committed
+  capability: unit.plan.revise
+  writes:
+  - path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/study-map.yaml
+    created: false
+  artifact_revisions_after:
+    unit-m2-sad-l11: 14
+deck_chars: 25292
+deck_bytes: 26991
+triage_bytes: 8931
+triage_ratio_bytes: 0.331

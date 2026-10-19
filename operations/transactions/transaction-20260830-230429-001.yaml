@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260830-230429-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-30T23:04:29+02:00'
+snapshot_before: sha256:46d3b7b62cc9e94059444546c019836e8a8dc74238c996e3075770f7b85c537c
+snapshot_after: sha256:d6526a66625e9729e7a15edda62803efd3b04c79019d332aae875c798f32cab6
+expected_revisions:
+  unit-aml-l10: 4
+  study-map-aml-l10: 3
+artifact_revisions:
+  study-map-aml-l10:
+    before: 3
+    after: 4
+  unit-aml-l10:
+    before: 4
+    after: 5
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l10/study-map.yaml
+  sha256_before: 69fe2f90bfe7f3e82907813835c8c54143ea6ab5e823654a6978cb26a0e80a5e
+  sha256_after: 21686aa5e8ced680b056dac6f8fc174ea600941e4cd5ca6cf8d0ea81e48a2677
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l10/unit.yaml
+  sha256_before: d497ab2d3b67fd647202536dbfeb143663ffc2a125694a9e43bd99c1973ffae5
+  sha256_after: d497ab2d3b67fd647202536dbfeb143663ffc2a125694a9e43bd99c1973ffae5
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: codex
+  request_id: request-aml-l10-open-target-repair-20260830-002
+  idempotency_key: aml-l10-open-target-repair-20260830-002
+  intent_sha256: sha256:ef85336ea505a30765f8b08acf3c2c4ac690a845d67dc0c95672584234cae731
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:ef85336ea505a30765f8b08acf3c2c4ac690a845d67dc0c95672584234cae731

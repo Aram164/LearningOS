@@ -1,0 +1,213 @@
+operation: ai-action.prepare
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: prepare-garden
+  a5_base: true
+  kind: success
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: prepare-minted-id
+  kind: success
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  expect:
+    site: null
+- id: prepare-with-snapshot
+  kind: success
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - ai-request-prepare-snap
+  - --expected-snapshot
+  - sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+  expect:
+    site: null
+- id: unknown-action
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - nope.action
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: wrong-target-kind
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - unit
+  - --target-id
+  - unit-demo-l01
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: unknown-garden-target
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-nope
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: unknown-unit-target
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - unit.compare-materials
+  - --target-kind
+  - unit
+  - --target-id
+  - unit-nope
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: bad-provider
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --provider
+  - nope-provider
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: unavailable-provider
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --provider
+  - claude
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+- id: bad-request-id
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - BAD-ID
+  expect:
+    site: null
+- id: stale-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - ai-request-prepare-ok
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: null
+- id: duplicate-request-id
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - garden.shelve
+  - --target-kind
+  - garden-note
+  - --target-id
+  - garden-note-seed
+  - --request-id
+  - ai-request-demo
+  expect:
+    site: null
+- id: unit-routes-unmigrated
+  kind: refusal
+  transport: cli
+  argv:
+  - ai-action-prepare
+  - --action-id
+  - unit.compare-materials
+  - --target-kind
+  - unit
+  - --target-id
+  - unit-demo-l02
+  - --request-id
+  - ai-request-prepare-ok
+  expect:
+    site: null
+untriggered: []

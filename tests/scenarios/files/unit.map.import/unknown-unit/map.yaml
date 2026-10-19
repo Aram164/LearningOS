@@ -1,0 +1,27 @@
+id: study-map-nope
+type: study-map
+plan_template_version: 1
+unit_id: unit-nope
+status: ready
+current_stage: stage-nope
+source_plan:
+  path: work/active/workspace-demo/CONTEXT.md
+  provenance: operator
+detours: []
+stages:
+- id: stage-nope
+  number: 1
+  title: Nope
+  status: pending
+  objective: Build working fluency in Nope.
+  done_when:
+  - Explain and apply Nope without notes.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources: []
+  working_note: curriculum/modules/module-demo/units/unit-nope/stages/stage-nope/notes.md
+  attachments: []
+  source_feedback: []
+shelving:
+  state: none

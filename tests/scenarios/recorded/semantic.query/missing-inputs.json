@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: malformed inputs for RepoClean: repo_clean() missing 2 required keyword-only arguments: 'error_count' and 'new_or_grown_warnings'\n",
+  "stdout": "",
+  "stdout_json": null
+}

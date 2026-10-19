@@ -1,0 +1,1364 @@
+id: study-map-m2-analysis-ch03
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch03
+status: not-started
+current_stage: stage-m2-analysis-ch03-folgen
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch03-folgen
+  number: 1
+  title: Folgen (§3.1)
+  status: pending
+  objective: Sequences as functions on N, explicit and recursive definition, boundedness and monotonicity.
+    The vocabulary every later criterion is stated in.
+  done_when:
+  - 'Reproduce without notes: Sequences as functions on N, explicit and recursive definition, boundedness
+    and monotonicity. The vocabulary every later criterion is stated in.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+    6, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, sequences
+    locator: 'Professor Leonard, Calculus 2: the sequences block (sequences, convergence, monotone and
+      bounded). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Slow blackboard teaching that does the computation in full where the script compresses it to
+      a result. The angle is pace.
+    angle_detail: 'Conditional, not scheduled: reach for it when a cold diagnostic shows a block on this
+      chapter, take the one topic, and stop. The reason it earns a place at all is that the script''s
+      §3.6 states limit rules and applies them in one or two lines, while this works every intermediate
+      step aloud — which is what an actual gap in the algebra needs. It is a US calculus course, so it
+      never reaches the ε-N material the HU sheets grade; for that, the route is Abbott or MIT 18.100A,
+      not this.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.1 Konvergenz
+    locator: fritzsche.pdf §2.1 Konvergenz p. 52; Lösungen in Kap. 5 Anhang from p. 253
+    angle: The whole convergence idea developed at tutorial pace, with solutions written as prose.
+    angle_detail: 'Fritzsche puts sequences, series and function limits in one chapter (Der Grenzwertbegriff),
+      which mirrors the script''s own dependency chain and makes §2.1 read as the beginning of something
+      rather than an isolated topic. On this chapter it is the first drill to open after the HU sheets:
+      the explanations are fuller than Forster''s and the solutions show the estimate being constructed,
+      which is precisely the step an ε-N argument gets stuck on.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: auf-2-2 Folgen — monotone and bounded first, with solutions
+    locator: 'auf-2-2_Folgen_Loesungen.pdf (30 pp), Aufgabenkatalog Analysis SoSe 2019: opens on the monotone-convergence
+      criterion (Aufgabe 1 ''Monotone Zahlenfolgen I''), then existence before value (Aufgaben 4, 5),
+      with Lösungen inline'
+    angle: Organised around the one criterion the script leans on hardest — prove convergence first, compute
+      the limit second.
+    angle_detail: 'Its opening line is the pedagogical claim: the most important convergence criterion
+      is that monotone bounded sequences converge, and sometimes you must establish convergence before
+      you can compute anything. That is exactly the structure of the script''s recursive-sequence material
+      and of Marburg''s recursion tasks. Thirty pages of German problems with inline solutions, at university
+      level — the strongest of the seven loose drill sheets for this chapter.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — Konvergenz von Folgen and Häufungspunkte, worked with the thinking shown
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.1 ''Konvergenz von Folgen'' p. 3 with Lösung 2.1 p. 11; Aufgabe
+      1.2 ''Häufungspunkte'' p. 3 with Lösung 2.2 p. 15'
+    angle: Two problems, nine pages of solution — the accumulation-point one is the direct partner to
+      HU Serie 06.3.
+    angle_detail: 'Same author and same principle as the supremum entry on Chapter 2: the solution records
+      the search, not the polished proof, including the pictures. Serie 06.3 asks four connected claims
+      about accumulation points and is one of the harder current HU tasks; Aufgabe 1.2 here is the same
+      material with every step written out.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 10.1-10.5 — computational sequence technique at volume
+    locator: 'IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): §10.1 Einführende Beispiele p. 2,
+      §10.2 Konvergenz von Folgen p. 8, §10.3 Reelle Zahlenfolgen p. 16, §10.4 Cauchysches Konvergenzkriterium
+      p. 35, §10.5 Folgen in Vektorräumen p. 44 (out of scope)'
+    angle: 'Engineering-style drill: many exercises, all with solutions, aimed at fluency rather than
+      at understanding.'
+    angle_detail: This file is the practice workhorse for Chapters 6 and 7, where nothing else covers
+      the ground; on Chapter 3 it is optional volume. §10.4 is the one worth naming — a whole section
+      of Cauchy-criterion exercises, which the German exercise books treat in a handful of problems. §10.5
+      (sequences in vector spaces) goes past the script and is left closed.
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on sequences, recursion and Cauchy
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A7 (two quotient sequences
+      with competing exponentials), A8 (a recursive sequence — show it converges, then find the limit);
+      2. Klausur A3 (three limits incl. √(k²+3k) − k), A4 (recursive, with well-definedness asked first),
+      A5 (show a given sequence is Cauchy by estimating a_{k+1} − a_k); Wiederholungsklausur A3, A4. Darmstadt_...pdf
+      A2 (Grenzwerte konkreter Folgen), A5 (rekursive Folgen und Induktion). Regensburg_...pdf A2.2 (negate
+      convergence correctly), A2.3 (does e^(1/n²) converge)'
+    angle: German exam wording for the exact three shapes this chapter is examined in — compute, recursion,
+      and negate the definition — all with solutions.
+    angle_detail: 'The recursion tasks are the ones to notice. Marburg''s A8 and 2. Klausur A4 both ask
+      for well-definedness and boundedness before the limit, which is the same order the script''s §3.5
+      monotone criterion imposes and the same order HU Serie 07.1 uses on Heron. Regensburg''s A2.2 is
+      a different and rarer test: it prints a wrong negation of convergence and asks whether it holds,
+      with a printed note that saying ''the negation looks different'' was not accepted. That is a quantifier-handling
+      check no drill sheet on this menu supplies.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 2 Folgen + Übungsaufgaben
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 2 Folgen PDF p. 19 (§2.1 Konvergenz & Cauchy-Konvergenz,
+      §2.2 Monotonie, Häufungspunkte und Rechenregeln PDF p. 21), Übungsaufgaben PDF p. 25; Anhang B ''Ausführliches
+      Beispiel zu einem ε-Beweis'' PDF p. 84'
+    angle: The whole chapter in six pages plus exercises — and one fully worked ε-proof kept as a separate
+      appendix.
+    angle_detail: 'Anhang B is the reason to open this file for Chapter 3 even if the main text is too
+      compressed to learn from: it is a single ε-argument written out at length, with the scratch-work
+      that produces the choice of N shown before the clean version. That is the artifact this chapter''s
+      HU tasks keep asking to be produced, and it is the only worked example of it in the Klausur folder.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§4-6 — Folgen, Vollständigkeit, Wurzeln
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen, Grenzwerte p. 20, §5 Das Vollständigkeitsaxiom p.
+      23, §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
+    angle: Terse solved problems in the exact vocabulary German Analysis exams are written in.
+    angle_detail: §4 is the main drill and §5 is where completeness gets used on sequences rather than
+      sets, which is the join the script makes in §3.5. §6 (Wurzeln) is the natural partner to the script's
+      §3.8 Heron Ausflug. The solutions assume you can supply the routine algebra; that is the right level
+      once Fritzsche has been worked and the wrong one before.
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.1 Konvergenz
+    locator: deitmar.pdf §3.1 Konvergenz p. 24; Lösungen Kap. 23 p. 142
+    angle: The third solved bank — fresh problems once Fritzsche and Forster are spent on this node.
+    angle_detail: 'Deitmar is deliberately last of the three German exercise books on this chapter, for
+      a practical reason rather than a quality one: its Kap. 3 is short (six pages of problems) and its
+      value is that it has not been seen yet. Reach for it when a technique needs more repetitions and
+      the earlier two banks no longer supply unseen ones.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 2 — Sequences and Series
+    locator: abbott.pdf §2.2 The Limit of a Sequence p. 54, §2.3 The Algebraic and Order Limit Theorems
+      p. 61, §2.4 The Monotone Convergence Theorem p. 68, §2.5 Subsequences and Bolzano-Weierstrass p.
+      74, §2.6 The Cauchy Criterion p. 78 (§2.7 onward is series — Chapter 4's session)
+    angle: The clearest available answer to why the ε-N definition has the shape it does, rather than
+      how to apply it.
+    angle_detail: 'Abbott''s §2.2 spends its pages on the logical structure of the definition — the order
+      of the quantifiers, and why the game of ''given ε, produce N'' is the right formalisation of approaching
+      a value. That is the specific thing that makes the definition finally readable for most people,
+      and no drill sheet supplies it. Rule from its record, unchanged: one book per stuck idea, not a
+      parallel course.'
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 7 — Konvergenz von Folgen
+    locator: 'grieser.pdf Kap. 7 ''Konvergenz von Folgen'' p. 97: §7.2 Definition der Konvergenz p. 99,
+      §7.3 Konvergenz, algebraische Operationen und Anordnung p. 103, §7.4 Der Grenzwert »unendlich« p.
+      106, §7.5 Beispiele und Strategien zur Grenzwertberechnung p. 110, §7.6 Konvergenz und Vollständigkeit
+      p. 116, Übungen p. 124; Lösungen und Hinweise p. 329'
+    angle: German rigour with a section explicitly devoted to *strategies* for computing limits, and exercises
+      that carry hints before answers.
+    angle_detail: '§7.5 is the reason this route is here rather than any other German text: it is six
+      pages of worked strategy — which manipulation to try, in what order — for exactly the limits §3.6
+      sets. §7.4 covers definite divergence, the script''s §3.7, which several of the other references
+      treat only in passing.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Sequences and Series
+    locator: 'realanal.pdf ''Sequences and Series'' p. 51: Sequences and limits p. 51, Facts about limits
+      of sequences p. 61, Limit superior, limit inferior, and Bolzano–Weierstrass p. 73, Cauchy sequences
+      p. 84'
+    angle: The structural twin of the script's §§3.5-3.7, in English, free, and with the same ordering.
+    angle_detail: 'Where Abbott motivates, Lebl mirrors: the four sections listed here correspond almost
+      exactly to the script''s convergence criteria, limit arithmetic, subsequences and Cauchy material,
+      in that order. That makes it the route for a second pass over the same argument rather than a different
+      account of it — useful when a script proof is followable but not yet reconstructable.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Folgen, Konvergenz, Häufungspunkte und Cauchy-Folgen
+    locator: 'MfNF_Analysis-1.pdf: ''Folgen'' p. 51 (Definition p. 52, explizite und rekursive Bildungsgesetze
+      p. 57); ''Konvergenz und Divergenz'' p. 65 (Definition Grenzwert p. 66, ''Konvergenz und Divergenz
+      beweisen'' p. 76, Grenzwertsätze p. 94, Sandwichsatz p. 104, Monotoniekriterium p. 107, ''Konvergenzbeweise
+      rekursiver Folgen'' p. 109); ''Häufungspunkte und Cauchy-Folgen'' p. 115 (Teilfolgen p. 116, Bolzano-Weierstraß
+      p. 129, bestimmte Divergenz p. 134, Cauchy-Folgen p. 145). Located by the 2026-08-03 coverage audit;
+      no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A hundred German pages on this chapter alone, split into sections that are named after the
+      *task* — 'prove convergence', 'prove convergence of a recursive sequence' — not the theory.
+    angle_detail: The section titles are the reason this route is worth its length. Where the script has
+      one §3.5, this has separate treatments of proving convergence, proving divergence, the sandwich
+      argument, the monotone criterion and recursive sequences, each with worked examples. It is the most
+      complete free German account available for the chapter with the heaviest HU load. It is also verbose
+      and nobody has yet judged it against this exam — the locator is recorded, the evaluation is not.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§7-12 — sequences, in numbered short sections
+    locator: Ross_Elementary-Analysis_2ed.pdf §7 Limits of Sequences p. 45, §8 A Discussion about Proofs
+      p. 51, §9 Limit Theorems for Sequences p. 57, §10 Monotone Sequences and Cauchy Sequences p. 68,
+      §11 Subsequences p. 78, §12 limsup's and liminf's p. 90; Selected Hints and Answers p. 376. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Short numbered sections, one idea each — and §8 is a discussion about how these proofs are
+      written, placed deliberately between the definition and the theorems.
+    angle_detail: 'The §8 placement is the distinctive thing: Ross interrupts the mathematics after the
+      first ε-N definition to talk about proof writing, which is the same diagnosis the script''s own
+      ''you need not reproduce proofs'' contract makes from the other direction. Sections are three to
+      twelve pages, so it is easy to enter at a point. Unassessed against this exam.'
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas §10.1 Sequences
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §10.1 Sequences p. 586 (1205 pp). Located by the
+      2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: A large computational calculus text — reserve volume for routine limit calculations, with no
+      ε-N content.
+    angle_detail: Named at section level for the first time. Thomas treats sequences in one section as
+      a prelude to series, at a computational level well below the script's; that makes it a fallback
+      for calculation practice and useless for the proof half of the chapter. It overlaps almost entirely
+      with Stewart §11.1 — there is no reason to open both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart §11.1 Sequences
+    locator: Stewart.pdf §11.1 Sequences p. 726 (1404 pp). Located by the 2026-08-03 coverage audit; no
+      contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The same computational level as Thomas, with more worked examples and a fuller exercise set.
+    angle_detail: 'Kept on the menu as the alternative to Thomas rather than in addition to it: the two
+      books cover this section identically. Pick one when routine calculation is what is missing, and
+      neither when the missing thing is the definition.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-folgen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch03-rekursionen
+  number: 2
+  title: Ausflug – Lineare Rekursionsgleichungen (§§3.3-3.4)
+  status: pending
+  objective: Setting up a recurrence from a process and solving the linear homogeneous case. §3.3 is an
+    Ausflug and §3.4 an Exkurs, but Serie 05's Türme-von-Hanoi task is exactly this, so the modelling
+    half is examined even though the solution theory is not.
+  done_when:
+  - 'Reproduce without notes: Setting up a recurrence from a process and solving the linear homogeneous
+    case. §3.3 is an Ausflug and §3.4 an Exkurs, but Serie 05''s Türme-von-Hanoi task is exactly this,
+    so the modelling half is examined even though the solution theory is not.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-proof-technique
+  - concept-sequences-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rekursionen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch03-konvergenzkriterien
+  number: 3
+  title: Konvergenzkriterien für Folgen (§3.5)
+  status: pending
+  objective: 'The epsilon-N definition of convergence and the criteria that avoid it: monotone and bounded,
+    Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing the criterion is the graded
+    skill, not knowing the list.'
+  done_when:
+  - 'Reproduce without notes: The epsilon-N definition of convergence and the criteria that avoid it:
+    monotone and bounded, Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing the
+    criterion is the graded skill, not knowing the list.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+    9, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the seven Chapter 3 proofs the tutors named
+    locator: 'kleine_beweise.pdf, section ''Kapitel 3: Folgen und Konvergenz'': Lemma 3.21 (uniqueness
+      of the limit; convergent sequences are bounded), Satz 3.25(i)-(iii) (Grenzwertsätze), Satz 3.30
+      including (ii) (Monotonieprinzip), Satz 3.40 (Teilfolgenkriterium), Satz 3.42 (Cauchy sequences
+      are bounded), Satz 3.43 (Cauchy-Kriterium), Satz 3.49 (limits with definitely divergent sequences)'
+    angle: A named, bounded list of which Chapter 3 proofs are worth being able to reproduce — with the
+      authors' own disclaimer that it is not exam intelligence.
+    angle_detail: 'This is a two-page handout by student tutors for the SoSe 2025 exam preparation, and
+      it states plainly that it has no known relation to the exam contents. Treated as what it is — an
+      experienced reader''s shortlist — it solves a real problem: the script says proofs need not be memorised,
+      which leaves ''then which ones are worth understanding?'' unanswered. Seven results for a thirty-nine-page
+      chapter is a defensible answer. Use it to repair a failed application, and note that Serie 06.1
+      asks for one of these (Satz 3.25(i)) as an exercise, which is corroboration from the sheets themselves.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, sequences
+    locator: 'Professor Leonard, Calculus 2: the sequences block (sequences, convergence, monotone and
+      bounded). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Slow blackboard teaching that does the computation in full where the script compresses it to
+      a result. The angle is pace.
+    angle_detail: 'Conditional, not scheduled: reach for it when a cold diagnostic shows a block on this
+      chapter, take the one topic, and stop. The reason it earns a place at all is that the script''s
+      §3.6 states limit rules and applies them in one or two lines, while this works every intermediate
+      step aloud — which is what an actual gap in the algebra needs. It is a US calculus course, so it
+      never reaches the ε-N material the HU sheets grade; for that, the route is Abbott or MIT 18.100A,
+      not this.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.1 Konvergenz
+    locator: fritzsche.pdf §2.1 Konvergenz p. 52; Lösungen in Kap. 5 Anhang from p. 253
+    angle: The whole convergence idea developed at tutorial pace, with solutions written as prose.
+    angle_detail: 'Fritzsche puts sequences, series and function limits in one chapter (Der Grenzwertbegriff),
+      which mirrors the script''s own dependency chain and makes §2.1 read as the beginning of something
+      rather than an isolated topic. On this chapter it is the first drill to open after the HU sheets:
+      the explanations are fuller than Forster''s and the solutions show the estimate being constructed,
+      which is precisely the step an ε-N argument gets stuck on.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Kippels 'Grenzwerte von Folgen' — fourteen exercises, each solved on its own page
+    locator: 'Grenzwerte-von-Folgen.pdf (26 pp): Definition des Grenzwertes p. 4 with two worked examples,
+      Grenzwertlehrsätze p. 8 with three, Übungsaufgaben p. 11-12 (Aufgaben 1-14), Lösungen p. 13-26,
+      one per page'
+    angle: Volume, at a deliberately gentle level, with a separate full solution for every single task.
+    angle_detail: 'This is repetition material, not a new account: fourteen limits of the kind §3.6 is
+      about, each with a complete worked solution on its own page so nothing is skipped. It is aimed below
+      university level, which is exactly why it works when the algebra of limits is the problem rather
+      than the concept. Use after the HU sheets, and stop as soon as the manipulation is automatic.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: auf-2-2 Folgen — monotone and bounded first, with solutions
+    locator: 'auf-2-2_Folgen_Loesungen.pdf (30 pp), Aufgabenkatalog Analysis SoSe 2019: opens on the monotone-convergence
+      criterion (Aufgabe 1 ''Monotone Zahlenfolgen I''), then existence before value (Aufgaben 4, 5),
+      with Lösungen inline'
+    angle: Organised around the one criterion the script leans on hardest — prove convergence first, compute
+      the limit second.
+    angle_detail: 'Its opening line is the pedagogical claim: the most important convergence criterion
+      is that monotone bounded sequences converge, and sometimes you must establish convergence before
+      you can compute anything. That is exactly the structure of the script''s recursive-sequence material
+      and of Marburg''s recursion tasks. Thirty pages of German problems with inline solutions, at university
+      level — the strongest of the seven loose drill sheets for this chapter.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Loesungen4.pdf — choosing N explicitly for a given epsilon
+    locator: 'Loesungen4.pdf (3 pp), Aufgabe 16: for a_n = (n(n+3) − 4)/(n² − 1), find N with |a_n − 1|
+      < ε for ε = 1/10, ε = 1/100 and then arbitrary ε > 0, with the full estimate shown'
+    angle: The ε-N definition worked with concrete numbers before the general case — the one move that
+      makes the definition stop being abstract.
+    angle_detail: 'Three pages, one task. It is on this menu because of its structure rather than its
+      size: it asks for N at two specific tolerances first and only then for arbitrary ε, so the quantifier
+      order becomes visible instead of memorised. HU Serie 05.2 and 05.3 ask for the general case directly;
+      if that is where the block is, this is the intermediate step.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — Konvergenz von Folgen and Häufungspunkte, worked with the thinking shown
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.1 ''Konvergenz von Folgen'' p. 3 with Lösung 2.1 p. 11; Aufgabe
+      1.2 ''Häufungspunkte'' p. 3 with Lösung 2.2 p. 15'
+    angle: Two problems, nine pages of solution — the accumulation-point one is the direct partner to
+      HU Serie 06.3.
+    angle_detail: 'Same author and same principle as the supremum entry on Chapter 2: the solution records
+      the search, not the polished proof, including the pictures. Serie 06.3 asks four connected claims
+      about accumulation points and is one of the harder current HU tasks; Aufgabe 1.2 here is the same
+      material with every step written out.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 10.1-10.5 — computational sequence technique at volume
+    locator: 'IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): §10.1 Einführende Beispiele p. 2,
+      §10.2 Konvergenz von Folgen p. 8, §10.3 Reelle Zahlenfolgen p. 16, §10.4 Cauchysches Konvergenzkriterium
+      p. 35, §10.5 Folgen in Vektorräumen p. 44 (out of scope)'
+    angle: 'Engineering-style drill: many exercises, all with solutions, aimed at fluency rather than
+      at understanding.'
+    angle_detail: This file is the practice workhorse for Chapters 6 and 7, where nothing else covers
+      the ground; on Chapter 3 it is optional volume. §10.4 is the one worth naming — a whole section
+      of Cauchy-criterion exercises, which the German exercise books treat in a handful of problems. §10.5
+      (sequences in vector spaces) goes past the script and is left closed.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1 Aufgabe 1 — five sequences of different types in one task
+    locator: 'Aufgabensammlung-M1_Loesung.pdf (7 pp), Aufgabe 1: decide convergence and find the limit
+      for n^((−1)^n), the n-th root of 1 + 1/n, a sum, a product and cos(nπ)'
+    angle: One mixed task where the work is choosing a different tool for each of five sequences — a method-choice
+      drill rather than a technique drill.
+    angle_detail: 'Small, and useful for a specific purpose: every other route on this node groups problems
+      by the technique that solves them, which quietly removes the decision the exam actually tests. Here
+      the five parts need five different arguments — unbounded divergence, sandwich, a closed sum, a telescoping
+      product, and a two-accumulation-point argument — with no signposting. The solution names the sandwich
+      lemma and Gauß''s sum formula at the point it uses them.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on sequences, recursion and Cauchy
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A7 (two quotient sequences
+      with competing exponentials), A8 (a recursive sequence — show it converges, then find the limit);
+      2. Klausur A3 (three limits incl. √(k²+3k) − k), A4 (recursive, with well-definedness asked first),
+      A5 (show a given sequence is Cauchy by estimating a_{k+1} − a_k); Wiederholungsklausur A3, A4. Darmstadt_...pdf
+      A2 (Grenzwerte konkreter Folgen), A5 (rekursive Folgen und Induktion). Regensburg_...pdf A2.2 (negate
+      convergence correctly), A2.3 (does e^(1/n²) converge)'
+    angle: German exam wording for the exact three shapes this chapter is examined in — compute, recursion,
+      and negate the definition — all with solutions.
+    angle_detail: 'The recursion tasks are the ones to notice. Marburg''s A8 and 2. Klausur A4 both ask
+      for well-definedness and boundedness before the limit, which is the same order the script''s §3.5
+      monotone criterion imposes and the same order HU Serie 07.1 uses on Heron. Regensburg''s A2.2 is
+      a different and rarer test: it prints a wrong negation of convergence and asks whether it holds,
+      with a printed note that saying ''the negation looks different'' was not accepted. That is a quantifier-handling
+      check no drill sheet on this menu supplies.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 2 Folgen + Übungsaufgaben
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 2 Folgen PDF p. 19 (§2.1 Konvergenz & Cauchy-Konvergenz,
+      §2.2 Monotonie, Häufungspunkte und Rechenregeln PDF p. 21), Übungsaufgaben PDF p. 25; Anhang B ''Ausführliches
+      Beispiel zu einem ε-Beweis'' PDF p. 84'
+    angle: The whole chapter in six pages plus exercises — and one fully worked ε-proof kept as a separate
+      appendix.
+    angle_detail: 'Anhang B is the reason to open this file for Chapter 3 even if the main text is too
+      compressed to learn from: it is a single ε-argument written out at length, with the scratch-work
+      that produces the choice of N shown before the clean version. That is the artifact this chapter''s
+      HU tasks keep asking to be produced, and it is the only worked example of it in the Klausur folder.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — convergence, the squeeze theorem, Bolzano-Weierstrass
+    locator: 'mit18_100af20_lec_full2.pdf: ''Convergent Sequences of Real Numbers'' p. 24, ''The Squeeze
+      Theorem and Operations Involving Convergent Sequences'' p. 27, ''Limsup, Liminf, and the Bolzano-Weierstrass
+      Theorem'' p. 31, ''The Completeness of the Real Numbers and Basic Properties of Infinite Series''
+      p. 35'
+    angle: Full rigour for one blocked definition — the permitted window for this chapter, named lecture
+      by lecture.
+    angle_detail: 'The record''s rule stands: opened for a single definition that refuses to make sense,
+      never read through. What changed on 2026-08-29 is that the lectures are named rather than numbered,
+      so the right one can be found without paging. Note that p. 35 spans the Chapter 3/Chapter 4 boundary
+      — it derives the basic series facts from completeness, which is the join the script makes at the
+      start of its Chapter 4.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§4-6 — Folgen, Vollständigkeit, Wurzeln
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen, Grenzwerte p. 20, §5 Das Vollständigkeitsaxiom p.
+      23, §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
+    angle: Terse solved problems in the exact vocabulary German Analysis exams are written in.
+    angle_detail: §4 is the main drill and §5 is where completeness gets used on sequences rather than
+      sets, which is the join the script makes in §3.5. §6 (Wurzeln) is the natural partner to the script's
+      §3.8 Heron Ausflug. The solutions assume you can supply the routine algebra; that is the right level
+      once Fritzsche has been worked and the wrong one before.
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.1 Konvergenz
+    locator: deitmar.pdf §3.1 Konvergenz p. 24; Lösungen Kap. 23 p. 142
+    angle: The third solved bank — fresh problems once Fritzsche and Forster are spent on this node.
+    angle_detail: 'Deitmar is deliberately last of the three German exercise books on this chapter, for
+      a practical reason rather than a quality one: its Kap. 3 is short (six pages of problems) and its
+      value is that it has not been seen yet. Reach for it when a technique needs more repetitions and
+      the earlier two banks no longer supply unseen ones.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger 6.2 und 6.3 — Musterlösungen für Konvergenz und Cauchyfolgen
+    locator: ableitinger.pdf §6.2 Konvergenz von Folgen p. 61, §6.3 Cauchyfolgen p. 64; the compressed
+      counterparts in §4.2 'Hinweise zum Verfassen komprimierter Musterlösungen' p. 38; Lösungsvorschläge
+      to Kap. 6 in §11.2 p. 190
+    angle: Model solutions written to be studied as *writing*, with the solver's decision process annotated
+      alongside the mathematics.
+    angle_detail: 'Ableitinger is a didactics book, not an exercise book: Teil I sets out seven named
+      sub-processes of solving a task (creating problem awareness, clarifying the options, getting a grip,
+      checking fit, craft, tricks, structuring commentary) and Teil II shows worked Analysis solutions
+      with those sub-processes marked. Before this pass it was routed only to the transfer unit with the
+      locator ''One example matching the diagnosed error''. It is now routed per chapter, because §6.2
+      and §6.3 are Chapter 3''s material specifically. Read a solution here after writing your own, to
+      compare the presentation rather than the answer.'
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 2 — Sequences and Series
+    locator: abbott.pdf §2.2 The Limit of a Sequence p. 54, §2.3 The Algebraic and Order Limit Theorems
+      p. 61, §2.4 The Monotone Convergence Theorem p. 68, §2.5 Subsequences and Bolzano-Weierstrass p.
+      74, §2.6 The Cauchy Criterion p. 78 (§2.7 onward is series — Chapter 4's session)
+    angle: The clearest available answer to why the ε-N definition has the shape it does, rather than
+      how to apply it.
+    angle_detail: 'Abbott''s §2.2 spends its pages on the logical structure of the definition — the order
+      of the quantifiers, and why the game of ''given ε, produce N'' is the right formalisation of approaching
+      a value. That is the specific thing that makes the definition finally readable for most people,
+      and no drill sheet supplies it. Rule from its record, unchanged: one book per stuck idea, not a
+      parallel course.'
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 7 — Konvergenz von Folgen
+    locator: 'grieser.pdf Kap. 7 ''Konvergenz von Folgen'' p. 97: §7.2 Definition der Konvergenz p. 99,
+      §7.3 Konvergenz, algebraische Operationen und Anordnung p. 103, §7.4 Der Grenzwert »unendlich« p.
+      106, §7.5 Beispiele und Strategien zur Grenzwertberechnung p. 110, §7.6 Konvergenz und Vollständigkeit
+      p. 116, Übungen p. 124; Lösungen und Hinweise p. 329'
+    angle: German rigour with a section explicitly devoted to *strategies* for computing limits, and exercises
+      that carry hints before answers.
+    angle_detail: '§7.5 is the reason this route is here rather than any other German text: it is six
+      pages of worked strategy — which manipulation to try, in what order — for exactly the limits §3.6
+      sets. §7.4 covers definite divergence, the script''s §3.7, which several of the other references
+      treat only in passing.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Sequences and Series
+    locator: 'realanal.pdf ''Sequences and Series'' p. 51: Sequences and limits p. 51, Facts about limits
+      of sequences p. 61, Limit superior, limit inferior, and Bolzano–Weierstrass p. 73, Cauchy sequences
+      p. 84'
+    angle: The structural twin of the script's §§3.5-3.7, in English, free, and with the same ordering.
+    angle_detail: 'Where Abbott motivates, Lebl mirrors: the four sections listed here correspond almost
+      exactly to the script''s convergence criteria, limit arithmetic, subsequences and Cauchy material,
+      in that order. That makes it the route for a second pass over the same argument rather than a different
+      account of it — useful when a script proof is followable but not yet reconstructable.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Folgen, Konvergenz, Häufungspunkte und Cauchy-Folgen
+    locator: 'MfNF_Analysis-1.pdf: ''Folgen'' p. 51 (Definition p. 52, explizite und rekursive Bildungsgesetze
+      p. 57); ''Konvergenz und Divergenz'' p. 65 (Definition Grenzwert p. 66, ''Konvergenz und Divergenz
+      beweisen'' p. 76, Grenzwertsätze p. 94, Sandwichsatz p. 104, Monotoniekriterium p. 107, ''Konvergenzbeweise
+      rekursiver Folgen'' p. 109); ''Häufungspunkte und Cauchy-Folgen'' p. 115 (Teilfolgen p. 116, Bolzano-Weierstraß
+      p. 129, bestimmte Divergenz p. 134, Cauchy-Folgen p. 145). Located by the 2026-08-03 coverage audit;
+      no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A hundred German pages on this chapter alone, split into sections that are named after the
+      *task* — 'prove convergence', 'prove convergence of a recursive sequence' — not the theory.
+    angle_detail: The section titles are the reason this route is worth its length. Where the script has
+      one §3.5, this has separate treatments of proving convergence, proving divergence, the sandwich
+      argument, the monotone criterion and recursive sequences, each with worked examples. It is the most
+      complete free German account available for the chapter with the heaviest HU load. It is also verbose
+      and nobody has yet judged it against this exam — the locator is recorded, the evaluation is not.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§7-12 — sequences, in numbered short sections
+    locator: Ross_Elementary-Analysis_2ed.pdf §7 Limits of Sequences p. 45, §8 A Discussion about Proofs
+      p. 51, §9 Limit Theorems for Sequences p. 57, §10 Monotone Sequences and Cauchy Sequences p. 68,
+      §11 Subsequences p. 78, §12 limsup's and liminf's p. 90; Selected Hints and Answers p. 376. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Short numbered sections, one idea each — and §8 is a discussion about how these proofs are
+      written, placed deliberately between the definition and the theorems.
+    angle_detail: 'The §8 placement is the distinctive thing: Ross interrupts the mathematics after the
+      first ε-N definition to talk about proof writing, which is the same diagnosis the script''s own
+      ''you need not reproduce proofs'' contract makes from the other direction. Sections are three to
+      twelve pages, so it is easy to enter at a point. Unassessed against this exam.'
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-konvergenzkriterien/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch03-rechenregeln
+  number: 4
+  title: Rechnen mit konvergenten Folgen (§3.6)
+  status: pending
+  objective: The limit laws for sums, products and quotients, the sandwich argument, and the standard
+    manipulations — dividing by the dominant power, rationalising a difference of roots — that turn a
+    limit into a computation.
+  done_when:
+  - 'Reproduce without notes: The limit laws for sums, products and quotients, the sandwich argument,
+    and the standard manipulations — dividing by the dominant power, rationalising a difference of roots
+    — that turn a limit into a computation.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+    6, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the seven Chapter 3 proofs the tutors named
+    locator: 'kleine_beweise.pdf, section ''Kapitel 3: Folgen und Konvergenz'': Lemma 3.21 (uniqueness
+      of the limit; convergent sequences are bounded), Satz 3.25(i)-(iii) (Grenzwertsätze), Satz 3.30
+      including (ii) (Monotonieprinzip), Satz 3.40 (Teilfolgenkriterium), Satz 3.42 (Cauchy sequences
+      are bounded), Satz 3.43 (Cauchy-Kriterium), Satz 3.49 (limits with definitely divergent sequences)'
+    angle: A named, bounded list of which Chapter 3 proofs are worth being able to reproduce — with the
+      authors' own disclaimer that it is not exam intelligence.
+    angle_detail: 'This is a two-page handout by student tutors for the SoSe 2025 exam preparation, and
+      it states plainly that it has no known relation to the exam contents. Treated as what it is — an
+      experienced reader''s shortlist — it solves a real problem: the script says proofs need not be memorised,
+      which leaves ''then which ones are worth understanding?'' unanswered. Seven results for a thirty-nine-page
+      chapter is a defensible answer. Use it to repair a failed application, and note that Serie 06.1
+      asks for one of these (Satz 3.25(i)) as an exercise, which is corroboration from the sheets themselves.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, sequences
+    locator: 'Professor Leonard, Calculus 2: the sequences block (sequences, convergence, monotone and
+      bounded). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Slow blackboard teaching that does the computation in full where the script compresses it to
+      a result. The angle is pace.
+    angle_detail: 'Conditional, not scheduled: reach for it when a cold diagnostic shows a block on this
+      chapter, take the one topic, and stop. The reason it earns a place at all is that the script''s
+      §3.6 states limit rules and applies them in one or two lines, while this works every intermediate
+      step aloud — which is what an actual gap in the algebra needs. It is a US calculus course, so it
+      never reaches the ε-N material the HU sheets grade; for that, the route is Abbott or MIT 18.100A,
+      not this.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.1 Konvergenz
+    locator: fritzsche.pdf §2.1 Konvergenz p. 52; Lösungen in Kap. 5 Anhang from p. 253
+    angle: The whole convergence idea developed at tutorial pace, with solutions written as prose.
+    angle_detail: 'Fritzsche puts sequences, series and function limits in one chapter (Der Grenzwertbegriff),
+      which mirrors the script''s own dependency chain and makes §2.1 read as the beginning of something
+      rather than an isolated topic. On this chapter it is the first drill to open after the HU sheets:
+      the explanations are fuller than Forster''s and the solutions show the estimate being constructed,
+      which is precisely the step an ε-N argument gets stuck on.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Kippels 'Grenzwerte von Folgen' — fourteen exercises, each solved on its own page
+    locator: 'Grenzwerte-von-Folgen.pdf (26 pp): Definition des Grenzwertes p. 4 with two worked examples,
+      Grenzwertlehrsätze p. 8 with three, Übungsaufgaben p. 11-12 (Aufgaben 1-14), Lösungen p. 13-26,
+      one per page'
+    angle: Volume, at a deliberately gentle level, with a separate full solution for every single task.
+    angle_detail: 'This is repetition material, not a new account: fourteen limits of the kind §3.6 is
+      about, each with a complete worked solution on its own page so nothing is skipped. It is aimed below
+      university level, which is exactly why it works when the algebra of limits is the problem rather
+      than the concept. Use after the HU sheets, and stop as soon as the manipulation is automatic.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 10.1-10.5 — computational sequence technique at volume
+    locator: 'IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): §10.1 Einführende Beispiele p. 2,
+      §10.2 Konvergenz von Folgen p. 8, §10.3 Reelle Zahlenfolgen p. 16, §10.4 Cauchysches Konvergenzkriterium
+      p. 35, §10.5 Folgen in Vektorräumen p. 44 (out of scope)'
+    angle: 'Engineering-style drill: many exercises, all with solutions, aimed at fluency rather than
+      at understanding.'
+    angle_detail: This file is the practice workhorse for Chapters 6 and 7, where nothing else covers
+      the ground; on Chapter 3 it is optional volume. §10.4 is the one worth naming — a whole section
+      of Cauchy-criterion exercises, which the German exercise books treat in a handful of problems. §10.5
+      (sequences in vector spaces) goes past the script and is left closed.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1 Aufgabe 1 — five sequences of different types in one task
+    locator: 'Aufgabensammlung-M1_Loesung.pdf (7 pp), Aufgabe 1: decide convergence and find the limit
+      for n^((−1)^n), the n-th root of 1 + 1/n, a sum, a product and cos(nπ)'
+    angle: One mixed task where the work is choosing a different tool for each of five sequences — a method-choice
+      drill rather than a technique drill.
+    angle_detail: 'Small, and useful for a specific purpose: every other route on this node groups problems
+      by the technique that solves them, which quietly removes the decision the exam actually tests. Here
+      the five parts need five different arguments — unbounded divergence, sandwich, a closed sum, a telescoping
+      product, and a two-accumulation-point argument — with no signposting. The solution names the sandwich
+      lemma and Gauß''s sum formula at the point it uses them.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on sequences, recursion and Cauchy
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A7 (two quotient sequences
+      with competing exponentials), A8 (a recursive sequence — show it converges, then find the limit);
+      2. Klausur A3 (three limits incl. √(k²+3k) − k), A4 (recursive, with well-definedness asked first),
+      A5 (show a given sequence is Cauchy by estimating a_{k+1} − a_k); Wiederholungsklausur A3, A4. Darmstadt_...pdf
+      A2 (Grenzwerte konkreter Folgen), A5 (rekursive Folgen und Induktion). Regensburg_...pdf A2.2 (negate
+      convergence correctly), A2.3 (does e^(1/n²) converge)'
+    angle: German exam wording for the exact three shapes this chapter is examined in — compute, recursion,
+      and negate the definition — all with solutions.
+    angle_detail: 'The recursion tasks are the ones to notice. Marburg''s A8 and 2. Klausur A4 both ask
+      for well-definedness and boundedness before the limit, which is the same order the script''s §3.5
+      monotone criterion imposes and the same order HU Serie 07.1 uses on Heron. Regensburg''s A2.2 is
+      a different and rarer test: it prints a wrong negation of convergence and asks whether it holds,
+      with a printed note that saying ''the negation looks different'' was not accepted. That is a quantifier-handling
+      check no drill sheet on this menu supplies.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 2 Folgen + Übungsaufgaben
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 2 Folgen PDF p. 19 (§2.1 Konvergenz & Cauchy-Konvergenz,
+      §2.2 Monotonie, Häufungspunkte und Rechenregeln PDF p. 21), Übungsaufgaben PDF p. 25; Anhang B ''Ausführliches
+      Beispiel zu einem ε-Beweis'' PDF p. 84'
+    angle: The whole chapter in six pages plus exercises — and one fully worked ε-proof kept as a separate
+      appendix.
+    angle_detail: 'Anhang B is the reason to open this file for Chapter 3 even if the main text is too
+      compressed to learn from: it is a single ε-argument written out at length, with the scratch-work
+      that produces the choice of N shown before the clean version. That is the artifact this chapter''s
+      HU tasks keep asking to be produced, and it is the only worked example of it in the Klausur folder.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — convergence, the squeeze theorem, Bolzano-Weierstrass
+    locator: 'mit18_100af20_lec_full2.pdf: ''Convergent Sequences of Real Numbers'' p. 24, ''The Squeeze
+      Theorem and Operations Involving Convergent Sequences'' p. 27, ''Limsup, Liminf, and the Bolzano-Weierstrass
+      Theorem'' p. 31, ''The Completeness of the Real Numbers and Basic Properties of Infinite Series''
+      p. 35'
+    angle: Full rigour for one blocked definition — the permitted window for this chapter, named lecture
+      by lecture.
+    angle_detail: 'The record''s rule stands: opened for a single definition that refuses to make sense,
+      never read through. What changed on 2026-08-29 is that the lectures are named rather than numbered,
+      so the right one can be found without paging. Note that p. 35 spans the Chapter 3/Chapter 4 boundary
+      — it derives the basic series facts from completeness, which is the join the script makes at the
+      start of its Chapter 4.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§4-6 — Folgen, Vollständigkeit, Wurzeln
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen, Grenzwerte p. 20, §5 Das Vollständigkeitsaxiom p.
+      23, §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
+    angle: Terse solved problems in the exact vocabulary German Analysis exams are written in.
+    angle_detail: §4 is the main drill and §5 is where completeness gets used on sequences rather than
+      sets, which is the join the script makes in §3.5. §6 (Wurzeln) is the natural partner to the script's
+      §3.8 Heron Ausflug. The solutions assume you can supply the routine algebra; that is the right level
+      once Fritzsche has been worked and the wrong one before.
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.1 Konvergenz
+    locator: deitmar.pdf §3.1 Konvergenz p. 24; Lösungen Kap. 23 p. 142
+    angle: The third solved bank — fresh problems once Fritzsche and Forster are spent on this node.
+    angle_detail: 'Deitmar is deliberately last of the three German exercise books on this chapter, for
+      a practical reason rather than a quality one: its Kap. 3 is short (six pages of problems) and its
+      value is that it has not been seen yet. Reach for it when a technique needs more repetitions and
+      the earlier two banks no longer supply unseen ones.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 2 — Sequences and Series
+    locator: abbott.pdf §2.2 The Limit of a Sequence p. 54, §2.3 The Algebraic and Order Limit Theorems
+      p. 61, §2.4 The Monotone Convergence Theorem p. 68, §2.5 Subsequences and Bolzano-Weierstrass p.
+      74, §2.6 The Cauchy Criterion p. 78 (§2.7 onward is series — Chapter 4's session)
+    angle: The clearest available answer to why the ε-N definition has the shape it does, rather than
+      how to apply it.
+    angle_detail: 'Abbott''s §2.2 spends its pages on the logical structure of the definition — the order
+      of the quantifiers, and why the game of ''given ε, produce N'' is the right formalisation of approaching
+      a value. That is the specific thing that makes the definition finally readable for most people,
+      and no drill sheet supplies it. Rule from its record, unchanged: one book per stuck idea, not a
+      parallel course.'
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 7 — Konvergenz von Folgen
+    locator: 'grieser.pdf Kap. 7 ''Konvergenz von Folgen'' p. 97: §7.2 Definition der Konvergenz p. 99,
+      §7.3 Konvergenz, algebraische Operationen und Anordnung p. 103, §7.4 Der Grenzwert »unendlich« p.
+      106, §7.5 Beispiele und Strategien zur Grenzwertberechnung p. 110, §7.6 Konvergenz und Vollständigkeit
+      p. 116, Übungen p. 124; Lösungen und Hinweise p. 329'
+    angle: German rigour with a section explicitly devoted to *strategies* for computing limits, and exercises
+      that carry hints before answers.
+    angle_detail: '§7.5 is the reason this route is here rather than any other German text: it is six
+      pages of worked strategy — which manipulation to try, in what order — for exactly the limits §3.6
+      sets. §7.4 covers definite divergence, the script''s §3.7, which several of the other references
+      treat only in passing.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Sequences and Series
+    locator: 'realanal.pdf ''Sequences and Series'' p. 51: Sequences and limits p. 51, Facts about limits
+      of sequences p. 61, Limit superior, limit inferior, and Bolzano–Weierstrass p. 73, Cauchy sequences
+      p. 84'
+    angle: The structural twin of the script's §§3.5-3.7, in English, free, and with the same ordering.
+    angle_detail: 'Where Abbott motivates, Lebl mirrors: the four sections listed here correspond almost
+      exactly to the script''s convergence criteria, limit arithmetic, subsequences and Cauchy material,
+      in that order. That makes it the route for a second pass over the same argument rather than a different
+      account of it — useful when a script proof is followable but not yet reconstructable.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Folgen, Konvergenz, Häufungspunkte und Cauchy-Folgen
+    locator: 'MfNF_Analysis-1.pdf: ''Folgen'' p. 51 (Definition p. 52, explizite und rekursive Bildungsgesetze
+      p. 57); ''Konvergenz und Divergenz'' p. 65 (Definition Grenzwert p. 66, ''Konvergenz und Divergenz
+      beweisen'' p. 76, Grenzwertsätze p. 94, Sandwichsatz p. 104, Monotoniekriterium p. 107, ''Konvergenzbeweise
+      rekursiver Folgen'' p. 109); ''Häufungspunkte und Cauchy-Folgen'' p. 115 (Teilfolgen p. 116, Bolzano-Weierstraß
+      p. 129, bestimmte Divergenz p. 134, Cauchy-Folgen p. 145). Located by the 2026-08-03 coverage audit;
+      no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A hundred German pages on this chapter alone, split into sections that are named after the
+      *task* — 'prove convergence', 'prove convergence of a recursive sequence' — not the theory.
+    angle_detail: The section titles are the reason this route is worth its length. Where the script has
+      one §3.5, this has separate treatments of proving convergence, proving divergence, the sandwich
+      argument, the monotone criterion and recursive sequences, each with worked examples. It is the most
+      complete free German account available for the chapter with the heaviest HU load. It is also verbose
+      and nobody has yet judged it against this exam — the locator is recorded, the evaluation is not.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§7-12 — sequences, in numbered short sections
+    locator: Ross_Elementary-Analysis_2ed.pdf §7 Limits of Sequences p. 45, §8 A Discussion about Proofs
+      p. 51, §9 Limit Theorems for Sequences p. 57, §10 Monotone Sequences and Cauchy Sequences p. 68,
+      §11 Subsequences p. 78, §12 limsup's and liminf's p. 90; Selected Hints and Answers p. 376. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Short numbered sections, one idea each — and §8 is a discussion about how these proofs are
+      written, placed deliberately between the definition and the theorems.
+    angle_detail: 'The §8 placement is the distinctive thing: Ross interrupts the mathematics after the
+      first ε-N definition to talk about proof writing, which is the same diagnosis the script''s own
+      ''you need not reproduce proofs'' contract makes from the other direction. Sections are three to
+      twelve pages, so it is easy to enter at a point. Unassessed against this exam.'
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas §10.1 Sequences
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §10.1 Sequences p. 586 (1205 pp). Located by the
+      2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: A large computational calculus text — reserve volume for routine limit calculations, with no
+      ε-N content.
+    angle_detail: Named at section level for the first time. Thomas treats sequences in one section as
+      a prelude to series, at a computational level well below the script's; that makes it a fallback
+      for calculation practice and useless for the proof half of the chapter. It overlaps almost entirely
+      with Stewart §11.1 — there is no reason to open both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart §11.1 Sequences
+    locator: Stewart.pdf §11.1 Sequences p. 726 (1404 pp). Located by the 2026-08-03 coverage audit; no
+      contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The same computational level as Thomas, with more worked examples and a fuller exercise set.
+    angle_detail: 'Kept on the menu as the alternative to Thomas rather than in addition to it: the two
+      books cover this section identically. Pick one when routine calculation is what is missing, and
+      neither when the missing thing is the definition.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-rechenregeln/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch03-bestimmte-divergenz
+  number: 5
+  title: Bestimmt divergente Folgen (§3.7)
+  status: pending
+  objective: Divergence to plus or minus infinity as a positive statement rather than the mere absence
+    of a limit, and the arithmetic that survives it.
+  done_when:
+  - 'Reproduce without notes: Divergence to plus or minus infinity as a positive statement rather than
+    the mere absence of a limit, and the arithmetic that survives it.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+    5, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the seven Chapter 3 proofs the tutors named
+    locator: 'kleine_beweise.pdf, section ''Kapitel 3: Folgen und Konvergenz'': Lemma 3.21 (uniqueness
+      of the limit; convergent sequences are bounded), Satz 3.25(i)-(iii) (Grenzwertsätze), Satz 3.30
+      including (ii) (Monotonieprinzip), Satz 3.40 (Teilfolgenkriterium), Satz 3.42 (Cauchy sequences
+      are bounded), Satz 3.43 (Cauchy-Kriterium), Satz 3.49 (limits with definitely divergent sequences)'
+    angle: A named, bounded list of which Chapter 3 proofs are worth being able to reproduce — with the
+      authors' own disclaimer that it is not exam intelligence.
+    angle_detail: 'This is a two-page handout by student tutors for the SoSe 2025 exam preparation, and
+      it states plainly that it has no known relation to the exam contents. Treated as what it is — an
+      experienced reader''s shortlist — it solves a real problem: the script says proofs need not be memorised,
+      which leaves ''then which ones are worth understanding?'' unanswered. Seven results for a thirty-nine-page
+      chapter is a defensible answer. Use it to repair a failed application, and note that Serie 06.1
+      asks for one of these (Satz 3.25(i)) as an exercise, which is corroboration from the sheets themselves.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §2.1 Konvergenz
+    locator: fritzsche.pdf §2.1 Konvergenz p. 52; Lösungen in Kap. 5 Anhang from p. 253
+    angle: The whole convergence idea developed at tutorial pace, with solutions written as prose.
+    angle_detail: 'Fritzsche puts sequences, series and function limits in one chapter (Der Grenzwertbegriff),
+      which mirrors the script''s own dependency chain and makes §2.1 read as the beginning of something
+      rather than an isolated topic. On this chapter it is the first drill to open after the HU sheets:
+      the explanations are fuller than Forster''s and the solutions show the estimate being constructed,
+      which is precisely the step an ε-N argument gets stuck on.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 10.1-10.5 — computational sequence technique at volume
+    locator: 'IngMath2_Aufgaben.pdf (312 pp, Voß, TU Hamburg 1991): §10.1 Einführende Beispiele p. 2,
+      §10.2 Konvergenz von Folgen p. 8, §10.3 Reelle Zahlenfolgen p. 16, §10.4 Cauchysches Konvergenzkriterium
+      p. 35, §10.5 Folgen in Vektorräumen p. 44 (out of scope)'
+    angle: 'Engineering-style drill: many exercises, all with solutions, aimed at fluency rather than
+      at understanding.'
+    angle_detail: This file is the practice workhorse for Chapters 6 and 7, where nothing else covers
+      the ground; on Chapter 3 it is optional volume. §10.4 is the one worth naming — a whole section
+      of Cauchy-criterion exercises, which the German exercise books treat in a handful of problems. §10.5
+      (sequences in vector spaces) goes past the script and is left closed.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1 Aufgabe 1 — five sequences of different types in one task
+    locator: 'Aufgabensammlung-M1_Loesung.pdf (7 pp), Aufgabe 1: decide convergence and find the limit
+      for n^((−1)^n), the n-th root of 1 + 1/n, a sum, a product and cos(nπ)'
+    angle: One mixed task where the work is choosing a different tool for each of five sequences — a method-choice
+      drill rather than a technique drill.
+    angle_detail: 'Small, and useful for a specific purpose: every other route on this node groups problems
+      by the technique that solves them, which quietly removes the decision the exam actually tests. Here
+      the five parts need five different arguments — unbounded divergence, sandwich, a closed sum, a telescoping
+      product, and a two-accumulation-point argument — with no signposting. The solution names the sandwich
+      lemma and Gauß''s sum formula at the point it uses them.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on sequences, recursion and Cauchy
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A7 (two quotient sequences
+      with competing exponentials), A8 (a recursive sequence — show it converges, then find the limit);
+      2. Klausur A3 (three limits incl. √(k²+3k) − k), A4 (recursive, with well-definedness asked first),
+      A5 (show a given sequence is Cauchy by estimating a_{k+1} − a_k); Wiederholungsklausur A3, A4. Darmstadt_...pdf
+      A2 (Grenzwerte konkreter Folgen), A5 (rekursive Folgen und Induktion). Regensburg_...pdf A2.2 (negate
+      convergence correctly), A2.3 (does e^(1/n²) converge)'
+    angle: German exam wording for the exact three shapes this chapter is examined in — compute, recursion,
+      and negate the definition — all with solutions.
+    angle_detail: 'The recursion tasks are the ones to notice. Marburg''s A8 and 2. Klausur A4 both ask
+      for well-definedness and boundedness before the limit, which is the same order the script''s §3.5
+      monotone criterion imposes and the same order HU Serie 07.1 uses on Heron. Regensburg''s A2.2 is
+      a different and rarer test: it prints a wrong negation of convergence and asks whether it holds,
+      with a printed note that saying ''the negation looks different'' was not accepted. That is a quantifier-handling
+      check no drill sheet on this menu supplies.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 2 Folgen + Übungsaufgaben
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 2 Folgen PDF p. 19 (§2.1 Konvergenz & Cauchy-Konvergenz,
+      §2.2 Monotonie, Häufungspunkte und Rechenregeln PDF p. 21), Übungsaufgaben PDF p. 25; Anhang B ''Ausführliches
+      Beispiel zu einem ε-Beweis'' PDF p. 84'
+    angle: The whole chapter in six pages plus exercises — and one fully worked ε-proof kept as a separate
+      appendix.
+    angle_detail: 'Anhang B is the reason to open this file for Chapter 3 even if the main text is too
+      compressed to learn from: it is a single ε-argument written out at length, with the scratch-work
+      that produces the choice of N shown before the clean version. That is the artifact this chapter''s
+      HU tasks keep asking to be produced, and it is the only worked example of it in the Klausur folder.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§4-6 — Folgen, Vollständigkeit, Wurzeln
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen, Grenzwerte p. 20, §5 Das Vollständigkeitsaxiom p.
+      23, §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
+    angle: Terse solved problems in the exact vocabulary German Analysis exams are written in.
+    angle_detail: §4 is the main drill and §5 is where completeness gets used on sequences rather than
+      sets, which is the join the script makes in §3.5. §6 (Wurzeln) is the natural partner to the script's
+      §3.8 Heron Ausflug. The solutions assume you can supply the routine algebra; that is the right level
+      once Fritzsche has been worked and the wrong one before.
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.1 Konvergenz
+    locator: deitmar.pdf §3.1 Konvergenz p. 24; Lösungen Kap. 23 p. 142
+    angle: The third solved bank — fresh problems once Fritzsche and Forster are spent on this node.
+    angle_detail: 'Deitmar is deliberately last of the three German exercise books on this chapter, for
+      a practical reason rather than a quality one: its Kap. 3 is short (six pages of problems) and its
+      value is that it has not been seen yet. Reach for it when a technique needs more repetitions and
+      the earlier two banks no longer supply unseen ones.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 2 — Sequences and Series
+    locator: abbott.pdf §2.2 The Limit of a Sequence p. 54, §2.3 The Algebraic and Order Limit Theorems
+      p. 61, §2.4 The Monotone Convergence Theorem p. 68, §2.5 Subsequences and Bolzano-Weierstrass p.
+      74, §2.6 The Cauchy Criterion p. 78 (§2.7 onward is series — Chapter 4's session)
+    angle: The clearest available answer to why the ε-N definition has the shape it does, rather than
+      how to apply it.
+    angle_detail: 'Abbott''s §2.2 spends its pages on the logical structure of the definition — the order
+      of the quantifiers, and why the game of ''given ε, produce N'' is the right formalisation of approaching
+      a value. That is the specific thing that makes the definition finally readable for most people,
+      and no drill sheet supplies it. Rule from its record, unchanged: one book per stuck idea, not a
+      parallel course.'
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 7 — Konvergenz von Folgen
+    locator: 'grieser.pdf Kap. 7 ''Konvergenz von Folgen'' p. 97: §7.2 Definition der Konvergenz p. 99,
+      §7.3 Konvergenz, algebraische Operationen und Anordnung p. 103, §7.4 Der Grenzwert »unendlich« p.
+      106, §7.5 Beispiele und Strategien zur Grenzwertberechnung p. 110, §7.6 Konvergenz und Vollständigkeit
+      p. 116, Übungen p. 124; Lösungen und Hinweise p. 329'
+    angle: German rigour with a section explicitly devoted to *strategies* for computing limits, and exercises
+      that carry hints before answers.
+    angle_detail: '§7.5 is the reason this route is here rather than any other German text: it is six
+      pages of worked strategy — which manipulation to try, in what order — for exactly the limits §3.6
+      sets. §7.4 covers definite divergence, the script''s §3.7, which several of the other references
+      treat only in passing.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Sequences and Series
+    locator: 'realanal.pdf ''Sequences and Series'' p. 51: Sequences and limits p. 51, Facts about limits
+      of sequences p. 61, Limit superior, limit inferior, and Bolzano–Weierstrass p. 73, Cauchy sequences
+      p. 84'
+    angle: The structural twin of the script's §§3.5-3.7, in English, free, and with the same ordering.
+    angle_detail: 'Where Abbott motivates, Lebl mirrors: the four sections listed here correspond almost
+      exactly to the script''s convergence criteria, limit arithmetic, subsequences and Cauchy material,
+      in that order. That makes it the route for a second pass over the same argument rather than a different
+      account of it — useful when a script proof is followable but not yet reconstructable.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Folgen, Konvergenz, Häufungspunkte und Cauchy-Folgen
+    locator: 'MfNF_Analysis-1.pdf: ''Folgen'' p. 51 (Definition p. 52, explizite und rekursive Bildungsgesetze
+      p. 57); ''Konvergenz und Divergenz'' p. 65 (Definition Grenzwert p. 66, ''Konvergenz und Divergenz
+      beweisen'' p. 76, Grenzwertsätze p. 94, Sandwichsatz p. 104, Monotoniekriterium p. 107, ''Konvergenzbeweise
+      rekursiver Folgen'' p. 109); ''Häufungspunkte und Cauchy-Folgen'' p. 115 (Teilfolgen p. 116, Bolzano-Weierstraß
+      p. 129, bestimmte Divergenz p. 134, Cauchy-Folgen p. 145). Located by the 2026-08-03 coverage audit;
+      no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A hundred German pages on this chapter alone, split into sections that are named after the
+      *task* — 'prove convergence', 'prove convergence of a recursive sequence' — not the theory.
+    angle_detail: The section titles are the reason this route is worth its length. Where the script has
+      one §3.5, this has separate treatments of proving convergence, proving divergence, the sandwich
+      argument, the monotone criterion and recursive sequences, each with worked examples. It is the most
+      complete free German account available for the chapter with the heaviest HU load. It is also verbose
+      and nobody has yet judged it against this exam — the locator is recorded, the evaluation is not.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§7-12 — sequences, in numbered short sections
+    locator: Ross_Elementary-Analysis_2ed.pdf §7 Limits of Sequences p. 45, §8 A Discussion about Proofs
+      p. 51, §9 Limit Theorems for Sequences p. 57, §10 Monotone Sequences and Cauchy Sequences p. 68,
+      §11 Subsequences p. 78, §12 limsup's and liminf's p. 90; Selected Hints and Answers p. 376. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Short numbered sections, one idea each — and §8 is a discussion about how these proofs are
+      written, placed deliberately between the definition and the theorems.
+    angle_detail: 'The §8 placement is the distinctive thing: Ross interrupts the mathematics after the
+      first ε-N definition to talk about proof writing, which is the same diagnosis the script''s own
+      ''you need not reproduce proofs'' contract makes from the other direction. Sections are three to
+      twelve pages, so it is easy to enter at a point. Unassessed against this exam.'
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-bestimmte-divergenz/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch03-quadratwurzel
+  number: 6
+  title: Ausflug – Berechnung der Quadratwurzel (§3.8)
+  status: pending
+  objective: 'The Heron iteration as a monotone bounded recursive sequence whose limit is the root: the
+    chapter''s own worked example of convergence proving something the field axioms cannot construct.
+    Serie 07''s Aufgabe 7.1.'
+  done_when:
+  - 'Reproduce without notes: The Heron iteration as a monotone bounded recursive sequence whose limit
+    is the root: the chapter''s own worked example of convergence proving something the field axioms cannot
+    construct. Serie 07''s Aufgabe 7.1.'
+  - Work HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice, then the remaining
+    1, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  - concept-sequences-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 3 — the scope authority
+    locator: unser skript.pdf Kapitel 3, printed p. 41 (PDF p. 51)–printed p. 79 (PDF p. 89); §3.1 Folgen
+      printed p. 42 (PDF p. 52), §3.2 Exkurs Landau-Notation printed p. 46 (PDF p. 56), §3.3 Ausflug lineare
+      Rekursionsgleichungen printed p. 47 (PDF p. 57), §3.4 Exkurs printed p. 52 (PDF p. 62), §3.5 Konvergenzkriterien
+      für Folgen printed p. 55 (PDF p. 65), §3.6 Rechnen mit konvergenten Folgen printed p. 61 (PDF p.
+      71), §3.7 Bestimmt divergente Folgen printed p. 69 (PDF p. 79), §3.8 Ausflug Berechnung der Quadratwurzel
+      printed p. 74 (PDF p. 84)
+    angle: The longest exam-bearing chapter in the script, and the one the four chapters after it are
+      defined in terms of.
+    angle_detail: 'Thirty-nine printed pages, of which §§3.5-3.7 carry the exam weight. The chapter''s
+      shape is worth noticing before working it: one definition (§3.5''s epsilon-N), then a set of criteria
+      whose whole purpose is to avoid using it, then an arithmetic (§3.6) that turns limits into computation.
+      Choosing between the criteria is the graded skill. Two of the four Exkurs/Ausflug sections are examined
+      anyway through the HU sheets — §3.3 by Serie 05.1 and §3.8 by Serie 07.1 — so ''Ausflug'' here means
+      shallower, not skipped.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serien 05, 06, 07 and Hausaufgabe WV1.1 — the calibrated sequence practice
+    locator: 'ana_inf_serie05.pdf: 5.1 Türme von Hanoi (recursion → §3.3), 5.2 limits from Definition
+      3.19 with the ε-N step shown, 5.3 HA (10 P) 1/n^k → 0 from the definition. ana_inf_serie06.pdf:
+      6.1 prove Satz 3.25(i) by choosing ε and n_0, 6.2 HA (15 P) the scalar rule plus √(n+1) − √n by
+      rationalising, 6.3 Häufungspunkte (prove Lemma 3.35 and three consequences). ana_inf_serie07.pdf:
+      7.1 Heron (→ §3.8), 7.2 and 7.3 HA (20 P) further limits, 7.4 Rechenregeln. ana_inf_serieWV.pdf:
+      Hausaufgabe WV1.1 (20 P), parts (a) Bolzano-Weierstraß, (b) Cauchy sequences converge, (c) three
+      limits'
+    angle: Three full sheets plus one exam-format Hausaufgabe, all in the script's own numbering — the
+      densest current practice anywhere in the Analysis half.
+    angle_detail: 'These sheets are the closest thing to seeing the exam. Notice what they keep asking
+      for: not the value of a limit but the ε-N argument that establishes it, cited against the script''s
+      numbered definitions and theorems (Definition 3.19, Satz 3.25, Lemma 3.35). Two of the tasks are
+      the *proofs* of limit laws rather than their application. WV1.1 is explicitly written as an exam-format
+      question at 30-45 minutes; it belongs to the transfer unit as a timed sitting and is named here
+      so this chapter''s preparation knows what it is preparing for. Work all of these before opening
+      any external bank: everything else on this menu is a different examiner asking differently.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Forster/Wessoly §§4-6 — Folgen, Vollständigkeit, Wurzeln
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen, Grenzwerte p. 20, §5 Das Vollständigkeitsaxiom p.
+      23, §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
+    angle: Terse solved problems in the exact vocabulary German Analysis exams are written in.
+    angle_detail: §4 is the main drill and §5 is where completeness gets used on sequences rather than
+      sets, which is the join the script makes in §3.5. §6 (Wurzeln) is the natural partner to the script's
+      §3.8 Heron Ausflug. The solutions assume you can supply the routine algebra; that is the right level
+      once Fritzsche has been worked and the wrong one before.
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Konvergenz, mit Landau-Notation und Quadratwurzeln am selben Ort
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Konvergenz'' p. 89: Folgen p. 89, ''Beispiele
+      für Folgen in der Informatik'' p. 94, ''Landau–Symbole (O– und o–Notation)'' p. 94, ''Aufwandsanalyse
+      der Multiplikation'' p. 95, Das Vollständigkeitsaxiom p. 95, Quadratwurzeln p. 100, Der Satz von
+      Bolzano–Weierstrass p. 105. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The only source on this menu that puts sequences, Landau notation and square-root iteration
+      in the same chapter — the same three things the script's Chapter 3 puts together.
+    angle_detail: 'This is the discovery of the 2026-08-29 pass. The script''s Chapter 3 is unusual in
+      interleaving pure convergence with two Informatik excursions (§3.2 Landau-Notation, §3.8 Heron),
+      and every English reference on this menu drops both. Labs/Schreyer keeps them: O-notation and a
+      running-time analysis sit inside the Konvergenz chapter, and Quadratwurzeln follows the completeness
+      axiom, which is the script''s own §2.3.6 → §3.8 arc. For §3.2 in particular it is the only route
+      here at all — and §3.2 is an Exkurs, so this is offered for the Algorithmen-2 overlap rather than
+      for the exam.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/stages/stage-m2-analysis-ch03-quadratwurzel/notes.md
+  attachments: []
+  source_feedback: []

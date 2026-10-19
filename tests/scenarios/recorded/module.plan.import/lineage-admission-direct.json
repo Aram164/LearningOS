@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 1,
+  "idempotency_changed": {},
+  "outcome": "diagnostic-failure",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: module plan lineage preflight failed; no canonical files were written\n- covers:route-b2f1f80014860a929a3af0bc: local claim requires a verified quote, or an explicit unreadable-material fallback\n",
+  "stdout": "",
+  "stdout_json": null
+}

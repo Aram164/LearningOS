@@ -1,0 +1,39 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"unit-list-summary\",\"filters\":{},\"items\":[{\"id\":\"unit-demo-l01\",\"title\":\"Expected value\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":1,\"current_study_map\":\"study-map-demo-l01\",\"needs_study_map\":false},{\"id\":\"unit-demo-l02\",\"title\":\"Variance\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":2,\"needs_study_map\":true}],\"total\":2,\"next_offset\":null,\"detail\":\"inspect UNIT_ID\"}\n",
+  "stdout_json": {
+    "contract": "unit-list-summary",
+    "detail": "inspect UNIT_ID",
+    "filters": {},
+    "items": [
+      {
+        "current_study_map": "study-map-demo-l01",
+        "id": "unit-demo-l01",
+        "module_id": "module-demo",
+        "needs_study_map": false,
+        "order": 1,
+        "status": "active",
+        "title": "Expected value"
+      },
+      {
+        "id": "unit-demo-l02",
+        "module_id": "module-demo",
+        "needs_study_map": true,
+        "order": 2,
+        "status": "active",
+        "title": "Variance"
+      }
+    ],
+    "next_offset": null,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "total": 2
+  }
+}

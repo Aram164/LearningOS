@@ -1,0 +1,128 @@
+operation: collection.entry.revise
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: revise-success
+    kind: success
+    transport: gateway
+    request:
+      record: {collection: shelf, source: source-demo-book, why: "A revised role in this shelf."}
+      expected_diff_sha256: "sha256:d8c6bcf1b6ebd8a223150c072b3743d16ee7c303591b7d2b1c61b0f5c70004aa"
+    artifact_ids: [collection:shelf]
+    a5_base: true
+    expect: {site: null}
+  - id: unknown-collection
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: nope, source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: bad-stem
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: "Shelf!", source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: bad-source
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: nope, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: blank-why
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: source-demo-book, why: " "}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: no-entry-source
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: source-scenario-x, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: noop-same-why
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: source-demo-book, why: "The main demo reading."}}
+    artifact_ids: []
+    expect: {site: collection.entry.revise.bad-record}
+  - id: missing-file
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --file, work/inbox/nope.yaml]
+    expect: {site: collection.entry.revise.bad-record}
+  - id: foreign-field
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x", "group": "g"}']
+    expect: {site: collection.entry.revise.bad-record}
+  - id: missing-keys
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book"}']
+    expect: {site: collection.entry.revise.bad-record}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}']
+    expect: {site: collection.entry.revise.needs-approval}
+  - id: direct-cli-approved
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}', --approve]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record: {collection: shelf, source: source-demo-book, why: "A revised role in this shelf."}
+          expected_diff_sha256: "sha256:d8c6bcf1b6ebd8a223150c072b3743d16ee7c303591b7d2b1c61b0f5c70004aa"
+        artifact_ids: [collection:shelf]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: null}
+
+  - id: missing-diff
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+    artifact_ids: []
+    expect:
+      site: collection.entry.revise.needs-expected-diff
+  - id: diff-changed
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+      expected_diff_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+    artifact_ids: []
+    expect:
+      site: collection.entry.revise.diff-changed
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        collection: shelf
+        source: source-demo-book
+        why: A revised role in this shelf.
+      expected_diff_sha256: sha256:d8c6bcf1b6ebd8a223150c072b3743d16ee7c303591b7d2b1c61b0f5c70004aa
+    artifact_ids:
+    - ''
+    expect:
+      site: collection.entry.revise.bad-expected-revision

@@ -1,0 +1,30 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"out_dir\":\"<MATERIALS>/staging-prep\",\"envelope\":\"<MATERIALS>/staging-prep/envelope.json\",\"expected_snapshot\":\"SNAP1\",\"expected_revisions\":{\"note-demo-analysis\":0},\"notes\":[{\"note_id\":\"note-demo-analysis\",\"note_path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"predicted_new\":false,\"frozen_input_sha256\":\"f9d41532b0bcbb91b0a0199a302c57d99e7b9e4322e92162a898de1407f37fe4\",\"body_file\":\"<MATERIALS>/staging-prep/bodies/note-demo-analysis.bin\"}],\"submit\":\".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"}\n",
+  "stdout_json": {
+    "envelope": "<MATERIALS>/staging-prep/envelope.json",
+    "expected_revisions": {
+      "note-demo-analysis": 0
+    },
+    "expected_snapshot": "SNAP1",
+    "notes": [
+      {
+        "body_file": "<MATERIALS>/staging-prep/bodies/note-demo-analysis.bin",
+        "frozen_input_sha256": "f9d41532b0bcbb91b0a0199a302c57d99e7b9e4322e92162a898de1407f37fe4",
+        "note_id": "note-demo-analysis",
+        "note_path": "knowledge/notes/mathematics/note-demo-analysis.md",
+        "predicted_new": false
+      }
+    ],
+    "ok": true,
+    "out_dir": "<MATERIALS>/staging-prep",
+    "submit": ".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json"
+  }
+}

@@ -1,0 +1,182 @@
+operation: goal.decide
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: canonical-goal-preview
+  kind: success
+  transport: cli
+  argv:
+  - goal
+  - study-map-obligation:unit-demo-l02
+  - --close
+  - --check
+  a5_base: true
+  expect:
+    site: null
+- id: close-goal
+  kind: success
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --close
+  a5_base: true
+  expect:
+    site: null
+- id: check-preview
+  kind: success
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --defer
+  - --revisit-on
+  - 2026-12-01
+  - --check
+  expect:
+    site: null
+- id: batch-apply
+  kind: success
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - goal-demo-rejected
+  - --reject
+  - --reviewed-sha256
+  - sha256:2e15f0a78c81660e038aac856ead9f4b255d3a703e353f21a90eff1a24329348
+  - --note
+  - Explicit reviewed rejection.
+  expect:
+    site: null
+- id: bad-pattern
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-*
+  - --reject
+  expect:
+    site: goal.decide.bad-goal-ids
+- id: blank-id
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - with space
+  - --reject
+  expect:
+    site: goal.decide.bad-goal-ids
+- id: revisit-needs-defer
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --reject
+  - --revisit-on
+  - 2026-12-01
+  expect:
+    site: goal.decide.revisit-needs-defer
+- id: bad-revisit
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --defer
+  - --revisit-on
+  - someday
+  expect:
+    site: goal.decide.bad-revisit
+- id: past-revisit
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --defer
+  - --revisit-on
+  - 2026-01-01
+  expect:
+    site: goal.decide.past-revisit
+- id: unknown-goal
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-nope
+  - --reject
+  expect:
+    site: goal.decide.unknown-goal
+- id: batch-needs-sha
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - goal-demo-rejected
+  - --reject
+  - --note
+  - Explicit reviewed rejection.
+  expect:
+    site: goal.decide.batch-needs-review
+- id: reject-needs-note
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - goal-demo-deferred
+  - --reject
+  - --check
+  expect:
+    site: goal.decide.reject-needs-note
+- id: audit-needs-reviewed-file
+  kind: refusal
+  transport: cli
+  argv:
+  - goal
+  - claims-audit:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - --authorize
+  - --check
+  expect:
+    site: goal.decide.invalid-audit
+- id: authorize-intent
+  kind: success
+  transport: cli
+  argv:
+  - goal
+  - study-map-obligation:unit-demo-l02
+  - --authorize
+  expect:
+    site: null
+untriggered:
+- where: tools/learning_os/app/handlers/goals.py:134
+  reason: 'unreadable goal ledger: needs permissions no step can set'
+- where: tools/learning_os/app/handlers/goals.py:162
+  reason: 'malformed ledger YAML: the fixture ledger parses, and no step can corrupt
+    it'
+- where: tools/learning_os/app/handlers/goals.py:162
+  reason: 'non-mapping ledger: the fixture ledger is a mapping, and no step can corrupt
+    it'
+- where: tools/learning_os/app/handlers/goals.py:162
+  reason: 'non-mapping decisions: the fixture decisions are a mapping, and no step
+    can corrupt them'
+- where: tools/learning_os/app/handlers/goals.py:298
+  reason: 'corrupt own session ledger: needs a pre-existing corrupt session file'
+- site: goal.decide.unreadable-ledger
+  reason: os-error-only
+- site: goal.decide.malformed-ledger
+  reason: fixture-inexpressible
+- site: goal.decide.unreadable-session
+  reason: fixture-inexpressible
+- site: goal.decide.not-admitted
+  reason: fixture-inexpressible
+- site: goal.decide.invalid-ledger
+  reason: fixture-inexpressible

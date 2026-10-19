@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s8a-ck-0904",
+  "idempotency_key": "pl-s8a-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:b616e983fb601471b97288d7e69dce87af57698212d0c6413b747c6179735aaf",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 2,
+    "study-map-job-polars-lazy-udf-interop": 1
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "stage_id": "stage-polars-15-lazy-plans-and-optimizer-literacy",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s8a-check.py",
+    "label": "Answer-key self-check (22 assertions)",
+    "file_sha256": "sha256:50b61c1174ad500d38387e90a4bff8c0839a7426a8885a59c52f4395923661ce"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:e421eec4d86f2779d55a178d15c756386e8dae0a6f7df2945ffafbeaf8249a2e"
+  }
+}

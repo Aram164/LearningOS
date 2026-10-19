@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/atlas.question.save.schema.json",
+  "title": "payload for capability atlas.question.save",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question"
+  ],
+  "properties": {
+    "question": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Durable note id the question lives on; an unknown id starts a new question note."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Question title; required for a new question."
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Question body; required for a new question."
+        },
+        "target": {
+          "type": "object",
+          "description": "What the question is about, shaped as note atlas_question.target in system/schema/note.schema.json: {concepts: [...]} or {from, type, to}. Required for a new question; preserved, never changed, on an existing one."
+        },
+        "state": {
+          "type": "string",
+          "description": "open or resolved, per note atlas_question.state; new questions start open."
+        },
+        "answer_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Durable note ids answering the question; each must resolve to another durable note."
+        }
+      },
+      "description": "the explicitly authored question to save or resolve: id is required, and new questions also need title, text and target"
+    }
+  }
+}

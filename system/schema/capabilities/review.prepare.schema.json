@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/review.prepare.schema.json",
+  "title": "payload for capability review.prepare",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit_id"
+  ],
+  "properties": {
+    "items_file": {
+      "type": "string",
+      "description": "optional JSON proposal items produced with explicit unit context"
+    },
+    "items_file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact shelving-items file bytes approved for review"
+    },
+    "summary": {
+      "type": "string",
+      "description": "optional summary recorded on the shelving proposal, defaulting to the stock review line when omitted"
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "ID of the unit whose review packet is prepared"
+    }
+  },
+  "dependentRequired": {
+    "items_file": [
+      "items_file_sha256"
+    ],
+    "items_file_sha256": [
+      "items_file"
+    ]
+  }
+}

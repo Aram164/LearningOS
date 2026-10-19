@@ -1,0 +1,206 @@
+{
+  "canonical_changed": {
+    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "b0309b06ab7979bc0b18042ea5e92af36f0269ba45ccf0e92f03d477c625281e",
+    "curriculum/resume.yaml": "e0b8f589a8e6dfc18a44e7f2727aa7962470d89ed0a5ab1e168d52810e8d851e"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "stage.progress.update",
+          "channel": "operator",
+          "intent_sha256": "sha256:d3035832967cb436d82abe2e4d981ba29e14a1fbef3bef0a95ef9f2681647c81",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "study-map-demo-l01": {
+          "after": 1,
+          "before": 0
+        },
+        "unit-demo-l01": {
+          "after": 4,
+          "before": 3
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "stage.progress.update",
+            "declared_writes": [
+              "curriculum/modules/**/units/**",
+              "curriculum/resume.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "stage.progress.update",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "study-map-demo-l01": 0,
+        "unit-demo-l01": 3
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:010990f9dd63f44a6b0bc6c9d77b4850279b4bd365c42f085ffc51efd3061314",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:d3035832967cb436d82abe2e4d981ba29e14a1fbef3bef0a95ef9f2681647c81"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:d3035832967cb436d82abe2e4d981ba29e14a1fbef3bef0a95ef9f2681647c81",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+          "sha256_after": "b0309b06ab7979bc0b18042ea5e92af36f0269ba45ccf0e92f03d477c625281e",
+          "sha256_before": "506b0fdd350e11960069e09ffd099e7ac616076a8b3425557614e9167bbfe141"
+        },
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+          "sha256_after": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
+          "sha256_before": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1"
+        },
+        {
+          "created": false,
+          "path": "curriculum/resume.yaml",
+          "sha256_after": "e0b8f589a8e6dfc18a44e7f2727aa7962470d89ed0a5ab1e168d52810e8d851e",
+          "sha256_before": "1360307adc4f3cf81ae20860966e3e53d87eb779bfed8284ca970314c58fd858"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "b0309b06ab7979bc0b18042ea5e92af36f0269ba45ccf0e92f03d477c625281e",
+          "state": "file"
+        },
+        "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
+          "state": "file"
+        },
+        "curriculum/resume.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e0b8f589a8e6dfc18a44e7f2727aa7962470d89ed0a5ab1e168d52810e8d851e",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "6f799e07fb268084f0dbbed13c10f86717e99a1142fedf1ff11db74908042ffa",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "66714008b907b7d7029f7153c0c046d584a5f10b354e132332b02a4d5d01058d",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e017d5ddad803394f168ee4f49716a86587023cd57933ac66746727222e523ba",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"stage.progress.update\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"stage_id\": \"stage-demo\",\n    \"status\": \"complete\",\n    \"map_status\": \"active\",\n    \"current_stage\": \"stage-demo-pending\",\n    \"observe_requirement\": \"req-demo-l01-demo\",\n    \"observe_next\": \"los observe req-demo-l01-demo --activity <what-you-did> --result <correct|incorrect|partial|abandoned> --condition unfamiliar-example\",\n    \"observe_conditions\": [\n      \"unfamiliar-example\"\n    ],\n    \"observe_note\": \"keep only the conditions that actually held; an omitted one is read as unknown, never as met\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "stage.progress.update",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "current_stage": "stage-demo-pending",
+      "map_status": "active",
+      "observe_conditions": [
+        "unfamiliar-example"
+      ],
+      "observe_next": "los observe req-demo-l01-demo --activity <what-you-did> --result <correct|incorrect|partial|abandoned> --condition unfamiliar-example",
+      "observe_note": "keep only the conditions that actually held; an omitted one is read as unknown, never as met",
+      "observe_requirement": "req-demo-l01-demo",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "stage_id": "stage-demo",
+      "status": "complete",
+      "transaction_id": "TX1",
+      "unit_id": "unit-demo-l01"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

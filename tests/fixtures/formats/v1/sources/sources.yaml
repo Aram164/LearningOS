@@ -1,0 +1,14 @@
+sources:
+- authors:
+  - A. Author
+  evaluations:
+  - concepts:
+    - concept-expected-value
+    level: introductory
+    roles:
+    - first-learning
+    strengths:
+    - clear intuition
+  id: source-demo-book
+  title: Demo Book
+  type: book

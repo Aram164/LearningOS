@@ -1,0 +1,404 @@
+# The repository's data-format contract.
+#
+# `contract_version` is the format canonical records are written in. The
+# fingerprint is a sha256 over the schemas in system/schema/ that govern data at
+# rest. A schema is left out only when it declares `x-governs: artifact` —
+# something a command produces, like a health report or a backup inventory,
+# where an edit redefines no record already written. Anything else counts,
+# including a schema that declares nothing, so forgetting to classify one costs
+# a needless bump rather than a hole in the gate (capability payload schemas
+# stay excluded by living in a subdirectory).
+#
+# `make check` fails when the schemas change and this file does not, so a schema
+# edit cannot silently redefine what "valid" means for data already on disk.
+# When that fires, the fix is a decision, not a rubber stamp:
+#
+#   1. does existing data still validate?  tests/fixtures/formats/ answers this
+#   2. if not, write the migration under tools/migrations/
+#   3. python tools/schema_contract.py --bump --note "…" [--migration …]
+#   4. freeze the new shape as tests/fixtures/formats/v<N>/
+#
+# Rebuild with: python tools/schema_contract.py --bump
+contract_version: 54
+schema_fingerprint: sha256:a21cb0c25c24c70ae4637552600e53b61a0e31a7fc4035cb0e89681b7e31646d
+record_schemas: 36
+history:
+- version: 1
+  adopted: '2026-08-07'
+  note: baseline — the canonical record format as it stands at the v3 cutover (module-first
+    curriculum, manifest v2, projects)
+  migration: null
+  fixture: tests/fixtures/formats/v1/
+- version: 2
+  adopted: '2026-08-08'
+  note: 'study-map stage resources gained an optional scope_triage field (same enum
+    as the stage''s own), so a required-now stage can rank its resources: do-this
+    / if-stuck / depth / preserved. Additive and backward-compatible — absent means
+    unranked, which is what every v1 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v2/
+- version: 3
+  adopted: '2026-08-08'
+  note: study-map stage resources gained an optional stable 'id' (resource identity),
+    and source_feedback gained an optional 'resource_id' alongside the still-required
+    source_id. Lets a judgment name one paper inside a bundled course instead of collapsing
+    onto the whole bundle. Additive and backward-compatible — absent ids mean source_id
+    + locator addressing, which is what every v1/v2 record carries.
+  migration: null
+  fixture: tests/fixtures/formats/v3/
+- version: 4
+  adopted: '2026-08-08'
+  note: sources gained an optional 'topics' array over the closed vocabulary in sources/topics.yaml
+    (ADR-009 topic facet). Independent of thematic_group_ids so one source can be
+    classified along several dimensions. Additive and backward-compatible — absent
+    means not yet classified, and population is on-use rather than a bulk backfill.
+  migration: null
+  fixture: tests/fixtures/formats/v4/
+- version: 5
+  adopted: '2026-08-12'
+  note: units gained an optional knowledge_map of stable concept nodes, and module
+    source routes may now carry lecture-specific material metadata (format, angle,
+    covered nodes, depth, scope, and locator). Both changes are additive and legacy
+    string routes remain valid, so no migration is required.
+  migration: null
+  fixture: tests/fixtures/formats/v5/
+- version: 6
+  adopted: '2026-08-15'
+  note: 'Three additive schema extensions, all backward-compatible (no migration):
+    (1) note.authorship gains ''operator-drafted'' — a note built by the operator
+    from a scope source and not yet reasoned through by the learner, distinct from
+    ''external'' (another author''s text) and never evidence of understanding; (2)
+    module gains an optional structured ''drop'' record (date, attempt_made, semester,
+    stated_by, reversible, intent, notes) so a drop is a first-class fact rather than
+    prose in examination.notes — attempt_made is load-bearing, since an empty attempts
+    array cannot itself say whether nothing was registered or the record is incomplete;
+    (3) module-source-map unit_routes gain format ''exam''/''solutions'' (used differently
+    from ''exercise''), depth ''unassessed'' and scope ''unevaluated'' — a source
+    routed to a unit but never evaluated, so visibility debt is visible per-route
+    instead of being flattened into ''optional''. Absent values mean exactly what
+    they meant at v5.'
+  migration: null
+  fixture: tests/fixtures/formats/v6/
+- version: 7
+  adopted: '2026-08-19'
+  note: Add producer-owned Job dashboard and structured Job plan schemas
+  migration: null
+  fixture: tests/fixtures/formats/v7/
+- version: 8
+  adopted: '2026-08-21'
+  note: 'job plan stages may carry an anchor stamp: job_context gained optional ''component''
+    (list of repo-root-relative Stratum paths) and ''verified_against'' (''<sha> (YYYY-MM-DD)''),
+    the same contract notes/stratum/ frontmatter already uses. Both optional, so every
+    plan written before this version stays valid; an unstamped stage reports freshness
+    ''unverified'' rather than ''current''.'
+  migration: null
+  fixture: tests/fixtures/formats/v8/
+- version: 9
+  adopted: '2026-08-22'
+  note: Tighten Job Stratum anchors to inert repo-relative component paths and 7-64
+    digit hexadecimal commit ids; existing valid anchors remain unchanged, so no migration
+    is required.
+  migration: null
+  fixture: tests/fixtures/formats/v9/
+- version: 10
+  adopted: '2026-08-22'
+  note: Standardize curriculum and Job plan creation on shared plan-template v1, numbered
+    stages, and one resource contract; legacy study maps remain readable.
+  migration: tools/migrations/standardize_plan_template_v10.py
+  fixture: tests/fixtures/formats/v10/
+- version: 11
+  adopted: '2026-08-22'
+  note: 'Declare the plan-template query result and project plan_template_version
+    onto Job dashboard tracks. No stored-record shape changed: both schemas govern
+    query responses, so the v10 fixture remains the frozen on-disk shape.'
+  migration: null
+  fixture: tests/fixtures/formats/v10/
+- version: 12
+  adopted: '2026-08-24'
+  note: resource rows and module source-map routes gain optional angle and angle_detail
+    fields; the angle stops being concatenated onto the locator (CRITIQUE-POINTS 1)
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 13
+  adopted: '2026-08-25'
+  note: Stable material-route identities and guarded selection references, optional
+    route links on stage resources, reviewed local-to-global concept mappings, and
+    the strict vNext synthesis, recovery, diagnostics, Legacy archive, Future Master's
+    Planning, gateway, and receipt records. Pre-v13 records remain readable; the migration
+    persists rich-route and exact selection ids without guessing.
+  migration: tools/migrations/route_identity_v13.py
+  fixture: tests/fixtures/formats/v12/
+  fixture_note: 'Corrected 2026-08-28. This entry pointed at tests/fixtures/formats/v13/,
+    which was never frozen — `bump()` writes that path automatically and nothing checked
+    it, so the record claimed a snapshot that does not exist. No v13 shape was frozen
+    because none was needed: the migration persists route and selection ids rather
+    than changing the stored vocabulary, and the v12 fixture still loads against current
+    schemas. v12 is therefore the applicable frozen shape, as v14 also records. `tests/test_format_fixtures.py`
+    now asserts every pointer resolves.'
+- version: 14
+  adopted: '2026-08-26'
+  note: Remove obsolete Job dashboard and Job plan schemas plus the Job-only stage
+    extension from the shared learning-plan vocabulary. Job learning now uses ordinary
+    program, module, unit, study-map, and note contracts. These retired schemas did
+    not govern canonical records, so no canonical data migration is required and the
+    v12 compatibility fixture remains the applicable stored shape.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 15
+  adopted: '2026-09-05'
+  note: Optional Atlas personal-question metadata on question notes; existing notes
+    remain valid, no record migration.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 16
+  adopted: '2026-09-06'
+  note: 'backup-manifest gained an optional materials_aliases map: the meaning of
+    materials/.flat, recorded as data because no backup can contain a symlink farm
+    and a restore cannot recover the mapping by guessing folder names (#31). Additive
+    and backward-compatible; no stored record changes, so no migration.'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 17
+  adopted: '2026-09-06'
+  note: 'The fingerprint now covers only schemas declaring x-governs: record. Four
+    artifact schemas left the set. No stored record changed, and no migration is required.'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 18
+  adopted: '2026-09-07'
+  note: Add explicit shared material references to study-map resources; loaded records
+    and manifest v9 remain fully expanded. Inline resources and older formats remain
+    valid. Governed module.materials.compact preserves every effective field.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 19
+  adopted: '2026-09-10'
+  note: 'Learning Runtime V0: LearnerObservation record schema; learning-plan affordance
+    vocabulary and canonical stage runtime_target (LearningRequirement compiles from
+    the owning stage, no sidecar channel)'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 20
+  adopted: '2026-09-10'
+  note: 'Learning Runtime V0: study-map legacy stage/resource shapes accept canonical
+    runtime_target and affordance (LearningRequirement compiles from the owning stage)'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 21
+  adopted: '2026-09-10'
+  note: Add optional stage runtime_review attestation (reviewed_by/reviewed_on/fingerprint)
+    for §19.6 first slice; no existing data required to change
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 22
+  adopted: '2026-09-13'
+  note: study-map resources gained independent_evidence (per-activity review of which
+    target conditions an activity actually tests) and source-map routes gained exposes_solutions_for
+    (which activities a material answers); both are optional and additive — audit
+    synthetic-learner-2026-09-12 F03
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 23
+  adopted: '2026-09-13'
+  note: 'source-map routes gained requires_assets: the files an activity itself needs
+    (dataset, code template), distinct from the material being reachable — audit synthetic-learner-2026-09-12
+    F06'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 24
+  adopted: '2026-09-13'
+  note: 'learner observations gained conditions_not_met: conditions the learner states
+    did NOT hold, disjoint from conditions and distinct from silence, so ''a different
+    situation'' is actionable — review repair-review-2026-09-13 D4'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 25
+  adopted: '2026-09-13'
+  note: Bind assessment suitability to exact requirement and activity bytes/scope;
+    accept reviews on both current-template and legacy resources. Explicit prior exposure
+    can exclude assessment while practice remains available. Optional additions; no
+    migration.
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 26
+  adopted: '2026-09-18'
+  note: 'unit-material-synthesis basis policy tiered-v1 -> tiered-v2: route_set_checksum
+    and source_map_checksum now hash evidential projections, not whole rows or file
+    bytes'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 27
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy accepts tiered-v1 and tiered-v2 during
+    the basis-projection migration
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 28
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy pinned to tiered-v2; both published dossiers
+    rebased onto the narrowed basis projection
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 29
+  adopted: '2026-09-18'
+  note: unit-material-synthesis gains optional scope_of_absence ahead of the backfill
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 30
+  adopted: '2026-09-18'
+  note: scope_of_absence required on every deep-reviewed assessment; both published
+    dossiers backfilled from their own slice indexes
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 31
+  adopted: '2026-09-18'
+  note: stageCore gains optional knowledge_node_id (assembler-emitted join key; legacy
+    stages link by id convention)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 32
+  adopted: '2026-09-18'
+  note: legacyStage gains optional knowledge_node_id (same join key for pre-template
+    maps)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 33
+  adopted: '2026-09-20'
+  note: 'add optional node_scaffold_note to study-map resource (v1 + legacy): records
+    deliberate scaffolding placements; no existing data invalidated, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 34
+  adopted: '2026-09-21'
+  note: 'note: optional material_analysis provenance binding for durable source-chapter
+    analyses (additive; existing notes validate unchanged)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 35
+  adopted: '2026-09-21'
+  note: 'note.material_analysis: required frozen_input_bytes records the preserved
+    body length (additive; no notes written under v34 yet)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 36
+  adopted: '2026-09-21'
+  note: 'unit-material-synthesis route assessments gain optional analysis_refs: pinned
+    note revision, approved-content digest, exact anchor, and inspected material identity
+    per referenced analysis note (additive, no migration)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 37
+  adopted: '2026-09-23'
+  note: Add independent ability records, optional stage links, confirmed observations
+    with conditions and evidence criteria, tentative connection candidates, and source-bound
+    reviewed bridges
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 38
+  adopted: '2026-09-23'
+  note: Allow stable ability identities to retire while preserving historical observations
+    (additive; existing records remain active)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 39
+  adopted: '2026-09-23'
+  note: sources gain optional metadata-only discovery provenance with child titles
+    (two-pass intake); Master's candidates gain url, identifiers, child titles, possible
+    use and type (additive; existing records stay valid)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 40
+  adopted: '2026-09-26'
+  note: 'study-map stages gain an optional progress record (updated, summary, next):
+    the stage''s current structured progress, written only through stage.progress.update
+    and surfaced by resume. Additive and backward-compatible — absent means nothing
+    recorded, which is what every v39 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 41
+  adopted: '2026-09-28'
+  note: Clarify inspected_range physical PDF page and text line units; descriptions
+    only, no stored shape change
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 42
+  adopted: '2026-09-29'
+  note: 'useful_sections entries require exactly one section-to-note pair (no migration:
+    all 136 loaded entries already single-key)'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 43
+  adopted: '2026-09-29'
+  note: useful_sections forbids locator/use keys via propertyNames
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 44
+  adopted: '2026-09-29'
+  note: useful_sections bans empty and blank keys
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 45
+  adopted: '2026-09-29'
+  note: 'source evaluation items require at least one property (no migration: no stored
+    evaluation is empty)'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 46
+  adopted: '2026-09-30'
+  note: Optional content-bound reviews distinguish stage angle refinements from source
+    corrections; existing plans remain readable without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 47
+  adopted: '2026-10-02'
+  note: Receipts record an optional metadata.data_roots_sha256 (authored-data digest)
+    so diagnostics can tell contract-only moves from data drift; old receipts stay
+    valid without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 48
+  adopted: '2026-10-02'
+  note: module attempts gain result 'sat' (sat the sitting, outcome unknown) and examination
+    sittings gain an optional withdrawal_deadline (Rucktritt); both additive, existing
+    records validate unchanged, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 49
+  adopted: '2026-10-02'
+  note: Add learner-stage-result record schema (untargeted stage-result ledger) and
+    optional receipts metadata.routed_to for inbox.resolve; additive, old records
+    and receipts stay valid without a migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 50
+  adopted: '2026-10-02'
+  note: Transaction receipts gain optional claims_sha256 and claims_count metadata,
+    written only by lineage.restamp so a re-stamp receipt is directly auditable without
+    reopening the envelope. Additive and backward-compatible — absent on every other
+    receipt, which is what every v49 record carries.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 51
+  adopted: '2026-10-03'
+  note: GatewayEnvelopeV2 gains optional sealed session_id; additive and backward
+    compatible with unsealed requests, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 52
+  adopted: '2026-10-03'
+  note: Reject whitespace-only optional sealed session identities; omitted identities
+    remain backward compatible, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 53
+  adopted: '2026-10-03'
+  note: Receipts optionally identify the snapshot fingerprint definition; byte-bound
+    caches and conservative legacy resolver admission preserve existing records, no
+    migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 54
+  adopted: '2026-10-08'
+  note: 'PLAN D3: typed optional error details (reason, suggestions, remedy)'
+  migration: null
+  fixture: tests/fixtures/formats/v46/

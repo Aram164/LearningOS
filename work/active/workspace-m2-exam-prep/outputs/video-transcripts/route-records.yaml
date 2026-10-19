@@ -1,0 +1,2084 @@
+type: video-route-proposals
+count: 65
+provenance: derived from fetched captions; every timestamp verified present in its transcript
+authoring: depth and scope are rule-derived and each carries its basis; angle prose authored from transcripts 2026-09-15
+routes:
+- video_id: 0oc49DyA3hU
+  unit_id: unit-m2-sad-l10
+  title: Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=0oc49DyA3hU
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!", 09:55-12:43 for the null-hypothesis idea;
+    12:43-13:44 for the sample-size intuition'
+  covers:
+  - knowledge-sad-l10-test-model
+  covers_confidence:
+    knowledge-sad-l10-test-model: low
+  does_not_cover:
+  - No p-value is ever computed or interpreted; title promises hypothesis testing but the video stops before any decision
+    rule
+  - No test statistic, z/t distribution, or critical value is constructed; rejection stays purely verbal
+  - No Type I / Type II errors and no power concept appear anywhere in the transcript
+  - No confidence interval and no duality argument is shown despite the L10 setting
+  notes: Gentle conceptual on-ramp; expects no prerequisites. Notation is drug A/B/C/D toy means, no formal H0/H1 symbols.
+    Thin on inference machinery — pair with a video that actually computes a test.
+  review_flag: ''
+  angle: Unlike other L10 materials that compute tests, this video builds the null-hypothesis idea purely through repeated
+    toy drug trials, contrasting confident rejection against failing to reject when replicates wobble only slightly.
+  angle_detail: 'Start with [09:55]–[12:43], where the narrator argues the only testable default is zero difference because
+    any nonzero guess is arbitrary. Then watch [12:43]–[13:44] for the small-versus-large-sample intuition about when random
+    wobble stops mattering. Note the notation gap: the video talks in drug A/B mean differences and never writes H0/H1, test
+    statistics, or p-values, so pair it with a video that computes a test and skip the closing promo from [13:44] on.'
+- video_id: 2v-4NrbVVr0
+  unit_id: unit-m2-sad-l07
+  title: 'Zufall ohne Gedächtnis: Geometrische & Exponentialverteilung endlich verstehen (mit Alwin ☕)'
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=2v-4NrbVVr0
+  format: video
+  depth: derivation
+  depth_basis: 2 of 3 segments derive rather than illustrate
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Zufall ohne Gedächtnis: Geometrische & Exponentialverteilung endlich verstehen (mit Alwin ☕)", 00:03-05:00 for
+    the geometric law; 09:26-11:41 for estimation rules and the memoryless summary'
+  covers:
+  - knowledge-sad-l07-geometric
+  - knowledge-sad-l07-relationships
+  covers_confidence:
+    knowledge-sad-l07-geometric: high
+    knowledge-sad-l07-relationships: low
+  does_not_cover:
+  - No Bernoulli, binomial, hypergeometric, or Poisson model is fitted or compared; the video never selects among discrete
+    distributions
+  - No moment signatures, limit approximations between named discrete laws, or parameter estimation from data appear
+  - No hypothesis test, confidence interval, or sampling-uncertainty quantification is performed on the coffee examples
+  notes: 'English narration despite German title; expects basic probability notation. Uses p for per-trial chance and F/f
+    for CDF vs pmf/density. Teaches knowledge-sad-l07-geometric — reassignment signal: the continuous waiting-time half belongs
+    to another unit''s nodes (exponential has no L07 node) and is excluded from teaches.'
+  review_flag: ''
+  angle: Anders als andere Materialien leitet dieses Video die geometrische Verteilung vollständig aus der Kaffee-Verkostung
+    bis zum ersten Erfolg her und führt sie über immer feinere Zeitblöcke in ein stetiges Wartezeitgesetz mit Gedächtnislosigkeit
+    über.
+  angle_detail: Beginne mit [00:03]–[05:00], wo aus dem Produkt der Fehlversuche Wahrscheinlichkeits- und Verteilungsfunktion
+    entstehen. Nutze dann [09:26]–[11:41] für die Schätzregel über den Kehrwert des Erwartungswerts und die Zusammenfassung
+    zur Gedächtnislosigkeit. Beachte die Symbolik mit p für die Einzelchance sowie F und f für Verteilung und Dichte, und
+    behandle die stetige zweite Hälfte ab [06:28] nur als Übergang, da sie zu einer anderen Einheit gehört.
+- video_id: 3I-aLUc6ylQ
+  unit_id: unit-m2-sad-l03
+  title: Streudiagramm & Korrelationskoeffizient einfach erklärt – anschaulich mit Alwins Restaurant
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=3I-aLUc6ylQ
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Streudiagramm & Korrelationskoeffizient einfach erklärt – anschaulich mit Alwins Restaurant", 04:55-07:16 für
+    die Rechenidee; 07:16-09:01 für die beiden durchgerechneten Koeffizienten'
+  covers:
+  - knowledge-sad-l03-paired-data
+  - knowledge-sad-l03-covariance
+  covers_confidence:
+    knowledge-sad-l03-paired-data: high
+    knowledge-sad-l03-covariance: high
+  does_not_cover:
+  - Keine einzige Regressionsgerade wird angepasst; trotz Korrelationsthema fehlt jede Kleinste-Quadrate-Rechnung
+  - Keine multivariate Regression, keine Designmatrix und kein Gradientenverfahren kommen vor
+  - Kausalitätswarnungen und die Grenzen von Modellen bleiben unerwähnt; es gibt nur Stärke und Richtung
+  notes: 'Deutschsprachig, ruhig erzählt; erwartet Mittelwert und Varianz als bekannt. Symbolik: kleines r, Kovarianz im Zähler,
+    Varianzen im Nenner. Durchgerechnete Beispiele mit n=6; Uhrzeit dient als Negativbeispiel.'
+  review_flag: ''
+  angle: Anders als andere Materialien zu denselben Knoten stellt dieses Video zwei Streudiagramme desselben Datensatzes gegenüber
+    und verankert den Korrelationskoeffizienten in der Vorzeichenlogik des Mittelwertkreuzes, belegt durch zwei vollständig
+    gerechnete Beispiele.
+  angle_detail: Schaue zuerst [01:47]–[03:03], wo die Uhrzeit als Negativbeispiel scheitert und die Gästezahl als Trend sichtbar
+    wird. Arbeite dann [04:55]–[07:16] für die Zähleridee aus Differenzenprodukten und Kovarianz mit Normierung durch. Rechne
+    schließlich [07:16]–[09:01] mit, wo Werte um minus 0,02 und 0,93 entstehen; erwarte keine angepasste Gerade, denn Regression
+    kommt nicht vor.
+- video_id: 3oZrS3ZWVcA
+  unit_id: unit-m2-sad-l02
+  title: Streumaße - Varianz, Standardabweichung, Variationskoeffizient und mehr!
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=3oZrS3ZWVcA
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Streumaße - Varianz, Standardabweichung, Variationskoeffizient und mehr!", 06:30-08:46 für Varianz und Standardabweichung;
+    09:50-13:16 für den Variationskoeffizienten'
+  covers:
+  - knowledge-sad-l02-dispersion
+  covers_confidence:
+    knowledge-sad-l02-dispersion: medium
+  does_not_cover:
+  - 'Keine einzige Grafik über Streuung hinaus: keine Histogramme, keine empirischen Verteilungen, keine Klassifikations-
+    oder Bayes-Inhalte der Einheit L01'
+  - Kein Lagevergleich von Mittelwert, Median und Modus und keine Robustheitsdiskussion trotz Mittelwertbezugs
+  - 'Keine Stichproben- oder Kontextüberlegung: Bias, Population und Kontext fehlen völlig'
+  notes: 'Deutschsprachig, anfängerfreundlich, mit Arbeitszeit- und Umsatzbeispielen. Symbolik teils mündlich (s², sx, V,
+    R). Teaches knowledge-sad-l01-location — reassignment signal: Spannweite, mittlere absolute Abweichung, Varianz, Standardabweichung
+    und Variationskoeffizient stammen aus den Knoten einer anderen Einheit und stehen nie in teaches.'
+  review_flag: ''
+  angle: Anders als andere Materialien durchläuft dieses Video die komplette Leiter von Spannweite über mittlere absolute
+    Abweichung und Varianz bis zu Standardabweichung und Variationskoeffizient an einem einzigen Patrick-und-Anna-Beispiel
+    und zeigt jeweils, welcher Mangel die nächste Stufe nötig macht.
+  angle_detail: Beginne mit [01:55]–[03:41] für die Motivation über gleiche Mittelwerte bei völlig verschiedener Streuung.
+    Arbeite dann [06:30]–[08:46], wo das Quadrieren die Varianzwerte 0,5 und 12 erzeugt und erst die Wurzel wieder deutbar
+    wird. Nutze [09:50]–[13:16] für den Variationskoeffizienten, der gleiche Streuung an ungleichen Mitteln relativiert; ordne
+    die mündlichen Kürzel s², sx, V und R dabei den Kurssymbolen zu.
+  review_recommendation: 'Operator-reviewed reassignment L01→L02 2026-09-15: worked range/MAD/variance/SD/CV ladder matches
+    dispersion (range, variance, standard deviation); divisors unaddressed, hence medium not high. First cross-unit route
+    in the module (1848/1848 existing covers stay in-unit); admitted as reviewed exception.'
+- video_id: 7mE-K_w1v90
+  unit_id: unit-m2-sad-l10
+  title: Type I Errors, Type II Errors, and the Power of the Test
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=7mE-K_w1v90
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Type I Errors, Type II Errors, and the Power of the Test", 03:57-05:43 for alpha/beta/power definitions; 05:43-07:08
+    for the numeric tradeoff'
+  covers:
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-errors-power
+  covers_confidence:
+    knowledge-sad-l10-test-model: low
+    knowledge-sad-l10-errors-power: high
+  does_not_cover:
+  - No test statistic is computed and no p-value or critical region is derived; the video never runs a test end to end
+  - No z/t procedures, no confidence intervals, and no chi-square, rank, or multiple-testing methods appear
+  - No sample-size or variance calculation is worked; beta's drivers are only named, never quantified
+  notes: Dense 8-minute lecture; expects null/alternative vocabulary. Uses alpha/beta symbols and a mu=10 vs >10 running example
+    plus a courtroom analogy. No derivations, all definitions with a tradeoff table.
+  review_flag: ''
+  angle: Unlike other L10 materials that run a test end to end, this video isolates the error vocabulary itself, defining
+    alpha, beta, and power through a courtroom analogy and a single numeric alpha-beta tradeoff table.
+  angle_detail: Start with [03:57]–[05:43] for the definitions of significance level, beta drivers, and power as 1 minus beta.
+    Then study [05:43]–[07:08], where raising alpha from 0.05 lowers the beta of 0.77 and lifts power above 0.23. Expect no
+    computed statistic, p-value, or interval here — the mu-equals-10 example from [00:32] stays definitional — so pair it
+    with a video that calculates.
+- video_id: 8JIe_cz6qGA
+  unit_id: unit-m2-sad-l10
+  title: Hypothesis testing (ALL YOU NEED TO KNOW!)
+  channel: zedstatistics
+  url: https://www.youtube.com/watch?v=8JIe_cz6qGA
+  format: video
+  depth: derivation
+  depth_basis: 2 of 7 segments derive rather than illustrate
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Hypothesis testing (ALL YOU NEED TO KNOW!)", 19:17-26:32 for the computed test; 33:51-44:23 for intervals; 44:23-54:37
+    for power'
+  covers:
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-tails-pvalue
+  - knowledge-sad-l10-errors-power
+  - knowledge-sad-l10-ci-duality
+  covers_confidence:
+    knowledge-sad-l10-test-model: high
+    knowledge-sad-l10-tails-pvalue: high
+    knowledge-sad-l10-errors-power: high
+    knowledge-sad-l10-ci-duality: medium
+  does_not_cover:
+  - No chi-square, rank/permutation, or multiple-testing procedure is demonstrated despite full L10 coverage otherwise
+  - No nonparametric fallback is even mentioned when the normal approximation is invoked via the central limit theorem
+  - No second worked test beyond the surgery example; the promised closing practice example is algebra without data
+  notes: 68-minute comprehensive lecture; expects proportions and normal-distribution fluency. Heavy CLT reliance for the
+    two-proportion statistic; one- vs two-tailed framing explicit. Long but the only L10 video that computes.
+  review_flag: ''
+  angle: Unlike the other L10 materials that stay verbal, this 68-minute lecture is the only one that computes a full two-proportion
+    test end to end and then re-reads the same surgery numbers as a confidence interval and as a power demonstration.
+  angle_detail: Start with [19:17]–[26:32], where the sampling distribution is built and the value 1.99 is set against 1.96
+    at the 5 percent level. Continue with [33:51]–[44:23] for the interval around 0.14 read from the sample perspective rather
+    than the null perspective. Finish with [44:23]–[54:37] for error types and what larger samples buy; treat the closing
+    algebra from [54:37] as optional practice and watch the normal-approximation leap, which is justified only by the limit
+    theorem.
+- video_id: A82brFpdr9g
+  unit_id: unit-m2-sad-l09
+  title: Standard Deviation vs Standard Error, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=A82brFpdr9g
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Standard Deviation vs Standard Error, Clearly Explained!!!", 00:52-02:10 for the standard-error construction
+    and the SD contrast'
+  covers:
+  - knowledge-sad-l09-standard-error
+  covers_confidence:
+    knowledge-sad-l09-standard-error: high
+  does_not_cover:
+  - No confidence interval is constructed; z-intervals and t-intervals never appear despite the L09 header
+  - No estimator properties (bias, consistency, efficiency) and no bootstrap are discussed
+  - No data-bias or sampling critique appears; the five-mice setup is taken as given
+  notes: 'Under 3 minutes, brisk quickie format; expects mean/SD familiarity. Core slogan: SD describes one sample, SE describes
+    means across repeats. Points onward to SE and p-value videos.'
+  review_flag: ''
+  angle: Unlike other L09 materials that derive intervals or debate bias, this under-three-minute quickie reduces the standard-deviation-versus-standard-error
+    distinction to a single image of five mice weighed once versus five repeated means.
+  angle_detail: 'Watch [00:52]–[01:40] first, where five repeated experiments produce five means whose spread is named the
+    standard error. Then take [01:40]–[02:10] as the exam rule: deviation describes one measured sample, error describes means
+    across repeats. Remember the pitfall flagged at [02:03]: the error can be estimated from a single sample even though it
+    describes many, so plot the deviation for measured data and skip the onward pointers from [02:31].'
+- video_id: CF4Vdqiwhaw
+  unit_id: unit-m2-sad-l09
+  title: Jimmy and Mr. S discuss the interpretation of a confidence interval
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=CF4Vdqiwhaw
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Jimmy and Mr. S discuss the interpretation of a confidence interval", 00:36-01:09 for the interval setup; 01:09-01:54
+    for the correct interpretation'
+  covers:
+  - knowledge-sad-l09-data-bias
+  - knowledge-sad-l09-t-interval
+  covers_confidence:
+    knowledge-sad-l09-data-bias: high
+    knowledge-sad-l09-t-interval: low
+  does_not_cover:
+  - No interval is derived or recomputed on screen; the $6-$8 result arrives ready-made with no formula
+  - No standard error, z/t critical value, or sampling distribution is shown behind the T procedure
+  - No estimator theory, bootstrap, or power consideration appears; the video is interpretation only
+  notes: 2-minute dialogue skit; expects basic mean/interval vocabulary. Normality and random-sampling assumptions are named
+    then pretended away. Best used as a misconception check, not a methods lesson.
+  review_flag: ''
+  angle: Unlike other L09 materials that construct intervals, this two-minute dialogue teaches confidence intervals purely
+    as an interpretation check by rejecting three wrong readings of a ready-made lunch-cost interval built on a deliberately
+    biased sample.
+  angle_detail: 'Start with [00:00]–[00:36] for why the hand-picked sample cannot support claims about all students. Then
+    watch [01:09]–[01:54], where the wrong readings are refused one by one and only the population-mean claim survives. Note
+    the trap: the interval setup at [00:36]–[01:09] names normality and random sampling and then pretends them away, and the
+    sample mean is already known, so use this as a misconception check rather than a methods lesson.'
+- video_id: CqOfi41LfDw
+  unit_id: unit-m2-sad-l15
+  title: The Essential Main Ideas of Neural Networks
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=CqOfi41LfDw
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The Essential Main Ideas of Neural Networks", 08:25-15:25 worked forward pass; 05:43-06:25 activation functions'
+  covers:
+  - knowledge-sad-l15-neuron
+  - knowledge-sad-l15-activation
+  - knowledge-sad-l15-forward
+  covers_confidence:
+    knowledge-sad-l15-neuron: high
+    knowledge-sad-l15-activation: high
+    knowledge-sad-l15-forward: high
+  does_not_cover:
+  - Backpropagation and parameter fitting are explicitly deferred to part 2, never derived here
+  - No output-layer design (softmax, one-hot targets) and no training, regularization or generalization practice
+  - No deep architectures, CNN/RNN/Transformer outlook, and no universality proof beyond a spoken claim
+  notes: 'Slow worked forward pass with concrete numbers; notation: parameters on connections are weights (multiplied) and
+    biases (added). Thin on real data scope (single toy dosage example).'
+  review_flag: ''
+  angle: It builds the network's fitted curve live from numbers, reshaping two identical softplus curves with explicit weights
+    and biases on a single toy dosage example instead of teaching matrix notation or training.
+  angle_detail: 'Start with the worked forward pass at [08:25] and follow it through [12:30] to [15:25], since that numeric
+    chain is the part no other source replicates. Note the course-clashing vocabulary: values on connections that multiply
+    are weights and values that add are biases, stated plainly at [17:17]. Backpropagation is deliberately deferred at [04:21],
+    so treat this as forward-pass intuition only and skip the closing promotion after [18:12].'
+- video_id: D0efHEJsfHo
+  unit_id: unit-m2-sad-l12
+  title: How to Prune Regression Trees, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=D0efHEJsfHo
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"How to Prune Regression Trees, Clearly Explained!!!", 04:11-10:48 SSR and tree-score worked example; 13:06-15:44
+    alpha choice'
+  covers:
+  - knowledge-sad-l12-regression
+  - knowledge-sad-l12-pruning
+  covers_confidence:
+    knowledge-sad-l12-regression: low
+    knowledge-sad-l12-pruning: high
+  does_not_cover:
+  - No entropy, information gain or ID3 splitting criteria despite the tree-model framing
+  - No bagging, random forests, boosting or stacking; single-tree pruning only
+  - No classification-tree impurity (Gini) treatment; worked score is regression SSR throughout
+  notes: Assumes regression trees and cross-validation as prerequisites. Pacing is slow and numeric; alpha is tuned by cross-validation
+    on train/test splits, which echoes resampling ideas from another unit's nodes (never in teaches).
+  review_flag: ''
+  angle: It works cost-complexity pruning end to end by hand, computing SSR totals and alpha-penalized tree scores for every
+    subtree of one dosage tree before selecting alpha by cross-validation.
+  angle_detail: Watch the SSR arithmetic first at [04:11] through [07:54], then the tree-score comparison at [07:54] to [10:48]
+    where the penalty flips the winner. Finish with the alpha sweep and cross-validation selection at [13:06] to [15:44].
+    It assumes regression trees and cross-validation throughout, and the alpha equals 10000 arithmetic is example-specific
+    rather than a rule, so do not memorize the winning subtree.
+- video_id: DdwTa28W4Os
+  unit_id: unit-m2-sad-l09
+  title: Intervallschätzungen - Konfidenzintervalle
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=DdwTa28W4Os
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Intervallschätzungen - Konfidenzintervalle", 07:53-13:00 Herleitung ueber Stichprobenverteilung und Standardisierung;
+    14:30-17:53 Rechenbeispiel'
+  covers:
+  - knowledge-sad-l09-estimator
+  - knowledge-sad-l09-standard-error
+  - knowledge-sad-l09-z-interval
+  covers_confidence:
+    knowledge-sad-l09-estimator: high
+    knowledge-sad-l09-standard-error: high
+    knowledge-sad-l09-z-interval: high
+  does_not_cover:
+  - Keine t-Verteilung, keine t-Intervalle und kein Bootstrap trotz kleinem n
+  - Kein Hypothesentest, keine p-Werte und keine Fehlertypen trotz nahem Themenfeld
+  - Keine Intervalle fuer Anteile, Varianzen oder andere Parameter ausser dem Mittelwert
+  notes: 'Ausfuehrliche Herleitung ueber Stichprobenverteilung und CLT; das n=4-Rechenbeispiel verletzt die eigene n>=30-Faustregel
+    und ersetzt Sigma kommentarlos durch s-Stern. Notation: mue, x-quer, Sigma, s-Stern, Gamma.'
+  review_flag: ''
+  angle: Es leitet das Konfidenzintervall über ein vollständig ausgezähltes Neun-Orangen-Modell mit allen 84 Dreierstichproben
+    her, statt die Z-Formel direkt zu setzen.
+  angle_detail: 'Zuerst die Herleitung ab [04:38] über [07:53] bis [13:00] ansehen, weil dort Stichprobenverteilung, Grenzwertsatz
+    und Standardisierung zusammenkommen. Danach erst das Rechenbeispiel ab [14:30] bis [17:53] durcharbeiten. Vorsicht: Das
+    n=4-Beispiel verletzt die eigene n≥30-Faustregel aus [08:22], und Sigma wird kommentarlos durch s-Stern ersetzt; Notation
+    mü gegen x-quer, Sigma, s-Stern und Gamma für das Niveau beachten.'
+- video_id: DoHTsDrzAQk
+  unit_id: unit-m2-sad-l06
+  title: Zufallsvariable, Massenfunktion, Dichtefunktion und Verteilungsfunktion
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=DoHTsDrzAQk
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Zufallsvariable, Massenfunktion, Dichtefunktion und Verteilungsfunktion", 04:28-07:26 Massenfunktion am Boris-Beispiel;
+    09:19-10:30 Verteilungsfunktion'
+  covers:
+  - knowledge-sad-l06-random-variable
+  - knowledge-sad-l06-distribution-functions
+  covers_confidence:
+    knowledge-sad-l06-random-variable: high
+    knowledge-sad-l06-distribution-functions: high
+  does_not_cover:
+  - Kein Erwartungswert, keine Varianz und kein Rechnen mit Zufallsvariablen
+  - Kein Schätzen, kein Testen und keine Verteilungsmodelle ausser blosser Namensnennung
+  - Keine Transformationen von Zufallsvariablen und keine Grenzwertsaetze
+  notes: 'Ruhiges Erzaehltempo mit Boris-Reisekosten als rotem Faden; Notation: gross X gegen klein x, f(x), gross F. Diskrete
+    Wahrscheinlichkeiten teils erfunden, teils aus 20 Abrechnungen abgeleitet.'
+  review_flag: ''
+  angle: Es konstruiert die Zufallsvariable am durchgehenden Boris-Reisekostenbeispiel und zeigt zwei Wege zur selben Massenfunktion,
+    bevor es Dichte und Verteilungsfunktion als deren stetige Fortsetzung einführt.
+  angle_detail: 'Mit dem Boris-Beispiel ab [01:48] bis [04:28] beginnen, weil dort die vier Reisekostenwerte motiviert werden.
+    Danach die Wahrscheinlichkeitskonstruktion ab [04:28] bis [07:26] und die Verteilungsfunktion ab [09:19] bis [10:30] ansehen.
+    Notation groß X gegen klein x sowie f(x) gegen groß F beachten: F bedeutet immer höchstens, und die Einzelwahrscheinlichkeiten
+    wurden teils erfunden, teils aus 20 Abrechnungen abgeleitet.'
+- video_id: EJe3jiZNwUU
+  unit_id: unit-m2-sad-l09
+  title: What are confidence intervals? Actually.
+  channel: zedstatistics
+  url: https://www.youtube.com/watch?v=EJe3jiZNwUU
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"What are confidence intervals? Actually.", 06:56-13:41 both worked interval calculations; 18:47-22:26 frequentist
+    versus Bayesian reading'
+  covers:
+  - knowledge-sad-l09-estimator
+  - knowledge-sad-l09-standard-error
+  - knowledge-sad-l09-t-interval
+  - knowledge-sad-l09-z-interval
+  covers_confidence:
+    knowledge-sad-l09-estimator: high
+    knowledge-sad-l09-standard-error: high
+    knowledge-sad-l09-t-interval: high
+    knowledge-sad-l09-z-interval: high
+  does_not_cover:
+  - No bootstrap estimation and no data-bias versus uncertainty discussion
+  - No hypothesis tests, p-values or error/power analysis despite the inference overlap
+  - No regression, likelihood fitting or Bayesian computation beyond a conceptual coda
+  notes: Frequentist mechanics first, Bayesian credible intervals only as an interpretive coda; Excel recipes (t.inv, norm.s.inv)
+    shown rather than derived. Uses heart-rate data with n=50.
+  review_flag: ''
+  angle: It teaches mean and proportion intervals side by side on one heart-rate dataset with spreadsheet recipes, then shows
+    how to read published forest, error-bar, and funnel plots plus a frequentist-versus-Bayesian interpretation coda.
+  angle_detail: 'Start with the intuition at [01:01] to [03:51], then work the mean interval at [06:56] to [09:05] and the
+    proportion interval at [12:03] to [13:41] back to back to see the t-versus-z contrast. Finish with the plot-reading stretch
+    at [13:41] and the sealed section at [18:47] to [22:26] on why textbooks pair frequentist intervals with Bayesian wording.
+    Watch the notation: pi is the population proportion against sample p, and theta marks a general parameter at [06:11].'
+- video_id: Ekbw28n6IX0
+  unit_id: unit-m2-sad-l03
+  title: Regression - Methode der kleinsten Fehlerquadrate
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=Ekbw28n6IX0
+  format: video
+  depth: derivation
+  depth_basis: 2 of 8 segments derive rather than illustrate
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Regression - Methode der kleinsten Fehlerquadrate", 05:58-11:22 Herleitung und Loesung der Normalgleichungen;
+    12:00-14:40 Exponentialtrick'
+  covers:
+  - knowledge-sad-l03-simple-regression
+  covers_confidence:
+    knowledge-sad-l03-simple-regression: high
+  does_not_cover:
+  - Keine Kovarianz, keine Korrelation und keine Streudiagramme trotz Regressionstitel
+  - Keine multiple Regression mit Designmatrix und kein Gradientenverfahren
+  - Keine Skalierung, keine Koeffizienteninterpretation und keine Modellgrenzen
+  notes: Dicht gerechnetes Video mit Kaffee-Lernstunden als Beispiel; Voraussetzungen Summenoperator, lineare Gleichungssysteme
+    und partielles Ableiten. Exponentialansatz wird per Logarithmieren linearisiert.
+  review_flag: ''
+  angle: Es rechnet die kleinsten Quadrate lückenlos von Hand am Kaffee-Beispiel durch, von Fehlerquadraten über partielle
+    Ableitungen bis zu den Normalgleichungen, und linearisiert danach einen Exponentialansatz durch Logarithmieren.
+  angle_detail: Zuerst Einzelfehler und Quadratsumme ab [02:34] bis [05:58] verstehen, dann Ableitungen ab [05:58] und Normalgleichungen
+    mit Lösung ab [08:33] bis [11:22] durcharbeiten. Den Exponentialtrick ab [12:00] bis [14:40] nur als Zusatz ansehen. Voraussetzungen
+    Summenoperator, lineare Gleichungssysteme und partielles Ableiten werden ab [01:14] genannt; y=a+b*x-Notation und Prognose
+    ab [11:42] beachten.
+- video_id: FZ4pEQxkVhU
+  unit_id: unit-m2-sad-l02
+  title: 'Skalenniveaus einfach erklärt: Nominal-, Ordinal-, Intervall- und Verhältnisskala mit Beispiel'
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=FZ4pEQxkVhU
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 0 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Skalenniveaus einfach erklärt: Nominal-, Ordinal-, Intervall- und Verhältnisskala mit Beispiel", 02:04-04:30
+    Operationen pro Merkmal und Typenzuordnung'
+  covers:
+  - knowledge-sad-l02-vocabulary
+  - knowledge-sad-l02-scales
+  covers_confidence:
+    knowledge-sad-l02-vocabulary: medium
+    knowledge-sad-l02-scales: high
+  does_not_cover:
+  - Keine Haeufigkeiten, Histogramme, Lage-, Streuungs- oder Boxplotmasse
+  - Kein Simpson-Paradox, keine Stichprobenziehung und kein Bias
+  - Keine einzige Formel oder Grafik ueber das Apfelbeispiel hinaus
+  notes: Sehr kurzes, aber vollstaendiges Einfuehrungsvideo; Apfelmerkmale Farbe, Suesse, Erntedatum, Gewicht als Leitbeispiel.
+    Metrische Skala als Sammelbegriff fuer Intervall und Verhaeltnis.
+  review_flag: ''
+  angle: Es testet dieselben vier Vergleichsoperationen der Reihe nach an vier Apfelmerkmalen und lässt jede Skala genau dort
+    enden, wo eine Operation scheitert.
+  angle_detail: Mit den vier Operationen am Gewicht ab [01:21] bis [02:04] beginnen, weil dieser Maßstab das weitere Vorgehen
+    festlegt. Danach das Scheitern der Operationen bei Datum, Süße und Farbe ab [02:04] bis [03:36] und die Typenzuordnung
+    bis [04:30] ansehen. Das Video ist bewusst kurz gehalten (Schluss bei [05:47]) und warnt ab [04:30] davor, umcodierte
+    Zahlen so zu verrechnen, als gäbe es keine Skalengrenzen; nichts überspringen, es gibt keine Formeln.
+- video_id: H3EjCKtlVog
+  unit_id: unit-m2-sad-l14
+  title: Gaussian Naive Bayes, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=H3EjCKtlVog
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Gaussian Naive Bayes, Clearly Explained!!!", 01:14-02:22 per-class Gaussian setup; 03:33-07:12 both scored classes'
+  covers:
+  - knowledge-sad-l14-nb-recap
+  - knowledge-sad-l14-numeric
+  - knowledge-sad-l14-gaussian
+  covers_confidence:
+    knowledge-sad-l14-nb-recap: high
+    knowledge-sad-l14-numeric: high
+    knowledge-sad-l14-gaussian: high
+  does_not_cover:
+  - No Laplace smoothing or zero-count handling worked through
+  - No Bayesian networks, Markov blankets or conditional-independence graphs
+  - No multinomial derivation; multinomial Naive Bayes is only an assumed prerequisite
+  notes: Assumes multinomial Naive Bayes, Gaussian shape and log/probability-vs-likelihood as prerequisites. Numeric features
+    modeled per class with mean and standard deviation; log space used against underflow.
+  review_flag: ''
+  angle: It scores both classes fully in log space on continuous snack features with per-class Gaussians, letting one dominant
+    feature visibly overturn the verdict the other features suggest.
+  angle_detail: Start with the per-class Gaussian setup at [01:14] to [02:22] to see how each snack amount becomes a distribution
+    per class. Then follow the loves-class scoring at [03:33] to [05:19], where the log transform against underflow is introduced,
+    against the not-loves scoring at [05:19] to [07:12]. It assumes multinomial Naive Bayes and the likelihood-versus-probability
+    distinction from [00:32], so review those first; priors here are just 0.5 each.
+- video_id: HZGCoVF3YvM
+  unit_id: unit-m2-sad-l01
+  title: Bayes theorem, the geometry of changing beliefs
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=HZGCoVF3YvM
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Bayes theorem, the geometry of changing beliefs", 02:54-07:44 for the counting-to-formula derivation; 08:37-10:08
+    for the area diagram'
+  covers:
+  - knowledge-sad-l01-base-rates
+  - knowledge-sad-l01-sampling-context
+  covers_confidence:
+    knowledge-sad-l01-base-rates: high
+    knowledge-sad-l01-sampling-context: low
+  does_not_cover:
+  - Title promises the geometry of changing beliefs, yet the treasure-hunt and AI applications are name-dropped only, never
+    worked through with numbers.
+  - No confusion matrix, classification metric, histogram, or sampling-bias discussion appears despite the L01 header; the
+    video stays inside one toy counting example.
+  - The 1x1-square diagram is sketched qualitatively; no continuous distribution or real dataset is ever mapped onto it.
+  notes: Brisk popular exposition, prerequisites none beyond fractions; prior/likelihood/posterior vocabulary introduced cleanly.
+    Representative-sample counting overlaps L02 sampling ideas but stays at L01 level.
+  review_flag: ''
+  angle: Unlike formula-first treatments of the same base-rate material, this video rebuilds Bayes' theorem from a librarian-versus-farmer
+    counting story and a redraw-it-yourself 1x1 area square, so the formula becomes a proportion you can reconstruct rather
+    than memorize.
+  angle_detail: 'Start at [02:54], where the 200-farmer/10-librarian count is turned into prior, likelihood and posterior
+    by [07:44], then use [08:37]-[10:08] for the 1x1-square sketch to keep as your memory aid. Notation matches the course
+    (vertical bar for conditioning); watch that the prior depends on the assumed reference population, a choice debated from
+    [13:26] onward. Skip the treasure-hunt and AI name-drops around [00:14]-[00:25]: they are never worked through with numbers.'
+- video_id: HsDeAoBOyS4
+  unit_id: unit-m2-sad-l01
+  title: Boxplots ... und auch Median und Quartile ;o)
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=HsDeAoBOyS4
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Boxplots ... und auch Median und Quartile ;o)", 01:43-08:31 fuer Median und Quartile; 11:43-14:16 fuer die Ausreisserregel'
+  covers:
+  - knowledge-sad-l01-location
+  - knowledge-sad-l01-distributions
+  covers_confidence:
+    knowledge-sad-l01-location: high
+    knowledge-sad-l01-distributions: low
+  does_not_cover:
+  - Trotz Ankuendigung von Mittelwert und Streuung wird nie eine Varianz oder Standardabweichung ausgerechnet.
+  - Der Referent gibt zu, dass es mindestens zwoelf Quartilsverfahren gibt, rechnet aber nur sein eigenes vor; Vergleichbarkeit
+    bleibt offen.
+  - Histogramme und empirische Verteilungsfunktionen kommen nicht vor, obwohl die L01-Knoten sie nennen.
+  notes: 'Langsames deutsches Erklaertempo mit Pflanzenbeispiel, Notation teils uneinheitlich. Interquartilsabstand und 1,5er-Ausreisserregel
+    gehoeren zu Streuungsmassen: teaches knowledge-sad-l02-dispersion — reassignment signal.'
+  review_flag: ''
+  angle: Anders als Formelsammlungen zum selben Lage- und Verteilungsknoten baut dieses Video Median, Quartile, Box und Whisker
+    Schritt für Schritt an vier Pflanzendatensätzen per Hand auf und ergänzt danach die Tukey-Ausreißerregel mit 1,5-fachem
+    Interquartilsabstand.
+  angle_detail: 'Beginne bei [01:43] mit dem Median bei ungerader und gerader Wertanzahl und folge der Quartilskonstruktion
+    bis [08:31]; die Tukey-Variante mit Ausreißerkreisen steht in [11:43]-[14:16]. Achtung Notation: Median als XM sowie XQ
+    von 0,25/0,75 sind course-unüblich, und laut Video existieren mindestens zwölf Quartilsverfahren, sodass Werte je nach
+    Methode leicht abweichen. Varianz und Standardabweichung werden trotz Ankündigung nie gerechnet — dafür anderes Material
+    nutzen.'
+- video_id: IHZwWFHWa-w
+  unit_id: unit-m2-sad-l15
+  title: Gradient descent, how neural networks learn | Deep Learning Chapter 2
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=IHZwWFHWa-w
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Gradient descent, how neural networks learn | Deep Learning Chapter 2", 02:31-05:09 for the cost construction;
+    05:51-11:37 for the gradient-descent intuition'
+  covers:
+  - knowledge-sad-l15-training
+  - knowledge-sad-l15-forward
+  covers_confidence:
+    knowledge-sad-l15-training: low
+    knowledge-sad-l15-forward: low
+  does_not_cover:
+  - Backpropagation itself is explicitly deferred to the next video; no gradient is ever computed for any weight.
+  - Despite the series title, no activation-function math, softmax layer, or parameter-count derivation is worked out here.
+  - The memorization-versus-structure debate is interview anecdote only, with no experiment the student can reproduce from
+    this transcript.
+  notes: 'Calm analogy-driven pacing; multivariable calculus helpful but optional. Full backprop derivation belongs to the
+    next chapter: teaches knowledge-sad-l15-backprop — reassignment signal.'
+  review_flag: ''
+  angle: Where other training materials jump to update equations, this video stays entirely with the idea that learning means
+    rolling downhill on a squared-error cost surface, building from one-input slopes to the 13,000-dimensional gradient-as-importance
+    picture without computing a single weight gradient.
+  angle_detail: 'Watch [02:31]-[05:09] first for how the cost averages squared output errors over tens of thousands of MNIST
+    examples, then [05:51]-[11:37] for slope-proportional steps, local minima and gradient components as per-weight importance.
+    Pitfall: a local minimum need not be the global one, and the hidden patterns end up looking random rather than edge-like.
+    Backprop itself is deferred, so pair this with the series'' backprop video for any computation.'
+- video_id: IN2XmBhILt4
+  unit_id: unit-m2-sad-l15
+  title: 'Neural Networks Pt. 2: Backpropagation Main Ideas'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=IN2XmBhILt4
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Neural Networks Pt. 2: Backpropagation Main Ideas", 10:41-13:30 for the chain-rule derivation; 13:38-16:03 for
+    the descent iterations'
+  covers:
+  - knowledge-sad-l15-backprop
+  - knowledge-sad-l15-training
+  - knowledge-sad-l15-forward
+  covers_confidence:
+    knowledge-sad-l15-backprop: high
+    knowledge-sad-l15-training: medium
+    knowledge-sad-l15-forward: medium
+  does_not_cover:
+  - Only the final bias b3 is optimized; the other six parameters stay fixed, so no full-network backprop ever happens.
+  - The chain rule beyond one parameter and all matrix notation are deferred to later parts of the series.
+  - No classification decision, accuracy figure, or test-set check appears; the fit quality is SSR only.
+  notes: 'Very slow hand-computed pacing, assumes chain rule and gradient descent as prerequisites. Squared-residual fitting
+    overlaps regression least squares: teaches knowledge-sad-l03-simple-regression — reassignment signal.'
+  review_flag: ''
+  angle: Instead of general backprop machinery, this video hand-computes the complete chain-rule derivative and every gradient-descent
+    step for one single bias (b3, from 0 to 2.61) in a tiny drug-dosage network, so each symbol stays attached to a number.
+  angle_detail: 'Skim the forward-pass squiggle setup, then study [10:41]-[13:30] for the two-part chain-rule derivative and
+    [13:38]-[16:03] for the learning-rate-0.1 iterations down to SSR 0.46 and below. Prerequisites from [00:19] are real:
+    chain rule and gradient descent are assumed, not taught. Notation clash: sum of squared residuals (SSR) is the course''s
+    SSE/RSS idea, and only b3 is optimized while six parameters stay frozen.'
+- video_id: Ilg3gGewQ5U
+  unit_id: unit-m2-sad-l15
+  title: Backpropagation, intuitively | Deep Learning Chapter 3
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=Ilg3gGewQ5U
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Backpropagation, intuitively | Deep Learning Chapter 3", 03:39-09:14 for the backward-propagation walkthrough;
+    09:33-10:35 for mini-batch SGD'
+  covers:
+  - knowledge-sad-l15-backprop
+  - knowledge-sad-l15-training
+  - knowledge-sad-l15-forward
+  covers_confidence:
+    knowledge-sad-l15-backprop: low
+    knowledge-sad-l15-training: low
+    knowledge-sad-l15-forward: low
+  does_not_cover:
+  - No derivative, index notation, or line of code appears; the promised calculus video carries all of that.
+  - No numeric gradient is ever computed for a single weight, so the sensitivity story stays qualitative.
+  - The edge-and-loop motivation from the series opening is admitted to be false for the trained net, with no fix demonstrated.
+  notes: Notation-free intuition first, calculus explicitly deferred. The loose Hebbian analogy is flagged as such in-transcript;
+    treat as flavor, not theory.
+  review_flag: ''
+  angle: Rather than deriving backprop calculus, this video narrates it as per-example wishes flowing backward layer by layer
+    (bright connections matter most, in a loose Hebbian flavor) and averaging into the gradient, closing with the mini-batch
+    shortcut.
+  angle_detail: Focus on [03:39]-[09:14], where one image of a 2 votes on output nudges, weights, prior activations and their
+    backward averaging; then take [09:33]-[10:35] for mini-batches and stochastic gradient descent. No number is ever computed
+    for any weight, so treat the sensitivity story as qualitative and pair it with a calculus source for exam derivations.
+    The Hebbian analogy is flagged in-video as loose, and the closing MNIST data plea is context, not examinable method.
+- video_id: J4Wdy0Wc_xQ
+  unit_id: unit-m2-sad-l12
+  title: 'StatQuest: Random Forests Part 1 - Building, Using and Evaluating'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=J4Wdy0Wc_xQ
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"StatQuest: Random Forests Part 1 - Building, Using and Evaluating", 01:17-04:10 for bootstrap plus random-subset
+    construction; 06:03-08:13 for out-of-bag evaluation'
+  covers:
+  - knowledge-sad-l12-bagging-forest
+  covers_confidence:
+    knowledge-sad-l12-bagging-forest: high
+  does_not_cover:
+  - No split criterion such as entropy or variance reduction is ever computed; best split is assumed by fiat.
+  - The promised missing-data and clustering sequel is absent, so evaluation stops at a toy out-of-bag sketch.
+  - A four-sample demo with six shown trees cannot support any claim about real forest accuracy or tuning.
+  notes: 'Fast upbeat demo pacing; decision-tree basics are a stated prerequisite, not taught. Out-of-bag accuracy estimation
+    is evaluation machinery: teaches knowledge-sad-l11-evaluation — reassignment signal.'
+  review_flag: ''
+  angle: Where tree materials analyze one fitted tree, this demo constructs forest diversity live from a four-sample bootstrap
+    drawn with replacement plus a random variable subset at every split, then evaluates accuracy by out-of-bag majority vote
+    with no held-out set.
+  angle_detail: Study [01:17]-[04:10] first for the bootstrap dataset, the two-variables-per-split rule and the six-tree variety,
+    then [06:03]-[08:13] for out-of-bag classification and the error proportion. The best split is assumed, never computed
+    with any criterion, and four samples cannot support real accuracy claims, so do not generalize the demo numbers. Decision-tree
+    basics are a stated prerequisite from [00:22], not taught here.
+- video_id: J8jNoF-K8E8
+  unit_id: unit-m2-sad-l07
+  title: The Binomial Distribution and Test, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=J8jNoF-K8E8
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The Binomial Distribution and Test, Clearly Explained!!!", 05:34-09:09 for the formula anatomy; 11:25-14:13 for
+    the worked binomial test'
+  covers:
+  - knowledge-sad-l07-bernoulli-binomial
+  covers_confidence:
+    knowledge-sad-l07-bernoulli-binomial: high
+  does_not_cover:
+  - No hypergeometric, geometric, or Poisson case appears, so distribution choice is never actually exercised.
+  - The normal approximation and continuity correction are absent; every probability is enumerated or plugged in by hand.
+  - Samples larger than seven never occur, so sampling variability of real survey sizes stays invisible.
+  notes: 'Heavy repetition from the doubled captions slows the pace; the Fanta survey keeps it concrete. The two-sided p-value
+    computation is testing machinery: teaches knowledge-sad-l10-tails-pvalue — reassignment signal.'
+  review_flag: ''
+  angle: Instead of stating the binomial pmf up front, this video earns it from a 2-of-3 orange-versus-grape Fanta hand count
+    (ordered versus any-order sequences) and then reuses the same counting to assemble a two-sided p-value of 1, binding distribution
+    and test into one story.
+  angle_detail: 'Work [05:34]-[09:09] for the term-by-term formula anatomy (counts, then p-powers) checked against the hand
+    count, then [11:25]-[14:13] for the four-of-seven case and the equally-rare-or-rarer sum. Samples never exceed seven and
+    captions repeat heavily, so budget patience and look elsewhere for large-n behavior. Heed the independence caveat at [14:51]:
+    one taster must not shift the next taster''s probability.'
+- video_id: JQc3yx0-Q9E
+  unit_id: unit-m2-sad-l10
+  title: How to calculate p-values
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=JQc3yx0-Q9E
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 6 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"How to calculate p-values", 04:49-09:12 for the three-part p-value recipe; 13:08-20:09 for continuous-distribution
+    p-values'
+  covers:
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-tails-pvalue
+  covers_confidence:
+    knowledge-sad-l10-test-model: high
+    knowledge-sad-l10-tails-pvalue: high
+  does_not_cover:
+  - 'No named test statistic appears: no z, t, chi-square, or rank procedure is ever computed.'
+  - Multiple testing and false-discovery control are absent despite many repeated probability comparisons.
+  - Coin enumeration with 4 or 32 outcomes teaches nothing about power or sample-size planning for real studies.
+  notes: 'Long repetitive delivery from doubled captions; flower and drug analogies carry the intuition. Binomial counting
+    underneath is discrete-distribution craft: teaches knowledge-sad-l07-bernoulli-binomial — reassignment signal.'
+  review_flag: ''
+  angle: While other p-value sources define and move on, this video drills one explicit three-part recipe (observed plus equally
+    rare plus rarer-or-more-extreme) across tiny coin enumerations and then a continuous height distribution, ending with
+    a worked warning against one-sided p-values.
+  angle_detail: 'Learn the recipe at [04:49]-[09:12] via the two-flip p-value of 0.5 and its flower analogy, then transfer
+    it at [13:08]-[20:09] to tail areas: 142 cm borderline, 141 cm significant, near-mean probability small yet p-value 1.
+    Finish with the one-sided trap from [22:01], where a drug that worsens recovery scores 0.98 one-sided versus 0.03 two-sided.
+    No named test statistic appears, so bridge to z/t procedures separately.'
+- video_id: KLs_7b7SKi4
+  unit_id: unit-m2-sad-l06
+  title: Expected Values, Main Ideas!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=KLs_7b7SKi4
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Expected Values, Main Ideas!!!", 03:40-10:28 for both worked bets and the sigma form'
+  covers:
+  - knowledge-sad-l06-expectation
+  covers_confidence:
+    knowledge-sad-l06-expectation: high
+  does_not_cover:
+  - Continuous expected values (explicitly deferred to another video)
+  - Variance, its rules, and the n-1 divisor (teased only, never derived)
+  - Transformations of random variables and linearity beyond the two worked bets
+  notes: Brisk comic pacing; assumes comfort with basic probability. Variance teaser at the close is a pointer, not coverage.
+  review_flag: ''
+  angle: Builds expected value from a repeated $1 StatLand bet so the 100-trial arithmetic cancels into sigma notation instead
+    of presenting the formula first.
+  angle_detail: Start at [03:40], where the payoff table turns probabilities into 100-bet wins and losses, then follow through
+    [08:03] where the trial counts cancel into E notation. Watch that X here means the whole bet payoff, not a single draw
+    outcome as in some course texts. Skip the closing variance teaser around [12:44] since the record marks it uncovered;
+    the second asymmetric bet from [10:30] is worth a second pass once the first clicks.
+- video_id: Kdsp6soqA7o
+  unit_id: unit-m2-sad-l01
+  title: 'Machine Learning Fundamentals: The Confusion Matrix'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=Kdsp6soqA7o
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Machine Learning Fundamentals: The Confusion Matrix", 01:38-04:18 for definitions plus the binary comparison'
+  covers:
+  - knowledge-sad-l01-classification
+  covers_confidence:
+    knowledge-sad-l01-classification: high
+  does_not_cover:
+  - Sensitivity, specificity, ROC and AUC (explicitly deferred to later quests)
+  - Threshold choice and tradeoffs between error types
+  - Calibration and any metric beyond raw cell counts
+  notes: 'Brisk pacing; cross-validation name-drop is a pointer only: teaches knowledge-sad-l11-resampling — reassignment
+    signal.'
+  review_flag: ''
+  angle: Compares full random-forest and K-nearest-neighbour count matrices head-to-head before extending the diagonal rule
+    to a three-class movie example, rather than defining cells in isolation.
+  angle_detail: Begin at [01:38] for the four cell definitions with rows as predictions and columns as truth, then stay through
+    [02:44] where the 142/110 random-forest counts are set against KNN. Note this layout with predicted rows and true columns
+    is transposed in some course slides, so relabel before copying numbers. Skip the cross-validation aside near [01:05] and
+    stop before [04:20], where sensitivity and related metrics are only deferred.
+- video_id: L2KMttDm3aY
+  unit_id: unit-m2-sad-l05
+  title: An Introduction to the Hypergeometric Distribution
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=L2KMttDm3aY
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"An Introduction to the Hypergeometric Distribution", 00:35-04:06 for the core contrast plus first worked example'
+  covers:
+  - knowledge-sad-l05-counting-probability
+  - knowledge-sad-l05-decision-grid
+  covers_confidence:
+    knowledge-sad-l05-counting-probability: high
+    knowledge-sad-l05-decision-grid: medium
+  does_not_cover:
+  - Permutation and variation formulas (never derived here)
+  - Stars-and-bars and combinations with repetition
+  - Binomial identities and Stirling approximation
+  notes: 'Assumes the combinations formula as prerequisite. Binomial mechanics are contrast only: teaches knowledge-sad-l07-bernoulli-binomial
+    — reassignment signal.'
+  review_flag: ''
+  angle: Teaches the hypergeometric as think-it-through counting against an explicit with-replacement binomial contrast, closing
+    with a 5%-rule approximation and a three-group extension instead of centring the pmf formula.
+  angle_detail: Watch [00:35] through [02:31] first for the urn counting that yields the choose-based ratio, then [02:41]
+    for why single-trial probabilities shift without replacement. The notation clash is a versus N minus a for successes and
+    failures, which the course may write with different letters. Treat the pmf slide near [05:25] as reference only and skip
+    the variance remark near [07:38], which the record marks uncovered.
+- video_id: LsK-xG1cLYA
+  unit_id: unit-m2-sad-l12
+  title: AdaBoost, Clearly Explained
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=LsK-xG1cLYA
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"AdaBoost, Clearly Explained", 04:09-15:32 for the full stump-to-reweighting build'
+  covers:
+  - knowledge-sad-l12-boosting
+  - knowledge-sad-l12-tree-model
+  covers_confidence:
+    knowledge-sad-l12-boosting: high
+    knowledge-sad-l12-tree-model: low
+  does_not_cover:
+  - Entropy, information gain, and ID3 splitting
+  - Tree growth, stopping, and pruning
+  - Stacking, regression trees, and multiclass boosting variants
+  notes: Dense 20-minute build; random-forest contrast is framing, not coverage. Weighted-Gini path sketched only as an alternative
+    to resampling.
+  review_flag: ''
+  angle: Builds AdaBoost end-to-end as a hand-computed stump loop of Gini pick, vote weight, exponential reweighting, and
+    resampling rebuild, framed throughout against random forests rather than as abstract boosting theory.
+  angle_detail: Start at [04:09] for the first stump choice and error-to-vote computation through [09:21], then continue to
+    [10:46] for the weight-update and normalization mechanics. Keep sample weights, the importance of each row, separate from
+    patient weight, a feature the video flags explicitly. Skim the random-draw resampling demo from [15:32] if time is short,
+    since weighted Gini is the shortcut the record notes.
+- video_id: O2L2Uv9pdDA
+  unit_id: unit-m2-sad-l04
+  title: Naive Bayes, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=O2L2Uv9pdDA
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Naive Bayes, Clearly Explained!!!", 01:25-12:29 for likelihoods, scoring, and smoothing'
+  covers:
+  - knowledge-sad-l04-naive-bayes
+  - knowledge-sad-l04-bayes
+  covers_confidence:
+    knowledge-sad-l04-naive-bayes: high
+    knowledge-sad-l04-bayes: low
+  does_not_cover:
+  - Gaussian naive Bayes (explicitly deferred to a follow-up)
+  - Probability axioms and any formal derivation of the rule
+  - Parameter estimation theory beyond counting with smoothing
+  notes: 'Steady worked-example pacing. Gaussian variant is a pointer only: teaches knowledge-sad-l14-gaussian — reassignment
+    signal.'
+  review_flag: ''
+  angle: Earns smoothing by letting a repeated-word spam message break on a zero count before repairing it with added counts,
+    instead of introducing the classifier as prior-times-likelihood alone.
+  angle_detail: Begin at [01:25] for the word-histogram likelihoods, then [04:34] where priors multiply into the short-message
+    decision. The key stretch is [09:00] to [10:55], where the unseen-word zero wipes out the spam score until smoothing near
+    [12:29] fixes it. Note likelihood here just means per-word class probability, interchangeable with probability in this
+    video unlike the course usage.
+- video_id: PaFPbb66DxQ
+  unit_id: unit-m2-sad-l03
+  title: The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.)
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=PaFPbb66DxQ
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.)", 01:21-08:17
+    for residuals through the optimum'
+  covers:
+  - knowledge-sad-l03-simple-regression
+  covers_confidence:
+    knowledge-sad-l03-simple-regression: high
+  does_not_cover:
+  - Correlation coefficients and causation analysis
+  - Multivariate regression and the design matrix
+  - Gradient descent as an optimizer beyond the computer-only remark
+  notes: Concept-first pacing; hand computation explicitly disclaimed as computer work. Assumes only plotted points and means.
+  review_flag: ''
+  angle: Motivates least squares from the sign-cancellation failure of raw residuals on a mean line, then hunts the optimum
+    by rotating the line through live error sums toward a zero-derivative picture rather than solving normal equations.
+  angle_detail: Watch [01:21] first for the residual sign problem and the move to squaring, then [04:04] where rotations drive
+    the sum down and back up. The A/B slope-intercept symbols here may clash with course beta notation, so translate before
+    writing exam answers. Skip hand-derivative mechanics near [08:17], which the video itself marks computer work; the concept
+    of zero slope at the minimum is the takeaway.
+- video_id: Pujol1yC1_A
+  unit_id: unit-m2-sad-l08
+  title: Introduction to the Central Limit Theorem
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=Pujol1yC1_A
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Introduction to the Central Limit Theorem", 01:38-12:44 for both simulations plus the salary application'
+  covers:
+  - knowledge-sad-l08-clt
+  covers_confidence:
+    knowledge-sad-l08-clt: high
+  does_not_cover:
+  - The Normal family and its parameters
+  - Continuity correction and discrete approximations
+  - Any formal convergence proof beyond the finite-moment note
+  notes: Leans on assumed sampling-distribution results. The n-at-least-30 rule is flagged as rough only.
+  review_flag: ''
+  angle: Shows the theorem through two million-sample simulations that morph skewed and mixture starts toward the bell curve,
+    then pairs an invalid single-salary z-calculation against a valid mean-of-100 one.
+  angle_detail: Start at [01:38] for the exponential simulation from n=2 toward n=50, then [05:18] for the faster-converging
+    mixture case. The pitfall stretch is [08:29] to [10:51], where standardizing one salary is shown as an error before the
+    mean-of-100 version succeeds near [12:44]. Treat the n-at-least-30 line near [04:43] as rough guidance only, as the video
+    stresses.
+- video_id: RNmDyzYw7aQ
+  unit_id: unit-m2-sad-l08
+  title: What is a Gaussian Distribution?
+  channel: Iain Explains Signals, Systems, and Digital Comms
+  url: https://www.youtube.com/watch?v=RNmDyzYw7aQ
+  format: video
+  depth: orientation
+  depth_basis: source role orientation; 0 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"What is a Gaussian Distribution?", 00:05-03:48 for parameters plus scope limits'
+  covers:
+  - knowledge-sad-l08-normal
+  covers_confidence:
+    knowledge-sad-l08-normal: low
+  does_not_cover:
+  - Standardization, CDF, and quantile calculations
+  - The central limit theorem beyond a named pointer
+  - Likelihood, maximum likelihood, and any numeric worked example
+  notes: Short thin explainer, no worked numbers. Gaussian-sum claim stated without derivation; comms-noise story is domain
+    color only.
+  review_flag: ''
+  angle: Acts as a scope-limit companion on the bell curve, showing what the Gaussian is not for discrete marks and bounded
+    positive measures with a communications-noise motive, rather than a calculation workout.
+  angle_detail: Watch [00:05] first for the mu/sigma shape roles, then [01:37] for why integer marks and positive-only quantities
+    only roughly fit the continuous unbounded model. There are no worked examples, so pair this with a computation source.
+    Skip nothing since it runs under six minutes, but do not expect standardization or CLT mechanics here.
+- video_id: TqOeMYtOc1w
+  unit_id: unit-m2-sad-l09
+  title: Confidence Intervals, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=TqOeMYtOc1w
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Confidence Intervals, Clearly Explained!!!", 02:55-03:43 for the core definition; 04:04-06:37 for the visual-test
+    use'
+  covers:
+  - knowledge-sad-l09-bootstrap
+  covers_confidence:
+    knowledge-sad-l09-bootstrap: high
+  does_not_cover:
+  - Never derives or applies a z- or t-interval formula for a mean (no critical values, no standard error plug-in).
+  - Never computes an interval from real formulas outside the bootstrap percentile picture.
+  - 'Title-adjacent testing ideas stay visual only: no t-test statistic, no power calculation, no multiple-comparison handling.'
+  notes: Fast-paced intuition video; assumes a prior bootstrap video. The visual-test material (p-values, two-group comparison)
+    belongs to unit-m2-sad-l10 nodes — reassignment signal, not listed in teaches.
+  review_flag: ''
+  angle: It builds the confidence interval entirely from a bootstrap percentile picture on twelve mouse weights and then reframes
+    the interval as a visual significance test rather than deriving any z or t formula.
+  angle_detail: Start with [02:55]-[03:43] for the core definition of the 95 percent interval as the span covering most bootstrapped
+    means, then continue to [04:04]-[06:37] for the visual-test use with the threshold-20 example and the two-group non-overlap
+    caveat. If the resampling steps feel rushed, rewind to the refresher at [01:09]-[02:51] first, since the video assumes
+    a prior bootstrap lesson and moves fast. Note the course-notation pitfall that significance is spoken as values outside
+    the interval occurring rarely, so pair this with a formula video before the exam because nothing here derives or plugs
+    in a critical value or standard error.
+- video_id: UrOXRvG9oYE
+  unit_id: unit-m2-sad-l07
+  title: Overview of Some Discrete Probability Distributions (Binomial,Geometric,Hypergeometric,Poisson,NegB)
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=UrOXRvG9oYE
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 0 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Overview of Some Discrete Probability Distributions (Binomial,Geometric,Hypergeometric,Poisson,NegB)", 01:43-03:06
+    for the fixed-trials vs fixed-successes contrast; 04:48-06:05 for the Poisson link'
+  covers:
+  - knowledge-sad-l07-model-selection
+  - knowledge-sad-l07-bernoulli-binomial
+  - knowledge-sad-l07-geometric
+  - knowledge-sad-l07-hypergeometric
+  - knowledge-sad-l07-poisson
+  - knowledge-sad-l07-relationships
+  covers_confidence:
+    knowledge-sad-l07-model-selection: low
+    knowledge-sad-l07-bernoulli-binomial: low
+    knowledge-sad-l07-geometric: low
+    knowledge-sad-l07-hypergeometric: low
+    knowledge-sad-l07-poisson: low
+    knowledge-sad-l07-relationships: low
+  does_not_cover:
+  - 'Shows zero probability calculations despite the title: no PMF evaluated, no table or software use.'
+  - Never writes a Bernoulli, binomial, Poisson or hypergeometric formula or moment.
+  - 'Promises relationships only verbally: no limit derivation, no fitted example, no decision rule for model choice.'
+  notes: Deliberate no-math recap; states upfront it skips calculations. Negative binomial content has no L07 node counterpart.
+    Brisk overview pacing, best used as a map before detail videos.
+  review_flag: ''
+  angle: It is a deliberately calculation-free map that distinguishes the discrete families only by the sampling setup that
+    produces each one instead of evaluating any probability mass function.
+  angle_detail: Watch [01:43]-[03:06] first for the fixed-trials versus fixed-successes contrast between the binomial and
+    the negative binomial families, then [04:48]-[06:05] for how the Poisson approximates the binomial when n is large and
+    p is small. The framing statement at [00:01] warns that no calculations follow, so do not expect formulas, moments, or
+    tables here, and note the negative binomial has no L07 node counterpart. Use this as a chooser before detail videos and
+    skip it as a computation reference.
+- video_id: UsU-O2Z1rAs
+  unit_id: unit-m2-sad-l10
+  title: What is a p-value?  (Updated and extended version)
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=UsU-O2Z1rAs
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"What is a p-value?  (Updated and extended version)", 00:55-02:52 for the worked example; 05:06-09:03 for the
+    simulation intuition'
+  covers:
+  - knowledge-sad-l10-tails-pvalue
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-errors-power
+  covers_confidence:
+    knowledge-sad-l10-tails-pvalue: high
+    knowledge-sad-l10-test-model: medium
+    knowledge-sad-l10-errors-power: low
+  does_not_cover:
+  - Never runs a t, chi-square, rank, or permutation test despite the testing title scope.
+  - Never builds a confidence interval or shows test/interval duality.
+  - Never touches multiple testing, error rates beyond passing mention, or nonparametric alternatives.
+  notes: Concept-first pacing with one worked Z example plus simulations. Power and sample-size effects shown visually belong
+    to errors-power; uniform-distribution detail is unusually thorough.
+  review_flag: ''
+  angle: It combines one fully shaded right-tail Z example with million-sample simulations showing the uniform distribution
+    under the null and the shift toward zero when the null is false, plus a rough evidence-strength table.
+  angle_detail: Start with [00:55]-[02:52] for the worked normal-mean example with the statistic near two and a tail area
+    near two percent, which fixes the conditional-on-the-null reading of the definition. Then study [05:06]-[09:03] for the
+    simulation histograms, including the sample-size increase that shifts false-null p values further toward zero and is named
+    greater power. Treat the guideline at [09:31] as rough rather than a cutoff, and look elsewhere for t, chi-square, interval
+    duality, or multiple-testing material.
+- video_id: Uv6nGIgZMVw
+  unit_id: unit-m2-sad-l09
+  title: Introduction to the t Distribution (non-technical)
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=Uv6nGIgZMVw
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Introduction to the t Distribution (non-technical)", 00:18-01:58 for why t replaces Z; 05:50-07:46 for the critical-value
+    table'
+  covers:
+  - knowledge-sad-l09-t-interval
+  - knowledge-sad-l09-z-interval
+  - knowledge-sad-l09-standard-error
+  covers_confidence:
+    knowledge-sad-l09-t-interval: low
+    knowledge-sad-l09-z-interval: medium
+    knowledge-sad-l09-standard-error: low
+  does_not_cover:
+  - Never computes a z or t interval from actual sample data end to end.
+  - Never covers bootstrap intervals, bias, or sampling-design issues.
+  - 'No hypothesis test is performed: no p-value, no power, no duality discussion.'
+  notes: 'Non-technical by design; defers pdf and degrees-of-freedom theory. Warns against the n>30 z-substitution habit.
+    Clear prerequisite: z-intervals with known sigma.'
+  review_flag: ''
+  angle: It motivates the t distribution as the consequence of replacing the unknown population sigma with the sample s in
+    the familiar Z statistic, then shows the degrees-of-freedom animation converging toward the standard normal.
+  angle_detail: Watch [00:18]-[01:58] first for why estimating sigma adds variability and turns Z into t with n minus 1 degrees
+    of freedom, then [05:50]-[07:46] for the critical-value table contrasting the value near two point six at five degrees
+    of freedom and near two point zero at thirty against one point nine six. Do not adopt the n greater than 30 z-substitution
+    habit the video explicitly rejects, and note it defers the density and the degrees-of-freedom theory while never computing
+    an interval from data end to end.
+- video_id: VMj-3S1tku0
+  unit_id: unit-m2-sad-l15
+  title: 'The spelled-out intro to neural networks and backpropagation: building micrograd'
+  channel: Andrej Karpathy
+  url: https://www.youtube.com/watch?v=VMj-3S1tku0
+  format: video
+  depth: implementation
+  depth_basis: builds the thing in code end to end
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The spelled-out intro to neural networks and backpropagation: building micrograd", 34:31-38:14 for backprop mechanics;
+    107:17-135:51 for the full train loop'
+  covers:
+  - knowledge-sad-l15-backprop
+  - knowledge-sad-l15-neuron
+  - knowledge-sad-l15-forward
+  - knowledge-sad-l15-training
+  - knowledge-sad-l15-activation
+  covers_confidence:
+    knowledge-sad-l15-backprop: high
+    knowledge-sad-l15-neuron: high
+    knowledge-sad-l15-forward: medium
+    knowledge-sad-l15-training: medium
+    knowledge-sad-l15-activation: medium
+  does_not_cover:
+  - Never shows output layers, softmax, one-hot targets, or classification losses in this portion range.
+  - Never discusses universal approximation, CNN/RNN/Transformer outlook, or generalization theory.
+  - 'No SaD-style exam statistics: no distributions, tests, or intervals anywhere in the lecture.'
+  notes: Very long code-along (146 min); proposal indexed from sampled transcript evidence across the full span. Scalar-only
+    pedagogy; tensors framed as pure efficiency. PyTorch comparison is a side note, not the core.
+  review_flag: ''
+  angle: It teaches backpropagation and network training by live-coding a scalar autograd engine of about a hundred lines
+    plus neuron, layer, and multilayer perceptron classes from a blank notebook rather than presenting slides or tensor APIs.
+  angle_detail: Start with [08:11]-[14:11] for the numerical-slope intuition on scalar functions, since everything later leans
+    on the nudge-and-response reading of the derivative. Then work through [34:31]-[38:14] for the manual chain-rule pass
+    with gradient checking before attempting the full loop at [107:17]-[135:51], where inputs run through the multilayer perceptron
+    to predictions and gradient descent tunes the weights. Budget for a very long code-along of 146 minutes and treat tensors
+    as pure efficiency packaging, as the lecture frames them. Skip expecting output layers, classification losses, or any
+    exam-statistics content, which the record excludes.
+- video_id: Vyk8HQOckIE
+  unit_id: unit-m2-sad-l06
+  title: The Expected Value and Variance of Discrete Random Variables
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=Vyk8HQOckIE
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The Expected Value and Variance of Discrete Random Variables", 04:27-06:01 for the mean example; 08:16-11:12
+    for the variance computation'
+  covers:
+  - knowledge-sad-l06-expectation
+  - knowledge-sad-l06-variance-covariance
+  - knowledge-sad-l06-random-variable
+  - knowledge-sad-l06-concentration
+  covers_confidence:
+    knowledge-sad-l06-expectation: high
+    knowledge-sad-l06-variance-covariance: high
+    knowledge-sad-l06-random-variable: medium
+    knowledge-sad-l06-concentration: low
+  does_not_cover:
+  - 'Stays discrete only: no densities, CDFs, or continuous counterparts despite the general title.'
+  - Never touches transformations of variables, covariance, or Chebyshev bounds.
+  - 'No fitting or model-choice guidance: single fixed distribution worked throughout.'
+  notes: Slow worked-example pacing with a simulation interlude. Law-of-large-numbers demo previews concentration ideas —
+    reassignment signal, kept out of teaches except one low-confidence entry.
+  review_flag: ''
+  angle: It works a single biased-coin distribution all the way from the mean through the squared variable to the variance
+    computed both directly and via the shortcut, closing with a million-draw simulation of convergence.
+  angle_detail: Study [04:27]-[06:01] first for the mean 1 point 2 calculation as a probability-weighted average, then [08:16]-[11:12]
+    for the variance 0 point 48 with the shortcut verification and the square root for the standard deviation. Use the simulation
+    at [06:35]-[07:32] to cement why long-run averages settle near the theoretical mean, and remember the early warning that
+    expectation is a mean rather than the most likely or even a possible value. The video stays discrete only, so look elsewhere
+    for densities, transformations, or covariance.
+- video_id: XLCWeSVzHUU
+  unit_id: unit-m2-sad-l07
+  title: Sampling from a Distribution, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=XLCWeSVzHUU
+  format: video
+  depth: orientation
+  depth_basis: teaches no node of the unit it is routed to
+  scope: unevaluated
+  scope_basis: 'flagged: routed to the wrong lecture'
+  locator: '"Sampling from a Distribution, Clearly Explained!!!", 01:23-02:01 for the one core idea; rest is motivation only'
+  covers: []
+  covers_confidence: {}
+  does_not_cover:
+  - 'Names no discrete model at all: no Bernoulli, binomial, geometric, hypergeometric, or Poisson content.'
+  - Shows no PMF, parameter, fitting step, or distribution-choice reasoning of any kind.
+  - Title promises sampling a distribution but delivers only generic histogram intuition plus t-test anecdotes.
+  notes: Thin 3:48 explainer; honest thin record. t-test and p-value discussion belongs to unit-m2-sad-l10 nodes — reassignment
+    signal, never in teaches. Useful only as a simulation-motivation prelude.
+  review_flag: wrong-lecture
+  angle: It teaches no discrete model at all and instead gives only a generic histogram-to-curve sampling intuition followed
+    by t-test simulation motivation, unlike every other routed L07 source.
+  angle_detail: Watch [01:23]-[02:01] for the single core idea that a computer draws values with the probabilities described
+    by the histogram or curve, since that is the only stretch the record credits. Treat [02:05]-[03:39] as motivation about
+    probing t-tests on simulated draws and sizing samples rather than L07 content, and do not use this video for any Bernoulli,
+    binomial, geometric, hypergeometric, or Poisson study. Its title overpromises distribution coverage that the transcript
+    never delivers.
+  review_recommendation: 'Recommend reassignment to unit-m2-sad-l10 (depth: intuition, scope: complementary). Evidence: [02:45]
+    Since the distribution is the same, the t-test'
+- video_id: XNgt7F6FqDU
+  unit_id: unit-m2-sad-l09
+  title: The standard error, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=XNgt7F6FqDU
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The standard error, Clearly Explained!!!", 04:00-05:47 for the core intuition; 08:46-11:11 for the bootstrap
+    procedure'
+  covers:
+  - knowledge-sad-l09-standard-error
+  - knowledge-sad-l09-bootstrap
+  - knowledge-sad-l09-estimator
+  covers_confidence:
+    knowledge-sad-l09-standard-error: high
+    knowledge-sad-l09-bootstrap: medium
+    knowledge-sad-l09-estimator: low
+  does_not_cover:
+  - Never constructs a z or t confidence interval from data despite the close topic link.
+  - 'Never runs a hypothesis test: no statistic, p-value, or decision rule appears.'
+  - 'No estimator theory: no bias, consistency, efficiency, or data-bias discussion.'
+  notes: Lively sampling-demo pacing; concrete n=5 mouse example throughout. Confidence intervals explicitly deferred to a
+    future video. Pairs naturally with the bootstrap-CI proposal.
+  review_flag: ''
+  angle: It constructs the standard error as the standard deviation of repeated n equals 5 mouse-sample means with overlaid
+    sampling pictures, then walks a complete six-step resampling recipe for estimating it from a single sample.
+  angle_detail: Start with [04:00]-[05:47] for the core intuition that means cluster tighter than raw data, then follow [08:46]-[11:11]
+    for the full bootstrap walkthrough resampling five values with replacement and taking the deviation of the resulting means.
+    Use the formula shortcut at [08:13]-[08:25] only for the mean case and bootstrap everything else, noting the aside that
+    bootstrapping ideally wants ten or more measurements. Confidence-interval construction is explicitly deferred, so pair
+    this with the follow-up interval video.
+- video_id: XepXtl9YKwc
+  unit_id: unit-m2-sad-l08
+  title: Maximum Likelihood, clearly explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=XepXtl9YKwc
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Maximum Likelihood, clearly explained!!!", 03:25-04:55 for the MLE core; 05:22-05:48 for the terminology warning'
+  covers:
+  - knowledge-sad-l08-mle
+  - knowledge-sad-l08-normal
+  - knowledge-sad-l08-likelihood
+  covers_confidence:
+    knowledge-sad-l08-mle: high
+    knowledge-sad-l08-normal: low
+    knowledge-sad-l08-likelihood: high
+  does_not_cover:
+  - 'Standardization and CDF/quantile lookups: never shown, only shape talk'
+  - 'Linear transforms and sums of independent Normals: absent'
+  - 'LLN versus CLT and the sampling distribution of the mean: absent'
+  - 'Normal approximation with continuity correction: absent'
+  - 'Any formal MLE derivation or MSE-bridge calculation: hand-waved, not computed'
+  notes: Brisk cartoon pace; assumes the Normal shape is already familiar; P-versus-L handled verbally only, no density formula
+    written or derived.
+  review_flag: ''
+  angle: Unlike formula-first treatments of the same nodes, this video fits a Normal to mouse-weight data by visibly sliding
+    candidate centres and spreads along a likelihood curve until the peak is found.
+  angle_detail: 'Watch [03:25] through [04:07] first, because the centre-scanning demo is the whole MLE idea in miniature,
+    then continue to [04:55] for the same scan applied to the spread. Finish with [05:22] to [05:48], which pins down the
+    probability-versus-likelihood wording the course will test. Do not expect a density formula or a real derivation here:
+    the Normal shape is assumed familiar from [01:13] on, and the MSE bridge is never computed, so pair this with a derivation
+    source.'
+- video_id: Xz0x-8-cgaQ
+  unit_id: unit-m2-sad-l09
+  title: Bootstrapping Main Ideas!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=Xz0x-8-cgaQ
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Bootstrapping Main Ideas!!!", 02:28-05:00 for the resampling recipe; 05:28-06:49 for error and interval payoff'
+  covers:
+  - knowledge-sad-l09-bootstrap
+  - knowledge-sad-l09-standard-error
+  covers_confidence:
+    knowledge-sad-l09-bootstrap: high
+    knowledge-sad-l09-standard-error: low
+  does_not_cover:
+  - 't intervals: never mentioned, only a percentile band'
+  - 'Fancier bootstrap interval variants: explicitly deferred to another day'
+  - 'Bias, consistency, efficiency and MSE of estimators: absent'
+  - 'Estimator-versus-estimate vocabulary: never formalized'
+  - 'Data bias versus statistical uncertainty: no such distinction drawn'
+  notes: Uses one tiny n=8 drug example throughout; percentile band shown is not a z formula; test-logic framing at 07:02-07:12
+    belongs to another unit's nodes, reassignment signal, never in teaches.
+  review_flag: ''
+  angle: Unlike abstract resampling summaries, this video builds every idea on one tiny n=8 drug example with a physical draw-and-replace
+    walkthrough and a four-step recipe that transfers to any statistic.
+  angle_detail: 'Start with [02:28] through [05:00] to learn the resampling recipe itself, since everything later reuses it.
+    Then watch [05:28] through [06:49] for the payoff, where the spread of resample means becomes the standard error and the
+    band covering zero decides the example. Note the trap at [06:49]: the interval shown is a percentile band, never a t-interval,
+    and the hypothesis-testing remarks around [07:02] belong to another unit, so do not file them under bootstrapping.'
+- video_id: YAlJCEDH2uY
+  unit_id: unit-m2-sad-l08
+  title: The Central Limit Theorem, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=YAlJCEDH2uY
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The Central Limit Theorem, Clearly Explained!!!", 01:06-04:04 for both demos; 05:12-06:10 for why it matters'
+  covers:
+  - knowledge-sad-l08-clt
+  covers_confidence:
+    knowledge-sad-l08-clt: high
+  does_not_cover:
+  - 'Normal density, parameters and shape facts: assumed, not taught'
+  - 'Standardization, CDF and quantile computation: never shown'
+  - 'Formal LLN-versus-CLT separation: LLN never stated'
+  - 'Normal approximation with continuity correction: absent'
+  - 'Likelihood, MLE and MSE bridge: nowhere in the video'
+  notes: Demo batch size is 20, breaking the own n=30 rule of thumb; Cauchy named as the mean-less exception; CI/t-test/ANOVA
+    payoff points at other units' nodes, reassignment signal, never in teaches.
+  review_flag: ''
+  angle: Unlike statement-only versions of the same node, this video runs two live batch-mean demos, flat uniform then skewed
+    exponential, so you watch Normality emerge instead of taking it on faith.
+  angle_detail: 'Watch [01:06] through [04:04] first, since the twin demos are the entire argument and worth seeing back to
+    back. Then take [05:12] through [06:10] for why it matters, which is how intervals and mean tests get away with ignoring
+    the raw-data shape. Flag the inconsistency the video admits itself: the demos use batches of 20 yet the rule of thumb
+    at [06:12] demands 30, and the only stated exception is the mean-less Cauchy case, so expect no LLN-versus-CLT separation
+    here.'
+- video_id: YG15m2VwSjA
+  unit_id: unit-m2-sad-l15
+  title: Visualizing the chain rule and product rule | Chapter 4, Essence of calculus
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=YG15m2VwSjA
+  format: video
+  depth: derivation
+  depth_basis: 2 of 6 segments derive rather than illustrate
+  scope: prerequisite
+  scope_basis: 'flagged: routed to the wrong lecture'
+  locator: '"Visualizing the chain rule and product rule | Chapter 4, Essence of calculus", 08:41-12:47 for the composition
+    walkthrough; 04:11-08:06 for the product area'
+  covers: []
+  covers_confidence: {}
+  does_not_cover:
+  - 'Artificial neurons and linear-model equivalence: no network appears'
+  - 'Activation functions and nonlinearity: sine/square are calculus props only'
+  - 'One-hot targets, output layers and softmax: absent'
+  - 'Multilayer forward passes, shapes and parameter counts: absent'
+  - 'Loss gradients, backpropagation and any training choice: absent'
+  notes: Pure single-variable calculus despite the L15 header; chain-rule intuition is prerequisite for knowledge-sad-l15-backprop,
+    reassignment signal, never in teaches since no listed node covers it.
+  review_flag: wrong-lecture
+  angle: 'Unlike rule-list treatments, this video derives each differentiation rule from its own picture: stacked bars for
+    sums, an adjustable box area for products, and three stacked number lines for composition.'
+  angle_detail: 'If time is short, take [08:41] through [12:47] first, since the composition walkthrough is the chain-rule
+    intuition backprop will assume, then go back to [04:11] through [08:06] for the product area. Critical pitfall: despite
+    the L15 header this video contains zero neural-network content, so file it as calculus preparation, not L15 coverage.
+    The closing stretch from [14:48] warns that watching never substitutes for doing the computations yourself.'
+  review_recommendation: 'Recommend keeping unit unit-m2-sad-l15 with depth derivation and scope prerequisite: the video teaches
+    no listed L15 node and only prepares knowledge-sad-l15-backprop. Evidence: it asks for "the derivative of their composition".'
+- video_id: ZlBog_1EyAM
+  unit_id: unit-m2-sad-l04
+  title: Bedingte Wahrscheinlichkeit, Satz von Bayes und stochastische Unabhängigkeit
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=ZlBog_1EyAM
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Bedingte Wahrscheinlichkeit, Satz von Bayes und stochastische Unabhängigkeit", 03:53-06:28 für die Bedingung
+    mit Tafel; 10:24-11:20 für die Umkehrung'
+  covers:
+  - knowledge-sad-l04-conditional
+  - knowledge-sad-l04-independence
+  - knowledge-sad-l04-bayes
+  covers_confidence:
+    knowledge-sad-l04-conditional: high
+    knowledge-sad-l04-independence: medium
+    knowledge-sad-l04-bayes: high
+  does_not_cover:
+  - 'Wahrscheinlichkeitsaxiome und Ereignisräume: werden nie eingeführt'
+  - 'Totale Wahrscheinlichkeit als eigener Satz: kommt nicht vor'
+  - 'Naive-Bayes-Klassifikator: nur Data-Mining als Stichwort'
+  - 'Menschliche Urteilsfehler und Framing: trotz Titelnähe fehlend'
+  - 'Abzählmethoden und Laplace-Räume: keine Brücke dorthin'
+  notes: Durchgehend ein einziges Segway-Zahlenbeispiel (50/40/30 Prozent); Vierfeldertafel trägt die ganze Anschauung; Data-Mining/KI
+    bleibt Namensnennung.
+  review_flag: ''
+  angle: Anders als rein formale Darstellungen trägt dieses Video Bedingtheit, Unabhängigkeit und Bayes an einem einzigen
+    Segway-Werkstattbeispiel mit festen Anteilen und der Vierfeldertafel als Anschauung durch.
+  angle_detail: 'Zuerst [03:53] bis [04:26] ansehen, denn dort wird die Bedingungsformel einmal komplett auf 0,75 durchgerechnet;
+    danach [05:00] bis [06:28] für die Tafel mit 20 Rollern, die dieselbe Rechnung sichtbar macht. Die Umkehrfrage folgt in
+    [10:24] bis [11:20] mit Ergebnis 0,6 und ist der eigentliche Bayes-Kern. Aufpassen: Data-Mining und KI werden nur beim
+    Namen genannt, und Axiome sowie totale Wahrscheinlichkeit kommen nicht vor, also dafür eine andere Quelle einplanen.'
+- video_id: _L39rN6gz7Y
+  unit_id: unit-m2-sad-l12
+  title: Decision and Classification Trees, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=_L39rN6gz7Y
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 5 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Decision and Classification Trees, Clearly Explained!!!", 06:46-12:22 for the impurity-driven build; 14:05-15:37
+    for prediction readout'
+  covers:
+  - knowledge-sad-l12-tree-model
+  covers_confidence:
+    knowledge-sad-l12-tree-model: high
+  does_not_cover:
+  - 'Entropy, information gain and ID3 math: named once, computed never'
+  - 'Regression-tree splitting and variance reduction: deferred elsewhere'
+  - 'Pruning method: named only, full video promised'
+  - 'Bagging, random forests and boosting: nowhere in the video'
+  - 'Stacking and ensemble tradeoffs: absent; cross-validation only named'
+  notes: Gini-centered build; entropy/information gain get one passing sentence, never teaches; pruning and cross-validation
+    deferred to other videos; single toy dataset throughout.
+  review_flag: ''
+  angle: Unlike overview treatments of trees, this video hand-builds a complete classifier on one toy dataset with every Gini
+    number and every age threshold worked out loud.
+  angle_detail: 'Give the core build from [06:46] through [12:22] your first full watch, since the impurity arithmetic and
+    the threshold search there are the transferable skill. Then take [14:05] through [15:37] to see how a new person is routed
+    down the finished tree to a majority-vote leaf. Two pitfalls: entropy is named once and never computed, so Gini is all
+    you get, and pruning plus cross-validation are only promised from [16:05] on, while the captions spell Gini as genie throughout.'
+- video_id: aJDXIG1P738
+  unit_id: unit-m2-sad-l02
+  title: 'Statistik Grundlagen: Grundbegriffe einfach erklärt (Grundgesamtheit, Merkmal, Merkmalsträger)'
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=aJDXIG1P738
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Statistik Grundlagen: Grundbegriffe einfach erklärt (Grundgesamtheit, Merkmal, Merkmalsträger)", 01:16-03:05
+    for the full carrier-to-value walkthrough'
+  covers:
+  - knowledge-sad-l02-vocabulary
+  covers_confidence:
+    knowledge-sad-l02-vocabulary: high
+  does_not_cover:
+  - 'Feature types and measurement scales: value kinds shown, taxonomy never'
+  - 'Frequency distributions and histograms: no counts or plots'
+  - 'Location, quantiles and boxplots: absent'
+  - 'Dispersion, divisors and variance talk: absent'
+  - 'Representative sampling and sampling bias: no selection design'
+  notes: Thin 3:43 single-example clip; header language tag reads en despite German title; 'unit of measurement' for Merkmalsträger
+    is a notation clash; scale taxonomy never follows.
+  review_flag: ''
+  angle: Anders als dichte Begriffslisten verankert dieser ultrakurze Clip alle vier Grundbegriffe an einer einzigen Hutkauf-Geschichte
+    inklusive der Unterscheidung zwischen kleiner und vollständiger Grundgesamtheit.
+  angle_detail: 'Die Strecke [01:16] bis [03:05] in einem Zug ansehen, denn dort läuft der komplette Weg von den vier Alternativen
+    über Merkmale bis zu den Werten ohne Unterbrechung. Danach genügt [03:05] bis [03:33] als Merkschema für jede eigene Auswertung.
+    Aufpassen: Die Übersetzung unit of measurement für Merkmalsträger kollidiert mit der Kurssprache, und Skalentypen sowie
+    Häufigkeiten fehlen ganz, daher als Einstieg nutzen und mit dichterem Material paaren.'
+- video_id: aircAruvnKk
+  unit_id: unit-m2-sad-l15
+  title: But what is a neural network? | Deep learning chapter 1
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=aircAruvnKk
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"But what is a neural network? | Deep learning chapter 1", 09:08-12:27 for weights-to-counts core; 13:32-15:05
+    for the matrix form'
+  covers:
+  - knowledge-sad-l15-neuron
+  - knowledge-sad-l15-forward
+  - knowledge-sad-l15-activation
+  covers_confidence:
+    knowledge-sad-l15-neuron: high
+    knowledge-sad-l15-forward: high
+    knowledge-sad-l15-activation: medium
+  does_not_cover:
+  - 'Loss gradients and backpropagation: explicitly deferred to part two'
+  - 'Training loops, generalization and practical choices: only teased'
+  - 'One-hot targets, output layers and softmax design: outputs only counted'
+  - 'Expressiveness and universal approximation: not claimed'
+  - 'CNN, RNN and Transformer outlook: absent'
+  notes: Structure-only part one; learning deferred at 16:13-16:23; hand-setting weights framed as thought experiment; sigmoid-versus-ReLU
+    coda updates the activation story.
+  review_flag: ''
+  angle: Unlike notation-first network summaries, this video motivates the whole architecture from the 28x28 digit problem
+    via an edges-to-parts-to-digits ladder and a hand-setting-the-weights thought experiment.
+  angle_detail: 'Start with [09:08] through [12:27], where weights, the squish function, and the bias threshold turn into
+    the thirteen-thousand-dials count that makes learning necessary. Then read [13:32] through [15:05] for the compact matrix-plus-vector
+    notation the course will use afterward. Note the boundary stated at [16:13]: training itself is deferred to part two,
+    outputs are only counted rather than designed, and the closing guest stretch revises the activation story toward ReLU.'
+- video_id: bsZGt-caXO4
+  unit_id: unit-m2-sad-l10
+  title: 'StatQuest:  One or Two Tailed P-Values'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=bsZGt-caXO4
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"StatQuest:  One or Two Tailed P-Values", 01:52-02:38 for the meaning of each choice; 05:08-06:02 for the peeking-inflates-errors
+    demo'
+  covers:
+  - knowledge-sad-l10-tails-pvalue
+  - knowledge-sad-l10-errors-power
+  covers_confidence:
+    knowledge-sad-l10-tails-pvalue: high
+    knowledge-sad-l10-errors-power: low
+  does_not_cover:
+  - 'Never computes a test statistic from raw data: no t-value, no critical-value lookup, no z-test walkthrough; the 0.03/0.06
+    p-values arrive pre-made.'
+  - Title promises how to choose tails but never shows a case where a one-sided test is legitimate; every example ends in
+    'always two-sided'.
+  notes: Brisk pacing, single running clinical-trial example; p-hacking/false-positive material touches l10-multiple only
+    in passing, not taught. No notation clashes; thin by design at 7 minutes.
+  review_flag: ''
+  angle: Unlike other tails and p-value treatments that formalize hypotheses, this one stages a single clinical-trial story
+    where a 0.03 one-sided versus 0.06 two-sided split motivates a 10,000-test simulation showing that peeking at the data
+    inflates false positives from 5% to 8%.
+  angle_detail: 'Start with [01:52]–[02:38] to fix what each tail choice hypothesizes, then jump to [05:08]–[06:02] for the
+    peeking-inflates-errors demo, which is the part worth your time. Do not expect a worked test statistic or table lookup
+    here: both p-values arrive pre-made and every example ends in always-two-sided, so pair this with a source that shows
+    a legitimate one-sided case. It is brisk at seven minutes with no notation clashes, so watch it for decision discipline,
+    not computation.'
+- video_id: g9c66TUylZ4
+  unit_id: unit-m2-sad-l12
+  title: Regression Trees, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=g9c66TUylZ4
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 6 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Regression Trees, Clearly Explained!!!", 06:59-12:58 for the split-search procedure; 13:11-18:41 for overfitting
+    and stopping'
+  covers:
+  - knowledge-sad-l12-tree-model
+  - knowledge-sad-l12-regression
+  - knowledge-sad-l12-pruning
+  covers_confidence:
+    knowledge-sad-l12-tree-model: high
+    knowledge-sad-l12-regression: high
+    knowledge-sad-l12-pruning: medium
+  does_not_cover:
+  - Entropy, information gain and ID3 never appear; no classification tree is ever built despite the genre.
+  - Bagging, random forests, boosting and stacking are absent; pruning is reduced to a minimum-node-size stopping rule, never
+    post-pruning.
+  notes: 'Prerequisites assumed: bias-variance trade-off, decision-tree basics, least squares. Notation: SSR for sum of squared
+    residuals. Example uses min-size 7 as a stand-in for the usual 20.'
+  review_flag: ''
+  angle: Where other tree materials state splitting rules abstractly, this one builds the split search live on a nonlinear
+    drug-dosage story, sweeping every candidate threshold by summed squared residuals until 14.5 emerges as root and then
+    growing the tree under an explicit minimum-node-size stop.
+  angle_detail: Start with [06:59]–[12:58] to see the threshold sweep and residual accounting that picks the root, then continue
+    to [13:11]–[18:41] for the overfitting warning and the stopping rule. Note the SSR shorthand for summed squared residuals
+    and that the demo minimum of seven stands in for the usual twenty used in practice. It assumes comfort with bias-variance
+    ideas and least squares, and it never covers entropy, classification trees, or forests, so skip it for those topics.
+- video_id: iYiOVISWXS4
+  unit_id: unit-m2-sad-l08
+  title: An Introduction to the Normal Distribution
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=iYiOVISWXS4
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 0 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"An Introduction to the Normal Distribution", 01:44-02:43 for the empirical rules; 04:09-05:20 for the standard
+    normal'
+  covers:
+  - knowledge-sad-l08-normal
+  - knowledge-sad-l08-standardization
+  covers_confidence:
+    knowledge-sad-l08-normal: high
+    knowledge-sad-l08-standardization: low
+  does_not_cover:
+  - No standardization is ever computed and no table lookup is worked; tables/software are only name-checked at the close.
+  - No CLT, no likelihood, no worked probability calculation; a definitions-only piece that never solves anything.
+  notes: Slow, clean pacing with height example; flags that the second normal parameter may denote variance or sd by source.
+    Thin by design at 5 minutes.
+  review_flag: ''
+  angle: Instead of computing with the normal curve, this short piece teaches it as a visual vocabulary lesson, anchoring
+    symmetry, center, and spread in plotted height data before naming the 68/95/99.7 bands and the standard normal.
+  angle_detail: 'Watch [01:44]–[02:43] first for the empirical bands, then [04:09]–[05:20] for the standard normal and the
+    areas-as-probabilities framing. Heed its own caution that the second slot in N(mu, .) means variance here but standard
+    deviation elsewhere, and expect definitions only: no standardization is worked and tables or software are only named.
+    At five minutes it is a primer to pair with a source that actually solves problems.'
+- video_id: lG4VkPoG3ko
+  unit_id: unit-m2-sad-l01
+  title: The medical test paradox, and redesigning Bayes' rule
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=lG4VkPoG3ko
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"The medical test paradox, and redesigning Bayes'' rule", 00:00-02:09 for the counting paradox; 11:01-13:07 for
+    the odds-form derivation'
+  covers:
+  - knowledge-sad-l01-base-rates
+  - knowledge-sad-l01-classification
+  covers_confidence:
+    knowledge-sad-l01-base-rates: high
+    knowledge-sad-l01-classification: high
+  does_not_cover:
+  - 'None of L01''s descriptive core appears: no location, spread, histograms, or sampling-context material.'
+  - Title implies a paradox resolution but the counting solution is asserted early and the rest is formula advocacy, not new
+    evidence.
+  notes: Dense but well-paced; concrete-population counting throughout. Teaches knowledge-sad-l04-conditional and knowledge-sad-l04-bayes
+    (Bayes factor, odds-form Bayes) at length — reassignment signal, kept out of teaches. Prior-as-prevalence substitution
+    is flagged in-video.
+  review_flag: ''
+  angle: Rather than presenting Bayes' rule as a fixed plug-in formula, this video reframes testing as updating prior odds
+    by a single Bayes factor and derives the odds form so one precomputed factor can be reused across priors and sequential
+    evidence.
+  angle_detail: Begin with [00:00]–[02:09] for the thousand-woman counting paradox that fixes sensitivity, specificity, and
+    predictive value, then study [11:01]–[13:07] for the odds-form derivation and reuse logic. Remember the video substitutes
+    disease prevalence for the prior and flags that symptoms or contacts would change it, so do not carry prevalence over
+    blindly. It is dense at twenty-one minutes and its Bayes-factor material belongs to conditional-probability nodes, so
+    treat the L01 fit as base-rate intuition only.
+- video_id: pYxNSUDSFH4
+  unit_id: unit-m2-sad-l08
+  title: In Statistics, Probability is not Likelihood.
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=pYxNSUDSFH4
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"In Statistics, Probability is not Likelihood.", 00:47-03:36 for the probability-versus-likelihood contrast'
+  covers:
+  - knowledge-sad-l08-likelihood
+  covers_confidence:
+    knowledge-sad-l08-likelihood: high
+  does_not_cover:
+  - Maximum likelihood estimation is only pointed at, never derived or computed; no estimator appears.
+  - No CLT, no standardization, no distribution fitting; the normal curve is a prop, not an object of study.
+  notes: Very brisk; mouse-weight example carries the whole video. Assumes comfort with normal curves and area-as-probability;
+    no notation clashes.
+  review_flag: ''
+  angle: 'This video isolates the single most-confused distinction on this node by holding one normal curve of mouse weights
+    fixed and flipping which side varies: areas under the curve for probability versus curve height at fixed data for likelihood.'
+  angle_detail: Watch [00:47]–[03:36] straight through, since the 29% area example and the 0.12-versus-0.21 height comparison
+    only land as a pair. It assumes you already read areas as probabilities and points nowhere near maximum likelihood estimation,
+    so use it to fix direction-of-conditioning errors, not to learn fitting. At five minutes there is nothing to skip, but
+    bring a second source for any actual estimator.
+- video_id: qcTcsEdMgBo
+  unit_id: unit-m2-sad-l02
+  title: Range | Interquartile Range (IQR) | Box and whisker plot
+  channel: zedstatistics
+  url: https://www.youtube.com/watch?v=qcTcsEdMgBo
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Range | Interquartile Range (IQR) | Box and whisker plot", 02:54-04:08 for the outlier-robustness demo; 06:52-08:06
+    for reading boxplots'
+  covers:
+  - knowledge-sad-l02-dispersion
+  - knowledge-sad-l02-location
+  covers_confidence:
+    knowledge-sad-l02-dispersion: low
+    knowledge-sad-l02-location: medium
+  does_not_cover:
+  - Variance, standard deviation and divisors never appear, leaving the dispersion node half empty.
+  - Boxplot outlier rules are hand-waved to software; quartile computation itself is deferred to another video.
+  notes: Chatty pacing with two worked datasets (seven-point toy, ice-cream sugar). Assumes quartiles from a prior video;
+    boxplot orientation variants noted.
+  review_flag: ''
+  angle: Its signature move is a paired outlier experiment on the same toy dataset, showing the range exploding while the
+    interquartile range holds steady, then reading both quantities off a box-and-whisker plot of fictional ice-cream sugar
+    data.
+  angle_detail: Start with [02:54]–[04:08] for the outlier-robustness demo, then use [06:52]–[08:06] to practice reading quartiles,
+    median, and whiskers with the 25%-per-section rule. It assumes quartile computation from an earlier video and waves outlier-exclusion
+    rules off to software, and it never touches variance or standard deviation. Watch it for robust-spread intuition and pair
+    it with a variance source to complete the node.
+- video_id: rbYg5IsOYaM
+  unit_id: unit-m2-sad-l10
+  title: Einstichproben-t-Test einfach erklärt | Beispiel, Voraussetzungen, Interpretation
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=rbYg5IsOYaM
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 1 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Einstichproben-t-Test einfach erklärt | Beispiel, Voraussetzungen, Interpretation", 07:12-09:23 for the t-table
+    logic; 09:23-12:10 for the worked test decision'
+  covers:
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-z-t
+  covers_confidence:
+    knowledge-sad-l10-test-model: high
+    knowledge-sad-l10-z-t: high
+  does_not_cover:
+  - No p-value is ever computed; the decision runs purely through critical value versus statistic.
+  - Two-sample and paired variants are deferred to other videos; no confidence interval is constructed.
+  notes: 'Auto-transcript is garbled: sample mean 10.5 renders as 55 grams, t-distribution as beetle distribution, test statistic
+    ~1.98 as 108. Teaches knowledge-sad-l08-clt (CLT/LLN for mean estimates) only as a lemma — reassignment signal, kept out
+    of teaches. Validity rule stated: n at least 30 or near-normal population.'
+  review_flag: ''
+  angle: 'Anders als andere Test-Materialien baut dieses Video einen vollständigen Einstichproben-t-Test als festes Ablaufschema
+    auf: von der Nullhypothese über die t-Tabelle mit neun Freiheitsgraden bis zur Annahme- oder Ablehnungsentscheidung an
+    einem Fruchtgummi-Beispiel.'
+  angle_detail: 'Beginne mit [07:12]–[09:23] für die Tabellenlogik mit dem kritischen Wert 2,26 und gehe dann zu [09:23]–[12:10]
+    für die Testentscheidung aus Mittelwert und Stichprobenvarianz. Beachte, dass das automatische Transkript entstellt ist
+    und dass die Entscheidung nur über den kritischen Wert läuft, ohne p-Wert; die Gültigkeitsregel lautet: Stichprobe ab
+    etwa 30 oder annähernd normale Grundgesamtheit. Zweiseitige Fragestellung und Freiheitsgrade aus Stichprobengröße minus
+    eins stehen im Mittelpunkt, Konfidenzintervalle und Zweistichprobenfälle musst du anderswo suchen.'
+- video_id: sDv4f4s2SB8
+  unit_id: unit-m2-sad-l03
+  title: Gradient Descent, Step-by-Step
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=sDv4f4s2SB8
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Gradient Descent, Step-by-Step", 09:41-14:05 for the worked intercept descent; 14:49-19:14 for the two-parameter
+    gradient'
+  covers:
+  - knowledge-sad-l03-gradient-descent
+  covers_confidence:
+    knowledge-sad-l03-gradient-descent: high
+  does_not_cover:
+  - No multivariate regression appears; dosage, age, sex serve only as optimizer inputs, never as interpreted coefficients.
+  - Covariance, correlation and scaling are absent; logistic regression and t-SNE are name-dropped as motivation only.
+  notes: Assumes least squares and linear regression as prerequisites (stated in-video). Learning-rate sensitivity shown honestly,
+    including a failed large rate. Stochastic gradient descent sketched only at the close; paraphrase kept clear of long transcript
+    quotes.
+  review_flag: ''
+  angle: Instead of jumping to code or multivariate theory, this one performs gradient descent by hand on three points of
+    weight-height data, deriving the loss derivative with the chain rule and walking shrinking steps from an intercept-only
+    warm-up to a two-parameter gradient.
+  angle_detail: Start with [09:41]–[14:05] for the worked intercept descent with its slope, learning-rate, and stopping rules,
+    then move to [14:49]–[19:14] for partial derivatives and the gradient step. It states least squares and linear regression
+    as prerequisites and is candid that a large learning rate can fail, so note the 0.01 choice there rather than copying
+    the earlier 0.1. Stochastic descent gets only a closing sketch, so bring another source for large-scale practice.
+- video_id: tIeHLnjs5U8
+  unit_id: unit-m2-sad-l15
+  title: Backpropagation calculus | Deep Learning Chapter 4
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=tIeHLnjs5U8
+  format: video
+  depth: derivation
+  depth_basis: 3 of 6 segments derive rather than illustrate
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Backpropagation calculus | Deep Learning Chapter 4", 02:27-04:07 for the chain-rule core; 06:43-09:13 for the
+    multi-neuron extension'
+  covers:
+  - knowledge-sad-l15-backprop
+  - knowledge-sad-l15-forward
+  covers_confidence:
+    knowledge-sad-l15-backprop: high
+    knowledge-sad-l15-forward: low
+  does_not_cover:
+  - 'Never runs a numeric full-network update: no concrete weights, no worked epoch, no code.'
+  - 'Deep-learning practice missing: no architecture choice, no overfitting, no optimizer tuning.'
+  - 'Activation functions only named in passing: no comparison, no gradient plots, no failure cases.'
+  notes: Dense fast notation; assumes the prior intuition video and basic derivatives. Cost-averaging over examples only sketched
+    — thin on training-loop practice.
+  review_flag: ''
+  angle: Unlike other backprop treatments that train a network numerically, this one derives the last-layer weight sensitivity
+    as a three-ratio chain-rule product on a one-neuron-per-layer model, then extends it to indexed multi-neuron paths with
+    summed influences.
+  angle_detail: 'Start with [02:27]–[04:07] because that stretch splits the last-weight sensitivity into three ratios before
+    any formulas are evaluated. Note the notation clash: superscripts mark layers while subscripts mark neurons, with separate
+    symbols for the weighted sum, the activation, and the single-example cost, so copy the index order carefully. Watch [06:43]–[09:13]
+    for the multi-path extension where one earlier activation feeds several outputs, and treat the cost-averaging remarks
+    as a sketch rather than a training-loop procedure.'
+- video_id: tTeMYuS87oU
+  unit_id: unit-m2-sad-l10
+  title: An Introduction to Hypothesis Testing
+  channel: jbstatistics
+  url: https://www.youtube.com/watch?v=tTeMYuS87oU
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"An Introduction to Hypothesis Testing", 00:57-02:58 for the null-model computation; 02:58-05:01 for hypotheses
+    framing'
+  covers:
+  - knowledge-sad-l10-test-model
+  - knowledge-sad-l10-tails-pvalue
+  covers_confidence:
+    knowledge-sad-l10-test-model: high
+    knowledge-sad-l10-tails-pvalue: low
+  does_not_cover:
+  - 'Never fixes a significance level or rejection rule: no alpha, no critical value, no decision executed.'
+  - No z or t statistic, no interval duality, no categorical or rank test worked.
+  - One-sided versus two-sided choice never analyzed despite several alternative wordings.
+  notes: Gentle intro pacing; binomial fluency assumed. The tail-probability idea previews p-values — kept at medium confidence
+    only.
+  review_flag: ''
+  angle: Unlike other L10 materials that fix a cutoff or compute a named statistic, this one builds null-and-alternative intuition
+    purely from a 100-card binomial story contrasting a weak 28-hit outcome against an extreme 44-hit outcome.
+  angle_detail: 'Start with [00:57]–[02:58] because the null binomial model and the as-good-or-better tail calculation motivate
+    everything that follows. Then watch [02:58]–[05:01] for the null-versus-alternative framing and the extreme-case contrast
+    that shows what strong evidence looks like. Note the course gap: the video never fixes a significance level or computes
+    a named test statistic, and it stresses hypotheses about parameters rather than sample summaries, so pair it with a video
+    that executes a decision rule.'
+- video_id: udyAvvaMjfM
+  unit_id: unit-m2-sad-l05
+  title: Fisher's Exact Test and the Hypergeometric Distribution
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=udyAvvaMjfM
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Fisher''s Exact Test and the Hypergeometric Distribution", 00:51-02:57 for the without-replacement chain; 03:44-04:38
+    for the p-value idea'
+  covers:
+  - knowledge-sad-l05-counting-probability
+  covers_confidence:
+    knowledge-sad-l05-counting-probability: low
+  does_not_cover:
+  - 'Never writes a binomial coefficient or decision-grid taxonomy: no with/without-order classification.'
+  - No Stirling, no identities, no complement rules beyond the single candy example.
+  - Fisher table machinery with margins never derived despite the title.
+  notes: Breezy pace with heavy caption duplication; urn-model intuition assumed. The hypothesis-test framing belongs to l10
+    nodes — reassignment signal, not listed in teaches.
+  review_flag: ''
+  angle: Unlike other counting-probability materials that classify with-or-without-order schemes or coefficients, this one
+    builds the without-replacement idea entirely through a draw-by-draw candy handful that ends in a rare-or-rarer p-value.
+  angle_detail: Start with [00:51]–[02:57] because the shrinking-fraction conditional chain shows sampling without replacement
+    concretely. Then watch [03:44]–[04:38] for the p-value as the total over equally rare or rarer outcomes, noting the video
+    asserts the final value rather than enumerating every case. Expect duplicated captions and no contingency-table machinery
+    with fixed margins, so use a second source for the formal test tables and code.
+- video_id: vMh0zPT0tLI
+  unit_id: unit-m2-sad-l15
+  title: Stochastic Gradient Descent, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=vMh0zPT0tLI
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 4 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Stochastic Gradient Descent, Clearly Explained!!!", 04:21-07:18 for the single-sample mechanism; 07:18-08:34
+    for mini-batches'
+  covers:
+  - knowledge-sad-l15-training
+  covers_confidence:
+    knowledge-sad-l15-training: high
+  does_not_cover:
+  - 'Never derives a gradient or touches backpropagation: all derivatives arrive pre-made.'
+  - 'No network trained: no layers, no activations, no loss curves, no generalization diagnosis.'
+  - No convergence proof or rate comparison beyond one anecdotal closeness claim.
+  notes: Assumes the earlier gradient-descent video throughout. The redundancy and clustering asides are illustrative, not
+    a clustering lesson.
+  review_flag: ''
+  angle: Unlike other L15 training materials that derive gradients or train networks, this one motivates stochastic updates
+    purely through a cost-scaling story that shrinks a full-batch step to one-sample and mini-batch steps on a tiny line-fitting
+    recap.
+  angle_detail: 'Start with [04:21]–[07:18] because the single-sample mechanism and the learning-rate schedule caution carry
+    the core idea. Then watch [07:18]–[08:34] for mini-batches as the stable middle ground with estimates closer to the least-squares
+    reference. Note the assumed prerequisite: all derivatives arrive pre-made from the earlier gradient-descent video, so
+    do not expect backpropagation here, and treat the redundancy-cluster asides as illustration.'
+- video_id: vP06aMoz4v8
+  unit_id: unit-m2-sad-l01
+  title: 'Machine Learning Fundamentals: Sensitivity and Specificity'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=vP06aMoz4v8
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 2 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Machine Learning Fundamentals: Sensitivity and Specificity", 02:46-05:28 for the binary computation; 05:33-10:15
+    for the per-class method'
+  covers:
+  - knowledge-sad-l01-classification
+  covers_confidence:
+    knowledge-sad-l01-classification: high
+  does_not_cover:
+  - 'Never addresses base rates or predictive values: no Bayes update, no prevalence effect.'
+  - No threshold tuning, no ROC, no calibration despite comparing classifiers.
+  - 'Sampling and study-design context absent: the medical numbers arrive unexplained.'
+  notes: Steady worked-example pacing; confusion-matrix familiarity assumed. The multi-class counting stretch is careful but
+    long.
+  review_flag: ''
+  angle: Unlike other classification materials that discuss thresholds, ROC, or prevalence, this one computes sensitivity
+    and specificity end to end on fixed tables, first binary across two classifiers and then per-category on a three-class
+    table.
+  angle_detail: Start with [02:46]–[05:28] because the binary formulas plus the logistic-versus-forest comparison show how
+    to read each rate directly off the table layout. Then work through [05:33]–[10:15] for the per-category method where each
+    class gets its own rates from regrouped counts. Watch the layout convention that rows are predictions and columns are
+    truth, and do not expect threshold tuning or predictive values here.
+- video_id: vemZtEM63GY
+  unit_id: unit-m2-sad-l10
+  title: 'p-values: What they are and how to interpret them'
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=vemZtEM63GY
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"p-values: What they are and how to interpret them", 05:35-08:51 for thresholds and false positives; 08:51-10:49
+    for the effect-size warning'
+  covers:
+  - knowledge-sad-l10-tails-pvalue
+  - knowledge-sad-l10-errors-power
+  covers_confidence:
+    knowledge-sad-l10-tails-pvalue: low
+    knowledge-sad-l10-errors-power: low
+  does_not_cover:
+  - 'Never computes a test statistic or distribution: the 0.24 and 0.04 values arrive asserted.'
+  - No z or t procedure, no intervals, no power or sample-size planning.
+  - Categorical, rank and multiplicity methods untouched despite the testing title.
+  notes: Story-driven pace; no formulas required. The drug framing is illustrative and non-technical throughout.
+  review_flag: ''
+  angle: Unlike other p-value materials that compute a statistic from a distribution, this one teaches thresholds and false
+    positives purely through staged drug-trial stories that scale from anecdotes to repeat-experiment error rates.
+  angle_detail: 'Start with [05:35]–[08:51] because the same-drug repeat runs make the 0.05 cutoff and false-positive meaning
+    concrete without any formula. Then watch [08:51]–[10:49] for the testing vocabulary and the warning that a small value
+    says nothing about effect size. Note the gap: the closing numeric values arrive asserted rather than derived, so pair
+    this with a video that computes a statistic when exam arithmetic is needed.'
+- video_id: xZ_z8KWkhXE
+  unit_id: unit-m2-sad-l03
+  title: Pearson's Correlation, Clearly Explained!!!
+  channel: StatQuest with Josh Starmer
+  url: https://www.youtube.com/watch?v=xZ_z8KWkhXE
+  format: video
+  depth: intuition
+  depth_basis: one derivation inside an otherwise explanatory video
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Pearson''s Correlation, Clearly Explained!!!", 00:00-04:16 for intuition and the causation warning; 13:37-16:32
+    for the formula'
+  covers:
+  - knowledge-sad-l03-paired-data
+  - knowledge-sad-l03-covariance
+  - knowledge-sad-l03-interpretation
+  covers_confidence:
+    knowledge-sad-l03-paired-data: high
+    knowledge-sad-l03-covariance: high
+    knowledge-sad-l03-interpretation: medium
+  does_not_cover:
+  - 'Never fits a regression line: no least squares, no slope estimate, no residuals.'
+  - No multivariate model, no design matrix, no gradient descent despite the series context.
+  - Scaling and coefficient-interpretation practice absent beyond scale-invariance remarks.
+  notes: Long video with repetition; variance and covariance videos assumed. The p-value interlude previews l10 ideas — reassignment
+    signal, not listed in teaches.
+  review_flag: ''
+  angle: Unlike other paired-data materials that fit regression lines, this one teaches correlation as trendline closeness
+    and scale-free strength while separating the strength number from the sample-size confidence behind it.
+  angle_detail: Start with [00:00]–[04:16] for the paired-measurement intuition, the prediction-range reading, and the explicit
+    causation disclaimer. Then watch [13:37]–[16:32] for the covariance-over-spreads formula worked to a numeric value and
+    the scale-invariance point. Treat the middle p-value interlude as confidence about the trend rather than correlation itself,
+    and expect the variance-covariance prerequisites throughout.
+- video_id: ybyunHdinXo
+  unit_id: unit-m2-sad-l01
+  title: 'Arithmetisches Mittel & Median einfach erklärt: Anwendung und Unterschied mit Beispiel'
+  channel: Kurzes Tutorium Statistik
+  url: https://www.youtube.com/watch?v=ybyunHdinXo
+  format: video
+  depth: intuition
+  depth_basis: source role intuition; 3 worked example(s) illustrate, none derive
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"Arithmetisches Mittel & Median einfach erklärt: Anwendung und Unterschied mit Beispiel", 00:04-01:58 für das
+    Mittel; 04:31-07:03 für Median und Robustheit'
+  covers:
+  - knowledge-sad-l01-location
+  covers_confidence:
+    knowledge-sad-l01-location: high
+  does_not_cover:
+  - No mode, no quantiles beyond the median, no boxplots, no dispersion measures.
+  - No histograms or empirical distributions despite the grouped-data material.
+  - 'No sampling context: the cap prices are toy numbers without population framing.'
+  notes: Ruhiges Erklärtempo mit Wiederholungen durch Untertitel. Formelnotation teils mündlich ungenau; klassierte Daten
+    nur grob angerissen.
+  review_flag: ''
+  angle: Anders als andere Materialien zu Lageparametern vergleicht dieses Video arithmetisches Mittel und Median durchgehend
+    am Mützenpreis-Beispiel und erweitert das Mittel um gewichtete und klassierte Varianten, während der Median über Robustheit
+    und Sortierbarkeit begründet wird.
+  angle_detail: 'Beginne mit [00:04]–[01:58], weil dort die Mittelwertidee als ausgleichender Ersatzwert und die allgemeine
+    Formel eingeführt werden. Arbeite danach [04:31]–[07:03] für Medianidee, Ausreißer-Robustheit und die getrennten Formelfälle
+    für ungerade und gerade Anzahlen. Beachte die Kurssprache: das Video nutzt x-quer- und Zentralwert-Schreibweisen teils
+    mündlich ungenau und behandelt klassierte Daten nur grob über Klassenmitten, sodass du diesen Teil nur als Näherung einordnen
+    und den Formelüberblick gezielt wiederholen solltest.'
+- video_id: zeJD6dqJ5lo
+  unit_id: unit-m2-sad-l08
+  title: But what is the Central Limit Theorem?
+  channel: 3Blue1Brown
+  url: https://www.youtube.com/watch?v=zeJD6dqJ5lo
+  format: video
+  depth: derivation
+  depth_basis: 2 of 11 segments derive rather than illustrate
+  scope: complementary
+  scope_basis: third-party supplement, not the course’s own material
+  locator: '"But what is the Central Limit Theorem?", 05:01-08:07 for the phenomenon; 16:01-19:02 for the formula; 24:51-27:07
+    for the worked interval'
+  covers:
+  - knowledge-sad-l08-clt
+  - knowledge-sad-l08-normal
+  - knowledge-sad-l08-standardization
+  - knowledge-sad-l08-transform-sum
+  covers_confidence:
+    knowledge-sad-l08-clt: high
+    knowledge-sad-l08-normal: high
+    knowledge-sad-l08-standardization: medium
+    knowledge-sad-l08-transform-sum: medium
+  does_not_cover:
+  - 'Never derives a likelihood or fits parameters: no MLE, no data-estimated sigma.'
+  - No continuity correction applied despite the discrete-to-continuous bridging.
+  - 'No quantile tables or CDF lookups: the interval uses only the rough two-sigma rule.'
+  - 'Normal approximation as this unit defines it (knowledge-sad-l08-approximation): the 100-dice interval uses only the rough
+    two-sigma rule, with no continuity correction and no discrete-model approximation worked through.'
+  notes: 'Long lesson with simulation and theory halves; basic probability assumed. IID and finite-variance conditions arrive
+    late — students should not stop early. [reviewed] approximation claim withdrawn: the node bundles continuity correction,
+    which this video never performs.'
+  review_flag: ''
+  angle: Unlike other CLT and normal materials that look up quantiles or fit parameters, this one builds the phenomenon from
+    Galton-board and weighted-die simulations, then assembles the density piece by piece and standardizes sums toward the
+    universal shape.
+  angle_detail: 'Start with [05:01]–[08:07] because the parallel simulations show symmetry emerging only as the sum size grows.
+    Then watch [16:01]–[19:02] for the density construction from exponential shape through spread control to unit area, and
+    finish with [24:51]–[27:07] for the rough two-deviation interval on one hundred rolls. Do not stop early: the independence,
+    identical-distribution, and finite-variance conditions arrive late, and the interval uses only the rough rule with no
+    continuity correction or table lookup.'

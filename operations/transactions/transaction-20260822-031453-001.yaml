@@ -1,0 +1,38 @@
+schema_version: 1
+id: transaction-20260822-031453-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-22T03:14:53+02:00'
+snapshot_before: sha256:928145312c49a9840054682a6af391b0e85f5eaf35bcb0f128567dfcb8a56e55
+snapshot_after: sha256:860396722172eb7d719c667af8a2e27e825d191e1253bdbc62e7e7faef6459e3
+expected_revisions: {}
+artifact_revisions:
+  module-hu-aml:
+    before: 2
+    after: 3
+  unit-aml-exam-prep:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 0165855ee22b2931413a23cba0e79b37997539c743b367250d36018b173fd508
+  sha256_after: 109c4ea6b19cb5b377b7c51fc4470aa00628cc557d399f8185dc457a06461602
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  sha256_before: 37cf6bcdd5b2d372a5e6d5975fce4bbea964581569305913c862af97288f3d23
+  sha256_after: 04c93473a2ca157d276100ee473dacf8fad16652e57c4d3dda8eac24dd3779e0
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml
+  sha256_before: 820181b2f9a8b77d1561998ca4048a5054319c3f8f23b3eabe512e961e86b45e
+  sha256_after: 862910d72d3d52e40c2a020fd504992796600be91599691f8921d1496399b315
+  created: false
+- path: work/active/workspace-aml-exam-prep/CONTEXT.md
+  sha256_before: e87fe35004b66f349d5dd49bd9394d974d5aa365fc1312a2a077b36f41c55d90
+  sha256_after: e4c2804ad7b17771977a89c626b08f01aeda312eccad6686c8a6baf05bc96714
+  created: false
+metadata: {}

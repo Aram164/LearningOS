@@ -1,0 +1,83 @@
+id: unit-m2-combined-exam-rehearsal
+type: unit
+module_id: module-hu-m2-statistik-analysis
+kind: bridge
+title: Combined M2 examination — joint rehearsal only
+order: 110
+scope: 'The only shared learning surface for the one combined three-hour M2 examination. It contains no
+  first-pass Statistics or Analysis teaching: it begins after the two independent subject maps have completed
+  their own transfer gates and rehearses switching, timing, full-paper simulation, error return, and final
+  taper.'
+status: ready
+knowledge_map:
+  summary: The combined exam creates an execution problem, not a third syllabus. This bridge joins two
+    ready subject lanes for blueprinting, two full simulations, repair routing, and taper.
+  nodes:
+  - id: knowledge-m2-joint-blueprint
+    title: Combined-exam blueprint without invented weighting
+    summary: The coverage matrix joins the two completed subject lanes while keeping their scope owners
+      and error ledgers separate; any time/point split remains provisional unless supported by official
+      evidence.
+  - id: knowledge-m2-joint-switching
+    title: Switching, order, and time control
+    summary: A three-hour sitting adds context switching, question-order choice, time allocation, and
+      recovery from a stuck problem beyond either subject's independent content.
+    builds_on:
+    - knowledge-m2-joint-blueprint
+  - id: knowledge-m2-joint-simulation
+    title: Full combined simulation
+    summary: Two fresh, source-traceable halves are assembled into one uninterrupted three-hour paper,
+      graded by predeclared rubrics and followed by evidence-based repair.
+    builds_on:
+    - knowledge-m2-joint-switching
+  - id: knowledge-m2-joint-taper
+    title: Final retrieval and taper
+    summary: Short alternating retrieval, logistics, sleep, and a no-new-source boundary protect recall
+      and execution in the final 72 hours.
+    builds_on:
+    - knowledge-m2-joint-simulation
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: SaD L01-L15 current scope
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf course contract and Chapters 1-7
+source_selections:
+- source_id: source-sad-ss26-lectures
+  locator: current L01-L15 scope
+  purpose: Statistics correction authority and blueprint.
+  stage_ids:
+  - stage-m2-joint-blueprint
+  - stage-m2-joint-repair
+- source_id: source-sad-uebungen
+  locator: current Blatt/UE assets
+  purpose: Near-transfer repair for Statistics errors.
+  stage_ids:
+  - stage-m2-joint-repair
+- source_id: source-sad-klausuren-extern
+  locator: unused scope-matched German questions
+  purpose: Fresh Statistics half for the first combined mock.
+  stage_ids:
+  - stage-m2-joint-mock-one
+- source_id: source-fau-klausur-ws1415
+  locator: unused solved questions
+  purpose: Second fresh Statistics half or replacement items.
+  stage_ids:
+  - stage-m2-joint-mock-two
+- source_id: source-analysis-skript
+  locator: course contract, Chapters 1-7, and HU exercises
+  purpose: Analysis blueprint and correction authority.
+  stage_ids:
+  - stage-m2-joint-blueprint
+  - stage-m2-joint-repair
+- source_id: source-analysis-klausuren-extern
+  locator: two disjoint unused scope-matched selections
+  purpose: Fresh Analysis halves for both full combined mocks.
+  stage_ids:
+  - stage-m2-joint-mock-one
+  - stage-m2-joint-mock-two
+current_study_map: study-map-m2-combined-exam-rehearsal
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep

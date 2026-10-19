@@ -1,0 +1,98 @@
+operation: module.materials.compact
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: check-noop-plan
+    kind: success
+    transport: gateway
+    request: {module_id: module-demo, check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: check-cli
+    kind: success
+    transport: cli
+    argv: [module-materials-compact, module-demo, --check]
+    expect: {site: null}
+  - id: apply-success
+    kind: success
+    transport: gateway
+    request: {module_id: module-demo, plan_sha256: "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93"}
+    artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: unknown-module
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-nope, check: true}
+    artifact_ids: []
+    expect: {site: module.materials.compact.unknown-module}
+  - id: apply-without-plan
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-wrong-plan
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, plan_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-noop-plan
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93"}
+        artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"}
+        artifact_ids: []
+    expect: {site: module.materials.compact.no-changes}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [module-materials-compact, module-demo, --plan-sha256, "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"]
+    expect: {site: null}
+  - id: warning-gate-check-and-apply
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: project.create
+        request:
+          project:
+            schema_version: 1
+            id: project-scenario-new
+            type: project
+            title: Scenario project
+            project_type: software
+            status: active
+            root_uri: project://scenario
+            objective: Characterize project creation.
+            milestone_ids: []
+            linked_module_ids: []
+            unit_ids: []
+            workspace_ids: []
+            thematic_group_ids: []
+            boundaries: {confidentiality: private, external_code_access: approved}
+        artifact_ids: [project-scenario-new]
+      - transport: gateway
+        request: {module_id: module-demo, check: true}
+        artifact_ids: []
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93"}
+        artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93"}
+        artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {module_id: module-demo, check: true}
+    artifact_ids: []
+    expect: {site: null}

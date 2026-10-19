@@ -1,0 +1,47 @@
+schema_version: 2
+id: transaction-20261002-213939-001
+type: transaction-receipt
+status: committed
+capability: inbox.resolve
+committed_at: '2026-10-02T21:39:39+02:00'
+snapshot_before: sha256:97adeb0847f3b80e427ea1035f5fc8ded2c9d77e4e3fdffc9a45b5dfa455b962
+snapshot_after: sha256:9a9343dda8814fc868b59c96e5b6bd9eefa4cd1b078479237729194965f61d86
+expected_revisions:
+  file:archive/inbox/2026/complaints/2026-09-29-collection-why-correction.md: 0
+  file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 0
+artifact_revisions:
+  file:archive/inbox/2026/complaints/2026-09-29-collection-why-correction.md:
+    before: 0
+    after: 1
+  file:work/inbox/complaints/2026-09-29-collection-why-correction.md:
+    before: 0
+    after: 1
+writes:
+- path: archive/inbox/2026/complaints/2026-09-29-collection-why-correction.md
+  sha256_before: null
+  sha256_after: 28a5e5aea106bc97089ae5712e7cf7bccbe6c76be74aa5e3e063a8c8d4a85ef8
+  created: true
+- path: work/inbox/complaints/2026-09-29-collection-why-correction.md
+  sha256_before: 28a5e5aea106bc97089ae5712e7cf7bccbe6c76be74aa5e3e063a8c8d4a85ef8
+  sha256_after: null
+  created: false
+metadata:
+  routed_to:
+  - '#57'
+  data_roots_sha256: sha256:1cd29cc0d3b49fe868ddf332d0a8e2e8a24488ef7f11370815bd4946a3310b69
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: inbox.resolve
+    declared_writes:
+    - work/inbox/**
+    - archive/inbox/**
+request:
+  channel: operator
+  request_id: request-inbox-resolve-int2-06-27a7cad4
+  idempotency_key: inbox-resolve-int2-06
+  intent_sha256: sha256:130493328e50be425c50f81e14fd9b8fc2119c8c98de6d9e9407188f5cb2dd40
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:130493328e50be425c50f81e14fd9b8fc2119c8c98de6d9e9407188f5cb2dd40

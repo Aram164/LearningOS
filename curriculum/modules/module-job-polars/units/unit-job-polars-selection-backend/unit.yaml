@@ -1,0 +1,68 @@
+id: unit-job-polars-selection-backend
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 3 - Selection backend clinic
+order: 3
+scope: 'Use the attached SelectionOp implementation as a real backend clinic: resolve runtime operands,
+  translate parameters, compose native Polars expressions, and make fallbacks and unsupported behavior
+  explicit.'
+status: ready
+knowledge_map:
+  summary: 'Use the attached SelectionOp implementation as a real backend clinic: resolve runtime operands,
+    translate parameters, compose native Polars expressions, and make fallbacks and unsupported behavior
+    explicit.'
+  nodes:
+  - id: knowledge-polars-selection-contract
+    title: Selection versus projection
+    summary: Separate row restriction from column selection and preserve shape contracts.
+    concept_ids:
+    - concept-selection-family
+    - concept-projection-family
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+  - id: knowledge-polars-runtime-operands
+    title: Runtime operand resolution
+    summary: Distinguish plan-time support from process-time values.
+    concept_ids:
+    - concept-selection-family
+    - concept-projection-family
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-selection-contract
+  - id: knowledge-polars-selection-methods
+    title: Method selection semantics
+    summary: Implement head, tail, sample, and duplicate removal with explicit mappings.
+    concept_ids:
+    - concept-selection-family
+    - concept-projection-family
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-runtime-operands
+  - id: knowledge-polars-dropna-lowering
+    title: Dropna expression lowering
+    summary: Compose selectors, missing predicates, horizontal logic, and thresholds.
+    concept_ids:
+    - concept-selection-family
+    - concept-projection-family
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-selection-methods
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-python-cheatsheets
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-selection-backend
+artifacts: {}
+workspace_ids: []

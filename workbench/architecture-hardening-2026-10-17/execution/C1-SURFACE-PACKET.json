@@ -1,0 +1,575 @@
+{
+  "base_core": "074f4717e14527798752de84b3c9c4e88348b658",
+  "changes": {
+    "catalog.commands.route.patch": {
+      "after": {
+        "admission": null,
+        "cli_command": "route-patch",
+        "handler": "route_patch",
+        "writes": [
+          "curriculum/modules/*/source-map.yaml",
+          "curriculum/modules/*/units/*/unit.yaml",
+          "curriculum/modules/*/units/*/study-map.yaml",
+          "operations/transactions/lineage.yaml"
+        ]
+      },
+      "before": {
+        "admission": null,
+        "cli_command": "route-patch",
+        "handler": "route_patch",
+        "writes": [
+          "curriculum/modules/*/source-map.yaml",
+          "curriculum/modules/*/units/*/unit.yaml",
+          "curriculum/modules/*/units/*/study-map.yaml"
+        ]
+      }
+    },
+    "cli.goal": {
+      "after": [
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "goal_id",
+          "metavar": null,
+          "nargs": "+",
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "audit_file",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--audit-file"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "authorize",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--authorize"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "check",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--check"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "close",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--close"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "defer",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--defer"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "help",
+          "choices": null,
+          "default_repr": "'==SUPPRESS=='",
+          "dest": "help",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--help",
+            "-h"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "json",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--json"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "note",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--note"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "reject",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--reject"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "reviewed_sha256",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--reviewed-sha256"
+          ],
+          "required": false,
+          "type": "sha256_value"
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "revisit_on",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--revisit-on"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "session_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--session-id"
+          ],
+          "required": false,
+          "type": null
+        }
+      ],
+      "before": [
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "goal_id",
+          "metavar": null,
+          "nargs": "+",
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "check",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--check"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "close",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--close"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "defer",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--defer"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "help",
+          "choices": null,
+          "default_repr": "'==SUPPRESS=='",
+          "dest": "help",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--help",
+            "-h"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "json",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--json"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "note",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--note"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "reject",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--reject"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "reviewed_sha256",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--reviewed-sha256"
+          ],
+          "required": false,
+          "type": "sha256_value"
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "revisit_on",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--revisit-on"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "session_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--session-id"
+          ],
+          "required": false,
+          "type": null
+        }
+      ]
+    },
+    "cli.route-patch": {
+      "after": [
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "route_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "unit_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "changes",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--changes"
+          ],
+          "required": true,
+          "type": "json_object"
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "check",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--check"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "claim_evidence",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--claim-evidence"
+          ],
+          "required": false,
+          "type": "json_object"
+        },
+        {
+          "action": "append",
+          "choices": null,
+          "default_repr": "[]",
+          "dest": "expected_revision",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--expected-revision"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "expected_snapshot",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--expected-snapshot"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "help",
+          "choices": null,
+          "default_repr": "'==SUPPRESS=='",
+          "dest": "help",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--help",
+            "-h"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "json",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--json"
+          ],
+          "required": false,
+          "type": null
+        }
+      ],
+      "before": [
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "route_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "unit_id",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [],
+          "required": true,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "changes",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--changes"
+          ],
+          "required": true,
+          "type": "json_object"
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "check",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--check"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "append",
+          "choices": null,
+          "default_repr": "[]",
+          "dest": "expected_revision",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--expected-revision"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store",
+          "choices": null,
+          "default_repr": "None",
+          "dest": "expected_snapshot",
+          "metavar": null,
+          "nargs": null,
+          "option_strings": [
+            "--expected-snapshot"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "help",
+          "choices": null,
+          "default_repr": "'==SUPPRESS=='",
+          "dest": "help",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--help",
+            "-h"
+          ],
+          "required": false,
+          "type": null
+        },
+        {
+          "action": "store_true",
+          "choices": null,
+          "default_repr": "False",
+          "dest": "json",
+          "metavar": null,
+          "nargs": 0,
+          "option_strings": [
+            "--json"
+          ],
+          "required": false,
+          "type": null
+        }
+      ]
+    },
+    "request_schemas.goal.decide.schema.json": {
+      "after": "153d5ec6ea2358ec84af5df7cb2469c0fd7445bc4c62492f773fb753ee5df3f0",
+      "before": "75a7540bbfa50f3f70fc7aeda02732ced72040e34eda6102bd7267c51da5c0da"
+    },
+    "request_schemas.route.patch.schema.json": {
+      "after": "04cf04b1b48c8132f8a61b63be2cd65c7338844438f4ef118d50e39131c4a19d",
+      "before": "118048798ae18b22b94515564d9d2bc76d0c9c4103391ef10591101bbc4cc8c5"
+    }
+  },
+  "contract_sha256": "ffcca27a2d0c516d12e8394ae4247b94a0491345885aadbf74e6e2892468ebaf",
+  "status": "Aram approval pending"
+}

@@ -1,0 +1,855 @@
+id: study-map-m2-sad-l14
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l14
+status: not-started
+current_stage: stage-sad-l14-nb-recap
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l14-nb-recap
+  number: 1
+  title: Naive Bayes decision rule
+  status: pending
+  objective: Class priors multiply with feature likelihoods under conditional independence, and the largest
+    posterior score determines the class without needing the shared evidence denominator.
+  done_when:
+  - 'Reproduce without notes: Class priors multiply with feature likelihoods under conditional independence,
+    and the largest posterior score determines the class without needing the shared evidence denominator.'
+  - Work UE4, slides 9-12 — categorical Naive Bayes worked example, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-conditional-independence
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 4-6
+    angle: The current lecture's focused reading for naive bayes decision rule.
+    angle_detail: Read physical PDF pages 4-6 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Naive
+        Bayes decision rule'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:99bb14b9b396727f5bc8cd88f7d5a220e218847124dbb6befdef322a433c311e
+  - material_ref:
+      route_id: route-bccca809087fa5eefd5f492c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-bccca809087fa5eefd5f492c
+  - material_ref:
+      route_id: route-b3d516335f24f55b1d6ddc00
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b3d516335f24f55b1d6ddc00
+  - material_ref:
+      route_id: route-933228d740dc54b3653e1190
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-933228d740dc54b3653e1190
+  - material_ref:
+      route_id: route-c6ef21e8e56052473f0d7cef
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-c6ef21e8e56052473f0d7cef
+  - material_ref:
+      route_id: route-d7cf7c94fb31a1141d0c7aab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-d7cf7c94fb31a1141d0c7aab
+  - material_ref:
+      route_id: route-9a418de23be3ffd147750581
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-9a418de23be3ffd147750581
+  - material_ref:
+      route_id: route-9e8924fd776e576177b5fbd1
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-9e8924fd776e576177b5fbd1
+  - material_ref:
+      route_id: route-65ec7d8349853c0a323bc4da
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-65ec7d8349853c0a323bc4da
+  - material_ref:
+      route_id: route-bd195adc3fd5927a2d5b8428
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-bd195adc3fd5927a2d5b8428
+  - material_ref:
+      route_id: route-533d07e5753b0285a7d3b5fc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-533d07e5753b0285a7d3b5fc
+  - material_ref:
+      route_id: route-accc9d7a034e6648a4e7ee65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-accc9d7a034e6648a4e7ee65
+  - material_ref:
+      route_id: route-c0b5823ea68abe2175956a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-c0b5823ea68abe2175956a82
+  - material_ref:
+      route_id: route-1fabf5404c63c601fc8c2ef0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1fabf5404c63c601fc8c2ef0
+  - material_ref:
+      route_id: route-5635dfbf861c3f2486851c09
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-5635dfbf861c3f2486851c09
+  - material_ref:
+      route_id: route-ff2589997ecc1ae5194a1211
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-ff2589997ecc1ae5194a1211
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-nb-recap/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-smoothing
+  number: 2
+  title: Zero counts and Laplace smoothing
+  status: pending
+  objective: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts prevent
+    collapse while preserving normalized conditional distributions.
+  done_when:
+  - 'Reproduce without notes: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts
+    prevent collapse while preserving normalized conditional distributions.'
+  - Work UE4, slides 9-12 — categorical Naive Bayes worked example, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-laplace-smoothing
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 7-11
+    angle: The current lecture's focused reading for zero counts and laplace smoothing.
+    angle_detail: Read physical PDF pages 7-11 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Zero
+        counts and Laplace smoothing'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f884478bebc711a374201399a23a9de7f1e3b826c9a9ee598c5cee4e05dac8ad
+  - material_ref:
+      route_id: route-bccca809087fa5eefd5f492c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-bccca809087fa5eefd5f492c
+  - material_ref:
+      route_id: route-b3d516335f24f55b1d6ddc00
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b3d516335f24f55b1d6ddc00
+  - material_ref:
+      route_id: route-c6ef21e8e56052473f0d7cef
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-c6ef21e8e56052473f0d7cef
+  - material_ref:
+      route_id: route-d7cf7c94fb31a1141d0c7aab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-d7cf7c94fb31a1141d0c7aab
+  - material_ref:
+      route_id: route-9a418de23be3ffd147750581
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-9a418de23be3ffd147750581
+  - material_ref:
+      route_id: route-accc9d7a034e6648a4e7ee65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-accc9d7a034e6648a4e7ee65
+  - material_ref:
+      route_id: route-5635dfbf861c3f2486851c09
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-5635dfbf861c3f2486851c09
+  - material_ref:
+      route_id: route-ff2589997ecc1ae5194a1211
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-ff2589997ecc1ae5194a1211
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-smoothing/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-numeric
+  number: 3
+  title: Numerical attributes and discretization
+  status: pending
+  objective: Numeric features can be binned into categorical events or modeled with a class-conditional
+    density; binning changes information and probability estimates.
+  done_when:
+  - 'Reproduce without notes: Numeric features can be binned into categorical events or modeled with a
+    class-conditional density; binning changes information and probability estimates.'
+  exam_critical: true
+  concepts:
+  - concept-gaussian-naive-bayes
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 13-14
+    angle: The current lecture's focused reading for numerical attributes and discretization.
+    angle_detail: Read physical PDF pages 13-14 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Numerical
+        attributes and discretization'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5b13c0cd692c783a21e479d9f04b35aa7779eb84537de1f70c71b729d5d1b28d
+  - material_ref:
+      route_id: route-b3d516335f24f55b1d6ddc00
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b3d516335f24f55b1d6ddc00
+  - material_ref:
+      route_id: route-d7cf7c94fb31a1141d0c7aab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-d7cf7c94fb31a1141d0c7aab
+  - material_ref:
+      route_id: route-533d07e5753b0285a7d3b5fc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-533d07e5753b0285a7d3b5fc
+  - material_ref:
+      route_id: route-ff2589997ecc1ae5194a1211
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-ff2589997ecc1ae5194a1211
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-numeric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-gaussian
+  number: 4
+  title: Gaussian Naive Bayes
+  status: pending
+  objective: Each class-feature pair is modeled by a Normal density with estimated mean and variance,
+    producing continuous likelihoods under the same conditional-independence factorization.
+  done_when:
+  - 'Reproduce without notes: Each class-feature pair is modeled by a Normal density with estimated mean
+    and variance, producing continuous likelihoods under the same conditional-independence factorization.'
+  - Work Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-gaussian-naive-bayes
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 15-17
+    angle: The current lecture's focused reading for gaussian naive bayes.
+    angle_detail: Read physical PDF pages 15-17 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Gaussian
+        Naive Bayes'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:9ce3d74dd091999415d36f6ee1da9519880167186c94400d6be5627b0cf57883
+  - material_ref:
+      route_id: route-b3d516335f24f55b1d6ddc00
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b3d516335f24f55b1d6ddc00
+  - material_ref:
+      route_id: route-1cc15543ed952ee0f7f940d0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-1cc15543ed952ee0f7f940d0
+  - material_ref:
+      route_id: route-933228d740dc54b3653e1190
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-933228d740dc54b3653e1190
+  - material_ref:
+      route_id: route-d7cf7c94fb31a1141d0c7aab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-d7cf7c94fb31a1141d0c7aab
+  - material_ref:
+      route_id: route-bd195adc3fd5927a2d5b8428
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-bd195adc3fd5927a2d5b8428
+  - material_ref:
+      route_id: route-533d07e5753b0285a7d3b5fc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-533d07e5753b0285a7d3b5fc
+  - material_ref:
+      route_id: route-fe46f2fec8e3b764ed5ee7a6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-fe46f2fec8e3b764ed5ee7a6
+  - material_ref:
+      route_id: route-1fabf5404c63c601fc8c2ef0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1fabf5404c63c601fc8c2ef0
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-gaussian/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-multinomial
+  number: 5
+  title: Multinomial Naive Bayes and log space
+  status: pending
+  objective: Count features such as words use multinomial event probabilities; log probabilities turn
+    products into sums and prevent numerical underflow.
+  done_when:
+  - 'Reproduce without notes: Count features such as words use multinomial event probabilities; log probabilities
+    turn products into sums and prevent numerical underflow.'
+  - Work CS229 problem sets — the Naive Bayes and generative-model problems, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 19-22
+    angle: The current lecture's focused reading for multinomial naive bayes and log space.
+    angle_detail: Read physical PDF pages 19-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Multinomial
+        Naive Bayes and log space'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:c2d37286787e132f668e290df046da9630920415112dffdd2fab76fd463de2d3
+  - material_ref:
+      route_id: route-c6ef21e8e56052473f0d7cef
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-c6ef21e8e56052473f0d7cef
+  - material_ref:
+      route_id: route-d7cf7c94fb31a1141d0c7aab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-d7cf7c94fb31a1141d0c7aab
+  - material_ref:
+      route_id: route-9a418de23be3ffd147750581
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-9a418de23be3ffd147750581
+  - material_ref:
+      route_id: route-accc9d7a034e6648a4e7ee65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-accc9d7a034e6648a4e7ee65
+  - material_ref:
+      route_id: route-c0b5823ea68abe2175956a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-c0b5823ea68abe2175956a82
+  - material_ref:
+      route_id: route-fe46f2fec8e3b764ed5ee7a6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-fe46f2fec8e3b764ed5ee7a6
+  - material_ref:
+      route_id: route-1fabf5404c63c601fc8c2ef0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1fabf5404c63c601fc8c2ef0
+  - material_ref:
+      route_id: route-43f41cd16c2b8e288baac925
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-43f41cd16c2b8e288baac925
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-multinomial/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-bayes-net
+  number: 6
+  title: Bayesian networks and factorization
+  status: pending
+  objective: A directed acyclic graph encodes local conditional dependencies, factorizing a joint distribution
+    without assuming that all features are independent given the class.
+  done_when:
+  - 'Reproduce without notes: A directed acyclic graph encodes local conditional dependencies, factorizing
+    a joint distribution without assuming that all features are independent given the class.'
+  exam_critical: true
+  concepts:
+  - concept-bayesian-network
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 24-27
+    angle: The current lecture's focused reading for bayesian networks and factorization.
+    angle_detail: Read physical PDF pages 24-27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Bayesian
+        networks and factorization'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4432885e53a82e339073aacf9ec7a5d906c9fc38326f344314d4300cdc3a3605
+  - material_ref:
+      route_id: route-9e8924fd776e576177b5fbd1
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-9e8924fd776e576177b5fbd1
+  - material_ref:
+      route_id: route-6d3e6411e2da6cfaf960676c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6d3e6411e2da6cfaf960676c
+  - id: resource-kelleher-stage-sad-l14-bayes-net
+    route_id: route-b3d516335f24f55b1d6ddc00
+    kind: read
+    label: Kelleher §6.4.4
+    source_id: source-kelleher-fmlpda
+    locator: §6.4.4, PDF pp. 324-328
+    angle: Relate a dependency graph to its joint-distribution factorization.
+    angle_detail: Start from the graph and list the parents for each factor; identify Naive Bayes as a
+      restricted dependency structure.
+    scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 6 — probability-based learning' against the stage
+        'Bayesian networks and factorization'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:da2c8495fd8d402608f7dda9fa20e9780c8e4d0ed7f8bd059e048e8eb97db471
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l14-markov
+  number: 7
+  title: Conditional independence and Markov blankets
+  status: pending
+  objective: Graph structure determines which variables become independent when others are observed; a
+    node's Markov blanket contains the local information needed for its conditional distribution.
+  done_when:
+  - 'Reproduce without notes: Graph structure determines which variables become independent when others
+    are observed; a node''s Markov blanket contains the local information needed for its conditional distribution.'
+  exam_critical: true
+  concepts:
+  - concept-bayesian-network
+  - concept-conditional-independence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 28-29
+    angle: The current lecture's focused reading for conditional independence and markov blankets.
+    angle_detail: Read physical PDF pages 28-29 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Conditional
+        independence and Markov blankets'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:2c84f730fd19ad0d4d80bd903885a4a2bd9c8b10c8985607b4c866239efb7902
+  - material_ref:
+      route_id: route-9e8924fd776e576177b5fbd1
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-9e8924fd776e576177b5fbd1
+  - material_ref:
+      route_id: route-6d3e6411e2da6cfaf960676c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6d3e6411e2da6cfaf960676c
+  - id: resource-kelleher-stage-sad-l14-markov
+    route_id: route-b3d516335f24f55b1d6ddc00
+    kind: read
+    label: Kelleher §6.4.4
+    source_id: source-kelleher-fmlpda
+    locator: §6.4.4, PDF p. 328
+    angle: Identify parents, children and co-parents in the Markov blanket.
+    angle_detail: Use the book diagram to distinguish a blanket from only the parent set.
+    scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 6 — probability-based learning' against the stage
+        'Conditional independence and Markov blankets'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:3029e31e63fc4159000c21af0fb4af28bc29a211bdcef89cbd24590b11b38366
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
+  attachments: []
+  source_feedback: []

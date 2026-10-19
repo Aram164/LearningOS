@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "W ROUTE-ID-MISSING: source 'source-demo-book' route to 'unit-demo-l02' has no persisted route id; v13 projects 'route-7d42915c4988c513e6caa207' until migration [curriculum/modules/module-demo/source-map.yaml]\nW SELECTION-ROUTE-ID-MISSING: unit 'unit-demo-l02' has a readable pre-v13 source selection without route_id; exact route 'route-7d42915c4988c513e6caa207' is available [curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml]\nW RUNTIME-REVIEW-MISSING: stage stage-demo carries runtime semantics but no runtime_review attestation [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]\nW URI-PROJECT: 'project://demo' does not resolve on disk [projects/registry/project-demo.yaml]\nW LOCATOR-VAGUE: source 'source-demo-book' route to 'unit-demo-l01' is a book whose locator names no page range ('lecture-01.pdf') — give the chapter AND its PDF pages [curriculum/modules/module-demo/source-map.yaml]\nW ROUTE-ANGLE-DETAIL-MISSING: source 'source-demo-book' route to 'unit-demo-l01' has a one-line angle but no `angle_detail` for the hover [curriculum/modules/module-demo/source-map.yaml]\nW LOCATOR-VAGUE: source 'source-demo-book' route to 'unit-demo-l02' is a book whose locator names no page range ('lecture-02.pdf') — give the chapter AND its PDF pages [curriculum/modules/module-demo/source-map.yaml]\nW ROUTE-ANGLE-DETAIL-MISSING: source 'source-demo-book' route to 'unit-demo-l02' has a one-line angle but no `angle_detail` for the hover [curriculum/modules/module-demo/source-map.yaml]\nW STAGE-NODE-UNLINKED: study map 'study-map-demo-l01' stage 'stage-demo' carries no knowledge_node_id and its id matches no live node — name the node the stage teaches [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]\n\n0 error(s), 9 warning(s) — OK\n",
+  "stdout_json": null
+}

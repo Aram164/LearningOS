@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: invalid unit-revision YAML: while parsing a flow sequence\n  in \"<unicode string>\", line 1, column 2:\n    {[ invalid yaml\n     ^\nexpected ',' or ']', but got '<stream end>'\n  in \"<unicode string>\", line 2, column 1:\n    \n    ^\n",
+  "stdout": "",
+  "stdout_json": null
+}

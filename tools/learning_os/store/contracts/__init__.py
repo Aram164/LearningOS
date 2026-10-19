@@ -1,0 +1,20 @@
+"""Versioned LearningOS interface and capability contracts."""
+
+from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.contracts.learning_plan import (
+    PLAN_TEMPLATE_VERSION,
+    PlanTemplateError,
+    build_plan_template,
+    current_template_problems,
+    require_current_template,
+)
+
+__all__ = [
+    "ContractValidationError",
+    "PLAN_TEMPLATE_VERSION",
+    "PlanTemplateError",
+    "build_plan_template",
+    "current_template_problems",
+    "require_current_template",
+    "validate_contract",
+]

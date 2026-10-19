@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260929-043750-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-29T04:37:50+02:00'
+snapshot_before: sha256:7b94c062e5b3403472e889670dd9b26b644561684c969a9f93615421fe199e33
+snapshot_after: sha256:53c1fd8ea5bbf273eb996ed1ec693eaecdac97b8db057d67b2a33251584e553f
+expected_revisions:
+  module-hu-m2-statistik-analysis: 60
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 60
+    after: 61
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: sources/registry/mathematics.yaml
+  sha256_before: 1413ca52c71d684dd8f75304f4b6b0b53baef4cf906bec86932a72e64fd65747
+  sha256_after: 0a920f942e5716a2879750dcaf0f49737371497ec5f0ae156221bc52ab4ac50a
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-f593700651a34c4cb8d02fb3a87ff3ed
+  idempotency_key: reviewed-29550b9720f541fa86a2d5fc495ac77d
+  intent_sha256: sha256:82da1fa88021ed707fa0eb0ba19de4f64e162ceba964dfa9f111ef62ce13aeba
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:82da1fa88021ed707fa0eb0ba19de4f64e162ceba964dfa9f111ef62ce13aeba

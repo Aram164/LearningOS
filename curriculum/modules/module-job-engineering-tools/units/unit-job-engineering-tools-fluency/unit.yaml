@@ -1,0 +1,19 @@
+id: unit-job-engineering-tools-fluency
+type: unit
+module_id: module-job-engineering-tools
+kind: topic
+title: The Missing Semester — engineering tools fluency
+order: 1
+scope: Given a new development machine, remote host, unfamiliar repository, failing program, or release
+  task, independently navigate and compose Unix tools, build safe shell automation, configure an editor
+  and environment, debug and profile with evidence, package and ship reproducibly, enforce code quality,
+  collaborate clearly, use coding agents within explicit authority and privacy boundaries, and explain
+  the security model of the credentials and protocols involved. Fluency is evidenced by reusable artifacts
+  and a clean-environment capstone, not lecture completion.
+status: ready
+scope_sources: []
+source_selections: []
+working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-engineering-tools-fluency

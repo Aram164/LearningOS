@@ -1,0 +1,44 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"metadata-search-page\",\"items\":[{\"id\":\"note-demo\",\"type\":\"note\",\"title\":\"Demo note\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"note-demo-analysis\",\"type\":\"note\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"status\":null,\"state\":null,\"deprecated\":null}],\"total\":15,\"offset\":0,\"returned\":2,\"next_offset\":2,\"has_more\":true,\"expand\":{\"next\":\"search demo --page --limit 2 --offset 2 --expected-snapshot SNAP1\"}}\n",
+  "stdout_json": {
+    "contract": "metadata-search-page",
+    "expand": {
+      "next": "search demo --page --limit 2 --offset 2 --expected-snapshot SNAP1"
+    },
+    "has_more": true,
+    "items": [
+      {
+        "deprecated": null,
+        "id": "note-demo",
+        "path": "knowledge/notes/mathematics/note-demo.md",
+        "state": null,
+        "status": null,
+        "title": "Demo note",
+        "type": "note"
+      },
+      {
+        "deprecated": null,
+        "id": "note-demo-analysis",
+        "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+        "state": null,
+        "status": null,
+        "title": "Expected value — analysis of Demo Book §1",
+        "type": "note"
+      }
+    ],
+    "next_offset": 2,
+    "offset": 0,
+    "returned": 2,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "total": 15
+  }
+}

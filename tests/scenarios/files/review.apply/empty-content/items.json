@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "content": "   ",
+      "destination": "knowledge/garden/empty-idea.md",
+      "id": "proposal-empty",
+      "kind": "garden",
+      "rationale": "Hollow.",
+      "title": "Empty"
+    }
+  ]
+}

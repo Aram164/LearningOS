@@ -1,0 +1,52 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"learning_os\":\"3.2.0\",\"root\":\"<ROOT>\",\"counts\":{\"notes\":2,\"concepts\":2,\"concept_relations\":1,\"sources\":1,\"programs\":1,\"programs_quarantined\":0,\"modules\":1,\"modules_compatibility_only\":0,\"projects\":1,\"modules_enrolled\":1,\"active_workspaces\":2,\"standing_workspaces\":0,\"archived_workspaces\":0,\"inbox_items\":2,\"inbox_files\":3,\"garden_notes\":1,\"units\":2,\"study_maps\":1},\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":0},\"exam_spine\":[{\"date\":\"2026-10-09\",\"module_id\":\"module-demo\",\"title\":\"Demo Module\",\"termin\":2}],\"validation\":{\"errors\":0,\"warnings\":9,\"ok\":true}}\n",
+  "stdout_json": {
+    "adoption": {
+      "notes_reviewed": 0,
+      "notes_with_evidence": 0
+    },
+    "counts": {
+      "active_workspaces": 2,
+      "archived_workspaces": 0,
+      "concept_relations": 1,
+      "concepts": 2,
+      "garden_notes": 1,
+      "inbox_files": 3,
+      "inbox_items": 2,
+      "modules": 1,
+      "modules_compatibility_only": 0,
+      "modules_enrolled": 1,
+      "notes": 2,
+      "programs": 1,
+      "programs_quarantined": 0,
+      "projects": 1,
+      "sources": 1,
+      "standing_workspaces": 0,
+      "study_maps": 1,
+      "units": 2
+    },
+    "exam_spine": [
+      {
+        "date": "2026-10-09",
+        "module_id": "module-demo",
+        "termin": 2,
+        "title": "Demo Module"
+      }
+    ],
+    "learning_os": "3.2.0",
+    "root": "<ROOT>",
+    "validation": {
+      "errors": 0,
+      "ok": true,
+      "warnings": 9
+    }
+  }
+}

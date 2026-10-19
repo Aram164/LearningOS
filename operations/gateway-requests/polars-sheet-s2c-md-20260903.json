@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s2c-md-20260903",
+  "idempotency_key": "polars-sheet-s2c-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:9ebfe0d882c2f6df619f3cb2eaff2ce3591b7190988497cfbdee0ded2f9b3285",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 5,
+    "study-map-job-polars-expressions": 4
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-expr-horizontal-conditional",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s2c-exercises.md",
+    "label": "Exercise sheet - Kleene tables, folds, branch validity, dropna core",
+    "file_sha256": "sha256:6ed2baa2caa14443fc87a1c0e99c1b37fdf9c43829f82d2daaf4d42b9ccf7c37"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:4c5d6cd5cb8480409667c6d8657a41ec51d7f156c75dbf3236c0ca63831f00a0"
+  }
+}

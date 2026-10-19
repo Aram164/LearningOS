@@ -1,0 +1,53 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"contract\":\"plan-template-v1\",\"profile\":\"curriculum\",\"plan_template_version\":1,\"schema\":\"study-map.schema.json\",\"plan\":{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"plan_template_version\":1,\"unit_id\":\"unit-demo-l01\",\"status\":\"ready\",\"current_stage\":\"stage-scenario-template\",\"source_plan\":{\"path\":\"replace-with-reviewed-plan.yaml\",\"provenance\":\"operator\"},\"detours\":[],\"stages\":[{\"id\":\"stage-scenario-template\",\"number\":1,\"title\":\"Scenario Template\",\"status\":\"pending\",\"objective\":\"Build working fluency in Scenario Template.\",\"done_when\":[\"Explain and apply Scenario Template without notes.\"],\"exam_critical\":false,\"concepts\":[],\"scope_triage\":\"required-now\",\"resources\":[],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-scenario-template/notes.md\",\"attachments\":[],\"source_feedback\":[]}],\"shelving\":{\"state\":\"none\"}}}\n",
+  "stdout_json": {
+    "contract": "plan-template-v1",
+    "ok": true,
+    "plan": {
+      "current_stage": "stage-scenario-template",
+      "detours": [],
+      "id": "study-map-demo-l01",
+      "plan_template_version": 1,
+      "shelving": {
+        "state": "none"
+      },
+      "source_plan": {
+        "path": "replace-with-reviewed-plan.yaml",
+        "provenance": "operator"
+      },
+      "stages": [
+        {
+          "attachments": [],
+          "concepts": [],
+          "done_when": [
+            "Explain and apply Scenario Template without notes."
+          ],
+          "exam_critical": false,
+          "id": "stage-scenario-template",
+          "number": 1,
+          "objective": "Build working fluency in Scenario Template.",
+          "resources": [],
+          "scope_triage": "required-now",
+          "source_feedback": [],
+          "status": "pending",
+          "title": "Scenario Template",
+          "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-scenario-template/notes.md"
+        }
+      ],
+      "status": "ready",
+      "type": "study-map",
+      "unit_id": "unit-demo-l01"
+    },
+    "plan_template_version": 1,
+    "profile": "curriculum",
+    "schema": "study-map.schema.json"
+  }
+}

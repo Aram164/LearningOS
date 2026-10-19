@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s3c-md-20260903",
+  "idempotency_key": "polars-sheet-s3c-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:0cf261f69344a32a9881340fc0c4927f4535d47b32ff348bc2bac1badf57e037",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 5,
+    "study-map-job-polars-selection-backend": 4
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "stage_id": "stage-polars-selection-duplicates",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s3c-exercises.md",
+    "label": "Exercise sheet - unique/drop_duplicates and the two duplicate masks",
+    "file_sha256": "sha256:75a20e02f0f9b24cbe4c041ccd76793f122f8b46263e77d1c4db8376a80c1a49"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:621c886fc87e67952c297852255fc33900f465a3a2e097363f15b84615378eff"
+  }
+}

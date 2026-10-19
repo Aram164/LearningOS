@@ -1,0 +1,66 @@
+id: unit-m2-analysis-ch03
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 3 — Folgen und Konvergenz
+order: 103
+scope: 'Script Chapter 3 ''Folgen und Konvergenz'', printed pp. 41-79 (PDF pp. 51-89). The largest exam-bearing
+  chapter and the one with the most current HU practice: Serien 05, 06 and 07 and Hausaufgabe WV1.1 are
+  all Chapter 3. §3.2 (Landau-Notation) and §3.4 are Exkurse; §3.3 (lineare Rekursionsgleichungen) and
+  §3.8 (Berechnung der Quadratwurzel) are Ausflüge that the HU sheets nevertheless examine.'
+status: ready
+knowledge_map:
+  summary: 'Chapter 3 is the spine: it defines convergence, supplies every criterion for deciding it,
+    and is the chapter the rest of the script reduces to. Series are sequences of partial sums, function
+    limits are defined through sequences, and continuity and the derivative are function limits — so a
+    gap here reappears four times. The chapter also carries the two Informatik excursions the module is
+    named for: Landau notation and linear recurrences.'
+  nodes:
+  - id: knowledge-m2-analysis-ch03-folgen
+    title: Folgen (§3.1)
+    summary: Sequences as functions on N, explicit and recursive definition, boundedness and monotonicity.
+      The vocabulary every later criterion is stated in.
+  - id: knowledge-m2-analysis-ch03-rekursionen
+    title: Ausflug – Lineare Rekursionsgleichungen (§§3.3-3.4)
+    summary: Setting up a recurrence from a process and solving the linear homogeneous case. §3.3 is an
+      Ausflug and §3.4 an Exkurs, but Serie 05's Türme-von-Hanoi task is exactly this, so the modelling
+      half is examined even though the solution theory is not.
+    builds_on:
+    - knowledge-m2-analysis-ch03-folgen
+  - id: knowledge-m2-analysis-ch03-konvergenzkriterien
+    title: Konvergenzkriterien für Folgen (§3.5)
+    summary: 'The epsilon-N definition of convergence and the criteria that avoid it: monotone and bounded,
+      Cauchy, subsequences and accumulation points, Bolzano-Weierstraß. Choosing the criterion is the
+      graded skill, not knowing the list.'
+    builds_on:
+    - knowledge-m2-analysis-ch03-folgen
+  - id: knowledge-m2-analysis-ch03-rechenregeln
+    title: Rechnen mit konvergenten Folgen (§3.6)
+    summary: The limit laws for sums, products and quotients, the sandwich argument, and the standard
+      manipulations — dividing by the dominant power, rationalising a difference of roots — that turn
+      a limit into a computation.
+    builds_on:
+    - knowledge-m2-analysis-ch03-konvergenzkriterien
+  - id: knowledge-m2-analysis-ch03-bestimmte-divergenz
+    title: Bestimmt divergente Folgen (§3.7)
+    summary: Divergence to plus or minus infinity as a positive statement rather than the mere absence
+      of a limit, and the arithmetic that survives it.
+    builds_on:
+    - knowledge-m2-analysis-ch03-rechenregeln
+  - id: knowledge-m2-analysis-ch03-quadratwurzel
+    title: Ausflug – Berechnung der Quadratwurzel (§3.8)
+    summary: 'The Heron iteration as a monotone bounded recursive sequence whose limit is the root: the
+      chapter''s own worked example of convergence proving something the field axioms cannot construct.
+      Serie 07''s Aufgabe 7.1.'
+    builds_on:
+    - knowledge-m2-analysis-ch03-konvergenzkriterien
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 3, printed pp. 41-79 (PDF pp. 51-89); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch03

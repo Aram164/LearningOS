@@ -1,0 +1,50 @@
+operation: atlas.context
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: editor-read
+  kind: success
+  transport: cli
+  argv:
+  - atlas-context
+  - concept-expected-value
+  a5_base: true
+  expect:
+    site: null
+- id: unknown-concept
+  kind: refusal
+  transport: cli
+  argv:
+  - atlas-context
+  - concept-nope
+  expect:
+    site: atlas.context.unknown-concept
+- id: cli-editor-read
+  kind: success
+  transport: cli
+  argv:
+  - atlas-context
+  - concept-expected-value
+  expect:
+    site: null
+- id: cli-unknown-concept
+  kind: refusal
+  transport: cli
+  argv:
+  - atlas-context
+  - concept-nope
+  expect:
+    site: atlas.context.unknown-concept
+untriggered:
+- where: tools/learning_os/app/handlers/atlas.py:524
+  reason: 'snapshot changed mid-read: a single-threaded read cannot race itself'
+- where: tools/learning_os/app/handlers/atlas.py:527
+  reason: 'snapshot changed mid-read: a single-threaded read cannot race itself'
+- site: atlas.context.snapshot-changed
+  reason: race-only

@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""Bind one JSON value from stdin to a shell variable (SPEC §7.1, PLAN D11).
+
+Usage: <stdout JSON> | los-bind NAME JSONPATH, as
+``eval "$(… | los-bind …)"``. Prints ``export NAME=…``. On failure prints
+``exit 1`` to stdout (so the eval fails) and the cause to stderr.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import shlex
+import sys
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_STEP_RE = re.compile(r"\.([^.\[]+)|\[(\d+)\]")
+
+
+def _fail(message: str) -> int:
+    print("exit 1")
+    print(f"los-bind: {message}", file=sys.stderr)
+    return 1
+
+
+def _resolve(document: object, path: str) -> tuple[bool, object, str]:
+    """Resolve a ``$.a.b[0]`` style path; (ok, value, error)."""
+    text = path[1:] if path.startswith("$") else path
+    if text == "":
+        return True, document, ""
+    node = document
+    pos = 0
+    while pos < len(text):
+        match = _STEP_RE.match(text, pos)
+        if match is None:
+            return False, None, f"bad JSONPATH {path!r}"
+        key, index = match.groups()
+        if key is not None:
+            if not isinstance(node, dict) or key not in node:
+                return False, None, f"{path!r}: no key {key!r}"
+            node = node[key]
+        else:
+            if not isinstance(node, list) or int(index) >= len(node):
+                return False, None, f"{path!r}: no index [{index}]"
+            node = node[int(index)]
+        pos = match.end()
+    return True, node, ""
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) != 3:
+        print("usage: los-bind NAME JSONPATH", file=sys.stderr)
+        return 2
+    name, path = argv[1], argv[2]
+    if not _NAME_RE.match(name):
+        print(f"usage: bad variable name {name!r}", file=sys.stderr)
+        return 2
+    try:
+        document = json.load(sys.stdin)
+    except json.JSONDecodeError as exc:
+        return _fail(f"stdin is not JSON: {exc}")
+    ok, value, error = _resolve(document, path)
+    if not ok:
+        return _fail(error)
+    rendered = value if isinstance(value, str) else json.dumps(value)
+    print(f"export {name}={shlex.quote(rendered)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

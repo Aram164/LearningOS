@@ -1,0 +1,36 @@
+schema_version: 2
+id: transaction-20260928-191223-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-09-28T19:12:23+02:00'
+snapshot_before: sha256:33d3df6daf20526b445dfc7393b1a24a92e998fb0cc80e3c946a76bf4fb97f21
+snapshot_after: sha256:78eac3b5c46dbc846c7078d939ad19305b9369847f1d6ea353cb3a6759ada644
+expected_revisions:
+  source-dennis-sun-probability: 0
+artifact_revisions:
+  source-dennis-sun-probability:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/mathematics.yaml
+  sha256_before: d0fe63c81db0f84e5e9aef4ca3e4caac85a69231de3df0ae719cdea112f09b87
+  sha256_after: 1413ca52c71d684dd8f75304f4b6b0b53baef4cf906bec86932a72e64fd65747
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-sad-l06-l08-dlsun-source-20260928-4e8fb290
+  idempotency_key: sad-l06-l08-dlsun-source-20260928
+  intent_sha256: sha256:c958fc9a3fc977ea859502447ebecb06e385193cb0e753914b530d8c53ececbf
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c958fc9a3fc977ea859502447ebecb06e385193cb0e753914b530d8c53ececbf

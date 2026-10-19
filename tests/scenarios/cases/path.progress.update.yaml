@@ -1,0 +1,66 @@
+operation: path.progress.update
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: complete-active-stage
+    kind: success
+    transport: gateway
+    request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
+    artifact_ids: [path-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: complete-twice
+    kind: sequence
+    expect: {site: path.progress.update.not-active}
+    steps:
+      - transport: gateway
+        request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
+        artifact_ids: [path-demo]
+      - transport: gateway
+        request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
+        artifact_ids: [path-demo]
+  - id: unknown-stage
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-demo, stage_id: stage-nope, status: active}
+    artifact_ids: []
+    expect: {site: path.progress.update.unknown-stage}
+  - id: unknown-path
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-nope, stage_id: stage-demo-path, status: active}
+    artifact_ids: []
+    expect: {site: path.progress.update.unknown-path}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [path-progress, path-demo, stage-demo-path, complete]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
+        artifact_ids: [path-demo]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {path_id: path-demo, stage_id: stage-demo-path, status: complete}
+    artifact_ids: [path-demo]
+    expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - path-progress
+    - path-demo
+    - stage-demo-path
+    - active
+    - --expected-revision
+    - bogus
+    expect: {site: path.progress.update.bad-expected-revision}
+untriggered:
+  - {site: path.progress.update.unknown-status, reason: guarded-before-handler}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/ability-observation",
+  "title": "Stage-independent learner work",
+  "x-governs": "record",
+  "type": "object", "additionalProperties": false,
+  "required": ["id", "ability_id", "ability_sha256", "claim", "work_ref", "confirmation_ref", "activity", "result", "timestamp", "conditions", "evidence_tags", "assistance", "confirmed_by"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^ability-observation-[a-z0-9-]+$"},
+    "ability_id": {"type": "string", "pattern": "^ability-[a-z0-9-]+$"},
+    "ability_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "claim": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "work_ref": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "confirmation_ref": {"type": "string", "pattern": "^(conversation|note)://\\S+$"},
+    "activity": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "result": {"enum": ["correct", "incorrect", "partial", "abandoned"]},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "conditions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "evidence_tags": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "conditions_not_met": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "assistance": {"type": "string"},
+    "confirmed_by": {"const": "learner"},
+    "supersedes": {"type": "string", "pattern": "^ability-observation-[a-z0-9-]+$"}
+  }
+}

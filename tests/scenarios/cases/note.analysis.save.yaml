@@ -1,0 +1,217 @@
+operation: note.analysis.save
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: save-analysis
+    kind: success
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-1, title: "Scenario analysis one", path: "knowledge/notes/mathematics/note-scenario-save-1.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: 711777c71c63c893795788378ebc72c0d786ede402475473ceb885076e8a52ea, frozen_input_bytes: 63}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:711777c71c63c893795788378ebc72c0d786ede402475473ceb885076e8a52ea"}
+    artifact_ids: [note-scenario-save-1]
+    expect: {site: null}
+  - id: save-resolved
+    kind: success
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-2, title: "Scenario analysis two", path: "knowledge/notes/mathematics/note-scenario-save-2.md", binding: {resolution: resolved, material: "material://source-demo-book/book.pdf", recorded_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, live_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, inspected_range: {start: 1, end: 1}, frozen_input_sha256: 7fdc033b7a30186e4cafd7db48e5984b16c7387cddcebd436a27733fec9fe6e5, frozen_input_bytes: 63, source_id: source-demo-book}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:7fdc033b7a30186e4cafd7db48e5984b16c7387cddcebd436a27733fec9fe6e5"}
+    artifact_ids: [note-scenario-save-2]
+    expect: {site: null}
+  - id: save-replay
+    kind: success
+    transport: gateway
+    request: {analysis: {id: note-demo-analysis, title: "Expected value — analysis of Demo Book §1", path: "knowledge/notes/mathematics/note-demo-analysis.md", binding: {resolution: resolved, material: source-demo-book/book.pdf, recorded_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, live_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, inspected_range: {start: 1, end: 1}, frozen_input_sha256: f9d41532b0bcbb91b0a0199a302c57d99e7b9e4322e92162a898de1407f37fe4, frozen_input_bytes: 105, source_id: source-demo-book}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:f9d41532b0bcbb91b0a0199a302c57d99e7b9e4322e92162a898de1407f37fe4"}
+    artifact_ids: [note-demo-analysis]
+    a5_base: true
+    expect: {site: null}
+  - id: save-then-resave
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {analysis: {id: note-scenario-save-3, title: "Scenario analysis three", path: "knowledge/notes/mathematics/note-scenario-save-3.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: 46a5ddc1305652ed6db63033a7c7073e58d4d832cab52197ed26af1a9b1e775d, frozen_input_bytes: 54}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:46a5ddc1305652ed6db63033a7c7073e58d4d832cab52197ed26af1a9b1e775d"}
+        artifact_ids: [note-scenario-save-3]
+      - transport: gateway
+        request: {analysis: {id: note-scenario-save-3, title: "Scenario analysis three", path: "knowledge/notes/mathematics/note-scenario-save-3.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: 46a5ddc1305652ed6db63033a7c7073e58d4d832cab52197ed26af1a9b1e775d, frozen_input_bytes: 54}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:46a5ddc1305652ed6db63033a7c7073e58d4d832cab52197ed26af1a9b1e775d"}
+        artifact_ids: [note-scenario-save-3]
+  - id: unknown-source
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-4, title: "Unknown source", path: "knowledge/notes/mathematics/note-scenario-save-4.md", binding: {resolution: resolved, material: source-demo-book/book.pdf, recorded_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, live_source_digest: 61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6, inspected_range: {start: 1, end: 1}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-nope}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: stale-material
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-5, title: "Stale material", path: "knowledge/notes/mathematics/note-scenario-save-5.md", binding: {resolution: resolved, material: source-demo-book/book.pdf, recorded_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", live_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", inspected_range: {start: 1, end: 1}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-material
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-6, title: "Missing material", path: "knowledge/notes/mathematics/note-scenario-save-6.md", binding: {resolution: resolved, material: source-demo-book/nonexistent.pdf, recorded_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", live_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", inspected_range: {start: 1, end: 1}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: outside-material
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-7, title: "Outside material", path: "knowledge/notes/mathematics/note-scenario-save-7.md", binding: {resolution: resolved, material: ../escape.pdf, recorded_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", live_source_digest: "0000000000000000000000000000000000000000000000000000000000000000", inspected_range: {start: 1, end: 1}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unrelated-material
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-8, title: "Unrelated material", path: "knowledge/notes/mathematics/note-scenario-save-8.md", binding: {resolution: resolved, material: source-demo-book/lecture-01.pdf, recorded_source_digest: 395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5, live_source_digest: 395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5, inspected_range: {start: 1, end: 1}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-material-uri
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-9, title: "Bad uri", path: "knowledge/notes/mathematics/note-scenario-save-9.md", binding: {resolution: unresolved, material: "material://source-demo-book/../escape.pdf", recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: uri-without-source
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-10, title: "Uri no source", path: "knowledge/notes/mathematics/note-scenario-save-10.md", binding: {resolution: unresolved, material: "material://source-demo-book/book.pdf", recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: uri-authority-mismatch
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-11, title: "Uri mismatch", path: "knowledge/notes/mathematics/note-scenario-save-11.md", binding: {resolution: unresolved, material: "material://other-source/book.pdf", recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: uri-without-file
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-12, title: "Uri no file", path: "knowledge/notes/mathematics/note-scenario-save-12.md", binding: {resolution: unresolved, material: "material://source-demo-book", recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26, source_id: source-demo-book}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-binding-spelling
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-13, title: "Bad spelling", path: "knowledge/notes/mathematics/note-scenario-save-13.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: xyz, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-resolution
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-14, title: "Bad resolution", path: "knowledge/notes/mathematics/note-scenario-save-14.md", binding: {resolution: nope, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-frozen
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-15, title: "Missing frozen", path: "knowledge/notes/mathematics/note-scenario-save-15.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: frozen-sha-mismatch
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-16, title: "Sha mismatch", path: "knowledge/notes/mathematics/note-scenario-save-16.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: "0000000000000000000000000000000000000000000000000000000000000000", frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: frozen-bytes-mismatch
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-17, title: "Bytes mismatch", path: "knowledge/notes/mathematics/note-scenario-save-17.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 27}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: empty-body
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-18, title: "Empty body", path: "knowledge/notes/mathematics/note-scenario-save-18.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, frozen_input_bytes: 0}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-body-encoding
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-19, title: "Binary body", path: "knowledge/notes/mathematics/note-scenario-save-19.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: 812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0, frozen_input_bytes: 12}}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: id-not-analysis
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-demo, title: "Not analysis", path: "knowledge/notes/mathematics/note-demo.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: id-collision-diff
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-demo-analysis, title: "Collision", path: "knowledge/notes/mathematics/note-demo-analysis.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-id-pattern
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: "Bad_ID!", title: "Bad id", path: "knowledge/notes/Bad_ID!.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-path-empty
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-20, title: "Empty path", path: "", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-path-escape
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-21, title: "Escape path", path: "../escape.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-path-stem
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-22, title: "Stem mismatch", path: "knowledge/notes/mathematics/wrong.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-path-outside
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-23, title: "Outside notes", path: "knowledge/garden/note-scenario-save-23.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-body-file
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-24, title: "Missing body", path: "knowledge/notes/mathematics/note-scenario-save-24.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/nope.bin", body_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: changed-body
+    kind: refusal
+    transport: gateway
+    request: {analysis: {id: note-scenario-save-25, title: "Changed body", path: "knowledge/notes/mathematics/note-scenario-save-25.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-analysis-field
+    kind: refusal
+    transport: cli
+    request: {analysis: {id: note-scenario-save-26, title: "Bogus field", path: "knowledge/notes/mathematics/note-scenario-save-26.md", binding: {}, bogus: 1}, body_file: "work/inbox/note-drop.md"}
+    expect: {site: null}
+  - id: id-not-string
+    kind: refusal
+    transport: cli
+    request: {analysis: {id: 5, title: "Numeric id", path: "knowledge/notes/mathematics/note-5.md", binding: {}}, body_file: "work/inbox/note-drop.md"}
+    expect: {site: null}
+  - id: title-required
+    kind: refusal
+    transport: cli
+    request: {analysis: {id: note-scenario-save-27, path: "knowledge/notes/mathematics/note-scenario-save-27.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md"}
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    request: {analysis: {id: note-scenario-save-direct, title: "Direct", path: "knowledge/notes/mathematics/note-scenario-save-direct.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md"}
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {analysis: {id: note-scenario-save-28, title: "Replayed", path: "knowledge/notes/mathematics/note-scenario-save-28.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+        artifact_ids: [note-scenario-save-28]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {analysis: {id: note-scenario-save-29, title: "Miss", path: "knowledge/notes/mathematics/note-scenario-save-29.md", binding: {resolution: unresolved, material: demo/deck.pdf, recorded_source_digest: abababababababababababababababababababababababababababababababab, inspected_range: {start: 1, end: 3}, frozen_input_sha256: cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d, frozen_input_bytes: 26}}, body_file: "work/inbox/note-drop.md", body_file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: [note-scenario-save-29]
+    expect: {site: null}

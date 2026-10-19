@@ -1,0 +1,275 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "capture.create",
+              "channel": "operator",
+              "intent_sha256": "sha256:6a0abda42c8e78362b62c0cf377c259fe2968cf149800c0bea9fba0ededb0cab",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "capture-request:KEY2": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "capture.create",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "capture-request:KEY2": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "capture.create",
+                "declared_writes": [
+                  "work/inbox/**"
+                ]
+              }
+            ]
+          },
+          "capability": "capture.create",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "capture-request:KEY2": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:d49ee97a728a2416abb2891737da7da1b2d2a6a34c3814ac0e7b1c0fd18c0bb2",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:6a0abda42c8e78362b62c0cf377c259fe2968cf149800c0bea9fba0ededb0cab"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:6a0abda42c8e78362b62c0cf377c259fe2968cf149800c0bea9fba0ededb0cab",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md",
+              "sha256_after": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "capture-request:KEY2": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "84906c6b24f0950f611e1f72fe75a223cea323a1607c1be4396dd068730f6a6b",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "efec37e98f2835f2dd12bd4a3b6cba4292071e41a5f042ac04590c468f5f3877",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7b953707abfad1665fc220f9a86b23b3c805c1314ae2b9258e56aaaa570809ea",
+              "state": "file"
+            },
+            "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "capture.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "capture-request:KEY2": 1
+          },
+          "captured": "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md",
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "operation": "capture.create",
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "84906c6b24f0950f611e1f72fe75a223cea323a1607c1be4396dd068730f6a6b",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "efec37e98f2835f2dd12bd4a3b6cba4292071e41a5f042ac04590c468f5f3877",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7b953707abfad1665fc220f9a86b23b3c805c1314ae2b9258e56aaaa570809ea",
+              "state": "file"
+            },
+            "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "84906c6b24f0950f611e1f72fe75a223cea323a1607c1be4396dd068730f6a6b",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "efec37e98f2835f2dd12bd4a3b6cba4292071e41a5f042ac04590c468f5f3877",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7b953707abfad1665fc220f9a86b23b3c805c1314ae2b9258e56aaaa570809ea",
+              "state": "file"
+            },
+            "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md\"\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "capture.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": true,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "capture-request:KEY2": 1
+          },
+          "captured": "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": true,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

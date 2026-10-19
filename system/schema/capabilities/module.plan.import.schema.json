@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.plan.import.schema.json",
+  "title": "payload for capability module.plan.import",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "run contract, routing, and shadow-repository validation without writing"
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed YAML plan for an existing canonical module"
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact module-plan file bytes approved for import"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "The module whose material source map and units this plan updates."
+    },
+    "package_sha256": {
+      "type": "string",
+      "description": "exact promotion package hash returned by --check"
+    },
+    "promotion": {
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "recorded_at": {},
+        "candidate_module_id": {},
+        "canonical_module_id": {},
+        "catalog_revision": {},
+        "verification": {},
+        "adopted_sources": {},
+        "module_plan": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "adopted_sources",
+        "candidate_module_id",
+        "canonical_module_id",
+        "catalog_revision",
+        "id",
+        "module_plan",
+        "recorded_at",
+        "schema_version",
+        "type",
+        "verification"
+      ],
+      "description": "Inline MasterPlanning promotion package; the accepted fields are the full promotion record governed by system/schema/master-planning-promotion.schema.json."
+    },
+    "staged_basis": {
+      "type": "string",
+      "description": "with --check, print the requested unit's post-package dossier basis without writing"
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "promotion"
+      ]
+    }
+  ],
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s01-md-20260903",
+  "idempotency_key": "polars-sheet-s01-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:b3bea13bb08999890c3294803558a220150ce984b55255899d54329bff471fb1",
+  "expected_revisions": {
+    "unit-job-polars-pandas-fluency": 3,
+    "study-map-job-polars-pandas-fluency": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-pandas-fluency",
+    "stage_id": "stage-polars-01-two-data-models-and-the-eight-divergence-axes",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s01-exercises.md",
+    "label": "Exercise sheet - verified against pandas 3.0.2 / Polars 1.36.0",
+    "file_sha256": "sha256:588823011a80a0c15aa914b5ed82df62b3907cb097e40cb1386bc010f8209872"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:ca7285ac2fe4d62014028c683eb88acb21d97060beefb6b28ebf3bdc0bd13ee5"
+  }
+}

@@ -1,0 +1,222 @@
+"""Hostile filesystem and receipt-cache cases found during independent review."""
+
+import json
+import os
+from pathlib import Path
+
+import pytest
+from test_compute_once import _commit_capture
+
+from learning_os.app import validation_service
+from learning_os.derive.validation import validate
+from learning_os.store import digests
+from learning_os.store.loader import load_repo
+
+
+def _receipt_errors(root: Path):
+    return [(i.code, i.message, i.path) for i in validate(load_repo(root), online=False)
+            if i.severity == "E" and "transaction-receipt" in i.message]
+
+
+def _stage_receipt_producers(root: Path) -> None:
+    """Copy the real receipt-node producer bytes under a mini root."""
+    import learning_os.derive.validation.receipt_cache as rc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(rc.RECEIPT_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
+def _corrupt_status(path: Path):
+    content = path.read_bytes()
+    assert b"status: committed" in content
+    path.write_bytes(content.replace(b"status: committed", b"status: corrupted"))
+
+
+def test_preserved_mtime_receipt_tampering_cannot_reuse_verdict(mini_repo: Path):
+    _stage_receipt_producers(mini_repo)
+    result = _commit_capture(mini_repo, "tamper-stat", "request-tamper-stat")
+    assert not _receipt_errors(mini_repo)
+    path = mini_repo / result.receipt_path
+    old = path.stat()
+    _corrupt_status(path)
+    os.utime(path, ns=(old.st_atime_ns, old.st_mtime_ns))
+    assert (path.stat().st_size, path.stat().st_mtime_ns) == (old.st_size, old.st_mtime_ns)
+    # Simulate the fresh process that loads the persisted sidecar.
+    digests.clear()
+    assert _receipt_errors(mini_repo)
+
+
+def test_receipt_rewrite_after_parse_cannot_bless_new_bytes(mini_repo: Path, monkeypatch):
+    import learning_os.derive.validation.receipt_cache as cache
+
+    _stage_receipt_producers(mini_repo)
+    result = _commit_capture(mini_repo, "parse-race", "request-parse-race")
+    path = mini_repo / result.receipt_path
+    original = cache._validate_fresh
+
+    def rewrite_after_parse(validator, target, rel):
+        verdict = original(validator, target, rel)
+        if target == path:
+            _corrupt_status(target)
+        return verdict
+
+    monkeypatch.setattr(cache, "_validate_fresh", rewrite_after_parse)
+    _receipt_errors(mini_repo)
+    monkeypatch.setattr(cache, "_validate_fresh", original)
+    digests.clear()
+    assert _receipt_errors(mini_repo)
+
+
+def test_changed_sidecar_verdict_is_discarded(mini_repo: Path):
+    import learning_os.derive.validation.receipt_cache as cache
+    from learning_os.store.derived.store import read_state
+
+    _stage_receipt_producers(mini_repo)
+    result = _commit_capture(mini_repo, "cache-corrupt", "request-cache-corrupt")
+    _corrupt_status(mini_repo / result.receipt_path)
+    assert _receipt_errors(mini_repo)
+    assert not (mini_repo / cache.SIDECAR_RELATIVE).exists()
+    # Tamper with the stored verdict bytes in place: the blob hash no
+    # longer matches, so the verdict is discarded and the errors return.
+    node_id = next(node for node in read_state(mini_repo)
+                   if node.startswith("cache.receipt:"))
+    blob = mini_repo / "generated" / "derived-state" / read_state(mini_repo)[node_id].blob
+    data = json.loads(blob.read_text(encoding="utf-8"))
+    data["issues"] = []
+    blob.write_text(json.dumps(data), encoding="utf-8")
+    digests.clear()
+    assert _receipt_errors(mini_repo)
+
+
+def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
+    from learning_os.derive.validation.core import Validator
+
+    _stage_receipt_producers(mini_repo)
+    _commit_capture(mini_repo, "schema-race", "request-schema-race")
+    old_validator = Validator(load_repo(mini_repo))
+    schema = mini_repo / "system/schema/transaction-receipt.schema.json"
+    content = schema.read_text()
+    assert '"const": "committed"' in content
+    schema.write_text(content.replace('"const": "committed"', '"const": "corrupted"'))
+    # This run already loaded the old schema. It may only cache its proof
+    # against that schema, never the new bytes found on disk afterwards.
+    old_validator.check_transaction_receipts()
+    new_validator = Validator(load_repo(mini_repo))
+    new_validator.check_transaction_receipts()
+    assert any(i.code == "SCHEMA" for i in new_validator.issues)
+
+
+def test_receipt_cache_invalidates_changed_external_schema_ref(mini_repo: Path):
+    from learning_os.derive.validation.core import Validator
+
+    _stage_receipt_producers(mini_repo)
+    _commit_capture(mini_repo, "schema-ref", "request-schema-ref")
+    schema_dir = mini_repo / "system/schema"
+    receipt_path = schema_dir / "transaction-receipt.schema.json"
+    receipt_schema = json.loads(receipt_path.read_text())
+    receipt_schema["allOf"] = [{"$ref": "https://learningos.local/schema/receipt-extra.schema.json"}]
+    receipt_path.write_text(json.dumps(receipt_schema))
+    extra = schema_dir / "receipt-extra.schema.json"
+    extra.write_text(json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema",
+                                 "type": "object"}))
+    original = Validator(load_repo(mini_repo))
+    original.check_transaction_receipts()
+    assert not original.issues
+    extra.write_text(json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema",
+                                 "not": {"required": ["id"]}}))
+    changed = Validator(load_repo(mini_repo))
+    changed.check_transaction_receipts()
+    assert any(i.code == "SCHEMA" for i in changed.issues)
+
+
+def test_warm_boundary_digest_refuses_retarget_to_external_hardlink(tmp_path: Path):
+    from learning_os.store.derived.identity import digest_file
+
+    root = tmp_path / "root"
+    root.mkdir()
+    shared = root / "shared.md"
+    shared.write_bytes(b"private bytes")
+    external = tmp_path / "external.md"
+    os.link(shared, external)
+    alias = root / "alias.md"
+    alias.symlink_to(shared)
+    digests.clear()
+    admitted = digest_file(root, alias)
+    alias.unlink()
+    alias.symlink_to(external)
+    warm = digest_file(root, alias)
+    digests.clear()
+    cold = digest_file(root, alias)
+    assert warm == cold
+    assert warm != admitted
+
+
+@pytest.mark.parametrize("definition", [True, False, 1.0, 2.0, 9])
+def test_unsupported_definition_cannot_settle_contract_drift(mini_repo: Path, definition):
+    from learning_os.store.diagnostics.resolver import contract_only_drift_receipt
+    from learning_os.store.fingerprint import data_roots_fingerprint
+
+    receipt = {"id": "transaction-20260101-000001-001", "snapshot_after": "sha256:old",
+               "metadata": {"fingerprint_definition": definition,
+                            "data_roots_sha256": "sha256:" + data_roots_fingerprint(mini_repo)}}
+    assert contract_only_drift_receipt(mini_repo, [receipt], "sha256:new") is None
+
+
+def _stage_validation_producers(root: Path) -> None:
+    """Copy the real validation-node producer bytes under a mini root."""
+    import learning_os.store.validation_cache as vc
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for rel in dict.fromkeys(vc.VALIDATION_PRODUCER_FILES):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repo_root / rel).read_bytes())
+
+
+@pytest.mark.parametrize("suffix, initial, changed, code", [
+    ("json", '{"_generated": {}}', "{broken", "GEN-JSON"),
+    ("md", "<!-- GENERATED -->\n", "no warning header\n", "GEN-HEADER"),
+])
+def test_nested_text_cache_input_edit_misses_status(
+        mini_repo: Path, suffix, initial, changed, code):
+    import learning_os.store.validation_cache as cache
+
+    _stage_validation_producers(mini_repo)
+    target = mini_repo / f"generated/text-cache/demo/pages/unexpected.{suffix}"
+    target.parent.mkdir(parents=True)
+    target.write_text(initial)
+    validation_service.status_issues(load_repo(mini_repo))
+    assert cache.read_cached_static_issues(mini_repo) is not None
+    target.write_text(changed)
+    assert cache.read_cached_static_issues(mini_repo) is None
+    assert any(i.code == code for i in validation_service.status_issues(load_repo(mini_repo)))
+
+
+def test_text_cache_index_symlink_target_edit_misses_status(mini_repo: Path):
+    import learning_os.store.validation_cache as cache
+
+    _stage_validation_producers(mini_repo)
+    directory = mini_repo / "generated/text-cache/demo"
+    directory.mkdir(parents=True)
+    blob = directory / "blob.txt"
+    blob.write_text('{"_generated": {}}')
+    (directory / "index.json").symlink_to(blob)
+    validation_service.status_issues(load_repo(mini_repo))
+    assert cache.read_cached_static_issues(mini_repo) is not None
+    blob.write_text("{broken")
+    assert cache.read_cached_static_issues(mini_repo) is None
+    assert any(i.code == "GEN-JSON" for i in validation_service.status_issues(load_repo(mini_repo)))
+
+
+def test_non_utf8_attachment_declaration_is_reported_and_excludes_nothing(mini_repo: Path):
+    from learning_os.store.contracts.local_attachments import check, local_paths
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    declaration = mini_repo / "system/contracts/local-attachments.yaml"
+    declaration.write_bytes(b"\xffnot UTF-8")
+    assert local_paths(mini_repo) == set()
+    assert check(mini_repo, set())[0].code == "UNREADABLE"
+    assert canonical_fingerprint(mini_repo) == canonical_fingerprint(mini_repo, definition=1)

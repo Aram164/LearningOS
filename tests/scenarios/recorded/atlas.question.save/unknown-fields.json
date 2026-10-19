@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: question has unknown fields: bogus (accepted: id, title, text, target, state, answer_notes; type/role/created/authorship are set by the handler)\n",
+  "stdout": "",
+  "stdout_json": null
+}

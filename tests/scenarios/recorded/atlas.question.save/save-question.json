@@ -1,0 +1,164 @@
+{
+  "canonical_changed": {
+    "knowledge/notes/questions/note-demo-question-1.md": "e62d45d3230fa2adb41e492f624b519e2e5fc1c8fa6b3dc2842b1f84eb9fc933"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "atlas.question.save",
+          "channel": "operator",
+          "intent_sha256": "sha256:4da4e99e7113d53469db2061f0112ba4211fc372dcbcbafce9c46529fb3a760b",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "note-demo-question-1": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "note-demo-question-1": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "atlas.question.save",
+            "declared_writes": [
+              "knowledge/notes/**"
+            ]
+          }
+        ]
+      },
+      "capability": "atlas.question.save",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "note-demo-question-1": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:65f91e4eafba7f9a49e5371af9a4ac827d7c218a80d4ce695e25670dc9f7f31a",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:4da4e99e7113d53469db2061f0112ba4211fc372dcbcbafce9c46529fb3a760b"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:4da4e99e7113d53469db2061f0112ba4211fc372dcbcbafce9c46529fb3a760b",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "knowledge/notes/questions/note-demo-question-1.md",
+          "sha256_after": "e62d45d3230fa2adb41e492f624b519e2e5fc1c8fa6b3dc2842b1f84eb9fc933",
+          "sha256_before": null
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "note-demo-question-1": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "knowledge/notes/questions/note-demo-question-1.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e62d45d3230fa2adb41e492f624b519e2e5fc1c8fa6b3dc2842b1f84eb9fc933",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "5968fefb4a6178aa74c2cb5185fc71aabc0ba90b300f70eea921e9d0770fb4d0",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "d6c35273beca40403bbb98dcc054a1dc86a743150d4766353d9004a163d93786",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e21bf9efdcea623c126d3c1f0e1ce1f8b6d94eda4e123aa829b19f6f9e842678",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"atlas.question.save\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"note_id\": \"note-demo-question-1\",\n    \"note_path\": \"knowledge/notes/questions/note-demo-question-1.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"note-demo-question-1\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "atlas.question.save",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "note-demo-question-1": 1
+      },
+      "note_id": "note-demo-question-1",
+      "note_path": "knowledge/notes/questions/note-demo-question-1.md",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

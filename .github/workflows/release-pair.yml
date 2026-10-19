@@ -1,0 +1,197 @@
+# Learning OS v3 — exact-pair release CI (release-hardening plan, Phase 9).
+#
+# Branch-based CI (validate.yml, ui-ci.yml) is useful but mutable: today's
+# green run says nothing about whether the Core commit it verified is still
+# paired with the same UI commit tomorrow. This workflow is dispatched by
+# hand with two exact, full commit SHAs, checks out precisely those two
+# commits (never a branch), runs the same local paired gate a release
+# requires, and uploads a schema-validated pair-receipt.json plus the four
+# shipped plugin files as one downloadable, independently verifiable proof
+# that this exact Core/UI pair was built and tested together.
+#
+# This workflow never tags, releases, or merges to main — see plan §5 rule 8
+# and §12 out-of-scope items.
+name: release-pair
+
+on:
+  workflow_dispatch:
+    inputs:
+      core_sha:
+        description: "Exact Core commit — 40 lowercase hex characters"
+        required: true
+      ui_sha:
+        description: "Exact UI commit — 40 lowercase hex characters"
+        required: true
+
+permissions:
+  contents: read
+
+run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
+
+jobs:
+  release-pair:
+    runs-on: ubuntu-latest
+    # Phase 4 Linux pytest alone took 86 minutes; the complete local
+    # source gate took 130 minutes. Keep complete paired coverage with
+    # a bounded allowance for extraction tests and the UI checks.
+    timeout-minutes: 180
+    steps:
+      - name: Validate the exact-SHA inputs before checking anything out
+        id: inputs
+        env:
+          CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
+          UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
+        run: |
+          core_sha="$CORE_SHA_INPUT"
+          ui_sha="$UI_SHA_INPUT"
+          echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
+          echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
+          echo "core_sha_short=${core_sha:0:12}" >> "$GITHUB_OUTPUT"
+          echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Core at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: ${{ steps.inputs.outputs.core_sha }}
+          fetch-depth: 0
+
+      - name: Check out UI at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          path: obsidian-ui
+          ref: ${{ steps.inputs.outputs.ui_sha }}
+          fetch-depth: 0
+
+      - name: Verify each checkout is exactly the requested commit and clean
+        env:
+          EXPECTED_CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
+          EXPECTED_UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
+        run: |
+          set -eu
+          core_actual="$(git -C repository rev-parse HEAD)"
+          if [ "$core_actual" != "$EXPECTED_CORE_SHA" ]; then
+            echo "Core checked out $core_actual, requested $EXPECTED_CORE_SHA" >&2
+            exit 1
+          fi
+          test -z "$(git -C repository status --porcelain)" \
+            || { echo "Core checkout is not clean" >&2; exit 1; }
+          ui_actual="$(git -C obsidian-ui rev-parse HEAD)"
+          if [ "$ui_actual" != "$EXPECTED_UI_SHA" ]; then
+            echo "UI checked out $ui_actual, requested $EXPECTED_UI_SHA" >&2
+            exit 1
+          fi
+          test -z "$(git -C obsidian-ui status --porcelain)" \
+            || { echo "UI checkout is not clean" >&2; exit 1; }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The documented project environment is the repository venv: parser
+      # diagnostics are characterized bytes pinned to this interpreter, and
+      # the procedure transcripts invoke $LOS_REPO/.venv/bin/python.
+      - name: Install Core development dependencies
+        working-directory: repository
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Install UI dependencies
+        working-directory: obsidian-ui
+        run: npm ci --ignore-scripts
+
+      # The procedure transcripts (tests/test_procedures.py, PLAN D11) run under
+      # Scrut v0.5.0. The release archive is pinned by GitHub's published
+      # SHA-256 and checked before use; the binary stays outside the checkout,
+      # clear of the tree-contract test, and reaches the gate as LOS_SCRUT_BIN.
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftotext -v
+
+      - name: Install Scrut v0.5.0 (pinned digest)
+        run: |
+          set -eu
+          dir="$RUNNER_TEMP/scrut"
+          mkdir -p "$dir"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
+            https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+          echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
+          tar -xzf "$dir/scrut.tar.gz" -C "$dir"
+          bin="$(find "$dir" -type f -name scrut | head -n 1)"
+          test -n "$bin"
+          chmod 0755 "$bin"
+          test "$("$bin" --version)" = "scrut 0.5.0"
+          echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
+
+      # The exact local paired gate. Full `make stress` is not run here: the
+      # checkout provisions neither repository's external materials tree, so
+      # it stays the mandatory *local* gate — the receipt below records this
+      # scope explicitly rather than implying stress ran.
+      #
+      # `live_install` tests need state no checkout can carry: the
+      # maintainer's gitignored data, or the wrapper root above repository/.
+      # They are deselected here by name, never skipped, so the summary line
+      # counts them as deselected; the live installation's own
+      # `make system-check` still runs them.
+      - name: paired release gate (make system-check)
+        working-directory: repository
+        env:
+          PYTEST_ADDOPTS: '-m "not live_install"'
+          LOS_RATCHET_BASE: origin/main
+        run: make system-check
+
+      # The UI build always uses its own checked-out Git revision (never a
+      # generic GITHUB_SHA, which here would be the *Core* checkout's SHA) —
+      # build.mjs enforces this itself; nothing extra is set here.
+      - name: Rebuild the UI once more to record the exact, now-verified pair
+        working-directory: obsidian-ui
+        run: npm run build:info
+
+      - name: Generate the pair receipt
+        working-directory: repository
+        env:
+          CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
+          UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          .venv/bin/python tools/release_pair_receipt.py generate \
+            --core-root . \
+            --ui-root ../obsidian-ui \
+            --core-sha "$CORE_SHA" \
+            --ui-sha "$UI_SHA" \
+            --workflow-run-id "$WORKFLOW_RUN_ID" \
+            --workflow-run-attempt "$WORKFLOW_RUN_ATTEMPT" \
+            --live-install-scope not-run-live-install-deselected \
+            --out ../release-pair-artifact/pair-receipt.json
+
+      - name: Assemble the fixed upload layout
+        run: |
+          mkdir -p release-pair-artifact/plugin
+          cp obsidian-ui/plugin/main.js release-pair-artifact/plugin/main.js
+          cp obsidian-ui/plugin/styles.css release-pair-artifact/plugin/styles.css
+          cp obsidian-ui/plugin/manifest.json release-pair-artifact/plugin/manifest.json
+          cp obsidian-ui/plugin/build-info.json release-pair-artifact/plugin/build-info.json
+
+      - name: Verify the assembled artifact against its own receipt
+        working-directory: repository
+        run: |
+          .venv/bin/python tools/release_pair_receipt.py verify \
+            --receipt ../release-pair-artifact/pair-receipt.json \
+            --artifact-dir ../release-pair-artifact
+
+      - name: Upload learningos-pair-<core-12>-<ui-12>
+        uses: actions/upload-artifact@v4
+        with:
+          name: "learningos-pair-${{ steps.inputs.outputs.core_sha_short }}-${{ steps.inputs.outputs.ui_sha_short }}"
+          path: release-pair-artifact
+          if-no-files-found: error

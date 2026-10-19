@@ -1,0 +1,165 @@
+{
+  "canonical_changed": {
+    "knowledge/notes/mathematics/note-scenario-create-2.md": "cb5ce6e8bee4377458d4a38b63362eec962a56a2c24977707ab36a87af2e1517"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "note.create",
+          "channel": "operator",
+          "intent_sha256": "sha256:800bbf3fd34692340f32fa440ea5e05d4361634a15414577df2edda2bec5c18e",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "note-scenario-create-2": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "note-scenario-create-2": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "note.create",
+            "declared_writes": [
+              "knowledge/notes/**"
+            ]
+          }
+        ]
+      },
+      "capability": "note.create",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "note-scenario-create-2": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:4b2e83be57196e83ad4ac66172e1017517701d9b87bd11448582a684c3abbcef",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:800bbf3fd34692340f32fa440ea5e05d4361634a15414577df2edda2bec5c18e"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:800bbf3fd34692340f32fa440ea5e05d4361634a15414577df2edda2bec5c18e",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "knowledge/notes/mathematics/note-scenario-create-2.md",
+          "sha256_after": "cb5ce6e8bee4377458d4a38b63362eec962a56a2c24977707ab36a87af2e1517",
+          "sha256_before": null
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "note-scenario-create-2": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "knowledge/notes/mathematics/note-scenario-create-2.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "cb5ce6e8bee4377458d4a38b63362eec962a56a2c24977707ab36a87af2e1517",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "c0c1027111f582748790a4be53ccdf1ae91cfe5c486c6256fb69b7ed9810993f",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "3778d38ea5d4d024499ad1961d52af6a67275223d6c7bc4a3c865343251573c3",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "ddf885e61094533a2bfd1db32d5bf68e78e7b491be0fc070b504aa81d25c3469",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"note_id\": \"note-scenario-create-2\",\n    \"note_path\": \"knowledge/notes/mathematics/note-scenario-create-2.md\",\n    \"deprecated\": [],\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"note-scenario-create-2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "note.create",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "note-scenario-create-2": 1
+      },
+      "deprecated": [],
+      "note_id": "note-scenario-create-2",
+      "note_path": "knowledge/notes/mathematics/note-scenario-create-2.md",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

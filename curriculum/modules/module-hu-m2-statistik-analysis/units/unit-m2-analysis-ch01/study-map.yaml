@@ -1,0 +1,346 @@
+id: study-map-m2-analysis-ch01
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch01
+status: not-started
+current_stage: stage-m2-analysis-ch01-zahlenmengen
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch01-zahlenmengen
+  number: 1
+  title: Zahlenmengen und Notation (§1.1)
+  status: pending
+  objective: The number sets N, Z, Q, R and the notation the script uses for them, together with the logical
+    and set symbols fixed in the Bezeichnungen section. This is the vocabulary every later definition
+    is written in.
+  done_when:
+  - 'Reproduce without notes: The number sets N, Z, Q, R and the notation the script uses for them, together
+    with the logical and set symbols fixed in the Bezeichnungen section. This is the vocabulary every
+    later definition is written in.'
+  - Work Fritzsche §§1.1-1.2 — Mengen von Zahlen, Induktion, then the remaining 1, and record every miss
+    with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-zahlenmengen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch01-induktion
+  number: 2
+  title: Vollständige Induktion (§1.2)
+  status: pending
+  objective: 'The induction principle and its schema: base case, hypothesis, step. The script assumes
+    it from M1, and it is the one Chapter 1 technique that reappears as an exam task in its own right
+    and inside recursive-sequence arguments.'
+  done_when:
+  - 'Reproduce without notes: The induction principle and its schema: base case, hypothesis, step. The
+    script assumes it from M1, and it is the one Chapter 1 technique that reappears as an exam task in
+    its own right and inside recursive-sequence arguments.'
+  - Work HU Serie 05, Aufgabe 5.1(c) — induction inside a recursion, then the remaining 3, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch01-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-induktion/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch01-beziehungen
+  number: 3
+  title: Wichtige Beziehungen in der Analysis (§1.3)
+  status: pending
+  objective: The standard inequalities and identities the later chapters apply without comment — triangle
+    inequality, Bernoulli, binomial theorem, geometric sum. They are the estimation toolkit every epsilon
+    argument reaches for.
+  done_when:
+  - 'Reproduce without notes: The standard inequalities and identities the later chapters apply without
+    comment — triangle inequality, Bernoulli, binomial theorem, geometric sum. They are the estimation
+    toolkit every epsilon argument reaches for.'
+  - Work Fritzsche §§1.1-1.2 — Mengen von Zahlen, Induktion, then the remaining 1, and record every miss
+    with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  - concept-proof-technique
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-beziehungen/notes.md
+  attachments: []
+  source_feedback: []

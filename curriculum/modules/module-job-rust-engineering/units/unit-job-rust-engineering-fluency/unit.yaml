@@ -1,0 +1,18 @@
+id: unit-job-rust-engineering-fluency
+type: unit
+module_id: module-job-rust-engineering
+kind: topic
+title: Rust engineering fluency — ownership to PyO3
+order: 1
+scope: Given an unfamiliar Rust or PyO3 path, independently explain ownership, borrowing, lifetime, trait,
+  error, concurrency, and FFI behavior; design a small crate with explicit invariants; follow compiler
+  diagnostics rather than guessing; test, document, profile, and package it; and review a Python-to-Rust
+  boundary for copies, errors, GIL behavior, and thread safety. Evidence is a no-AI Rust/Python extension
+  capstone and a read-only architectural comparison with Stratum, not completion of readings.
+status: ready
+scope_sources: []
+source_selections: []
+working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-rust-engineering-fluency

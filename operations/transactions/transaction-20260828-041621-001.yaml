@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260828-041621-001
+type: transaction-receipt
+status: committed
+capability: note.revise
+committed_at: '2026-08-28T04:16:21+02:00'
+snapshot_before: sha256:3ce3f753536b73427d84e86a8203e244fe05ebeb34dd16e4de4f21fc3e638979
+snapshot_after: sha256:5d59d9eb5c3241de6bbf5a5103a99c6af7245ebbbf109405c8e8acc658b93c58
+expected_revisions:
+  note-pandas-polars-aggregation-contentions: 2
+artifact_revisions:
+  note-pandas-polars-aggregation-contentions:
+    before: 2
+    after: 3
+writes:
+- path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+  sha256_before: 8f66ddb1dbbf2c38b59892991015611ca49b5a9991cb9953ddb8d7e32a899d5c
+  sha256_after: 84a0415ccc2ab1e28b69864a77c0ba38f79d0041f922c144f9d4769b811b760a
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.revise
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-attach-orphan-repair-002
+  idempotency_key: attach-orphan-repair-002
+  intent_sha256: sha256:745994d344f76b926a132d7749450c43b7170bcb62ea2eb9bba056d09ef473fc
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:745994d344f76b926a132d7749450c43b7170bcb62ea2eb9bba056d09ef473fc

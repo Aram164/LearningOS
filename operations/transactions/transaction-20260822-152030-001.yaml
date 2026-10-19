@@ -1,0 +1,54 @@
+schema_version: 1
+id: transaction-20260822-152030-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:20:30+02:00'
+snapshot_before: sha256:bf93d081beb719c2dcbf9d99a877357ac5349edbc12b33f135f4288cd675e688
+snapshot_after: sha256:f24933aa4b2742d4218d916f0ec29daf84a8498c37abf050f9fe8e9a15bf3cbc
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l04:
+    before: 0
+    after: 1
+  unit-m2-sad-l04:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  sha256_before: null
+  sha256_after: aac6abdf9a33a766cc265864053208d158175a65468f4266f5dbed8c58207fae
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/unit.yaml
+  sha256_before: 08092a4c8567d089aa6ea50caef04c2d20aa8e906ca49e5a25e5898136efa386
+  sha256_after: 0caa7f022f6a11e1273497f2c27a68a10a36d26838c840f02ab6cbb27c135ed2
+  created: false
+metadata: {}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/legacy.archive.lock.publish.schema.json",
+  "title": "payload for capability legacy.archive.lock.publish",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "file": {
+      "type": "string",
+      "description": "reviewed Legacy disposition lock as a YAML file"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "created_at": {},
+        "entries": {},
+        "excluded": {},
+        "verification": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "entries",
+        "excluded",
+        "id",
+        "schema_version",
+        "type",
+        "verification"
+      ],
+      "description": "The accepted fields are the full lock record governed by system/schema/legacy-archive-lock.schema.json."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

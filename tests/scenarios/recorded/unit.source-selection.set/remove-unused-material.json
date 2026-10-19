@@ -1,0 +1,166 @@
+{
+  "canonical_changed": {
+    "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml": "c06a0d182e5b0675f9b92a397b3bfd033d1bbfb9b702c859d8db51e36eeef06e"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "unit.source-selection.set",
+          "channel": "operator",
+          "intent_sha256": "sha256:a9825cef82bf512734c9c048355fc90942511701f9a7c0b18d5d858a90b4514b",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "unit-demo-l02": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "unit-demo-l02": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "unit.source-selection.set",
+            "declared_writes": [
+              "curriculum/modules/**/units/**/unit.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "unit.source-selection.set",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "unit-demo-l02": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:d8643e3ddba7475337f036f0cd88967ff90f5b2a12461077963f94d715adc37e",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:a9825cef82bf512734c9c048355fc90942511701f9a7c0b18d5d858a90b4514b"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:a9825cef82bf512734c9c048355fc90942511701f9a7c0b18d5d858a90b4514b",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml",
+          "sha256_after": "c06a0d182e5b0675f9b92a397b3bfd033d1bbfb9b702c859d8db51e36eeef06e",
+          "sha256_before": "3972911e1580b4afb0f23a0df306b5fbd5073996aae31895a49ce6363d9fa235"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "unit-demo-l01": 3,
+        "unit-demo-l02": 1
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "c06a0d182e5b0675f9b92a397b3bfd033d1bbfb9b702c859d8db51e36eeef06e",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "8d9ca062bd22c37a31b7eb06cfd991438ce50f9586d7b3b38df65ca064995be2",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "5511c22bdbe3157545898692cb4bba99af3f0639bc9c9333e866c05f4f1b779d",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "4cc096e2ceb3d0c1c03c11053d5bfcfb98ba06ffe9b59bc2a8f0ef8f0b54f617",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.source-selection.set\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l02\",\n    \"source_id\": \"source-demo-book\",\n    \"locator\": \"lecture-02.pdf\",\n    \"selected\": false,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"unit-demo-l02\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "unit.source-selection.set",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "unit-demo-l02": 1
+      },
+      "locator": "lecture-02.pdf",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "selected": false,
+      "snapshot_after": "SNAP1",
+      "source_id": "source-demo-book",
+      "transaction_id": "TX1",
+      "unit_id": "unit-demo-l02"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

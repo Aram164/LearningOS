@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""Seal one GatewayEnvelopeV2 (SPEC §7.1, PLAN D11).
+
+A thin wrapper over ``tools/seal_envelope.py``: ``--root`` defaults to
+``$LOS_FX`` when the caller does not pass it. Streams and exit status are
+the tool's own.
+"""
+
+from __future__ import annotations
+
+import os
+import sys
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+
+def main(argv: list[str]) -> int:
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        print("los-seal: LOS_REPO is not set", file=sys.stderr)
+        return 2
+    rest = list(argv[1:])
+    if "--root" not in rest and not any(
+            item.startswith("--root=") for item in rest):
+        root = os.environ.get("LOS_FX")
+        if not root:
+            print("los-seal: LOS_FX is not set", file=sys.stderr)
+            return 2
+        rest = ["--root", root, *rest]
+    os.execv(sys.executable,
+             [sys.executable, os.path.join(repo, "tools", "seal_envelope.py"),
+              *rest])
+    raise AssertionError("unreachable")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

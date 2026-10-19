@@ -1,0 +1,29 @@
+sources:
+- authors:
+  - A. Author
+  evaluations:
+  - concepts:
+    - concept-expected-value
+    level: introductory
+    roles:
+    - first-learning
+    strengths:
+    - clear intuition
+  id: source-demo-book
+  title: Demo Book
+  type: book
+  # Two topics from different display domains on ONE source — the polyhierarchy
+  # the facet exists for. A source is not "in" a topic; it participates in
+  # several.
+  topics:
+  - topic-probability
+  - topic-statistical-learning
+- authors:
+  - B. Author
+  id: source-demo-unclassified
+  title: Demo Unclassified Source
+  type: paper
+  # No `topics` at all. Absent means NOT YET CLASSIFIED, which is what every
+  # v1–v3 record carries and what most of the live Library will carry for a long
+  # time under on-use population (ADR-005). A fixture where everything was
+  # classified would stop proving the field is optional.

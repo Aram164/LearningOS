@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20260929-062902-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-09-29T06:29:02+02:00'
+snapshot_before: sha256:3d6a644a67c5646e3827123419a1a29526c55e0bd6a5ae6827191f2a5f5d5450
+snapshot_after: sha256:45efbd27746376ca8ca28f0f2a53324b8d8057577d0e9268770e4b4351d98f2f
+expected_revisions:
+  source-grinstead-snell: 1
+artifact_revisions:
+  source-grinstead-snell:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/mathematics.yaml
+  sha256_before: bfb3f47ba98ddf419046b25dff40221b68a2ead66c64848095091cad421b29ee
+  sha256_after: 2785a7f8d4f80f6e9a01f3830293d09fd239d633bf06ed0c1cd56bb23d0f4ce5
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-grinstead-eval-format-20260929
+  idempotency_key: grinstead-eval-format-20260929
+  intent_sha256: sha256:bac6d52f02be7b6247630a5cdde207b27e6fe5b909203209cc10359dcd533d0f
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:bac6d52f02be7b6247630a5cdde207b27e6fe5b909203209cc10359dcd533d0f

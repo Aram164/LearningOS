@@ -1,0 +1,863 @@
+id: study-map-job-rust-engineering-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-rust-engineering-fluency
+status: ready
+current_stage: stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop
+source_plan:
+  path: Job/plans/job-track-rust.yaml
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop
+  number: 1
+  title: Tooling, Cargo, and the compiler feedback loop
+  status: pending
+  objective: Build the smallest complete Rust crate and learn to treat cargo, rustc diagnostics, rustfmt,
+    clippy, tests, and documentation as one engineering feedback loop.
+  done_when:
+  - A library-plus-binary crate builds, tests, formats, lints, and documents cleanly in a disposable lab.
+  - You can explain Cargo.toml, src/lib.rs, src/main.rs, target artifacts, and the difference between
+    check, build, run, and test without notes.
+  - 'Independence gate: the first implementation and first two compiler-error repairs were completed without
+    AI.'
+  estimate_minutes: 90
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-01-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-01-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 1 — Getting Started
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-01-03-rustlings-exercises
+    locator: intro exercises
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Build a tiny library and CLI from blank
+    id: resource-rust-01-04-build-a-tiny-library-and-cli-from-blank
+    locator: Create one pure function, one fallible parser, unit tests, a doc test, and an intentional
+      type error; explain the diagnostic before repairing it.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop/notes.md
+- id: stage-rust-02-bindings-types-expressions-and-control-flow
+  number: 2
+  title: Bindings, types, expressions, and control flow
+  status: pending
+  objective: Write idiomatic Rust syntax from memory and reason about mutability, shadowing, expressions,
+    numeric conversions, loops, matches, and function signatures.
+  done_when:
+  - A typed command-line transformer handles valid and invalid input without hidden coercions.
+  - Twelve prediction snippets covering shadowing, expressions, ownership-neutral Copy values, and control
+    flow are correct or repaired in a miss ledger.
+  - 'Independence gate: the transformer is rebuilt without AI within 48 hours.'
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-02-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-02-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: 'Chapters 2–3: Programming a Guessing Game and Common Programming Concepts'
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-02-03-rustlings-exercises
+    locator: variables, functions, if, primitive_types
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Implement a typed text-statistics CLI
+    id: resource-rust-02-04-implement-a-typed-text-statistics-cli
+    locator: Parse arguments, compute counts, return explicit errors, and test boundary inputs without
+      copying examples.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-02-bindings-types-expressions-and-control-flow/notes.md
+- id: stage-rust-03-ownership-moves-clone-and-drop
+  number: 3
+  title: Ownership, moves, Clone, and Drop
+  status: pending
+  objective: Predict ownership transfers and design APIs that make allocation and copying visible.
+  done_when:
+  - At least fifteen move/Copy/Clone/Drop predictions are explained before compilation.
+  - A three-stage buffer pipeline compiles with no accidental clone; every intentional clone is justified
+    by an ownership diagram.
+  - 'Independence gate: compiler errors are repaired from diagnostics before any AI consultation.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-03-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-03-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 4.1 — What Is Ownership?
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-03-03-rustlings-exercises
+    locator: move_semantics
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Build an owned buffer pipeline
+    id: resource-rust-03-04-build-an-owned-buffer-pipeline
+    locator: Create, transform, and consume String and Vec buffers; instrument Drop and document each
+      owner transition.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-03-ownership-moves-clone-and-drop/notes.md
+- id: stage-rust-04-borrowing-slices-and-reborrowing
+  number: 4
+  title: Borrowing, slices, and reborrowing
+  status: pending
+  objective: Design borrowed APIs with shared and exclusive access, slices, and scopes that satisfy invariants
+    without unnecessary allocation.
+  done_when:
+  - A tokenizer accepts &str and &[T] inputs, returns owned or borrowed results deliberately, and passes
+    aliasing tests.
+  - Ten borrow-checker failures are classified before repair as overlapping mutable access, use-after-move,
+    lifetime escape, or needless ownership.
+  - 'Independence gate: no clone, Rc, or unsafe is introduced merely to silence the compiler.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-04-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-04-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 4.2–4.3 — References, Borrowing, and Slices
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-04-03-rustlings-exercises
+    locator: borrowing and strings
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Design and repair a slice-based tokenizer
+    id: resource-rust-04-04-design-and-repair-a-slice-based-tokenizer
+    locator: Write the public contract first, exercise empty and Unicode inputs, and document every borrow
+      scope.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-04-borrowing-slices-and-reborrowing/notes.md
+- id: stage-rust-05-structs-enums-pattern-matching-and-domain-models
+  number: 5
+  title: Structs, enums, pattern matching, and domain models
+  status: pending
+  objective: Model valid states with structs and enums so impossible or unhandled cases become compiler-visible.
+  done_when:
+  - A small transformation domain uses enums rather than sentinel values or inheritance.
+  - Every match is exhaustive, invalid construction is refused, and tests cover all variants plus malformed
+    input.
+  - 'Independence gate: the domain model is sketched on paper before implementation or AI use.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-05-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-05-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapters 5–6 — Structs, Enums, and Pattern Matching
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-05-03-rustlings-exercises
+    locator: structs, enums, options
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Model a fallible transformation pipeline
+    id: resource-rust-05-04-model-a-fallible-transformation-pipeline
+    locator: Use structs, data-carrying enums, Option, match guards, and constructor validation; add one
+      new variant and follow compiler guidance.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-05-structs-enums-pattern-matching-and-domain-models/notes.md
+- id: stage-rust-06-collections-result-and-iterator-fundamentals
+  number: 6
+  title: Collections, Result, and iterator fundamentals
+  status: pending
+  objective: Choose collections by access pattern, propagate typed failures, and replace index-heavy loops
+    with clear iterator code where it improves correctness.
+  done_when:
+  - A parser and frequency index use Vec, HashMap, slices, entry, Option, Result, and ? without production
+    unwrap calls.
+  - Tests cover empty, duplicate, malformed, Unicode, and large inputs; each collection choice has a complexity
+    note.
+  - 'Independence gate: all error variants and boundary cases are written before implementation.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-06-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-06-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapters 8–9 — Collections and Error Handling
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-06-03-rustlings-exercises
+    locator: vecs, hashmaps, strings, error_handling
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Build a validated sparse-row accumulator
+    id: resource-rust-06-04-build-a-validated-sparse-row-accumulator
+    locator: Accumulate values and indices, enforce monotonic offsets, return a custom error, and test
+      broken invariants.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-06-collections-result-and-iterator-fundamentals/notes.md
+- id: stage-rust-07-traits-generics-and-interface-design
+  number: 7
+  title: Traits, generics, and interface design
+  status: pending
+  objective: Express capability-based interfaces with trait bounds and choose static or dynamic dispatch
+    deliberately.
+  done_when:
+  - A generic Kernel trait has two implementations, explicit associated types or bounds, and tests shared
+    across both.
+  - A decision table correctly chooses generics, impl Trait, dyn Trait, enums, or concrete types for six
+    scenarios.
+  - 'Independence gate: the interface and laws are specified before any implementation is generated.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-07-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-07-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 10.1–10.2 — Generics and Traits
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-07-03-rustlings-exercises
+    locator: generics and traits
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Implement and review a generic processing kernel
+    id: resource-rust-07-04-implement-and-review-a-generic-processing-kernel
+    locator: Create two implementations, a reusable contract test, and one object-safe dynamic-dispatch
+      path.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-07-traits-generics-and-interface-design/notes.md
+- id: stage-rust-08-lifetimes-and-borrowed-api-contracts
+  number: 8
+  title: Lifetimes and borrowed API contracts
+  status: pending
+  objective: Annotate lifetime relationships by reasoning about which output borrows from which input,
+    and redesign APIs when borrowing would make ownership unclear.
+  done_when:
+  - Twelve lifetime examples are solved by relationship reasoning rather than random annotation.
+  - A borrowed index/view API exposes no dangling references and has compile-fail or documented negative
+    cases.
+  - 'Independence gate: no ''static, leak, clone, or unsafe escape hatch is used to avoid the actual design
+    question.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-08-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-08-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 10.3 — Validating References with Lifetimes
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-08-03-rustlings-exercises
+    locator: lifetimes
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Build a borrowed view over validated sparse data
+    id: resource-rust-08-04-build-a-borrowed-view-over-validated-sparse-data
+    locator: Connect input and output lifetimes explicitly, then compare an owned alternative and document
+      the trade-off.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-08-lifetimes-and-borrowed-api-contracts/notes.md
+- id: stage-rust-09-modules-crates-workspaces-and-public-boundaries
+  number: 9
+  title: Modules, crates, workspaces, and public boundaries
+  status: pending
+  objective: Organize a multi-module crate with a small public API, private implementation details, feature-aware
+    dependencies, and reproducible metadata.
+  done_when:
+  - A library is split into domain, service, adapter, and CLI modules with minimal pub exposure.
+  - cargo test and cargo doc succeed from a clean checkout; an API consumer imports only the intended
+    surface.
+  - 'Independence gate: the module graph and dependency direction are drawn before moving code.'
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-09-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-09-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 7 and Chapter 14.1–14.3 — Packages, Crates, Modules, and Workspaces
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: reference
+    label: Cargo reference — manifest format
+    id: resource-rust-09-03-cargo-reference-manifest-format
+    locator: Package, target, feature, and dependency tables
+    url: https://doc.rust-lang.org/cargo/reference/manifest.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Refactor one crate into explicit modules
+    id: resource-rust-09-04-refactor-one-crate-into-explicit-modules
+    locator: Preserve behavior with tests, reduce the public surface, and explain every dependency edge.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-09-modules-crates-workspaces-and-public-boundaries/notes.md
+- id: stage-rust-10-closures-iterators-and-zero-cost-pipelines
+  number: 10
+  title: Closures, iterators, and zero-cost pipelines
+  status: pending
+  objective: Reason about Fn/FnMut/FnOnce capture, iterator ownership, laziness, and allocation while
+    building expressive data pipelines.
+  done_when:
+  - A lazy pipeline and an explicit-loop version are equivalent under adversarial tests and compared with
+    evidence.
+  - Closure capture mode and iterator consumption are predicted correctly for ten examples.
+  - 'Independence gate: the iterator adaptor is implemented and tested before reading a library solution.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-10-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-10-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: 'Chapter 13 — Functional Language Features: Iterators and Closures'
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: practise
+    label: Rustlings exercises
+    id: resource-rust-10-03-rustlings-exercises
+    locator: iterators and closures
+    url: https://github.com/rust-lang/rustlings
+    scope_triage: required-now
+  - kind: practise
+    label: Implement a lazy token-to-feature pipeline
+    id: resource-rust-10-04-implement-a-lazy-token-to-feature-pipeline
+    locator: Use iterators, closures, collect, and fold; measure allocations before claiming an optimization.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-10-closures-iterators-and-zero-cost-pipelines/notes.md
+- id: stage-rust-11-smart-pointers-shared-ownership-and-interior-mut
+  number: 11
+  title: Smart pointers, shared ownership, and interior mutability
+  status: pending
+  objective: Select Box, Rc, Arc, Cell, RefCell, Mutex, or ordinary ownership from the actual sharing
+    and mutation requirements.
+  done_when:
+  - A tree or DAG example contrasts owned, shared, and synchronized designs with explicit cycle and contention
+    risks.
+  - Runtime borrow and lock failures are tested; Rc/RefCell is not presented as a default borrow-checker
+    workaround.
+  - 'Independence gate: an ownership graph and simpler alternatives are documented before choosing a smart
+    pointer.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-11-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-11-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 15 — Smart Pointers
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: reference
+    label: Rust standard library — pointer module
+    id: resource-rust-11-03-rust-standard-library-pointer-module
+    locator: Pointer types and safety contracts
+    url: https://doc.rust-lang.org/std/ptr/
+    scope_triage: reference-only
+  - kind: practise
+    label: Build three ownership variants of a small graph
+    id: resource-rust-11-04-build-three-ownership-variants-of-a-small-graph
+    locator: Compare Box tree ownership, Rc shared nodes, and Arc synchronization; document leaks, cycles,
+      and runtime costs.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-11-smart-pointers-shared-ownership-and-interior-mut/notes.md
+- id: stage-rust-12-testing-documentation-clippy-and-api-quality
+  number: 12
+  title: Testing, documentation, clippy, and API quality
+  status: pending
+  objective: Treat examples, unit tests, integration tests, property checks, compiler lints, and documentation
+    as parts of the public contract.
+  done_when:
+  - A crate has unit, integration, regression, and doc tests with named boundary cases and no ignored
+    warning without justification.
+  - One deliberate bug is caught by a regression test and one API ambiguity is removed after writing documentation.
+  - 'Independence gate: test cases and expected failures are written before asking AI to review the implementation.'
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-12-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-12-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 11 and Chapter 14.2 — Tests and Documentation
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: reference
+    label: Rust API Guidelines
+    id: resource-rust-12-03-rust-api-guidelines
+    locator: Checklist for idiomatic, interoperable public APIs
+    url: https://rust-lang.github.io/api-guidelines/
+    scope_triage: helpful-now
+  - kind: practise
+    label: Harden the earlier kernel crate
+    id: resource-rust-12-04-harden-the-earlier-kernel-crate
+    locator: Add contract tests, doc tests, failure injection, clippy cleanup, and a README consumer example.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-12-testing-documentation-clippy-and-api-quality/notes.md
+- id: stage-rust-13-concurrency-send-sync-channels-and-rayon
+  number: 13
+  title: Concurrency, Send, Sync, channels, and Rayon
+  status: pending
+  objective: Design concurrent work with explicit ownership, deterministic results, bounded resources,
+    and measured benefit.
+  done_when:
+  - A parallel batch processor has a sequential oracle, deterministic tests, error propagation, and a
+    cancellation or shutdown path.
+  - Send, Sync, Arc, Mutex, channels, atomics, and Rayon are chosen correctly in a written decision table.
+  - 'Independence gate: correctness is proven sequentially before parallelization or AI optimization advice.'
+  estimate_minutes: 150
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-13-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-13-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 16 — Fearless Concurrency
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: reference
+    label: Rayon documentation
+    id: resource-rust-13-03-rayon-documentation
+    locator: Parallel iterators and thread-pool contracts
+    url: https://docs.rs/rayon/latest/rayon/
+    scope_triage: required-now
+  - kind: practise
+    label: Parallelize a measured batch transform
+    id: resource-rust-13-04-parallelize-a-measured-batch-transform
+    locator: Build a sequential oracle, use Rayon or scoped threads, inject failures, and benchmark enough
+      work to justify concurrency.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-13-concurrency-send-sync-channels-and-rayon/notes.md
+- id: stage-rust-14-async-rust-cancellation-and-blocking-boundaries
+  number: 14
+  title: Async Rust, cancellation, and blocking boundaries
+  status: pending
+  objective: Understand Future polling, executors, cancellation, pinning at a conceptual level, and when
+    async is inappropriate for CPU-bound kernels.
+  done_when:
+  - A small async service handles timeout, cancellation, cleanup, and one blocking boundary without starving
+    the executor.
+  - A decision record distinguishes threads, Rayon, async I/O, processes, and a synchronous API for five
+    workloads.
+  - 'Independence gate: the state-machine sketch and failure paths exist before framework code is written.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-14-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-14-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Chapter 17 — Async and Await
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: reference
+    label: Tokio tutorial
+    id: resource-rust-14-03-tokio-tutorial
+    locator: Tasks, I/O, spawning, shared state, and channels
+    url: https://tokio.rs/tokio/tutorial
+    scope_triage: helpful-now
+  - kind: practise
+    label: Build a cancellable async fetch-and-transform lab
+    id: resource-rust-14-04-build-a-cancellable-async-fetch-and-transform-la
+    locator: Use timeouts and structured cleanup, isolate blocking CPU work, and test cancellation deterministically.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-14-async-rust-cancellation-and-blocking-boundaries/notes.md
+- id: stage-rust-15-production-errors-serialization-and-ecosystem-ch
+  number: 15
+  title: Production errors, serialization, and ecosystem choices
+  status: pending
+  objective: Design stable error categories and adopt ecosystem crates only after understanding their
+    contract, maintenance cost, and boundary behavior.
+  done_when:
+  - A CLI/library pair uses typed library errors, contextual application errors, serde data, and a stable
+    exit/error contract.
+  - Every dependency has a one-sentence reason, minimal features, and an update/security check recorded.
+  - 'Independence gate: the error taxonomy and serialized format are specified before choosing crates
+    or asking AI.'
+  estimate_minutes: 120
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-15-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: reference
+    label: thiserror documentation
+    id: resource-rust-15-02-thiserror-documentation
+    locator: Typed library errors
+    url: https://docs.rs/thiserror/latest/thiserror/
+    scope_triage: required-now
+  - kind: reference
+    label: anyhow documentation
+    id: resource-rust-15-03-anyhow-documentation
+    locator: Application-level context and propagation
+    url: https://docs.rs/anyhow/latest/anyhow/
+    scope_triage: required-now
+  - kind: reference
+    label: Serde documentation
+    id: resource-rust-15-04-serde-documentation
+    locator: Serialization data model and derives
+    url: https://serde.rs/
+    scope_triage: required-now
+  - kind: practise
+    label: Build a versioned configuration and error boundary
+    id: resource-rust-15-05-build-a-versioned-configuration-and-error-bounda
+    locator: Reject malformed inputs, preserve error sources, define exit behavior, and round-trip valid
+      configuration.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-15-production-errors-serialization-and-ecosystem-ch/notes.md
+- id: stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design
+  number: 16
+  title: PyO3, maturin, the GIL, and Python boundary design
+  status: pending
+  objective: Build and reason about a small Python extension whose types, ownership, errors, copies, ABI,
+    and threading behavior are explicit.
+  done_when:
+  - A disposable extension builds and installs into a clean environment, exposes one typed function, and
+    maps invalid input to a deliberate Python exception.
+  - A boundary table records Python type, Rust type, ownership/copy behavior, GIL state, failure mapping,
+    and test oracle for every argument and return.
+  - 'Independence gate: the pure-Python oracle and boundary contract are complete before native implementation
+    or AI assistance.'
+  estimate_minutes: 180
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-16-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: PyO3 user guide
+    id: resource-rust-16-02-pyo3-user-guide
+    locator: Python modules, functions, types, errors, GIL, and free-threading notes
+    url: https://pyo3.rs/
+    scope_triage: required-now
+  - kind: read
+    label: maturin guide
+    id: resource-rust-16-03-maturin-guide
+    locator: Project layout, build, develop, and wheel workflow
+    url: https://www.maturin.rs/
+    scope_triage: required-now
+  - kind: practise
+    label: Create a toy Python-to-Rust extension
+    id: resource-rust-16-04-create-a-toy-python-to-rust-extension
+    locator: Implement a checked numeric transform, build a wheel, test the installed artifact against
+      a pure-Python oracle, and inspect exception mapping.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design/notes.md
+- id: stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi
+  number: 17
+  title: Sparse buffers, NumPy interop, and performance evidence
+  status: pending
+  objective: Reason about contiguous and sparse layouts, dtype and index contracts, copies, parallel kernels,
+    and benchmark validity across Python and Rust.
+  done_when:
+  - A toy CSR transform validates shape, offsets, indices, dtype, and empty inputs against a Python oracle.
+  - A copy/lifetime diagram and repeated benchmark separate conversion from kernel time and justify any
+    claimed speedup.
+  - 'Independence gate: invariants and the scalar reference implementation exist before vectorization,
+    parallelization, or AI tuning.'
+  estimate_minutes: 180
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-17-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: reference
+    label: Rust ndarray documentation
+    id: resource-rust-17-02-rust-ndarray-documentation
+    locator: Owned arrays, views, shapes, strides, and parallel features
+    url: https://docs.rs/ndarray/latest/ndarray/
+    scope_triage: required-now
+  - kind: reference
+    label: rust-numpy documentation
+    id: resource-rust-17-03-rust-numpy-documentation
+    locator: PyO3 bindings for NumPy arrays and ownership rules
+    url: https://docs.rs/numpy/latest/numpy/
+    scope_triage: required-now
+  - kind: practise
+    label: Implement and benchmark a checked CSR kernel
+    id: resource-rust-17-04-implement-and-benchmark-a-checked-csr-kernel
+    locator: Use a scalar Python oracle, adversarial sparse inputs, explicit copy accounting, and repeated
+      measurements.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi/notes.md
+- id: stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end
+  number: 18
+  title: Capstone — own a Python-to-Rust feature end to end
+  status: pending
+  objective: Independently design, implement, test, package, profile, document, and review a small native-backed
+    Python feature without copying Stratum code.
+  done_when:
+  - Before code, a no-AI brief defines users, non-goals, Python API, Rust API, data invariants, errors,
+    copies, GIL/thread behavior, test oracle, and performance threshold.
+  - A pure-Python implementation and a Rust implementation pass the same adversarial and property-oriented
+    tests from an installed wheel.
+  - The package includes documentation, type-facing API notes, clean build instructions, error behavior,
+    repeated benchmarks, and a self-review of every dependency and unsafe assumption.
+  - Only after the working baseline, an AI review may be requested; every suggestion is accepted or rejected
+    with a reason and validated independently.
+  - Seven days later, the core boundary and kernel are rebuilt or explained closed-book without AI.
+  estimate_minutes: 360
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-18-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: The Rust Programming Language
+    id: resource-rust-18-02-the-rust-programming-language
+    source_id: source-rust-book
+    locator: Revisit the chapters connected to recorded misses
+    url: https://doc.rust-lang.org/book/
+    scope_triage: required-now
+  - kind: read
+    label: PyO3 examples repository
+    id: resource-rust-18-03-pyo3-examples-repository
+    locator: Small reference integrations; read only after the baseline works
+    url: https://github.com/PyO3/pyo3/tree/main/examples
+    scope_triage: helpful-now
+  - kind: practise
+    label: Build the complete independent extension capstone
+    id: resource-rust-18-04-build-the-complete-independent-extension-capston
+    locator: Choose a bounded tokenizer, sparse transform, or numeric kernel; preserve a Python oracle
+      and produce a reviewable history.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end/notes.md
+- id: stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ
+  number: 19
+  title: Pull-based advanced clinic — unsafe, macros, and type-level techniques
+  status: pending
+  objective: Approach advanced Rust only when a concrete problem demands it, with explicit safety invariants,
+    expansion inspection, and simpler alternatives documented first.
+  done_when:
+  - One chosen topic is tied to a real need, not novelty; the safe or simpler design is attempted first.
+  - For unsafe, every invariant is documented and tested; for macros, expansion and error messages are
+    inspected; for type-level work, user-facing complexity is justified.
+  - 'Independence gate: no advanced feature is accepted from AI without primary-documentation verification
+    and a line-by-line safety explanation.'
+  estimate_minutes: 150
+  exam_critical: false
+  concepts: []
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Canonical roadmap — Rust learning plan
+    id: resource-rust-19-01-canonical-roadmap-rust-learning-plan
+    locator: The matching phase and step in the canonical Rust roadmap
+    vault_path: knowledge/notes/programming/note-rust-learning-plan.md
+    scope_triage: required-now
+  - kind: reference
+    label: The Rustonomicon
+    id: resource-rust-19-02-the-rustonomicon
+    locator: Unsafe Rust contracts and undefined behavior
+    url: https://doc.rust-lang.org/nomicon/
+    scope_triage: deferred
+  - kind: reference
+    label: The Rust Reference — macros
+    id: resource-rust-19-03-the-rust-reference-macros
+    locator: Declarative and procedural macro semantics
+    url: https://doc.rust-lang.org/reference/macros.html
+    scope_triage: deferred
+  - kind: practise
+    label: Run one need-driven advanced spike
+    id: resource-rust-19-04-run-one-need-driven-advanced-spike
+    locator: Write the requirement, safe baseline, invariant proof, focused tests, and decision to adopt
+      or reject.
+    scope_triage: deferred
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ/notes.md

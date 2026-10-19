@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260917-203949-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-17T20:39:49+02:00'
+snapshot_before: sha256:8e319299cb83604768a20d378df5c4636be9a808b8c8beb5d9dce8e9052e45f5
+snapshot_after: sha256:c1249a84ba48d27d9a28094b5f06d02508725e3d89449d131b0a8912ea4218d6
+expected_revisions:
+  module-hu-m2-statistik-analysis: 52
+  study-map-m2-sad-l03: 6
+  unit-m2-sad-l03: 17
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 52
+    after: 53
+  study-map-m2-sad-l03:
+    before: 6
+    after: 7
+  unit-m2-sad-l03:
+    before: 17
+    after: 18
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 038d12732781bdaf6dbd66fa8f2b40d0d87215c5496711932f48bd6bc84988a7
+  sha256_after: fea5b938fbd75af8ae545f2e89402dac8d8cfa1c502c4ac8e2f8f062885cf458
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-routepatch-sad-l03-ced062
+  idempotency_key: routepatch-sad-l03-ced062
+  intent_sha256: sha256:d551555456a528143370ceeee8949be743b7f93aceb131609a74900e3adb360e
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:d551555456a528143370ceeee8949be743b7f93aceb131609a74900e3adb360e

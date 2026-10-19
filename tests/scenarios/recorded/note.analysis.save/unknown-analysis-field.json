@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: analysis has unknown fields: bogus (accepted: id, title, path, binding; type/created/state/authorship/semantic_review are set by the handler)\n",
+  "stdout": "",
+  "stdout_json": null
+}

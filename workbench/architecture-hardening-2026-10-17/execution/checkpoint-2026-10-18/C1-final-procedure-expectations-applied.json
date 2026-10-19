@@ -1,0 +1,226 @@
+[
+  {
+    "file": "add-concept-relation.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "8aac4594882fe0d9248a1c46932908cee9de70b1fb1304714e7f40c76b9d01b3",
+    "after_sha256": "24ccc3cce98f0d4acb97e7b776eaf86d1378a60892ec551939abb5caac706494"
+  },
+  {
+    "file": "add-or-evaluate-a-source.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "7e3dcb7aa4671ebe0f53ab83644bef792c026eec0cf0ef99a6de489187c60595",
+    "after_sha256": "7d873d71c0061ddaf24aa527ccf024a044d7a9cfc52eba70acb85b5a782964cf"
+  },
+  {
+    "file": "back-up-and-restore.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "1fcfa2c370184d2c05befd90eaff9d7ef3cb7030cf74fd1ddcc6f7bdeaa0e618",
+    "after_sha256": "58695c632bc0d1236c15f5977111b6f97c54350d7e6d947a0a6b06db8aa591f2"
+  },
+  {
+    "file": "bootstrap-order.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "0fc2e34439c7971edadc6e4d3be450769e7afbf2801516336b40661804a60bba",
+    "after_sha256": "e2fa9bb5e8ffadd8eaf3bf9bd3fa72456e4a0ecd45726508ac336408429bec05"
+  },
+  {
+    "file": "build-write-envelope.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "972b6f479cfcd6c16cf8fc9df418e8efec7617469c8ee5fd3f9e903f61970f96",
+    "after_sha256": "e1e2830f52083b56c8b3d5a212f6c24658e98e17ae1d96ed08899c843e140f66"
+  },
+  {
+    "file": "capture-routing.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "729a80e53acbb3948d3946a6c86f06b1c8c9eea74be3d1535d83a92dd8e29d16",
+    "after_sha256": "6ee88b057d8fed039a8f195fdac0f9cea1aef30e68fb56050b1e8838a26f00dd"
+  },
+  {
+    "file": "capture-temporary-material.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "89830ec9f018cb8416886cca8eb0471bd920d0ff44e9dd377899b79cf789e2cf",
+    "after_sha256": "22b490ff05eb15de7413a6e5353698ece351f4a0b2321f0aae68e093c18b2247"
+  },
+  {
+    "file": "carry-work-across-semesters.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "4344e0b9526792df6ad465d21e797e5cc2dd7a8f5fd637be86be4b6bb925edd9",
+    "after_sha256": "1e1c313d0f10843aae31eb67205ab1c187cd41c2d043a4490f39e9a2bb38a8a7"
+  },
+  {
+    "file": "close-a-module.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "3f69f8a64cb53143fc244cb2911fe61109db3abd2c9fa8fde34ea724f90f4c7a",
+    "after_sha256": "f31f7c3202a04d19c93762c139d6290bec1f076735a357e9c23af65f683ce93f"
+  },
+  {
+    "file": "create-durable-note.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "e50e8253c8e41c01609dba894fff60b1b398aa0949eeab54ca4bf7565bae3a2a",
+    "after_sha256": "35a72b34e750ad03990a75c6f3f7c2a591f2ba9f328e04ee15d6d2c5908b6966"
+  },
+  {
+    "file": "deprecate-or-supersede.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "605a15ad8be7990ea6cc7195edf4f4fe03e4557f093a46d75002a169ff87f681",
+    "after_sha256": "de61f325b4cfe8f85d91154b634ad34f5cedf88830e9c95c0207922810369c41"
+  },
+  {
+    "file": "end-a-session.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "006881edb7ac3635527183a6dbd39ef7d4f303432b5d0658de11953d2eb11122",
+    "after_sha256": "41e9e44307a1c9f83122fbeb05cd356b439282cd1dccd1526a2879894448baaa"
+  },
+  {
+    "file": "ingest-a-handwritten-note.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "0910e9c60290c9017e35fd2d578f73500e62e8c8136dabc1624c564be235051b",
+    "after_sha256": "fff6b38aab887cacaa1f14a03ae5332544e0d70fdfef4afedf369f0fc597e658"
+  },
+  {
+    "file": "maintain-crosswalk.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "77f3f145a74296fe4b235526d5e59f4ccc9f310d16db454306335b209b2f9842",
+    "after_sha256": "1d26f5542b4c0f7bdd12961eca8ab5f15b7348007e1f56a8c10814e3387c386a"
+  },
+  {
+    "file": "process-inbox.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "40879402c73c1b46ffa2123f54acd7ecd5577d229c05bd49f88660f3eafbe14c",
+    "after_sha256": "3c5aa273d2b23e50a73c24719835a8a378c2e11eb8fc6548119082d875ab1052"
+  },
+  {
+    "file": "read-an-operation.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "7cd89a1373448ba0dec2909735ad2c705e5c7766c1e1ad74cde66f56dd44c683",
+    "after_sha256": "77ea9f5172e515f0287d29e807e3d16a4660b781ffe5b02e1655e988c430a569"
+  },
+  {
+    "file": "record-evidence.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "7625b6407dcebf7d82ec30ed6238946ea5a414f4b22063f12681f35e82e900c9",
+    "after_sha256": "37325e0791159b8534bbae425702414f25166983716131390f669edd2b297f9d"
+  },
+  {
+    "file": "record-module-event.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "d52282c6103efed396219f4a51357c5d9f5d4261f07c2f856557dd023a1f7270",
+    "after_sha256": "ab362ab40eb480bf91490c55972f6a94b27d08009eff171e36619e709987d44c"
+  },
+  {
+    "file": "review-a-note.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "221a4a0a9d1c5b10f5ee8de6b6920807dbde4d6071342fdd830b3ceab2b1e19a",
+    "after_sha256": "8bea0a9852d2d335bb44c28b5f8a54d63e028d0267000525823ea78a0df9032c"
+  },
+  {
+    "file": "review-a-stage-material-angle.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "89b46fa27f94511a605ee862afc0fc7925e10234536120ae0b03f29814bee1cc",
+    "after_sha256": "7f0fbaa9e1581be8e61a8f7c936f97b9f67a533ecc425e0804309f14c993a697"
+  },
+  {
+    "file": "revise-an-existing-plan.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "61e2839ae3a7ba597e8fe7caa48d71e17d071d3e8f414e72236674445773abbe",
+    "after_sha256": "03dc2d708e8747a48ed3228b7e1be9a5865be68ef535fb677a56b2645fdf3caf"
+  },
+  {
+    "file": "save-a-batch-of-source-analyses.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "acaaab64a3569f0e3139f442c44a6a11d8fd652399c836a47ce4055a163b6037",
+    "after_sha256": "1ca4f02ac9ccccfc1e96b44e355bdbb50d4a25e1ad885473b88553074b43ea5e"
+  },
+  {
+    "file": "shelving-session-closure.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "91dfe642aa44ef5ec94ebe372ae1b74ae198711dd04e638c065c54139daee4b1",
+    "after_sha256": "3bb96bd49dadba255345a7ede154403bdf6f8de03ea88813baf2f560a1c3fdce"
+  },
+  {
+    "file": "source-routing-and-feedback.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "667c18cfda907a4a8f79ffbf1bc5e9760626d1912f51dcbe9868fabe87f990ff",
+    "after_sha256": "1433b5e451bc0a96762fcb9c1efee3e0e82061e911476ce6f30e176257eb0c66"
+  },
+  {
+    "file": "start-a-module.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "3219be9c4e8acddf79bbe5fe96f9181b70bde61538ec14d6a5c70dd32a43ecaf",
+    "after_sha256": "a2c3e2298f3701802e72845171a0c23259d117bfd2d4b5d24643f50984b4ff47"
+  },
+  {
+    "file": "start-a-workspace.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "ae636ea9e0467f86fc38a16231adc8f7254c7ed160db714b4708227bea13cf24",
+    "after_sha256": "909300ada6f3839b064a92a1872da3efc88f0f63584572079ea6536c282d4b99"
+  },
+  {
+    "file": "unit-workflow.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "8cab19938462c7d786a7ffe553db6cf3947932cc4054f57b76d0b97003e505de",
+    "after_sha256": "52186f58687da8fbec998cce404831006a3245f181e80c6843c393bad0127e55"
+  },
+  {
+    "file": "update-coordination.md",
+    "commands_preserved": true,
+    "expected_exits_preserved": true,
+    "non_digest_blocks": [],
+    "before_sha256": "ed583a07c070814a1e9d7848b0cf6051f24b0aa413431b6b12bb2afb17475e84",
+    "after_sha256": "a35bd621782f523f2cb196e5950c521b5f76ae618a18ead57f8de4ae2e2e3041"
+  }
+]

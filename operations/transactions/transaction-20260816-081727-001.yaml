@@ -1,0 +1,38 @@
+schema_version: 1
+id: transaction-20260816-081727-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-16T08:17:27+02:00'
+snapshot_before: sha256:7f6c9334b2cc4b5b2d2d741e2e1f2398888f860be4930bec34b2520c3bbfeef9
+snapshot_after: sha256:c97ecea0cb78ede1b87493287f400a7a39388021840bb6a631d8e09aeb99a28e
+expected_revisions: {}
+artifact_revisions:
+  module-hu-algo2:
+    before: 0
+    after: 1
+  unit-algo2-exam-prep:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-algo2/module.yaml
+  sha256_before: 4270df25cb128d45a3a716cf38e10193cb41359d28ecad92d9218c4505230c67
+  sha256_after: d61399337fa5074eea950794e250be40a4aeb792f8ae227c33e45da28d812e59
+  created: false
+- path: curriculum/modules/module-hu-algo2/source-map.yaml
+  sha256_before: 36f076eb885841379988e0bd9273f43bc28ff91c6e3eef3eec71167415571020
+  sha256_after: ec900d807f58074503bdf85edb67e2560ca2b55e045ae59f04fab6c5edbe5c0a
+  created: false
+- path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
+  sha256_before: 850d5bdd0ec3505a23a6b62ff70d763adbe2f7bbd08b4b270aa001b6e6b80918
+  sha256_after: 8d32686ac13df65dcb9143ad48fe2fda58034133b6fc7e77cfd5b61d8954b29e
+  created: false
+- path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/unit.yaml
+  sha256_before: aa2641630ed30b6011523bac022820513c10522784f460c59ec57cd1d3244750
+  sha256_after: 02687650ed7415927000bbdeb53baef99518cbba783be72ea7f089c9332d2d95
+  created: false
+- path: work/active/workspace-algo2-exam-prep/CONTEXT.md
+  sha256_before: 09cf61a3e0eb6da9f9a71243d5979e7b3f7e5fc465105f54b78ee93e9612c596
+  sha256_after: f1b5edda864d1f52c6410c9a76c79aff536defb076038fac9977c5c86f095606
+  created: false
+metadata: {}

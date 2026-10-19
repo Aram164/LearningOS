@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "Demo Module · Expected value · stage-demo\n  (via resume pointer; pointer updated 2026-09-20 (11 days ago))\n\n  Recorded aims (compare with current dates and state):\n    Coordination priorities (undated): (none)\n      source: work/COORDINATION.md#Priorities\n    Workspace workspace-demo: Do the demo thing.\n      source: work/active/workspace-demo/CONTEXT.md#Next-Action\n\n  Requirement  knowledge-demo-expectation\n               capability: {\"kind\": \"explain\", \"operands\": [\"expectation\"]}\n               under: unfamiliar-example\n               evidence: explain-reason\n\n  Evidence     none recorded yet\n  Last result  none\n  Stage note   nothing recorded yet (curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md)\n\n  Open here    —\n\n  Top goal     Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved (1 goal)\n               tier 1 — 2026-10-09 (8 days); seeing it files nothing\n               decide per goal id: los goal <id> --reject|--defer|--close\n\n  Next         los observe req-demo-l01-demo --activity <what-you-did> --result <correct|incorrect|partial|abandoned>\n  Exam         2. Termin — 2026-10-09 (8 days)\n",
+  "stdout_json": null
+}

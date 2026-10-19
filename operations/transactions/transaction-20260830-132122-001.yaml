@@ -1,0 +1,52 @@
+schema_version: 2
+id: transaction-20260830-132122-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-30T13:21:22+02:00'
+snapshot_before: sha256:5d7bb925e74eed3a6024fda72ff77cee9955b5d7fd9417a3a26e3dc6e8493924
+snapshot_after: sha256:f5c55e690cb7ccb15c011f0ab5310c8daafdec18b0139148158a87cd86a1f76f
+expected_revisions:
+  module-hu-aml: 4
+  unit-aml-exam-prep: 4
+artifact_revisions:
+  module-hu-aml:
+    before: 4
+    after: 5
+  unit-aml-exam-prep:
+    before: 4
+    after: 5
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 8af2318b4615951af9e6de17a0c043e3d2f8ed07ff59b088b35eb351fe63def5
+  sha256_after: bc530677c24b5a35de69983188a05c240cb7c407b8cb4ffea67e7946fbd8a1d0
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml
+  sha256_before: 3a0469f9ed36be345041a6ee84a7da4272ed27fbd67484ab825867c68a699c8b
+  sha256_after: 58a8cfe070409954391eb3bacd310b674bf05555fc7fc2e6fec1d60dd3b945c7
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: codex
+  request_id: request-aml-source-rigor-p1-20260830-002
+  idempotency_key: aml-source-rigor-p1-20260830-002
+  intent_sha256: sha256:5c6561c71d56897eb28093c2fa55fe49e81fecd0fb433d424e29ecbfb4d3ce4c
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:5c6561c71d56897eb28093c2fa55fe49e81fecd0fb433d424e29ecbfb4d3ce4c

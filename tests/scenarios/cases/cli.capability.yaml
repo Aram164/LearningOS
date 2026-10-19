@@ -1,0 +1,89 @@
+operation: cli.capability
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: dispatch-success
+    kind: success
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json"]
+    a5_base: true
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json"]
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json"]
+  - id: idempotency-conflict
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/first.json"]
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/second.json"]
+  - id: unknown-name-no-envelope
+    kind: refusal
+    transport: cli
+    argv: [capability, nope-capability, --payload-file, no-such-envelope.json]
+    expect: {site: null}
+  - id: known-name-missing-file
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, /nonexistent/no-such-envelope.json]
+    expect: {site: null}
+  - id: legacy-envelope
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/legacy.json"]
+    expect: {site: null}
+  - id: unknown-capability-v2
+    kind: refusal
+    transport: gateway
+    request: {}
+    expect: {site: null}
+  - id: capability-mismatch
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/mismatch.json"]
+    expect: {site: null}
+  - id: invalid-envelope-shape
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/invalid.json"]
+    expect: {site: null}
+  - id: unconfirmed-approval
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/tampered.json"]
+    expect: {site: null}
+  - id: gesture-not-allowed
+    kind: refusal
+    transport: cli
+    argv: [capability, note.create, --payload-file, "<CASEDATA>/gesture.json"]
+    expect: {site: null}
+  - id: replay-only-miss
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json", --replay-only]
+    expect: {site: null}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/stale.json"]
+    expect: {site: null}
+  - id: approve-in-payload
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/approve-payload.json"]
+    expect: {site: null}
+  - id: invalid-payload
+    kind: refusal
+    transport: cli
+    argv: [capability, capture.create, --payload-file, "<CASEDATA>/invalid-payload.json"]
+    expect: {site: null}
+  - id: dispatched-refusal
+    kind: refusal
+    transport: cli
+    argv: [capability, stage.progress.update, --payload-file, "<CASEDATA>/refused-stage.json"]
+    expect: {site: null}

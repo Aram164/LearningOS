@@ -1,0 +1,943 @@
+id: study-map-m2-analysis-ch02
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch02
+status: not-started
+current_stage: stage-m2-analysis-ch02-koerperaxiome
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch02-koerperaxiome
+  number: 1
+  title: Wiederholung – Körperaxiome (§2.1)
+  status: pending
+  objective: 'The field axioms and the consequences drawn from them. Labelled Wiederholung: assumed from
+    M1.2, restated here only to fix notation.'
+  done_when:
+  - 'Reproduce without notes: The field axioms and the consequences drawn from them. Labelled Wiederholung:
+    assumed from M1.2, restated here only to fix notation.'
+  - Work Bestimmt_Scan.pdf — handwritten field and order axioms, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-analysisdrillblaetterext-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-rosselementaryanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-koerperaxiome/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-anordnung
+  number: 2
+  title: Anordnung von R (§2.2)
+  status: pending
+  objective: The order axioms and the rules for manipulating inequalities. Every later estimate is an
+    inequality argument, so fluency here is what makes epsilon arguments writable.
+  done_when:
+  - 'Reproduce without notes: The order axioms and the rules for manipulating inequalities. Every later
+    estimate is an inequality argument, so fluency here is what makes epsilon arguments writable.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 3, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisdrillblaetterext-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-rosselementaryanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-anordnung/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-intervalle-betrag
+  number: 3
+  title: Intervalle und Betragsfunktion (§2.3.1)
+  status: pending
+  objective: Interval notation and the absolute value as a distance, including the triangle inequality
+    in the form the convergence definition uses.
+  done_when:
+  - 'Reproduce without notes: Interval notation and the absolute value as a distance, including the triangle
+    inequality in the form the convergence definition uses.'
+  - Work HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof, then the remaining
+    2, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-intervalle-betrag/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-supremum-infimum
+  number: 4
+  title: Supremum und Infimum von Mengen (§2.3.2)
+  status: pending
+  objective: Bounded sets, upper and lower bounds, supremum and infimum, and the difference between a
+    supremum and a maximum. The distinction is a standing exam question and the reason Serie 05's Hausaufgabe
+    5.4 exists.
+  done_when:
+  - 'Reproduce without notes: Bounded sets, upper and lower bounds, supremum and infimum, and the difference
+    between a supremum and a maximum. The distinction is a standing exam question and the reason Serie
+    05''s Hausaufgabe 5.4 exists.'
+  - Work HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof, then the remaining
+    4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisdrillblaetterext
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mit18100a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-abbottunderstandinganaly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mfnfanalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-rosselementaryanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-supremum-infimum/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-vollstaendigkeitsaxiom
+  number: 5
+  title: Das Vollständigkeitsaxiom (§2.3.3)
+  status: pending
+  objective: The completeness axiom in the script's supremum form. It is the axiom that separates R from
+    Q and the one every convergence theorem later cites, directly or through Bolzano-Weierstraß.
+  done_when:
+  - 'Reproduce without notes: The completeness axiom in the script''s supremum form. It is the axiom that
+    separates R from Q and the one every convergence theorem later cites, directly or through Bolzano-Weierstraß.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 2, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mit18100a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-abbottunderstandinganaly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mfnfanalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-rosselementaryanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-vollstaendigkeitsaxiom/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-folgerungen
+  number: 6
+  title: Folgerungen aus dem Vollständigkeitsaxiom (§2.3.4)
+  status: pending
+  objective: 'What completeness immediately buys: the Archimedean property and the density of Q in R.
+    These are the steps that let an epsilon argument choose an N at all.'
+  done_when:
+  - 'Reproduce without notes: What completeness immediately buys: the Archimedean property and the density
+    of Q in R. These are the steps that let an epsilon argument choose an N at all.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 2, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mit18100a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-abbottunderstandinganaly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-mfnfanalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-rosselementaryanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-folgerungen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-potenzen-wurzeln
+  number: 7
+  title: Potenzen und Wurzeln reeller Zahlen (§§2.3.5-2.3.6)
+  status: pending
+  objective: Powers with integer and rational exponents, and the existence of n-th roots as the first
+    genuine payoff of completeness — an existence proof rather than a calculation. Serie 07's Heron task
+    is its computational counterpart.
+  done_when:
+  - 'Reproduce without notes: Powers with integer and rational exponents, and the existence of n-th roots
+    as the first genuine payoff of completeness — an existence proof rather than a calculation. Serie
+    07''s Heron task is its computational counterpart.'
+  - Work Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln, then the remaining
+    1, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-ch02-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-grieseranalysis1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-leblbasicanalysis
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-ch02-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-potenzen-wurzeln/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-maschinenzahlen
+  number: 8
+  title: Ausflug – Darstellung reeller Zahlen im Rechner (§2.4)
+  status: pending
+  objective: 'Floating-point machine numbers, rounding error and machine arithmetic: why a complete ordered
+    field cannot be represented exactly and what breaks when you pretend otherwise. Ausflug depth — understand
+    and apply the core claims; not an exam focus.'
+  done_when:
+  - 'Reproduce without notes: Floating-point machine numbers, rounding error and machine arithmetic: why
+    a complete ordered field cannot be represented exactly and what breaks when you pretend otherwise.
+    Ausflug depth — understand and apply the core claims; not an exam focus.'
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-ch02-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-maschinenzahlen/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s8c-ck-0904",
+  "idempotency_key": "pl-s8c-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:dfc143bbf3c78260f4922dbc7daa1662d64fee53b06ee639caff63b1053ce1e9",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 6,
+    "study-map-job-polars-lazy-udf-interop": 5
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "stage_id": "stage-polars-17-arrow-interop-chunks-and-conversion-costs",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s8c-check.py",
+    "label": "Answer-key self-check (22 assertions)",
+    "file_sha256": "sha256:d2a6ef205dbc05093f4216df23a214f2c97d5feae4a7db441d1163f71d7ab759"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:03e57977c973e40eb7ea249bc9eba9434925ecb7893f83f869921529484be529"
+  }
+}

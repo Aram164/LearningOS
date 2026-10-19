@@ -1,0 +1,271 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "sources/sources.yaml": "21eee7edecfe652df8247c366900be8c9875f558991c09b31774c1c21ae18068"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "source.intake.record",
+              "channel": "operator",
+              "intent_sha256": "sha256:46a8e312f58d30b374ea28a4fc66654a09d3ebc9159bf810a7831158a7c54efa",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "source-scenario-lbl": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "source.intake.record",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "source-scenario-lbl": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "source.intake.record",
+                "declared_writes": [
+                  "sources/sources.yaml",
+                  "sources/registry/**"
+                ]
+              }
+            ]
+          },
+          "capability": "source.intake.record",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "source-scenario-lbl": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:0b3788f447c628018952b90945b7bcabd2fe96a21b72146b715cc14e06ef8317",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:46a8e312f58d30b374ea28a4fc66654a09d3ebc9159bf810a7831158a7c54efa"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:46a8e312f58d30b374ea28a4fc66654a09d3ebc9159bf810a7831158a7c54efa",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": false,
+              "path": "sources/sources.yaml",
+              "sha256_after": "21eee7edecfe652df8247c366900be8c9875f558991c09b31774c1c21ae18068",
+              "sha256_before": "03e8c76818ced582638f18e1cb41b3bac2403f0ba0da20a04932851ed4461087"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "source-scenario-lbl": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "71f2596805cb7bb2444b0cd103542ef3942e39943299b223d013a7da193ebe28",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7e65ecf9764e9d451e8368aa464a04de55ebf7b13ddde7b8b6864c8121460092",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b869eb9b0e7679d4f65c3574145b72488c91d37ccca3bf575c1721f329ff2af5",
+              "state": "file"
+            },
+            "sources/sources.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "21eee7edecfe652df8247c366900be8c9875f558991c09b31774c1c21ae18068",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"source.intake.record\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"source-scenario-lbl\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "source.intake.record",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "source-scenario-lbl": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "operation": "source.intake.record",
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "71f2596805cb7bb2444b0cd103542ef3942e39943299b223d013a7da193ebe28",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7e65ecf9764e9d451e8368aa464a04de55ebf7b13ddde7b8b6864c8121460092",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b869eb9b0e7679d4f65c3574145b72488c91d37ccca3bf575c1721f329ff2af5",
+              "state": "file"
+            },
+            "sources/sources.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "21eee7edecfe652df8247c366900be8c9875f558991c09b31774c1c21ae18068",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "71f2596805cb7bb2444b0cd103542ef3942e39943299b223d013a7da193ebe28",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7e65ecf9764e9d451e8368aa464a04de55ebf7b13ddde7b8b6864c8121460092",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b869eb9b0e7679d4f65c3574145b72488c91d37ccca3bf575c1721f329ff2af5",
+              "state": "file"
+            },
+            "sources/sources.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "21eee7edecfe652df8247c366900be8c9875f558991c09b31774c1c21ae18068",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"source.intake.record\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"{\\\"ok\\\": false, \\\"error\\\": \\\"source-scenario-lbl: identifiers label 'doi' is both set and removed\\\"}\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout_json": {
+        "capability": "source.intake.record",
+        "error": {
+          "code": "INVALID_REQUEST",
+          "details": {},
+          "message": "{\"ok\": false, \"error\": \"source-scenario-lbl: identifiers label 'doi' is both set and removed\"}",
+          "retryable": false
+        },
+        "idempotency_key": "KEY4",
+        "ok": false,
+        "receipt_path": null,
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {},
+        "schema_version": 2,
+        "snapshot_after": null,
+        "transaction_id": null
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

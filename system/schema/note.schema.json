@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/note.schema.json",
+  "title": "Note frontmatter",
+  "x-governs": "record",
+  "description": "Validates the YAML frontmatter of files under knowledge/notes/**/*.md. Note prose is canonical user meaning and is not schema-validated. Path must not determine identity.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "title",
+    "created"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "const": "note"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "reviewed": {
+      "type": "string",
+      "format": "date"
+    },
+    "role": {
+      "enum": [
+        "synthesis",
+        "reference",
+        "derivation",
+        "exercise-bank",
+        "mock-exam",
+        "implementation",
+        "question",
+        "crosswalk"
+      ],
+      "default": "synthesis"
+    },
+    "state": {
+      "enum": [
+        "rough",
+        "evolving",
+        "mature",
+        "deprecated"
+      ]
+    },
+    "authorship": {
+      "description": "Who wrote the note body. 'user' is Aram's own synthesis. 'mixed' is his reasoning plus imported material. 'external' is another author's text carried in. 'operator-drafted' is built by the operator from a scope source and NOT yet reasoned through by Aram \u2014 a study input, never evidence of understanding; it becomes 'mixed' when he works it and adds his own reasoning.",
+      "enum": [
+        "user",
+        "mixed",
+        "external",
+        "operator-drafted"
+      ]
+    },
+    "transcription": {
+      "enum": [
+        "none",
+        "manual",
+        "ai-assisted"
+      ]
+    },
+    "semantic_review": {
+      "enum": [
+        "unreviewed",
+        "user-reviewed"
+      ]
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "ref"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "derivation",
+              "explanation",
+              "implementation",
+              "exercise",
+              "exam",
+              "external"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "atlas_question": {
+      "type": "object",
+      "required": [
+        "state",
+        "target"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "open",
+            "resolved"
+          ]
+        },
+        "answer_notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "uniqueItems": true
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "concepts"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "concepts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "uniqueItems": true
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "type",
+                "to"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "type": {
+                  "enum": [
+                    "requires",
+                    "builds-on",
+                    "derives",
+                    "generalizes",
+                    "contrasts-with",
+                    "equivalent-to",
+                    "applies-in",
+                    "motivates"
+                  ]
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "material_analysis": {
+      "description": "Provenance binding for a durable source-chapter analysis. Only resolution 'resolved' claims a current registered source; every other resolution preserves the prose without impersonating one.",
+      "type": "object",
+      "required": [
+        "resolution",
+        "material",
+        "recorded_source_digest",
+        "inspected_range",
+        "frozen_input_sha256",
+        "frozen_input_bytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "resolution": {
+          "enum": [
+            "resolved",
+            "unresolved",
+            "unavailable",
+            "stale"
+          ]
+        },
+        "material": {
+          "description": "Recorded material relpath. Existence is not claimed.",
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "recorded_source_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "live_source_digest": {
+          "description": "Digest observed during binding. Absent when the source bytes were unobservable.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "inspected_range": {
+          "description": "Inclusive physical PDF pages (cover = 1) for PDF sources; inclusive one-based physical file lines for Markdown and plain text. Section labels are not line numbers.",
+          "type": "object",
+          "required": [
+            "start",
+            "end"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "topic",
+              "purpose",
+              "locator"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locator": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "frozen_input_sha256": {
+          "description": "sha256 of the frozen input bytes this note body preserves.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frozen_input_bytes": {
+          "description": "Length in bytes of the preserved body: the note body is exactly the file's last N bytes.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "model": {
+          "type": "string"
+        },
+        "built": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resolution": {
+                "const": "resolved"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "source_id"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "source_id"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "atlas_question"
+        ]
+      },
+      "then": {
+        "required": [
+          "role"
+        ],
+        "properties": {
+          "role": {
+            "const": "question"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2078 @@
+diff --git a/Makefile b/Makefile
+index 857dda3e..b27edc43 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,7 +12,7 @@ VENV   := .venv
+ # Homebrew "externally-managed-environment" errors on macOS.
+ PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
+ 
+-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean scrut hooks garden status plan-check system-check stress clean-derived commit-check
++.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check typecheck all setup setup-lean scrut hooks garden status plan-check system-check stress clean-derived commit-check
+ 
+ help:
+ 	@echo "make check  - validate the repository (schemas + semantic rules)"
+@@ -146,8 +146,12 @@ clean-derived:
+ # hand: "is the pair I am about to rely on coherent?" It intentionally changes
+ # no canonical data. The UI build is deterministic and its own check refuses a
+ # stale contract mirror or hand-edited bundle.
++typecheck:
++	$(PY) -m mypy
++
+ system-check:
+ 	$(MAKE) lint
++	$(MAKE) typecheck
+ 	$(PY) tools/validate.py --no-report
+ 	$(PY) tools/warning_baseline.py --check
+ 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
+diff --git a/pyproject.toml b/pyproject.toml
+index c79449a6..a71860c9 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -47,6 +47,24 @@ markers = [
+   "migrations: migrations and multi-year format compatibility",
+ ]
+ 
++# Migration boundaries remain strict while imported legacy modules retain their
++# existing diagnostics. Every new production module must join this maintained
++# list; test_arch_types compares it with the frozen pre-migration inventory.
++[tool.mypy]
++strict = true
++follow_imports = "silent"
++disallow_any_unimported = true
++disallow_any_explicit = true
++mypy_path = "tools"
++cache_dir = "/dev/null"
++files = [
++  "tools/learning_os/domain/transaction.py",
++  "tools/learning_os/app/claim_admission.py",
++  "tools/learning_os/domain/verbatim.py",
++  "tools/learning_os/store/materials/pdf_text.py",
++  "tools/learning_os/store/materials/anchors.py",
++]
++
+ # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).
+ #
+ # The review's argument for a linter was not style. Three of the five Tier-1
+diff --git a/system/VALIDATION.md b/system/VALIDATION.md
+index 011a0a66..91087095 100644
+--- a/system/VALIDATION.md
++++ b/system/VALIDATION.md
+@@ -166,6 +166,13 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
+ - **W** `LOCATOR-VAGUE` — a book or paper route names a chapter but no page
+   range; or a route of any format hedges ("selections", "topic-matched",
+   "relevant") instead of naming the material.
++- **E** `ROUTE-LOCATOR-DUPLICATE` — distinct rich routes in one source/unit
++  group must have distinct explicit locators after whitespace normalization.
++  This is an authoring constraint, including intentionally overlapping material.
++- **E** `ROUTE-VAULT-LOCATOR-MISMATCH` — a route's locator names another
++  registered or sibling file while omitting its own `material://` vault filename.
++  Book locators that name only chapters/pages remain valid; matching normalizes
++  Unicode and case and checks complete filenames.
+ - **W** `ROUTE-ANGLE-MISSING` — a rich route declares no `angle`.
+ - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
+   `angle_detail` for the hover.
+diff --git a/system/contracts/backup-roots.yaml b/system/contracts/backup-roots.yaml
+index dacc21d4..5cb2ba5a 100644
+--- a/system/contracts/backup-roots.yaml
++++ b/system/contracts/backup-roots.yaml
+@@ -46,6 +46,9 @@ roots:
+       - curriculum/quarantine/masters-planning/comparisons
+       - curriculum/quarantine/masters-planning/promotions
+     files:
++      # Handler-owned decisions and frozen audit samples are recovery evidence;
++      # the domain loader does not read them, so read observation cannot cover it.
++      - operations/goal-ledger.yaml
+       - curriculum/resume.yaml
+       # Explicit canonical metadata that interfaces may never infer from titles,
+       # paths or identifiers — so nothing in a restore can reconstruct it. It was
+diff --git a/system/contracts/capabilities.yaml b/system/contracts/capabilities.yaml
+index 26b4664f..da968143 100644
+--- a/system/contracts/capabilities.yaml
++++ b/system/contracts/capabilities.yaml
+@@ -202,12 +202,28 @@ commands:
+     - curriculum/modules/*/source-map.yaml
+     - curriculum/modules/*/units/*/unit.yaml
+     - curriculum/modules/*/units/*/study-map.yaml
++    - operations/transactions/lineage.yaml
+     invariants:
+     - one exact route in one owning unit; only declared descriptive material fields
+     - source selections and identical legacy mirrors synchronize; stage overrides are preserved
+     - snapshot and all affected logical revisions are guarded, including maps changed by inheritance
+     - full validation and the warning policy are enforced inside the receipt-producing transaction, on the staged state, refusing before anything commits
++    - changing a covered route's material identity or explicitly re-judging a stale or disputed claim uses shared evidence admission and the shared lineage file revision
+     payload_records:
++      claim_evidence:
++        description: One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit page or transcript window. Excerpts remain outside tracked output.
++        accepted: [claim_id, evidence, reads]
++        required: [claim_id, evidence]
++        types: {claim_id: string, evidence: array, reads: object}
++        fields:
++          evidence:
++            type: array
++            min_items: 1
++            items:
++              type: object
++              accepted: [kind, ref, text, page, page_end, window, node, note]
++              required: [kind, ref]
++              types: {kind: string, ref: string, text: string, page: integer, page_end: integer, window: string, node: string, note: string}
+       changes:
+         description: >-
+           A nonempty map of declared descriptive material fields to their new
+diff --git a/system/schema/capabilities/route.patch.schema.json b/system/schema/capabilities/route.patch.schema.json
+index 2d12f88e..8e23c0cd 100644
+--- a/system/schema/capabilities/route.patch.schema.json
++++ b/system/schema/capabilities/route.patch.schema.json
+@@ -41,6 +41,61 @@
+       "type": "boolean",
+       "description": "return the field diff, affected files, snapshot and exact expected revisions without writing"
+     },
++    "claim_evidence": {
++      "type": "object",
++      "properties": {
++        "claim_id": {
++          "type": "string"
++        },
++        "evidence": {
++          "type": "array",
++          "items": {
++            "type": "object",
++            "properties": {
++              "kind": {
++                "type": "string"
++              },
++              "ref": {
++                "type": "string"
++              },
++              "text": {
++                "type": "string"
++              },
++              "page": {
++                "type": "integer"
++              },
++              "page_end": {
++                "type": "integer"
++              },
++              "window": {
++                "type": "string"
++              },
++              "node": {
++                "type": "string"
++              },
++              "note": {
++                "type": "string"
++              }
++            },
++            "additionalProperties": false,
++            "required": [
++              "kind",
++              "ref"
++            ]
++          },
++          "minItems": 1
++        },
++        "reads": {
++          "type": "object"
++        }
++      },
++      "additionalProperties": false,
++      "required": [
++        "claim_id",
++        "evidence"
++      ],
++      "description": "One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit page or transcript window. Excerpts remain outside tracked output."
++    },
+     "route_id": {
+       "type": "string",
+       "description": "exact id of the route to patch, as plan-edit-context reports it"
+diff --git a/system/schema/requests/route.patch.schema.json b/system/schema/requests/route.patch.schema.json
+index a58c22b5..9f267cca 100644
+--- a/system/schema/requests/route.patch.schema.json
++++ b/system/schema/requests/route.patch.schema.json
+@@ -159,6 +159,27 @@
+         "transport_only": true,
+         "envelope_owned": false
+       }
++    },
++    "claim_evidence": {
++      "type": "object",
++      "description": "One reviewed covers claim for this exact route: claim_id, evidence and optional read revisions. Required for covered material-identity changes; local readable material needs a quote at an explicit page/window.",
++      "x-los-cli": {
++        "flags": [
++          "--claim-evidence"
++        ],
++        "position": null,
++        "action": "store",
++        "nargs": null,
++        "const": null,
++        "default": null,
++        "type": "json_object",
++        "choices": null,
++        "metavar": null,
++        "required": false,
++        "stdin": false,
++        "transport_only": false,
++        "envelope_owned": false
++      }
+     }
+   },
+   "x-los-cli-command": {
+diff --git a/tests/arch_audit_hook.py b/tests/arch_audit_hook.py
+index 2f1ae782..84510b4f 100644
+--- a/tests/arch_audit_hook.py
++++ b/tests/arch_audit_hook.py
+@@ -17,6 +17,12 @@ _STATE = threading.local()
+ _EVENTS: dict | None = None
+ _RENDER_FN = None
+ 
++# Only these mechanical frames may delegate, and only to their immediate
++# production caller. An engine frame further out cannot authorize a callback.
++MECHANICAL_HELPERS = {
++    "learning_os.store.durable_fs": frozenset({"learning_os.store.transactions"}),
++}
++
+ #: Events logged only while the render marker is set (SPEC §3.5b).
+ _RENDER_ONLY_EVENTS = frozenset({
+     "os.listdir",
+@@ -261,6 +267,33 @@ def _current_phase():
+         return None
+ 
+ 
++def _production_frames() -> list[tuple[str, str, int]]:
++    import traceback
++
++    result = []
++    for frame in reversed(traceback.extract_stack()):
++        filename = frame.filename.replace(os.sep, "/")
++        for marker, prefix in (("/tools/learning_os/", "learning_os."),
++                               ("/tools/migrations/", "migrations.")):
++            index = filename.rfind(marker)
++            if index >= 0:
++                relative = filename[index + len(marker):].removesuffix(".py")
++                result.append((prefix + relative.replace("/", "."), frame.filename, frame.lineno))
++                break
++    return result
++
++
++def delegated_owner(frames: list[tuple[str, str, int]]) -> str | None:
++    if not frames:
++        return None
++    helper = frames[0][0]
++    allowed = MECHANICAL_HELPERS.get(helper)
++    if allowed is None:
++        return None
++    caller = next((module for module, _, _ in frames if module != helper), None)
++    return caller if caller in allowed else None
++
++
+ def _current_writer() -> tuple[str | None, str | None, int | None]:
+     """The innermost writing module under tools/ (SPEC §3.6, A19).
+ 
+@@ -272,24 +305,10 @@ def _current_writer() -> tuple[str | None, str | None, int | None]:
+     ``(None, None, None)`` when no such frame exists (fail closed).
+     """
+     try:
+-        import traceback
+-
+-        frames = traceback.extract_stack()
++        frames = _production_frames()
+     except Exception:
+         return None, None, None
+-    for frame in reversed(frames):
+-        filename = frame.filename.replace(os.sep, "/")
+-        for marker, prefix in (("/tools/learning_os/", "learning_os."),
+-                               ("/tools/migrations/", "migrations.")):
+-            index = filename.rfind(marker)
+-            if index < 0:
+-                continue
+-            relative = filename[index + len(marker):]
+-            if relative.endswith(".py"):
+-                relative = relative[:-3]
+-            module = prefix + relative.replace("/", ".")
+-            return module, frame.filename, frame.lineno
+-    return None, None, None
++    return frames[0] if frames else (None, None, None)
+ 
+ 
+ def _current_render():
+@@ -491,6 +510,8 @@ def _hook(event: str, args) -> None:
+                 "writer_line": writer_line,
+             }
+         if record is not None:
++            if record.get("writer") in MECHANICAL_HELPERS:
++                record["delegated_owner"] = delegated_owner(_production_frames())
+             if "paths" in record:
+                 record["resolved_paths"] = _operational_paths(event, args, record["paths"], record.get("mode"))
+             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:
+diff --git a/tests/architecture/operational-owners.yaml b/tests/architecture/operational-owners.yaml
+index 4fe5996f..84f32b56 100644
+--- a/tests/architecture/operational-owners.yaml
++++ b/tests/architecture/operational-owners.yaml
+@@ -1,6 +1,7 @@
+ schema: 1
+ roots: ["operations/", "<STATE>/"]
+-io_helpers: []
++io_helpers:
++  - {module: learning_os.store.durable_fs, callers: [learning_os.store.transactions]}
+ excluded:
+   - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
+   - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}
+@@ -9,11 +10,11 @@ entries:
+   - {glob: "operations/transactions/revisions.yaml", sink: module, owner: learning_os.store.transactions}
+   - {glob: "operations/transactions/idempotency.yaml", sink: module, owner: learning_os.store.transactions}
+   - {glob: "operations/transactions/.inflight/**", sink: module, owner: learning_os.store.transactions}
++  - {glob: "operations/transactions/.settled/**", sink: module, owner: learning_os.store.transactions}
+   - {glob: "operations/transactions/.authority-check", sink: module, owner: learning_os.store.transactions}
+-  # Corrected by Builder Task 79 (conductor decision): P4-PREP section 4
+-  # measures four engine writers of lineage.yaml, not the two the SPEC
+-  # table assumed. The SPEC table row is amended by this declaration.
+-  - {glob: "operations/transactions/lineage.yaml", sink: "engine:apply", capabilities: [unit.material-synthesis.publish, lineage.restamp, module.plan.import, unit.plan.revise]}
++  # Five existing writers: source revision also republishes dossier lineage.
++  # Sixth writer: candidate route.patch authority amendment, pending A11 approval.
++  - {glob: "operations/transactions/lineage.yaml", sink: "engine:apply", capabilities: [unit.material-synthesis.publish, lineage.restamp, module.plan.import, unit.plan.revise, source.record.revise, route.patch]}
+   - {glob: "operations/legacy/**", sink: "engine:apply", capabilities: [legacy.archive.lock.publish]}
+   - {glob: "operations/ai-actions/**", sink: module, owner: learning_os.store.ai_actions}
+   - {glob: "operations/ai-actions/**", sink: "engine:apply", capabilities: [ai-action.delivery.apply]}
+diff --git a/tests/group_map.py b/tests/group_map.py
+index 2eb0f1de..95f66f8b 100644
+--- a/tests/group_map.py
++++ b/tests/group_map.py
+@@ -56,6 +56,8 @@ GROUPS: dict[str, list[str]] = {
+         "test_material_text_cache.py",
+         "test_materials_manifest.py",
+         "test_materials_catalogue.py",
++        "test_verbatim.py",
++        "test_verbatim_anchor_admission.py",
+     ],
+     # Semantics, synthesis, dossiers, goals, runtime, operator questions.
+     "synthesis": [
+@@ -154,6 +156,7 @@ GROUPS: dict[str, list[str]] = {
+         "test_structural_inspect.py",
+         "test_trace_context.py",
+         "test_transactions.py",
++        "test_architecture_hardening_adversarial.py",
+         "test_ui_gateway_recovery.py",
+         "test_validation_cache.py",
+         "test_workspace_next_action.py",
+@@ -182,6 +185,7 @@ GROUPS: dict[str, list[str]] = {
+         "test_arch_error_vocabulary.py",
+         "test_arch_idroundtrip.py",
+         "test_arch_layers.py",
++        "test_arch_types.py",
+         "test_arch_outcomes.py",
+         "test_arch_plumbing.py",
+         "test_arch_private_names.py",
+diff --git a/tests/repo_builders.py b/tests/repo_builders.py
+index 52dcc16c..78dbaf96 100644
+--- a/tests/repo_builders.py
++++ b/tests/repo_builders.py
+@@ -473,6 +473,9 @@ def _sliced_route(route_id: str, locator: str, scope: str = "current") -> dict:
+     }
+ 
+ 
++SLICED_LECTURE_TEXT = "Expected-value lecture: the probability weighted average of the possible outcomes."
++
++
+ def _sliced_unit(root: Path, routes: list[dict]) -> None:
+     add_curriculum(root)
+     unit_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+@@ -495,8 +498,13 @@ def _sliced_unit(root: Path, routes: list[dict]) -> None:
+     registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+     registry["sources"][0]["material"] = "material://source-demo-book/"
+     write_yaml(registry_path, registry)
+-    write_minimal_pdf(root.parent / "materials/source-demo-book/lecture-01.pdf",
+-                      ["expected-value lecture"])
++    material = root.parent / "materials/source-demo-book/lecture-01.pdf"
++    write_minimal_pdf(material, [SLICED_LECTURE_TEXT])
++    manifest_path = root / "records/materials-manifest.yaml"
++    manifest = yaml.safe_load(manifest_path.read_text()) if manifest_path.exists() else {"files": {}}
++    manifest.setdefault("files", {})["source-demo-book/lecture-01.pdf"] = {
++        "size": material.stat().st_size, "sha256": hashlib.sha256(material.read_bytes()).hexdigest()}
++    write_yaml(manifest_path, manifest)
+ 
+ 
+ def _valid_dossier(root: Path, route_id: str, locator: str) -> dict:
+diff --git a/tests/test_arch_layers.py b/tests/test_arch_layers.py
+index 8d8cef9f..586c635e 100644
+--- a/tests/test_arch_layers.py
++++ b/tests/test_arch_layers.py
+@@ -2,6 +2,8 @@
+ 
+ from __future__ import annotations
+ 
++import ast
++import importlib.util
+ import subprocess
+ import sys
+ from pathlib import Path
+@@ -12,6 +14,73 @@ PYPROJECT = ROOT / "pyproject.toml"
+ FIX = "Move the import below the importer's layer, or split the module (PLAN D17)."
+ 
+ 
++def _imports_mechanical_helper(source: str, package: str = "learning_os.app.handlers") -> bool:
++    helper = "learning_os.store.durable_fs"
++    for node in ast.walk(ast.parse(source)):
++        if isinstance(node, ast.Import) and any(alias.name == helper for alias in node.names):
++            return True
++        if isinstance(node, ast.ImportFrom):
++            module = node.module or ""
++            if node.level:
++                module = importlib.util.resolve_name("." * node.level + module, package)
++            if module == helper:
++                return True
++            if module == "learning_os.store" and any(
++                    alias.name == "durable_fs" for alias in node.names):
++                return True
++    return False
++
++
++def test_mechanical_helper_has_one_production_importer():
++    allowed = {"tools/learning_os/store/transactions.py", "tools/learning_os/store/durable_fs.py"}
++    for path in (ROOT / "tools/learning_os").rglob("*.py"):
++        relative = path.relative_to(ROOT).as_posix()
++        if relative not in allowed:
++            package = ".".join(path.relative_to(ROOT / "tools").parts[:-1])
++            assert not _imports_mechanical_helper(path.read_text(), package), f"protected helper imported by {relative}"
++
++
++def test_mechanical_helper_protection_detects_all_import_forms():
++    for source in (
++        "import learning_os.store.durable_fs as fs",
++        "from learning_os.store import durable_fs as fs",
++        "from learning_os.store.durable_fs import replace_bytes",
++        "from ...store.durable_fs import replace_bytes",
++        "from ...store import durable_fs",
++    ):
++        assert _imports_mechanical_helper(source)
++
++
++def _impure_derivation(source: str) -> list[str]:
++    pure = {"collections", "dataclasses", "datetime", "enum", "functools", "hashlib",
++            "json", "math", "re", "statistics", "string", "typing", "unicodedata", "__future__"}
++    problems = []
++    for node in ast.walk(ast.parse(source)):
++        if isinstance(node, (ast.Import, ast.ImportFrom)):
++            modules = ([alias.name for alias in node.names] if isinstance(node, ast.Import)
++                       else [node.module or ""])
++            for module in modules:
++                if module.split(".")[0] not in pure and not module.startswith("learning_os.domain"):
++                    problems.append(module)
++        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
++            if node.func.id in {"open", "eval", "exec", "__import__"}:
++                problems.append(node.func.id)
++    return problems
++
++
++def test_migrated_material_derivation_has_no_observation_access():
++    for relative in ("tools/learning_os/derive/material_context.py", "tools/learning_os/domain/verbatim.py"):
++        path = ROOT / relative
++        if path.exists():
++            assert not _impure_derivation(path.read_text()), relative
++
++
++def test_impure_derivation_negative_controls():
++    for source in ("import os", "from pathlib import Path", "import subprocess",
++                   "import socket", "open('material.pdf')", "__import__('os')"):
++        assert _impure_derivation(source), source
++
++
+ def test_layer_contracts_hold():
+     lint_imports = Path(sys.executable).parent / "lint-imports"
+     # --no-cache: the graph cache would otherwise land in the tree as
+diff --git a/tests/test_material_editing.py b/tests/test_material_editing.py
+index 1693dbab..b42fc101 100644
+--- a/tests/test_material_editing.py
++++ b/tests/test_material_editing.py
+@@ -13,7 +13,7 @@ from gateway_helpers import (
+     file_sha256,
+     run_v2_capability,
+ )
+-from repo_builders import material_fixture, run_los, write_yaml
++from repo_builders import material_fixture, run_los, write_minimal_pdf, write_yaml
+ 
+ from learning_os.app.handlers.maps import unit_map_import
+ from learning_os.app.handlers.routes import compaction_plan, route_patch_plan
+@@ -125,10 +125,19 @@ def test_route_patch_updates_inheritance_and_exact_selections_but_preserves_over
+     assert artifacts == {"module-demo", unit_id, smid}
+     # Fully inherited descriptions need no study-map write at all.
+     assert repo.study_maps[smid].path not in writes
+-    (repo.materials_root / "source-demo-book/lecture-02.pdf").write_text("new synthetic lecture")
++    text = "The expected value is the probability weighted sum of the possible outcomes."
++    material = repo.materials_root / "source-demo-book/lecture-02.pdf"
++    write_minimal_pdf(material, [text])
++    write_minimal_pdf(material.with_name("book.pdf"), [text])
++    write_yaml(mini_repo / "records/materials-manifest.yaml", {"files": {
++        "source-demo-book/" + path.name: {"sha256": file_sha256(path), "size": path.stat().st_size}
++        for path in material.parent.iterdir() if path.is_file()}})
++    evidence = {"claim_id": "covers:" + rid, "evidence": [{
++        "kind": "quote", "ref": "material://source-demo-book/lecture-02.pdf", "page": 1, "text": text}]}
+     response = approved_v2_call(
+-        mini_repo, capability="route.patch", payload={"unit_id": unit_id, "route_id": rid, "changes": changes},
+-        artifact_ids=sorted(artifacts), idempotency_key="patch-demo",
++        mini_repo, capability="route.patch", payload={"unit_id": unit_id, "route_id": rid,
++                                                    "changes": changes, "claim_evidence": evidence},
++        artifact_ids=sorted(artifacts | {"file:operations/transactions/lineage.yaml"}), idempotency_key="patch-demo",
+     )
+     assert response.returncode == 0, response.stdout + response.stderr
+     changed = load_repo(mini_repo)
+diff --git a/tests/test_material_slices.py b/tests/test_material_slices.py
+index ce7770d0..7a7a42b5 100644
+--- a/tests/test_material_slices.py
++++ b/tests/test_material_slices.py
+@@ -123,6 +123,45 @@ def test_locator_page_ranges_rejects_non_strings():
+     assert parse_locator_page_ranges(None) == []
+ 
+ 
++def test_pdf_parser_and_extraction_errors_are_distinct_from_no_text(tmp_path, monkeypatch):
++    from learning_os.store.materials.pdf_text import PDFTextError, pdf_page_text, pdf_reader
++
++    with pytest.raises(PDFTextError, match="cannot be parsed"):
++        pdf_reader(b"not a PDF")
++    path = tmp_path / "book.pdf"
++    write_minimal_pdf(path, ["A genuine page with a text layer."])
++    reader = pdf_reader(path.read_bytes())
++    original_page = reader.pages[0]
++
++    def broken(*args, **kwargs):
++        raise RuntimeError("synthetic extraction failure")
++
++    monkeypatch.setattr(type(original_page), "extract_text", broken)
++    with pytest.raises(PDFTextError, match="extraction failed"):
++        pdf_page_text(reader, 1)
++
++
++def test_pdf_slice_hashes_the_same_bytes_it_extracts(mini_repo, monkeypatch):
++    import hashlib
++
++    _add_sliced_unit(mini_repo, [_route("route-demo-snapshot", "book.pdf, PDF p. 1")],
++                     {"book.pdf": ["Original text observed by the admission reader."]})
++    path = mini_repo.parent / "materials/source-demo-book/book.pdf"
++    original = path.read_bytes()
++    real_reader = material_slices.pdf_reader
++
++    def replaced_after_open(content):
++        write_minimal_pdf(path, ["Replacement after the immutable snapshot was captured."])
++        return real_reader(content)
++
++    monkeypatch.setattr(material_slices, "pdf_reader", replaced_after_open)
++    part = material_slices._read_pdf_part("route-demo-snapshot", "material://source-demo-book/book.pdf",
++                                           path, "PDF p. 1")
++    assert "Original text" in part.text
++    assert part.file_sha256 == "sha256:" + hashlib.sha256(original).hexdigest()
++    assert part.file_sha256 != "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
++
++
+ def test_resolver_is_centralized_single_multi_and_garbage(mini_repo):
+     _add_sliced_unit(mini_repo, [_route("route-demo-a", "lecture-01.pdf")],
+                      {"lecture-01.pdf": ["page one"]})
+diff --git a/tests/test_materials_manifest.py b/tests/test_materials_manifest.py
+index 32e4f9c3..a907057b 100644
+--- a/tests/test_materials_manifest.py
++++ b/tests/test_materials_manifest.py
+@@ -373,7 +373,7 @@ def test_symlinked_materials_root_keeps_inner_aliases_inside_its_target(mini_rep
+ 
+ 
+ def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypatch):
+-    from learning_os.derive.validation import materials
++    from learning_os.store.materials import resolution as materials
+ 
+     link = mini_repo.parent / "materials"
+     link.rmdir()
+diff --git a/tests/test_phaseB_prospective_lineage.py b/tests/test_phaseB_prospective_lineage.py
+index 40603f3d..0326960d 100644
+--- a/tests/test_phaseB_prospective_lineage.py
++++ b/tests/test_phaseB_prospective_lineage.py
+@@ -10,13 +10,14 @@ as the canonical mutation.
+ from __future__ import annotations
+ 
+ import sys
+-import types
+ from pathlib import Path
+ 
+ import yaml
+ 
+-from learning_os.app.handlers.plan import _phaseB_ledger_text, _phaseB_validate
++from learning_os.app.claim_admission import prepare_claim_admission as _phaseB_validate
++from learning_os.app.claim_admission import render_claim_lineage as _phaseB_ledger_text
+ from learning_os.derive.semantics.lineage import load_ledger
++from learning_os.domain.snapshot import Repo
+ from learning_os.store.contracts.gateway import (
+     GatewayRequestContext,
+     gateway_request_context,
+@@ -49,7 +50,7 @@ def _map(*routes):
+ 
+ 
+ def _repo(live_map):
+-    return types.SimpleNamespace(module_source_maps={"module-demo": live_map})
++    return Repo(root=Path("/__synthetic_phaseB__/repository"), module_source_maps={"module-demo": live_map})
+ 
+ 
+ def _root_with_revisions(tmp_path, revisions):
+@@ -342,7 +343,7 @@ def test_end_to_end_apply_persists_lineage_atomically(mini_repo, tmp_path):
+     applied = approved_v2_cli(
+         mini_repo, "module-plan-import", "module-demo",
+         "--file", str(package), "--file-sha256", file_sha256(package),
+-        artifact_ids=["module-demo", "unit-demo-l01"],
++        artifact_ids=["module-demo", "unit-demo-l01", "file:operations/transactions/lineage.yaml"],
+         idempotency_key="phaseB-e2e-atomic",
+     )
+     assert applied.returncode == 0, applied.stderr
+@@ -443,6 +444,8 @@ def _apply_in_process(mini_repo, package, key, request_id):
+         f"module-demo={revisions.get('module-demo', 0)}",
+         "--expected-revision",
+         f"unit-demo-l01={revisions.get('unit-demo-l01', 0)}",
++        "--expected-revision",
++        f"file:operations/transactions/lineage.yaml={revisions.get('file:operations/transactions/lineage.yaml', 0)}",
+     ])
+     request = GatewayRequestContext(
+         request_id=request_id,
+@@ -813,7 +816,7 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
+     applied = approved_v2_cli(
+         mini_repo, "module-plan-import", "module-demo",
+         "--file", str(package), "--file-sha256", file_sha256(package),
+-        artifact_ids=["module-demo", "unit-demo-l01"],
++        artifact_ids=["module-demo", "unit-demo-l01", "file:operations/transactions/lineage.yaml"],
+         idempotency_key="phaseB-e2e-post-commit-supported",
+     )
+     assert applied.returncode == 0, applied.stderr
+@@ -859,7 +862,7 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
+     removed = approved_v2_cli(
+         mini_repo, "module-plan-import", "module-demo",
+         "--file", str(package), "--file-sha256", file_sha256(package),
+-        artifact_ids=["module-demo", "unit-demo-l01"],
++        artifact_ids=["module-demo", "unit-demo-l01", "file:operations/transactions/lineage.yaml"],
+         idempotency_key="phaseB-e2e-removal-only",
+     )
+     assert removed.returncode == 0, removed.stderr
+diff --git a/tests/test_plan_rigor.py b/tests/test_plan_rigor.py
+index 34c03905..dcbafb74 100644
+--- a/tests/test_plan_rigor.py
++++ b/tests/test_plan_rigor.py
+@@ -7,6 +7,7 @@ from learning_os.derive.validation.plan_rigor import (
+     ChecksPlanRigor,
+     _has_unquoted_hedge,
+     angle_review_fingerprint,
++    locator_binding_findings,
+ )
+ 
+ 
+@@ -23,6 +24,46 @@ def test_unquoted_selection_instruction_remains_vague():
+     assert _has_unquoted_hedge(locator)
+ 
+ 
++def _binding_route(rid, locator, file="script.pdf", unit="unit-demo"):
++    return {"id": rid, "unit_id": unit, "locator": locator,
++            "vault_path": "material://source-demo/" + file}
++
++
++def test_broadcast_shape_has_duplicate_and_wrong_file_findings():
++    rows = [_binding_route("route-script", "sheet.pdf, PDF p. 1"),
++            _binding_route("route-sheet", "sheet.pdf, PDF p. 1", "sheet.pdf")]
++    findings = locator_binding_findings("module-demo", "source-demo", rows, set())
++    assert sorted(code for code, _ in findings) == ["ROUTE-LOCATOR-DUPLICATE", "ROUTE-VAULT-LOCATOR-MISMATCH"]
++    assert "route-script" in str(findings)
++    assert "route-sheet" in str(findings)
++
++
++def test_duplicate_locators_are_bounded_by_source_and_unit():
++    rows = [_binding_route("route-a", "Ch 2, PDF pp. 1-2"),
++            _binding_route("route-b", "Ch 2,  PDF pp. 1-2", unit="unit-other")]
++    assert locator_binding_findings("module-demo", "source-demo", rows, set()) == []
++    rows[1]["unit_id"] = "unit-demo"
++    assert [code for code, _ in locator_binding_findings("module-demo", "source-demo", rows, set())] == ["ROUTE-LOCATOR-DUPLICATE"]
++
++
++def test_book_style_and_own_filename_with_other_file_are_allowed():
++    for locator in ("Chapter 2, PDF pp. 17-50", "script.pdf and sheet.pdf, PDF pp. 1-2"):
++        assert not locator_binding_findings("module-demo", "source-demo",
++                                            [_binding_route("route-a", locator)], {"sheet.pdf"})
++
++
++def test_filename_match_uses_whole_names_and_unicode_normalization():
++    import unicodedata
++
++    assert not locator_binding_findings("module-demo", "source-demo",
++        [_binding_route("route-a", "supersheet.pdf, PDF p. 1")], {"sheet.pdf"})
++    name = unicodedata.normalize("NFD", "Überblick.pdf")
++    assert not locator_binding_findings("module-demo", "source-demo",
++        [_binding_route("route-a", "ÜBERBLICK.PDF, PDF p. 1", name)], {"sheet.pdf"})
++    assert [code for code, _ in locator_binding_findings("module-demo", "source-demo",
++        [_binding_route("route-a", "sheet.pdf, PDF p. 1")], {"sheet.pdf"})] == ["ROUTE-VAULT-LOCATOR-MISMATCH"]
++
++
+ class _StubChecker(ChecksPlanRigor):
+     """Drive the stage/node checks without a repository on disk."""
+ 
+diff --git a/tests/test_scenarios_zz_operational_owners.py b/tests/test_scenarios_zz_operational_owners.py
+index e35823ef..2ebb789e 100644
+--- a/tests/test_scenarios_zz_operational_owners.py
++++ b/tests/test_scenarios_zz_operational_owners.py
+@@ -126,8 +126,15 @@ def _receipts_for_run(root: str | None) -> list[tuple[str, set[str]]]:
+ 
+ def _owner_satisfied(entry: dict, record: dict, rel: str,
+                      receipts: list[tuple[str, set[str]]]) -> bool:
++    import arch_audit_hook
++
++    writer = record.get("writer")
++    if writer in arch_audit_hook.MECHANICAL_HELPERS:
++        semantic_owner = record.get("delegated_owner")
++        if semantic_owner not in arch_audit_hook.MECHANICAL_HELPERS[writer]:
++            return False
++        writer = semantic_owner
+     if entry["sink"] == "module":
+-        writer = record.get("writer")
+         if not isinstance(writer, str) or not writer:
+             return False
+         owner = entry["owner"]
+@@ -136,6 +143,8 @@ def _owner_satisfied(entry: dict, record: dict, rel: str,
+     # naming one of the declared capabilities.
+     if record.get("phase") != "apply":
+         return False
++    if writer != "learning_os.store.transactions":
++        return False
+     declared = set(entry.get("capabilities", []))
+     return any(capability in declared and rel in writes
+                for capability, writes in receipts)
+@@ -407,6 +416,43 @@ def test_engine_apply_needs_declared_capability_receipt(tmp_path):
+     assert len(sigs) == 1 and "lineage.yaml" in next(iter(sigs))
+ 
+ 
++def test_engine_phase_cannot_authorize_a_hidden_callback_writer(tmp_path):
++    proof = {"capability": "lineage.restamp",
++             "writes": [{"path": "operations/transactions/lineage.yaml"}]}
++    assert _signatures(tmp_path, [_write_record(
++        "/w/operations/transactions/lineage.yaml", "learning_os.app.handlers.plan",
++        phase="apply")], receipts=proof)
++
++
++def test_mechanical_delegation_is_bounded_to_the_immediate_caller(tmp_path):
++    import arch_audit_hook
++
++    helper = "learning_os.store.durable_fs"
++    engine = "learning_os.store.transactions"
++    frames = [(helper, "helper.py", 1), (helper, "helper.py", 2), (engine, "engine.py", 3)]
++    assert arch_audit_hook.delegated_owner(frames) == engine
++    frames.insert(2, ("learning_os.app.handlers.plan", "callback.py", 4))
++    assert arch_audit_hook.delegated_owner(frames) is None
++    record = _write_record("/w/operations/transactions/revisions.yaml", helper, phase="apply")
++    assert _signatures(tmp_path, [record])
++    assert not _signatures(tmp_path, [dict(record, delegated_owner=engine)])
++
++
++def test_helper_declaration_matches_the_hook():
++    import arch_audit_hook
++
++    assert {row["module"]: frozenset(row["callers"]) for row in _load_owners()["io_helpers"]} == (
++        arch_audit_hook.MECHANICAL_HELPERS)
++
++
++def test_source_revision_is_a_declared_lineage_writer(tmp_path):
++    proof = {"capability": "source.record.revise",
++             "writes": [{"path": "operations/transactions/lineage.yaml"}]}
++    assert not _signatures(tmp_path, [_write_record(
++        "/w/operations/transactions/lineage.yaml", "learning_os.store.transactions",
++        phase="apply")], receipts=proof)
++
++
+ def test_missing_writer_and_excluded_and_rename(tmp_path):
+     assert _signatures(tmp_path, [
+         _write_record("/w/operations/transactions/revisions.yaml", None),
+diff --git a/tests/test_source_record_revise.py b/tests/test_source_record_revise.py
+index 83b3387e..c164717f 100644
+--- a/tests/test_source_record_revise.py
++++ b/tests/test_source_record_revise.py
+@@ -347,9 +347,9 @@ def test_attach_refuses_when_an_approved_dossier_basis_moves(mini_repo, tmp_path
+     (row,) = body["diff"]
+     assert row["affected_units"] == ["unit-demo-l01"]
+     assert row["replacements"] == {"unit-demo-l01": replacement}
+-    assert body["artifact_ids"] == ["source-demo-book", "unit-demo-l01"]
++    assert body["artifact_ids"] == ["file:operations/transactions/lineage.yaml", "source-demo-book", "unit-demo-l01"]
+     assert set(body["expected_revisions"]) == {
+-        "source-demo-book", "unit-demo-l01"}
++        "source-demo-book", "unit-demo-l01", "file:operations/transactions/lineage.yaml"}
+ 
+ 
+ def test_attach_refuses_a_live_basis_replacement(mini_repo, tmp_path):
+@@ -468,12 +468,12 @@ def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
+     assert moved["route_id"] == "route-demo-grinstead"
+     assert moved["before"] != moved["after"]
+     assert moved["reason"] == live["route_assessments"][-1]["reason"]
+-    assert body["artifact_ids"] == ["source-demo-book", "unit-demo-l01"]
++    assert body["artifact_ids"] == ["file:operations/transactions/lineage.yaml", "source-demo-book", "unit-demo-l01"]
+     applied = approved_v2_call(
+         mini_repo, capability="source.record.revise",
+         payload={"record": record,
+                  "expected_diff_sha256": body["diff_sha256"]},
+-        artifact_ids=["source-demo-book", "unit-demo-l01"],
++        artifact_ids=["file:operations/transactions/lineage.yaml", "source-demo-book", "unit-demo-l01"],
+         idempotency_key="revise-apply-rebase")
+     assert applied.returncode == 0, applied.stderr + applied.stdout
+     written = yaml.safe_load(
+@@ -589,7 +589,7 @@ def test_rebase_refuses_a_dossier_changed_after_check(mini_repo, tmp_path):
+         mini_repo, capability="source.record.revise",
+         payload={"record": record,
+                  "expected_diff_sha256": checked["diff_sha256"]},
+-        artifact_ids=["source-demo-book", "unit-demo-l01"],
++        artifact_ids=["file:operations/transactions/lineage.yaml", "source-demo-book", "unit-demo-l01"],
+         idempotency_key="revise-rebase-raced")
+     outer = json.loads(proc.stdout)["error"]["message"]
+     assert "changed since" in json.loads(outer)["error"]
+@@ -863,7 +863,7 @@ def test_apply_writes_source_and_replacement_atomically(mini_repo, tmp_path):
+         mini_repo, capability="source.record.revise",
+         payload={"record": record,
+                  "expected_diff_sha256": checked["diff_sha256"]},
+-        artifact_ids=["source-demo-book", "unit-demo-l01"],
++        artifact_ids=["file:operations/transactions/lineage.yaml", "source-demo-book", "unit-demo-l01"],
+         idempotency_key="revise-apply-dossier")
+     assert proc.returncode == 0, proc.stderr + proc.stdout
+     body = json.loads(proc.stdout)
+diff --git a/tests/test_unit_plan_revision.py b/tests/test_unit_plan_revision.py
+index d8850b5c..b5b26a2a 100644
+--- a/tests/test_unit_plan_revision.py
++++ b/tests/test_unit_plan_revision.py
+@@ -13,6 +13,7 @@ from pathlib import Path
+ import pytest
+ import yaml
+ from repo_builders import (
++    SLICED_LECTURE_TEXT,
+     _audit,
+     _compact_revision,
+     _compact_setup,
+@@ -175,7 +176,8 @@ def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Pa
+                                    "fields": {"covers": covers}}]},
+         material_synthesis=good,
+         claim_evidence=[{"claim_id": "covers:route-demo-book",
+-                         "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}]}],
++                         "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                               "page": 1, "text": SLICED_LECTURE_TEXT}]}],
+     )
+     path = tmp_path / "staged-basis.yaml"
+     write_yaml(path, revision)
+@@ -405,7 +407,8 @@ def test_missing_dossier_does_not_require_replacement_for_route_addition(
+         {"source_id": "source-demo-book", "route": route},
+     ]}, claim_evidence=[{
+         "claim_id": "covers:route-demo-new",
+-        "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}],
++        "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                               "page": 1, "text": SLICED_LECTURE_TEXT}],
+     }])
+     path = tmp_path / "add-without-dossier.yaml"
+     write_yaml(path, revision)
+@@ -565,10 +568,14 @@ def test_verify_plan_receipt_checks_projection(mini_repo, tmp_path):
+     assert verify.returncode == 0, verify.stderr
+ 
+ 
++def _acceptance_locator(rid):
++    return "lecture-01.pdf" if rid == "route-demo-book" else f"lecture-01.pdf, PDF p. 1, {rid} worked example"
++
++
+ def _live_study_map() -> dict:
+     def resource(rid, triage):
+         return {"kind": "read", "label": f"Resource {rid}",
+-                "source_id": "source-demo-book", "locator": "lecture-01.pdf",
++                "source_id": "source-demo-book", "locator": _acceptance_locator(rid),
+                 "route_id": rid, "scope_triage": triage}
+ 
+     def stage(sid, number, title, resources):
+@@ -601,8 +608,8 @@ def _acceptance_setup(mini_repo: Path):
+ 
+     _sliced_unit(mini_repo, [
+         _sliced_route("route-demo-book", "lecture-01.pdf"),
+-        _sliced_route("route-demo-old", "lecture-01.pdf"),
+-        _sliced_route("route-demo-sup", "lecture-01.pdf", scope="complementary"),
++        _sliced_route("route-demo-old", _acceptance_locator("route-demo-old")),
++        _sliced_route("route-demo-sup", _acceptance_locator("route-demo-sup"), scope="complementary"),
+     ])
+     unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+     unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+@@ -634,7 +641,7 @@ def _acceptance_setup(mini_repo: Path):
+             row = {k: row[k] for k in ("route_id", "source_id", "locator",
+                                        "review_status", "concept_ids")}
+             row["reason"] = "Complementary background; screened, not deeply reviewed."
+-        row.update(route_id=rid, review_status=status,
++        row.update(route_id=rid, locator=_acceptance_locator(rid), review_status=status,
+                    evidence=[{"locator": "lecture-01.pdf p.1",
+                               "checksum": basis["material_checksums"][rid]}])
+         assessments.append(row)
+@@ -659,7 +666,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
+     from learning_os.derive.material_synthesis import current_unit_material_basis
+ 
+     _acceptance_setup(mini_repo)
+-    new_route = _sliced_route("route-demo-new", "lecture-01.pdf")
++    new_route = _sliced_route("route-demo-new", _acceptance_locator("route-demo-new"))
+     revision = _compact_revision(
+         mini_repo,
+         route_changes={
+@@ -675,9 +682,11 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
+         }],
+         claim_evidence=[
+             {"claim_id": "covers:route-demo-old",
+-             "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}]},
++             "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                               "page": 1, "text": SLICED_LECTURE_TEXT}]},
+             {"claim_id": "covers:route-demo-new",
+-             "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}]},
++             "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                               "page": 1, "text": SLICED_LECTURE_TEXT}]},
+         ],
+     )
+     final_map = _live_study_map()
+@@ -686,7 +695,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
+                           if r["route_id"] != "route-demo-old"]
+     intro["resources"].append({"kind": "read", "label": "Resource route-demo-new",
+                                "source_id": "source-demo-book",
+-                               "locator": "lecture-01.pdf",
++                               "locator": new_route["locator"],
+                                "route_id": "route-demo-new",
+                                "scope_triage": "required-now"})
+     revision["study_map"] = final_map
+@@ -717,7 +726,7 @@ def test_acceptance_one_lecture_revision_end_to_end(mini_repo, tmp_path):
+             if a["route_id"] != "route-demo-old"]
+     new_assessment = copy.deepcopy(kept[0])
+     new_assessment.update(
+-        route_id="route-demo-new", review_status="deep-reviewed",
++        route_id="route-demo-new", locator=new_route["locator"], review_status="deep-reviewed",
+         evidence=[{"locator": "lecture-01.pdf p.1",
+                    "checksum": changed_basis["material_checksums"]["route-demo-new"]}])
+     replacement["route_assessments"] = kept + [new_assessment]
+@@ -830,6 +839,94 @@ def _reviewed_fixture(mini_repo, tmp_path, *, structural=False):
+     return report, report_file, revision_file, apply_args
+ 
+ 
++def _ledger_only_fixture(mini_repo, tmp_path):
++    from repo_builders import run_los, write_yaml
++
++    from learning_os.derive.semantics.lineage import dump_ledger, emit_route_covers
++
++    _compact_setup(mini_repo)
++    prior = emit_route_covers(
++        route_id="route-demo-book", covers=["knowledge-demo-expectation"], read_revisions={},
++        judged_by="prior-review", admitted_by={"request_id": "prior", "idempotency_key": "prior"},
++        source_hashes={"route-content:route-demo-book": "sha256:" + "0" * 64})
++    ledger = mini_repo / "operations/transactions/lineage.yaml"
++    ledger.parent.mkdir(parents=True, exist_ok=True)
++    ledger.write_text(dump_ledger({prior.claim_id: prior}))
++    revision = _compact_revision(mini_repo, claim_evidence=[{
++        "claim_id": prior.claim_id,
++        "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                      "text": SLICED_LECTURE_TEXT, "page": 1}]}])
++    draft = tmp_path / "rejudge.yaml"
++    write_yaml(draft, revision)
++    checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01", "--file", str(draft), "--check")
++    assert checked.returncode == 0, checked.stderr
++    report_file = tmp_path / "rejudge-check.json"
++    report_file.write_text(checked.stdout)
++    report = json.loads(checked.stdout)
++    args = ("unit-plan-revise", "unit-demo-l01", "--file", str(draft),
++            "--review-report", str(report_file), "--apply-reviewed-sha256", report["reviewed_file_sha256"])
++    return report, report_file, args
++
++
++def test_ledger_only_rejudgment_preserves_authored_bytes_and_verifies_receipt(mini_repo, tmp_path):
++    import subprocess
++    import sys
++
++    from repo_builders import run_los
++
++    from learning_os.derive.semantics.lineage import load_ledger
++    from learning_os.store.revisions import load_revisions
++
++    report, report_file, args = _ledger_only_fixture(mini_repo, tmp_path)
++    assert report["expected_write_paths"] == ["operations/transactions/lineage.yaml"]
++    assert report["commit_artifact_ids"] == ["file:operations/transactions/lineage.yaml"]
++    assert report["expected_write_sha256"] == {}
++    authored = {path: path.read_bytes() for path in (mini_repo / "curriculum/modules/module-demo").rglob("*") if path.is_file()}
++    before_revisions = load_revisions(mini_repo)
++    applied = run_los(mini_repo, *args)
++    assert applied.returncode == 0, applied.stdout + applied.stderr
++    response = json.loads(applied.stdout)
++    assert {path: path.read_bytes() for path in authored} == authored
++    revisions = load_revisions(mini_repo)
++    assert revisions == {**before_revisions, "file:operations/transactions/lineage.yaml": 1}
++    record = load_ledger(mini_repo)["covers:route-demo-book"]
++    assert record.supersedes is not None
++    # Excerpts appear in the outside review file, never in committed effects.
++    receipt = yaml.safe_load((mini_repo / response["receipt_path"]).read_text())
++    for row in receipt["writes"]:
++        assert SLICED_LECTURE_TEXT.encode() not in (mini_repo / row["path"]).read_bytes()
++    replay = run_los(mini_repo, *args)
++    assert replay.returncode == 0, replay.stdout + replay.stderr
++    assert json.loads(replay.stdout)["replayed"] is True
++    generated = subprocess.run([sys.executable, str(REPO_ROOT / "tools/generate.py"), "--root", str(mini_repo)],
++                               capture_output=True, text=True)
++    assert generated.returncode == 0, generated.stderr
++    verified = subprocess.run([sys.executable, str(REPO_ROOT / "tools/verify_plan_receipt.py"),
++                               "--root", str(mini_repo), "--unit", "unit-demo-l01", "--report", str(report_file)],
++                              capture_output=True, text=True)
++    assert verified.returncode == 0, verified.stdout + verified.stderr
++
++
++@pytest.mark.parametrize("capability", ["route.patch", "module.plan.import", "unit.plan.revise", "source.record.revise",
++                                        "unit.material-synthesis.publish", "lineage.restamp"])
++def test_reviewed_ledger_only_repair_refuses_each_interposed_lineage_writer(mini_repo, tmp_path, capability):
++    from repo_builders import run_los
++
++    from learning_os.store.transactions import TransactionService, artifact_revision
++
++    _, _, args = _ledger_only_fixture(mini_repo, tmp_path)
++    path = mini_repo / "operations/transactions/lineage.yaml"
++    # Exercise the shared artifact using each existing writer's actual grant.
++    TransactionService(mini_repo).commit(capability=capability,
++        writes={path: path.read_bytes()}, artifact_ids=["file:operations/transactions/lineage.yaml"])
++    before = path.read_bytes()
++    refused = run_los(mini_repo, *args)
++    assert refused.returncode != 0
++    assert "REVISION_CONFLICT" in refused.stdout + refused.stderr
++    assert path.read_bytes() == before
++    assert artifact_revision(mini_repo, "file:operations/transactions/lineage.yaml") == 1
++
++
+ @pytest.mark.parametrize("structural", [False, True])
+ def test_reviewed_request_retries_exactly_once(mini_repo, tmp_path, structural):
+     from repo_builders import run_los
+@@ -1088,7 +1185,8 @@ def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo,
+         route_changes={"update": [{"route_id": "route-demo-book", "fields": {"covers": covers}}]},
+         material_synthesis=dossier,
+         claim_evidence=[{"claim_id": "covers:route-demo-book",
+-                         "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}]}])
++                         "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf",
++                               "page": 1, "text": SLICED_LECTURE_TEXT}]}])
+     file = tmp_path / "coverage.yaml"
+     write_yaml(file, revision)
+     checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01", "--file", str(file), "--check")
+diff --git a/tests/test_vnext_boundaries.py b/tests/test_vnext_boundaries.py
+index df890fa9..e33450e5 100644
+--- a/tests/test_vnext_boundaries.py
++++ b/tests/test_vnext_boundaries.py
+@@ -2013,6 +2013,32 @@ def test_a_canonical_input_the_contract_omits_is_named(mini_repo):
+     assert undeclared_canonical_inputs(mini_repo) == ["curriculum/thematic-groups.yaml"]
+ 
+ 
++def test_backup_carries_handler_owned_goals_even_before_first_write(mini_repo, tmp_path):
++    from learning_os.app.backup_manifest import undeclared_operational_writes
++
++    goal = mini_repo / "operations/goal-ledger.yaml"
++    assert not goal.exists()
++    assert undeclared_operational_writes(mini_repo) == []
++    contract_path = mini_repo / "system/contracts/backup-roots.yaml"
++    contract = yaml.safe_load(contract_path.read_text())
++    contract["roots"]["core"]["files"].remove("operations/goal-ledger.yaml")
++    contract_path.write_text(yaml.safe_dump(contract))
++    assert undeclared_operational_writes(mini_repo) == ["operations/goal-ledger.yaml"]
++    contract["roots"]["core"]["files"].append("operations/goal-ledger.yaml")
++    contract_path.write_text(yaml.safe_dump(contract))
++    # Stored audit/decision bytes must survive the ordinary inventory exactly.
++    goal.parent.mkdir(exist_ok=True)
++    goal.write_bytes(b"schema_version: 1\nentries: {}\n")
++    ui = tmp_path / "ui"
++    _ui_fixture(ui, mini_repo)
++    materials = tmp_path / "materials"
++    materials.mkdir()
++    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
++    row = next(row for row in manifest["entries"]
++               if row["root"] == "core" and row["path"] == "operations/goal-ledger.yaml")
++    assert row["sha256"] == "sha256:" + hashlib.sha256(goal.read_bytes()).hexdigest()
++
++
+ def test_quarantined_workspaces_stay_out_of_the_inventory(mini_repo, tmp_path):
+     """Widening the allowlist to `curriculum` would fix #30 by breaking this."""
+     sealed = mini_repo / "curriculum/quarantine/masters-planning/workspaces/workspace-sealed"
+diff --git a/tools/learning_os/app/backup_manifest.py b/tools/learning_os/app/backup_manifest.py
+index b51403e2..11a5d0ee 100644
+--- a/tools/learning_os/app/backup_manifest.py
++++ b/tools/learning_os/app/backup_manifest.py
+@@ -341,6 +341,9 @@ def build_backup_manifest(
+     ui_root = authorities["ui"]
+     materials_root = authorities["materials"]
+     contract = _load_contract(root)
++    omitted = undeclared_operational_writes(root)
++    if omitted:
++        raise BackupManifestError("backup omits durable operational writes: " + ", ".join(omitted))
+     excluded = set(contract.get("excluded_names") or [])
+     entries: dict[tuple[str, str], dict[str, Any]] = {}
+     for label, authority in authorities.items():
+@@ -404,6 +407,35 @@ def build_backup_manifest(
+     return manifest
+ 
+ 
++def undeclared_operational_writes(root: Path) -> list[str]:
++    """Declared durable write scopes must be restorable even before first use.
++
++    The capability catalogue is the write authority. Observing loader reads
++    misses handler-owned state such as goal decisions, and walking existing
++    files misses a new destination that has not been written yet.
++    """
++    contract = _load_contract(root)
++    declared = contract["roots"]["core"]
++    trees = [_safe_relative(value).as_posix() for value in declared["trees"]]
++    files = set(declared["files"])
++    catalogue = yaml.safe_load(
++        (root / "system/contracts/capabilities.yaml").read_text(encoding="utf-8"))
++    missing: set[str] = set()
++    for family in ("commands", "internal_commands", "domain_capabilities"):
++        for definition in catalogue.get(family, {}).values():
++            for scope in definition.get("writes", []):
++                if not scope.startswith("operations/"):
++                    continue
++                prefix = scope.split("*", 1)[0].rstrip("/")
++                # A glob must be wholly covered by a declared tree. An exact
++                # destination can additionally be covered by a declared file.
++                if "*" not in scope and prefix in files:
++                    continue
++                if not any(prefix == tree or prefix.startswith(tree + "/") for tree in trees):
++                    missing.add(scope)
++    return sorted(missing)
++
++
+ def undeclared_canonical_inputs(root: Path) -> list[str]:
+     """Canonical files the loader reads that the backup contract does not cover.
+ 
+@@ -446,7 +478,7 @@ def undeclared_canonical_inputs(root: Path) -> list[str]:
+     finally:
+         yamlio.read_text_inside = original
+ 
+-    undeclared = []
++    undeclared = undeclared_operational_writes(root)
+     for relative in sorted(seen):
+         if any(part in excluded for part in PurePosixPath(relative).parts):
+             continue
+@@ -455,7 +487,7 @@ def undeclared_canonical_inputs(root: Path) -> list[str]:
+         if any(relative == tree or relative.startswith(tree + "/") for tree in trees):
+             continue
+         undeclared.append(relative)
+-    return undeclared
++    return sorted(set(undeclared))
+ 
+ 
+ def verify_backup_manifest(
+diff --git a/tools/learning_os/app/handlers/plan.py b/tools/learning_os/app/handlers/plan.py
+index c42cd311..66944877 100644
+--- a/tools/learning_os/app/handlers/plan.py
++++ b/tools/learning_os/app/handlers/plan.py
+@@ -30,6 +30,9 @@ from learning_os.app._plan_gate import (
+ from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
+ from learning_os.app.admin.masters_planning import prepare_master_promotion
+ from learning_os.app.check import staged_shadow as _staged_shadow
++from learning_os.app.claim_admission import anchor_report, lineage_artifacts
++from learning_os.app.claim_admission import prepare_claim_admission as _phaseB_validate
++from learning_os.app.claim_admission import render_claim_lineage as _phaseB_ledger_text
+ from learning_os.app.context import OpContext
+ from learning_os.app.gateway import prepare_review_envelope
+ from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
+@@ -40,21 +43,11 @@ from learning_os.derive.masters_catalog import MastersPlanningError
+ from learning_os.derive.material_synthesis import (
+     MaterialSynthesisError,
+     current_unit_material_basis,
+-    publication_lineage_record,
+     synthesis_destination,
+ )
+ from learning_os.derive.semantics.lineage import (
+     LEDGER_RELATIVE,
+-    NODE_CONTENT_PREFIX,
+-    ROUTE_CONTENT_PREFIX,
+     LineageError,
+-    dump_ledger,
+-    emit_route_covers,
+-    load_ledger,
+-    node_content_digest,
+-    route_content_digest,
+-    to_dict,
+-    withdraw,
+ )
+ from learning_os.domain.failures import NotFound, RevisionConflict, WriteRefused
+ from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
+@@ -64,7 +57,6 @@ from learning_os.domain.plan_import import (
+ )
+ from learning_os.domain.plan_import import inventory_block as _inventory_block
+ from learning_os.domain.plan_import import inventory_view as _inventory_view
+-from learning_os.domain.plan_import import knowledge_node_rows as _knowledge_node_rows
+ from learning_os.domain.plan_import import minimal_artifact_ids as _minimal_artifact_ids
+ from learning_os.domain.plan_import import (
+     module_plan_ordering_problems as _module_plan_ordering_problems,
+@@ -72,10 +64,6 @@ from learning_os.domain.plan_import import (
+ from learning_os.domain.plan_import import (
+     module_plan_routing_problems as _module_plan_routing_problems,
+ )
+-from learning_os.domain.plan_import import source_map_routes as _source_map_routes
+-from learning_os.domain.plan_import import (
+-    source_map_routes_with_source as _source_map_routes_with_source,
+-)
+ from learning_os.domain.plan_import import synthesis_entries as _synthesis_entries
+ from learning_os.domain.render import replace_h2_section as _replace_h2_section
+ from learning_os.domain.suggest import not_found
+@@ -94,282 +82,6 @@ from learning_os.store.transactions import parse_expected_revisions
+ # entries by SPEC 12 (R1 promotion/compact branches, R4 shared tail).
+ 
+ 
+-_LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")
+-
+-def _materials_files(root: Path) -> dict:
+-    try:
+-        raw = yaml.safe_load(
+-            (root / "records" / "materials-manifest.yaml").read_text(encoding="utf-8"))
+-    except (OSError, yaml.YAMLError):
+-        return {}
+-    files = raw.get("files") if isinstance(raw, dict) else None
+-    return files if isinstance(files, dict) else {}
+-
+-def _phaseB_validate(root: Path, repo, module_id: str, package: dict):
+-    problems = []
+-    live_map = (repo.module_source_maps or {}).get(module_id) or {}
+-    live_routes = _source_map_routes(live_map)
+-    package_map = package.get("source_map")
+-    package_routes = _source_map_routes(package_map) if package_map is not None else {}
+-    changed = {}
+-    if package_map is not None:
+-        for rid, route in sorted(package_routes.items()):
+-            old = live_routes.get(rid)
+-            new_covers = [str(node) for node in (route.get("covers") or [])]
+-            if old is None:
+-                if new_covers:
+-                    changed[rid] = new_covers
+-            elif sorted(str(node) for node in (old.get("covers") or [])) != sorted(new_covers):
+-                changed[rid] = new_covers
+-        # Deleting the route deletes its covers claim too. Include removals
+-        # even when there is no added/edited route to trigger ledger handling.
+-        for rid in sorted(set(live_routes) - set(package_routes)):
+-            if live_routes[rid].get("covers"):
+-                changed[rid] = []
+-    raw_evidence = package.get("claim_evidence", [])
+-    if raw_evidence is None:
+-        raw_evidence = []
+-    if not isinstance(raw_evidence, list):
+-        return (["claim_evidence must be a list of per-claim evidence maps"], {}, {}, live_routes)
+-    evidence_by_claim = {}
+-    for index, entry in enumerate(raw_evidence):
+-        label = f"claim_evidence[{index}]"
+-        if not isinstance(entry, dict):
+-            problems.append(f"{label} must be a mapping")
+-            continue
+-        claim_id = entry.get("claim_id")
+-        if not isinstance(claim_id, str) or not claim_id.strip():
+-            problems.append(f"{label} needs a non-empty claim_id")
+-            continue
+-        if claim_id in evidence_by_claim:
+-            problems.append(f"{label} repeats claim {claim_id!r}")
+-            continue
+-        items = entry.get("evidence")
+-        if not isinstance(items, list) or not items:
+-            problems.append(f"{label} needs a non-empty evidence list")
+-            continue
+-        reads = entry.get("reads", {})
+-        if reads is None:
+-            reads = {}
+-        if not isinstance(reads, dict):
+-            problems.append(f"{label} reads must be a mapping")
+-            continue
+-        evidence_by_claim[claim_id] = {"evidence": items, "reads": reads}
+-    for rid in sorted(changed):
+-        claim_id = "covers:" + rid
+-        if claim_id not in evidence_by_claim:
+-            problems.append(
+-                f"route {rid} changes covers without claim evidence; Phase B "
+-                f"requires admitted evidence for {claim_id}")
+-    for claim_id in sorted(evidence_by_claim):
+-        if not claim_id.startswith("covers:") or claim_id[7:] not in changed:
+-            problems.append(
+-                f"claim evidence names {claim_id!r}, which this package does not "
+-                "change; lineage is prospective only, never backfill")
+-    if problems:
+-        return (problems, {}, {}, live_routes)
+-    try:
+-        current_revisions = load_revisions(root)
+-    except (OSError, ValueError) as exc:
+-        return ([f"cannot read revision ledger: {exc}"], {}, {}, live_routes)
+-    manifest_files = _materials_files(root)
+-    for claim_id in sorted(evidence_by_claim):
+-        rid = claim_id[7:]
+-        route = package_routes.get(rid, live_routes.get(rid)) or {}
+-        locator = str(route.get("locator") or "")
+-        for item in evidence_by_claim[claim_id]["evidence"]:
+-            problems.extend(_phaseB_check_item(claim_id, item, locator, manifest_files, root))
+-        for artifact, revision in sorted(evidence_by_claim[claim_id]["reads"].items()):
+-            try:
+-                declared = int(revision)
+-            except (TypeError, ValueError):
+-                problems.append(f"{claim_id} declares malformed revision for {artifact!r}")
+-                continue
+-            if artifact not in current_revisions:
+-                problems.append(f"{claim_id} reads unknown artifact {artifact!r}")
+-            elif current_revisions[artifact] != declared:
+-                problems.append(
+-                    f"{claim_id} reads stale revision of {artifact!r}: package saw "
+-                    f"{declared}, current is {current_revisions[artifact]}")
+-    if problems:
+-        return (problems, {}, {}, live_routes)
+-    return ([], changed, evidence_by_claim, live_routes)
+-
+-def _phaseB_check_item(claim_id, item, locator, manifest_files, root):
+-    if not isinstance(item, dict):
+-        return [f"{claim_id} evidence entries must be mappings"]
+-    kind = item.get("kind")
+-    ref = item.get("ref")
+-    if kind not in _LINEAGE_EVIDENCE_KINDS:
+-        return [f"{claim_id} cites unknown evidence kind {kind!r}"]
+-    if not isinstance(ref, str) or not ref.strip():
+-        return [f"{claim_id} evidence needs a non-empty ref"]
+-    if kind == "route-locator":
+-        if ref not in locator:
+-            return [f"{claim_id} cites route-locator text absent from the recorded locator"]
+-    elif kind == "manifest":
+-        if ref not in manifest_files:
+-            return [f"{claim_id} cites unregistered manifest path {ref!r}"]
+-        entry = manifest_files[ref]
+-        digest = entry.get("sha256") if isinstance(entry, dict) else None
+-        if not isinstance(digest, str) or not digest.strip():
+-            return [f"{claim_id} cites manifest path {ref!r} with no digest"]
+-    elif kind == "repo-file":
+-        try:
+-            candidate = (root / ref).resolve()
+-            inside = candidate == root.resolve() or root.resolve() in candidate.parents
+-        except (OSError, ValueError):
+-            inside = False
+-        if not inside or not candidate.is_file():
+-            return [f"{claim_id} cites unreadable repo file {ref!r}"]
+-    elif kind == "external":
+-        if not ref.startswith(("http://", "https://")):
+-            return [f"{claim_id} external evidence must be an http(s) URL"]
+-        if not isinstance(item.get("note"), str) or not str(item.get("note")).strip():
+-            return [f"{claim_id} external evidence needs its verification trail in note"]
+-    return []
+-
+-def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_claim, live_routes,
+-                       incremented_artifacts=None, synthesis_entries=()):
+-    request = current_gateway_request()
+-    if request is None:
+-        raise LineageError("prospective lineage needs gateway admission context")
+-    judged_by = f"{request.channel}/{request.approval_kind}"
+-    admitted = {"request_id": request.request_id, "idempotency_key": request.idempotency_key}
+-    try:
+-        current_revisions = load_revisions(root)
+-    except (OSError, ValueError) as exc:
+-        raise LineageError(f"cannot read revision ledger: {exc}") from exc
+-    manifest_files = _materials_files(root)
+-    records = dict(load_ledger(root))
+-    package_routes = _source_map_routes(package.get("source_map"))
+-    # Post-apply route rows with ownership: the package row when this import
+-    # carries the route, else the live row (a deletion still emits before
+-    # its withdrawal below). Package unit rows likewise override live rows,
+-    # so covered-node digests describe post-apply validity.
+-    live_map = (getattr(repo, "module_source_maps", {}) or {}).get(module_id) or {}
+-    package_owned = _source_map_routes_with_source(package.get("source_map"))
+-    live_owned = _source_map_routes_with_source(live_map)
+-    post_apply_nodes: dict = {}
+-    for unit in (getattr(repo, "units", {}) or {}).values():
+-        post_apply_nodes.update(_knowledge_node_rows(getattr(unit, "data", None)))
+-    # Post-apply stamping: the gateway increments exactly module_id and the
+-    # units supplied in the package (see cmd_module_plan_import artifact_ids).
+-    # Declared reads store post-apply validity for those artifacts so the new
+-    # claim is supported immediately after its own commit. Nothing else is
+-    # stamped: each covers claim reads its own route row plus its covered
+-    # nodes (content digests below), never the module revision and never
+-    # co-imported units or learner state.
+-    package_unit_ids = set()
+-    for entry in package.get("units", []) or []:
+-        unit_data = entry.get("unit") if isinstance(entry, dict) else None
+-        uid = unit_data.get("id") if isinstance(unit_data, dict) else None
+-        if isinstance(uid, str) and uid \
+-                and unit_data.get("module_id") == module_id:
+-            package_unit_ids.add(uid)
+-        if isinstance(unit_data, dict):
+-            post_apply_nodes.update(_knowledge_node_rows(unit_data))
+-    incremented = ({module_id} | package_unit_ids) if incremented_artifacts is None \
+-        else set(incremented_artifacts)
+-    for rid in sorted(changed):
+-        claim_id = "covers:" + rid
+-        trails = []
+-        digests = {}
+-        for item in evidence_by_claim[claim_id]["evidence"]:
+-            ref = str(item["ref"])
+-            trail = "{}:{}".format(item["kind"], ref)
+-            note = item.get("note")
+-            if isinstance(note, str) and note.strip():
+-                trail += f" -- trail: {note.strip()}"
+-            trails.append(trail)
+-            if item["kind"] == "manifest":
+-                entry = manifest_files.get(ref)
+-                digest = str(entry.get("sha256") or "") \
+-                    if isinstance(entry, dict) else ""
+-                if not digest:
+-                    raise LineageError(
+-                        f"{claim_id} cites manifest path {ref!r} with no digest")
+-                digests["manifest:" + ref] = digest
+-            elif item["kind"] == "repo-file":
+-                try:
+-                    candidate = (root / ref).resolve()
+-                    inside = candidate == root.resolve() \
+-                        or root.resolve() in candidate.parents
+-                except (OSError, ValueError):
+-                    inside = False
+-                    candidate = None
+-                if not inside or candidate is None or not candidate.is_file():
+-                    raise LineageError(
+-                        f"{claim_id} cites unreadable repo file {ref!r}")
+-                try:
+-                    content = candidate.read_bytes()
+-                except OSError as exc:
+-                    raise LineageError(
+-                        f"{claim_id} cites unreadable repo file {ref!r}: "
+-                        f"{exc}") from exc
+-                digests["file:" + ref] = "sha256:" + hashlib.sha256(
+-                    content).hexdigest()
+-        try:
+-            declared = {
+-                str(artifact): int(revision)
+-                for artifact, revision
+-                in dict(evidence_by_claim[claim_id].get("reads") or {}).items()
+-            }
+-        except (TypeError, ValueError) as exc:
+-            raise LineageError(
+-                f"{claim_id} declares malformed revision: {exc}") from exc
+-        # Declared reads were validated fresh against pre-commit state;
+-        # store post-apply validity for incremented artifacts so the new
+-        # claim is supported immediately after its own commit.
+-        read_revisions = {}
+-        for artifact, revision in declared.items():
+-            if artifact in incremented:
+-                read_revisions[artifact] = current_revisions.get(artifact, 0) + 1
+-            else:
+-                read_revisions[artifact] = revision
+-        # The judgment's own reads: this route's row plus the nodes it
+-        # covers. A covered node without a post-apply row earns no key —
+-        # canonical validation owns covers resolvability, and the ledger
+-        # never invents a digest for a row that is not there.
+-        owned = package_owned.get(rid) or live_owned.get(rid)
+-        if owned is not None:
+-            source_id, route_row = owned
+-            digests[ROUTE_CONTENT_PREFIX + rid] = route_content_digest(
+-                module_id=module_id, source_id=source_id, route=route_row)
+-        for node_id in changed[rid]:
+-            node_row = post_apply_nodes.get(str(node_id))
+-            if node_row is not None:
+-                digests[NODE_CONTENT_PREFIX + str(node_id)] = node_content_digest(
+-                    node_row)
+-        prior = records.get(claim_id)
+-        records[claim_id] = emit_route_covers(
+-            route_id=rid,
+-            covers=changed[rid],
+-            read_revisions=read_revisions,
+-            judged_by=judged_by,
+-            admitted_by=admitted,
+-            evidence=trails,
+-            supersedes=to_dict(prior) if prior is not None else None,
+-            source_hashes=digests,
+-        )
+-    live_ids = set(live_routes)
+-    package_ids = set(package_routes)
+-    for rid in sorted(live_ids - package_ids):
+-        claim_id = "covers:" + rid
+-        if claim_id in records:
+-            for lineage in withdraw(list(records.values()), claim_id):
+-                records[lineage.claim_id] = lineage
+-    for unit_id, dossier in synthesis_entries:
+-        content = _dump_yaml(dossier)
+-        destination = synthesis_destination(root, unit_id)
+-        if destination.is_file() and destination.read_bytes() == content.encode("utf-8"):
+-            continue
+-        claim_id = f"dossier:{dossier['id']}"
+-        records[claim_id] = publication_lineage_record(
+-            root, unit_id, dossier, content, request, prior=records.get(claim_id))
+-    return dump_ledger(records)
+-
+-
+ def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
+     """Bind the observed material set to the preflight report.
+ 
+@@ -909,7 +621,8 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
+             extra=tuple(f"- {problem}" for problem in routing_problems),
+         )
+     lineage_problems, changed_claims, claim_evidence, live_routes = _phaseB_validate(
+-        root, repo, module_id, package)
++        root, repo, module_id, package,
++        unit_scope=req.get("unit_id") if capability_override == "unit.plan.revise" else None)
+     if lineage_problems:
+         _plan_refuse(
+             ctx,
+@@ -918,7 +631,10 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
+             exit_code=1,
+             extra=tuple(f"- {problem}" for problem in lineage_problems),
+         )
+-    if not req.get("check") and (changed_claims or synthesis_entries):
++    lineage_will_change = bool(changed_claims) or any(
++        synthesis_destination(root, uid) in _drop_unchanged_writes(writes)
++        for uid, _ in synthesis_entries)
++    if not req.get("check") and lineage_will_change:
+         try:
+             writes[root / LEDGER_RELATIVE] = _phaseB_ledger_text(
+                 root, repo, module_id, package,
+@@ -979,22 +695,24 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
+             root, module_id, package, writes,
+             synthesis_entries, package_sha, seen_units)
+         result["units_checked"] = sorted(seen_units)
+-        result["files_checked"] = len(writes)
++        result["files_checked"] = len(writes) + int(lineage_will_change)
+         capability = capability_override or "module.plan.import"
+         reviewed_sha = review_input[0] if review_input else package_sha
+         payload = review_input[1] if review_input else {
+             "module_id": module_id, "file": str(source), "file_sha256": package_sha}
+         owners = result["commit_artifact_ids"] if minimal_writes \
+             else [module_id, *sorted(seen_units), *synthesis_ids]
++        owners = lineage_artifacts(owners, lineage_will_change)
+         result["expected_revisions"] = {aid: load_revisions(root).get(aid, 0) for aid in owners}
+         result["commit_artifact_ids"] = owners
+         result["reviewed_file_sha256"] = reviewed_sha
+         result["assembled_package_sha256"] = package_sha
+         result["capability"] = capability
+-        result["changes"] = "present" if writes else "none"
++        result["changes"] = "present" if writes or lineage_will_change else "none"
+         result["expected_write_paths"] = sorted({
+             str(p.relative_to(root)) for p in writes
+-        } | ({LEDGER_RELATIVE} if changed_claims or synthesis_entries else set()))
++        } | ({LEDGER_RELATIVE} if lineage_will_change else set()))
++        result["claim_anchors"] = anchor_report(claim_evidence)
+         result["expected_write_sha256"] = {
+             str(p.relative_to(root)): hashlib.sha256(content.encode("utf-8")).hexdigest()
+             for p, content in writes.items()}
+@@ -1032,6 +750,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
+             root, module_id, writes, synthesis_entries)
+     else:
+         artifact_ids = [module_id, *sorted(seen_units), *synthesis_ids]
++    artifact_ids = lineage_artifacts(artifact_ids, lineage_will_change)
+     validate_extra, gate_errors = _plan_apply_gate(
+         root, live_repo=repo, module_id=module_id,
+         syntheses=synthesis_entries,
+diff --git a/tools/learning_os/app/handlers/routes.py b/tools/learning_os/app/handlers/routes.py
+index 72882354..1dc12101 100644
+--- a/tools/learning_os/app/handlers/routes.py
++++ b/tools/learning_os/app/handlers/routes.py
+@@ -7,18 +7,27 @@ import copy
+ import hashlib
+ import json
+ 
++import yaml
++
+ from learning_os.app._plan_gate import compose_plan_gate_errors as _compose_plan_gate_errors
+ from learning_os.app._plan_gate import (
+     module_plan_validation_errors as _module_plan_validation_errors,
+ )
+ from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
+ from learning_os.app._plan_gate import real_perimeter_errors as _real_perimeter_errors
++from learning_os.app.claim_admission import (
++    anchor_report,
++    lineage_artifacts,
++    prepare_claim_admission,
++    render_claim_lineage,
++)
+ from learning_os.app.context import OpContext
+ from learning_os.app.encoders import dumps_compact
+ from learning_os.app.handlers._shared import guard_rows as _guard_rows
+ from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
+ from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
+ from learning_os.app.registry import register
++from learning_os.derive.semantics.lineage import LEDGER_RELATIVE
+ from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
+ from learning_os.domain.material_refs import (
+     MATERIAL_FIELDS,
+@@ -32,6 +41,7 @@ from learning_os.domain.material_refs import (
+ )
+ from learning_os.domain.suggest import with_suggestions
+ from learning_os.store.codec import dump_yaml as _dump_yaml
++from learning_os.store.contracts.gateway import current_gateway_request
+ from learning_os.store.transactions import parse_expected_revisions
+ from learning_os.store.warning_baseline import signatures_from_issues
+ 
+@@ -47,14 +57,13 @@ def _apply_hint(args, capability, snapshot_id, revisions):
+     """
+     if capability != "route.patch":
+         return None
++    payload = {"unit_id": args.unit_id, "route_id": args.route_id, "changes": args.changes}
++    if getattr(args, "claim_evidence", None) is not None:
++        payload["claim_evidence"] = args.claim_evidence
+     return {
+         "apply_via": "GatewayEnvelopeV2",
+         "capability": capability,
+-        "payload": {
+-            "unit_id": args.unit_id,
+-            "route_id": args.route_id,
+-            "changes": args.changes,
+-        },
++        "payload": payload,
+         "expected_snapshot": snapshot_id,
+         "expected_revisions": dict(revisions),
+         "apply_how": ("direct CLI application is disabled; submit a "
+@@ -278,13 +287,38 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
+         writes, artifacts, detail = planner(repo)
+     except MaterialReferenceError as exc:
+         raise WriteRefused(str(exc)) from exc
++    checking = req.get("check") is True
++    lineage_will_change = False
++    if capability == "route.patch":
++        unit = repo.units[req["unit_id"]]
++        source_map_path = repo.module_source_map_origins[unit.module_id]
++        proposed = (yaml.safe_load(writes[source_map_path]) if source_map_path in writes
++                    else repo.module_source_maps[unit.module_id])
++        supplied = req.get("claim_evidence")
++        if supplied is not None and (not isinstance(supplied, dict)
++                                    or supplied.get("claim_id") != "covers:" + req["route_id"]):
++            raise WriteRefused("claim_evidence must name exactly this route's covers claim",
++                               site="route.patch.lineage-preflight-failed", exit_code=1)
++        package = {"source_map": proposed, "claim_evidence": [supplied] if supplied is not None else []}
++        admission = prepare_claim_admission(root, repo, unit.module_id, package, unit_scope=unit.id)
++        if admission.problems:
++            raise WriteRefused("route patch lineage preflight failed; no canonical files were written",
++                               site="route.patch.lineage-preflight-failed", exit_code=1,
++                               extra_stderr=tuple("- " + problem for problem in admission.problems))
++        lineage_will_change = bool(admission.changed)
++        artifacts = set(lineage_artifacts(artifacts, lineage_will_change))
++        detail["claim_anchors"] = anchor_report(admission.evidence)
++        if lineage_will_change and not checking and current_gateway_request() is not None:
++            writes[root / LEDGER_RELATIVE] = render_claim_lineage(
++                root, repo, unit.module_id, package, admission.changed,
++                admission.evidence, admission.live_routes, incremented_artifacts=artifacts)
+     rows = {p.relative_to(root).as_posix(): hashlib.sha256(v.encode()).hexdigest()
+-            for p, v in sorted(writes.items())}
++            for p, v in sorted(writes.items()) if p != root / LEDGER_RELATIVE}
++    affected = sorted(set(rows) | ({LEDGER_RELATIVE} if lineage_will_change else set()))
+     plan_hash = "sha256:" + hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()
+     result = {"schema_version": 1, **detail, "plan_sha256": plan_hash,
+-              "affected_files": list(rows), "artifact_ids": sorted(artifacts),
++              "affected_files": affected, "artifact_ids": sorted(artifacts),
+               "expected_revisions": _guard_rows(root, artifacts)}
+-    checking = req.get("check") is True
+     if req.get("plan_sha256") not in (None, plan_hash):
+         raise WriteRefused("compaction plan changed; review the current plan")
+     if not checking and capability == "module.materials.compact" and req.get("plan_sha256") is None:
+@@ -299,7 +333,7 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
+         return Result(
+             {"result": result, "capability": capability,
+              "apply_args": {key: req.get(key)
+-                            for key in ("unit_id", "route_id", "changes")}},
++                            for key in ("unit_id", "route_id", "changes", "claim_evidence")}},
+             proposal=TransactionProposal(
+                 capability=capability,
+                 writes=writes,
+diff --git a/tools/learning_os/app/handlers/sources.py b/tools/learning_os/app/handlers/sources.py
+index f6b75caa..49a77585 100644
+--- a/tools/learning_os/app/handlers/sources.py
++++ b/tools/learning_os/app/handlers/sources.py
+@@ -13,6 +13,7 @@ from urllib.parse import urlsplit
+ 
+ import yaml
+ 
++from learning_os.app.claim_admission import lineage_artifacts
+ from learning_os.app.context import OpContext
+ from learning_os.app.encoders import dumps_indented
+ from learning_os.app.handlers._shared import input_record as _input_record
+@@ -1307,14 +1308,14 @@ def _plan_source_record_revise(root: Path, repo, item: Any) -> dict:
+     writes = {destination: _dump_yaml({"sources": merged})}
+     writes.update(dossier_writes)
+     unit_ids = sorted(set(replacements) | set(rebased))
+-    revisions = {sid: artifact_revision(root, sid)}
+-    revisions.update({uid: artifact_revision(root, uid) for uid in unit_ids})
++    artifacts = lineage_artifacts([sid, *unit_ids], bool(dossier_publications))
++    revisions = {artifact: artifact_revision(root, artifact) for artifact in artifacts}
+     return {
+         "diff": diff,
+         "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
+         "writes": writes,
+         "dossier_publications": dossier_publications,
+-        "artifact_ids": [sid] + unit_ids,
++        "artifact_ids": artifacts,
+         "expected_revisions": revisions,
+     }
+ 
+diff --git a/tools/learning_os/app/handlers/synthesis.py b/tools/learning_os/app/handlers/synthesis.py
+index 0aac4ff7..5ab49488 100644
+--- a/tools/learning_os/app/handlers/synthesis.py
++++ b/tools/learning_os/app/handlers/synthesis.py
+@@ -7,6 +7,7 @@ import hashlib
+ import json
+ from pathlib import Path
+ 
++from learning_os.app.claim_admission import lineage_artifacts
+ from learning_os.app.context import OpContext
+ from learning_os.app.encoders import dumps_indented
+ from learning_os.app.gateway import prepare_review_envelope
+@@ -71,10 +72,12 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
+     value = _input_record(req, "unit material synthesis")
+     _validate_publication_synthesis(root, req["unit_id"], value)
+     basis = current_unit_material_basis(root, req["unit_id"])
++    artifacts = lineage_artifacts((req["unit_id"], value["id"]))
+     if req.get("check") is True:
+         return Result(
+             {"ok": True, "check": True, "unit_id": req["unit_id"],
+-             "basis": basis},
++             "basis": basis, "artifact_ids": artifacts,
++             "expected_revisions": {aid: load_revisions(root).get(aid, 0) for aid in artifacts}},
+ 
+         )
+     if not req.get("approve"):
+@@ -116,7 +119,7 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
+         proposal=TransactionProposal(
+             capability="unit.material-synthesis.publish",
+             writes={destination: content, root / LEDGER_RELATIVE: lineage},
+-            artifact_ids=(req["unit_id"], value["id"]),
++            artifact_ids=tuple(artifacts),
+             expected_revisions=expected_revisions,
+         ),
+ 
+diff --git a/tools/learning_os/derive/validation/materials.py b/tools/learning_os/derive/validation/materials.py
+index 0b94d011..7521f12e 100644
+--- a/tools/learning_os/derive/validation/materials.py
++++ b/tools/learning_os/derive/validation/materials.py
+@@ -19,7 +19,6 @@ pre-commit hook. ``python tools/materials_manifest.py --deep`` verifies content.
+ 
+ from __future__ import annotations
+ 
+-import os
+ import re
+ import unicodedata
+ from pathlib import Path
+@@ -28,6 +27,7 @@ import yaml
+ 
+ from learning_os.store.layout import PathBoundaryError, read_text_inside, resolve_symlinks_inside
+ from learning_os.store.loading.yamlio import UniqueKeySafeLoader
++from learning_os.store.materials.resolution import materials_mount
+ 
+ # Material filenames legitimately contain spaces ("unser skript.pdf"), so a
+ # whitespace-delimited pattern silently truncates them. Delimited forms are
+@@ -99,36 +99,14 @@ class ChecksMaterials:
+         # `material://` URIs are id-based (source-<id>/…) and resolve through the
+         # materials/.flat/ symlink farm. Referenced URIs must therefore be
+         # translated to physical paths before the inventory can be consulted.
+-        physical = repo.learningos_root / "materials"
+-        tree: Path | None = physical
+-        dangling = False
+-        if physical.is_symlink():
+-            # Paired clones and worktrees link materials/ at the real tree:
+-            # the loader resolves material:// URIs through it, so the
+-            # inventory verifies against the resolved target — the same
+-            # bytes the reads see. Only a link to nowhere stays offline.
+-            try:
+-                tree = physical.resolve(strict=True)
+-            except (OSError, RuntimeError):
+-                tree, dangling = None, True
+-        if tree is None or not tree.is_dir():
+-            if dangling:
+-                why = f"materials symlink at {physical} points nowhere"
+-            else:
+-                why = f"materials tree not mounted at {physical}"
++        tree, why = materials_mount(repo)
++        if tree is None:
+             self.warn("MATERIALS-OFFLINE",
+                       f"{why} — "
+                       f"{len(recorded)} inventoried file(s) unverified this run "
+                       "(the manifest still records what belongs there)",
+                       "records/materials-manifest.yaml")
+             return
+-        if not os.access(tree, os.R_OK | os.X_OK):
+-            self.warn("MATERIALS-OFFLINE",
+-                      f"materials tree at {physical} is not readable — "
+-                      f"{len(recorded)} inventoried file(s) unverified this run "
+-                      "(the manifest still records what belongs there)",
+-                      "records/materials-manifest.yaml")
+-            return
+         physical = tree
+ 
+         referenced: set[str] = set()
+diff --git a/tools/learning_os/derive/validation/plan_rigor.py b/tools/learning_os/derive/validation/plan_rigor.py
+index 120de823..a9dd21ed 100644
+--- a/tools/learning_os/derive/validation/plan_rigor.py
++++ b/tools/learning_os/derive/validation/plan_rigor.py
+@@ -19,8 +19,13 @@ from __future__ import annotations
+ import hashlib
+ import json
+ import re
++import unicodedata
++from collections import defaultdict
++from pathlib import PurePosixPath
+ from typing import Literal
+ 
++from learning_os.domain.route_identity import route_with_identity
++from learning_os.store.loading.yamlio import LoaderError, load_yaml
+ from learning_os.store.materials.resolution import (
+     material_uri_authority,
+     resolve_route_material_files,
+@@ -99,6 +104,42 @@ _ADDRESSED_FORMATS = {"course", "documentation", "website", "exam", "solutions",
+ _EM_DASH_RE = re.compile(r"\s—\s")
+ 
+ 
++def _filename_present(name: str, locator: str) -> bool:
++    return bool(re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", locator))
++
++
++def locator_binding_findings(module_id: str, source_id: str, routes: list[dict],
++                              manifest_names: set[str]) -> list[tuple[str, str]]:
++    """Authoring constraints over declared identities; no material bytes are read."""
++    findings = []
++    groups = defaultdict(list)
++    names = {unicodedata.normalize("NFC", name).casefold() for name in manifest_names}
++    for route in routes:
++        vault = route.get("vault_path")
++        if isinstance(vault, str) and vault.startswith("material://"):
++            names.add(unicodedata.normalize("NFC", PurePosixPath(vault).name).casefold())
++    for route in routes:
++        locator = unicodedata.normalize("NFC", str(route.get("locator") or ""))
++        rid = route_with_identity(module_id, source_id, route)["id"]
++        if locator.strip():
++            groups[(str(route.get("unit_id") or ""), " ".join(locator.split()))].append(rid)
++        vault = route.get("vault_path")
++        if not isinstance(vault, str) or not vault.startswith("material://"):
++            continue
++        own = unicodedata.normalize("NFC", PurePosixPath(vault).name).casefold()
++        text = locator.casefold()
++        if own and not _filename_present(own, text):
++            others = sorted(name for name in names if name and name != own and _filename_present(name, text))
++            if others:
++                findings.append(("ROUTE-VAULT-LOCATOR-MISMATCH",
++                                 f"route {rid} binds {own!r} but its locator names {others!r} without its own file"))
++    for (unit, _), ids in sorted(groups.items()):
++        if len(ids) >= 2:
++            findings.append(("ROUTE-LOCATOR-DUPLICATE",
++                             f"source {source_id!r}, unit {unit!r}: distinct rich routes share one locator: {', '.join(sorted(ids))}"))
++    return findings
++
++
+ def _looks_fused(locator: str) -> bool:
+     """Sentence after the dash, and nothing addressable in it.
+ 
+@@ -124,6 +165,16 @@ class ChecksPlanRigor:
+     # ------------------------------------------------------------- routes
+     def _check_route_rigor(self) -> None:
+         r = self.repo
++        if not r.module_source_maps:
++            return
++        manifest_names: set[str] = set()
++        path = r.root / "records/materials-manifest.yaml"
++        if path.is_file():
++            try:
++                manifest = load_yaml(path, r.root)
++                manifest_names = {PurePosixPath(str(key)).name for key in (manifest.get("files") or {})}
++            except LoaderError:
++                pass  # MATERIALS-MANIFEST owns malformed inventory diagnostics.
+         for mid, source_map in r.module_source_maps.items():
+             module = r.modules.get(mid)
+             if module is not None and module.get("status") == "archived":
+@@ -134,7 +185,12 @@ class ChecksPlanRigor:
+                 continue
+             where = self._rel(r.module_source_map_origins[mid])
+             for entry in source_map.get("sources", []) or []:
+-                sid = entry.get("source_id") if isinstance(entry, dict) else None
++                if not isinstance(entry, dict):
++                    continue
++                sid = entry.get("source_id")
++                rich = [row for row in entry.get("unit_routes", []) or [] if isinstance(row, dict)]
++                for code, message in locator_binding_findings(mid, str(sid or ""), rich, manifest_names):
++                    self.err(code, message, where)
+                 for route in entry.get("unit_routes", []) or []:
+                     if not isinstance(route, dict):
+                         continue
+diff --git a/tools/learning_os/store/materials/resolution.py b/tools/learning_os/store/materials/resolution.py
+index 3de157c3..533697fc 100644
+--- a/tools/learning_os/store/materials/resolution.py
++++ b/tools/learning_os/store/materials/resolution.py
+@@ -17,6 +17,7 @@ from __future__ import annotations
+ 
+ import hashlib
+ import json
++import os
+ import re
+ from pathlib import Path, PurePosixPath
+ from typing import TYPE_CHECKING, Any, NamedTuple
+@@ -35,6 +36,20 @@ class ResolvedMaterialFile(NamedTuple):
+ 
+ MATERIAL_SCHEME = "material://"
+ 
++
++def materials_mount(repo: Repo) -> tuple[Path | None, str]:
++    """The shared mounted/readable predicate used by validation and admission."""
++    physical = repo.learningos_root / "materials"
++    try:
++        tree = physical.resolve(strict=True) if physical.is_symlink() else physical
++    except (OSError, RuntimeError):
++        return None, f"materials symlink at {physical} points nowhere"
++    if not tree.is_dir():
++        return None, f"materials tree not mounted at {physical}"
++    if not os.access(tree, os.R_OK | os.X_OK):
++        return None, f"materials tree at {physical} is not readable"
++    return tree, ""
++
+ MATERIAL_RESOURCE_SUFFIXES = frozenset({
+     ".ipynb",
+     ".md",
+diff --git a/tools/learning_os/store/materials/slices.py b/tools/learning_os/store/materials/slices.py
+index ee0c9292..526b1329 100644
+--- a/tools/learning_os/store/materials/slices.py
++++ b/tools/learning_os/store/materials/slices.py
+@@ -32,6 +32,7 @@ from dataclasses import dataclass, field, replace
+ from pathlib import Path, PurePosixPath
+ from typing import Any
+ 
++from learning_os.store.materials.pdf_text import PDFTextError, pdf_page_text, pdf_reader
+ from learning_os.store.materials.resolution import (
+     MATERIAL_RESOURCE_SUFFIXES,
+     MATERIAL_SCHEME,
+@@ -43,6 +44,7 @@ from learning_os.store.materials.resolution import (
+     resolve_route_material_files,
+     route_material_checksum,
+     safe_material_locator,
++    sha256_bytes,
+     sha256_file,
+ )
+ 
+@@ -328,30 +330,28 @@ def _select_pages(total: int, requested: list[tuple[int, int]]) -> tuple[tuple[i
+ 
+ def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str) -> SlicePart:
+     try:
+-        import pypdf
+-    except ImportError as exc:
+-        raise SliceResolutionError(
+-            route_id, "pypdf is required for PDF slices: make setup") from exc
+-    try:
+-        reader = pypdf.PdfReader(str(path))
++        content = path.read_bytes()
++        reader = pdf_reader(content)
+         total = len(reader.pages)
+     except Exception as exc:
+         raise SliceResolutionError(
+             route_id, f"its file cannot be parsed as PDF: {exc}") from exc
+     pages, status = _select_pages(total, parse_locator_page_ranges(locator))
+-    return _pdf_part_for_pages(route_id, material_uri, path, reader, total, pages, status)
++    return _pdf_part_for_pages(route_id, material_uri, reader, total, pages, status,
++                               sha256_bytes(content))
+ 
+ 
+-def _pdf_part_for_pages(route_id: str, material_uri: str, path: Path, reader: Any,
+-                        total: int, pages: tuple[int, ...], status: str) -> SlicePart:
++def _pdf_part_for_pages(route_id: str, material_uri: str, reader: Any,
++                        total: int, pages: tuple[int, ...], status: str,
++                        file_sha256: str) -> SlicePart:
+     if status == "out-of-range":
+         raise SliceResolutionError(route_id, f"requested locator pages are outside this {total}-page file")
+     raw: list[tuple[int, str]] = []
+     for page in pages:
+         try:
+-            text = reader.pages[page - 1].extract_text() or ""
+-        except Exception:
+-            text = ""
++            text = pdf_page_text(reader, page)
++        except PDFTextError as exc:
++            raise SliceResolutionError(route_id, str(exc)) from exc
+         raw.append((page, text))
+     if not any(text.strip() for _, text in raw):
+         raise SliceResolutionError(route_id, "its file yields no extractable text")
+@@ -363,7 +363,7 @@ def _pdf_part_for_pages(route_id: str, material_uri: str, path: Path, reader: An
+         page_total=total,
+         status=status,
+         text="".join(chunks),
+-        file_sha256=sha256_file(path),
++        file_sha256=file_sha256,
+     )
+ 
+ 
+@@ -715,12 +715,8 @@ def plan_continuation(
+             "its material changed since pass 1; re-prepare the request instead of continuing",
+         )
+     try:
+-        import pypdf
+-    except ImportError as exc:
+-        raise ContinuationError(
+-            route_id, "pypdf is required for PDF slices: make setup") from exc
+-    try:
+-        reader = pypdf.PdfReader(str(resolved.path))
++        observed_content = resolved.path.read_bytes()
++        reader = pdf_reader(observed_content)
+         total = len(reader.pages)
+     except Exception as exc:
+         raise ContinuationError(
+@@ -735,8 +731,8 @@ def plan_continuation(
+             f"pages {start}-{end} were already inspected; "
+             "a continuation must name unread pages")
+     try:
+-        part = _pdf_part_for_pages(route_id, resolved.material_uri, resolved.path,
+-                                   reader, total, pages, "complete")
++        part = _pdf_part_for_pages(route_id, resolved.material_uri,
++                                   reader, total, pages, "complete", sha256_bytes(observed_content))
+     except SliceResolutionError as exc:
+         raise ContinuationError(route_id, "its pages yield no extractable text") from exc
+     pending = MaterialSlice(
+diff --git a/tools/material_toc.py b/tools/material_toc.py
+index 3949edb3..22f71f38 100644
+--- a/tools/material_toc.py
++++ b/tools/material_toc.py
+@@ -32,7 +32,6 @@ from __future__ import annotations
+ 
+ import argparse
+ import re
+-import subprocess
+ import sys
+ from pathlib import Path
+ 
+@@ -40,6 +39,8 @@ TOOLS = Path(__file__).resolve().parent
+ if str(TOOLS) not in sys.path:
+     sys.path.insert(0, str(TOOLS))
+ 
++from learning_os.domain.verbatim import matches  # noqa: E402
++from learning_os.store.materials.pdf_text import pdf_page_text, pdf_reader  # noqa: E402
+ from learning_os.store.materials.resolution import (  # noqa: E402
+     PathBoundaryError,
+     material_uri_authority,
+@@ -140,11 +141,7 @@ def outline_toc(path: Path, depth: int) -> list[tuple[int, str, int | None]]:
+ 
+ 
+ def page_text(path: Path, page: int) -> str:
+-    out = subprocess.run(
+-        ["pdftotext", "-f", str(page), "-l", str(page), str(path), "-"],
+-        capture_output=True, text=True,
+-    )
+-    return out.stdout
++    return pdf_page_text(pdf_reader(path.read_bytes()), page)
+ 
+ 
+ def printed_toc(path: Path, scan_pages: int) -> list[str]:
+@@ -164,10 +161,6 @@ def printed_toc(path: Path, scan_pages: int) -> list[str]:
+     return rows
+ 
+ 
+-def normalise(text: str) -> str:
+-    return re.sub(r"\s+", " ", text).strip().casefold()
+-
+-
+ def build_parser() -> argparse.ArgumentParser:
+     """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
+     parser = argparse.ArgumentParser(description=__doc__,
+@@ -196,7 +189,7 @@ def main(argv: list[str] | None = None) -> int:
+     if args.verify:
+         if not args.page or not args.expect:
+             raise SystemExit("--verify needs --page and --expect")
+-        found = normalise(args.expect) in normalise(page_text(path, args.page))
++        found = matches(args.expect, page_text(path, args.page))
+         print(f"{'OK  ' if found else 'MISS'} p{args.page} {args.expect!r} in {path.name}")
+         return 0 if found else 1
+ 
+diff --git a/tools/verify_plan_receipt.py b/tools/verify_plan_receipt.py
+index d2901ea5..afc553da 100644
+--- a/tools/verify_plan_receipt.py
++++ b/tools/verify_plan_receipt.py
+@@ -48,7 +48,9 @@ sys.path.insert(0, str(TOOLS))
+ 
+ from learning_os.app.gateway import context_from_v2 as _context_from_v2  # noqa: E402
+ from learning_os.app.gateway import read_structured_file as _read_structured_file  # noqa: E402
+-from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope  # noqa: E402
++from learning_os.app.gateway import (  # noqa: E402
++    validate_capability_envelope as _validate_capability_envelope,
++)
+ from learning_os.app.gateway import validate_payload as _validate_payload  # noqa: E402
+ from learning_os.app.lock import operator_lock as _operator_lock  # noqa: E402
+ from learning_os.derive.material_synthesis import (  # noqa: E402
+@@ -184,7 +186,10 @@ def verify(root: Path, args) -> int:
+         raise ValueError("receipt writes do not match the preflight")
+     receipt_hashes = {row["path"]: row["sha256_after"] for row in receipt["writes"]}
+     expected_hashes = report.get("expected_write_sha256")
+-    if not isinstance(expected_hashes, dict) or not expected_hashes \
++    ledger_only = (written_paths == {"operations/transactions/lineage.yaml"}
++                   and set(expected) == {"file:operations/transactions/lineage.yaml"}
++                   and receipt.get("capability") in {"unit.plan.revise", "module.plan.import"})
++    if not isinstance(expected_hashes, dict) or (not expected_hashes and not ledger_only) \
+             or set(expected_hashes) != written_paths - {"operations/transactions/lineage.yaml"} \
+             or any(receipt_hashes.get(path) != digest for path, digest in expected_hashes.items()):
+         raise ValueError("receipt final bytes do not match the preflight")

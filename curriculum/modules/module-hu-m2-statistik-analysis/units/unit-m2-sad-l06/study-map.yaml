@@ -1,0 +1,520 @@
+id: study-map-m2-sad-l06
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l06
+status: not-started
+current_stage: stage-sad-l06-random-variable
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l06-random-variable
+  number: 1
+  title: Random variables and realizations
+  status: pending
+  objective: A random variable maps outcomes to numbers; the variable, a realized value, and the underlying
+    random experiment are distinct objects.
+  done_when:
+  - 'Reproduce without notes: A random variable maps outcomes to numbers; the variable, a realized value,
+    and the underlying random experiment are distinct objects.'
+  - Work UE4, slides 18-34 — random variables, moments and LLN, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 5-8,18-19
+    angle: Separates an outcome from the numerical function applied to it.
+    angle_detail: Read physical PDF pages 5-8,18-19. The three-dice example maps 216 ordered outcomes
+      to sums 3 through 18, which are not equiprobable. A continuous point event has probability zero,
+      not an undefined probability. A CDF is defined for every real x, including values outside the support.
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Random variables
+        and realizations'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:fd7fb2c7249df39c59896bf39807e635e222e53b8fdbceb541576b2446384cc6
+  - material_ref:
+      route_id: route-25ae05c5bd133243f7bf98aa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-25ae05c5bd133243f7bf98aa
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-distribution-functions
+  number: 2
+  title: PMF, density, and CDF
+  status: pending
+  objective: Discrete mass and continuous density assign probability differently, while the cumulative
+    distribution function uniformly represents P(X less than or equal to x).
+  done_when:
+  - 'Reproduce without notes: Discrete mass and continuous density assign probability differently, while
+    the cumulative distribution function uniformly represents P(X less than or equal to x).'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    6, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 9-23
+    angle: Relates PMF jumps and density integrals through the same CDF.
+    angle_detail: Read physical PDF pages 9-23. Use F(x)=P(X≤x), including equality for discrete variables.
+      On p. 15 the CDF integral must end at x, not +∞; p. 17 gives the correct limit. On p. 20 the uniform
+      CDF is 1 above b, and the exponential expression is a density only when λ=k>0; its CDF is 1-exp(-kx).
+      On p. 21 read both models and keep them apart — the stated discrete-minutes model (x = 0..9, F(x)=0.1(x+1))
+      gives P(X≤3)=0.4 and P(X>4)=0.5 — note the printed F(4) is a slip for F(3); the continuous-U(0,10)
+      reading gives F(x)=x/10, P(X≤3)=0.3 and P(X>4)=0.6. Know which model the question asks for. Density
+      need not be continuous for point probabilities to vanish.
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'PMF, density,
+        and CDF'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:972b01a6302bcc5a27e8f2007374a3a9b1fe3622955eb4d12a167fe1435f372d
+  - material_ref:
+      route_id: route-2da0864f340f4e794158cc61
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2da0864f340f4e794158cc61
+  - material_ref:
+      route_id: route-64aa48498fe151c8b1c69305
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-64aa48498fe151c8b1c69305
+  - material_ref:
+      route_id: route-0374705a29ffc770fc54d9b5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0374705a29ffc770fc54d9b5
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-transformations
+  number: 3
+  title: Functions and transformations of random variables
+  status: pending
+  objective: A transformation g(X) changes the possible values and distribution; probabilities and moments
+    must be recomputed from the mapping rather than by treating X as a fixed number.
+  done_when:
+  - 'Reproduce without notes: A transformation g(X) changes the possible values and distribution; probabilities
+    and moments must be recomputed from the mapping rather than by treating X as a fixed number.'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 28-31,38
+    angle: Computes moments of a function directly from the original distribution.
+    angle_detail: Read physical PDF pages 28-31,38. Page 28 states the LOTUS formula (unnamed on the slide).
+      Pages 29–30 call g a per-error cost but compute E[g(X)]; a total daily cost under that wording is
+      Xg(X). With the displayed table E[g(X)]=3.0467 and E[Xg(X)]=4.6733. Decide which quantity the model
+      represents before calculating. For many-to-one transformations such as |X|, combine all original
+      outcomes mapping to the same value (p. 31 notes the combining; p. 38 reuses the same table for Z²);
+      use Blatt 3 Aufgabe 1(c).
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Functions and
+        transformations of random variables'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:bc1d0123320b6dcd236695e6a1d326d5e47f4bdfea73c1adfaca79d88727d499
+  - material_ref:
+      route_id: route-2da0864f340f4e794158cc61
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2da0864f340f4e794158cc61
+  - material_ref:
+      route_id: route-64aa48498fe151c8b1c69305
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-64aa48498fe151c8b1c69305
+  - material_ref:
+      route_id: route-sad-l06-transformations
+      inherit:
+      - label
+      - source_id
+      - locator
+      - url
+    route_id: route-sad-l06-transformations
+    kind: read
+    scope_triage: helpful-now
+    angle: Derives a transformed CDF step by step, then checks it by changing variables in the density.
+    angle_detail: Read physical PDF pages 1-3. The worked X² example has nonnegative support. Begin from
+      P(g(X)≤y) and its support; do not apply a one-branch inverse to a many-to-one map on both signs.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-transformations/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-expectation
+  number: 4
+  title: Expected value and linearity
+  status: pending
+  objective: Expectation is a probability-weighted long-run average; linearity holds without independence
+    and extends from X to functions and sums of random variables.
+  done_when:
+  - 'Reproduce without notes: Expectation is a probability-weighted long-run average; linearity holds
+    without independence and extends from X to functions and sums of random variables.'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-expected-value
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 24,26-32
+    angle: Proves linearity by summing the joint probabilities, without assuming independence.
+    angle_detail: Read physical PDF pages 24,26-32. Page 24 defines independence (factorization); p. 32's
+      E[XY] lemma is its first use. The dice mean 3.5 need not be a possible realization. Page 28 already
+      gives E[g(X)], and p. 31 proves linearity; p. 32 separately uses independence for E[XY]=E[X]E[Y].
+      Keep finite/existing expectations in view. The repair-cost caveat is given at the transformations
+      stage.
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Expected value
+        and linearity'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:1ddf4d1ec5c77664b17be7c5dea5e577a668437c60e480d7ef21eb0de9481dd7
+  - material_ref:
+      route_id: route-2da0864f340f4e794158cc61
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2da0864f340f4e794158cc61
+  - material_ref:
+      route_id: route-64aa48498fe151c8b1c69305
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-64aa48498fe151c8b1c69305
+  - material_ref:
+      route_id: route-a336d6454947c097344796b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a336d6454947c097344796b8
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-variance-covariance
+  number: 5
+  title: Variance, standard deviation, and covariance
+  status: pending
+  objective: Variance measures squared deviation from expectation, affine scaling squares the multiplier,
+    and covariance records joint variation needed for sums and sample means.
+  done_when:
+  - 'Reproduce without notes: Variance measures squared deviation from expectation, affine scaling squares
+    the multiplier, and covariance records joint variation needed for sums and sample means.'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-correlation
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 34-42
+    angle: Derives the second-moment identity and squared affine scaling.
+    angle_detail: Read physical PDF pages 34-42. Pages 36 and 39 derive Var(X)=E[X²]-E[X]² and Var(aX+b)=a²Var(X).
+      Pages 40–42 repeat the malformed uniform/exponential CDF notation; the stated moments require U(a,b)
+      and normalized Exp(k). Page 41’s “Slope is 1” annotation is wrong — inside [a,b] the uniform density
+      has height 1/(b-a) and slope zero, while 1/(b-a) is the CDF’s slope. The slide integration already
+      normalizes correctly. Covariance and the general sum rule are supplied by Blitzstein and MIT below.
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Variance, standard
+        deviation, and covariance'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:694964fdbfc292b5300160a5a946488859a62c8c058dc1e0aaf68590743d575d
+  - material_ref:
+      route_id: route-2da0864f340f4e794158cc61
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-2da0864f340f4e794158cc61
+  - material_ref:
+      route_id: route-0374705a29ffc770fc54d9b5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0374705a29ffc770fc54d9b5
+  - material_ref:
+      route_id: route-sad-l06-covariance
+      inherit:
+      - label
+      - source_id
+      - locator
+      - url
+    route_id: route-sad-l06-covariance
+    kind: read
+    scope_triage: helpful-now
+    angle: Uses overlapping coin counts to expose the covariance term in a sum.
+    angle_detail: Read physical PDF pages 1-4,9. Pages 1–3 give the definition, sum rule and two computations
+      of the covariance of overlapping counts; pp. 3–4 show zero covariance without independence; p. 9
+      proves the algebraic rules.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-variance-covariance/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-sample-mean
+  number: 6
+  title: IID samples and the random sample mean
+  status: pending
+  objective: The sample mean is itself random; under IID sampling its expectation is the population mean
+    and its variance shrinks as sigma squared divided by n.
+  done_when:
+  - 'Reproduce without notes: The sample mean is itself random; under IID sampling its expectation is
+    the population mean and its variance shrinks as sigma squared divided by n.'
+  - Work Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-expected-value
+  - concept-random-variable
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 52-56
+    angle: Treats the average as a new random variable and exposes IID as a modeling assumption.
+    angle_detail: Read physical PDF pages 52-56. The repeated ten-dice experiment distinguishes each Xi
+      from the realized xi and from their random average. On p. 55 linearity proves only E[X̄]=μ; Var(X̄)=σ²/n
+      also uses zero cross-covariances and the squared factor 1/n². Dekking pp. 189–190 and Fahrmeir pp.
+      332–333 make those steps explicit.
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'IID samples
+        and the random sample mean'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5cb08948eaaa07813973280713983a5d0c264122830b7fcf20161f31a0cc0000
+  - material_ref:
+      route_id: route-e7975557941ab093de08152e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-e7975557941ab093de08152e
+  - material_ref:
+      route_id: route-25ae05c5bd133243f7bf98aa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-25ae05c5bd133243f7bf98aa
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-sample-mean/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-concentration
+  number: 7
+  title: Chebyshev bounds and the law of large numbers
+  status: pending
+  objective: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why
+    sample averages stabilize as data accumulate.
+  done_when:
+  - 'Reproduce without notes: Chebyshev gives a distribution-free tail bound, and the law of large numbers
+    explains why sample averages stabilize as data accumulate.'
+  - Work Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN, then the remaining 3, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-law-of-large-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 44-50,57-60
+    angle: Derives a finite-variance probability bound and then convergence in probability.
+    angle_detail: 'Read physical PDF pages 44-50,57-60. Use c>0 and finite variance: P(|X-μ|≥c)≤min(1,σ²/c²).
+      For the mean substitute σ²/n. The bound concerns a tail event under a model, not the probability
+      that a model generated one observed value. Stabilization need not be monotone along one sample path.
+      Page 60 states pointwise empirical-CDF convergence; do not silently read it as the stronger uniform
+      Glivenko–Cantelli theorem.'
+    scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Chebyshev bounds
+        and the law of large numbers'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:fb1ddd0b360125b136320238c6b4c4bb741e0236277751b8c622bd2fa455641f
+  - material_ref:
+      route_id: route-e7975557941ab093de08152e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-e7975557941ab093de08152e
+  - material_ref:
+      route_id: route-676e8ea98543e3a7b4f466aa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - vault_path
+    route_id: route-676e8ea98543e3a7b4f466aa
+    kind: read
+    scope_triage: helpful-now
+    angle: Turns Chebyshev into the LLN and interprets a simulated sequence.
+    angle_detail: Read physical PDF pages 191-194. The proof controls a probability; the realization on
+      p. 194 can move farther away again.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking Chapters 4–7,9,13 — distributions, LOTUS and concentration'
+        against the stage 'Chebyshev bounds and the law of large numbers'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a8cd2c6d78c66e12b0dc2e1509fd88d1e168a64941524880cd7a76c64abaafd2
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md
+  attachments: []
+  source_feedback: []

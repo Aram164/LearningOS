@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""Learning OS v3 unified validator (BUILD-SPEC Step 4).
+
+    python tools/validate.py            # full offline validation
+    python tools/validate.py --online   # + external URL audit
+
+Enforces system/schema/*.schema.json plus every rule in system/VALIDATION.md.
+Replaces the legacy check_links.py / check_system.py / routine offline lychee runs.
+Writes generated/reports/validation-report.md; exit code 1 on errors.
+"""
+
+from __future__ import annotations
+
+import argparse
+import datetime as _dt
+import time as _time
+from pathlib import Path
+
+from learning_os.derive.validation import render_report, validate  # noqa: E402
+from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS  # noqa: E402
+from learning_os.store.fingerprint import seed_source_fingerprint  # noqa: E402
+from learning_os.store.loader import load_repo  # noqa: E402
+from learning_os.store.validation_cache import (  # noqa: E402
+    discard_unreadable_cache,
+    observe_pins,
+    write_static_cache,
+)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--online", action="store_true",
+                        help="also gate on external link rot (never runs during offline validation)")
+    parser.add_argument("--root", default=None,
+                        help="repository root (default: parent of tools/)")
+    parser.add_argument("--no-report", action="store_true",
+                        help="do not write generated/reports/validation-report.md")
+    parser.add_argument("--compact", action="store_true",
+                        help="print errors plus one summary line instead of "
+                             "streaming every unchanged warning; the complete "
+                             "list stays in the validation report unless "
+                             "--no-report is also given")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    started = _time.monotonic()
+    root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
+    pins = None
+    if not args.online:
+        # A corrupt cache is a miss, not a defect: discard it before the
+        # run so neither the report nor the refreshed cache names it.
+        discard_unreadable_cache(root)
+        # Observed before loading, so the cache never vouches for a state
+        # this run did not see (validation_cache module docstring).
+        pins = observe_pins(root)
+    repo = load_repo(root)
+    if pins is not None:
+        # One canonical walk per run (#112): HYGIENE-VIEWS reuses the
+        # fingerprint observed just before loading instead of walking the
+        # same bytes again. A write landing between the pin and the load
+        # is already caught: the next `status` misses on the pins.
+        seed_source_fingerprint(repo, f"sha256:{pins['canonical_fingerprint']}")
+    issues = validate(repo, online=args.online)
+    elapsed = _time.monotonic() - started
+
+    errors = [i for i in issues if i.severity == "E"]
+    warnings = [i for i in issues if i.severity == "W"]
+    if args.compact:
+        # Without a saved report there is nowhere else to inspect warnings.
+        # Operational advisories must be visible on every run in either mode.
+        for issue in issues:
+            if issue.severity != "E" and not args.no_report \
+                    and issue.code not in BASELINE_EXEMPT_WARNINGS:
+                continue
+            print(issue)
+        # Name where the suppressed warnings went, so neither a person nor an
+        # agent has to rerun without --compact to find them.
+        report_hint = "" if args.no_report else \
+            "; warning list: generated/reports/validation-report.md"
+        print(f"{len(errors)} error(s), {len(warnings)} warning(s) — "
+              f"{'FAIL' if errors else 'OK'} ({elapsed:.1f}s){report_hint}")
+    else:
+        for issue in issues:
+            print(issue)
+        print(f"\n{len(errors)} error(s), {len(warnings)} warning(s) — "
+              f"{'FAIL' if errors else 'OK'}")
+
+    if not args.no_report:
+        generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
+        report_dir = root / "generated" / "reports"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        (report_dir / "validation-report.md").write_text(
+            render_report(issues, generated_at), encoding="utf-8")
+
+    if pins is not None:
+        # Offline runs refresh the status cache; --online results depend
+        # on network state and must never be served as static issues.
+        # The cache is auxiliary: a write failure never fails validation.
+        try:
+            write_static_cache(root, issues, pins)
+        except OSError:
+            pass
+
+    return 1 if errors else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

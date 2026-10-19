@@ -1,0 +1,18 @@
+type: module-source-map
+module_id: module-job-git
+sources:
+- source_id: source-git-handbook-archive
+  role: reference
+  why: Referenced by migrated learning plan job-track-git.
+  priority: 0
+  unit_routes: []
+- source_id: source-hu-git-intro
+  role: reference
+  why: Referenced by migrated learning plan job-track-git.
+  priority: 0
+  unit_routes: []
+- source_id: source-progit
+  role: reference
+  why: Referenced by migrated learning plan job-track-git.
+  priority: 0
+  unit_routes: []

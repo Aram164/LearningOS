@@ -1,0 +1,170 @@
+{
+  "canonical_changed": {
+    "knowledge/notes/mathematics/note-demo.md": "12c2f73df21f23e0d08132aeee843e4a1fba7abce6882981e5780211eebb9f45"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "note.evidence.add",
+          "channel": "operator",
+          "intent_sha256": "sha256:4e70e27e1d3038aaebb1c896bf014e9f744b1411f5e8e176dfec3459542e67d6",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "note-demo": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "note-demo": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "note.evidence.add",
+            "declared_writes": [
+              "knowledge/notes/**"
+            ]
+          }
+        ]
+      },
+      "capability": "note.evidence.add",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "note-demo": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:9772f33a985a0bdda186edfceed91845425863e6a2c0916e21c06f524595a459",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:4e70e27e1d3038aaebb1c896bf014e9f744b1411f5e8e176dfec3459542e67d6"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:4e70e27e1d3038aaebb1c896bf014e9f744b1411f5e8e176dfec3459542e67d6",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "knowledge/notes/mathematics/note-demo.md",
+          "sha256_after": "12c2f73df21f23e0d08132aeee843e4a1fba7abce6882981e5780211eebb9f45",
+          "sha256_before": "5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "note-demo": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "knowledge/notes/mathematics/note-demo.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "12c2f73df21f23e0d08132aeee843e4a1fba7abce6882981e5780211eebb9f45",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "ad3c07e380fdfae117cbc5580e8e551217f0f6c8aeff4ff7e9ac0c9a9251d0d4",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "4b42df65b7962c395ecea82243abbbdf034f714dedeb6b8aa77427cd3b5d161a",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "1d3a3d98328552ce30eddf604b64daf054dfa3ae7af0c4e2f137ff6230a47a67",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.evidence.add\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"note_id\": \"note-demo\",\n    \"path\": \"knowledge/notes/mathematics/note-demo.md\",\n    \"evidence\": {\n      \"type\": \"derivation\",\n      \"ref\": \"material://source-demo-book/book.pdf\"\n    },\n    \"evidence_count\": 1,\n    \"scheme\": \"material\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"note-demo\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "note.evidence.add",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "note-demo": 1
+      },
+      "evidence": {
+        "ref": "material://source-demo-book/book.pdf",
+        "type": "derivation"
+      },
+      "evidence_count": 1,
+      "note_id": "note-demo",
+      "ok": true,
+      "path": "knowledge/notes/mathematics/note-demo.md",
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "scheme": "material",
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

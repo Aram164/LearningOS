@@ -1,0 +1,89 @@
+[
+  {
+    "file": "system/procedures/build-write-envelope.md",
+    "old_guard": "cd6982af0c1346f53599553ac4e55a16a8cfa95ecc5442d9dbe6f427b18c355b",
+    "new_guard": "a29c82a8bc1d280d22741d518b0869434b03871686d30dc234d28bb120b1689b",
+    "snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+    "command": [
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository/tests/procedure_helpers/los-seal",
+      "--capability",
+      "capture.create",
+      "--payload",
+      "{\"text\": \"Half-formed idea about the derivation.\"}",
+      "--key",
+      "envelope-capture-a",
+      "--request-id",
+      "request-envelope-capture-a",
+      "--snapshot",
+      "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+      "--guards",
+      "auto",
+      "--out",
+      "/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/los-c1-doc-envelopes-7w3krdhv/capture-a.json"
+    ],
+    "stdout": "",
+    "stderr": "seal_envelope: guards auto: capture-request:envelope-capture-a=0\n",
+    "envelope": {
+      "approval": {
+        "kind": "operator-approval",
+        "subject_sha256": "sha256:f1e24bb0d24b40fa3a874ae945e83b42eb7a9d1c9d37f39f86e5aec0b4519253"
+      },
+      "capability": "capture.create",
+      "channel": "operator",
+      "expected_revisions": {
+        "capture-request:envelope-capture-a": 0
+      },
+      "expected_snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+      "idempotency_key": "envelope-capture-a",
+      "payload": {
+        "text": "Half-formed idea about the derivation."
+      },
+      "request_id": "request-envelope-capture-a",
+      "schema_version": 2
+    }
+  },
+  {
+    "file": "system/procedures/end-a-session.md",
+    "old_guard": "d0f0122f00ffe43894f1e3917b9cf5d7b707189042c989d09555bb97c3db6511",
+    "new_guard": "f9272e5258a135b9eb968c1fc07bb7c2367c9a52565e1c164281ec76f51779aa",
+    "snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+    "command": [
+      "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository/tests/procedure_helpers/los-seal",
+      "--capability",
+      "stage.progress.update",
+      "--payload",
+      "{\"unit_id\": \"unit-demo-l01\", \"stage_id\": \"stage-demo\", \"status\": \"complete\"}",
+      "--key",
+      "end-a-session-stage-001",
+      "--request-id",
+      "request-end-a-session-stage-001",
+      "--guards",
+      "auto",
+      "--out",
+      "/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/los-c1-doc-envelopes-7w3krdhv/stage-progress.json"
+    ],
+    "stdout": "",
+    "stderr": "seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3\n",
+    "envelope": {
+      "approval": {
+        "kind": "operator-approval",
+        "subject_sha256": "sha256:d3035832967cb436d82abe2e4d981ba29e14a1fbef3bef0a95ef9f2681647c81"
+      },
+      "capability": "stage.progress.update",
+      "channel": "operator",
+      "expected_revisions": {
+        "study-map-demo-l01": 0,
+        "unit-demo-l01": 3
+      },
+      "expected_snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+      "idempotency_key": "end-a-session-stage-001",
+      "payload": {
+        "stage_id": "stage-demo",
+        "status": "complete",
+        "unit_id": "unit-demo-l01"
+      },
+      "request_id": "request-end-a-session-stage-001",
+      "schema_version": 2
+    }
+  }
+]

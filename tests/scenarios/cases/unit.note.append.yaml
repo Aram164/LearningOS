@@ -1,0 +1,100 @@
+operation: unit.note.append
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: append-note
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, title: "First session", text: "Worked the derivation.", stage_id: [stage-demo]}
+    artifact_ids: [unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: append-with-attachment
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, title: "With evidence", text: "See the scan.", attachment: ["work/inbox/note-drop.md"], attachment_sha256: ["sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"]}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+  - id: append-twice
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, title: "First session", text: "Worked the derivation."}
+        artifact_ids: [unit-demo-l01]
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, title: "Second session", text: "Checked the appendix."}
+        artifact_ids: [unit-demo-l01]
+  - id: empty-note
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, text: "   "}
+    artifact_ids: []
+    expect: {site: unit.note.append.empty-note}
+  - id: attachment-sha-count
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, text: "mismatched digests", attachment: ["work/inbox/note-drop.md", "work/inbox/pack/one.md"], attachment_sha256: ["sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"]}
+    artifact_ids: []
+    expect: {site: unit.note.append.attachment-sha-count}
+  - id: bad-attachment
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, text: "missing scan", attachment: ["work/inbox/nope.md"], attachment_sha256: ["sha256:0000000000000000000000000000000000000000000000000000000000000000"]}
+    artifact_ids: []
+    expect: {site: unit.note.append.bad-file}
+  - id: unknown-stage-id
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, text: "wrong stage", stage_id: [stage-nope]}
+    artifact_ids: []
+    expect: {site: unit.note.append.unknown-stage}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: unit.note.append.unknown-unit}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [unit-note, unit-demo-l01, --text, "hello"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, title: "First session", text: "Worked the derivation."}
+        artifact_ids: [unit-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l01, title: "First session", text: "Worked the derivation."}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - unit-note
+    - unit-demo-l01
+    - --text
+    - hello
+    - --expected-revision
+    - bogus
+    expect: {site: unit.note.append.write-failed}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      title: First session
+      text: Worked the derivation.
+    artifact_ids: []
+    expect: {site: unit.note.append.no-study-map}
+untriggered:
+  - {where: "tools/learning_os/app/handlers/learner.py:836", reason: "working-note escape: the unit default stays inside the repository, and no operation writes a crafted working_note"}
+  - {site: unit.note.append.note-outside-repo, reason: fixture-inexpressible}
+  - {where: "tools/learning_os/app/handlers/learner.py:904", reason: "cannot write unit note: needs an OSError mid-write (unwritable path)"}

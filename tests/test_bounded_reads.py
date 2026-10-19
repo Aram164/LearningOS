@@ -1,0 +1,1013 @@
+"""Complete note retrieval and compact startup without hidden truncation."""
+import json
+
+import pytest
+import yaml
+from repo_builders import add_curriculum, run_los, write_yaml
+
+from learning_os.store.loader import load_repo
+
+
+def test_note_segments_reconstruct_exact_bytes_and_refuse_stale_continuation(mini_repo):
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original = note.path.read_bytes().decode("utf-8")
+    response = run_los(mini_repo, "note-read", note.id, "--limit", "60")
+    assert response.returncode == 0, response.stderr
+    row = json.loads(response.stdout)
+    pieces = [row["content"]]
+    while row["next_offset"] is not None:
+        response = run_los(mini_repo, "note-read", note.id, "--limit", "60",
+                           "--offset", str(row["next_offset"]),
+                           "--expected-snapshot", row["snapshot_id"])
+        assert response.returncode == 0, response.stderr
+        row = json.loads(response.stdout)
+        pieces.append(row["content"])
+    assert "".join(pieces) == original
+    note.path.write_text(original + "\nA changed explanation.\n")
+    stale = run_los(mini_repo, "note-read", note.id, "--offset", "60",
+                    "--expected-snapshot", row["snapshot_id"])
+    assert stale.returncode == 3
+    assert not stale.stdout
+
+
+@pytest.mark.parametrize("argv", [
+    # Every _refusal caller: a not-found or usage refusal that echoes the
+    # word "snapshot" (in user input or in the missing-flag hint) is exit
+    # 2, never the optimistic-concurrency code 3. The stderr assertion
+    # proves the case actually exercises the word.
+    pytest.param(["note-read", "note-snapshot-review"], id="reads/not-found"),
+    pytest.param(["search", "snapshot", "--content", "--offset", "3"],
+                 id="reads/continuation-usage"),
+    pytest.param(["bootstrap", "--compact", "--offset", "1"],
+                 id="reads/bootstrap-continuation"),
+    pytest.param(["search", "x", "--type", "snapshot"], id="query/bad-type"),
+    pytest.param(["ability-context", "--offset", "1"], id="abilities/usage"),
+    pytest.param(["dossier", "unit-snapshot-x"], id="dossier/not-found"),
+    pytest.param(["unit-list", "--compact", "--status", "snapshot"],
+                 id="unit/bad-status"),
+    pytest.param(["material-span", "unit-snapshot-x", "route-y"],
+                 id="material-span/not-found"),
+])
+def test_snapshot_word_in_refusal_is_not_a_conflict(mini_repo, argv):
+    proc = run_los(mini_repo, *argv)
+    assert proc.returncode == 2, proc.stderr
+    assert "snapshot" in proc.stderr
+    assert not proc.stdout
+
+
+def test_content_search_finds_reasoning_beyond_summary(mini_repo):
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    with note.path.open("a") as handle:
+        handle.write("\n" + "Details. " * 100 + "\n## Same heading\nFehlversuch über Unicode.\n")
+    response = run_los(mini_repo, "search", "Fehlversuch", "--type", "note", "--content")
+    assert response.returncode == 0, response.stderr
+    payload = json.loads(response.stdout)
+    assert payload["total"] == 1
+    hit = payload["items"][0]
+    assert hit["id"] == note.id
+    snippet = hit["snippets"][0]
+    assert "Fehlversuch" in snippet["text"]
+    assert "Fehlversuch" in note.path.read_text().splitlines()[snippet["line"] - 1]
+    assert json.loads(run_los(mini_repo, "search", "Fehlversuch", "--type", "note").stdout) == []
+
+
+def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
+    compact = run_los(mini_repo, "bootstrap", "--compact", "--limit", "1")
+    assert compact.returncode == 0, compact.stderr
+    data = json.loads(compact.stdout)
+    full = json.loads(run_los(mini_repo, "bootstrap").stdout)
+    for name in ("programs", "modules", "projects", "units"):
+        assert data["collections"][name]["total"] == len(full[name])
+        for row in data["collections"][name]["items"]:
+            detail = run_los(mini_repo, "inspect", row["id"])
+            assert detail.returncode == 0
+            assert json.loads(detail.stdout)["id"] == row["id"]
+    assert len(compact.stdout.encode()) < 65536
+    domains = {row["domain"]: row for row in data["domain_atlas"]}
+    assert len(domains) >= 7
+    repo = load_repo(mini_repo)
+    assert sum(row["notes"] for row in domains.values()) == len(repo.notes)
+    assert sum(row["shelves"] for row in domains.values()) == len(repo.collections)
+
+
+def test_domain_glance_keeps_empty_future_and_unbucketed_domains():
+    from learning_os.app.handlers.reads import _domain_glance
+
+    records = [
+        {"type": "note", "domain": "future", "role": "crosswalk"},
+        {"type": "note", "domain": ""},
+        {"type": "collection", "domain": "cross-domain", "entries": [{}, {}]},
+        {"type": "topic-pack", "domain": "cross-domain", "entries": [{}]},
+        {"type": "note", "domain": "nested", "path": "knowledge/notes/data-systems/nested/note.md"},
+        {"type": "source", "domain": "future"},
+    ]
+    glance = _domain_glance({"records": records})
+    assert glance == _domain_glance({"records": records[::-1]})
+    domains = {row["domain"]: row for row in glance}
+    assert domains["mathematics"]["notes"] == 0
+    assert domains["future"]["notes"] == domains["future"]["crosswalks"] == 1
+    assert domains["data-systems"]["notes"] == 1
+    assert "nested" not in domains
+    assert domains["cross-domain"] == {"domain": "cross-domain", "notes": 1,
+                                       "crosswalks": 0, "shelves": 2, "entries": 3}
+
+
+def test_bounded_reads_reject_bad_windows_and_unknown_ids(mini_repo):
+    for args in (("note-read", "../../private"),
+                 ("bootstrap", "--compact", "--limit", "0"),
+                 ("bootstrap", "--compact", "--offset", "1"),
+                 ("search", "word", "--content", "--limit", "101")):
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0
+        assert not result.stdout
+
+
+def test_search_refuses_malformed_note_and_returns_after_repair(mini_repo):
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original_text = note.path.read_text(encoding="utf-8")
+    with note.path.open("a", encoding="utf-8") as f:
+        f.write("\nNeedleUnfindable explanation.\n")
+
+    response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert response.returncode == 0
+
+    broken_text = note.path.read_text(encoding="utf-8").replace("id: ", "id: [broken", 1)
+    note.path.write_text(broken_text, encoding="utf-8")
+
+    broken_response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert broken_response.returncode != 0
+    assert "cannot search" in broken_response.stderr
+    # Naming the unreadable file is the point: the operator has to find it.
+    assert "note-demo.md" in broken_response.stderr
+
+    note.path.write_text(original_text + "\nNeedleUnfindable explanation.\n", encoding="utf-8")
+    repaired_response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert repaired_response.returncode == 0
+
+def _two_route_context(mini_repo):
+    """One unit with two resolvable routes, the first fully stage-wired."""
+    import yaml
+    from repo_builders import material_fixture, write_yaml
+
+    from learning_os.domain.material_refs import unit_routes
+
+    repo, first_id, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    smap_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    base = dict(smap["sources"][0]["unit_routes"][0])
+    base.pop("id", None)
+    base.update(title="Second derivation", locator="lecture-02.pdf",
+                covers=["knowledge-demo-outcomes"])
+    smap["sources"][0]["unit_routes"].append(base)
+    write_yaml(smap_path, smap)
+    material = repo.materials_root / "source-demo-book/lecture-02.pdf"
+    material.parent.mkdir(parents=True, exist_ok=True)
+    material.write_text("synthetic lecture two", encoding="utf-8")
+    fresh = load_repo(mini_repo)
+    assert not fresh.parse_failures
+    routes = unit_routes(
+        fresh.module_source_maps["module-demo"], "module-demo", unit_id)
+    ids = [row["id"] for row in routes]
+    assert len(ids) == 2 and len(set(ids)) == 2
+    assert first_id in ids
+    return unit_id, ids
+
+
+def test_route_batch_matches_scalar_per_item_in_requested_order(mini_repo):
+    unit_id, (first, second) = _two_route_context(mini_repo)
+    scalar = {}
+    for rid in (first, second):
+        proc = run_los(mini_repo, "plan-edit-context", unit_id,
+                       "--route-id", rid)
+        assert proc.returncode == 0, proc.stderr
+        scalar[rid] = json.loads(proc.stdout)
+    batch = run_los(mini_repo, "plan-edit-context", unit_id,
+                    "--route-ids", second, first)
+    assert batch.returncode == 0, batch.stderr
+    payload = json.loads(batch.stdout)
+    assert payload["contract"] == "plan-edit-context-batch"
+    assert payload["requested_route_ids"] == [second, first]
+    assert [entry["route"]["id"] for entry in payload["routes"]] == [
+        second, first]
+    for entry, rid in zip(payload["routes"], [second, first], strict=True):
+        assert entry == {key: scalar[rid][key] for key in (
+            "route", "uses", "patch_fields", "patch_capability", "claim")}
+    for key in ("unit_id", "module_id", "snapshot_id", "artifact_revisions",
+                "preflight"):
+        assert payload[key] == scalar[first][key]
+    assert payload["routes"][0]["uses"] or payload["routes"][1]["uses"]
+
+
+def test_route_batch_refuses_bad_requests_without_partial_payload(mini_repo):
+    unit_id, (first, _) = _two_route_context(mini_repo)
+    missing = run_los(mini_repo, "plan-edit-context", unit_id,
+                      "--route-ids", first, "route-missing")
+    assert missing.returncode != 0
+    assert not missing.stdout
+    assert "missing or ambiguous" in missing.stderr
+    duplicate = run_los(mini_repo, "plan-edit-context", unit_id,
+                        "--route-ids", first, first)
+    assert duplicate.returncode != 0
+    assert not duplicate.stdout
+    assert "distinct" in duplicate.stderr
+    oversized = run_los(mini_repo, "plan-edit-context", unit_id,
+                        "--route-ids", *(f"route-{n}" for n in range(21)))
+    assert oversized.returncode != 0
+    assert not oversized.stdout
+    assert "at most 20" in oversized.stderr
+
+
+def test_stage_scoped_read_returns_flags_without_the_map(mini_repo):
+    """One stage's own flags and placements, not the 127 KB map inspect."""
+    import yaml
+    from repo_builders import add_curriculum, write_yaml
+
+    add_curriculum(mini_repo)
+    staged = yaml.safe_load(
+        (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml")
+        .read_text(encoding="utf-8"))
+    staged["stages"][0]["scope_triage"] = "required-now"
+    staged["stages"][0]["exam_critical"] = True
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+               staged)
+    proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                   "--stage-id", "stage-demo")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["contract"] == "plan-edit-context-stage"
+    assert payload["requested_stage_id"] == "stage-demo"
+    assert payload["stage"]["scope_triage"] == "required-now"
+    assert payload["stage"]["exam_critical"] is True
+    assert payload["stage"]["id"] == "stage-demo"
+    assert "full unit context" in payload["scope"]
+    assert len(proc.stdout.encode()) < 65536
+
+
+def test_stage_scoped_read_refuses_missing_stage_and_mixed_selectors(mini_repo):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    missing = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                      "--stage-id", "stage-missing")
+    assert missing.returncode != 0
+    assert not missing.stdout
+    assert "missing or ambiguous" in missing.stderr
+    unit_id, (first, _) = _two_route_context(mini_repo)
+    mixed = run_los(mini_repo, "plan-edit-context", unit_id,
+                    "--stage-id", "stage-demo", "--route-id", first)
+    assert mixed.returncode == 2
+
+
+def test_route_batch_cli_parsing_rejects_empty_and_mixed_selectors(mini_repo):
+    unit_id, (first, _) = _two_route_context(mini_repo)
+    bare = run_los(mini_repo, "plan-edit-context", unit_id, "--route-ids")
+    assert bare.returncode == 2
+    mixed = run_los(mini_repo, "plan-edit-context", unit_id,
+                    "--route-id", first, "--route-ids", first)
+    assert mixed.returncode == 2
+
+
+def test_route_batch_uses_one_repository_load(mini_repo, monkeypatch):
+    import los
+    from learning_os.app import context as context_module
+    from learning_os.app import pipeline as ops_pipeline
+
+    unit_id, (first, second) = _two_route_context(mini_repo)
+    loads = []
+    real_load = context_module.load_repo
+
+    def counting(root):
+        loads.append(root)
+        return real_load(root)
+
+    # plan.edit-context runs through the registered pipeline; the
+    # context caches the repository, so one batch still loads once.
+    monkeypatch.setattr(context_module, "load_repo", counting)
+    args = los.build_parser().parse_args(
+        ["--root", str(mini_repo), "plan-edit-context", unit_id,
+         "--route-ids", first, second])
+    outcome = ops_pipeline.run_cli(
+        mini_repo, "plan.edit-context", args)
+    assert outcome.exit_code == 0, outcome.stderr
+    assert len(loads) == 1
+
+
+def test_route_batch_snapshot_conflict_refuses_whole_response(
+    mini_repo, monkeypatch, capsys,
+):
+    import los
+    from learning_os.app import pipeline as ops_pipeline
+    from learning_os.store import fingerprint as plumbing
+
+    unit_id, (first, second) = _two_route_context(mini_repo)
+    real_fingerprint = plumbing.canonical_fingerprint
+
+    def flipping(root):
+        if flipping.calls:
+            return "deadbeef-changed"
+        flipping.calls.append(root)
+        return real_fingerprint(root)
+
+    flipping.calls = []
+    monkeypatch.setattr(
+        plumbing, "canonical_fingerprint", flipping)
+    args = los.build_parser().parse_args(
+        ["--root", str(mini_repo), "plan-edit-context", unit_id,
+         "--route-ids", first, second])
+    # plan.edit-context runs through the registered pipeline, which
+    # renders the stale snapshot as the D16 stderr line; nothing is
+    # printed before the refusal either way.
+    outcome = ops_pipeline.run_cli(
+        mini_repo, "plan.edit-context", args)
+    assert outcome.exit_code == 3, outcome.stderr
+    assert outcome.stdout == ""
+    assert outcome.stderr.splitlines()[0].startswith("los: STALE_SNAPSHOT: ")
+    assert capsys.readouterr().out == ""
+
+
+def test_route_batch_refuses_a_cross_unit_route(mini_repo):
+    """A route that exists in the module but under another unit is
+    refused for this unit — per-unit scoping, same path as missing."""
+    import yaml
+    from repo_builders import material_fixture, write_yaml
+
+    from learning_os.domain.material_refs import unit_routes
+
+    repo, _, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    smap_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    base = dict(smap["sources"][0]["unit_routes"][0])
+    base.pop("id", None)
+    base.update(title="Foreign derivation", locator="lecture-09.pdf",
+                covers=["knowledge-demo-outcomes"], unit_id="unit-demo-l02")
+    smap["sources"][0]["unit_routes"].append(base)
+    write_yaml(smap_path, smap)
+    fresh = load_repo(mini_repo)
+    assert not fresh.parse_failures
+    foreign = unit_routes(
+        fresh.module_source_maps["module-demo"], "module-demo",
+        "unit-demo-l02")
+    assert len(foreign) == 1
+    proc = run_los(mini_repo, "plan-edit-context", unit_id,
+                   "--route-ids", foreign[0]["id"])
+    assert proc.returncode != 0
+    assert not proc.stdout
+    assert "missing or ambiguous" in proc.stderr
+
+
+def test_route_helper_refuses_unknown_and_ambiguous_ids():
+    from learning_os.app.handlers.routes import _require_route
+    from learning_os.domain.failures import NotFound, WriteRefused
+    from learning_os.domain.suggest import suggestions, with_suggestions
+
+    rows = [{"id": "route-a"}, {"id": "route-a"}, {"id": "route-b"}]
+    ids = [row["id"] for row in rows]
+    with pytest.raises(NotFound) as unknown:
+        _require_route(rows, "route-missing")
+    assert unknown.value.reason == "NOT_FOUND"
+    assert unknown.value.site == "route.patch.unknown-route"
+    assert unknown.value.suggestions == suggestions("route-missing", ids)
+    assert str(unknown.value) == with_suggestions(
+        "route route-missing is missing or ambiguous in this unit",
+        "route-missing", ids)
+    with pytest.raises(WriteRefused) as ambiguous:
+        _require_route(rows, "route-a")
+    assert type(ambiguous.value) is WriteRefused
+    assert ambiguous.value.reason is None
+    assert str(ambiguous.value) == with_suggestions(
+        "route route-a is missing or ambiguous in this unit",
+        "route-a", ids)
+    assert _require_route(rows, "route-b") == {"id": "route-b"}
+
+
+def test_search_succeeds_despite_malformed_project(mini_repo):
+    # A read refuses only when the failures actually affect the answer it is about to give.
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    with note.path.open("a", encoding="utf-8") as f:
+        f.write("\nNeedleUnfindable explanation.\n")
+
+    # Break a non-note file (modules)
+    module_path = mini_repo / "records" / "modules.yaml"
+    original_module_text = module_path.read_text(encoding="utf-8")
+    broken_module_text = original_module_text.replace("modules:", "modules: [broken")
+    module_path.write_text(broken_module_text, encoding="utf-8")
+
+    try:
+        response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+        assert response.returncode == 0, response.stderr
+        payload = json.loads(response.stdout)
+        assert len(payload.get("items", [])) > 0
+    finally:
+        module_path.write_text(original_module_text, encoding="utf-8")
+
+
+def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
+    add_curriculum(mini_repo)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["contract"] == "bootstrap-brief"
+    assert data["snapshot_id"].startswith("sha256:")
+    assert "resume_pointer" in data and "counts" in data
+    # The mapped demo unit owes nothing; its active map is resumable.
+    assert data["owed_study_maps"] == []
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    assert data["active_study_maps"][0]["current_stage"] == "stage-demo"
+    assert data["deadline_count"] == len(data["academic_deadlines"]) > 0
+    assert {row["module_id"] for row in data["academic_deadlines"]
+            if row.get("module_id")} == {"module-demo"}
+    expands = data["expand"]
+    for key in ("full_compact", "continuation", "resume", "inspect",
+                "note_read", "content_search", "material_context",
+                "capability_detail"):
+        assert expands[key], key
+    assert expands["plan_brief"] == []
+    assert len(brief.stdout.encode()) < 65536
+    # A second unit without a map is owed, with its own prep command.
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml", {
+        "id": "unit-demo-l02", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Variance", "order": 2,
+        "scope": "The lecture as taught.", "status": "active",
+        "scope_sources": [], "artifacts": {}, "workspace_ids": [],
+    })
+    again = run_los(mini_repo, "bootstrap", "--brief")
+    assert again.returncode == 0, again.stderr
+    owed = json.loads(again.stdout)
+    assert owed["owed_study_maps"] == ["unit-demo-l02"]
+    snapshot = owed["snapshot_id"]
+    assert owed["expand"]["plan_brief"] == [
+        f"plan-edit-context unit-demo-l02 --brief --expected-snapshot {snapshot}"]
+
+
+def test_brief_names_the_session_identity_in_effect(mini_repo, monkeypatch):
+    """#110: `bootstrap --brief` prints the session identity and its source."""
+    add_curriculum(mini_repo)
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    identity = json.loads(brief.stdout)["session_identity"]
+    assert identity["session_id"] == "channel:operator"
+    assert identity["source"] == "channel"
+    assert "LOS_SESSION_ID" in identity["how_to_set"]
+    assert ".venv/bin/python tools/seal_envelope.py --session-id" in identity["how_to_set"]
+
+    monkeypatch.setenv("LOS_SESSION_ID", "brief-session")
+    named = run_los(mini_repo, "bootstrap", "--brief")
+    assert named.returncode == 0, named.stderr
+    identity = json.loads(named.stdout)["session_identity"]
+    assert identity["session_id"] == "brief-session"
+    assert identity["source"] == "environment"
+
+
+def test_brief_reports_a_missing_registration_as_a_missing_fact(mini_repo):
+    """#90: the brief says 'registration not recorded', never 'unregistered'."""
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(module_path, module)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    rows = json.loads(brief.stdout)["academic_deadlines"]
+    assert "unregistered" not in json.dumps(rows)
+    mine = next(row for row in rows if row.get("termin") == 2)
+    assert (mine["start_date"], mine["registration_state"]) == (
+        date, "registration not recorded")
+    # The elapsed sitting without an attempt keeps its distinct state.
+    assert next(row for row in rows if row.get("termin") == 3)[
+        "registration_state"] == "unrecorded"
+
+
+def test_brief_startup_refuses_paging_and_mixed_modes(mini_repo):
+    for args in (("bootstrap", "--brief", "--offset", "1"),
+                 ("bootstrap", "--brief", "--compact")):
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0
+        assert not result.stdout
+
+
+def test_brief_pointer_state_confirmed_when_the_pointer_resolves(mini_repo):
+    add_curriculum(mini_repo)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "confirmed"
+    assert data["pointer_state_note"].startswith("confirmed =")
+    # A confirmed stop is not a priority choice: workspace options remain.
+    assert [row["workspace_id"] for row in data["recorded_options"]] == ["workspace-demo"]
+    assert "not current priorities" in data["recorded_options_note"]
+    assert data["expand"]["coordination"] == "inspect coordination"
+    assert data["expand"]["intelligence_scan"] == "intelligence-scan --brief --json"
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    # The brief agrees with resume about what the pointer means.
+    resumed = run_los(mini_repo, "resume", "--json")
+    assert resumed.returncode == 0, resumed.stderr
+    assert json.loads(resumed.stdout)["via"] == "resume pointer"
+
+
+def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
+    add_curriculum(mini_repo)
+    (mini_repo / "curriculum/resume.yaml").unlink()
+    # A second active track: the page must show both, never pick one.
+    second = mini_repo / "work/active/workspace-second/CONTEXT.md"
+    second.parent.mkdir(parents=True)
+    second.write_text(
+        "---\nid: workspace-second\ntype: workspace\ntitle: Second\n"
+        "status: active\n---\n\n## Objective\n\nSecond.\n\n"
+        "## Next Action\n\nDo the second thing.\n", encoding="utf-8")
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "missing"
+    assert data["recorded_options"] == [
+        {"workspace_id": "workspace-demo",
+         "next_action": "Do the demo thing.",
+         "source": "work/active/workspace-demo/CONTEXT.md"},
+        {"workspace_id": "workspace-second",
+         "next_action": "Do the second thing.",
+         "source": "work/active/workspace-second/CONTEXT.md"},
+    ]
+    for option in data["recorded_options"]:
+        assert set(option) == {"workspace_id", "next_action", "source"}
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+
+
+def test_brief_pointer_invalid_matches_missing(mini_repo):
+    add_curriculum(mini_repo)
+    pointer_path = mini_repo / "curriculum/resume.yaml"
+    pointer = yaml.safe_load(pointer_path.read_text(encoding="utf-8"))
+    pointer["stage_id"] = "stage-no-such-stage"
+    write_yaml(pointer_path, pointer)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "invalid"
+    assert [opt["workspace_id"] for opt in data["recorded_options"]] == ["workspace-demo"]
+
+
+def test_search_surfaces_garden_seeds_and_inbox_filenames(mini_repo):
+    from learning_os.derive.garden import garden_id
+
+    garden = mini_repo / "knowledge/garden"
+    garden.mkdir(parents=True, exist_ok=True)
+    (garden / "zephyrquux-garden.md").write_text(
+        "# Zephyrquux garden seed\n\nA seedling thought.\n", encoding="utf-8")
+    (mini_repo / "work/inbox/20260910-tessera-todo.md").write_text(
+        "tessera todo\n", encoding="utf-8")
+    seed_id = garden_id(garden, garden / "zephyrquux-garden.md")
+    rows = json.loads(run_los(mini_repo, "search", "Zephyrquux").stdout)
+    seed = next((row for row in rows if row.get("id") == seed_id), None)
+    assert seed is not None, rows
+    assert seed["type"] == "garden-note"
+    assert seed["state"] == "seed"
+    assert set(seed) == {"id", "type", "title", "path", "status", "state", "deprecated"}
+    rows = json.loads(run_los(mini_repo, "search", "tessera-todo").stdout)
+    drop = next((row for row in rows if row.get("type") == "inbox-item"), None)
+    assert drop is not None, rows
+    assert drop["id"] == "20260910-tessera-todo.md"
+    assert drop["path"] == "work/inbox/20260910-tessera-todo.md"
+    assert json.loads(run_los(mini_repo, "search", "tessera-todo",
+                              "--type", "note").stdout) == []
+
+
+def test_note_read_resolves_a_garden_seed(mini_repo):
+    from learning_os.derive.garden import garden_id
+
+    garden = mini_repo / "knowledge/garden"
+    garden.mkdir(parents=True, exist_ok=True)
+    (garden / "kernel-thought.md").write_text(
+        "# Kernel thought\n\nThe third meaning of kernel.\n", encoding="utf-8")
+    seed_id = garden_id(garden, garden / "kernel-thought.md")
+    response = run_los(mini_repo, "note-read", seed_id)
+    assert response.returncode == 0, response.stderr
+    row = json.loads(response.stdout)
+    assert row["contract"] == "note-content"
+    assert row["note_id"] == seed_id
+    assert "The third meaning of kernel." in row["content"]
+    assert row["snapshot_id"].startswith("sha256:")
+
+
+def test_inbox_read_serves_text_and_refuses_binary_escape_and_missing(mini_repo):
+    inbox = mini_repo / "work/inbox"
+    (inbox / "todo.md").write_text("hello inbox\n", encoding="utf-8")
+    response = run_los(mini_repo, "inbox-read", "todo.md")
+    assert response.returncode == 0, response.stderr
+    row = json.loads(response.stdout)
+    assert row["contract"] == "inbox-content"
+    assert row["item"] == "todo.md"
+    assert row["content"] == "hello inbox\n"
+    assert row["snapshot_id"].startswith("sha256:")
+    (inbox / "blob.bin").write_bytes(b"\x00\x01\x02\xff")
+    refused = run_los(mini_repo, "inbox-read", "blob.bin")
+    assert refused.returncode != 0
+    assert "not UTF-8" in refused.stderr
+    link = inbox / "link.md"
+    link.symlink_to(inbox / "todo.md")
+    linked = run_los(mini_repo, "inbox-read", "link.md")
+    assert linked.returncode != 0
+    assert "symlink" in linked.stderr
+    assert run_los(mini_repo, "inbox-read", "../active/x").returncode != 0
+    missing = run_los(mini_repo, "inbox-read", "nope.md")
+    assert missing.returncode != 0
+    assert "not found" in missing.stderr
+
+
+def test_search_rows_carry_state_and_deprecated(mini_repo):
+    concepts = json.loads(run_los(mini_repo, "search", "Expected",
+                                  "--type", "concept").stdout)
+    assert concepts, "mini concept must match"
+    assert all("deprecated" in row for row in concepts)
+    notes = json.loads(run_los(mini_repo, "search", "note-demo",
+                               "--type", "note").stdout)
+    assert notes, "mini note must match"
+    assert all("state" in row for row in notes)
+
+
+def test_inbox_list_lists_names_without_reading_bytes(mini_repo):
+    listed = run_los(mini_repo, "inbox-list")
+    assert listed.returncode == 0, listed.stderr
+    assert json.loads(listed.stdout) == []
+    inbox = mini_repo / "work/inbox"
+    (inbox / "todo.md").write_text("hello inbox\n", encoding="utf-8")
+    (inbox / "blob.bin").write_bytes(b"\x00\x01\x02\xff")
+    (inbox / ".hidden.md").write_text("dot-file\n", encoding="utf-8")
+    listed = run_los(mini_repo, "inbox-list")
+    assert listed.returncode == 0, listed.stderr
+    rows = json.loads(listed.stdout)
+    assert [row["id"] for row in rows] == ["blob.bin", "todo.md"]
+    assert all(row["type"] == "inbox-item" for row in rows)
+    assert all(set(row) == {"id", "type", "title", "path", "status",
+                            "state", "deprecated", "age_days"} for row in rows)
+    assert rows[0]["path"] == "work/inbox/blob.bin"
+    assert all(row["age_days"] == 0 for row in rows)
+
+
+def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_repo):
+    # Milestones and structure nodes resolve structurally since Item 4, so
+    # the hint cases use advertised-but-dangling cross-refs instead (the
+    # only advertised ids inspect still misses). The validator would refuse
+    # these dangling refs; inspect reads without validating.
+    write_yaml(mini_repo / "projects/registry/project-demo.yaml", {
+        "schema_version": 1, "id": "project-demo", "type": "project",
+        "title": "Demo project", "project_type": "software",
+        "status": "active", "root_uri": "project://demo",
+        "objective": "Demonstrate the shadow graph.",
+        "milestone_ids": ["milestone-demo-alpha"],
+        "linked_module_ids": [], "unit_ids": ["unit-demo-ghost"],
+        "workspace_ids": ["workspace-demo-ghost"],
+        "thematic_group_ids": [],
+        "boundaries": {"confidentiality": "private",
+                       "external_code_access": "approved"},
+        "structure": {"kind": "linear", "nodes": [
+            {"id": "step-demo-alpha", "title": "Alpha", "kind": "milestone",
+             "status": "active"}]},
+    })
+    missing = run_los(mini_repo, "inspect", "workspace-demo-ghost")
+    assert missing.returncode == 2, missing.stderr
+    assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
+    assert "project-demo" in missing.stderr
+    assert "workspace_ids" in missing.stderr
+    node = run_los(mini_repo, "inspect", "unit-demo-ghost")
+    assert node.returncode == 2, node.stderr
+    assert "project-demo" in node.stderr
+    assert "unit_ids" in node.stderr
+    unknown = run_los(mini_repo, "inspect", "note-no-such-note")
+    assert unknown.returncode == 2, unknown.stderr
+    assert "project-demo" not in unknown.stderr
+
+
+def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
+    # The hint names the referrer, and the miss keeps exit 2: a referrer id
+    # containing "snapshot" once turned a batch miss into exit 3 (chosen
+    # from the message text); the converted refusal classifies by type.
+    write_yaml(mini_repo / "projects/registry/project-snapshot-lab.yaml", {
+        "schema_version": 1, "id": "project-snapshot-lab", "type": "project",
+        "title": "Snapshot lab", "project_type": "software",
+        "status": "active", "root_uri": "project://snapshot-lab",
+        "objective": "Reference a workspace that does not exist.",
+        "milestone_ids": [], "linked_module_ids": [], "unit_ids": [],
+        "workspace_ids": ["workspace-demo-ghost"], "thematic_group_ids": [],
+        "boundaries": {"confidentiality": "private",
+                       "external_code_access": "approved"},
+    })
+    single = run_los(mini_repo, "inspect", "workspace-demo-ghost")
+    batch = run_los(mini_repo, "inspect", "workspace-demo-ghost",
+                    "project-snapshot-lab")
+    for missing in (single, batch):
+        assert missing.returncode == 2, missing.stderr
+        assert "los: INVALID_REQUEST: record not found: workspace-demo-ghost" in missing.stderr
+        assert ("los: hint: referenced by project-snapshot-lab (project) "
+                "in workspace_ids") in missing.stderr
+
+
+def _search_array(mini_repo, *extra):
+    result = run_los(mini_repo, "search", "", *extra)
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert isinstance(payload, list)
+    return payload
+
+
+def test_metadata_search_offset_slices_the_array(mini_repo):
+    full = _search_array(mini_repo)
+    assert len(full) >= 2, "the mini repo must offer more than one row to page"
+    first = _search_array(mini_repo, "--limit", "1", "--offset", "0")
+    second = _search_array(mini_repo, "--limit", "1", "--offset", "1")
+    assert first == full[:1]
+    assert second == full[1:2]
+    assert first != second
+    assert _search_array(mini_repo, "--limit", "1",
+                         "--offset", str(len(full))) == []
+
+
+def test_metadata_search_page_packet_and_runnable_continuation(mini_repo):
+    import shlex
+
+    full = _search_array(mini_repo)
+    first = run_los(mini_repo, "search", "", "--page", "--limit", "2")
+    assert first.returncode == 0, first.stderr
+    page = json.loads(first.stdout)
+    assert page["schema_version"] == 1
+    assert page["contract"] == "metadata-search-page"
+    assert page["snapshot_id"]
+    assert page["total"] == len(full)
+    assert page["offset"] == 0 and page["returned"] == 2
+    assert page["next_offset"] == 2 and page["has_more"] is True
+    assert [row["id"] for row in page["items"]] == [row["id"] for row in full[:2]]
+    follow = run_los(mini_repo, *shlex.split(page["expand"]["next"]))
+    assert follow.returncode == 0, follow.stderr
+    second = json.loads(follow.stdout)
+    assert second["offset"] == 2 and second["returned"] == 2
+    assert [row["id"] for row in second["items"]] == [row["id"] for row in full[2:4]]
+    assert {row["id"] for row in page["items"]}.isdisjoint(
+        row["id"] for row in second["items"])
+
+
+def test_metadata_search_page_enumerates_every_match_once(mini_repo):
+    full = _search_array(mini_repo)
+    seen = []
+    offset, snapshot = 0, None
+    while True:
+        args = ["search", "", "--page", "--limit", "3", "--offset", str(offset)]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        result = run_los(mini_repo, *args)
+        assert result.returncode == 0, result.stderr
+        page = json.loads(result.stdout)
+        assert page["total"] == len(full)
+        seen.extend(row["id"] for row in page["items"])
+        if page["next_offset"] is None:
+            assert page["has_more"] is False
+            assert page["expand"]["next"] is None
+            break
+        assert page["has_more"] is True
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    assert seen == [row["id"] for row in full]
+
+
+def test_metadata_search_page_empty_and_out_of_range(mini_repo):
+    empty = run_los(mini_repo, "search", "zephyrquux-no-such-term", "--page")
+    assert empty.returncode == 0, empty.stderr
+    payload = json.loads(empty.stdout)
+    assert payload["items"] == [] and payload["total"] == 0
+    assert payload["returned"] == 0
+    assert payload["next_offset"] is None and payload["has_more"] is False
+    first = json.loads(run_los(mini_repo, "search", "", "--page",
+                               "--limit", "1").stdout)
+    far = run_los(mini_repo, "search", "", "--page", "--limit", "1",
+                  "--offset", str(first["total"] + 5),
+                  "--expected-snapshot", first["snapshot_id"])
+    assert far.returncode == 0, far.stderr
+    payload = json.loads(far.stdout)
+    assert payload["items"] == [] and payload["total"] == first["total"]
+    assert payload["returned"] == 0
+    assert payload["next_offset"] is None and payload["has_more"] is False
+
+
+def test_metadata_search_rejects_bad_windows_and_mixed_modes(mini_repo):
+    bad = (("search", "", "--offset", "-1"),
+           ("search", "", "--limit", "0"),
+           ("search", "", "--page", "--limit", "101"),
+           ("search", "", "--page", "--offset", "1"),
+           ("search", "word", "--content", "--page"))
+    for args in bad:
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_metadata_search_refuses_a_stale_snapshot(mini_repo):
+    first = json.loads(run_los(mini_repo, "search", "", "--page",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(mini_repo, "search", "", "--page", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout
+    array = run_los(mini_repo, "search", "", "--limit", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert array.returncode == 3, array.stderr
+    assert not array.stdout
+
+
+def _two_unit_repo(mini_repo):
+    import shutil
+
+    add_curriculum(mini_repo)
+    module_dir = mini_repo / "curriculum/modules/module-demo"
+    shutil.copytree(module_dir / "units/unit-demo-l01",
+                    module_dir / "units/unit-demo-l02")
+    second = module_dir / "units/unit-demo-l02"
+    unit = yaml.safe_load((second / "unit.yaml").read_text(encoding="utf-8"))
+    unit.update({"id": "unit-demo-l02", "title": "Variance", "order": 2,
+                 "status": "complete", "component_id": "component-demo-core",
+                 "current_study_map": "study-map-demo-l02"})
+    write_yaml(second / "unit.yaml", unit)
+    study_map = yaml.safe_load((second / "study-map.yaml").read_text(encoding="utf-8"))
+    study_map.update({"id": "study-map-demo-l02", "unit_id": "unit-demo-l02"})
+    note_rel = ("curriculum/modules/module-demo/units/unit-demo-l02/"
+                "stages/stage-demo/notes.md")
+    study_map["stages"][0]["working_note"] = note_rel
+    write_yaml(second / "study-map.yaml", study_map)
+    (mini_repo / note_rel).parent.mkdir(parents=True, exist_ok=True)
+    (mini_repo / note_rel).write_text("", encoding="utf-8")
+    module_path = module_dir / "module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    return mini_repo
+
+
+def _compact_unit_pages(mini_repo, *filters):
+    seen, offset, snapshot, total = [], 0, None, None
+    while True:
+        args = ["unit-list", "--compact", "--limit", "1",
+                "--offset", str(offset), *filters]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        result = run_los(mini_repo, *args)
+        assert result.returncode == 0, result.stderr
+        page = json.loads(result.stdout)
+        assert page["contract"] == "unit-list-summary"
+        assert page["schema_version"] == 1
+        if total is None:
+            total = page["total"]
+        assert page["total"] == total
+        seen.extend(page["items"])
+        if page["next_offset"] is None:
+            break
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    return seen, total
+
+
+def test_compact_unit_list_matches_full_listing_for_every_filter(mini_repo):
+    _two_unit_repo(mini_repo)
+    combos = ((),
+              ("--module-id", "module-demo"),
+              ("--status", "active"), ("--status", "complete"),
+              ("--component-id", "component-demo-core"),
+              ("--module-id", "module-demo", "--status", "complete"),
+              ("--module-id", "module-demo",
+               "--component-id", "component-demo-core"),
+              ("--status", "complete",
+               "--component-id", "component-demo-core"),
+              ("--module-id", "module-demo", "--status", "complete",
+               "--component-id", "component-demo-core"))
+    allowed = {"id", "title", "status", "module_id", "component_id", "order",
+               "current_study_map", "needs_study_map"}
+    for filters in combos:
+        full = run_los(mini_repo, "unit-list", *filters)
+        assert full.returncode == 0, (filters, full.stderr)
+        full_rows = json.loads(full.stdout)
+        items, total = _compact_unit_pages(mini_repo, *filters)
+        assert total == len(full_rows), filters
+        assert [row["id"] for row in items] == sorted(
+            row["id"] for row in full_rows), filters
+        assert len({row["id"] for row in items}) == len(items), filters
+        for row in items:
+            assert set(row) <= allowed, (filters, sorted(row))
+            assert "knowledge_map" not in row and "notes_text" not in row
+
+
+def test_compact_unit_list_refuses_unknown_filters_with_suggestions(mini_repo):
+    _two_unit_repo(mini_repo)
+    bad = ((("unit-list", "--module-id", "module-dem"),
+            "module not found: module-dem", "module-demo"),
+           (("unit-list", "--compact", "--component-id", "component-demo-cor"),
+            "component not found: component-demo-cor", "component-demo-core"),
+           (("unit-list", "--compact", "--status", "actve"),
+            "unknown status: actve", "active"))
+    for argv, message, hint in bad:
+        result = run_los(mini_repo, *argv)
+        assert result.returncode == 2, argv
+        assert message in result.stderr, argv
+        assert hint in result.stderr, argv
+        assert not result.stdout, argv
+
+
+def test_compact_unit_list_empty_result_shape(mini_repo):
+    _two_unit_repo(mini_repo)
+    result = run_los(mini_repo, "unit-list", "--compact", "--status", "paused")
+    assert result.returncode == 0, result.stderr
+    page = json.loads(result.stdout)
+    assert page["items"] == [] and page["total"] == 0
+    assert page["next_offset"] is None
+    assert page["filters"] == {"status": "paused"}
+
+
+def test_compact_unit_list_keeps_nulls_and_drops_absent(mini_repo):
+    from learning_os.app.handlers.reads import _unit_summary
+
+    assert _unit_summary({"id": "u", "component_id": None}) == {
+        "id": "u", "component_id": None}
+    _two_unit_repo(mini_repo)
+    page = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                              "--limit", "50").stdout)
+    by_id = {row["id"]: row for row in page["items"]}
+    assert "component_id" not in by_id["unit-demo-l01"]
+    assert by_id["unit-demo-l02"]["component_id"] == "component-demo-core"
+
+
+def test_compact_unit_list_ignores_unit_body_growth(mini_repo):
+    _two_unit_repo(mini_repo)
+    before = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                                "--limit", "50").stdout)
+    full_before = run_los(mini_repo, "unit-list").stdout
+    unit_path = (mini_repo / "curriculum/modules/module-demo"
+                 "/units/unit-demo-l01/unit.yaml")
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["knowledge_map"] = {
+        "summary": "A large lecture map.",
+        "nodes": [{"id": "knowledge-demo-large", "title": "Large node",
+                   "summary": "Large-map-marker. " * 2000}],
+    }
+    write_yaml(unit_path, unit)
+    note_path = (mini_repo / "curriculum/modules/module-demo/units"
+                 "/unit-demo-l01/stages/stage-demo/notes.md")
+    note_path.write_text("Large-note-marker. " * 2000, encoding="utf-8")
+    after = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                               "--limit", "50").stdout)
+    full_after = run_los(mini_repo, "unit-list").stdout
+    assert after["items"] == before["items"]
+    assert len(full_after) > len(full_before) + 10000
+    assert "Large-map-marker" not in json.dumps(after["items"])
+    assert "Large-note-marker" not in json.dumps(after["items"])
+    detail = json.loads(run_los(mini_repo, "inspect",
+                                "unit-demo-l01").stdout)
+    assert "Large-map-marker" in json.dumps(detail)
+
+
+def test_compact_unit_list_refusals(mini_repo):
+    _two_unit_repo(mini_repo)
+    first = json.loads(run_los(mini_repo, "unit-list",
+                               "--compact").stdout)
+    bad = (("unit-list", "--compact", "--offset", "-1"),
+           ("unit-list", "--compact", "--limit", "0"),
+           ("unit-list", "--compact", "--limit", "51"),
+           ("unit-list", "--compact", "--offset", "1"),
+           ("unit-list", "--offset", "1"),
+           ("unit-list", "--limit", "5"),
+           ("unit-list", "--expected-snapshot", first["snapshot_id"]))
+    for args in bad:
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_compact_unit_list_refuses_a_stale_snapshot(mini_repo):
+    _two_unit_repo(mini_repo)
+    first = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(mini_repo, "unit-list", "--compact", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout
+
+
+def test_compact_unit_list_refuses_unreadable_unit(mini_repo):
+    _two_unit_repo(mini_repo)
+    unit_path = (mini_repo / "curriculum/modules/module-demo"
+                 "/units/unit-demo-l01/unit.yaml")
+    unit_path.write_text("id: [broken\n", encoding="utf-8")
+    full = run_los(mini_repo, "unit-list")
+    assert full.returncode != 0, full.stderr
+    compact = run_los(mini_repo, "unit-list", "--compact")
+    assert compact.returncode != 0, compact.stderr
+    assert not compact.stdout

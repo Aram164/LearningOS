@@ -1,0 +1,31 @@
+{
+  "recorded_at_utc": "2026-10-18T16:14:51.419190+00:00",
+  "reason": "Preserve exact historical contract and evidence before the user-directed simplification; all archived plans are historical.",
+  "files": [
+    {
+      "source": "FINAL-MIGRATION-CONTRACT.md",
+      "archive": "history/pre-simplification-2026-10-18/FINAL-MIGRATION-CONTRACT.md",
+      "sha256": "ffcca27a2d0c516d12e8394ae4247b94a0491345885aadbf74e6e2892468ebaf"
+    },
+    {
+      "source": "MIGRATION-PLAN.md",
+      "archive": "history/pre-simplification-2026-10-18/MIGRATION-PLAN.md",
+      "sha256": "52646183b21506fb23b73797013eb2ae8d22d5335ff72ec1278acd21c1fea152"
+    },
+    {
+      "source": "PLAN.md",
+      "archive": "history/pre-simplification-2026-10-18/PLAN.md",
+      "sha256": "99078e72f09b9ceff79d2e1a0a1fb5bdf1e139cf98c9bb616d6bf6443ddd3aaf"
+    },
+    {
+      "source": "execution/CONTINUE.md",
+      "archive": "history/pre-simplification-2026-10-18/execution/CONTINUE.md",
+      "sha256": "df2f816bfcfafc6deb2f9d3215da44cb8214d7b8000a12f1ea68620d5dd80f8e"
+    },
+    {
+      "source": "execution/LEDGER.md",
+      "archive": "history/pre-simplification-2026-10-18/execution/LEDGER.md",
+      "sha256": "61ba9142ac721816db16f2ed5449808bb1d0b84a4cf3ec8e56ae54baf8934da4"
+    }
+  ]
+}

@@ -1,0 +1,1033 @@
+id: study-map-aml-l09
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l09
+status: not-started
+current_stage: stage-aml-l09-graph
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l09-graph
+  number: 1
+  title: Computation graphs
+  status: pending
+  objective: Atomic operations, cached forward values, dependencies, and efficient reverse traversal.
+  done_when:
+  - 'Reproduce without notes: Atomic operations, cached forward values, dependencies, and efficient reverse
+    traversal.'
+  - Work Übung 10 — computation graphs and autodiff, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-backpropagation
+  - concept-chain-rule
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7ae7a07b786bdf4e75ca90d6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-graph/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-chain-rule
+  ability_ids:
+  - ability-chain-rule-graph
+  number: 2
+  title: Chain rule and local gradients
+  status: pending
+  objective: Gradient paths, accumulation through branches, shapes, and vector/matrix derivative bookkeeping.
+  done_when:
+  - 'Reproduce without notes: Gradient paths, accumulation through branches, shapes, and vector/matrix
+    derivative bookkeeping.'
+  - Work Übung 10 — computation graphs and autodiff, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-chain-rule
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-207185556058e90371302703
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cb9b43283aec0fabd1a672fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-91b7ccb423a27aef9f08dbf5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-79d377a5f96542b988fde40e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b907809826ba756aa1d65f9d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-chain-rule/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-backprop
+  ability_ids:
+  - ability-aml-backprop-local
+  - ability-aml-backprop-layerwise
+  number: 3
+  title: Layer-wise backpropagation
+  status: pending
+  objective: dz, dW, db, and da rules, the full worked network, and connection to stochastic gradient
+    updates.
+  done_when:
+  - 'Reproduce without notes: dz, dW, db, and da rules, the full worked network, and connection to stochastic
+    gradient updates.'
+  - Work Übung 10 — computation graphs and autodiff, then the remaining 3, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-backpropagation
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5537c790ee855af15adac484
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-207185556058e90371302703
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cb9b43283aec0fabd1a672fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9cfd96836a0ad571e9f9235a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-91b7ccb423a27aef9f08dbf5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-79d377a5f96542b988fde40e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-820965b7a56304da199d10c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-69c5b6e2f97ec6539c186fca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-af0dec1a20a6184eaf0ca273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b907809826ba756aa1d65f9d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7ae7a07b786bdf4e75ca90d6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-regularization
+  number: 4
+  title: Weight decay and dropout
+  status: pending
+  objective: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation
+    behaviour.
+  done_when:
+  - 'Reproduce without notes: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and
+    train/evaluation behaviour.'
+  - Work Cornell CS4780 HW9 — neural-network training, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-weight-decay
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5537c790ee855af15adac484
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9cfd96836a0ad571e9f9235a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-820965b7a56304da199d10c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-af0dec1a20a6184eaf0ca273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3bec316547b7480cfdfd5d49
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-stopping
+  number: 5
+  title: Early stopping and double descent
+  status: pending
+  objective: Validation-controlled training, classical U-curves, interpolation threshold, and modern risk
+    behaviour.
+  done_when:
+  - 'Reproduce without notes: Validation-controlled training, classical U-curves, interpolation threshold,
+    and modern risk behaviour.'
+  exam_critical: true
+  concepts:
+  - concept-early-stopping
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-3bec316547b7480cfdfd5d49
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-stopping/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-gradient-health
+  number: 6
+  title: Vanishing and exploding gradients
+  status: pending
+  objective: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies included
+    by the lecture.
+  done_when:
+  - 'Reproduce without notes: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the
+    remedies included by the lecture.'
+  exam_critical: true
+  concepts:
+  - concept-backpropagation
+  - concept-vanishing-gradients
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cc1692a36cdffbe573dd3279
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l09-autograd
+  number: 7
+  title: Automatic differentiation
+  status: pending
+  objective: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and no_grad as
+    an executable model.
+  done_when:
+  - 'Reproduce without notes: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing,
+    and no_grad as an executable model.'
+  - Work Übung 10 — computation graphs and autodiff, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
+  attachments: []
+  source_feedback: []

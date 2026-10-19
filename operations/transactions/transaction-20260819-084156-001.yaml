@@ -1,0 +1,45 @@
+schema_version: 1
+id: transaction-20260819-084156-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-19T08:41:56+02:00'
+snapshot_before: sha256:56ea0735b0f4fb7356f110acfce2e7117c72ef69f3dd5803c5a4b0cb7c5f3075
+snapshot_after: sha256:290a28f966bf6324dceb4ac84c827b319a1b7b7d92a7d489768c96c5e28de97b
+expected_revisions: {}
+artifact_revisions:
+  module-hu-aml:
+    before: 1
+    after: 2
+  unit-aml-exam-prep:
+    before: 1
+    after: 2
+  unit-aml-l11:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 0165855ee22b2931413a23cba0e79b37997539c743b367250d36018b173fd508
+  sha256_after: 0165855ee22b2931413a23cba0e79b37997539c743b367250d36018b173fd508
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  sha256_before: 37cf6bcdd5b2d372a5e6d5975fce4bbea964581569305913c862af97288f3d23
+  sha256_after: 37cf6bcdd5b2d372a5e6d5975fce4bbea964581569305913c862af97288f3d23
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml
+  sha256_before: 820181b2f9a8b77d1561998ca4048a5054319c3f8f23b3eabe512e961e86b45e
+  sha256_after: 820181b2f9a8b77d1561998ca4048a5054319c3f8f23b3eabe512e961e86b45e
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/unit.yaml
+  sha256_before: 49d35204fd89a3d2824324ff52a36d4d45d482c2e0dfceb8f3d72ed7fcaa79e8
+  sha256_after: 49d35204fd89a3d2824324ff52a36d4d45d482c2e0dfceb8f3d72ed7fcaa79e8
+  created: false
+- path: work/active/workspace-aml-exam-prep/CONTEXT.md
+  sha256_before: 17dc23e14390035d6494bf7cdfc588056fa94ab16a505fb0ae0eba6097e43ae2
+  sha256_after: e87fe35004b66f349d5dd49bd9394d974d5aa365fc1312a2a077b36f41c55d90
+  created: false
+metadata: {}

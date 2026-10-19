@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/sources.schema.json",
+  "title": "Source registry",
+  "x-governs": "record",
+  "description": "Validates sources/sources.yaml (or partitioned sources/registry/*.yaml \u2014 partitioning must not change semantics). A source is an evaluated teaching object. Contextual evaluations recorded here are the canonical home of pedagogical judgments, including those narrated in crosswalk notes. No universal scalar ratings.",
+  "type": "object",
+  "required": [
+    "sources"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "book",
+              "paper",
+              "lecture",
+              "course",
+              "video",
+              "website",
+              "documentation",
+              "software",
+              "conversation",
+              "other"
+            ]
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "organization": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 1800,
+            "maximum": 2100
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "material": {
+            "type": "string",
+            "pattern": "^material://.+"
+          },
+          "identifiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "discovery": {
+            "description": "Optional metadata-only provenance (two-pass intake): which list or page this shelf came from and what it may be good for. Never a claim about coverage, quality or fit; examination keeps it as provenance.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "observed",
+              "basis",
+              "possible_use"
+            ],
+            "properties": {
+              "observed": {
+                "type": "string",
+                "format": "date"
+              },
+              "basis": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "ref"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "list-entry",
+                        "landing-page",
+                        "catalogue-entry",
+                        "playlist-metadata",
+                        "table-of-contents"
+                      ]
+                    },
+                    "ref": {
+                      "type": "string",
+                      "pattern": "^(https?://\\S+|\\S+#L[0-9]+)$"
+                    }
+                  }
+                }
+              },
+              "origins": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(https?://\\S+|\\S+#L[0-9]+)$"
+                }
+              },
+              "possible_use": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "child_titles": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "evaluations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "concepts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "uniqueItems": true,
+                  "description": "Omit for a global evaluation."
+                },
+                "audience": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "e.g. first-learning, review, derivation, implementation, intuition"
+                },
+                "level": {
+                  "enum": [
+                    "introductory",
+                    "intermediate",
+                    "advanced",
+                    "reference"
+                  ]
+                },
+                "prerequisites": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "strengths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "weaknesses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "useful_sections": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "description": "One section-to-note pair per object: the key names the section (e.g. '§4.1, physical PDF pp. 141–149'), the value is the reading note. The projection renders every pair as an independent section, so 'locator'/'use' pseudo-fields are rejected — min/maxProperties alone would still admit a single {'locator': ...} entry, hence the propertyNames ban below, which also refuses empty and all-whitespace keys that would project as empty sections.",
+                    "minProperties": 1,
+                    "maxProperties": 1,
+                    "propertyNames": {
+                      "not": {"enum": ["locator", "use"]},
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
+                    },
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "reviewed": {
+                  "type": "string",
+                  "format": "date"
+                }
+              }
+            }
+          },
+          "thematic_group_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^thematic-group-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "uniqueItems": true
+          },
+          "topics": {
+            "description": "Optional medium-grained subject facet, drawn from the closed vocabulary in sources/topics.yaml (ADR-009). Independent of thematic_group_ids: a machine-learning source may carry the optimization topic, which is the whole point — one identity, many classifications. Absent means not yet classified, not 'no topics'; population happens the first time a source is actually used, never as a bulk backfill (ADR-005).",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^topic-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

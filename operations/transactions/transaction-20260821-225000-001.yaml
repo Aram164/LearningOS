@@ -1,0 +1,23 @@
+schema_version: 1
+id: transaction-20260821-225000-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-21T22:50:00+02:00'
+snapshot_before: sha256:a3116b81276585001b1c0319642e12686b4a3ad4bd44fd63be833a84f9f078c5
+snapshot_after: sha256:f120daad8eedb0029305a28fd93cdb8929e9717012aa02e129d40e81d48b963c
+expected_revisions: {}
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: af6cbc5ff7b10a4d9ed4766c9c414f0691fffd2e7775b7efbbfe2ff44b82c93f
+  sha256_after: af6cbc5ff7b10a4d9ed4766c9c414f0691fffd2e7775b7efbbfe2ff44b82c93f
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 2b70c0a1cb466eee00020669e88829d20f90f243177beb7930e59370bbf6cf77
+  sha256_after: 0eed9094341ce3e3c9e272a93646fb584bcaffaae7bf7a2da6d3dedb6ca509a2
+  created: false
+metadata: {}

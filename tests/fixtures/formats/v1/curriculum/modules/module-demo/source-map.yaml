@@ -1,0 +1,9 @@
+type: module-source-map
+module_id: module-demo
+sources:
+- source_id: source-demo-book
+  role: spine
+  why: Scoped demo reading.
+  priority: 0
+  unit_routes:
+  - unit-demo-l01

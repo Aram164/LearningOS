@@ -1,0 +1,64 @@
+schema_version: 2
+id: transaction-20260917-213624-001
+type: transaction-receipt
+status: committed
+capability: ai-action.delivery.apply
+committed_at: '2026-09-17T21:36:24+02:00'
+snapshot_before: sha256:c9c7cc46bebf2e35173ec018226a2b8a58196429cc60bb311868b38edc30563c
+snapshot_after: sha256:722517a83675d9d881c75eb14ac62dbf2958fdf5a062d3cc4b13879922c6f549
+expected_revisions:
+  unit-m2-sad-l04: 17
+  material-synthesis-m2-sad-l04: 0
+artifact_revisions:
+  material-synthesis-m2-sad-l04:
+    before: 0
+    after: 1
+  unit-m2-sad-l04:
+    before: 17
+    after: 18
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/material-synthesis.yaml
+  sha256_before: null
+  sha256_after: 8323f526b6afa65a986dd7d02047ee2c919bc594b1a1667ce3c0d8ab85bd89fe
+  created: true
+- path: operations/ai-actions/requests/ai-request-sad-l04-pilot/request.yaml
+  sha256_before: de246246487ca2dd9cbdadc1ab27125aea4474f1f24dceba92e3fc0bb7019525
+  sha256_after: 3d97265db748933f46abe33b790203df200eff4558b5a436a76c9831e2a8e0bd
+  created: false
+metadata:
+  request_id: ai-request-sad-l04-pilot
+  delivery_id: ai-delivery-sad-l04-pilot
+  action_id: unit.compare-materials
+  approved_delivery:
+    delivery_sha256: sha256:6e5973318650f83f51033cba5b6175c7b44b71077ec174c01c646adee6a90479
+    artifact_sha256:
+      material-synthesis.json: sha256:cf672374202cc8b47137d8f8266fef523ca7b8c8d01e017ceadaec1a9eaf0d1c
+  created_ids:
+  - material-synthesis-m2-sad-l04
+  updated_ids:
+  - unit-m2-sad-l04
+  deleted_ids: []
+  superseded_ids: []
+  validation:
+    schemas: passed
+    references: passed
+    boundaries: passed
+    projection: passed
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: ai-action.delivery.apply
+    declared_writes:
+    - operations/ai-actions/requests/**
+  - capability: unit.material-synthesis.publish
+    declared_writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-ai-delivery-apply-sad-l04-pilot
+  idempotency_key: ai-delivery-sad-l04-pilot-apply-001
+  intent_sha256: sha256:e08d06b297daf582f919a170bcae831f60f635131281ab094927a666542908ec
+  approval:
+    kind: approved-delivery
+    subject_sha256: sha256:e08d06b297daf582f919a170bcae831f60f635131281ab094927a666542908ec

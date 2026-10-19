@@ -1,0 +1,49 @@
+module_id: module-demo
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-demo/outputs/demo-coverage-audit.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+module_patch:
+  title: Reviewed demo module
+units: []
+source_map:
+  type: module-source-map
+  module_id: module-demo
+  sources:
+  - source_id: source-demo-book
+    role: spine
+    why: Scoped demo reading.
+    priority: 0
+    unit_routes:
+    - unit_id: unit-demo-l01
+      id: route-b2f1f80014860a929a3af0bc
+      title: Demo book — expected-value derivation
+      format: book
+      angle: Derives the weighted sum and works a discrete example.
+      covers:
+      - knowledge-demo-expectation
+      depth: derivation
+      scope: current
+      locator: lecture-01.pdf
+    - unit_id: unit-demo-l02
+      title: Demo book — variance derivation
+      format: book
+      angle: Derives variance and works a discrete example.
+      covers:
+      - knowledge-demo-variance
+      depth: derivation
+      scope: current
+      locator: lecture-02.pdf
+claim_evidence:
+- claim_id: covers:route-b2f1f80014860a929a3af0bc
+  evidence:
+  - kind: route-locator
+    ref: lecture-01.pdf
+  reads: {}

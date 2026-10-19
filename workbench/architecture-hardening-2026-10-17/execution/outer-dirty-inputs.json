@@ -1,0 +1,787 @@
+{
+  ".opencode": {
+    "bytes": 1461,
+    "kind": "file",
+    "sha256": "9d36f6894cc0483e4ecee1b067be3f529203f451423a8980b08b22298d6c9134"
+  },
+  "AGENTS.md": {
+    "bytes": 3313,
+    "kind": "file",
+    "sha256": "754c4618236ecae8bd8f0d5a82fbf174fd8448c8ca51b478aad50d7e55cf217c"
+  },
+  "HANDOFF.md": {
+    "bytes": 4439,
+    "kind": "file",
+    "sha256": "8909f73b5b031bde9770e3cad3853624965c8ad07d092b7889b5d1c318c12b7d"
+  },
+  "original_research.txt": {
+    "bytes": 31901,
+    "kind": "file",
+    "sha256": "4345cf71298693b0d36ee71f364584bf886442786f7f20c9028d423ebca27483"
+  },
+  "outputs/atlas-ux-2026-10-01/01-notes.png": {
+    "bytes": 111415,
+    "kind": "file",
+    "sha256": "daa84308b4fd49fbc8b496007ab24b8fd5ce9b85449bb0437f994cf0ff769f1f"
+  },
+  "outputs/atlas-ux-2026-10-01/02-selected-note.png": {
+    "bytes": 135807,
+    "kind": "file",
+    "sha256": "1ce803889b7773514940ac05c48a909c07e6d7f74c88b6e94220a2a6f2d58bcd"
+  },
+  "outputs/atlas-ux-2026-10-01/03-source-shelf.png": {
+    "bytes": 105018,
+    "kind": "file",
+    "sha256": "b62cbed82f753561e438d53c7292d96f2be63a09be2ae6778b46bec772b02701"
+  },
+  "outputs/atlas-ux-2026-10-01/04-concept-map.png": {
+    "bytes": 86607,
+    "kind": "file",
+    "sha256": "524b71a2519d8d7cf0cde8c03b934a4249023a1c8d9962d324b5094c3b6fc949"
+  },
+  "outputs/atlas-ux-2026-10-01/05-connection-detail.png": {
+    "bytes": 77202,
+    "kind": "file",
+    "sha256": "30e6fd0e07d697eef4b73f55c7cd35386bddec88997d1078a881030418c00068"
+  },
+  "outputs/atlas-ux-2026-10-01/06-abilities.png": {
+    "bytes": 78520,
+    "kind": "file",
+    "sha256": "9bbf3974b5c6e1e9d0e43f9950dcaf4ef179b8e01d5b8a3e99e6a27051d766f1"
+  },
+  "outputs/atlas-ux-2026-10-01/07-concept-narrow.png": {
+    "bytes": 60916,
+    "kind": "file",
+    "sha256": "9904d2c16c6444be8942738bc217add1c0d46184db75f6449a4c46fe5b54969d"
+  },
+  "outputs/atlas-ux-2026-10-01/08-concept-entry.png": {
+    "bytes": 58132,
+    "kind": "file",
+    "sha256": "d7b366e7f0c01e2f68c06589cb6087e9e311898f44de0a1c6ea5210e10efb14f"
+  },
+  "outputs/atlas-ux-2026-10-01/09-concept-recenter.png": {
+    "bytes": 86822,
+    "kind": "file",
+    "sha256": "612d32c40644be7c3b472a962153d49e0d96c8b4030463611bd9e4196587d5df"
+  },
+  "outputs/atlas-ux-2026-10-01/10-concept-browser.png": {
+    "bytes": 69663,
+    "kind": "file",
+    "sha256": "32f72b54ad20bb6d3662d0e4fa87547178b70b56610e1eec7c17754d557adfa9"
+  },
+  "outputs/atlas-ux-2026-10-01/11-ability-overview.png": {
+    "bytes": 71140,
+    "kind": "file",
+    "sha256": "7f49489472bf5fee2b347993df55d73b0fbf92b65d3065fdeaafbf00f6bcddf2"
+  },
+  "outputs/atlas-ux-2026-10-01/12-least-squares-focus.png": {
+    "bytes": 80126,
+    "kind": "file",
+    "sha256": "9ca19eb86affdf601b5e4348510e1946ce7a2692d63c247f1277c5fd85dbf4ad"
+  },
+  "outputs/atlas-ux-2026-10-01/13-ability-details.png": {
+    "bytes": 93298,
+    "kind": "file",
+    "sha256": "c914f1d68eb7c85402e0f15e17a72a615eb412dd88c3a10fe7b468a20107a031"
+  },
+  "outputs/atlas-ux-2026-10-01/14-shared-frontier-fold.png": {
+    "bytes": 79613,
+    "kind": "file",
+    "sha256": "31c985f993113a5ad376d10870010551b48f5648da795dc7bc46cd00c872e344"
+  },
+  "outputs/atlas-ux-2026-10-01/15-full-backward-selected.png": {
+    "bytes": 79051,
+    "kind": "file",
+    "sha256": "7974ba20cb73d23d0ef1863560c504d2eef3f7ff3e0f300e9d85d0f587c3eb5e"
+  },
+  "outputs/atlas-ux-2026-10-01/16-reviewed-bridges.png": {
+    "bytes": 77197,
+    "kind": "file",
+    "sha256": "dd8412068a899460ad05059cee8903925ac11e17016d6024b1eeeff9c590e4ff"
+  },
+  "outputs/atlas-ux-2026-10-01/17-preparation-routes.png": {
+    "bytes": 89879,
+    "kind": "file",
+    "sha256": "8b486fdf6947577608c28f8d02c7b6c3bdaf6ce4d018f6bfb5b163bc684d7013"
+  },
+  "outputs/atlas-ux-2026-10-01/ability-canvas-checks.json": {
+    "bytes": 10084,
+    "kind": "file",
+    "sha256": "134d3fa8c0996ea31be42a834e88ab26c3418d04c8c5daa32f34981b9872a522"
+  },
+  "outputs/atlas-ux-2026-10-01/ability-snapshot-evidence.json": {
+    "bytes": 4693,
+    "kind": "file",
+    "sha256": "59ebc85738ccc0ab0bffb3141e82cac06355a1f3a488ed09a074dcae926f77d9"
+  },
+  "outputs/atlas-ux-2026-10-01/atlas-design-handoff.md": {
+    "bytes": 36748,
+    "kind": "file",
+    "sha256": "f9edb7a78f80cc6e67ed96e867451e8d38202fa356bf9b8f3664499e167ccc39"
+  },
+  "outputs/atlas-ux-2026-10-01/compact-ability-id-ledger.json": {
+    "bytes": 12422,
+    "kind": "file",
+    "sha256": "53e12ab72686aa579f1ebf533bd5a3786319d5ed99d07fc88e8f3c82c48dde50"
+  },
+  "outputs/atlas-ux-2026-10-01/design-evidence.json": {
+    "bytes": 9786,
+    "kind": "file",
+    "sha256": "0a9c7c5974361dc8e72636eb5ec29b72d13993e0b5282d3387b41d82f5e3b722"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-prompt.md": {
+    "bytes": 9643,
+    "kind": "file",
+    "sha256": "d89d9a533c3107ef53c652adf36c127811e4b20161cba7ed945d3f82dc7ab53c"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/00-before.png": {
+    "bytes": 398811,
+    "kind": "file",
+    "sha256": "83c754c7772dd1c64049437a815a2722771d9e96390a87ea197d0aeb09874721"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/01-entry-wide.html": {
+    "bytes": 5488,
+    "kind": "file",
+    "sha256": "f5ca6b4af4324e569e08ba3c7c7927c0954a6d6715b0e8099f5c6ead1c67094e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/01-entry-wide.png": {
+    "bytes": 203570,
+    "kind": "file",
+    "sha256": "9acfcba251f5acdf2dfa8563359f4399668f4b4a6a32066e0543efd60d30a3ba"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/02-concept-wide.png": {
+    "bytes": 340182,
+    "kind": "file",
+    "sha256": "efd22b0f1f899549af75fb29a72ea84fee43fc5a4f391d80c0dd47313d2103c1"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/03-lecture-preserved.html": {
+    "bytes": 14786,
+    "kind": "file",
+    "sha256": "60e70b3c59861cfef3f6e3027dcbb3db41f51a0e43c1d86bad9bb19f21ecb738"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/03-lecture-preserved.png": {
+    "bytes": 459020,
+    "kind": "file",
+    "sha256": "a5819f5102bdb4587133ac0189133e598aa61d029561bab34e69437675ad0034"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/04-shelf-full.html": {
+    "bytes": 24489,
+    "kind": "file",
+    "sha256": "8aad1e9e538e210fa76d4b72c35febc397137bac619d52131c69dffcba8fc10b"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/04-shelf-full.png": {
+    "bytes": 254428,
+    "kind": "file",
+    "sha256": "589009d605e3f1df473d0e7ad1eb8a4c3bd610ee62e46f87c6befcff1b841d6f"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/05-ability-selected.html": {
+    "bytes": 19,
+    "kind": "file",
+    "sha256": "26cb2d938b494dff02f70ed0769baab3d43f771167f6772aaa2a10ae439d7e34"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/05-ability-selected.png": {
+    "bytes": 409440,
+    "kind": "file",
+    "sha256": "f266b08843f632a36160db47f78c4c694aeb553cd7d17eb3a3b8886f07d3d4c4"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/06-one-foundation-folded.html": {
+    "bytes": 13924,
+    "kind": "file",
+    "sha256": "c37fefc9ae3c6b3c1ce73e949fc3a585fb149708d84ca9a2f1606e11a8d38203"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/06-one-foundation-folded.png": {
+    "bytes": 285303,
+    "kind": "file",
+    "sha256": "853fd9baa4d436d65bfe7e6f062608af6ce2bc579ebf727e4eafe4325df4f1e3"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/07-back-restored.html": {
+    "bytes": 20391,
+    "kind": "file",
+    "sha256": "70f2b6279aa0e98304625f69447c66309cb6d948267cf4d51cd43e2246def8a3"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/07-back-restored.png": {
+    "bytes": 318332,
+    "kind": "file",
+    "sha256": "1c171cb71f4111fcbbf724bcf5179c93e48d3061eaa217004fc1e73981496e1e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/08-wide-css.txt": {
+    "bytes": 551,
+    "kind": "file",
+    "sha256": "63ebff81eae634aca63858c654a6ba18880c5d62f1b3a4572c1aa58202e9c69b"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/08-wide-final.png": {
+    "bytes": 305571,
+    "kind": "file",
+    "sha256": "91b199c49822bd5541a560e14e19bfbc3463eb4f02626a402a73b57e47a3dd7d"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/09-980-css.txt": {
+    "bytes": 553,
+    "kind": "file",
+    "sha256": "f955307119451335747df353fae4f01530b60b966590c2d2043aa96dec5fd1f1"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/09-concepts-980.png": {
+    "bytes": 265046,
+    "kind": "file",
+    "sha256": "33f05513ad15ebc9eddd587ca75380c06c5c7569060318e2064369ea34eb19d0"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/09-depth2-980.html": {
+    "bytes": 20470,
+    "kind": "file",
+    "sha256": "3c3ed8d5572cc81922f25bed486f8162cc8e8fa48459ac177f947633c83cbb35"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/09-depth2-980.png": {
+    "bytes": 283072,
+    "kind": "file",
+    "sha256": "b29cadaf7821c73b5cfab57384ac550dc2ba9ce227416155b32303c6bea51afe"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/10-notes-980.html": {
+    "bytes": 18407,
+    "kind": "file",
+    "sha256": "15a844983627675e918ded4e644336ebc135e6c856fa02ebd26b98021b2cd7c0"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/10-notes-980.png": {
+    "bytes": 367691,
+    "kind": "file",
+    "sha256": "567f6dec1ce04dd8e0362c751be7abda6c6cf10d412218dfba1dda932c0e2ad0"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/11-abilities-980-before.html": {
+    "bytes": 14027,
+    "kind": "file",
+    "sha256": "5362c5177b0e4b2d0f7260bd5b72ee29b57a5c014fbebc9708a05493532763bc"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/11-abilities-980.png": {
+    "bytes": 319660,
+    "kind": "file",
+    "sha256": "8685dd5ffe88bc981e8d3718f88adbd1170c49cda616e38bda7060b610cf10ec"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/12-camera-panned.html": {
+    "bytes": 14029,
+    "kind": "file",
+    "sha256": "69212dc942d285341b2c8e685bbfc3a520571e6381ab459eb4440a01b88a6ae3"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/13-camera-anchor-proof.html": {
+    "bytes": 14773,
+    "kind": "file",
+    "sha256": "d53bfefa874cbdaf6c0270acbcefd990207cf0ae3de4932f600a332415339fe9"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/14-800-css.txt": {
+    "bytes": 551,
+    "kind": "file",
+    "sha256": "d7a3277fa9c9790979b26043ccb63ed21b1b786e418b855f4f4d741f038698aa"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/14-abilities-800-overview.png": {
+    "bytes": 188418,
+    "kind": "file",
+    "sha256": "953ba789c3a1640a2d5d745d8352f5c11de95dd7dd96c5837e98c9324fc94f3c"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/15-bridges-800.html": {
+    "bytes": 17156,
+    "kind": "file",
+    "sha256": "0b9888088b48ab730651e6da4c2e2986542070b2458186cbd5254225a3582e12"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/15-bridges-800.png": {
+    "bytes": 322561,
+    "kind": "file",
+    "sha256": "c07d359549f064414d04f99e4081f009c24aafbece78136956b45d7ee5fa453d"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/16-and-or-routes-800.html": {
+    "bytes": 17488,
+    "kind": "file",
+    "sha256": "ea87c263eea1c283fa81db164ad625fdba6b5d7664edcd165a015279d7a47e43"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/16-and-or-routes-800.png": {
+    "bytes": 373590,
+    "kind": "file",
+    "sha256": "ee7db1247f043a92ad7782405a93aded909a0decaa0d3365558c7c286a653062"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/17-full-ability-detail-800.html": {
+    "bytes": 9256,
+    "kind": "file",
+    "sha256": "9beaa9aa432c4b512f021b59b002b60935b2d3a0f09bcbebe8ffe4324f370e60"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/18-concepts-800.html": {
+    "bytes": 21488,
+    "kind": "file",
+    "sha256": "bc12171d607c8de7d7790707bba95b41ca3dcb373f3b0775ffea2269ffba0a25"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/18-concepts-800.png": {
+    "bytes": 285537,
+    "kind": "file",
+    "sha256": "4ddf289de24fafd3b679598d37478ce8039cd38d513cd1ff536094d15cae344c"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/19-notes-800.html": {
+    "bytes": 7780,
+    "kind": "file",
+    "sha256": "88b39965a091e5e348a32cf2462d672f1875e4958fa16a2e1b22558f4d55bcfc"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/19-notes-800.png": {
+    "bytes": 263835,
+    "kind": "file",
+    "sha256": "235d25a78c6535f19f73646652785bcf87fd35ea702552c9bc6898d9a23a9f21"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/20-narrow-css.txt": {
+    "bytes": 552,
+    "kind": "file",
+    "sha256": "dfb18be7753770f01b3276c9641b52b25d3824e5baf5635fd61f206eba1861fd"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/20-notes-narrow.png": {
+    "bytes": 252818,
+    "kind": "file",
+    "sha256": "a88932ec1d4c412da0202b29d19daac82f559cca04acf7f6d15014c227251199"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/21-concepts-narrow.html": {
+    "bytes": 19497,
+    "kind": "file",
+    "sha256": "edd4754cf150574fd21a43a635ff5c1a39e50aac031381531ce5a99fe14b9f6a"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/21-concepts-narrow.png": {
+    "bytes": 216206,
+    "kind": "file",
+    "sha256": "9bddd1cb648a1b4dee8d6ecea7d9574defdf72f17e55876804095358a51a3fdd"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/22-abilities-narrow.html": {
+    "bytes": 14944,
+    "kind": "file",
+    "sha256": "12d8809c01f4e31b717e53c3a95be9ae9262f751674f233a2de95eaa4bb43775"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/22-abilities-narrow.png": {
+    "bytes": 209484,
+    "kind": "file",
+    "sha256": "6afead0c47f74c53de96c7cc10b63d8f6c7986f26c1669d1994ef9041b8d9404"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/23-final-entry.png": {
+    "bytes": 221119,
+    "kind": "file",
+    "sha256": "bee59001686d5450f373986e613f596135a5ee189a87954912b950e29f743c9b"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/RECEIPT.md": {
+    "bytes": 38298,
+    "kind": "file",
+    "sha256": "de7c7319243afd460c1270f44c33637f40a41415b5f3b1bfa98e9f3cc2b462cc"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/ability-context.json": {
+    "bytes": 6643,
+    "kind": "file",
+    "sha256": "0f1dcc491fa7be1baa7034ae5d0a594f9be5cdc87d4d0403fcea10faf8351c4b"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/baseline-diagnostics.html": {
+    "bytes": 11147,
+    "kind": "file",
+    "sha256": "cd62fb01fb349c208ff9e7fb431940430c49f0824c98455b85ab98d1697fc518"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/baseline.json": {
+    "bytes": 477246,
+    "kind": "file",
+    "sha256": "2571c57ab72c6ad3da915dfb69b8b4437fcbb68905f7a921a7a7ecedd1a10c7f"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/calendar-boundary-tests.log": {
+    "bytes": 98,
+    "kind": "file",
+    "sha256": "acd695113482189d691dcfb1883f33943b623f98a137c6e88c739cd2df230054"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/camera-anchor-proof.json": {
+    "bytes": 612,
+    "kind": "file",
+    "sha256": "df7d04610556e017794095fefb9361184ae259717bf8db7ca49e48e1101e9616"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/canonical-parity-preinstall.json": {
+    "bytes": 234,
+    "kind": "file",
+    "sha256": "2db756a878c41c5744d6a7eec137b723c36e0f8891b216abb255afd6cbbdfa89"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/canonical-parity.json": {
+    "bytes": 1010,
+    "kind": "file",
+    "sha256": "39e2505648d3a7bf509df46602f710134324584f70b2145d4923ee1d38d86b7d"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/core-failure-reproduction.log": {
+    "bytes": 1450,
+    "kind": "file",
+    "sha256": "23f6ed0cab12d3f656e61d27a1a7daf8ce400df9edbf9401e5abc0aab37fa767"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/core-independent-checks.log": {
+    "bytes": 6235,
+    "kind": "file",
+    "sha256": "ffba4fc913bf4fbc6900dde165e79d2b981dc62e558a2faa9a1080930feb0a8b"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/core-system-check.log": {
+    "bytes": 729,
+    "kind": "file",
+    "sha256": "cbf210ff67ee7f7c78645392190df24ae57552582d898edb52f93223d63ce399"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/core-test-collection.txt": {
+    "bytes": 243049,
+    "kind": "file",
+    "sha256": "0f6459d81ebc1f5887b3f2157f38ac7eff88ce756efd75902d450525a853da44"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/core-validation-final.log": {
+    "bytes": 245,
+    "kind": "file",
+    "sha256": "88e0ba8295f10a96adaee2ab3d2bcca4e0133bea3ddeb721c38d49baa2f3c40e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/corpus-parity-final.json": {
+    "bytes": 1724,
+    "kind": "file",
+    "sha256": "76e5367e111ed39cb17339372fe5aea7c4b43afd087e922daa845b44d947542e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/corpus-parity-final.log": {
+    "bytes": 1211,
+    "kind": "file",
+    "sha256": "eada06cad27df65cd2b872154155f444244dd0b9af1eab0e842f7ae5042cf780"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/corpus-parity.cjs": {
+    "bytes": 5548,
+    "kind": "file",
+    "sha256": "36d8c2e3c07fcf94be1723a76b642f26c003b66f35284c7c8ba91b7dc45f4e2e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/corpus-parity.json": {
+    "bytes": 1724,
+    "kind": "file",
+    "sha256": "9790c1405a515deeab59edbe49d2b6f405202d8e94a98638dbd7759b5b7a31e5"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/corpus-parity.log": {
+    "bytes": 1211,
+    "kind": "file",
+    "sha256": "3324139cb51db47f4e75ce4ea2f384a7ab6c738135633767bde4d597a7728127"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/development-ui.log": {
+    "bytes": 11825,
+    "kind": "file",
+    "sha256": "cff21868c1f609818dc4e808dca1130c5ae2e2d660e9e94e37e60f3fc2a3db59"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-build.log": {
+    "bytes": 330,
+    "kind": "file",
+    "sha256": "e919f7f16879e46f15b8c91f13c3107868d0e06ac59071627bcd1ae124104fa5"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-diagnostics.html": {
+    "bytes": 11149,
+    "kind": "file",
+    "sha256": "51107886a871e9246e727bbe288735082319b315ed2bf1919aea50cb76278617"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-install-status.log": {
+    "bytes": 435,
+    "kind": "file",
+    "sha256": "6d86d0d5d755f7c231c2b8c616ef294c3b5976672e05569fd9fe001912ec104c"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-installation.log": {
+    "bytes": 1648,
+    "kind": "file",
+    "sha256": "e42578dca0a3bb2ad4d0b62491ccf32c86483e1f4f706a290146cd226b489c05"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-live-check.log": {
+    "bytes": 925,
+    "kind": "file",
+    "sha256": "c0020a6811b8bb0e6cabe7e2ba88958e9e8bfdc684c98eccea53337411451839"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-live-errors.txt": {
+    "bytes": 20,
+    "kind": "file",
+    "sha256": "077112061e80e6963e644959cf9133aa3d295dea2f4ceb11484088e3cef32ef9"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-live-identity/check-live-verdict.json": {
+    "bytes": 442,
+    "kind": "file",
+    "sha256": "ffc092683066dcefe0c7577e96496a5cd6e7e0a4ef76d2a69f9d3a2eef4f5cca"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-live-identity/diagnostics.png": {
+    "bytes": 329427,
+    "kind": "file",
+    "sha256": "65606fde45f95cdf45bb4d9a41e4a98c74c71d236830146eeda2f6e372d2624c"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/final-source-evidence.json": {
+    "bytes": 10238,
+    "kind": "file",
+    "sha256": "4de9ab49f7eba7598721c842ecd2327267b2736320a0f51f0434f6dca31e9fc5"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/focused-ui.log": {
+    "bytes": 40969,
+    "kind": "file",
+    "sha256": "4665f35044d0f0c7ce5bcad34b23c81b02ce1e0d4cabe6ec462d7a6aeed48ec7"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/install-status-release.log": {
+    "bytes": 435,
+    "kind": "file",
+    "sha256": "97537196479e9cb7d4a4b2b48944d2bf4d02a88a16af0e6e957d2d223465787d"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/install-status.json": {
+    "bytes": 435,
+    "kind": "file",
+    "sha256": "cc8648738e921fd48f11670e2f8a74cbc3bb805c2f5749913821fad85c4c96f5"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/installation-release.log": {
+    "bytes": 1648,
+    "kind": "file",
+    "sha256": "e42578dca0a3bb2ad4d0b62491ccf32c86483e1f4f706a290146cd226b489c05"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/installation.log": {
+    "bytes": 1648,
+    "kind": "file",
+    "sha256": "967c3519cf6c9a0d82b125bd55d5f89e1ef6ceac6266617ed52a40753cb289b6"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-check-release.log": {
+    "bytes": 927,
+    "kind": "file",
+    "sha256": "0f916caef8f13e2c0e333cea0ad084c891f15bca316d1b1f2465a35cc64582be"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-check.log": {
+    "bytes": 919,
+    "kind": "file",
+    "sha256": "d8384f81696d2af8db6b5350e4fecebba7eca0a633a9c1d5a2ee2428181c0cb3"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-identity-release/check-live-verdict.json": {
+    "bytes": 442,
+    "kind": "file",
+    "sha256": "9f9695a8a64e218f7dc0457115e18372d455e0757403f23acd77226baeb40897"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-identity-release/diagnostics.png": {
+    "bytes": 305571,
+    "kind": "file",
+    "sha256": "91b199c49822bd5541a560e14e19bfbc3463eb4f02626a402a73b57e47a3dd7d"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-identity/check-live-verdict.json": {
+    "bytes": 442,
+    "kind": "file",
+    "sha256": "cf45dec665de7d5deecfcdf343f692b2ffc69252daa2e36b561473164aabf765"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/live-identity/diagnostics.png": {
+    "bytes": 327920,
+    "kind": "file",
+    "sha256": "5d4f8f6a137e012f2182e0f832bd260521b7de161ffa8b96f826dfc2fdd0b2c9"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/manifest-final-snapshot.json": {
+    "bytes": 14733210,
+    "kind": "file",
+    "sha256": "cd34bd03238832d211b8d48aa49c583ae890f7696bacc420c1cabb6278063e78"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/manifest-installed-snapshot.json": {
+    "bytes": 14921375,
+    "kind": "file",
+    "sha256": "bda3299e5523d0bd033f63d67b54d75effd4745650442cdacd57454bacfac0b8"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/manifest-snapshot.json": {
+    "bytes": 14733495,
+    "kind": "file",
+    "sha256": "0791e0c76a57909f03265d03f8c713ff8365f631fa0e2acf092e16ca281fbfda"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/operations-gate-retry.log": {
+    "bytes": 99,
+    "kind": "file",
+    "sha256": "d394e372d66613ee2bd47e0c0b561093b3acd40856da02b4db33b2c592c73303"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/paired-system-check-final.log": {
+    "bytes": 10994,
+    "kind": "file",
+    "sha256": "fe8cbec9e06271235679f7099aa21f48ad6b0975e3e64e19494ed9fa92f9d425"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/paired-system-check-frozen.log": {
+    "bytes": 68580,
+    "kind": "file",
+    "sha256": "ff1c44ee62796d961a1d8cd5a913d05db31dd7b107b8ee050e598c310b45d26e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/paired-system-check-release.log": {
+    "bytes": 42989,
+    "kind": "file",
+    "sha256": "d2119fbd3497d824967ec4643a3d6493a4ba6d8d9888ddf946e5de5e0465a12f"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/paired-system-check.log": {
+    "bytes": 10922,
+    "kind": "file",
+    "sha256": "4f4de067b94abc7f38b8732c0ee738b434e776a46b3d0768c7b0e871ed189110"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/pre-release-reload-diagnostics.html": {
+    "bytes": 19,
+    "kind": "file",
+    "sha256": "26cb2d938b494dff02f70ed0769baab3d43f771167f6772aaa2a10ae439d7e34"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/pre-reload-diagnostics.html": {
+    "bytes": 11147,
+    "kind": "file",
+    "sha256": "cd62fb01fb349c208ff9e7fb431940430c49f0824c98455b85ab98d1697fc518"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/release-build.log": {
+    "bytes": 330,
+    "kind": "file",
+    "sha256": "0a600ad3348ccc3beae254f09e4da25940439981293b73b2e5169d90ed0cf31e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/source-performance-metrics.json": {
+    "bytes": 12153,
+    "kind": "file",
+    "sha256": "82bcacc70cd87b2ff138a6457ce0f377ff0ca7d3afff05748553ac747bbccb2e"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/ui-check-final.log": {
+    "bytes": 58004,
+    "kind": "file",
+    "sha256": "c1e8b14ddc4168e83c4d2f025837fcfda5139cd325001772e1262e556021f201"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/ui-check-release.log": {
+    "bytes": 59140,
+    "kind": "file",
+    "sha256": "aff55fc08e2b95e081a8168aee6e4937b1de50a9acd435f763420df41d1fc6f6"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/ui-check.log": {
+    "bytes": 56596,
+    "kind": "file",
+    "sha256": "cbc329c219c7e1eacb710c2884d1d1305996fdf4e3adf3df425c9c91347e2552"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/verification-receipt.json": {
+    "bytes": 5813,
+    "kind": "file",
+    "sha256": "f12bfcfb6dff5b2ff8779234d3571dfbf76e2eca36b0c708ea1d95af46032dc1"
+  },
+  "outputs/atlas-ux-2026-10-01/implementation-verification/wide-pane-css.txt": {
+    "bytes": 551,
+    "kind": "file",
+    "sha256": "63ebff81eae634aca63858c654a6ba18880c5d62f1b3a4572c1aa58202e9c69b"
+  },
+  "outputs/learningos-finish-2026-10-01/RECEIPT.md": {
+    "bytes": 3735,
+    "kind": "file",
+    "sha256": "927e78b5457fd5d5027d5d84c40135e929fef32e90126b86dd49f139ed6d6e80"
+  },
+  "outputs/learningos-finish-2026-10-01/abilities-regression-before-build.log": {
+    "bytes": 4021,
+    "kind": "file",
+    "sha256": "e325eab3be6a6618a0793efbd837eb3d5764af56f4d00f5a9e1ed242b149a163"
+  },
+  "outputs/learningos-finish-2026-10-01/core-baseline.json": {
+    "bytes": 443378,
+    "kind": "file",
+    "sha256": "e696089512e279863facceef4264b7d7bf8bb21229abc5089bf597f1c35c71e9"
+  },
+  "outputs/learningos-finish-2026-10-01/core-parity.json": {
+    "bytes": 267,
+    "kind": "file",
+    "sha256": "8b9feee80f5e5b1b3609ad968187da8fc9db9d19ad8ca5dbe6521708324538ac"
+  },
+  "outputs/learningos-finish-2026-10-01/install-status.log": {
+    "bytes": 435,
+    "kind": "file",
+    "sha256": "243840d82a1d406fff4a42b9f5c4ce6aacf48eaeaadecf483537c8d63cec22f9"
+  },
+  "outputs/learningos-finish-2026-10-01/installation.log": {
+    "bytes": 1648,
+    "kind": "file",
+    "sha256": "1bbc7f07e64695e5c1d03b34af3105d1685eca77ff0711aaaa04d364c4889b0d"
+  },
+  "outputs/learningos-finish-2026-10-01/library-before.html": {
+    "bytes": 56534,
+    "kind": "file",
+    "sha256": "6867ab98aaa0710922da15c2a7bb64767beafe3523c9f7cca9d960e7494c3e8b"
+  },
+  "outputs/learningos-finish-2026-10-01/library-regression-before-build.log": {
+    "bytes": 2928,
+    "kind": "file",
+    "sha256": "1b4baec9721bb0abc8c9844c3d3269033a373674f07f5e9cc190f490155bd6f5"
+  },
+  "outputs/learningos-finish-2026-10-01/library-repaired.html": {
+    "bytes": 56534,
+    "kind": "file",
+    "sha256": "6867ab98aaa0710922da15c2a7bb64767beafe3523c9f7cca9d960e7494c3e8b"
+  },
+  "outputs/learningos-finish-2026-10-01/library-repaired.png": {
+    "bytes": 493232,
+    "kind": "file",
+    "sha256": "14ae385cbb0a5c3130a595e3f9ba57047ba0661f64252b17d7bbb69a5f730548"
+  },
+  "outputs/learningos-finish-2026-10-01/live-check.log": {
+    "bytes": 900,
+    "kind": "file",
+    "sha256": "6968217c3e94f3cb831cbc68e856633089aa2deaf34f60b2b0556162948662f2"
+  },
+  "outputs/learningos-finish-2026-10-01/live-identity/check-live-verdict.json": {
+    "bytes": 442,
+    "kind": "file",
+    "sha256": "e0da590e5b458601922778ec63042daba88aa2dd1785a90e1a4de0fe90f71d95"
+  },
+  "outputs/learningos-finish-2026-10-01/live-identity/diagnostics.png": {
+    "bytes": 328100,
+    "kind": "file",
+    "sha256": "61f8c4e52b5435043f3fcfc7f680b9553b904e0b16f42007f931eb4bb3ab082d"
+  },
+  "outputs/learningos-finish-2026-10-01/pre-reload-diagnostics.html": {
+    "bytes": 11149,
+    "kind": "file",
+    "sha256": "51107886a871e9246e727bbe288735082319b315ed2bf1919aea50cb76278617"
+  },
+  "outputs/learningos-finish-2026-10-01/regressions-before-build.log": {
+    "bytes": 11248,
+    "kind": "file",
+    "sha256": "66aa4bbe42e4e13f0cc4dd402a58e7851c85503e85f120eebaee4481cea1635d"
+  },
+  "outputs/learningos-finish-2026-10-01/reproduced-invalid-folder.html": {
+    "bytes": 12635,
+    "kind": "file",
+    "sha256": "12decb337089994e4d249704410dc3c6b998394883f518103094ad5a61b5df59"
+  },
+  "outputs/learningos-finish-2026-10-01/reproduced-invalid-folder.png": {
+    "bytes": 255535,
+    "kind": "file",
+    "sha256": "4163088cd423a1b328f13f0ed30b3652055c153d612c07bde1fbd07e2f68a5b4"
+  },
+  "outputs/learningos-finish-2026-10-01/two-ability-panes.html": {
+    "bytes": 13864,
+    "kind": "file",
+    "sha256": "4d26d379496cd85099e8c9a38ce6331c501145d06d4aebd6814b7a1bf4de4ef5"
+  },
+  "outputs/learningos-finish-2026-10-01/two-ability-panes.png": {
+    "bytes": 440349,
+    "kind": "file",
+    "sha256": "733428c911f39386e2e02273080a8f327d2ab37e9d1714fb2a89fa5c624743aa"
+  },
+  "outputs/learningos-finish-2026-10-01/two-atlas-panes.html": {
+    "bytes": 18441,
+    "kind": "file",
+    "sha256": "d09d90ebdd8ca170c1d5f42dbc3868418ca029459164827ae837d77447b85982"
+  },
+  "outputs/learningos-finish-2026-10-01/two-atlas-panes.png": {
+    "bytes": 375120,
+    "kind": "file",
+    "sha256": "ecf85169b4e1a27372c6faa317659c07f92187330b105d361b15b893ae19ce34"
+  },
+  "outputs/learningos-finish-2026-10-01/ui-check.log": {
+    "bytes": 61283,
+    "kind": "file",
+    "sha256": "db3b9f2a24d2418fe667c175c6f5c9346549c8434464d3319880b29480968316"
+  },
+  "outputs/learningos-finish-2026-10-01/verification-receipt.json": {
+    "bytes": 3276,
+    "kind": "file",
+    "sha256": "d067e5af813ce0b55f96b0059eea7add717fd1760275ceaafee4ff13103f80b0"
+  },
+  "tools/agent_pipeline/README.md": {
+    "bytes": 10104,
+    "kind": "file",
+    "sha256": "4fec28ba378208b91d53354cffe781f61d68acb77c5d2467e823957a660fbd3d"
+  },
+  "tools/agent_pipeline/agentctl.py": {
+    "bytes": 21069,
+    "kind": "file",
+    "sha256": "ffdd75b3514e94347e921cd3d52c1ef9b113bf040c47f8f7eb766666fea7a139"
+  },
+  "tools/agent_pipeline/config.toml": {
+    "bytes": 7765,
+    "kind": "file",
+    "sha256": "5e1b82336177954731549210b80bf24761e52e21926cf42bdbd24841abaef10c"
+  },
+  "tools/agent_pipeline/pipeline.py": {
+    "bytes": 33122,
+    "kind": "file",
+    "sha256": "982b32be796110f3f2df6dbb123046452104289e3b5263d69faae56a95c6ee8b"
+  },
+  "tools/agent_pipeline/selftest.py": {
+    "bytes": 63187,
+    "kind": "file",
+    "sha256": "38541701eea4a540ce3fcd515b670f6cd570191ac947c07cb0bad75a4a66cb1b"
+  },
+  "tools/agent_pipeline/state.py": {
+    "bytes": 2479,
+    "kind": "file",
+    "sha256": "82f3fabb1161198be6c3e9da42919f200091e7f63430d202f80c33595abec82a"
+  },
+  "tools/agent_pipeline/worktrees.py": {
+    "bytes": 9795,
+    "kind": "file",
+    "sha256": "7c709c34a313365f42a6b8586a1112df9e905291f0a9de4a38af3de3cfcda94c"
+  }
+}

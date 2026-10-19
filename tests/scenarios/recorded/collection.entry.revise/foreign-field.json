@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: field 'group' is outside the revise allowlist (only one entry's 'why' is revised here; source, group, order and every other entry are never written through revision)\n",
+  "stdout": "",
+  "stdout_json": null
+}

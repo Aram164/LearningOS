@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/unit.schema.json",
+  "title": "Curriculum unit",
+  "x-governs": "record",
+  "type": "object",
+  "required": ["id", "type", "module_id", "kind", "title", "order", "scope", "status", "artifacts", "workspace_ids"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "unit" },
+    "module_id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "component_id": { "type": "string", "pattern": "^component-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "kind": { "enum": ["lecture", "topic", "lecture-cluster", "milestone", "exam-block", "bridge"] },
+    "title": { "type": "string", "minLength": 1 },
+    "order": { "type": "integer", "minimum": 0 },
+    "scope": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["needs-map", "not-started", "ready", "active", "paused", "ready-to-shelve", "complete"] },
+    "knowledge_map": {
+      "description": "Lecture-level concept map. It defines what the lecture covers without prescribing a study order; rich module source-map routes point to these node ids.",
+      "type": "object",
+      "required": ["summary", "nodes"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "summary"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+              "title": { "type": "string", "minLength": 1 },
+              "summary": { "type": "string", "minLength": 1 },
+              "concept_ids": {
+                "description": "Reviewed links from this local lecture node to globally canonical concepts; absence means not mapped, never that no relationship exists.",
+                "type": "array",
+                "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                "uniqueItems": true
+              },
+              "builds_on": {
+                "type": "array",
+                "items": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                "uniqueItems": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "scope_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "authority"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "authority": { "enum": ["slides", "recording", "brief", "plan", "reference"] },
+          "locator": { "type": "string" }
+        }
+      }
+    },
+    "source_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "locator", "purpose"],
+        "additionalProperties": false,
+        "properties": {
+          "route_id": {
+            "description": "Stable rich-route identity. New v13 selections write it; source_id and locator remain required drift guards. Pre-v13 selections without it stay readable until migration.",
+            "type": "string",
+            "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "locator": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 },
+          "stage_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "current_study_map": { "type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "working_note": { "type": "string", "pattern": "^curriculum/modules/.+/units/.+/notes\\.md$" },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ultimate_reference": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "exercise_bank": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "mock_exam": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "other": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "parent_unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "child_unit_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    },
+    "related_module_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    },
+    "workspace_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    }
+  }
+}

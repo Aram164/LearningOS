@@ -1,0 +1,775 @@
+id: study-map-aml-l07
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l07
+status: not-started
+current_stage: stage-aml-l07-linear-geometry
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l07-linear-geometry
+  number: 1
+  title: Linear classifiers and separability
+  status: pending
+  objective: Scores, thresholds, hyperplane boundaries, class overlap, and linearly separable versus nonseparable
+    data.
+  done_when:
+  - 'Reproduce without notes: Scores, thresholds, hyperplane boundaries, class overlap, and linearly separable
+    versus nonseparable data.'
+  - Work Bonusblatt 03 — model choice and decision boundary, then the remaining 2, and record every miss
+    with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-decision-boundary
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-636a2abb1c28162c73ec7a1a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d3d6b5c98c909b1340c01e91
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-f9bae648830b68b38885701f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3a57aca9cbff2316a93e4e6e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-1b938e3c2fe27c48ca3cd377
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5fde74421095005bcd7796ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-linear-geometry/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-perceptron
+  number: 2
+  title: Perceptron learning
+  status: pending
+  objective: Sign activation, mistake-driven updates, primal form, convergence assumptions, and classifier
+    behaviour.
+  done_when:
+  - 'Reproduce without notes: Sign activation, mistake-driven updates, primal form, convergence assumptions,
+    and classifier behaviour.'
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 4, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-perceptron
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e1edea93b1a74b6acf98f646
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-636a2abb1c28162c73ec7a1a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d3d6b5c98c909b1340c01e91
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-f968dcfe59c4db9183a6dac9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-f9bae648830b68b38885701f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cd7615636cab19837678f3bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-1b938e3c2fe27c48ca3cd377
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2637137a9003dac44a7db244
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5fde74421095005bcd7796ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5f4b2dd31874b7e5384e231a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-perceptron/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-dual
+  number: 3
+  title: Dual perceptron
+  status: pending
+  objective: Expressing weights as training-point combinations, Gram matrices, and predictions through
+    dot products.
+  done_when:
+  - 'Reproduce without notes: Expressing weights as training-point combinations, Gram matrices, and predictions
+    through dot products.'
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 4, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-perceptron
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e1edea93b1a74b6acf98f646
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e4df0fb431660606a33d696d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e480cde6a573a897e7bc2390
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2ae7d70eb8fa7ba34ef8f04b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2637137a9003dac44a7db244
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5724ba798d6f6fea10e66606
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eac369153a165300d7c6a1a0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bca81cb5bc11101209368d5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-dual/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-xor
+  number: 4
+  title: Boolean gates and the XOR wall
+  status: pending
+  objective: AND/OR realizations, the XOR contradiction, and the representational limit of one linear
+    boundary.
+  done_when:
+  - 'Reproduce without notes: AND/OR realizations, the XOR contradiction, and the representational limit
+    of one linear boundary.'
+  - Work Bonusblatt 04 — perceptron and separability, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-perceptron
+  - concept-xor-problem
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-d3d6b5c98c909b1340c01e91
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-1b938e3c2fe27c48ca3cd377
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e7fa69027fa94e5f65d2734f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-xor/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-kernels
+  number: 5
+  title: Feature maps and kernel trick
+  status: pending
+  objective: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and efficient dot-product
+    substitution.
+  done_when:
+  - 'Reproduce without notes: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and
+    efficient dot-product substitution.'
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 4, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-kernel-trick
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e1edea93b1a74b6acf98f646
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-f968dcfe59c4db9183a6dac9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-e4df0fb431660606a33d696d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-250a1234665348201198e7ef
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-cd7615636cab19837678f3bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3a57aca9cbff2316a93e4e6e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e480cde6a573a897e7bc2390
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eb4c6fc7dbaa004e432f0969
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-1b938e3c2fe27c48ca3cd377
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e7fa69027fa94e5f65d2734f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2ae7d70eb8fa7ba34ef8f04b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2637137a9003dac44a7db244
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5724ba798d6f6fea10e66606
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eac369153a165300d7c6a1a0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5f4b2dd31874b7e5384e231a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bca81cb5bc11101209368d5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-kernels/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-rbf
+  number: 6
+  title: RBF kernels and landmarks
+  status: pending
+  objective: Gaussian similarity, bandwidth effects, landmark features, nonlinear boundaries, and bias-variance
+    behaviour.
+  done_when:
+  - 'Reproduce without notes: Gaussian similarity, bandwidth effects, landmark features, nonlinear boundaries,
+    and bias-variance behaviour.'
+  - Work Cornell CS4780 HW2/HW7 — perceptron and kernels, then the remaining 1, and record every miss
+    with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  - concept-kernel-trick
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-f968dcfe59c4db9183a6dac9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-cd7615636cab19837678f3bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e480cde6a573a897e7bc2390
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eb4c6fc7dbaa004e432f0969
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-e7fa69027fa94e5f65d2734f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2637137a9003dac44a7db244
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eac369153a165300d7c6a1a0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5f4b2dd31874b7e5384e231a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bca81cb5bc11101209368d5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-rbf/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l07-multiclass
+  number: 7
+  title: Multiclass classification
+  status: pending
+  objective: One-vs-rest scores, argmax prediction, and multiclass perceptron updates.
+  done_when:
+  - 'Reproduce without notes: One-vs-rest scores, argmax prediction, and multiclass perceptron updates.'
+  - Work Übung 08 — dual and kernel perceptron, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-perceptron
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-b6a4e4277ae6fd34a0802141
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e4df0fb431660606a33d696d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-250a1234665348201198e7ef
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-multiclass/notes.md
+  attachments: []
+  source_feedback: []

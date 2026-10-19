@@ -1,0 +1,314 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "work/inbox/note-drop.md": null
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "inbox.resolve",
+              "channel": "operator",
+              "intent_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "file:archive/inbox/2026/note-drop.md": 1,
+                "file:work/inbox/note-drop.md": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "inbox.resolve",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "file:archive/inbox/2026/note-drop.md": {
+              "after": 1,
+              "before": 0
+            },
+            "file:work/inbox/note-drop.md": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "inbox.resolve",
+                "declared_writes": [
+                  "work/inbox/**",
+                  "archive/inbox/**"
+                ]
+              }
+            ]
+          },
+          "capability": "inbox.resolve",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "file:archive/inbox/2026/note-drop.md": 0,
+            "file:work/inbox/note-drop.md": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:1e4d6d2e7657dbf9498bd36822f89f5aaf74da7add65c464d7c7711f4d5f74f8",
+            "fingerprint_definition": 2,
+            "routed_to": [
+              "note-demo"
+            ]
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "archive/inbox/2026/note-drop.md",
+              "sha256_after": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+              "sha256_before": null
+            },
+            {
+              "created": false,
+              "path": "work/inbox/note-drop.md",
+              "sha256_after": null,
+              "sha256_before": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "file:archive/inbox/2026/note-drop.md": 1,
+            "file:work/inbox/note-drop.md": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "archive/inbox/2026/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "state": "file"
+            },
+            "work/inbox/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "state": "absent"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"inbox.resolve\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"resolved\": \"note-drop.md\",\n    \"archived\": [\n      \"archive/inbox/2026/note-drop.md\"\n    ],\n    \"routed_to\": [\n      \"note-demo\"\n    ],\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:archive/inbox/2026/note-drop.md\": 1,\n      \"file:work/inbox/note-drop.md\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "inbox.resolve",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "archived": [
+            "archive/inbox/2026/note-drop.md"
+          ],
+          "artifact_revisions": {
+            "file:archive/inbox/2026/note-drop.md": 1,
+            "file:work/inbox/note-drop.md": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "resolved": "note-drop.md",
+          "routed_to": [
+            "note-demo"
+          ],
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "operation": "inbox.resolve",
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "archive/inbox/2026/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "state": "file"
+            },
+            "work/inbox/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "state": "absent"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "archive/inbox/2026/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "state": "file"
+            },
+            "work/inbox/note-drop.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "state": "absent"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"inbox.resolve\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:archive/inbox/2026/note-drop.md\": 1,\n      \"file:work/inbox/note-drop.md\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "inbox.resolve",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": true,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "file:archive/inbox/2026/note-drop.md": 1,
+            "file:work/inbox/note-drop.md": 1
+          },
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": true,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

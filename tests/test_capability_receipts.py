@@ -1,0 +1,216 @@
+"""Every canonical write must report the receipt it produced.
+
+``_write_transaction`` hands back ``(code, errors, confirmation)``, and the
+confirmation carries ``transaction_id``, ``receipt_path`` and
+``artifact_revisions``. ``cmd_capability`` reads those three fields out of the
+handler's *own* JSON result, so a handler that binds the confirmation and never
+spreads it answers ``transaction_id: null, receipt_path: null`` on a successful
+write that did produce a receipt on disk. Fourteen write
+commands did exactly that until 2026-08-18. Nothing failed: the envelope schema
+declares both fields nullable, and only a few commands asserted a non-null
+receipt. The audit trail existed and was unreachable from
+the response that created it.
+
+The structural assertion below is deliberately not an end-to-end sweep. Driving
+all 27 capabilities would need 27 hand-built fixtures and would still only cover
+the capabilities someone remembered to write a fixture for; the defect is one
+missing spread per handler, and the parser finds it in every handler that
+exists, including ones added after this file was written. One round trip through
+the real gateway follows it, so the property is anchored to observed behaviour
+and not only to syntax.
+"""
+
+from __future__ import annotations
+
+import ast
+import json
+from pathlib import Path
+
+import pytest
+from gateway_helpers import approved_v2_call
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+COMMANDS = REPO_ROOT / "tools" / "learning_os" / "commands"
+
+# Helpers that commit a transaction and hand its receipt facts back to the
+# caller. `_write_transaction` returns `(code, errors, confirmation)`.
+_PRODUCERS = {"_write_transaction": 2}
+
+
+def _callee(node: ast.AST) -> str | None:
+    if not isinstance(node, ast.Call):
+        return None
+    if isinstance(node.func, ast.Name):
+        return node.func.id
+    if isinstance(node.func, ast.Attribute):
+        return node.func.attr
+    return None
+
+
+def _binding(assign: ast.Assign) -> str | None:
+    """The name this assignment binds the confirmation block to, if any."""
+    callee = _callee(assign.value)
+    if callee not in _PRODUCERS:
+        return None
+    index = _PRODUCERS[callee]
+    target = assign.targets[0]
+    if index is None:
+        return target.id if isinstance(target, ast.Name) else None
+    if isinstance(target, ast.Tuple) and len(target.elts) > index:
+        element = target.elts[index]
+        return element.id if isinstance(element, ast.Name) else None
+    return None
+
+
+def _spread_names(function: ast.AST) -> set[str]:
+    """Names unpacked with ``**`` anywhere inside this function."""
+    names: set[str] = set()
+    for node in ast.walk(function):
+        if isinstance(node, ast.Dict):
+            for key, value in zip(node.keys, node.values, strict=True):
+                if key is None and isinstance(value, ast.Name):
+                    names.add(value.id)
+        elif isinstance(node, ast.Call):
+            for keyword in node.keywords:
+                if keyword.arg is None and isinstance(keyword.value, ast.Name):
+                    names.add(keyword.value.id)
+    return names
+
+
+def _committing_functions(
+    sources: dict[str, str] | None = None,
+) -> list[tuple[str, str, str, int]]:
+    """(module, function, bound name, line) for every transaction commit site.
+
+    With no arguments, scan the real command files. With a mapping of module
+    name to source text, scan those strings with the same AST walk (controls).
+    """
+    found: list[tuple[str, str, str, int]] = []
+    if sources is None:
+        inputs = [
+            (path.name, path.read_text(encoding="utf-8"))
+            for path in sorted(COMMANDS.glob("*.py"))
+        ]
+    else:
+        inputs = [(name, sources[name]) for name in sorted(sources)]
+    for module, text in inputs:
+        tree = ast.parse(text)
+        for function in ast.walk(tree):
+            if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            for node in ast.walk(function):
+                if not isinstance(node, ast.Assign):
+                    continue
+                name = _binding(node)
+                if name is not None:
+                    found.append((module, function.name, name, node.lineno))
+    return found
+
+
+COMMIT_SITES = _committing_functions()
+
+
+def _assert_confirmation_spread(
+    module: str, tree: ast.Module, function: str, bound: str, line: int
+) -> None:
+    target = next(
+        node for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and node.name == function
+    )
+    assert bound in _spread_names(target), (
+        f"{module}:{line} {function}() commits a transaction and binds its "
+        f"receipt to '{bound}' without ever spreading it into the JSON it "
+        f"reports. The write produces a receipt on disk; the capability "
+        f"envelope will answer transaction_id: null. Add **{bound} to the "
+        f"reported dict."
+    )
+
+
+_SYNTHETIC_SPREAD = '''\
+def cmd_synthetic_write():
+    code, errors, confirmation = _write_transaction(None)
+    return {"ok": True, **confirmation}
+'''
+
+_SYNTHETIC_MISSING_SPREAD = '''\
+def cmd_synthetic_write():
+    code, errors, confirmation = _write_transaction(None)
+    return {"ok": True}
+'''
+
+_SYNTHETIC_UNRELATED = '''\
+def cmd_synthetic_other():
+    code, errors, confirmation = _unrelated_call(None)
+    return {"ok": True, **confirmation}
+'''
+
+
+def test_synthetic_confirmation_spread_is_discovered_and_accepted():
+    """Guard the guard: a parser change that finds nothing must not read green."""
+    sites = _committing_functions({"synthetic_writer.py": _SYNTHETIC_SPREAD})
+    assert sites == [
+        ("synthetic_writer.py", "cmd_synthetic_write", "confirmation", 2)
+    ]
+    module, function, bound, line = sites[0]
+    _assert_confirmation_spread(
+        module, ast.parse(_SYNTHETIC_SPREAD), function, bound, line
+    )
+
+
+def test_synthetic_missing_spread_fails_the_real_receipt_assertion():
+    """The no-spread synthetic fails the same assertion as real writers."""
+    sites = _committing_functions(
+        {"synthetic_writer.py": _SYNTHETIC_MISSING_SPREAD}
+    )
+    assert sites == [
+        ("synthetic_writer.py", "cmd_synthetic_write", "confirmation", 2)
+    ]
+    module, function, bound, line = sites[0]
+    with pytest.raises(AssertionError, match="without ever spreading"):
+        _assert_confirmation_spread(
+            module, ast.parse(_SYNTHETIC_MISSING_SPREAD), function, bound, line
+        )
+
+
+def test_unrelated_call_is_not_a_receipt_site():
+    """An unrelated call must not be classified as a receipt producer."""
+    sites = _committing_functions({"synthetic_other.py": _SYNTHETIC_UNRELATED})
+    assert sites == []
+
+
+@pytest.mark.parametrize(
+    ("module", "function", "bound", "line"),
+    COMMIT_SITES,
+    ids=[f"{m}::{f}:{n}" for m, f, _, n in COMMIT_SITES],
+)
+def test_every_committed_write_reports_its_receipt(
+    module: str, function: str, bound: str, line: int
+):
+    tree = ast.parse((COMMANDS / module).read_text(encoding="utf-8"))
+    _assert_confirmation_spread(module, tree, function, bound, line)
+
+
+def test_a_write_capability_returns_its_receipt_through_the_envelope(
+    mini_repo: Path,
+):
+    """The end-to-end half: one of the fourteen, through the real gateway."""
+    result = approved_v2_call(
+        mini_repo,
+        capability="note.evidence.add",
+        payload={
+            "note_id": "note-demo",
+            "evidence_type": "derivation",
+            "ref": "workspace://workspace-demo",
+        },
+        artifact_ids=["note-demo"],
+        idempotency_key="note-evidence-receipt-001",
+    )
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)
+    assert response["ok"] is True
+    assert response["transaction_id"], "a successful write reported no transaction"
+    assert response["receipt_path"].startswith("operations/transactions/")
+    assert (mini_repo / response["receipt_path"]).is_file(), (
+        "the response named a receipt that is not on disk"
+    )

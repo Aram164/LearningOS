@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s8c-md-0904",
+  "idempotency_key": "pl-s8c-md-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:0b508594defabd85013df807613dedd1c6fb4feaa2be42e7590ebb1c67bce252",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 5,
+    "study-map-job-polars-lazy-udf-interop": 4
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "stage_id": "stage-polars-17-arrow-interop-chunks-and-conversion-costs",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s8c-exercises.md",
+    "label": "Exercise sheet - Arrow types, zero-copy as an assertion, schema degradation",
+    "file_sha256": "sha256:3be96b3deeb7e6a6067059d37beb53fab49764c455f816800f49ac377fc5590d"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:05df9d22f66b066023fa28b85cb46dcba5037ae48883b8e9326d97a00d81d931"
+  }
+}

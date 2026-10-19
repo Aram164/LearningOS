@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/coordination.section.revise.schema.json",
+  "title": "payload for capability coordination.section.revise",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "section",
+    "text"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "show the section diff without writing"
+    },
+    "expected_content_sha256": {
+      "type": "string",
+      "description": "SHA-256 of work/COORDINATION.md from `inspect coordination` (content_sha256); required to apply, omit with --check to preview"
+    },
+    "section": {
+      "type": "string",
+      "enum": [
+        "Commitments",
+        "Priorities",
+        "Dependencies",
+        "Deferrals"
+      ],
+      "description": "the coordination section to revise: one of Commitments, Priorities, Dependencies or Deferrals"
+    },
+    "text": {
+      "type": "string",
+      "description": "reviewed section text, carried inline"
+    }
+  }
+}

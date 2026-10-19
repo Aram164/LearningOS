@@ -1,0 +1,361 @@
+"""The Validator itself: construction, dispatch and reporting.
+
+The check methods live in mixins under this package, grouped by what they
+inspect. `run` below is the whole order of validation, on one screen.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import jsonschema
+from referencing import Registry
+
+from learning_os.derive.learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    read_observations,
+    read_stage_results,
+    runtime_review_fingerprint,
+)
+from learning_os.derive.validation.contract import ChecksContract
+from learning_os.derive.validation.curriculum import ChecksCurriculum
+from learning_os.derive.validation.generated import ChecksGenerated
+from learning_os.derive.validation.hygiene import ChecksHygiene
+from learning_os.derive.validation.materials import ChecksMaterials
+from learning_os.derive.validation.plan_rigor import ChecksPlanRigor
+from learning_os.derive.validation.projects import ChecksProjects
+from learning_os.derive.validation.references import ChecksReferences
+from learning_os.derive.validation.registries import ChecksRegistries
+from learning_os.derive.validation.structure import ChecksStructure
+from learning_os.domain.snapshot import Repo
+from learning_os.domain.validation import CANONICAL_TREES, Issue
+from learning_os.domain.validation import in_garden as _in_garden
+from learning_os.domain.validation import in_quarantine as _in_quarantine
+from learning_os.store.contracts.json_schema import ContractValidationError, schema_registry
+
+
+class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
+
+    def __init__(self, repo: Repo, online: bool = False):
+        self.repo = repo
+        self.online = online
+        self.issues: list[Issue] = []
+        self.schemas = self._load_schemas()
+        # One validator per schema, not one per instance checked. Building a
+        # Draft202012Validator re-resolves every `$ref` against the registry,
+        # and a full run checks 578 instances against ~40 schemas — so that
+        # resolution was repeated more than an order of magnitude more often
+        # than there are schemas to resolve. Reuse is the documented pattern;
+        # `iter_errors` does not mutate the validator.
+        self._validators: dict[str, jsonschema.Draft202012Validator] = {}
+        # Without a format checker jsonschema ignores "format" entirely, so
+        # `2026-13-45` validated clean on the most operationally critical field
+        # in the repository — exam dates. One checker serves every validator.
+        self._format_checker = jsonschema.FormatChecker()
+        self._canonical_text_cache: list[tuple[Path, str]] | None = None
+        try:
+            self.schema_registry = schema_registry(
+                self.repo.root / "system" / "schema"
+            )
+        except ContractValidationError as exc:
+            self.schema_registry = Registry()
+            self.err("SCHEMA-REGISTRY", str(exc), "system/schema")
+
+    # ------------------------------------------------------------------ util
+    def err(self, code: str, msg: str, path: str = ""):
+        self.issues.append(Issue("E", code, msg, path))
+
+    def warn(self, code: str, msg: str, path: str = ""):
+        self.issues.append(Issue("W", code, msg, path))
+
+    def _load_schemas(self) -> dict:
+        schema_dir = self.repo.root / "system" / "schema"
+        schemas = {}
+        for f in schema_dir.glob("*.schema.json"):
+            try:
+                schema = json.loads(f.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                self.err(
+                    "SCHEMA-UNREADABLE",
+                    f"cannot read or parse schema: {exc}",
+                    self._rel(f),
+                )
+                continue
+            if not isinstance(schema, dict):
+                self.err(
+                    "SCHEMA-UNREADABLE",
+                    "schema document must be a JSON object",
+                    self._rel(f),
+                )
+                continue
+            schemas[f.stem.replace(".schema", "")] = schema
+        return schemas
+
+    # A partitioned registry is checked as one merged document, so an error
+    # inside one of its records belongs to that record's partition file, not
+    # to the consolidated default passed as ``where``.
+    _MERGED_REGISTRY_FAMILIES = {"concepts": "concept", "sources": "source"}
+
+    def _schema_check(self, name: str, instance, where: str):
+        family = self._MERGED_REGISTRY_FAMILIES.get(name)
+        validator = self._validators.get(name)
+        if validator is None:
+            schema = self.schemas.get(name)
+            if schema is None:
+                # Deliberately not cached: a missing schema is reported for
+                # every instance that needed it, exactly as before.
+                self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
+                return
+            validator = jsonschema.Draft202012Validator(
+                schema,
+                registry=self.schema_registry,
+                format_checker=self._format_checker,
+            )
+            self._validators[name] = validator
+        for e in sorted(validator.iter_errors(instance), key=str):
+            path = list(e.absolute_path)
+            locator = "/".join(str(p) for p in path)
+            origin = ""
+            if family and len(path) >= 2 and isinstance(path[1], int) \
+                    and isinstance(instance, dict):
+                records = instance.get(path[0])
+                record = records[path[1]] if isinstance(records, list) \
+                    and path[1] < len(records) else None
+                rec_id = record.get("id") if isinstance(record, dict) else None
+                if isinstance(rec_id, str) and rec_id:
+                    origin = self._origin_for(family, rec_id)
+            self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})",
+                     origin or where)
+
+    def _canonical_texts(self) -> list[tuple[Path, str]]:
+        """Every canonical Markdown/YAML file and its text, read once per run.
+
+        The ownership sweep, the material-integrity sweep and the link check
+        each used to walk and read these ~1,200 files on their own. Garden
+        and quarantine stay excluded exactly as each sweep excluded them.
+        """
+        if self._canonical_text_cache is None:
+            root = self.repo.root
+            rows: list[tuple[Path, str]] = []
+            for tree in CANONICAL_TREES:
+                base = root / tree
+                if not base.is_dir():
+                    continue
+                for path in sorted(base.rglob("*")):
+                    if path.suffix.lower() not in (".md", ".yaml", ".yml") \
+                            or not path.is_file():
+                        continue
+                    if _in_garden(root, path) or _in_quarantine(root, path):
+                        continue
+                    rows.append((path, path.read_text(encoding="utf-8", errors="replace")))
+            self._canonical_text_cache = rows
+        return self._canonical_text_cache
+
+    def _rel(self, p: Path) -> str:
+        try:
+            return str(p.relative_to(self.repo.root))
+        except ValueError:
+            return str(p)
+
+    def _origin_for(self, family: str, rec_id: str) -> str:
+        """Best-known originating file for a record.
+
+        Registries may be partitioned (knowledge/concepts/*.yaml,
+        sources/registry/*.yaml); the loader remembers which file each record
+        came from. Diagnostics use this so they name the actual partition file
+        instead of the consolidated default — otherwise an error about a concept
+        defined in knowledge/concepts/ml.yaml would misleadingly point at
+        knowledge/concepts.yaml.
+        """
+        r = self.repo
+        if family == "concept":
+            o = r.concept_origins.get(rec_id)
+            return self._rel(o) if o else "knowledge/concepts.yaml"
+        if family == "ability":
+            o = r.ability_origins.get(rec_id)
+            return self._rel(o) if o else "knowledge/abilities.yaml"
+        if family == "source":
+            o = r.source_origins.get(rec_id)
+            return self._rel(o) if o else "sources/sources.yaml"
+        if family == "module":
+            o = r.module_origins.get(rec_id)
+            return self._rel(o) if o else "records/modules.yaml"
+        if family == "program":
+            p = r.programs.get(rec_id)
+            return self._rel(p.path) if p else ""
+        if family == "project":
+            project = r.projects.get(rec_id)
+            return self._rel(project.path) if project else ""
+        if family == "unit":
+            u = r.units.get(rec_id)
+            return self._rel(u.path) if u else ""
+        if family == "study-map":
+            sm = r.study_maps.get(rec_id)
+            return self._rel(sm.path) if sm else ""
+        if family == "note":
+            n = r.notes.get(rec_id)
+            return self._rel(n.path) if n else ""
+        if family == "workspace":
+            w = r.workspaces.get(rec_id)
+            return self._rel(w.path) if w else ""
+        return ""
+
+    # ------------------------------------------------------------------ run
+    def run(self) -> list[Issue]:
+        self.check_parse_failures()
+        self.check_data_contract()
+        self.check_manifest_contract()
+        self.check_normative_corpus()
+        self.check_perimeter()
+        self.check_tree_contract()
+        self.check_local_attachments()
+        self.check_contract_documentation()
+        self.check_doc_blocks()
+        self.check_schemas()
+        invalid = sorted({i.path for i in self.issues
+                          if i.severity == "E" and i.code == "SCHEMA" and i.path})
+        checks = [
+            self.check_identity,
+            self.check_references,
+            self.check_registries,
+            self.check_collections,
+            self.check_ownership,
+            self.check_modules,
+            self.check_curriculum,
+            self.check_learning_runtime,
+            self.check_lifecycle_coherence,
+            self.check_projects,
+            self.check_transaction_receipts,
+            self.check_ai_action_requests,
+            self.check_files,
+            self.check_workspaces,
+            self.check_learning_paths,
+            self.check_plan_rigor,
+            self.check_study_maps,
+            self.check_links,
+            self.check_generated,
+            self.check_materials,
+            self.check_hygiene,
+        ]
+        if self.online:
+            checks.append(self.check_external_urls)
+        for check in checks:
+            # Every pass below reads records in their schema shape. A record
+            # that failed its schema is already reported above, with its file,
+            # but a pass that reads it anyway can crash on it (a mapping used as
+            # a key: synthetic authoring campaign D2), which took the whole run
+            # down as a traceback naming no file. Only then is the crash
+            # contained, as one error naming those files; the rest of that pass
+            # is skipped. On schema-valid input a crash is a defect: it stays loud.
+            try:
+                check()
+            except (AttributeError, IndexError, KeyError, TypeError, ValueError) as exc:
+                if not invalid:
+                    raise
+                self.err(
+                    "SCHEMA-DEPENDENT",
+                    f"{check.__name__} stopped on schema-invalid input "
+                    f"({type(exc).__name__}: {exc}); fix the SCHEMA errors in "
+                    f"{', '.join(invalid)} and validate again")
+        return self.issues
+
+    def check_learning_runtime(self) -> None:
+        for sidecar in sorted(self.repo.root.glob("curriculum/modules/*/units/*/stages/*/requirements.yaml")):
+            self.err("LEARNING-RUNTIME", f"{sidecar}: independently authored requirement sidecars are retired; author runtime_target on the owning stage")
+        try:
+            read_observations(self.repo, collect_requirements(self.repo))
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
+        try:
+            read_stage_results(self.repo)
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
+        from learning_os.derive.abilities import (
+            read_ability_candidates,
+            read_ability_observations,
+            validate_ability_registry,
+        )
+        for issue in validate_ability_registry(self.repo):
+            self.err("ABILITY-REFERENCE", issue, "knowledge/abilities.yaml")
+        try:
+            read_ability_observations(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-EVIDENCE", str(exc))
+        try:
+            read_ability_candidates(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-CANDIDATE", str(exc))
+        self.check_runtime_review()
+
+    def check_runtime_review(self) -> None:
+        """Review accountability for runtime annotations (§19.6, first slice).
+
+        Warnings only: a stage with runtime semantics but no ``runtime_review``
+        attestation, or one whose payload changed since review, is reported but
+        never blocks a write. This proves attestation plus an unchanged
+        payload — never pedagogical correctness.
+        """
+        for map_id in sorted(self.repo.study_maps):
+            study_map = self.repo.study_maps[map_id]
+            data = study_map.data or {}
+            stages = data.get("stages") or []
+            for stage in stages:
+                if not isinstance(stage, dict):
+                    continue
+                resources = stage.get("resources") or []
+                has_semantics = "runtime_target" in stage or any(
+                    isinstance(resource, dict) and "affordance" in resource
+                    for resource in resources
+                )
+                if not has_semantics:
+                    continue
+                where = self._rel(study_map.path)
+                review = stage.get("runtime_review")
+                if not isinstance(review, dict):
+                    self.warn(
+                        "RUNTIME-REVIEW-MISSING",
+                        f"stage {stage.get('id', '?')} carries runtime semantics "
+                        "but no runtime_review attestation",
+                        where,
+                    )
+                elif review.get("fingerprint") != runtime_review_fingerprint(stage):
+                    self.warn(
+                        "RUNTIME-REVIEW-STALE",
+                        f"stage {stage.get('id', '?')} runtime semantics changed "
+                        "since runtime_review; re-review and refresh the fingerprint",
+                        where,
+                    )
+
+def validate(repo: Repo, online: bool = False) -> list[Issue]:
+    return Validator(repo, online=online).run()
+
+
+def render_report(issues: list[Issue], generated_at: str) -> str:
+    errors = [i for i in issues if i.severity == "E"]
+    warnings = [i for i in issues if i.severity == "W"]
+    lines = [
+        "# Validation report",
+        "",
+        "> ⚠️ GENERATED file — do not edit. Rebuilt by `python tools/validate.py` "
+        "from canonical inputs (knowledge/, sources/, records/, work/).",
+        f"> Generated: {generated_at}",
+        "",
+        f"**Errors: {len(errors)} · Warnings: {len(warnings)}**",
+        "",
+    ]
+    if errors:
+        lines.append("## Errors")
+        lines.append("")
+        lines.extend(f"- {i}" for i in errors)
+        lines.append("")
+    if warnings:
+        lines.append("## Warnings")
+        lines.append("")
+        lines.extend(f"- {i}" for i in warnings)
+        lines.append("")
+    if not issues:
+        lines.append("No issues found.")
+        lines.append("")
+    return "\n".join(lines)

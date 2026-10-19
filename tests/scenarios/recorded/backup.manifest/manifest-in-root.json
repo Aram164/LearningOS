@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: refusing to write the manifest inside the backed-up core root: <ROOT>/manifest.json\n",
+  "stdout": "",
+  "stdout_json": null
+}

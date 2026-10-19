@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/unit.material-synthesis.publish.schema.json",
+  "title": "payload for capability unit.material-synthesis.publish",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit_id"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "validate the dossier and show its basis without writing"
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed unit material synthesis as a YAML file"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "unit_id": {},
+        "status": {},
+        "basis": {},
+        "route_assessments": {},
+        "comparisons": {},
+        "concept_groups": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "comparisons",
+        "concept_groups",
+        "id",
+        "route_assessments",
+        "schema_version",
+        "status",
+        "type",
+        "unit_id"
+      ],
+      "description": "The accepted fields are the full dossier record governed by system/schema/unit-material-synthesis.schema.json."
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit the published dossier belongs to"
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

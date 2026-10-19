@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s2d-md-20260903",
+  "idempotency_key": "polars-sheet-s2d-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:e2ffd2e997133e6f4882cd0d266e000ffd94e0994606bcf947b9f512f37343fb",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 7,
+    "study-map-job-polars-expressions": 6
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-expr-assignmap-lowering",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s2d-exercises.md",
+    "label": "Exercise sheet - twelve-case assign lowering matrix",
+    "file_sha256": "sha256:971ddd27ae75344adbe973fee92690bb5c77ecd747a6445cefae67c7184ebd72"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:b9e4169b9ef2898da45bdd95adb93a8c08d59e4ee653c283eff228db60d709ca"
+  }
+}

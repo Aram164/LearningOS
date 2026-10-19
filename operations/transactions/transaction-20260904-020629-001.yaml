@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-020629-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T02:06:29+02:00'
+snapshot_before: sha256:c650b400c2e0ab462ff86e1f98d38129d55e61884a0fc8234ef3bfc9449d9b4c
+snapshot_after: sha256:3d4a674ad47dc45ca2b70730b10957a6942ac40b083d57488c4e46b9fbbc0230
+expected_revisions:
+  unit-job-polars-schema-missing-types: 6
+  study-map-job-polars-schema-missing-types: 5
+artifact_revisions:
+  study-map-job-polars-schema-missing-types:
+    before: 5
+    after: 6
+  unit-job-polars-schema-missing-types:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-check.py
+  sha256_before: null
+  sha256_after: d4d7544f805ed3ec3623ae7258d50df0c3e015994e78fec28213e01c7ee8ff79
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
+  sha256_before: 6c33391dabea16b8ca1472026ea71932405ec1ebf99daf4f39d00fd9c0ddc6bb
+  sha256_after: 8b24375c39851e698120c90111405ee7932291690f0f99e65cc8da4aef0d555e
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s4c-ck-20260904
+  idempotency_key: pl-s4c-ck-20260904
+  intent_sha256: sha256:4e4150d75b52d1ffd1b9252918414404f11087675df7b1a3d8b12694f7c993f3
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:4e4150d75b52d1ffd1b9252918414404f11087675df7b1a3d8b12694f7c993f3

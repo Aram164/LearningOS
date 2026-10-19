@@ -1,0 +1,79 @@
+operation: review.prepare
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: prepare-draft
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: prepare-proposal
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:f3cd4927fa60ad66c05875641b68484bfcc0e3ac1691d59e8b3d01d2bff64ccd"}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope}
+    artifact_ids: []
+    expect: {site: review.prepare.unknown-unit}
+  - id: unit-without-map
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02}
+    artifact_ids: []
+    expect: {site: review.prepare.no-study-map}
+  - id: bad-items-file
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, items_file: "work/inbox/nope.json", items_file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: review.prepare.bad-items-file}
+  - id: malformed-items
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:fa6414c5a47b5b431d8db87bebe64702849512a0362d03488f3f15409903ab88"}
+    artifact_ids: []
+    expect: {site: review.prepare.bad-items-file}
+  - id: items-not-list
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, items_file: "<CASEDATA>/items.json", items_file_sha256: "sha256:15efe024033a9f8bcca390b59b7024a5555d769cedd162c4e87558c2457738b0"}
+    artifact_ids: []
+    expect: {site: review.prepare.items-not-list}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [shelving-prepare, unit-demo-l01]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01}
+        artifact_ids: [unit-demo-l01, study-map-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l01}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - shelving-prepare
+    - unit-demo-l01
+    - --expected-revision
+    - bogus
+    expect:
+      site: review.prepare.bad-expected-revision
+untriggered: []

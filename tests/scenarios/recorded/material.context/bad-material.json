@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: --material must be a materials-tree-relative path: '/abs/path.pdf'\n",
+  "stdout": "",
+  "stdout_json": null
+}

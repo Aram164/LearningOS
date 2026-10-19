@@ -1,0 +1,66 @@
+schema_version: 1
+id: legacy-archive-lock
+type: legacy-archive-lock
+created_at: '2026-09-30T01:49:36+00:00'
+entries:
+- relative_path: CHAT-DIVISION.md
+  size: 11958
+  sha256: sha256:fb77c2eaac755a885a112614cdeeeba318db972d4e696796950438f0e1a986b1
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: HANDOFF.md
+  size: 17208
+  sha256: sha256:b02ec5d64f76cdf8d7a363d74c65a6d89a31f21936fb5cff1ffed5bb9c69d7c0
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: LEARNING-RESOURCES.md
+  size: 82295
+  sha256: sha256:e4c16dd08db7227c32baba46e5b0248b0fee8a61734779d44d01481f0f0c0f14
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: MASTERS-PROJECT-KICKOFF-PROMPT.md
+  size: 6043
+  sha256: sha256:07800492757cdbabb8e2773ba214c86bd8e21b53907ea5442f7ae471165d6c02
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: MD-FILE-INDEX.md
+  size: 11284
+  sha256: sha256:74e77872ad1997d1d1c963aa4b58b592297609b6e987b25281dd4a418112a3c9
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: SEMESTER-STATUS.md
+  size: 42077
+  sha256: sha256:fcbb4d539f96a1a3911d29cff79a7878beda498b700e097c361f7f5c9011c78d
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: SESSION-LOG.md
+  size: 52527
+  sha256: sha256:e1f178f713fd4933b85670de1404d0d1a9cb3e52628b0ce0f0e36e7e0303e507
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: SYSTEM-ARCHITECTURE-REVIEW.md
+  size: 9408
+  sha256: sha256:c59e30e049bfb08f463498d540bd09bb2adc5d5bd2dfc29ec44853f051f8ed3c
+  category: retired-system-record
+  disposition: historical-only
+  canonical_targets: []
+- relative_path: lychee.toml
+  size: 2201
+  sha256: sha256:cba53c9a52b00b4f222781f0f55518f968783a71e76de54377510478ea0725b0
+  category: retired-tool-config
+  disposition: historical-only
+  canonical_targets: []
+excluded:
+  count: 261
+  status: sealed-not-inspected
+verification:
+  verified_at: '2026-09-30T01:49:36+00:00'
+  status: verified
+  issues: []

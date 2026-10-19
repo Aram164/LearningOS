@@ -1,0 +1,27 @@
+id: study-map-demo-l01
+type: study-map
+unit_id: unit-demo-l01
+status: active
+current_stage: stage-demo
+source_plan:
+  path: work/active/workspace-demo/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-demo
+  title: Derive expected value
+  status: active
+  objective: Derive and explain expected value.
+  done_when:
+  - Explain the derivation.
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Demo Book §1
+    source_id: source-demo-book
+    locator: §1
+  working_note: curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md
+  attachments: []
+  source_feedback: []

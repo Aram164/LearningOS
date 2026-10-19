@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Copy repo tools byte-identical into a disposable anchored pair.
+
+Usage: los-anchored-copy materials_manifest|plan_write_audit DEST_REPO_DIR
+
+The inventory and plan-write-audit entrypoints anchor to their own file
+location (ROOT/REPO), so an unchanged copy binds to wherever it is
+placed. This helper stages exactly that: it copies only the allowlisted
+repo files for one bundle into DEST_REPO_DIR (which the caller creates
+under the transcript TMPDIR), verifies every copy byte-for-byte, and
+prints ``sha256:<hex> <relpath>`` per file, sorted by path.
+
+Safety: the destination must resolve under TMPDIR and outside LOS_REPO;
+symlink sources and destinations are refused; unknown bundles are
+refused. Silent except for the hash lines and diagnostics.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import os
+import sys
+from pathlib import Path
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+#: Bundle stem to the repo-relative files it needs, nothing more. The
+#: inventory bundle is the entrypoint, the one leaf module it imports,
+#: and the two repo files that entrypoint and leaf read (the Makefile
+#: for the documented `make inventory` / `make verify-materials` targets,
+#: pyproject.toml for the package version probe).
+BUNDLES = {
+    "materials_manifest": (
+        "Makefile",
+        "pyproject.toml",
+        "tools/learning_os/__init__.py",
+        "tools/learning_os/domain/material_inventory.py",
+        "tools/materials_manifest.py",
+    ),
+    "plan_write_audit": (
+        "tools/plan_write_audit.py",
+    ),
+}
+
+
+def _fail(message: str) -> int:
+    print(f"los-anchored-copy: {message}", file=sys.stderr)
+    return 2
+
+
+def _under(path: str, root: str) -> bool:
+    return path == root or path.startswith(root + os.sep)
+
+
+def _has_symlink_component(path: Path, root: Path) -> bool:
+    current = root
+    for part in path.relative_to(root).parts:
+        current = current / part
+        if current.is_symlink():
+            return True
+    return False
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="los-anchored-copy")
+    parser.add_argument("stem")
+    parser.add_argument("dest")
+    args = parser.parse_args(argv)
+
+    if args.stem not in BUNDLES:
+        return _fail(f"unknown bundle {args.stem!r}: "
+                      f"want one of {', '.join(sorted(BUNDLES))}")
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return _fail("LOS_REPO is not set")
+    tmpdir = os.environ.get("TMPDIR")
+    if not tmpdir:
+        return _fail("TMPDIR is not set")
+    dest = Path(args.dest)
+    # Location first: refuse an outside path before touching anything,
+    # so a missing path can never be created in the wrong place.
+    dest_real = os.path.realpath(dest)
+    if not _under(dest_real, os.path.realpath(tmpdir)):
+        return _fail(f"refuses: destination outside TMPDIR: {args.dest}")
+    if _under(dest_real, os.path.realpath(repo)):
+        return _fail(f"refuses: destination inside LOS_REPO: {args.dest}")
+    if dest.is_symlink():
+        return _fail(f"destination is a symlink: {args.dest}")
+    if not dest.is_dir():
+        return _fail(f"destination is not a directory: {args.dest}")
+
+    repo_path = Path(repo).resolve()
+    dest_path = Path(dest_real)
+    copied: list[tuple[str, str]] = []
+    for rel in BUNDLES[args.stem]:
+        src = repo_path / rel
+        if _has_symlink_component(src, repo_path) or not src.is_file():
+            print(f"los-anchored-copy: source is not a regular file: "
+                  f"{src}", file=sys.stderr)
+            return 1
+        dst = dest_path / rel
+        if _has_symlink_component(dst, dest_path) \
+                or not _under(os.path.realpath(dst), dest_real):
+            print(f"los-anchored-copy: refuses symlink destination: "
+                  f"{dst}", file=sys.stderr)
+            return 1
+        want = src.read_bytes()
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes(want)
+        if dst.read_bytes() != want:
+            print(f"los-anchored-copy: copy differs after write: "
+                  f"{dst}", file=sys.stderr)
+            return 1
+        copied.append((rel, hashlib.sha256(want).hexdigest()))
+    for rel, digest in sorted(copied):
+        print(f"sha256:{digest} {rel}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

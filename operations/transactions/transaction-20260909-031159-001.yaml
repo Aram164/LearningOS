@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260909-031159-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T03:11:59+02:00'
+snapshot_before: sha256:98d7c5308838a60b133fae8945321be0dd277c70afda51fc495402f00c45fd23
+snapshot_after: sha256:520b8ecebbbe234976e25ae3769704e8e300a056a1481fd7b708252b7f1e6bbf
+expected_revisions:
+  module-hu-m2-statistik-analysis: 26
+  study-map-m2-sad-l06: 5
+  unit-m2-sad-l06: 17
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 26
+    after: 27
+  study-map-m2-sad-l06:
+    before: 5
+    after: 6
+  unit-m2-sad-l06:
+    before: 17
+    after: 18
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 17efff9baf12aea1bf50f2e1df378b9456d91b01af97e8372833b92d1b3225f4
+  sha256_after: 4c3c2c2c46a4ffb5e511e9af041a8a2bcea0db708a3a4e04aa6ab67a063a0c5e
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260909-leuphana-l06-001
+  idempotency_key: op-20260909-leuphana-l06-001
+  intent_sha256: sha256:e480339f7c3f4245a18d8c47aa6550c934227109d204394aa691aa79431ecfee
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:e480339f7c3f4245a18d8c47aa6550c934227109d204394aa691aa79431ecfee

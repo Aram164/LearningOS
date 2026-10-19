@@ -1,0 +1,200 @@
+{
+  "branch": "review/architecture-hardening-2026-10-18",
+  "full_local_evidence": [
+    {
+      "bytes": 1179515,
+      "local_path": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/receipts/C1-full-recording-review.json",
+      "sha256": "9f5ebdd09ca2b8becb792188c752421781670f04501f25e0833b9c08a00c6a37"
+    },
+    {
+      "bytes": 534153,
+      "local_path": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/receipts/C1-full-recording-delta-classification.json",
+      "sha256": "0f8e1365e874cc94d28b8d24c40fe27b59d713e1bb3c05af472485966905ac04"
+    },
+    {
+      "bytes": 342186,
+      "local_path": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/receipts/C1-engine-neutrality-before.json",
+      "sha256": "231a12c429f0c1e50eb75f2ca504495630fdfb1d34997b4d35439ec126baa286"
+    }
+  ],
+  "gate_status": {
+    "C1": "pending full comparison and paired gate",
+    "C2": "red production witness only; defect unfixed",
+    "C3": "pending",
+    "S0": "not recorded"
+  },
+  "live_install_or_content_changes": false,
+  "parent": "d4ac02e6924ec0dac075e13e48d704f8656023fd",
+  "recorded_at_utc": "2026-10-18T19:16:31.356773+00:00",
+  "runs": {
+    "C1-final-read-performance": {
+      "command": [
+        ".venv/bin/python",
+        "../../measure_claim_reads.py",
+        "performance/c1-final-reads",
+        "../../performance/claim-reads/baseline/repository"
+      ],
+      "elapsed_seconds": 163.67896708400804,
+      "exit": 0,
+      "source_digests": {
+        "after": {
+          "core": "19f940ed5fbe530da50c67abeb489ad56f8300e3d4add501e906ddd81a95ae94",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "19f940ed5fbe530da50c67abeb489ad56f8300e3d4add501e906ddd81a95ae94",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    },
+    "C1-frozen-engine-fixture-recheck": {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_arch_engine_neutrality.py",
+        "tests/test_arch_json_everywhere.py",
+        "tests/test_arch_ratchets.py",
+        "tests/test_arch_surface.py",
+        "--tb=short"
+      ],
+      "elapsed_seconds": 7.204595082992455,
+      "exit": 0,
+      "source_digests": {
+        "after": {
+          "core": "d037bcc6e0743deb3ddab499fe2b64e46fc356016c6d8ddff5fd8d5f20f864e0",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "d037bcc6e0743deb3ddab499fe2b64e46fc356016c6d8ddff5fd8d5f20f864e0",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    },
+    "C1-full-scenario-recording": {
+      "command": [
+        "env",
+        "LOS_RECORD_SCENARIOS=1",
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_scenarios_effects.py",
+        "--tb=short"
+      ],
+      "elapsed_seconds": 699.7971678329923,
+      "exit": 0,
+      "source_digests": {
+        "after": {
+          "core": "19f940ed5fbe530da50c67abeb489ad56f8300e3d4add501e906ddd81a95ae94",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "641ee860ca1514731468bd40dc2d04401406b6ad2a19914387c7ac63ee9d2cea",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": false
+    },
+    "C1-observation-integrated": {
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_claim_status_audits.py",
+        "tests/test_intelligence_scan.py",
+        "tests/test_goal_select.py",
+        "tests/test_goal_proposals.py",
+        "tests/test_lineage_writer_interpositions.py",
+        "tests/test_phaseB_prospective_lineage.py",
+        "tests/test_verbatim_anchor_admission.py",
+        "tests/test_unit_plan_revision.py",
+        "tests/test_source_record_revise.py",
+        "tests/test_lineage_restamp.py"
+      ],
+      "elapsed_seconds": 97.50412729200616,
+      "exit": 0,
+      "source_digests": {
+        "after": {
+          "core": "7596671c5ef77b3b2f7a4451f624ca3b83faf0b25c787e5ff6e331642f2e26dc",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "7596671c5ef77b3b2f7a4451f624ca3b83faf0b25c787e5ff6e331642f2e26dc",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    },
+    "C1-paired-final": {
+      "command": [
+        "env",
+        "PYTEST_ADDOPTS=-m \"not live_install\"",
+        "make",
+        "system-check"
+      ],
+      "elapsed_seconds": 102.88015974999871,
+      "exit": 2,
+      "source_digests": {
+        "after": {
+          "core": "091cedf7ab561f947152a465208eeb00dd0c7f639eb7005de3651d0fe8a8688b",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "091cedf7ab561f947152a465208eeb00dd0c7f639eb7005de3651d0fe8a8688b",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    },
+    "C1-paired-frozen-inputs": {
+      "command": [
+        "env",
+        "PYTEST_ADDOPTS=-m \"not live_install\" --maxfail=1 --tb=short",
+        "make",
+        "system-check"
+      ],
+      "elapsed_seconds": 498.6158387910109,
+      "exit": 2,
+      "source_digests": {
+        "after": {
+          "core": "a9ec8942d0905b6e4a1cf2a99e2f8417aadd9d95165ce16b9241fabbaafeaf32",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "a9ec8942d0905b6e4a1cf2a99e2f8417aadd9d95165ce16b9241fabbaafeaf32",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    },
+    "C1-paired-recheck": {
+      "command": [
+        "env",
+        "PYTEST_ADDOPTS=-m \"not live_install\" --maxfail=1 --tb=short",
+        "make",
+        "system-check"
+      ],
+      "elapsed_seconds": 285.1332052910002,
+      "exit": 2,
+      "source_digests": {
+        "after": {
+          "core": "4e4ada687bdfdc319c3a88cf50f565eca8ec774c810fd3a375f45ab489926476",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        },
+        "before": {
+          "core": "4e4ada687bdfdc319c3a88cf50f565eca8ec774c810fd3a375f45ab489926476",
+          "ui": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+        }
+      },
+      "source_unchanged": true
+    }
+  },
+  "source_publication_authorized_by": "Aram: publish current state into github document the continuation steps now than stop working",
+  "status": "user-requested published WIP stop; no acceptance",
+  "ui": "a88b1188ad54439b4df32813904de182c06a105c"
+}

@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-020552-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T02:05:52+02:00'
+snapshot_before: sha256:6110bb7fbead07585832983eb9e40214fee22aa05ecfcb12e489b0f9ba4e811d
+snapshot_after: sha256:79ae2c57530b5cf4d3c0cbae4efaaf99cc1203020cf48c6a96379acb548d896f
+expected_revisions:
+  unit-job-polars-schema-missing-types: 3
+  study-map-job-polars-schema-missing-types: 2
+artifact_revisions:
+  study-map-job-polars-schema-missing-types:
+    before: 2
+    after: 3
+  unit-job-polars-schema-missing-types:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-exercises.md
+  sha256_before: null
+  sha256_after: df1b463a41eab6ddc7bde3b21136bf8afaec5c4e5ec13246d4d4be15e562526f
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
+  sha256_before: 92f7208a34831d14ac18b95a33e165d6f823b81bcfddfbf9f9cd95df6d4eb8e6
+  sha256_after: 5bc73b89aa2cb8ed83cc5c8ff6001c64cd99d3c4069a3dd87049d20e83581a35
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s4b-md-20260904
+  idempotency_key: pl-s4b-md-20260904
+  intent_sha256: sha256:bcb7ddea90f9b8a9a00d336508f74d819c801d57938caf4429849d5c8c23bdca
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:bcb7ddea90f9b8a9a00d336508f74d819c801d57938caf4429849d5c8c23bdca

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/lineage.restamp.schema.json",
+  "title": "payload for capability lineage.restamp",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "recompute eligibility (all claims), or verify the plan for --claim-ids; write nothing"
+    },
+    "claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "exact reviewed claim ids to stamp (1 or more)"
+    },
+    "claims_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 binding the exact reviewed claim list (sorted ids, one per line)"
+    }
+  }
+}

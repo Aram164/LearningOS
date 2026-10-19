@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/module-source-map.schema.json",
+  "title": "Module-specific source map",
+  "x-governs": "record",
+  "type": "object",
+  "required": ["type", "module_id", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "module-source-map" },
+    "module_id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "role", "why", "priority"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "role": { "enum": ["course-material", "spine", "first-exposure", "intuition", "derivation", "implementation", "practice", "exam-preparation", "optional-depth", "reference", "candidate"] },
+          "why": { "type": "string", "minLength": 1 },
+          "when": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 0 },
+          "unit_routes": {
+            "type": "array",
+            "description": "A string is the legacy routing edge. A rich route is a learner-facing material option for one unit: it explains the lecture-specific angle and coverage but does not impose an order.",
+            "items": {
+              "oneOf": [
+                { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                {
+                  "type": "object",
+                  "required": ["unit_id", "title", "format", "angle", "covers", "depth", "scope"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Stable route identity. Required on every route written in data-contract v13; absent only on readable pre-v13 evidence until the recorded migration persists it.",
+                      "type": "string",
+                      "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                    },
+                    "unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                    "title": { "type": "string", "minLength": 1 },
+                    "format": {
+                      "description": "What kind of artifact this is, which governs how it is used. 'exam' (past papers) and 'solutions' (worked model answers) are deliberately separate from 'exercise': a past paper is spent once under timed conditions, and model solutions are read as writing samples rather than solved.",
+                      "enum": ["course-material", "exercise", "exam", "solutions", "book", "video", "website", "course", "documentation", "code", "paper"]
+                    },
+                    "angle": {
+                      "description": "One line: what this material does for this lecture that the other options on it do not. Written for this lecture, never copied from the global source record.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "angle_detail": {
+                      "description": "The long form of the same judgment, shown on hover: what the reader gets, what it assumes, and where it departs from the taught deck. Optional only because the 2026-08 backfill is incremental; a newly authored route writes it.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "covers": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                      "uniqueItems": true
+                    },
+                    "depth": {
+                      "description": "How deep this route goes. 'unassessed' means no contextual evaluation has been written yet, so the depth is genuinely unknown — it is not a judgment of shallowness and must never be inferred by an operator (CLAUDE.md §4).",
+                      "enum": ["orientation", "intuition", "course-aligned", "derivation", "implementation", "practice", "advanced-reference", "unassessed"]
+                    },
+                    "scope": {
+                      "description": "How this route relates to current exam scope. 'unevaluated' is distinct from 'optional': optional means assessed and judged skippable, unevaluated means the source is routed here but nobody has ever assessed it — visibility debt, made visible so it can be chosen or dismissed deliberately, and repaid on use rather than in bulk (WORKFLOWS §6a).",
+                      "enum": ["current", "prerequisite", "complementary", "optional", "prior-year", "out-of-scope", "unevaluated"]
+                    },
+                    "locator": { "type": "string", "minLength": 1 },
+                    "url": { "type": "string", "format": "uri" },
+                    "vault_path": { "type": "string", "minLength": 1 },
+                    "requires_assets": {
+                      "description": "Files the activity itself needs before it can be done — a dataset it analyses, a code template it fills in. Distinct from the material being reachable: `_resource_available` answers 'can he open the worksheet', and this answers 'can he do what the worksheet asks'. Blatt 4 Aufgabe 3(b) needs International_Education_Costs.csv and aufgabe3.py from Moodle, neither registered here, and the session still reported the route ready (audit workbench/audits/synthetic-learner-2026-09-12, F06). An entry with no `material_uri` is by definition unregistered; the session keeps the route and names the parts that cannot be attempted, rather than dropping the runnable work or inventing a substitute dataset.",
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["name"],
+                        "properties": {
+                          "name": { "type": "string", "minLength": 1 },
+                          "material_uri": { "type": "string", "pattern": "^material://" },
+                          "needed_for": { "description": "Which part of the activity, in the sheet's own numbering.", "type": "string", "minLength": 1 },
+                          "obtain_from": { "description": "Where the exact file comes from. Never a substitute.", "type": "string", "minLength": 1 }
+                        }
+                      }
+                    },
+                    "exposes_solutions_for": {
+                      "description": "Route ids whose activities this material answers — a verifiable claim about content, that opening this hands over the worked solutions to those tasks, never a judgment of quality. The session compiler refuses to put such a route in the same proposal as an evidence step it answers: explaining with the answer key and then asking for unaided transfer on that same task measures nothing (audit workbench/audits/synthetic-learner-2026-09-12, F03).",
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": { "type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$" }
+                    }
+                  }
+                }
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

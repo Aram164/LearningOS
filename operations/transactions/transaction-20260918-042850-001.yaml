@@ -1,0 +1,39 @@
+schema_version: 2
+id: transaction-20260918-042850-001
+type: transaction-receipt
+status: committed
+capability: unit.material-synthesis.publish
+committed_at: '2026-09-18T04:28:50+02:00'
+snapshot_before: sha256:8b3aa54ee4c6387a8baca6c0666cdef5ac6d1f08c1ba0d9697cc4f48fb88d964
+snapshot_after: sha256:fec4aaec94349d0e72ab93670736d7713b6a85227c3d9e29405bb40db5b44b55
+expected_revisions:
+  unit-m2-sad-l03: 20
+  material-synthesis-m2-sad-l03: 1
+artifact_revisions:
+  material-synthesis-m2-sad-l03:
+    before: 1
+    after: 2
+  unit-m2-sad-l03:
+    before: 20
+    after: 21
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/material-synthesis.yaml
+  sha256_before: 1f447df5fd325c2b2bdd1f194594bc973193eda27498dedcd706ce3b1a695ac7
+  sha256_after: 76ad7dc27705949bdb8c027aecc0a5b46cafcc04c0356dca0cc70b893ee336c7
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.material-synthesis.publish
+    declared_writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-synthesis-basis-rebase-l03
+  idempotency_key: synthesis-basis-rebase-l03-001
+  intent_sha256: sha256:1009380367176646225adb6231cba3268e3a7f56a087bc06df6e481f5d333595
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:1009380367176646225adb6231cba3268e3a7f56a087bc06df6e481f5d333595

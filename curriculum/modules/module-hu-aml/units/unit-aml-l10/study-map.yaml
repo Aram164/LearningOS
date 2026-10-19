@@ -1,0 +1,966 @@
+id: study-map-aml-l10
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l10
+status: not-started
+current_stage: stage-aml-l10-motivation
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l10-motivation
+  number: 1
+  title: Spatial structure and weight sharing
+  status: pending
+  objective: Why flattening images is inefficient and how locality, translation structure, and shared
+    filters address it.
+  done_when:
+  - 'Reproduce without notes: Why flattening images is inefficient and how locality, translation structure,
+    and shared filters address it.'
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-ff147162ccc891125fca6e2c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b41652c0f7a8186398699a0c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-05e06c3d31f148c803e866f5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a279edf1db6e1037b5fd6c16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-motivation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-convolution
+  number: 2
+  title: Convolution and cross-correlation
+  status: pending
+  objective: Sliding filters, elementwise multiply-and-sum, mathematical convolution versus the DL convention,
+    and feature maps.
+  done_when:
+  - 'Reproduce without notes: Sliding filters, elementwise multiply-and-sum, mathematical convolution
+    versus the DL convention, and feature maps.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  - concept-correlation
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-05e06c3d31f148c803e866f5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-shapes
+  number: 3
+  title: Padding, stride, channels, and shapes
+  status: pending
+  objective: Output-size formula, multi-channel filters, multiple feature maps, receptive fields, and
+    parameter counting.
+  done_when:
+  - 'Reproduce without notes: Output-size formula, multi-channel filters, multiple feature maps, receptive
+    fields, and parameter counting.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a279edf1db6e1037b5fd6c16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-pooling
+  number: 4
+  title: Pooling
+  status: pending
+  objective: Max/average pooling, spatial downsampling, invariance intuition, and shape changes.
+  done_when:
+  - 'Reproduce without notes: Max/average pooling, spatial downsampling, invariance intuition, and shape
+    changes.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-network
+  number: 5
+  title: Complete CNN architecture
+  status: pending
+  objective: Conv-activation-pool stacks, flattening/classifier heads, end-to-end shapes, and design tradeoffs.
+  done_when:
+  - 'Reproduce without notes: Conv-activation-pool stacks, flattening/classifier heads, end-to-end shapes,
+    and design tradeoffs.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-b41652c0f7a8186398699a0c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-network/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-architectures
+  number: 6
+  title: LeNet, AlexNet, GoogLeNet, and ResNet
+  status: pending
+  objective: The course-level contribution of each architecture, including depth, inception modules, and
+    residual connections.
+  done_when:
+  - 'Reproduce without notes: The course-level contribution of each architecture, including depth, inception
+    modules, and residual connections.'
+  - Work Übung 11 — CNN calculations and fourth sheet, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  - concept-residual-connection
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-ff147162ccc891125fca6e2c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md
+  attachments: []
+  source_feedback: []

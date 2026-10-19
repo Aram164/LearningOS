@@ -1,0 +1,158 @@
+operation: note.content
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: read-note
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  a5_base: true
+  expect:
+    site: null
+- id: read-garden-seed
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - garden-note-seed
+  expect:
+    site: null
+- id: read-windowed
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --offset
+  - 0
+  - --limit
+  - 10
+  expect:
+    site: null
+- id: unknown-note
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-nope
+  expect:
+    site: note.content.unknown-note
+- id: bad-window
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --offset
+  - -1
+  expect:
+    site: null
+- id: continuation-without-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --offset
+  - 5
+  expect:
+    site: null
+- id: stale-read
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: note.content.stale-snapshot
+- id: cli-read-note
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  expect:
+    site: null
+- id: cli-read-analysis
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - note-demo-analysis
+  expect:
+    site: null
+- id: cli-read-garden
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - garden-note-seed
+  expect:
+    site: null
+- id: cli-windowed
+  kind: success
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --offset
+  - 10
+  - --limit
+  - 20
+  - --expected-snapshot
+  - sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+  expect:
+    site: null
+- id: cli-unknown-note
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-nope
+  expect:
+    site: note.content.unknown-note
+- id: cli-bad-window
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --limit
+  - 0
+  expect:
+    site: null
+- id: cli-offset-needs-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --offset
+  - 5
+  expect:
+    site: null
+- id: cli-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - note-read
+  - note-demo
+  - --expected-snapshot
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: note.content.stale-snapshot
+untriggered:
+- site: note.content.read-failed
+  reason: os-error-only
+- site: note.content.bad-encoding
+  reason: fixture-inexpressible

@@ -1,0 +1,70 @@
+operation: ai-action.delivery.apply
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: apply-garden-shelve
+    kind: sequence
+    a5_base: true
+    a5_step: 2
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-scenario-shelve]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+      - transport: gateway
+        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
+        artifact_ids: [garden-note-seed, transcription-garden-note-seed, relationship-garden-module-demo]
+        approval_kind: approved-delivery
+  - id: sha-mismatch
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-scenario-shelve]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+      - transport: gateway
+        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
+        artifact_ids: []
+        approval_kind: approved-delivery
+  - id: unknown-delivery
+    kind: refusal
+    transport: gateway
+    request: {delivery_id: ai-delivery-nope, delivery_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_sha256: {}}
+    artifact_ids: []
+    approval_kind: approved-delivery
+    expect: {site: ai-action.delivery.apply.binding}
+  - id: wrong-approval
+    kind: refusal
+    transport: gateway
+    request: {delivery_id: ai-delivery-nope, delivery_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_sha256: {}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [ai-action-apply-delivery, ai-delivery-nope, --delivery-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000", --artifact-sha256, "{}"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-scenario-shelve]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+      - transport: gateway
+        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
+        artifact_ids: [garden-note-seed, transcription-garden-note-seed, relationship-garden-module-demo]
+        approval_kind: approved-delivery
+      - transport: gateway
+        same_envelope_as: 2
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {delivery_id: ai-delivery-nope, delivery_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_sha256: {}}
+    artifact_ids: []
+    approval_kind: approved-delivery
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/app/handlers/ai.py:69", reason: "revision-conflict record: needs a revision change between seal and commit; the harness seals live guards under one lock"}
+  - {where: "tools/learning_os/app/handlers/ai.py:69", reason: "stale-snapshot record: same seal/commit interleave, unexpressible in a step"}

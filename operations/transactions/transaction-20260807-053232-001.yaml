@@ -1,0 +1,19 @@
+schema_version: 1
+id: transaction-20260807-053232-001
+type: transaction-receipt
+status: committed
+capability: capture.create
+committed_at: '2026-08-07T05:32:32+02:00'
+snapshot_before: sha256:541b269d1ae1bb3a69e45443790074eb56cecadb236f30b37d1f7fa0948e3227
+snapshot_after: sha256:85f237b32f6759585dda18ffce7e92067865de53df7c0a60f6466adca53a9eb3
+expected_revisions: {}
+artifact_revisions:
+  capture:work/inbox/20260807-053214-stage-3-smoke.md:
+    before: 0
+    after: 1
+writes:
+- path: work/inbox/20260807-053214-stage-3-smoke.md
+  sha256_before: null
+  sha256_after: bcfd503b70cc4d081b5ef7e961e498afdc8c689cd352775a0bc9caf947af858e
+  created: true
+metadata: {}

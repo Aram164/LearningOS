@@ -1,0 +1,25 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"note-content\",\"note_id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"content_sha256\":\"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276\",\"offset\":10,\"offset_unit\":\"unicode_characters\",\"total_characters\":162,\"start_line\":2,\"content\":\"te-demo\\ntype: note\\nt\",\"next_offset\":30}\n",
+  "stdout_json": {
+    "content": "te-demo\ntype: note\nt",
+    "content_sha256": "sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276",
+    "contract": "note-content",
+    "next_offset": 30,
+    "note_id": "note-demo",
+    "offset": 10,
+    "offset_unit": "unicode_characters",
+    "path": "knowledge/notes/mathematics/note-demo.md",
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "start_line": 2,
+    "total_characters": 162
+  }
+}

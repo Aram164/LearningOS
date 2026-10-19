@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/concept.relations.change.schema.json",
+  "title": "payload for capability concept.relations.change",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "change"
+  ],
+  "properties": {
+    "change": {
+      "type": "object",
+      "properties": {
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "old": {},
+              "new": {}
+            },
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operations"
+      ],
+      "description": "Exactly one operations list of 1 to 50 explicit operations; each names its action and carries the exact old/new rows that action needs (add: new; replace: old and new; remove: old)."
+    }
+  }
+}

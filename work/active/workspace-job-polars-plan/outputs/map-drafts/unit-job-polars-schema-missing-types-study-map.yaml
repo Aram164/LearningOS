@@ -1,0 +1,450 @@
+id: study-map-job-polars-schema-missing-types
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-schema-missing-types
+status: ready
+current_stage: stage-polars-03-construction-i-o-schema-and-chunks
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-03-construction-i-o-schema-and-chunks
+  number: 1
+  title: Construction, I/O, schema, and chunks
+  status: pending
+  objective: 'Decide where a schema comes from instead of inheriting one from an inference heuristic: declare, adjust
+    or infer it deliberately, read a lazy scan''s schema before touching data, and establish what each library''s
+    CSV reader does with dates, mixed columns and the string ''NA''.'
+  done_when:
+  - Six constructions run and the three ways a schema is decided named - declared, adjusted per column, inferred
+    - plus the one input where Polars refuses to guess.
+  - 'The trap confirmed: declaring a schema on convertible data casts rather than rejects, so a declaration is also
+    a cast instruction.'
+  - '`scan_csv(...).collect_schema()` used to get a schema without reading, and the plan line showing the scan narrowed
+    by a later select identified.'
+  - 'Chunk behaviour measured, not asserted: n_chunks after concat, after rechunk, and a timed comparison on a 100-append
+    frame, with a statement of when rechunk pays for itself.'
+  - The CSV inference table completed for dates, a mixed column and 'NA', with pandas' default missing-string list
+    identified as inventing missingness and promoting the column to float.
+  - 'The late-type-change file run with defaults on both sides, and the result recorded: pandas succeeds silently,
+    Polars raises ComputeError - plus a decision on infer_schema_length versus ignore_errors at the boundary.'
+  - A three-entry schema-contract decision record for the operation boundary.
+  - '`s4a-check.py` passes (26 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s4a-sheet
+    kind: practise
+    label: Stage exercise sheet - declare vs infer, CSV inference, chunks
+    locator: attachments/s4a-exercises.md - Part A, then Part B Task B2
+    angle: Lands on the case where the two readers disagree about whether text is missing, and the one where Polars
+      refuses rather than guesses.
+    angle_detail: 'Part B''s ''NA'' row is one file producing two dtypes and two value sets with no diagnostic from
+      either library. Task B2 is the surprise: with a column that turns from integers to text at row 201, pandas
+      reads the whole file and succeeds, while Polars raises ComputeError because its inference window is 100 rows.
+      That is the opposite of the usual direction, and the escape hatch most people reach for — `ignore_errors=True`
+      — silently converts the offending values to nulls.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-exercises.md
+  - id: resource-polars-s4a-check
+    kind: practise
+    label: Answer-key self-check - 26 assertions across construction and IO
+    locator: attachments/s4a-check.py
+    angle: Pins the reader defaults, which are the most likely thing in this stage to move between releases.
+    angle_detail: 'It asserts the ComputeError on the late-type-change file for both `read_csv` and `scan_csv`,
+      and that `ignore_errors=True` nulls the row instead. Keep it runnable: a change to `infer_schema_length`''s
+      default would otherwise show up as a mysterious failure much later in a pipeline.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-check.py
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-02-01-required-core-python-polars-the-defini
+    locator: Ch 4 §Data Types pp. 105-109 and §Data Type Conversion pp. 117-120; Ch 6 §Parsing Missing Values Correctly
+      pp. 149-151
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: 'The book''s own treatment of the two questions this stage asks: what types exist, and what the reader
+      does with text.'
+    angle_detail: 'pp. 149-151 is the section to read closely — it is the book''s account of exactly the ''NA''
+      divergence in Part B, from the Polars side, and it explains why the library declines to keep a default list
+      of missing strings. pp. 117-120 on conversion is the bridge into the next stage. Early-release edition: confirm
+      parameter names against 1.36.0.'
+  - kind: reference
+    label: Optional depth — docs.pola.rs — polars.read_csv.html
+    id: resource-polars-02-08-optional-depth-docs-pola-rs-polars-rea
+    locator: 'read_csv parameters: infer_schema_length, schema_overrides, null_values, ignore_errors, try_parse_dates'
+    url: https://docs.pola.rs/api/python/stable/reference/api/polars.read_csv.html
+    scope_triage: required-now
+    angle: Five parameters decide everything this stage measures; promoted from optional depth because Part B needs
+      them.
+    angle_detail: '`infer_schema_length` defaults to 100, which is why the late-type-change file fails. `ignore_errors`
+      makes it succeed by turning unparseable values into nulls — read that entry carefully, because it converts
+      a schema error into missing data and every null policy you set in Session 2 then applies to values that were
+      never missing.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — io
+    id: resource-polars-02-03-official-reference-docs-pola-rs-io
+    locator: §'Reading & writing' - CSV, and the scan_* versus read_* distinction
+    url: https://docs.pola.rs/user-guide/io/
+    scope_triage: reference-only
+    angle: Establishes that scan_ is the idiomatic entry point and read_ the exception, which is the reverse of
+      the pandas habit.
+    angle_detail: 'The practical consequence is Part A Task A2: a pipeline that begins with `read_csv` has materialised
+      the file before any pushdown can narrow it, so Session 3''s projection pushdown has nothing left to do. This
+      is the first stage where the lazy-by-default habit has a measurable payoff rather than a stylistic one.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — schemas
+    id: resource-polars-02-05-official-reference-docs-pola-rs-schema
+    locator: §'Schema' - collect_schema, schema resolution, and the cost of resolving early
+    url: https://docs.pola.rs/user-guide/lazy/schemas/
+    scope_triage: reference-only
+    angle: The API for asking what a query will produce before it produces anything.
+    angle_detail: '`collect_schema()` is the tool Part A Task A2 turns on and the one a lowering pass needs, since
+      it must know the output schema before any data exists. Note the page''s warning that resolving a schema is
+      not free on a wide lazy plan — it is cheap relative to executing, not free absolutely.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — io.html
+    id: resource-polars-02-06-official-reference-pandas-pydata-org-i
+    locator: §'CSV & text files' - specifically the na_values/keep_default_na parameters and the default NA list
+    url: https://pandas.pydata.org/docs/user_guide/io.html
+    scope_triage: reference-only
+    angle: Documents the default missing-string list that produces the Part B divergence.
+    angle_detail: Read the `keep_default_na` entry and the list it refers to. pandas treats roughly a dozen strings
+      — `NA`, `N/A`, `null`, `NaN`, `-nan`, and more — as missing unless told otherwise, which is why a file with
+      the literal text `NA` produces a float column on one side and a text column on the other. This is documented
+      behaviour, not a quirk, which means a translation may rely on it — and must reproduce it deliberately.
+  - kind: reference
+    label: Official reference — docs.pola.rs — using
+    id: resource-polars-02-04-official-reference-docs-pola-rs-using
+    locator: §'Multiple files' and the scan-with-glob pattern
+    url: https://docs.pola.rs/user-guide/lazy/using/
+    scope_triage: reference-only
+    angle: The multi-file case, where lazy scanning stops being a preference and becomes the only workable approach.
+    angle_detail: 'Worth reading now even though nothing in this stage needs it: it shows a scan over many files
+      being narrowed by a predicate before any file is read, which is the clearest single demonstration of what
+      the lazy API is for. Session 8 returns to it with the streaming engine.'
+  - kind: read
+    label: Local material — 03.01-Introducing-Pandas-Objects.ipynb
+    id: resource-polars-02-02-local-material-03-01-introducing-panda
+    source_id: source-pydata-handbook
+    locator: §'Data Indexing and Selection' dtype notes only
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+    scope_triage: reference-only
+    angle: pandas dtype vocabulary for the Part B table; not an authority on 3.0 behaviour.
+    angle_detail: 'Pre-3.0 notebook: its string columns are `object` where yours are `str`, and its missing-value
+      discussion predates the nullable dtypes. Use it to recognise names, then verify in 3.0.2.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-03-99-axis-pass
+    locator: Sheet Part B, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: The I/O divergences are the ones most likely to be discovered by a user rather than a test.
+    angle_detail: The 'NA' case and the late-type-change case both belong in the harness as file fixtures rather
+      than as frames, because both are properties of the reader and disappear once the data is in memory.
+  - id: resource-polars-03-construction-i-o-schema-and-chunks-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-03-construction-i-o-schema-and-chunks/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-exercises.md
+    label: Exercise sheet - construction, IO inference, chunks
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/attachments/s4a-check.py
+    label: Answer-key self-check (26 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/notes.md
+- id: stage-polars-07-type-promotion-coercion-and-strictness
+  number: 2
+  title: Type promotion, coercion, and strictness
+  status: pending
+  objective: Work out what each library does to a dtype when you are not looking — pandas widening silently against
+    Polars computing a supertype or refusing — and write the promotion table that lets you predict the output schema
+    of any operation.
+  done_when:
+  - The ten-pair supertype table completed by execution, and the rule stated in one sentence.
+  - 'The Int64+UInt64 row explained from the rule: no integer type holds both ranges, so the supertype is Float64
+    and exactness is lost above 2^53 - reachable from an ordinary join between a UInt64 and an Int64 key.'
+  - 'Strictness settled: the default, what strict=False produces (null, not a clamped or wrapped value), and the
+    float-to-int rule (truncation toward zero).'
+  - 'The headline divergence recorded as a harness case: pandas astype(''int8'') on 300 returns 44 silently, Polars
+    raises - with a written Stratum policy on reproduce / raise / translate.'
+  - Arithmetic overflow shown to agree (both wrap to -128), so the divergences are located in the policy layer rather
+    than in the arithmetic.
+  - Division result dtypes recorded as syntax-only on executed evidence.
+  - A coercion policy table with one row per supported astype target, every row resolved to a chosen behaviour with
+    a reason - no row left as 'depends'.
+  - '`s4b-check.py` passes (27 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s4b-sheet
+    kind: practise
+    label: Stage exercise sheet - the supertype rule, its edge, and the cast that lies
+    locator: attachments/s4b-exercises.md - Task A1 table first, then Part B
+    angle: Derives the promotion rule from ten executed pairs and lands on the one row where it stops being lossless.
+    angle_detail: 'Int8+UInt8 gives Int16 and Int32+UInt32 gives Int64, so signed-plus-unsigned widens one size.
+      At 64 bits there is nothing to widen into and the supertype becomes Float64 — exact only to 2^53, and reachable
+      from an ordinary join between a UInt64 id and an Int64 one. Part B is the headline: pandas `astype(''int8'')`
+      on 300 returns 44, the low byte, with no error; Polars refuses. A translation that ''fixes'' the Polars error
+      by falling back produces a plausible wrong number where it had a loud failure.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-exercises.md
+  - id: resource-polars-s4b-check
+    kind: practise
+    label: Answer-key self-check - 27 assertions including the 2^53 edge
+    locator: attachments/s4b-check.py
+    angle: Asserts both that 44 is 300 mod 256 and that the Float64 supertype really cannot separate 2^53 from 2^53+1.
+    angle_detail: 'The second assertion is the one to keep: it demonstrates the precision loss directly rather than
+      describing it, and it runs the Int64+UInt64 addition to confirm the promotion actually goes through Float64
+      rather than being a documentation claim.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — casting
+    id: resource-polars-07-03-official-reference-polars-casting
+    locator: §'Casting' - strict vs non-strict, overflow behaviour, and the supertype resolution rules
+    url: https://docs.pola.rs/user-guide/expressions/casting/
+    scope_triage: reference-only
+    angle: 'The one page that states both halves of this stage: what type results, and what happens when a value
+      will not fit.'
+    angle_detail: 'Note what non-strict casting does: it produces null, not a clamped or wrapped value. That is
+      a deliberate position — a value that does not fit is treated as missing — and it is the reason Polars'' answer
+      is never pandas'' 44. Whether Stratum adopts it is the policy decision in Part C.'
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-07-01-required-core-polars-guide-dtypes
+    locator: Ch 4 §Data Types pp. 105-109 and §Data Type Conversion pp. 117-120
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The type lattice as the book presents it, which is what the supertype rule is computed over.
+    angle_detail: Read pp. 105-109 for the enumerated types, then predict the Task A1 table from the lattice before
+      running it. The Int64/UInt64 row is the one the lattice explains and intuition does not — you can see from
+      the type list that there is nothing above them to widen into.
+  - kind: reference
+    label: Official reference — docs.pola.rs — data types and structures
+    id: resource-polars-07-04-official-reference-polars-data-types
+    locator: The complete data-type list, including the sized integer and float types
+    url: https://docs.pola.rs/user-guide/concepts/data-types-and-structures/
+    scope_triage: reference-only
+    angle: The enumerated lattice; keep it open while filling in the Task A1 table.
+    angle_detail: 'Useful as a reference rather than a read. The one thing to notice on it: the integer types stop
+      at 64 bits in both signed and unsigned directions, which is the fact that forces the Float64 fallback.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — dtypes
+    id: resource-polars-07-02-official-reference-pandas-dtypes
+    locator: §'dtypes' and §'Nullable integer data type' - specifically the object-fallback rules
+    url: https://pandas.pydata.org/docs/user_guide/basics.html#dtypes
+    scope_triage: reference-only
+    angle: Explains why pandas has two answers for almost every dtype question, and which one you are getting.
+    angle_detail: The NumPy-backed default and the nullable extension dtypes behave differently under missing values,
+      which is the whole of Session 1 Task 1. Read it to be able to say which storage a captured frame is using,
+      because the answer changes whether an integer column can hold a null at all.
+  - kind: practise
+    label: Concatenate mismatched schemas
+    id: resource-polars-07-08-concatenate-mismatched-schemas
+    locator: Sheet Part C - add concat as a row of the coercion policy table
+    scope_triage: required-now
+    angle: The promotion rule reached through an operation that never mentions a type.
+    angle_detail: 'Vertical concatenation of frames whose columns differ in dtype has to resolve a supertype, so
+      every rule from Task A1 applies without any cast being written. Test the Int64/UInt64 pair here in particular:
+      it is how a Float64 column appears in a pipeline nobody asked to convert.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-07-99-axis-pass
+    locator: Sheet Part B, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: The astype divergence is the highest-value harness case in the module so far.
+    angle_detail: It is silent, it produces a plausible number, and it is reachable from a single captured `astype`.
+      Commit it with the Int64/UInt64 supertype case, which is silent in the same way and needs no captured call
+      at all.
+  - id: resource-polars-07-type-promotion-coercion-and-strictness-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-07-type-promotion-coercion-and-strictness/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-exercises.md
+    label: Exercise sheet - supertypes, strictness, the cast that lies
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/attachments/s4b-check.py
+    label: Answer-key self-check (27 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/notes.md
+- id: stage-polars-06-nulls-nans-and-the-missing-value-model
+  number: 3
+  title: Nulls, NaNs, and the missing-value model
+  status: pending
+  objective: 'Settle the missing-value model end to end: what an unknown value does to arithmetic, comparison and
+    membership, where each library instead treats missing as an ordinary value, and which two defaults the two libraries
+    set in opposite directions.'
+  done_when:
+  - The seven three-valued-logic expressions predicted and run, including `is_in([1, None])` NOT matching a null
+    row, and the general rule stated.
+  - '`eq_missing` identified as the deliberate exception to that rule, with a statement of which operations need
+    it (dedup, null-matching joins) and which must not use it.'
+  - 'The four placement operations run - group_by, unique, sort, n_unique - and the distinction articulated: three-valued
+    logic governs computed answers, while placement operations must place every row somewhere.'
+  - 'The grouping default divergence recorded as a harness case: pandas groupby DROPS null-key rows by default,
+    Polars keeps them - with the translation rule for a captured groupby that never mentions dropna.'
+  - The sort placement divergence attached to the missing-value model rather than to the sort operation.
+  - The three answers to 'are two missing values equal' collected - pandas False, Polars null, eq_missing True -
+    and the one a join should use decided.
+  - A five-entry missing-value policy naming a mechanism for each, with the fill_nan(None) normalization applied
+    at exactly one point in the pipeline.
+  - '`s4c-check.py` passes (28 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  - concept-map-family
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s4c-sheet
+    kind: practise
+    label: Stage exercise sheet - three-valued logic, placement operations, and two flipped defaults
+    locator: attachments/s4c-exercises.md - Part A, then Part B Task B1
+    angle: Separates where missing means unknown from where it is treated as an ordinary value, then finds the two
+      defaults set in opposite directions.
+    angle_detail: 'Part A''s trap is `is_in([1, None])`: putting None in the list does not make a null row match,
+      because membership is a comparison and comparing to unknown is unknown. Part A2 then shows group_by, unique,
+      sort and n_unique all treating missing as a value — not an inconsistency, since a placement operation must
+      place every row. Part B is the one that changes results: pandas groupby discards null-key rows by default
+      and Polars keeps them, so a literal translation loses rows while the totals stay plausible.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-exercises.md
+  - id: resource-polars-s4c-check
+    kind: practise
+    label: Answer-key self-check - 28 assertions across the whole model
+    locator: attachments/s4c-check.py
+    angle: Asserts the grouping divergence as a changed total, not a changed shape, so a normalizing harness cannot
+      hide it.
+    angle_detail: It checks that pandas' default grouping sums to 1 while the Polars grouping sums to 3, and that
+      `dropna=False` reconciles them. It also pins all three answers to 'are two missing values equal', which is
+      the question Session 7's join stage has to have settled before it starts.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — missing data
+    id: resource-polars-05-04-official-reference-docs-pola-rs-missin
+    locator: §'Missing data' - null vs NaN, the validity bitmap, filling, and the NaN caveat
+    url: https://docs.pola.rs/user-guide/expressions/missing-data/
+    scope_triage: reference-only
+    angle: Polars' own statement that NaN is a value and not a missing marker.
+    angle_detail: 'Short page, and every sentence in it is load-bearing for this stage. The one to note: it says
+      explicitly that NaN is *not* considered missing, which makes `drop_nulls` keeping a NaN row documented behaviour
+      rather than an oversight — and therefore something a translation may rely on.'
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-05-01-required-core-python-polars-the-defini
+    locator: Ch 4 §Missing Values pp. 112-116; Ch 8 §Operations for Missing or Infinite Values pp. 219-221
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: 'The book''s two passes at missing data: the representation, then the operations over it.'
+    angle_detail: pp. 112-116 is the model — validity bitmap, null versus NaN, why they are orthogonal. pp. 219-221
+      is the verb list, and reading them together is what makes `fill_null` and `fill_nan` stop looking like duplicated
+      API. Read before Part A, not after.
+  - kind: read
+    label: Local material — pandas↔Polars aggregation contentions
+    id: resource-polars-06-90-local-material-contention-map-nulls
+    locator: Node (0) system-wide contentions 0.1 and 0.2, and the skipna discussion
+    vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+    scope_triage: required-now
+    angle: Your own verified map, which is more specific than either library's documentation on exactly this.
+    angle_detail: Contention 0.1 already records the NaN-versus-null reducer divergence with executable probes,
+      and 0.2 records the integer-to-float promotion under nulls. Read them before Part B and check whether this
+      stage's grouping-default finding is already in the map; if it is not, it belongs there as new evidence.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — missing_data.html
+    id: resource-polars-05-06-official-reference-pandas-pydata-org-m
+    locator: §'Working with missing data' - and specifically the `dropna` parameter on groupby
+    url: https://pandas.pydata.org/docs/user_guide/missing_data.html
+    scope_triage: reference-only
+    angle: Documents the grouping default that silently discards rows, which is Part B's finding.
+    angle_detail: The page states that group keys which are NA are excluded by default. That is a promise, so a
+      translation may rely on it — and must reproduce it, since Polars has no corresponding keyword and the behaviour
+      has to be emitted as an explicit filter before the grouping.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — basics.html
+    id: resource-polars-05-07-official-reference-pandas-pydata-org-b
+    locator: §'Nullable Boolean data type' - three-valued logic in pandas' own extension dtypes
+    url: https://pandas.pydata.org/docs/user_guide/basics.html#dtypes
+    scope_triage: reference-only
+    angle: Shows pandas implementing the same three-valued logic Polars uses, in one corner of its API.
+    angle_detail: 'Worth reading precisely because it complicates the neat story: pandas'' nullable BooleanDtype
+      does Kleene logic, so ''pandas has two-valued logic'' is false as a general claim. It is true of the NumPy-backed
+      default path, which is what a captured frame usually is. Record which path you are targeting.'
+  - kind: read
+    label: Local material — 03.04-Missing-Values.ipynb
+    id: resource-polars-05-02-local-material-03-04-missing-values-ip
+    source_id: source-pydata-handbook
+    locator: §'Trade-Offs in Missing Data Conventions' and §'Missing Data in Pandas'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.04-Missing-Values.ipynb
+    scope_triage: reference-only
+    angle: The clearest explanation of WHY pandas uses NaN as a sentinel, which is the decision Polars declined.
+    angle_detail: 'Worth reading once for the trade-off discussion: sentinel versus mask, and what each costs. It
+      is pre-3.0 so its account of pandas'' options is dated, but the trade-off it describes is exactly the fork
+      the two libraries took, and understanding the fork is what makes the divergences predictable instead of arbitrary.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — casting
+    id: resource-polars-05-05-official-reference-docs-pola-rs-castin
+    locator: §'Casting' - the interaction between casting and missing values
+    url: https://docs.pola.rs/user-guide/expressions/casting/
+    scope_triage: reference-only
+    angle: Cross-reference for the previous stage; here it answers what a cast does to a null.
+    angle_detail: 'Kept as reference because the casting material belongs to the type-promotion stage. The one question
+      it answers here: a null survives a cast as a null, in every direction, which is what makes the fill_nan(None)
+      normalization safe to place anywhere in a cast chain.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-06-99-axis-pass
+    locator: Sheet Part B, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: Two flipped defaults, both silent, both changing results rather than raising.
+    angle_detail: The grouping default changes row counts; the sort default changes row order. Neither raises, and
+      a harness that normalizes order before comparing will report the second as clean. Commit both, and make the
+      grouping case assert a total rather than a shape.
+  - kind: reference
+    label: Optional depth — arrow.apache.org — Columnar.html
+    id: resource-polars-05-09-optional-depth-arrow-apache-org-column
+    locator: §'Validity bitmaps' - the physical layout under the whole model
+    url: https://arrow.apache.org/docs/format/Columnar.html#validity-bitmaps
+    scope_triage: deferred
+    angle: 'The mechanism: why null and NaN can be orthogonal at all.'
+    angle_detail: Deferred, and worth ten minutes when the three-valued results stop feeling arbitrary. A separate
+      validity buffer makes 'absent' independent of any bit pattern in the values buffer, which is precisely what
+      a sentinel-based representation cannot do.
+  - id: resource-polars-06-nulls-nans-and-the-missing-value-model-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-exercises.md
+    label: Exercise sheet - three-valued logic and the flipped defaults
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/attachments/s4c-check.py
+    label: Answer-key self-check (28 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/notes.md
+shelving:
+  state: none

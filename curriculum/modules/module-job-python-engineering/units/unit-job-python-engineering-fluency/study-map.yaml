@@ -1,0 +1,856 @@
+id: study-map-job-python-engineering-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-engineering-fluency
+status: ready
+current_stage: stage-python-00-mechanism-diagnostic
+source_plan:
+  path: Job/plans/job-track-python.yaml
+  provenance: ai-proposed
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-00-mechanism-diagnostic
+  number: 1
+  title: Phase 0 - cold diagnostic across the nine mechanisms
+  status: pending
+  objective: Find out which of the nine Python mechanisms are already fluent. Attempt every prediction
+    notebook cold, with no guide, no book, and no AI. Most should pass and be skipped. The misses are
+    the only thing Phase 1 repairs. This is triage, not a course.
+  done_when:
+  - All nine prediction notebooks attempted closed-book, with no guide, no reference, and no AI.
+  - Every notebook scored pass or miss, and each miss named down to the specific weighted question.
+  - The Phase 1 repair list is written, and every passed mechanism is recorded as skipped rather than
+    silently dropped.
+  - The measured cost of Phase 0 is recorded, since it sets the real size of Phase 1.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Cold diagnostic stage-0-names-and-identity.ipynb
+    id: resource-python-d0-01-notebook-stage0namesandidentity
+    source_id: source-python-depth-drills
+    locator: '''stage-0-names-and-identity.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
+    angle: Scores names, identity, aliasing, and the hash contract before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-1-functions-as-objects.ipynb
+    id: resource-python-d0-02-notebook-stage1functionsasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-1-functions-as-objects.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+    angle: Scores functions as objects, closures over call timing before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-2-scope-and-closures.ipynb
+    id: resource-python-d0-03-notebook-stage2scopeandclosures
+    source_id: source-python-depth-drills
+    locator: '''stage-2-scope-and-closures.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+    angle: Scores scope, captured state, rebinding versus mutation before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-3-decorators.ipynb
+    id: resource-python-d0-04-notebook-stage3decorators
+    source_id: source-python-depth-drills
+    locator: '''stage-3-decorators.ipynb'', every weighted question, closed book, no guide and no AI'
+    vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+    angle: Scores decorators, import-time execution, registration before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-4-classes-as-objects.ipynb
+    id: resource-python-d0-05-notebook-stage4classesasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-4-classes-as-objects.ipynb'', every weighted question, closed book, no guide and
+      no AI'
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+    angle: Scores attribute lookup, MRO, cooperative super before any reading, so Phase 1 repairs misses
+      instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-5-imports-and-registration.ipynb
+    id: resource-python-d0-06-notebook-stage5importsandregistrati
+    source_id: source-python-depth-drills
+    locator: '''stage-5-imports-and-registration.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+    angle: Scores imports, circular dependencies, plugin discovery before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-6-data-model-and-dunders.ipynb
+    id: resource-python-d0-07-notebook-stage6datamodelanddunders
+    source_id: source-python-depth-drills
+    locator: '''stage-6-data-model-and-dunders.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+    angle: Scores dunders, slots, equality, hashing before any reading, so Phase 1 repairs misses instead
+      of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-7-generators-and-iterators.ipynb
+    id: resource-python-d0-08-notebook-stage7generatorsanditerato
+    source_id: source-python-depth-drills
+    locator: '''stage-7-generators-and-iterators.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+    angle: Scores iterators, generators, mutation while walking before any reading, so Phase 1 repairs
+      misses instead of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Cold diagnostic stage-8-interfaces-and-dispatch.ipynb
+    id: resource-python-d0-09-notebook-stage8interfacesanddispatc
+    source_id: source-python-depth-drills
+    locator: '''stage-8-interfaces-and-dispatch.ipynb'', every weighted question, closed book, no guide
+      and no AI'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+    angle: Scores protocols, typing, dispatch design before any reading, so Phase 1 repairs misses instead
+      of re-teaching what is already fluent.
+    scope_triage: required-now
+  - kind: practise
+    label: Write the repair list and the skip list
+    id: resource-python-d0-10-score-ledger
+    locator: Score every notebook pass or miss. Name each miss down to its weighted question. Record the
+      mechanisms that passed as deliberately skipped, and record the hours Phase 0 actually cost.
+    scope_triage: required-now
+    angle: Turns the diagnostic into the input Phase 1 consumes, and makes a skip visible rather than
+      silent.
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-00-mechanism-diagnostic/notes.md
+- id: stage-python-repair-mechanism-gaps
+  number: 2
+  title: Phase 1 - repair only the mechanisms that failed
+  status: pending
+  objective: 'Repair the mechanisms Phase 0 marked as misses, and skip the rest. Reading is pull-based:
+    a guide or a book chapter is opened only when a recorded miss names it. Every repair ends in a rebuild
+    from blank rather than a re-read, and each one names the Stratum construct it explains.'
+  done_when:
+  - Every mechanism marked miss in Phase 0 has a from-blank rebuild that passes its own tests, written
+    with the guide closed.
+  - Every mechanism marked pass in Phase 0 is skipped, and the skip stays recorded rather than quietly
+    reinstated.
+  - Each repair names the Stratum construct it explains, so the mechanism is attached to a design question
+    and not to a language feature.
+  - Each repaired mechanism is re-checked cold at least 48 hours later, and any second miss is recorded
+    rather than retried immediately.
+  - The budget below is an upper bound; the diagnostic decides the real cost, and finishing early is the
+    expected outcome.
+  estimate_minutes: 360
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Repair guide stage-0-names-and-identity.md
+    id: resource-python-p1-01-guide-stage0namesandidentity
+    source_id: source-python-depth-drills
+    locator: '''stage-0-names-and-identity.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-1-functions-as-objects.md
+    id: resource-python-p1-02-guide-stage1functionsasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-1-functions-as-objects.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-2-scope-and-closures.md
+    id: resource-python-p1-03-guide-stage2scopeandclosures
+    source_id: source-python-depth-drills
+    locator: '''stage-2-scope-and-closures.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-3-decorators.md
+    id: resource-python-p1-04-guide-stage3decorators
+    source_id: source-python-depth-drills
+    locator: '''stage-3-decorators.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-3-decorators.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-4-classes-as-objects.md
+    id: resource-python-p1-05-guide-stage4classesasobjects
+    source_id: source-python-depth-drills
+    locator: '''stage-4-classes-as-objects.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-5-imports-and-registration.md
+    id: resource-python-p1-06-guide-stage5importsandregistrati
+    source_id: source-python-depth-drills
+    locator: '''stage-5-imports-and-registration.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-6-data-model-and-dunders.md
+    id: resource-python-p1-07-guide-stage6datamodelanddunders
+    source_id: source-python-depth-drills
+    locator: '''stage-6-data-model-and-dunders.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-7-generators-and-iterators.md
+    id: resource-python-p1-08-guide-stage7generatorsanditerato
+    source_id: source-python-depth-drills
+    locator: '''stage-7-generators-and-iterators.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: reference
+    label: Repair guide stage-8-interfaces-and-dispatch.md
+    id: resource-python-p1-09-guide-stage8interfacesanddispatc
+    source_id: source-python-depth-drills
+    locator: '''stage-8-interfaces-and-dispatch.md'', opened only when a Phase 0 miss names this mechanism'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+    angle: 'Pull-based: this guide is opened by a recorded miss, never read as a scheduled assignment.'
+    scope_triage: reference-only
+  - kind: read
+    label: Fluent Python, opened at the chapter a miss names
+    id: resource-python-p1-10-fluent-python-on-miss
+    source_id: source-fluent-python
+    locator: Open only the chapter that a recorded Phase 0 miss identifies, never the book in sequence
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    angle: Replaces four scheduled readings per mechanism with one chapter bought by a specific failure.
+    scope_triage: reference-only
+  - kind: read
+    label: Effective Python, opened at the item a miss names
+    id: resource-python-p1-11-effective-python-on-miss
+    source_id: source-slatkin-effective-python
+    locator: Open only the mapped item that a recorded Phase 0 miss identifies
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Cross-cutting shelf index
+    id: resource-python-p1-12-shelf-index
+    source_id: source-python-depth-drills
+    locator: '''SHELF.md'', used to find which chapter a miss maps to'
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: reference-only
+  - kind: practise
+    label: Rebuild remove_node from blank
+    id: resource-python-p1-13-rebuild-remove-node
+    locator: 'Write the mutation contract first: inputs, side effects, identity rules, edge invariants,
+      failure behaviour, non-goals. Then implement without looking at Stratum and prove both sides of
+      every edge are repaired by identity.'
+    scope_triage: required-now
+    angle: The identity mechanism attached to the real design question it answers in an optimizer.
+  - kind: practise
+    label: Rebuild match_n_op_chain(op_cls, types) from a blank file
+    id: resource-python-p1-14-rebuild-match-chain
+    locator: State in words when the factory, the returned matcher, the action, and the rewrite runner
+      each execute, then implement and test the ordering you predicted.
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild a registration decorator, typed selector, and lazy traversal in one miniature package
+    id: resource-python-p1-15-rebuild-registry-and-traversal
+    locator: One package, not three exercises. Add an intentional circular import and repair the architecture
+      rather than hiding it behind a local import.
+    scope_triage: required-now
+  - kind: practise
+    label: Explain why adding structural __eq__ to Op would break deduplication and buffer-pool keys
+    id: resource-python-p1-16-structural-equality-question
+    locator: Write the answer as a design argument with a counterexample, not as a language fact.
+    scope_triage: required-now
+    angle: The single question in this module that most directly predicts whether a rewrite proposal is
+      sound.
+  - kind: read
+    label: Read-only Stratum anchors for the repaired mechanisms
+    id: resource-python-p1-17-stratum-anchors
+    locator: stratum/optimizer/ir/_base.py replace_input and _check_dup_in_inputs; stratum/optimizer/_numeric_rewrites.py
+      match_two_op_chain and eliminate_two_op_chain; stratum/optimizer/physical/_registry.py physical_impl
+      and build_default_physical_registry; stratum/optimizer/ir/_ops.py Op __repr__ and update_name; stratum/runtime/_buffer_pool.py
+    angle: Read only after the matching rebuild passes, to compare a design decision, never to copy an
+      implementation.
+    scope_triage: helpful-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-repair-mechanism-gaps/notes.md
+- id: stage-python-optimizer-theory-and-rewrite-soundness
+  number: 3
+  title: Phase 2 - logical plans, rewrite soundness, and cost
+  status: pending
+  objective: 'Learn why a system like Stratum has the shape it has: a declarative abstraction, a logical
+    plan, rewrite rules, lowering to physical operators, and cost-based implementation selection. The
+    output is a rule table you could defend in a design discussion, not code. Without this, a rewrite
+    proposal can only imitate the shape of the rewrites already in the tree.'
+  done_when:
+  - The Stratum paper read closely enough to state in your own words what it claims, what it actually
+    measures, and which of its stated open directions are still open.
+  - Six rewrites written up, each with its precondition, the invariant it preserves, and a concrete counterexample
+    that breaks it when the precondition is dropped.
+  - 'The logical and physical split explained: what a logical operator may assume, what lowering decides,
+    and why implementation selection is a separate cost question.'
+  - Common subexpression elimination explained as a semantic argument about when two nodes are interchangeable,
+    not as a hash-key trick.
+  - At least two claims in the write-up marked as uncertain and carried to the paper or a maintainer rather
+    than resolved by guessing.
+  estimate_minutes: 240
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'stratum: A System Infrastructure for Massive Agent-Centric ML Workloads'
+    id: resource-python-p2-01-stratum-paper-architecture
+    locator: Sections 3 to 4.3, Our Vision through Runtime Optimizations, pdf pp. 3-5
+    url: https://arxiv.org/abs/2603.03589
+    angle: The only document that states the system's intent in the authors' own words; everything else
+      in the repository is a consequence of it.
+    scope_triage: required-now
+  - kind: read
+    label: stratum paper, the authors' own open problems
+    id: resource-python-p2-02-stratum-paper-open-directions
+    locator: Section 5 Challenges and Key Directions, pdf pp. 5-6
+    url: https://arxiv.org/abs/2603.03589
+    angle: A published list of what is unsolved, which is where a contribution can be intentional rather
+      than decorative.
+    scope_triage: required-now
+  - kind: read
+    label: 'Spark SQL: Relational Data Processing in Spark'
+    id: resource-python-p2-03-catalyst
+    locator: Section 4 Catalyst Optimizer, 4.1 Trees through 4.4 Extension Points, pdf pp. 5-8
+    url: https://people.csail.mit.edu/matei/papers/2015/sigmod_spark_sql.pdf
+    angle: The compact canonical account of trees, rules, logical optimization, and physical planning
+      that Stratum's optimizer package assumes you already have.
+    scope_triage: required-now
+  - kind: read
+    label: skrub DataOps reference
+    id: resource-python-p2-04-skrub-dataops
+    locator: '''DataOps'' and ''The skb accessor exposes all DataOps methods and attributes'''
+    url: https://skrub-data.org/stable/reference/data_ops.html
+    angle: Separates the abstraction Stratum inherits from skrub, which is not yours to change, from the
+      parts Stratum actually owns.
+    scope_triage: required-now
+  - kind: read
+    label: Stratum's own stated intent in the sibling checkout
+    id: resource-python-p2-05-stratum-intent-docs
+    locator: README.md 'Design Principles'; CONTRIBUTING.md; stratum/optimizer/rewrite_ideas.md
+    angle: Maintainer-written intent and an explicit ideas list, which is requirements gathering rather
+      than implementation copying.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Write the rewrite rule table
+    id: resource-python-p2-06-rule-table
+    locator: Six rewrites, each with precondition, preserved invariant, and a counterexample that breaks
+      it when the precondition is dropped. Derive each from the semantics, not from an implementation.
+    scope_triage: required-now
+    angle: The deliverable that converts reading into something you can argue from.
+  - kind: practise
+    label: Sketch the cost question for one operation family
+    id: resource-python-p2-07-cost-model-sketch
+    locator: For one family, write what a selector would need to know to choose an implementation, what
+      is cheap to measure, what has to be estimated, and what happens when the estimate is wrong.
+    scope_triage: required-now
+  - kind: read
+    label: Read-only comparison after the rule table exists
+    id: resource-python-p2-08-stratum-rewrite-anchors
+    locator: stratum/optimizer/_algebraic_rewrites.py; stratum/optimizer/_numeric_rewrites.py; stratum/optimizer/_op_cse.py;
+      stratum/optimizer/physical/_lowering.py; stratum/optimizer/physical/_impl_selection.py
+    angle: Opened only after the table is written, to find where your derivation and the tree disagree
+      and which of the two is wrong.
+    scope_triage: helpful-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-optimizer-theory-and-rewrite-soundness/notes.md
+- id: stage-python-rewriter-tests-and-benchmark-evidence
+  number: 4
+  title: Phase 3 - one rewriter, its tests, and honest measurement
+  status: pending
+  objective: 'Build one small rewriter end to end and make it produce evidence: a DAG utility with real
+    invariants, an adversarial suite that is provably sensitive, and a benchmark harness that reports
+    spread instead of a single number. The contract is written before the code every time.'
+  done_when:
+  - A DAG utility with topological ordering, sub-DAG cloning with stop and replacement boundaries, and
+    an invariant checker covering reciprocal edges, duplicate inputs, reachability, and cycle refusal,
+    with at least 25 named cases.
+  - One rewrite pass built on it, its contract written before the code and compared against the implementation
+    once the tests pass.
+  - 'Mutation testing proves the suite is sensitive: four deliberate incorrect rewires are each caught
+    by a named test.'
+  - A reusable benchmark harness separates construction, planning, and execution, repeats each measurement,
+    and reports spread rather than one number.
+  - Exactly one optimization is made and defended with that harness, including the case where the measurement
+    says the optimization is not worth it.
+  - 'One agent-generated implementation reviewed as an untrusted patch: the defect found without hints,
+    and why it looked convincing recorded.'
+  estimate_minutes: 360
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Python graphlib topological sorter
+    id: resource-python-p3-01-graphlib
+    locator: TopologicalSorter, static and incremental use, and CycleError
+    url: https://docs.python.org/3/library/graphlib.html
+    scope_triage: reference-only
+  - kind: read
+    label: Open-source reading lab, NetworkX DAG algorithms
+    id: resource-python-p3-02-networkx-dag
+    locator: topological_generations and is_directed_acyclic_graph, then the matching tests
+    url: https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+    angle: A mature implementation of the exact operations you just built, useful for comparing ordering
+      guarantees and mutation assumptions rather than style.
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab, Hypothesis
+    id: resource-python-p3-03-hypothesis
+    locator: One small strategy or shrinking behaviour, starting from a test and tracing only the implementation
+      it exercises
+    url: https://github.com/HypothesisWorks/hypothesis
+    scope_triage: helpful-now
+  - kind: practise
+    label: Build the DAG utility and its invariant checker from blank
+    id: resource-python-p3-04-dag-utility
+    locator: Derive Kahn's algorithm on paper first and hand-run it on a diamond, a chain, a disconnected
+      branch, and a cycle. Then implement, and state what ordering is and is not guaranteed.
+    scope_triage: required-now
+  - kind: practise
+    label: Mutation-test the checker
+    id: resource-python-p3-05-mutation-sensitivity
+    locator: Introduce four incorrect rewires and record which named test caught each. A mutation that
+      nothing catches is a missing test, not a passing suite.
+    scope_triage: required-now
+    angle: Proves the suite has power, which is the difference between tests that pass and tests that
+      would catch a real regression.
+  - kind: practise
+    label: Build the benchmark harness before making any optimization
+    id: resource-python-p3-06-benchmark-harness
+    locator: Separate construction, planning, and execution. Repeat every measurement, report spread,
+      state what is held fixed, and write down why a single wall-clock number on a laptop is not evidence.
+    scope_triage: required-now
+    angle: The harness is the deliverable; the optimization is only what it is used on.
+  - kind: practise
+    label: Review a plausible but wrong implementation
+    id: resource-python-p3-07-untrusted-patch
+    locator: Only after your own version passes, ask an agent for two subtly flawed implementations. Without
+      hints, find each defect through contract review and targeted tests, and record why it looked convincing.
+    scope_triage: required-now
+  - kind: read
+    label: Read-only Stratum anchors for graph surgery and measurement
+    id: resource-python-p3-08-stratum-graph-anchors
+    locator: stratum/optimizer/_op_utils.py clone_sub_dag, topological_iterator_bfs and dfs, validate_dag,
+      rewrite_pass; stratum/optimizer/_optimize.py pass orchestration; stratum/utils/_utils.py start_time
+      and log_time; stratum/runtime/_buffer_pool.py
+    scope_triage: helpful-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-rewriter-tests-and-benchmark-evidence/notes.md
+- id: stage-python-contribution-loop
+  number: 5
+  title: Phase 4 - the recurring contribution loop
+  status: pending
+  objective: Run the loop that actually produces intentional contributions, weekly, starting in week one
+    rather than at the end. Read real merged changes, write your own review before asking an agent, then
+    land small patches under the receiving project's own conventions. This stage recurs and is never marked
+    complete after a single pass.
+  done_when:
+  - 'One merged change in a mature Python repository reviewed in full before any AI: problem restatement,
+    call-path map, test assessment, correctness and compatibility risks, and prioritized comments.'
+  - That review then compared against an agent's, classifying unique, overlapping, false-positive, and
+    missed findings with evidence for each.
+  - Stratum's contributing workflow followed for one small change on a local branch, including the commit
+    tag convention and an issue reference where one applies.
+  - One question or proposal written for a maintainer that cites the paper or the code and states what
+    you already checked, rather than asking to be told what to do.
+  - The loop has run at least four times before this stage is reconsidered, and the ledger of what was
+    proposed, accepted, and rejected is kept.
+  estimate_minutes: 120
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Stratum contributing workflow in the sibling checkout
+    id: resource-python-p4-01-stratum-contributing
+    locator: CONTRIBUTING.md 'Workflow', 'Commit Message Tags', and 'Referencing Issues'
+    angle: The receiving project's actual conventions, which decide whether a good change arrives in a
+      reviewable shape.
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab, pytest contribution workflow
+    id: resource-python-p4-02-pytest-contributing
+    locator: The current contributing guide, then one small merged pull request read as issue, patch,
+      tests, discussion, final change
+    url: https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab, pluggy as a compact mature library
+    id: resource-python-p4-03-pluggy
+    locator: One small recent behaviour change traced through changelog, implementation, compatibility
+      handling, and tests
+    url: https://github.com/pytest-dev/pluggy
+    angle: Small enough to hold in your head, old enough that every change had to justify itself against
+      compatibility.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Write the review before asking an agent
+    id: resource-python-p4-04-review-before-ai
+    locator: Review a patch of 100 to 250 lines with repository context and tests. Only afterwards ask
+      an agent for a second review, then classify the two against each other with evidence.
+    scope_triage: required-now
+  - kind: practise
+    label: Land small changes under the project's own conventions
+    id: resource-python-p4-05-first-patches
+    locator: A test, a documentation fix, or a reproduction of an open issue, on a local branch, committed
+      with the correct tag. Publishing stays optional; being reviewable does not.
+    scope_triage: required-now
+  - kind: practise
+    label: Write one question that cites evidence
+    id: resource-python-p4-06-maintainer-question
+    locator: State what you read, what you tried, what you concluded, and the specific thing you cannot
+      resolve from the paper or the code.
+    scope_triage: required-now
+    angle: The artifact that most reliably distinguishes an intentional contributor from someone matching
+      the local style.
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-contribution-loop/notes.md
+- id: stage-python-14-packaging-environments-maturin-and-the-python-to-rust
+  number: 6
+  title: Packaging, environments, maturin, and the Python to Rust boundary
+  status: pending
+  objective: Use Packaging, environments, maturin, and the Python to Rust boundary fluently, explain the
+    language and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - build-boundary diagram, disposable toy package, and FFI contract.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Required core — note-python-intermediate-roadmap.md
+    id: resource-python-14-01-required-core-note-python-intermediate
+    locator: Roadmap Step 25 and Python packaging tutorial
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — packaging.python.org — packaging projects
+    id: resource-python-14-02-required-core-packaging-python-org-pac
+    locator: Roadmap Step 25 and Python packaging tutorial
+    url: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-python-14-03-local-material-note-programming-toolbo
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-14-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — packaging.python.org — pyproject toml
+    id: resource-python-14-05-official-reference-packaging-python-or
+    locator: pyproject, maturin, and PyO3
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.maturin.rs
+    id: resource-python-14-06-official-reference-www-maturin-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://www.maturin.rs/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — pyo3.rs
+    id: resource-python-14-07-official-reference-pyo3-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://pyo3.rs/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Build a minimal wheel and native-extension package in a clean lab environment,
+      inspect artifacts, and test the installed result rather than the source tree.
+    id: resource-python-14-08-guided-exercises-build-a-minimal-wheel
+    locator: Build a minimal wheel and native-extension package in a clean lab environment, inspect artifacts,
+      and test the installed result rather than the source tree.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — docs.python.org — stable.html
+    id: resource-python-14-09-optional-depth-docs-python-org-stable
+    locator: Python binary extension ABI guidance
+    url: https://docs.python.org/3/c-api/stable.html
+    scope_triage: deferred
+  - kind: practise
+    label: Diagram interpreter, virtual environment, package source, wheel, shared library, import name,
+      and build backend.
+    id: resource-python-14-10-diagram-interpreter-virtual-environmen
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Create a tiny pure-Python package outside Stratum with pyproject and editable install in a
+      disposable environment.
+    id: resource-python-14-11-create-a-tiny-pure-python-package-outs
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect a wheel's contents and map import names to files.
+    id: resource-python-14-12-inspect-a-wheel-s-contents-and-map-imp
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Sketch one PyO3 function contract including ownership, error conversion, GIL, and copy expectations
+      without building Stratum.
+    id: resource-python-14-13-sketch-one-pyo3-function-contract-incl
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Explain exactly when maturin develop, a Python import, and a Rust function call execute.
+    id: resource-python-14-14-explain-exactly-when-maturin-develop-a
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Pydantic's Python/Rust boundary
+    id: resource-python-14-15-open-source-pydantic-boundary
+    locator: Trace one validation request from a Python public API into pydantic-core and back to a Python
+      error/result. Record ownership, conversion, exception, packaging, and test boundaries without reading
+      the whole validator.
+    url: https://github.com/pydantic/pydantic
+    scope_triage: required-now
+  - kind: practise
+    label: Engineering drill — review the built artifact as a consumer
+    id: resource-python-14-16-installed-artifact-review
+    locator: Install the toy wheel into a clean environment, inspect only its published API and metadata,
+      and list every assumption that leaked from the source tree.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md
+- id: stage-python-15-requirements-decomposition-and-design-records
+  number: 7
+  title: Requirements, decomposition, and design records
+  status: pending
+  objective: 'Turn a vague idea into an executable engineering contract before code: identify the user
+    and problem, define scope and non-goals, make uncertainty visible, choose a thin vertical slice, and
+    record consequential decisions.'
+  done_when:
+  - A one-page brief contains user/problem, examples, non-goals, inputs/outputs, invariants, failure behavior,
+    observability, test matrix, and acceptance criteria.
+  - A no-AI vertical slice proves the riskiest assumption; three short decision records state context,
+    options, choice, consequences, and reversal cost.
+  - An AI critique happens only after the brief and slice exist; disagreements are resolved with evidence
+    rather than deference.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Architecture Patterns with Python — domain modelling and service boundaries
+    id: resource-python-15-01-architecture-patterns
+    source_id: source-cosmicpython-architecture-patterns
+    locator: Use the preface plus one relevant early chapter to separate domain intent from infrastructure.
+    url: https://www.cosmicpython.com/book/preface.html
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Architecture Patterns with Python examples
+    id: resource-python-15-02-open-source-cosmic-python
+    locator: Trace one use case from an acceptance-facing example through a service/domain boundary into
+      tests. Record what the code makes easy or hard to change.
+    url: https://github.com/cosmicpython/book
+    scope_triage: required-now
+  - kind: practise
+    label: No-AI product slice — turn one personal idea into a tested contract
+    id: resource-python-15-03-spec-first-vertical-slice
+    locator: Pick an idea you would normally hand to an agent. Write the brief, implement the smallest
+      end-to-end slice yourself, then ask AI only to challenge assumptions and missing cases.
+    scope_triage: required-now
+  - kind: practise
+    label: Write three lightweight architecture decision records
+    id: resource-python-15-04-decision-records
+    locator: Cover data model, dependency direction, and error contract. Each record must include a rejected
+      alternative and what evidence would change the decision.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md
+- id: stage-python-16-api-design-boundaries-and-refactoring
+  number: 8
+  title: Readable APIs, boundaries, and refactoring
+  status: pending
+  objective: Design small unsurprising Python APIs, keep dependencies pointing inward, and improve existing
+    code through behavior-preserving, test-guarded refactoring.
+  done_when:
+  - A working module is refactored through small commits with no behavior change until an explicit contract
+    change is introduced.
+  - The public API has typed signatures, stable errors, documented ownership/mutation, narrow dependencies,
+    and consumer-focused examples.
+  - A self-review explains naming, abstraction level, compatibility, cohesion, coupling, and why each
+    new type or layer earns its cost.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Open-source reading lab — HTTPX public API
+    id: resource-python-16-01-open-source-httpx-api
+    locator: Trace one simple Client request from the public method in httpx/_client.py into transport
+      behavior and tests. Note sync/async symmetry, context ownership, errors, and what remains private.
+    url: https://github.com/encode/httpx
+    scope_triage: required-now
+  - kind: read
+    label: Effective Python — interfaces, composition, and maintainability
+    id: resource-python-16-02-effective-python
+    source_id: source-slatkin-effective-python
+    locator: Use the locally mapped items on functions, classes, interfaces, and collaboration.
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Refactoring lab — characterize, simplify, and preserve behavior
+    id: resource-python-16-03-characterization-refactor
+    locator: Take a deliberately tangled but working module. Write characterization tests, split responsibilities,
+      remove one accidental abstraction, and review the final diff as if it were a pull request.
+    scope_triage: required-now
+  - kind: practise
+    label: Consumer test — use the package from outside its source tree
+    id: resource-python-16-04-consumer-test
+    locator: Write a short script using only the published API. Any need to reach into internals becomes
+      an API-design observation, not an immediate export.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md
+- id: stage-python-17-concurrency-async-and-resource-lifetimes
+  number: 9
+  title: Concurrency, async, cancellation, and resource lifetimes
+  status: pending
+  objective: Choose threads, processes, asyncio, native parallelism, or sequential execution from the
+    workload and correctness requirements; make cancellation, cleanup, backpressure, and ownership explicit.
+  done_when:
+  - One bounded workload has sequential, threaded, and async or process-oriented versions with a written
+    choice based on evidence.
+  - Tests cover timeout, cancellation, partial failure, cleanup, ordering, backpressure, and repeated
+    execution without leaked tasks or resources.
+  - A resource-lifetime diagram identifies who creates, owns, closes, and observes every client, task,
+    executor, queue, and temporary artifact.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Python asyncio — tasks, cancellation, timeouts, and synchronization
+    id: resource-python-17-01-asyncio-docs
+    locator: Focus on task lifecycle, TaskGroup, cancellation, timeouts, queues, and running blocking
+      work.
+    url: https://docs.python.org/3/library/asyncio.html
+    scope_triage: required-now
+  - kind: reference
+    label: Python concurrent.futures
+    id: resource-python-17-02-concurrent-futures
+    locator: ThreadPoolExecutor, ProcessPoolExecutor, futures, shutdown, and deadlock warnings.
+    url: https://docs.python.org/3/library/concurrent.futures.html
+    scope_triage: reference-only
+  - kind: read
+    label: Open-source reading lab — HTTPX sync/async clients
+    id: resource-python-17-03-open-source-httpx-sync-async
+    locator: Compare Client and AsyncClient on one narrow request path. Trace context-manager cleanup,
+      transports, timeouts, and tests; do not infer that async is faster for CPU work.
+    url: https://github.com/encode/httpx
+    scope_triage: required-now
+  - kind: practise
+    label: Build a bounded, cancellable work pipeline
+    id: resource-python-17-04-bounded-concurrency-lab
+    locator: Start from a sequential oracle. Add bounded concurrency, inject slow and failing jobs, prove
+      cleanup, and measure throughput and overhead before choosing the final design.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md
+- id: stage-python-18-errors-observability-and-operational-debugging
+  number: 10
+  title: Errors, observability, and operational debugging
+  status: pending
+  objective: Design errors and telemetry so another engineer can understand what failed, where, for which
+    input and operation, without reproducing the entire process.
+  done_when:
+  - A service or pipeline has an error taxonomy, preserved exception causes, stable user-facing messages,
+    and structured events at boundaries rather than noisy internal spam.
+  - Failure-injection tests prove correlation context, cleanup, retry/refusal behavior, and that sensitive
+    values are not logged.
+  - A cold debugging exercise reaches the cause from logs, traceback, metrics/timing, and a minimal reproducer;
+    the evidence chain is recorded.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: deferred
+  resources:
+  - kind: read
+    label: Python exceptions and exception chaining
+    id: resource-python-18-01-exceptions-docs
+    locator: Raising, handling, cleanup, user-defined exceptions, and explicit chaining.
+    url: https://docs.python.org/3/tutorial/errors.html
+    scope_triage: required-now
+  - kind: read
+    label: Python logging cookbook
+    id: resource-python-18-02-logging-docs
+    locator: Context, configuration, handlers, concurrency, and library/application responsibilities.
+    url: https://docs.python.org/3/howto/logging-cookbook.html
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — structlog
+    id: resource-python-18-03-open-source-structlog
+    locator: Trace one event dictionary through processors into a renderer and corresponding tests. Identify
+      pure transformations, context binding, exception handling, and performance choices.
+    url: https://github.com/hynek/structlog
+    scope_triage: required-now
+  - kind: practise
+    label: Operational lab — inject five failures and diagnose from evidence
+    id: resource-python-18-04-failure-injection
+    locator: Cover invalid input, dependency failure, timeout/cancellation, corrupted state, and programmer
+      bug. Define which are retried, refused, wrapped, or allowed to crash.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md

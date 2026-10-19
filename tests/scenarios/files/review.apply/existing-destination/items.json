@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "content": "# Clash\n\nAlready exists.",
+      "destination": "knowledge/garden/seed.md",
+      "id": "proposal-clash",
+      "kind": "garden",
+      "rationale": "Taken.",
+      "title": "Clash"
+    }
+  ]
+}

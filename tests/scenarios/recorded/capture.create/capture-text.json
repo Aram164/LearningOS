@@ -1,0 +1,163 @@
+{
+  "canonical_changed": {
+    "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "capture.create",
+          "channel": "operator",
+          "intent_sha256": "sha256:9495b56d4c2a748d82b6594a86538f0f4cfe0c324e1a6863ac4e15b6655b2ade",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "capture-request:KEY2": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "capture-request:KEY2": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "capture.create",
+            "declared_writes": [
+              "work/inbox/**"
+            ]
+          }
+        ]
+      },
+      "capability": "capture.create",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "capture-request:KEY2": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:d49ee97a728a2416abb2891737da7da1b2d2a6a34c3814ac0e7b1c0fd18c0bb2",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:9495b56d4c2a748d82b6594a86538f0f4cfe0c324e1a6863ac4e15b6655b2ade"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:9495b56d4c2a748d82b6594a86538f0f4cfe0c324e1a6863ac4e15b6655b2ade",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md",
+          "sha256_after": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+          "sha256_before": null
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "capture-request:KEY2": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "07066f71c15d3ddc687260b29cbc48ec3e378e8b88c1406d7091b29298d4327a",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "6676234f9f2a484c72994d407d646997186b1fee2f1d4cabf6b1c541b81ab737",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "0e5f81868c6ab30d9e3b872b3e69e73b26164999da1fafb65a3cde95836eac31",
+          "state": "file"
+        },
+        "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "373f5fb1140ecbc4e202acca370e7223a6f4cef0bb29f31c127e51f6a7d4b489",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "capture.create",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "capture-request:KEY2": 1
+      },
+      "captured": "work/inbox/20261001-090000-a-fleeting-thought-about-expectation.md",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

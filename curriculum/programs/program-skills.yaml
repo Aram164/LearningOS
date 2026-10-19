@@ -1,0 +1,9 @@
+id: program-skills
+type: program
+title: Skills
+kind: skills
+status: active
+default: false
+semester_bound: false
+description: Long-running technical skills that are not semester-bound.
+semesters: []

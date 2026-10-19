@@ -1,0 +1,85 @@
+schema_version: 1
+id: transaction-20260819-042902-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-19T04:29:02+02:00'
+snapshot_before: sha256:5bdd9d1dd17b288086e8d0c772f72a3cfef57763e0c5bf6d269ca6e9800500a2
+snapshot_after: sha256:affc37053000f305d4b196c7191549c8a5075e7d3fcc5ae143abf0aee2324f7d
+expected_revisions: {}
+artifact_revisions:
+  module-hu-aml:
+    before: 0
+    after: 1
+  unit-aml-exam-prep:
+    before: 0
+    after: 1
+  unit-aml-l11:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: ab14e1b8c9a36be644126d9a0eb5c5909c26c2a2e5b918021306918ab9adc21b
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 5682f9433256d5078600545168353bf0ab2c4edfac2fab62a198d3264759f22e
+  sha256_after: 0165855ee22b2931413a23cba0e79b37997539c743b367250d36018b173fd508
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-calibration/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-final-repair/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-foundations-repair/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-integration-sheet/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-linear-optimization-repair/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one-repair/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-neural-transformer-loop/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-taper/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  sha256_before: null
+  sha256_after: 37cf6bcdd5b2d372a5e6d5975fce4bbea964581569305913c862af97288f3d23
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml
+  sha256_before: null
+  sha256_after: 820181b2f9a8b77d1561998ca4048a5054319c3f8f23b3eabe512e961e86b45e
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/unit.yaml
+  sha256_before: a606589a546836b87aac32ea2b0b1877ebc8313b632dfd35ded473949a9af931
+  sha256_after: 49d35204fd89a3d2824324ff52a36d4d45d482c2e0dfceb8f3d72ed7fcaa79e8
+  created: false
+- path: work/active/workspace-aml-exam-prep/CONTEXT.md
+  sha256_before: 83e48101ab443f2498d90561b617a167005b1bef7005e0af119c6b4c0f1da3a8
+  sha256_after: 17dc23e14390035d6494bf7cdfc588056fa94ab16a505fb0ae0eba6097e43ae2
+  created: false
+metadata: {}

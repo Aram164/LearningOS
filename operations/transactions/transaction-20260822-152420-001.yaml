@@ -1,0 +1,58 @@
+schema_version: 1
+id: transaction-20260822-152420-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:24:20+02:00'
+snapshot_before: sha256:0b8a84e4c1e057ac230b5ad2f1e8eb6a405bc25b4d9cafcdd3020c23a25c564e
+snapshot_after: sha256:60a9a93324738bcc6b26b85ae9ccfb8e274fc972e8f7b4429669bfb3bef0efb4
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l10:
+    before: 0
+    after: 1
+  unit-m2-sad-l10:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/study-map.yaml
+  sha256_before: null
+  sha256_after: 10f230c29429f5b9ee7be5e203f915f222f46ef344edd51c0073fb7f080389f3
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/unit.yaml
+  sha256_before: 02bae9d48837edced76b1fbc7488dab8af2c82057e2185a81aed68da934f9c39
+  sha256_after: c58d38e8531985a526a5f88b0b76934fc8052355affa3a715192d51bec268d9c
+  created: false
+metadata: {}

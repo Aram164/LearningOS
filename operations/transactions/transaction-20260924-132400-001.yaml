@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-132400-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:24:00+02:00'
+snapshot_before: sha256:6e45d6f2d3e7063d1e83124653347f7e2befe8f357c80aa0375e4858810a5ee2
+snapshot_after: sha256:84a37e1a3b179884b54e6952335ecb1b1571519707d80902cd3a04977155baf9
+expected_revisions:
+  note-sad-l07-blitzstein-geom-convention-pp174-178: 0
+artifact_revisions:
+  note-sad-l07-blitzstein-geom-convention-pp174-178:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l07-blitzstein-geom-convention-pp174-178.md
+  sha256_before: null
+  sha256_after: 32da180ea1bbf1d1387f2107bbe4a02044af38a3bc349af3a195b97ca1eeeda8
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-5994f2fb2b074f7989b5e9f7612af6c7
+  idempotency_key: sad-source-angle-5994f2fb2b074f7989b5e9f7612af6c7
+  intent_sha256: sha256:1cd415bde7090adb420651676df675849524cec9daf486d6101dc558ced23f8b
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:1cd415bde7090adb420651676df675849524cec9daf486d6101dc558ced23f8b

@@ -1,0 +1,14 @@
+id: unit-python-oop-scope
+type: unit
+module_id: module-skill-python
+kind: topic
+title: Python OOP & scope repair
+order: 3
+scope: Seeded from the existing roadmap without inferring completion.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts:
+  ultimate_reference: note-python-oop-scope-repair-plan
+workspace_ids: []
+current_study_map: study-map-python-oop-scope

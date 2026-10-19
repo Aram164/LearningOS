@@ -1,0 +1,46 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"goals\":[{\"goal_id\":\"lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2\",\"detector\":\"lineage-stale\",\"title\":\"Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved\",\"rationale\":\"Relevant dependencies changed or cannot be verified; re-judge the claim against current material.\",\"evidence\":[\"claim:covers:route-b2f1f80014860a929a3af0bc\",\"basis:256eccf4fafba28f4b59c542c1d897062bef72a47836b19bdb53e8f7e1cd08e6\",\"moved:module-demo\",\"moved:unit-demo-l01\",\"cause:coarse-pin\",\"unit:unit-demo-l01\"],\"state\":\"detected\",\"authorized_by\":\"\",\"superseded_by\":\"\",\"quiet\":false},{\"goal_id\":\"study-map-obligation:unit-demo-l02\",\"detector\":\"study-map-obligation\",\"title\":\"Unit unit-demo-l02 owes a study map\",\"rationale\":\"An active unit with no ordered study map: coverage without a path. The obligation is derived, one definition with the producer.\",\"evidence\":[\"unit:unit-demo-l02\"],\"state\":\"detected\",\"authorized_by\":\"\",\"superseded_by\":\"\",\"quiet\":false}]}\n",
+  "stdout_json": {
+    "goals": [
+      {
+        "authorized_by": "",
+        "detector": "lineage-stale",
+        "evidence": [
+          "claim:covers:route-b2f1f80014860a929a3af0bc",
+          "basis:256eccf4fafba28f4b59c542c1d897062bef72a47836b19bdb53e8f7e1cd08e6",
+          "moved:module-demo",
+          "moved:unit-demo-l01",
+          "cause:coarse-pin",
+          "unit:unit-demo-l01"
+        ],
+        "goal_id": "lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2",
+        "quiet": false,
+        "rationale": "Relevant dependencies changed or cannot be verified; re-judge the claim against current material.",
+        "state": "detected",
+        "superseded_by": "",
+        "title": "Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved"
+      },
+      {
+        "authorized_by": "",
+        "detector": "study-map-obligation",
+        "evidence": [
+          "unit:unit-demo-l02"
+        ],
+        "goal_id": "study-map-obligation:unit-demo-l02",
+        "quiet": false,
+        "rationale": "An active unit with no ordered study map: coverage without a path. The obligation is derived, one definition with the producer.",
+        "state": "detected",
+        "superseded_by": "",
+        "title": "Unit unit-demo-l02 owes a study map"
+      }
+    ]
+  }
+}

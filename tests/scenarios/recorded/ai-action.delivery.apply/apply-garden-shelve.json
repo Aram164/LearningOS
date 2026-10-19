@@ -1,0 +1,496 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "KEY1"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/KEY1",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "KEY1",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"delivery\":{\"schema_version\":1,\"id\":\"ai-delivery-scenario-shelve\",\"type\":\"ai-action-delivery\",\"request_id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"status\":\"ready\",\"producer\":{\"provider\":\"manual\",\"adapter\":\"manual-bundle\"},\"approval\":{\"user_approved\":true,\"approved_at\":\"2026-10-01T09:00:00+02:00\"},\"operations\":[{\"capability\":\"garden.add-transcription\",\"target_id\":\"garden-note-seed\",\"artifact_ref\":\"artifacts/transcription.md\"},{\"capability\":\"garden.update\",\"target_id\":\"garden-note-seed\",\"patch\":{\"title\":\"Shelved Thought\",\"state\":\"developing\"}},{\"capability\":\"relationship.create\",\"payload\":{\"id\":\"relationship-garden-module-demo\",\"from\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"relation\":\"supports\",\"to\":{\"kind\":\"module\",\"id\":\"module-demo\"}}}],\"preconditions\":{\"snapshot_id\":\"SNAP1\",\"artifact_revisions\":{\"garden-note-seed\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"}}}}\n",
+      "stdout_json": {
+        "delivery": {
+          "action_id": "garden.shelve",
+          "approval": {
+            "approved_at": "2026-10-01T09:00:00+02:00",
+            "user_approved": true
+          },
+          "id": "ai-delivery-scenario-shelve",
+          "operations": [
+            {
+              "artifact_ref": "artifacts/transcription.md",
+              "capability": "garden.add-transcription",
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "garden.update",
+              "patch": {
+                "state": "developing",
+                "title": "Shelved Thought"
+              },
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "relationship.create",
+              "payload": {
+                "from": {
+                  "id": "garden-note-seed",
+                  "kind": "garden-note"
+                },
+                "id": "relationship-garden-module-demo",
+                "relation": "supports",
+                "to": {
+                  "id": "module-demo",
+                  "kind": "module"
+                }
+              }
+            }
+          ],
+          "preconditions": {
+            "artifact_revisions": {
+              "garden-note-seed": "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"
+            },
+            "snapshot_id": "SNAP1"
+          },
+          "producer": {
+            "adapter": "manual-bundle",
+            "provider": "manual"
+          },
+          "request_id": "KEY1",
+          "schema_version": 1,
+          "status": "ready",
+          "type": "ai-action-delivery"
+        },
+        "ok": true
+      },
+      "step": 1,
+      "transport": "cli"
+    },
+    {
+      "canonical_changed": {
+        "knowledge/garden/transcriptions/garden-note-seed.md": "0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY3": {
+              "capability": "ai-action.delivery.apply",
+              "channel": "operator",
+              "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY2",
+              "revisions": {
+                "garden-note-seed": 1,
+                "relationship-garden-module-demo": 1,
+                "transcription-garden-note-seed": 1
+              },
+              "snapshot_after": "SNAP2",
+              "snapshot_before": "SNAP1",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "ai-action.delivery.apply",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "garden-note-seed": {
+              "after": 1,
+              "before": 0
+            },
+            "relationship-garden-module-demo": {
+              "after": 1,
+              "before": 0
+            },
+            "transcription-garden-note-seed": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "ai-action.delivery.apply",
+                "declared_writes": [
+                  "operations/ai-actions/requests/**"
+                ]
+              },
+              {
+                "capability": "garden.add-transcription",
+                "declared_writes": [
+                  "knowledge/garden/transcriptions/"
+                ]
+              },
+              {
+                "capability": "garden.update",
+                "declared_writes": [
+                  "operations/ai-actions/garden-state/"
+                ]
+              },
+              {
+                "capability": "relationship.create",
+                "declared_writes": [
+                  "operations/ai-actions/relationships.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "ai-action.delivery.apply",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "garden-note-seed": 0,
+            "relationship-garden-module-demo": 0,
+            "transcription-garden-note-seed": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "action_id": "garden.shelve",
+            "approved_delivery": {
+              "artifact_sha256": {
+                "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
+              },
+              "delivery_sha256": "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11"
+            },
+            "created_ids": [
+              "transcription-garden-note-seed",
+              "relationship-garden-module-demo"
+            ],
+            "data_roots_sha256": "sha256:9d975f3523832935e3578c0f86012cb05d4b80252a3cfcfc7e56f63f18f71b23",
+            "deleted_ids": [],
+            "delivery_id": "ai-delivery-scenario-shelve",
+            "fingerprint_definition": 2,
+            "request_id": "KEY1",
+            "superseded_ids": [],
+            "updated_ids": [
+              "garden-note-seed"
+            ],
+            "validation": {
+              "boundaries": "passed",
+              "projection": "passed",
+              "references": "passed",
+              "schemas": "passed"
+            }
+          },
+          "request": {
+            "approval": {
+              "kind": "approved-delivery",
+              "subject_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY3",
+            "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+            "request_id": "KEY2"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP2",
+          "snapshot_before": "SNAP1",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "knowledge/garden/transcriptions/garden-note-seed.md",
+              "sha256_after": "0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3",
+              "sha256_before": null
+            },
+            {
+              "created": true,
+              "path": "operations/ai-actions/garden-state/garden-note-seed.yaml",
+              "sha256_after": "0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b",
+              "sha256_before": null
+            },
+            {
+              "created": true,
+              "path": "operations/ai-actions/relationships.yaml",
+              "sha256_after": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
+              "sha256_before": null
+            },
+            {
+              "created": false,
+              "path": "operations/ai-actions/requests/KEY1/request.yaml",
+              "sha256_after": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
+              "sha256_before": "f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "garden-note-seed": 1,
+            "relationship-garden-module-demo": 1,
+            "transcription-garden-note-seed": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "knowledge/garden/transcriptions/garden-note-seed.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3",
+              "state": "file"
+            },
+            "operations/ai-actions/garden-state/garden-note-seed.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b",
+              "state": "file"
+            },
+            "operations/ai-actions/relationships.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
+              "state": "file"
+            },
+            "operations/ai-actions/requests/KEY1/request.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "a4dbd331174cd01531f3719349aa3a784ea7eff063e7e2b3d6bb318d3a39f254",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5\",\n          \"sha256_after\": \"269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:9d975f3523832935e3578c0f86012cb05d4b80252a3cfcfc7e56f63f18f71b23\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "ai-action.delivery.apply",
+        "error": null,
+        "idempotency_key": "KEY3",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY2",
+        "result": {
+          "artifact_revisions": {
+            "garden-note-seed": 1,
+            "relationship-garden-module-demo": 1,
+            "transcription-garden-note-seed": 1
+          },
+          "ok": true,
+          "receipt": {
+            "artifact_revisions": {
+              "garden-note-seed": {
+                "after": 1,
+                "before": 0
+              },
+              "relationship-garden-module-demo": {
+                "after": 1,
+                "before": 0
+              },
+              "transcription-garden-note-seed": {
+                "after": 1,
+                "before": 0
+              }
+            },
+            "authority": {
+              "capability_contract_version": 2,
+              "enforced": true,
+              "grants": [
+                {
+                  "capability": "ai-action.delivery.apply",
+                  "declared_writes": [
+                    "operations/ai-actions/requests/**"
+                  ]
+                },
+                {
+                  "capability": "garden.add-transcription",
+                  "declared_writes": [
+                    "knowledge/garden/transcriptions/"
+                  ]
+                },
+                {
+                  "capability": "garden.update",
+                  "declared_writes": [
+                    "operations/ai-actions/garden-state/"
+                  ]
+                },
+                {
+                  "capability": "relationship.create",
+                  "declared_writes": [
+                    "operations/ai-actions/relationships.yaml"
+                  ]
+                }
+              ]
+            },
+            "capability": "ai-action.delivery.apply",
+            "committed_at": "2026-10-01T09:00:00+02:00",
+            "expected_revisions": {
+              "garden-note-seed": 0,
+              "relationship-garden-module-demo": 0,
+              "transcription-garden-note-seed": 0
+            },
+            "id": "TX1",
+            "metadata": {
+              "action_id": "garden.shelve",
+              "approved_delivery": {
+                "artifact_sha256": {
+                  "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
+                },
+                "delivery_sha256": "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11"
+              },
+              "created_ids": [
+                "transcription-garden-note-seed",
+                "relationship-garden-module-demo"
+              ],
+              "data_roots_sha256": "sha256:9d975f3523832935e3578c0f86012cb05d4b80252a3cfcfc7e56f63f18f71b23",
+              "deleted_ids": [],
+              "delivery_id": "ai-delivery-scenario-shelve",
+              "fingerprint_definition": 2,
+              "request_id": "KEY1",
+              "superseded_ids": [],
+              "updated_ids": [
+                "garden-note-seed"
+              ],
+              "validation": {
+                "boundaries": "passed",
+                "projection": "passed",
+                "references": "passed",
+                "schemas": "passed"
+              }
+            },
+            "receipt_path": "operations/transactions/TX1.yaml",
+            "replayed": false,
+            "request": {
+              "approval": {
+                "kind": "approved-delivery",
+                "subject_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf"
+              },
+              "channel": "operator",
+              "idempotency_key": "KEY3",
+              "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+              "request_id": "KEY2"
+            },
+            "revision_updates": {
+              "garden-note-seed": 1,
+              "relationship-garden-module-demo": 1,
+              "transcription-garden-note-seed": 1
+            },
+            "schema_version": 2,
+            "snapshot_after": "SNAP2",
+            "snapshot_before": "SNAP1",
+            "status": "committed",
+            "transaction_id": "TX1",
+            "type": "transaction-receipt",
+            "writes": [
+              {
+                "created": true,
+                "path": "knowledge/garden/transcriptions/garden-note-seed.md",
+                "sha256_after": "0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3",
+                "sha256_before": null
+              },
+              {
+                "created": true,
+                "path": "operations/ai-actions/garden-state/garden-note-seed.yaml",
+                "sha256_after": "0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b",
+                "sha256_before": null
+              },
+              {
+                "created": true,
+                "path": "operations/ai-actions/relationships.yaml",
+                "sha256_after": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
+                "sha256_before": null
+              },
+              {
+                "created": false,
+                "path": "operations/ai-actions/requests/KEY1/request.yaml",
+                "sha256_after": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
+                "sha256_before": "f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5"
+              }
+            ]
+          },
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP2",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP2",
+        "transaction_id": "TX1"
+      },
+      "step": 2,
+      "transport": "gateway"
+    }
+  ]
+}

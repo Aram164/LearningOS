@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-joins-reshape-79a212a05f",
+  "idempotency_key": "polars-map-joins-reshape-79a212a05f",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:6095d97c02a7ede7bd216d4fd6edbb083d6b8caecc76baa368e5b7b42cbf64ff",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 7,
+    "study-map-job-polars-joins-reshape": 6
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-joins-reshape-study-map.yaml",
+    "file_sha256": "sha256:79a212a05fd25ceb9cc6af4afde1db205c73a95b271c4941641432a20da75eed",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:f4d95cc05284b3e6aec7cc8358bb75fcaa8d1eae36c7894c106eba7da3ab6e65"
+  }
+}

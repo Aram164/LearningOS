@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20260831-203645-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-31T20:36:45+02:00'
+snapshot_before: sha256:0c9b4079939e2c00f2cf229e39f15c10ccf4c6d8920f4ac7dffc296c96f12bdc
+snapshot_after: sha256:fc127d004138ed1de59440b8c474722ae70be38f55c63c3fc6f23bec347e8db6
+expected_revisions:
+  module-hu-algo2: 1
+artifact_revisions:
+  module-hu-algo2:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-algo2/module.yaml
+  sha256_before: 4270df25cb128d45a3a716cf38e10193cb41359d28ecad92d9218c4505230c67
+  sha256_after: 0663c7bd232e73c43e59c92b6ab030801edc4c2107082a9761733928f3955241
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: codex
+  request_id: request-algo2-safe-shelve-20260831-001
+  idempotency_key: algo2-safe-shelve-20260831-001
+  intent_sha256: sha256:4f32bcc5a97d09ba3fbd87cfc54e6d2ed78648ba87e5f6a49a95a5781d84be45
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:4f32bcc5a97d09ba3fbd87cfc54e6d2ed78648ba87e5f6a49a95a5781d84be45

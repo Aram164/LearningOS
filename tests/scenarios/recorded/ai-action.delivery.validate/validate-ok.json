@@ -1,0 +1,140 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "KEY1"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"request\":{\"id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/KEY1\"},\"bundle_path\":\"operations/ai-actions/requests/KEY1\"}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/KEY1",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "KEY1",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"delivery\":{\"schema_version\":1,\"id\":\"ai-delivery-validate-ok\",\"type\":\"ai-action-delivery\",\"request_id\":\"KEY1\",\"action_id\":\"garden.shelve\",\"status\":\"ready\",\"producer\":{\"provider\":\"manual\",\"adapter\":\"manual-bundle\"},\"approval\":{\"user_approved\":true,\"approved_at\":\"2026-10-01T09:00:00+02:00\"},\"operations\":[{\"capability\":\"garden.add-transcription\",\"target_id\":\"garden-note-seed\",\"artifact_ref\":\"artifacts/transcription.md\"},{\"capability\":\"garden.update\",\"target_id\":\"garden-note-seed\",\"patch\":{\"title\":\"Shelved Thought\",\"state\":\"developing\"}},{\"capability\":\"relationship.create\",\"payload\":{\"id\":\"relationship-garden-module-demo\",\"from\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"relation\":\"supports\",\"to\":{\"kind\":\"module\",\"id\":\"module-demo\"}}}],\"preconditions\":{\"snapshot_id\":\"SNAP1\",\"artifact_revisions\":{\"garden-note-seed\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"}}}}\n",
+      "stdout_json": {
+        "delivery": {
+          "action_id": "garden.shelve",
+          "approval": {
+            "approved_at": "2026-10-01T09:00:00+02:00",
+            "user_approved": true
+          },
+          "id": "ai-delivery-validate-ok",
+          "operations": [
+            {
+              "artifact_ref": "artifacts/transcription.md",
+              "capability": "garden.add-transcription",
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "garden.update",
+              "patch": {
+                "state": "developing",
+                "title": "Shelved Thought"
+              },
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "relationship.create",
+              "payload": {
+                "from": {
+                  "id": "garden-note-seed",
+                  "kind": "garden-note"
+                },
+                "id": "relationship-garden-module-demo",
+                "relation": "supports",
+                "to": {
+                  "id": "module-demo",
+                  "kind": "module"
+                }
+              }
+            }
+          ],
+          "preconditions": {
+            "artifact_revisions": {
+              "garden-note-seed": "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"
+            },
+            "snapshot_id": "SNAP1"
+          },
+          "producer": {
+            "adapter": "manual-bundle",
+            "provider": "manual"
+          },
+          "request_id": "KEY1",
+          "schema_version": 1,
+          "status": "ready",
+          "type": "ai-action-delivery"
+        },
+        "ok": true
+      },
+      "step": 1,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-validate-delivery",
+        "ai-delivery-validate-ok"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\"ok\":true,\"delivery_id\":\"ai-delivery-validate-ok\",\"request_id\":\"KEY1\"}\n",
+      "stdout_json": {
+        "delivery_id": "ai-delivery-validate-ok",
+        "ok": true,
+        "request_id": "KEY1"
+      },
+      "step": 2,
+      "transport": "cli"
+    }
+  ]
+}

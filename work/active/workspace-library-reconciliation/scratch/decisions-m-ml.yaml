@@ -1,0 +1,558 @@
+# Manual dispositions for MASTERS-ML-RESOURCES.md (origin key m-ml).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-mueller-kernel-tutorial
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:14:e1', role: mention}
+- id: source-schoelkopf-smola-lwk
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:15:e1', role: mention}
+- id: source-esl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:17:u1', role: landing, note: "official free PDF page; the record holds only the local copy"}
+  - {ref: 'm-ml:72:e1', role: duplicate, note: "back-reference; chapter 14"}
+- id: source-prince-udl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:38:e1', role: duplicate, note: "back-reference; second half of the book"}
+- id: source-bishop-prml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:60:e1', role: duplicate, note: "back-reference; chapters 3–5, 7, 8"}
+  - {ref: 'm-ml:69:e1', role: mention, note: "chapters 9, 12, 13"}
+  - {ref: 'm-ml:92:e1', role: duplicate, note: "back-reference; chapters 1–4, 6.4, 9, 12"}
+- id: source-murphy-pml1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:71:u1', role: companion, title: "Book site (Book 1 and Book 2)", note: "the site covers both volumes; Book 2 is candidate-source-murphy-pml2"}
+- id: source-islp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:50:u1', role: landing, note: "official site with Python labs; the record holds only the local copy"}
+  - {ref: 'm-ml:94:e1', role: duplicate}
+- id: source-mml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:95:e1', role: duplicate}
+- id: source-dmmls-boehm
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:102:e1', role: mention}
+- id: source-cmu-10414
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:104:e1', role: duplicate, note: "back-reference to MLMMI"}
+- id: source-caltech-lfd
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:59:u1', role: companion, title: "Telecourse (18 recorded lectures)"}
+- id: source-cs231n-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:27:u1', role: companion, title: "Course site (current run)"}
+- id: source-karpathy-micrograd
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:28:u1', role: companion, title: "Neural Networks: Zero to Hero (series page)"}
+  - {ref: 'm-ml:198:u1', role: companion, title: "micrograd repository"}
+- id: source-mit-6036
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:193:e1', role: mention}
+- id: source-fluent-python
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:165:e1', role: mention}
+- id: source-pydata-handbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:166:u1', role: companion, title: "Prose web book"}
+- id: source-pytorch-tutorials
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:167:e1', role: mention}
+- id: source-captum
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:131:u1', role: alias, note: "site root; the record stores the tutorials page"}
+- id: source-amls-prior-archives
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:101:u1', role: companion, title: "SS25 course page"}
+  - {ref: 'm-ml:101:u3', role: companion, title: "Boehm's teaching overview (archive from SS19)"}
+- id: source-nyu-dl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:200:u1', role: companion, title: "Course repository with notebooks"}
+- id: candidate-source-silver-ucl-rl
+  kind: new-masters-candidate
+  title: "David Silver — UCL Reinforcement Learning lectures"
+  type: video
+  extra_mentions: ['m-ml:62']
+  occurrences: []
+- id: candidate-source-numpy-tutorials
+  kind: new-masters-candidate
+  title: "NumPy official tutorials"
+  type: documentation
+  extra_mentions: ['m-ml:167']
+  occurrences: []
+- id: candidate-source-stanford-cs228
+  kind: new-masters-candidate
+  title: "Stanford CS228 — Probabilistic Graphical Models (course notes)"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:18:u1', role: landing}
+- id: candidate-source-chapelle-ssl
+  kind: new-masters-candidate
+  title: "Chapelle, Schölkopf & Zien (eds.) — Semi-Supervised Learning (MIT Press)"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:19:e1', role: mention}
+- id: candidate-source-uva-dl-notebooks
+  kind: new-masters-candidate
+  title: "UvA Deep Learning notebooks"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:32:u1', role: landing}
+- id: candidate-source-stanford-cs236
+  kind: new-masters-candidate
+  title: "Stanford CS236 — Deep Generative Models"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:39:u1', role: landing}
+- id: candidate-source-stanford-cs25
+  kind: new-masters-candidate
+  title: "Stanford CS25 — Transformers United"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:40:u1', role: landing}
+- id: candidate-source-lilian-weng-blog
+  kind: new-masters-candidate
+  title: "Lilian Weng — Lil'Log"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:41:u1', role: landing}
+- id: candidate-source-attention-is-all-you-need
+  kind: new-masters-candidate
+  title: "Vaswani et al. — Attention Is All You Need (2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-neural-odes
+  kind: new-masters-candidate
+  title: "Chen et al. — Neural Ordinary Differential Equations (NeurIPS 2018)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-deep-equilibrium-models
+  kind: new-masters-candidate
+  title: "Bai et al. — Deep Equilibrium Models (NeurIPS 2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-normalizing-flows-vi
+  kind: new-masters-candidate
+  title: "Rezende & Mohamed — Variational Inference with Normalizing Flows (ICML 2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-hinton-distillation
+  kind: new-masters-candidate
+  title: "Hinton et al. — Distilling the Knowledge in a Neural Network (2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-raschka-pytorch-sklearn
+  kind: new-masters-candidate
+  title: "Raschka, Liu & Mirjalili — Machine Learning with PyTorch and Scikit-Learn"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:51:e1', role: mention}
+- id: candidate-source-thakur-approaching-ml
+  kind: new-masters-candidate
+  title: "Thakur — Approaching (Almost) Any Machine Learning Problem"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:52:u1', role: landing}
+- id: candidate-source-pedregosa-sklearn-jmlr
+  kind: new-masters-candidate
+  title: "Pedregosa et al. — Scikit-learn: Machine Learning in Python (JMLR 2011)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:53:e1', role: mention}
+- id: candidate-source-varma-simon-cv-bias
+  kind: new-masters-candidate
+  title: "Varma & Simon — Bias in Error Estimation when Using Cross-Validation for Model Selection"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:53:e1', role: mention}
+- id: candidate-source-hertz-krogh-palmer
+  kind: new-masters-candidate
+  title: "Hertz, Krogh & Palmer — Introduction to the Theory of Neural Computation"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:63:e1', role: mention}
+- id: candidate-source-hyvarinen-oja-ica
+  kind: new-masters-candidate
+  title: "Hyvärinen & Oja — Independent Component Analysis: Algorithms and Applications (Neural Networks 2000)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:70:u1', role: landing}
+- id: candidate-source-murphy-pml2
+  kind: new-masters-candidate
+  title: "Murphy — Probabilistic Machine Learning: Advanced Topics (Book 2)"
+  type: book
+  extra_mentions: ['m-ml:71']
+  occurrences: []
+- id: candidate-source-kernel-pca-paper
+  kind: new-masters-candidate
+  title: "Schölkopf, Smola & Müller — Nonlinear Component Analysis as a Kernel Eigenvalue Problem (1998)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:73:e1', role: mention}
+- id: candidate-source-kolter-madry-adversarial
+  kind: new-masters-candidate
+  title: "Kolter & Madry — Adversarial Robustness: Theory and Practice (tutorial)"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:79:u1', role: landing}
+- id: candidate-source-biggio-roli-wild-patterns
+  kind: new-masters-candidate
+  title: "Biggio & Roli — Wild Patterns: Ten Years After the Rise of Adversarial Machine Learning (Pattern Recognition 2018)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:80:e1', role: mention}
+- id: candidate-source-szegedy-intriguing
+  kind: new-masters-candidate
+  title: "Szegedy et al. — Intriguing Properties of Neural Networks (2014)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-goodfellow-fgsm
+  kind: new-masters-candidate
+  title: "Goodfellow et al. — Explaining and Harnessing Adversarial Examples (2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-madry-pgd
+  kind: new-masters-candidate
+  title: "Madry et al. — Towards Deep Learning Models Resistant to Adversarial Attacks (2018)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-carlini-wagner
+  kind: new-masters-candidate
+  title: "Carlini & Wagner — Towards Evaluating the Robustness of Neural Networks (2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-shokri-membership-inference
+  kind: new-masters-candidate
+  title: "Shokri et al. — Membership Inference Attacks Against Machine Learning Models (2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-badnets
+  kind: new-masters-candidate
+  title: "Gu et al. — BadNets (2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-arp-dos-and-donts
+  kind: new-masters-candidate
+  title: "Arp et al. — Dos and Don'ts of Machine Learning in Computer Security (USENIX Security 2022)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-carlini-site
+  kind: new-masters-candidate
+  title: "Nicholas Carlini — adversarial-example paper list and evaluation essays"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:82:u1', role: landing}
+- id: candidate-source-robustbench
+  kind: new-masters-candidate
+  title: "RobustBench"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:83:u1', role: landing}
+- id: candidate-source-adversarial-robustness-toolbox
+  kind: new-masters-candidate
+  title: "Adversarial Robustness Toolbox (ART)"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:83:u2', role: landing}
+  - {ref: 'm-ml:202:u1', role: duplicate, note: "already listed in §7"}
+- id: candidate-source-cleverhans
+  kind: new-masters-candidate
+  title: "cleverhans (adversarial example library and tutorials)"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:202:u2', role: landing}
+- id: candidate-source-madrylab-robustness
+  kind: new-masters-candidate
+  title: "MadryLab robustness library"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:202:u3', role: landing}
+- id: candidate-source-rasmussen-williams-gpml
+  kind: new-masters-candidate
+  title: "Rasmussen & Williams — Gaussian Processes for Machine Learning"
+  type: book
+  extra_mentions: ['m-math:39']
+  occurrences:
+  - {ref: 'm-ml:93:u1', role: landing}
+- id: candidate-source-systemds-paper
+  kind: new-masters-candidate
+  title: "Boehm et al. — SystemDS: A Declarative Machine Learning System (CIDR 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-systemml-spark
+  kind: new-masters-candidate
+  title: "Boehm et al. — SystemML: Declarative Machine Learning on Spark (VLDB 2016)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-compressed-linear-algebra
+  kind: new-masters-candidate
+  title: "Elgohary et al. — Compressed Linear Algebra for Large-Scale Machine Learning (VLDB 2016)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-parameter-server
+  kind: new-masters-candidate
+  title: "Li et al. — Scaling Distributed Machine Learning with the Parameter Server (OSDI 2014)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-tvm
+  kind: new-masters-candidate
+  title: "Chen et al. — TVM: An Automated End-to-End Optimizing Compiler for Deep Learning (OSDI 2018)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-hidden-technical-debt
+  kind: new-masters-candidate
+  title: "Sculley et al. — Hidden Technical Debt in Machine Learning Systems (NeurIPS 2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-stanford-cs224n
+  kind: new-masters-candidate
+  title: "Stanford CS224N — Natural Language Processing with Deep Learning (Manning)"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:114:u1', role: landing}
+- id: candidate-source-cmu-anlp
+  kind: new-masters-candidate
+  title: "CMU CS11-711 — Advanced NLP (Neubig, 2024 run)"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:115:u1', role: landing}
+- id: candidate-source-huggingface-course
+  kind: new-masters-candidate
+  title: "Hugging Face — LLM/NLP course"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:116:u1', role: landing}
+- id: candidate-source-bert
+  kind: new-masters-candidate
+  title: "Devlin et al. — BERT (2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-gpt3
+  kind: new-masters-candidate
+  title: "Brown et al. — Language Models are Few-Shot Learners (GPT-3, 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-instructgpt
+  kind: new-masters-candidate
+  title: "Ouyang et al. — Training Language Models to Follow Instructions with Human Feedback (InstructGPT, 2022)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-rag
+  kind: new-masters-candidate
+  title: "Lewis et al. — Retrieval-Augmented Generation (2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-spacy
+  kind: new-masters-candidate
+  title: "spaCy"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:118:e1', role: mention}
+- id: candidate-source-nltk
+  kind: new-masters-candidate
+  title: "NLTK"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:118:e1', role: mention}
+- id: candidate-source-samek-explainable-ai
+  kind: new-masters-candidate
+  title: "Samek, Montavon, Vedaldi, Hansen & Müller (eds.) — Explainable AI: Interpreting, Explaining and Visualizing Deep Learning (LNCS 11700)"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:125:e1', role: mention}
+- id: candidate-source-xxai
+  kind: new-masters-candidate
+  title: "Holzinger et al. (eds.) — xxAI: Beyond Explainable AI (Springer 2022, open access)"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:126:u1', role: landing}
+- id: candidate-source-lrp-bach-2015
+  kind: new-masters-candidate
+  title: "Bach et al. — On Pixel-Wise Explanations by Layer-Wise Relevance Propagation (PLoS ONE 2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:127:e1', role: mention}
+- id: candidate-source-lrp-overview
+  kind: new-masters-candidate
+  title: "Montavon et al. — Layer-Wise Relevance Propagation: An Overview (2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:127:e1', role: mention}
+- id: candidate-source-crp
+  kind: new-masters-candidate
+  title: "Achtibat et al. — From Attribution Maps to Human-Understandable Explanations through Concept Relevance Propagation (Nature Machine Intelligence 2023)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:128:e1', role: mention}
+- id: candidate-source-molnar-iml
+  kind: new-masters-candidate
+  title: "Molnar — Interpretable Machine Learning"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:129:u1', role: landing}
+- id: candidate-source-fairmlbook
+  kind: new-masters-candidate
+  title: "Barocas, Hardt & Narayanan — Fairness and Machine Learning"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:130:u1', role: landing}
+- id: candidate-source-zennit
+  kind: new-masters-candidate
+  title: "Zennit (LRP/CRP library)"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:131:u2', role: landing}
+- id: candidate-source-pinns-paper
+  kind: new-masters-candidate
+  title: "Raissi, Perdikaris & Karniadakis — Physics-Informed Neural Networks (J. Computational Physics 2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:138:e1', role: mention}
+  - {ref: 'm-ml:141:u2', role: companion, title: "Reference implementation (maziarraissi/PINNs)"}
+- id: candidate-source-karniadakis-piml-review
+  kind: new-masters-candidate
+  title: "Karniadakis et al. — Physics-informed machine learning (Nature Reviews Physics 2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:139:e1', role: mention}
+- id: candidate-source-brunton-kutz-data-driven
+  kind: new-masters-candidate
+  title: "Brunton & Kutz — Data-Driven Science and Engineering"
+  type: book
+  occurrences:
+  - {ref: 'm-ml:140:u1', role: landing}
+- id: candidate-source-brunton-piml-videos
+  kind: new-masters-candidate
+  title: "Steve Brunton — Physics-Informed Machine Learning (YouTube series)"
+  type: video
+  extra_mentions: ['m-ml:140']
+  occurrences: []
+- id: candidate-source-deepxde
+  kind: new-masters-candidate
+  title: "DeepXDE"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:141:u1', role: landing}
+- id: candidate-source-schnet
+  kind: new-masters-candidate
+  title: "Schütt et al. — SchNet: A continuous-filter CNN for modeling quantum interactions (NeurIPS 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:148:e1', role: mention}
+- id: candidate-source-ml-molecular-materials
+  kind: new-masters-candidate
+  title: "Butler et al. — Machine learning for molecular and materials science (Nature 2018)"
+  type: paper
+  note: "the row also names quantum-ML reviews by von Lilienfeld, Müller and Tkatchenko without an identifiable item"
+  occurrences:
+  - {ref: 'm-ml:149:e1', role: mention}
+- id: candidate-source-papers-with-code
+  kind: new-masters-candidate
+  title: "Papers with Code"
+  type: website
+  occurrences:
+  - {ref: 'm-ml:158:u1', role: landing}
+- id: candidate-source-ml-reproducibility-checklist
+  kind: new-masters-candidate
+  title: "Pineau — Machine Learning Reproducibility Checklist"
+  type: documentation
+  extra_mentions: ['m-ml:158']
+  occurrences: []
+- id: candidate-source-tuebingen-probabilistic-ml
+  kind: new-masters-candidate
+  title: "Tübingen — Probabilistic Machine Learning (Hennig)"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:194:e1', role: mention}
+- id: candidate-source-nanogpt
+  kind: new-masters-candidate
+  title: "nanoGPT (Karpathy)"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:198:u2', role: landing}
+- id: candidate-source-tinygrad
+  kind: new-masters-candidate
+  title: "tinygrad"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:199:u1', role: landing}
+- id: candidate-source-fastai-course
+  kind: new-masters-candidate
+  title: "fast.ai — Practical Deep Learning course"
+  type: course
+  occurrences:
+  - {ref: 'm-ml:201:u1', role: landing}
+- id: candidate-source-kaggle-learn
+  kind: new-masters-candidate
+  title: "Kaggle Learn"
+  type: course
+  extra_mentions: ['m-ml:201']
+  occurrences: []
+- id: candidate-source-vllm
+  kind: new-masters-candidate
+  title: "vLLM"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:203:u1', role: landing}
+- id: candidate-source-llama-cpp
+  kind: new-masters-candidate
+  title: "llama.cpp"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:203:u2', role: landing}
+- id: candidate-source-mlflow
+  kind: new-masters-candidate
+  title: "MLflow (experiment tracking and model registry)"
+  type: software
+  occurrences:
+  - {ref: 'm-ml:203:u3', role: landing}
+- id: out-of-scope:discovery-pointer
+  kind: out-of-scope
+  reason: "Article or list used to discover sources; the sources it yielded are dispositioned separately"
+  occurrences: ['m-ml:150:u1', 'm-ml:157:u1']
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-ml:105:e1', 'm-ml:119:e1', 'm-ml:132:e1', 'm-ml:142:e1', 'm-ml:151:e1', 'm-ml:159:e1', 'm-ml:168:e1', 'm-ml:174:e1', 'm-ml:175:e1', 'm-ml:176:e1', 'm-ml:177:e1', 'm-ml:178:e1']

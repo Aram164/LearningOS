@@ -1,0 +1,477 @@
+schema: 1
+fields:
+- operation: ability.context
+  pointer: /properties/ability_id
+  kind: ability
+  lookup: tolerant
+- operation: ai-action.delivery.apply
+  pointer: /properties/artifact_sha256
+  kind: null
+  lookup: true
+  owner: ai-delivery-artifact-digests
+  owner_shape: mapping-values
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.delivery.apply
+  pointer: /properties/delivery_id
+  kind: null
+  lookup: true
+  owner: ai-delivery-exchange
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.delivery.apply
+  pointer: /properties/delivery_sha256
+  kind: digest
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: ai_actions/binding.py:35-53 verifies existing
+    delivery.yaml bytes'
+- operation: atlas.context
+  pointer: /properties/concept_id
+  kind: concept
+  lookup: true
+- operation: capture.create
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: ai-action.append-slices
+  pointer: /properties/concept_id/items
+  kind: concept
+  lookup: true
+- operation: ai-action.append-slices
+  pointer: /properties/request_id
+  kind: null
+  lookup: true
+  owner: ai-request-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.append-slices
+  pointer: /properties/route_id
+  kind: route
+  lookup: true
+- operation: ai-action.prepare
+  pointer: /properties/action_id
+  kind: null
+  lookup: true
+  owner: ai-action-registry
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded registry ids; owner
+    executed in test_arch_idroundtrip'
+- operation: ai-action.prepare
+  pointer: /properties/request_id
+  kind: null
+  lookup: false
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: prepare request_id is a caller-supplied
+    creation identity; never a known-ID lookup'
+- operation: ai-action.prepare
+  pointer: /properties/target_id
+  kind: null
+  lookup: true
+  owner: ai-action-target
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded garden/unit ids;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.status
+  pointer: /properties/request_id
+  kind: null
+  lookup: true
+  owner: ai-request-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store request inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: ai-action.delivery.validate
+  pointer: /properties/delivery_id
+  kind: null
+  lookup: true
+  owner: ai-delivery-store
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: miss-only same-store delivery inventory;
+    owner executed in test_arch_idroundtrip'
+- operation: dossier.read
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: goal.decide
+  pointer: /properties/goal_id/items
+  kind: goal
+  lookup: true
+- operation: goal.decide
+  pointer: /properties/reviewed_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/goal.py:141-167 binds the computed
+    ledger-plus-request decision review'
+- operation: goal.decide
+  pointer: /properties/session_id
+  kind: null
+  lookup: false
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: goal session_id is an ownership-window
+    identity; never a known-ID lookup'
+- operation: project.inspect
+  pointer: /properties/id
+  kind: null
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: project.inspect
+  pointer: /properties/more_ids/items
+  kind: null
+  lookup: true
+  owner: inspect-reference
+  owner_shape: scalar
+  decision: 'Terminal Muse conductor 2026-10-09: SPEC (ay); control/S15-Aram-six-field-approval-20261008.json;
+    owner executed in test_arch_idroundtrip'
+- operation: module.list
+  pointer: /properties/program_id
+  kind: program
+  lookup: false
+- operation: note.content
+  pointer: /properties/note_id
+  kind: note
+  lookup: true
+- operation: operations.read
+  pointer: /properties/request_id
+  kind: null
+  lookup: true
+  owner: operations-trace-request
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-6 2026-10-12: lookup over distinct already-loaded
+    trace request ids; owner executed in test_arch_idroundtrip'
+- operation: plan.edit-context
+  pointer: /properties/route_id
+  kind: route
+  lookup: true
+- operation: plan.edit-context
+  pointer: /properties/route_ids/items
+  kind: route
+  lookup: true
+- operation: plan.edit-context
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: plan.edit-context
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: plan.template
+  pointer: /properties/module_id
+  kind: module
+  lookup: false
+- operation: plan.template
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: false
+- operation: related.read
+  pointer: /properties/id
+  kind: null
+  lookup: true
+  owner: related-record
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-7 2026-10-12: heterogeneous record owner probe
+    over manifest record ids; owner executed in test_arch_idroundtrip'
+- operation: session.end
+  pointer: /properties/session_id
+  kind: null
+  lookup: false
+  decision: 'Task 73 conductor 2026-10-12: session-end session_id selects/creates
+    the ownership window; never a known-ID lookup ((cx) D-6 analogue)'
+- operation: unit.list
+  pointer: /properties/component_id
+  kind: component
+  lookup: true
+- operation: unit.list
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
+- operation: collection.entry.revise
+  pointer: /properties/expected_diff_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/collection_entry.py:254-282 binds
+    the recomputed requested revision diff'
+- operation: coordination.section.revise
+  pointer: /properties/expected_content_sha256
+  kind: digest
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: commands/workspace.py:35-69 verifies the
+    existing coordination file'
+- operation: detour.create
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: detour.create
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: detour.resolve
+  pointer: /properties/detour_id
+  kind: detour
+  lookup: true
+- operation: detour.resolve
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: inbox.resolve
+  pointer: /properties/drop_sha256
+  kind: digest
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: commands/inbox.py:115-127 verifies the existing
+    drop file or folder'
+- operation: lineage.restamp
+  pointer: /properties/claim_ids/items
+  kind: null
+  lookup: null
+  review: unknown id prefix 'claim'
+- operation: lineage.restamp
+  pointer: /properties/claims_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/lineage_restamp.py:60-68 binds supplied
+    claim_ids serialized as sorted newline bytes'
+- operation: masters-planning.comparison.publish
+  pointer: /properties/candidate_module_id
+  kind: null
+  lookup: true
+  owner: masters-candidate-module
+  owner_shape: scalar
+  decision: 'Builder Task 78 (cx) D-8 2026-10-12: already-loaded catalog module map;
+    owner executed in test_arch_idroundtrip'
+- operation: material.span
+  pointer: /properties/route_id
+  kind: route
+  lookup: true
+- operation: material.span
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: material.span
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: module.attempt.record
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
+- operation: module.materials.compact
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
+- operation: module.materials.compact
+  pointer: /properties/plan_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/material.py:710-715 binds the computed
+    requested compaction plan'
+- operation: module.plan.import
+  pointer: /properties/apply_reviewed_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:2373-2397 binds supplied
+    plan package bytes'
+- operation: module.plan.import
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: module.plan.import
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
+- operation: module.plan.import
+  pointer: /properties/package_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:1946-1963 binds the computed
+    promotion package from requested content'
+- operation: module.sitting.update
+  pointer: /properties/module_id
+  kind: module
+  lookup: true
+- operation: note.analysis.save
+  pointer: /properties/body_file_sha256
+  kind: digest
+  lookup: false
+- operation: note.create
+  pointer: /properties/body_file_sha256
+  kind: digest
+  lookup: false
+- operation: note.evidence.add
+  pointer: /properties/note_id
+  kind: note
+  lookup: true
+- operation: note.revise
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: note.revise
+  pointer: /properties/note_id
+  kind: note
+  lookup: true
+- operation: path.attachment.add
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: path.attachment.add
+  pointer: /properties/path_id
+  kind: path
+  lookup: true
+- operation: path.attachment.add
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: path.note.write
+  pointer: /properties/path_id
+  kind: path
+  lookup: true
+- operation: path.note.write
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: path.progress.update
+  pointer: /properties/path_id
+  kind: path
+  lookup: true
+- operation: path.progress.update
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: project.create
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: project.update
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: project.update
+  pointer: /properties/project_id
+  kind: project
+  lookup: true
+- operation: review.apply
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: review.prepare
+  pointer: /properties/items_file_sha256
+  kind: digest
+  lookup: false
+- operation: review.prepare
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: route.patch
+  pointer: /properties/route_id
+  kind: route
+  lookup: true
+- operation: route.patch
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: source.feedback.record
+  pointer: /properties/resource_id
+  kind: resource
+  lookup: true
+- operation: source.feedback.record
+  pointer: /properties/source_id
+  kind: source
+  lookup: true
+- operation: source.feedback.record
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: source.feedback.record
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: source.intake.record
+  pointer: /properties/expected_diff_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/source_catalog.py:519 binds the
+    requested intake diff'
+- operation: source.record.revise
+  pointer: /properties/expected_diff_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/source_catalog.py:1087 binds the
+    requested revision diff'
+- operation: stage.attachment.add
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: stage.attachment.add
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: stage.attachment.add
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: stage.note.write
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: stage.note.write
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: stage.progress.update
+  pointer: /properties/stage_id
+  kind: stage
+  lookup: true
+- operation: stage.progress.update
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.map.import
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: unit.map.import
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.material-synthesis.publish
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.note.append
+  pointer: /properties/attachment_sha256/items
+  kind: digest
+  lookup: false
+- operation: unit.note.append
+  pointer: /properties/stage_id/items
+  kind: stage
+  lookup: true
+- operation: unit.note.append
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.plan.revise
+  pointer: /properties/apply_reviewed_sha256
+  kind: digest
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:2269-2286 binds supplied
+    revision bytes'
+- operation: unit.plan.revise
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+- operation: unit.plan.revise
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: unit.source-selection.set
+  pointer: /properties/source_id
+  kind: source
+  lookup: true
+- operation: unit.source-selection.set
+  pointer: /properties/unit_id
+  kind: unit
+  lookup: true
+- operation: workspace.next-action.update
+  pointer: /properties/workspace_id
+  kind: workspace
+  lookup: true

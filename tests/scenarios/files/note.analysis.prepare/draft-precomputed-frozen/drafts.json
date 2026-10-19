@@ -1,0 +1,21 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "frozen_input_bytes": 10,
+        "frozen_input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "# note-scenario-prep-9\n\nStaged bytes.\n",
+      "id": "note-scenario-prep-9",
+      "path": "knowledge/notes/mathematics/note-scenario-prep-9.md",
+      "title": "Title note-scenario-prep-9"
+    }
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "canonical_changed": {
+    "work/active/workspace-demo/paths/stage-demo-path-notes.md": "76386c52c0aac24d9be7c0ff0b1fb5a3ace0bf9dcf192ac978c62dbb6f4edf4d"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "path.note.write",
+          "channel": "operator",
+          "intent_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "path-demo": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "path-demo": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "path.note.write",
+            "declared_writes": [
+              "work/active/**"
+            ]
+          }
+        ]
+      },
+      "capability": "path.note.write",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "path-demo": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:090a849917f0c4c83333fd8bd685e4fbde7d28a33f1a5c795161b97d07d8d29e",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "work/active/workspace-demo/paths/stage-demo-path-notes.md",
+          "sha256_after": "76386c52c0aac24d9be7c0ff0b1fb5a3ace0bf9dcf192ac978c62dbb6f4edf4d",
+          "sha256_before": "105f863cae25c40a6f48917be30307880ce4ff3f0d83b9b9116a04363170d413"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "path-demo": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "f3c745ad1e97c5fd47d37cf118ebecbf268ce5416da11d5745900f9ed897ea68",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "59ad29a665aa7c62c657a6e16ca5aac60d1d3db30855d9ff74a2ba3ee68fe81e",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "dc8343a81066dddd939f2346495ab4cb73d711614f511501092fd5061f113817",
+          "state": "file"
+        },
+        "work/active/workspace-demo/paths/stage-demo-path-notes.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "76386c52c0aac24d9be7c0ff0b1fb5a3ace0bf9dcf192ac978c62dbb6f4edf4d",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"path.note.write\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"path_id\": \"path-demo\",\n    \"stage_id\": \"stage-demo-path\",\n    \"notes_path\": \"work/active/workspace-demo/paths/stage-demo-path-notes.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"path-demo\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "path.note.write",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "path-demo": 1
+      },
+      "notes_path": "work/active/workspace-demo/paths/stage-demo-path-notes.md",
+      "ok": true,
+      "path_id": "path-demo",
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "stage_id": "stage-demo-path",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

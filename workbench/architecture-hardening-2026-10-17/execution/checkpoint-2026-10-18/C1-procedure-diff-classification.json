@@ -1,0 +1,644 @@
+{
+  "add-concept-relation.md": {
+    "retained_log_sha256": "16ad6ceec779a84f536c611e41a65c22a9d162b409ed57e0453e430d1fa27930",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:adf9e09560421fe8ecee2805d8d236296876173e2d530ac1a19af647e4c7a941\",",
+      "    \"snapshot_after\": \"sha256:adf9e09560421fe8ecee2805d8d236296876173e2d530ac1a19af647e4c7a941\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:0a9f8a987f902fdbfe7615ce5ca23ab93fc15dc40fc1262bb8e8d16c2904331b\",",
+      "    \"snapshot_after\": \"sha256:0a9f8a987f902fdbfe7615ce5ca23ab93fc15dc40fc1262bb8e8d16c2904331b\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "add-or-evaluate-a-source.md": {
+    "retained_log_sha256": "ec985da8112a0fa295015f33b142421022dc71cb176a6018f9e3d958b174136a",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:f47d98003b9bc5877ad2b23e34aeecbaeb56cd63ff3820fbbd0600f221a5a05c\",",
+      "    \"snapshot_after\": \"sha256:f47d98003b9bc5877ad2b23e34aeecbaeb56cd63ff3820fbbd0600f221a5a05c\",",
+      "sha256:4dd4d6db12b35b300efc55d8f31ac992ff514fff7075a0f18f829574c8c20aa1 Makefile",
+      "sha256:be88a5742bea630226b59664b20e30b74381cc03c86ce71d3ec6d85acda93fd0 pyproject.toml",
+      "  \"snapshot_after\": \"sha256:abf5abde9b5b1ed8d73a452d30ede8bfce6858f9c3a6befe322dcf6196d3f724\",",
+      "    \"snapshot_after\": \"sha256:abf5abde9b5b1ed8d73a452d30ede8bfce6858f9c3a6befe322dcf6196d3f724\",",
+      "  \"snapshot_after\": \"sha256:c4fd062c250edae0e93b42b6059f8afaae6de5075b25ed8b9c9eac5ea9ea9aee\",",
+      "    \"snapshot_after\": \"sha256:c4fd062c250edae0e93b42b6059f8afaae6de5075b25ed8b9c9eac5ea9ea9aee\",",
+      "  \"snapshot_after\": \"sha256:23c2fa77805236405b81af9430c0b612810c1db7abfbd492aab6e39efa7a1ed6\",",
+      "    \"snapshot_after\": \"sha256:23c2fa77805236405b81af9430c0b612810c1db7abfbd492aab6e39efa7a1ed6\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:e0616be4cd395d5d80611e6617cca81eda3d81550e023003e64e8af4164dd8e4\",",
+      "    \"snapshot_after\": \"sha256:e0616be4cd395d5d80611e6617cca81eda3d81550e023003e64e8af4164dd8e4\",",
+      "sha256:1207eaf5b5ed217ba8d146f68eeef1782da9188546fbbd9aae2c69d96cf2a4b5 Makefile",
+      "sha256:b6acb48bb65c04fdde0ac0ff4ad83a5999736ebabe06817b021549c62f744ee3 pyproject.toml",
+      "  \"snapshot_after\": \"sha256:aee46de97323f4083410680555af5da56033a6bab333e0403308726dca88b96f\",",
+      "    \"snapshot_after\": \"sha256:aee46de97323f4083410680555af5da56033a6bab333e0403308726dca88b96f\",",
+      "  \"snapshot_after\": \"sha256:8a36e5e80025003819018cbe2e8845635bdaeea1bbc4335f7964aeb248a88d80\",",
+      "    \"snapshot_after\": \"sha256:8a36e5e80025003819018cbe2e8845635bdaeea1bbc4335f7964aeb248a88d80\",",
+      "  \"snapshot_after\": \"sha256:680352b2bfde23ee645488b719db429f048da388cb3a75f763ae864f5dca3b10\",",
+      "    \"snapshot_after\": \"sha256:680352b2bfde23ee645488b719db429f048da388cb3a75f763ae864f5dca3b10\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "back-up-and-restore.md": {
+    "retained_log_sha256": "e6ea5ee73c15920bc007f0c3f993e99cfb305b7420296d23902d11935a431457",
+    "category": "backup population +1 is operations/goal-ledger.yaml: rich_world seeds it and the only backup-root delta explicitly adds it; no backup omission/oracle weakened",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "480",
+      "sha256:4f0d5a86186d3a70700d7bace64c3a26dad0a38118c2f43cb192e7dd82b2766d",
+      "480",
+      "sha256:4f0d5a86186d3a70700d7bace64c3a26dad0a38118c2f43cb192e7dd82b2766d",
+      "480",
+      "sha256:4f0d5a86186d3a70700d7bace64c3a26dad0a38118c2f43cb192e7dd82b2766d",
+      "{\"ok\":true,\"checked\":480,\"issues\":[]}",
+      "{\"ok\":false,\"checked\":480,\"issues\":[{\"root\":\"materials\",\"path\":\"source-demo-book/book.pdf\",\"issue\":\"checksum-mismatch\"}]}"
+    ],
+    "added_lines": [
+      "481",
+      "sha256:db84227a2a217eb354507c7abb089fc7ecf8a2b8f2f514ddd2ce5ec355427e3d",
+      "481",
+      "sha256:db84227a2a217eb354507c7abb089fc7ecf8a2b8f2f514ddd2ce5ec355427e3d",
+      "481",
+      "sha256:db84227a2a217eb354507c7abb089fc7ecf8a2b8f2f514ddd2ce5ec355427e3d",
+      "{\"ok\":true,\"checked\":481,\"issues\":[]}",
+      "{\"ok\":false,\"checked\":481,\"issues\":[{\"root\":\"materials\",\"path\":\"source-demo-book/book.pdf\",\"issue\":\"checksum-mismatch\"}]}"
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "bootstrap-order.md": {
+    "retained_log_sha256": "430392a28411501628bae2d3031d7617de33083fa3500aec824d002f55e5a5ca",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "bootstrap-brief sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "bootstrap-summary sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",\"contract\":\"unit-list-summary\",\"filters\":{},\"items\":[{\"id\":\"unit-demo-l01\",\"title\":\"Expected value\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":1,\"current_study_map\":\"study-map-demo-l01\",\"needs_study_map\":false},{\"id\":\"unit-demo-l02\",\"title\":\"Variance\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":2,\"needs_study_map\":true}],\"total\":2,\"next_offset\":null,\"detail\":\"inspect UNIT_ID\"}",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",\"contract\":\"record-batch\",\"requested_ids\":[\"note-demo\",\"concept-expected-value\"],\"records\":[{\"atlas_question\":null,\"attachments\":[],\"authorship\":null,\"concepts\":[\"concept-expected-value\"],\"contexts\":[],\"domain\":\"mathematics\",\"evidence\":[],\"id\":\"note-demo\",\"material_analysis\":null,\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"reviewed\":null,\"role\":\"synthesis\",\"semantic_review\":null,\"sources\":[\"source-demo-book\"],\"state\":null,\"summary\":\"Body prose.\",\"supersedes\":[],\"title\":\"Demo note\",\"transcription\":null,\"type\":\"note\"},{\"aliases\":[\"Erwartungswert\"],\"deprecated\":false,\"id\":\"concept-expected-value\",\"path\":\"knowledge/concepts.yaml\",\"title\":\"Expected value\",\"type\":\"concept\"}]}",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",\"contract\":\"note-content\",\"note_id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"content_sha256\":\"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":162,\"start_line\":1,\"content\":\"---\\nid: note-demo\\ntype: note\\ntitle: Demo note\\ncreated: 2026-07-16\\nrole: synthesis\\nconcepts: [concept-expected-value]\\nsources: [source-demo-book]\\n---\\n\\nBody prose.\\n\",\"next_offset\":null}"
+    ],
+    "added_lines": [
+      "bootstrap-brief sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "bootstrap-summary sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",\"contract\":\"unit-list-summary\",\"filters\":{},\"items\":[{\"id\":\"unit-demo-l01\",\"title\":\"Expected value\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":1,\"current_study_map\":\"study-map-demo-l01\",\"needs_study_map\":false},{\"id\":\"unit-demo-l02\",\"title\":\"Variance\",\"status\":\"active\",\"module_id\":\"module-demo\",\"order\":2,\"needs_study_map\":true}],\"total\":2,\"next_offset\":null,\"detail\":\"inspect UNIT_ID\"}",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",\"contract\":\"record-batch\",\"requested_ids\":[\"note-demo\",\"concept-expected-value\"],\"records\":[{\"atlas_question\":null,\"attachments\":[],\"authorship\":null,\"concepts\":[\"concept-expected-value\"],\"contexts\":[],\"domain\":\"mathematics\",\"evidence\":[],\"id\":\"note-demo\",\"material_analysis\":null,\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"reviewed\":null,\"role\":\"synthesis\",\"semantic_review\":null,\"sources\":[\"source-demo-book\"],\"state\":null,\"summary\":\"Body prose.\",\"supersedes\":[],\"title\":\"Demo note\",\"transcription\":null,\"type\":\"note\"},{\"aliases\":[\"Erwartungswert\"],\"deprecated\":false,\"id\":\"concept-expected-value\",\"path\":\"knowledge/concepts.yaml\",\"title\":\"Expected value\",\"type\":\"concept\"}]}",
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",\"contract\":\"note-content\",\"note_id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"content_sha256\":\"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":162,\"start_line\":1,\"content\":\"---\\nid: note-demo\\ntype: note\\ntitle: Demo note\\ncreated: 2026-07-16\\nrole: synthesis\\nconcepts: [concept-expected-value]\\nsources: [source-demo-book]\\n---\\n\\nBody prose.\\n\",\"next_offset\":null}"
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "build-write-envelope.md": {
+    "retained_log_sha256": "e451f463ca9625a79651079dcca6c9b249d76209f295dd8083fdfa786eb4ce0e",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": true,
+    "removed_lines": [
+      "sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "export EXPECTED=sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "sha256:6c256b94d293b2a2420e30108b8f362bd430ef174b906877deea9cd99f764e2b",
+      "  \"snapshot_after\": \"sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e\",",
+      "    \"snapshot_after\": \"sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e\",",
+      "  \"snapshot_after\": \"sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e\",",
+      "    \"snapshot_after\": \"sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e\",",
+      "  \"snapshot_after\": \"sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac\",",
+      "    \"snapshot_after\": \"sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac\",",
+      "      \"expected\": \"sha256:d49318b8ae2f33a0edec60fe301e742ac605e3f0058a7c63c4624046e7c0032e\",",
+      "      \"actual\": \"sha256:075980d1df306b3891f4727c6bd040873c64f4eb88df728e9f0dd0d8fc130aac\""
+    ],
+    "added_lines": [
+      "sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "export EXPECTED=sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "sha256:b452c532b769a84a4089a9aef954533a22127e3881a11ab91b2f77151236239d",
+      "  \"snapshot_after\": \"sha256:5bc3008b0bc9ebc4be77c8f0c7612c2c9dd0b13dd080f6e25b58f3bee6bbcb6c\",",
+      "    \"snapshot_after\": \"sha256:5bc3008b0bc9ebc4be77c8f0c7612c2c9dd0b13dd080f6e25b58f3bee6bbcb6c\",",
+      "  \"snapshot_after\": \"sha256:5bc3008b0bc9ebc4be77c8f0c7612c2c9dd0b13dd080f6e25b58f3bee6bbcb6c\",",
+      "    \"snapshot_after\": \"sha256:5bc3008b0bc9ebc4be77c8f0c7612c2c9dd0b13dd080f6e25b58f3bee6bbcb6c\",",
+      "  \"snapshot_after\": \"sha256:edfb56f47daf63cbe941dae22471301f9ad2c266ff275fc51cca0aca43f19aa6\",",
+      "    \"snapshot_after\": \"sha256:edfb56f47daf63cbe941dae22471301f9ad2c266ff275fc51cca0aca43f19aa6\",",
+      "      \"expected\": \"sha256:5bc3008b0bc9ebc4be77c8f0c7612c2c9dd0b13dd080f6e25b58f3bee6bbcb6c\",",
+      "      \"actual\": \"sha256:edfb56f47daf63cbe941dae22471301f9ad2c266ff275fc51cca0aca43f19aa6\""
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "capture-routing.md": {
+    "retained_log_sha256": "a6f42fc023b11a63c94869b7419573bdf50b689bf8930b7f7cfe5f3e031f53ef",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:9241fb7e7382ba749bd44a3437519afe6e16938c27735b0e368dcad4ffc090bc\",",
+      "    \"snapshot_after\": \"sha256:9241fb7e7382ba749bd44a3437519afe6e16938c27735b0e368dcad4ffc090bc\",",
+      "  \"snapshot_after\": \"sha256:e101f9001bc9b7f977f71704f668576961cfb7c89193171d16ed5d2b917cbdb3\",",
+      "    \"snapshot_after\": \"sha256:e101f9001bc9b7f977f71704f668576961cfb7c89193171d16ed5d2b917cbdb3\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:01ab84d7ad273a1d3d864645d697030ded439cddd82380fc30ed06947c4aa550\",",
+      "    \"snapshot_after\": \"sha256:01ab84d7ad273a1d3d864645d697030ded439cddd82380fc30ed06947c4aa550\",",
+      "  \"snapshot_after\": \"sha256:9cfe39f1ba487abe65bf0114e046449c4a815b8f3b2a4984e673b863031ecd38\",",
+      "    \"snapshot_after\": \"sha256:9cfe39f1ba487abe65bf0114e046449c4a815b8f3b2a4984e673b863031ecd38\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "capture-temporary-material.md": {
+    "retained_log_sha256": "d3077233a0befb4880c12a135eb211772e8ac009bc9a5f67b6b054f652bca5c3",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:62f956293876d8ab656c333bf811e4c51ce551ebcd04b8423d9417033ebc357f\",",
+      "    \"snapshot_after\": \"sha256:62f956293876d8ab656c333bf811e4c51ce551ebcd04b8423d9417033ebc357f\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:c18e93533c5a65a03200d726a9f178f50cf62e99f0d94b75ef402bfa84e97b87\",",
+      "    \"snapshot_after\": \"sha256:c18e93533c5a65a03200d726a9f178f50cf62e99f0d94b75ef402bfa84e97b87\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "carry-work-across-semesters.md": {
+    "retained_log_sha256": "b75ffb353b89cef4577b4b746064312664f89de9d4b119ce42653a3e2e0fc82e",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:464e36cb0c3fbf0a4c00371305ec126cedd830b40ed0b952ded1f38c608a000a\",",
+      "    \"snapshot_after\": \"sha256:464e36cb0c3fbf0a4c00371305ec126cedd830b40ed0b952ded1f38c608a000a\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:f18733c0fbb1abc4b457b2c902658e73f1c2591ecb21620038848c2a5653e411\",",
+      "    \"snapshot_after\": \"sha256:f18733c0fbb1abc4b457b2c902658e73f1c2591ecb21620038848c2a5653e411\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "close-a-module.md": {
+    "retained_log_sha256": "d18f194f93f0c8ae51402ec87cc3d5496a9c79ef4fa3f3a92ac6a28289b07327",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:d2fc3a517d748e81e6cc3b038e103c800285019b90eec32dcc2243b5c6ad6453\",",
+      "    \"snapshot_after\": \"sha256:d2fc3a517d748e81e6cc3b038e103c800285019b90eec32dcc2243b5c6ad6453\",",
+      "  \"snapshot_after\": \"sha256:315f8e8d16dbab58a62a92824389205b7bfdfc0959e7e1e461c357a805a17e5e\",",
+      "    \"snapshot_after\": \"sha256:315f8e8d16dbab58a62a92824389205b7bfdfc0959e7e1e461c357a805a17e5e\",",
+      "  \"snapshot_after\": \"sha256:d595b5bdfdb4bbdafd3d6bc42717b63f99d13f95db4d18a4d3aed6c28f254c4e\",",
+      "    \"snapshot_after\": \"sha256:d595b5bdfdb4bbdafd3d6bc42717b63f99d13f95db4d18a4d3aed6c28f254c4e\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:a9dba7cc778fb113c4e141989f8f55ca668cc6c7f03144752d85c543f0c98e11\",",
+      "    \"snapshot_after\": \"sha256:a9dba7cc778fb113c4e141989f8f55ca668cc6c7f03144752d85c543f0c98e11\",",
+      "  \"snapshot_after\": \"sha256:66cd4059c52bacaaef3e722eed121a2a2fdd4080ab1ba98101010e858f5af8c7\",",
+      "    \"snapshot_after\": \"sha256:66cd4059c52bacaaef3e722eed121a2a2fdd4080ab1ba98101010e858f5af8c7\",",
+      "  \"snapshot_after\": \"sha256:e848c7ce41fd23f308f620b2d3dae892649d6cc903be7ff7c73d0cb2dd23826d\",",
+      "    \"snapshot_after\": \"sha256:e848c7ce41fd23f308f620b2d3dae892649d6cc903be7ff7c73d0cb2dd23826d\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "create-durable-note.md": {
+    "retained_log_sha256": "1f9efb236cf0473ff7737b851df63f38b17a2dbd8438f41813027da6b157f48c",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:9b4dc5c20a63379250f94e78d577424acf61034855e2a2ffe0bd070018bffc32\",",
+      "    \"snapshot_after\": \"sha256:9b4dc5c20a63379250f94e78d577424acf61034855e2a2ffe0bd070018bffc32\",",
+      "  \"snapshot_after\": \"sha256:e9d0a16284e2d8e943e0ec8f162c4728242b4bec224b48d289c2974c84b559d0\",",
+      "    \"snapshot_after\": \"sha256:e9d0a16284e2d8e943e0ec8f162c4728242b4bec224b48d289c2974c84b559d0\",",
+      "  \"snapshot_after\": \"sha256:f0de98cbdb58ddb7dba94a42f1bf1be363119705a814f1e61902243de5b1aaba\",",
+      "    \"snapshot_after\": \"sha256:f0de98cbdb58ddb7dba94a42f1bf1be363119705a814f1e61902243de5b1aaba\",",
+      "  \"snapshot_after\": \"sha256:ab06ada637fee78c3107ad3b4fb8394167465bf58a884fc1ff4a06bfc8bf5fab\",",
+      "    \"snapshot_after\": \"sha256:ab06ada637fee78c3107ad3b4fb8394167465bf58a884fc1ff4a06bfc8bf5fab\""
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:7c3d2a37f233cbd76ab5989762b9535cf9a82e663eb7c1bfadc53774e13b6aaa\",",
+      "    \"snapshot_after\": \"sha256:7c3d2a37f233cbd76ab5989762b9535cf9a82e663eb7c1bfadc53774e13b6aaa\",",
+      "  \"snapshot_after\": \"sha256:c24d6ab205c21fe5c8e9e1f0d9f844e2494ac2946268ea532bf209c4374637f1\",",
+      "    \"snapshot_after\": \"sha256:c24d6ab205c21fe5c8e9e1f0d9f844e2494ac2946268ea532bf209c4374637f1\",",
+      "  \"snapshot_after\": \"sha256:43d9c365b5b2f53b83abbac2155bcfde78fb9f83592de6fb013b13a9ddf6ce1c\",",
+      "    \"snapshot_after\": \"sha256:43d9c365b5b2f53b83abbac2155bcfde78fb9f83592de6fb013b13a9ddf6ce1c\",",
+      "  \"snapshot_after\": \"sha256:344fb3e9836db70d222815a4e07bf11bd6f3f5c618d07029ffee51472b27e3bd\",",
+      "    \"snapshot_after\": \"sha256:344fb3e9836db70d222815a4e07bf11bd6f3f5c618d07029ffee51472b27e3bd\""
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "deprecate-or-supersede.md": {
+    "retained_log_sha256": "d01af204c4fb0c663bb8621cd051a61a9fa207decb22d7da468685a657ebcd3b",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:b87004e5bb805bada9bc2e39e3cd3c6bb8f7ad4aa83c1446858deb5cca06a219\",",
+      "    \"snapshot_after\": \"sha256:b87004e5bb805bada9bc2e39e3cd3c6bb8f7ad4aa83c1446858deb5cca06a219\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:c2ff9f9a20af64dda6941ac777eeb6658c372bd16af57dbe4a0c98bcc2458cd1\",",
+      "    \"snapshot_after\": \"sha256:c2ff9f9a20af64dda6941ac777eeb6658c372bd16af57dbe4a0c98bcc2458cd1\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "end-a-session.md": {
+    "retained_log_sha256": "d22dc45ad81b49a740ebcbb82e787dc05864f06644aa61eae2fb775201e15cc1",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": true,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:800c37c765595549e1229984db6e15e138ef86e126be3832cd92f6d79a8e1200\",",
+      "    \"snapshot_after\": \"sha256:800c37c765595549e1229984db6e15e138ef86e126be3832cd92f6d79a8e1200\",",
+      "      \"expected\": \"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",",
+      "      \"actual\": \"sha256:800c37c765595549e1229984db6e15e138ef86e126be3832cd92f6d79a8e1200\""
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:1c7e96f7126ef5490386bedc39395baab049a33ac288ff93bc2e26e4239c1af6\",",
+      "    \"snapshot_after\": \"sha256:1c7e96f7126ef5490386bedc39395baab049a33ac288ff93bc2e26e4239c1af6\",",
+      "      \"expected\": \"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",",
+      "      \"actual\": \"sha256:1c7e96f7126ef5490386bedc39395baab049a33ac288ff93bc2e26e4239c1af6\""
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "ingest-a-handwritten-note.md": {
+    "retained_log_sha256": "c89a0ccd8258eafafcc4db926147ba789cd60ec6efda62bf442902714f451665",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:7c331d5bc24ff9fa0f23798049a2fa905ccc7b89b8dea43c64e38a2d629d9917\",",
+      "    \"snapshot_after\": \"sha256:7c331d5bc24ff9fa0f23798049a2fa905ccc7b89b8dea43c64e38a2d629d9917\",",
+      "  \"snapshot_after\": \"sha256:ad95f6ce4f44c8e1937a0ec3b3572c185a33145a358df13e51190d7f303528d5\",",
+      "    \"snapshot_after\": \"sha256:ad95f6ce4f44c8e1937a0ec3b3572c185a33145a358df13e51190d7f303528d5\",",
+      "  \"snapshot_after\": \"sha256:432f8f3502543c553800deb386de58bd1109649848f1b872501b44a71630638e\",",
+      "    \"snapshot_after\": \"sha256:432f8f3502543c553800deb386de58bd1109649848f1b872501b44a71630638e\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:1c91a288bfc967f07463c6bd7eb3354c9dde7a84e7aba7a46f0c41eccccf15be\",",
+      "    \"snapshot_after\": \"sha256:1c91a288bfc967f07463c6bd7eb3354c9dde7a84e7aba7a46f0c41eccccf15be\",",
+      "  \"snapshot_after\": \"sha256:377547d234fa1695fcdbfc96aabfccf27b72a0975d9517a8dd211aa778a2a276\",",
+      "    \"snapshot_after\": \"sha256:377547d234fa1695fcdbfc96aabfccf27b72a0975d9517a8dd211aa778a2a276\",",
+      "  \"snapshot_after\": \"sha256:0a8207baa3ae0e22b46a13eb4efdbb0c7b2cc59dd86e81a04affdeaee4b2542f\",",
+      "    \"snapshot_after\": \"sha256:0a8207baa3ae0e22b46a13eb4efdbb0c7b2cc59dd86e81a04affdeaee4b2542f\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "maintain-crosswalk.md": {
+    "retained_log_sha256": "5d60e78acbf7a4b3eb35ffa4c802a31ff945278a2598847bf2288450cf67ebe0",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:e4cc5f2f49a2462434f4c792daf4bfb7f96047f82efe6366c2ead4065e2106a5\",",
+      "    \"snapshot_after\": \"sha256:e4cc5f2f49a2462434f4c792daf4bfb7f96047f82efe6366c2ead4065e2106a5\",",
+      "  \"snapshot_after\": \"sha256:8d019b1be5e78b343548aec1db5c268ca405114cfcf34ab32d26eba345e980f5\",",
+      "    \"snapshot_after\": \"sha256:8d019b1be5e78b343548aec1db5c268ca405114cfcf34ab32d26eba345e980f5\",",
+      "  \"snapshot_after\": \"sha256:3b63a41ed29729bd2055563a5ae8427ab20db5ee7a44ad78605e86c91470ecd6\",",
+      "    \"snapshot_after\": \"sha256:3b63a41ed29729bd2055563a5ae8427ab20db5ee7a44ad78605e86c91470ecd6\",",
+      "  \"snapshot_after\": \"sha256:b2778e9481a8d1e03a260001662aa26fec7ced50259f14259872b754af2e6366\",",
+      "    \"snapshot_after\": \"sha256:b2778e9481a8d1e03a260001662aa26fec7ced50259f14259872b754af2e6366\",",
+      "  \"snapshot_after\": \"sha256:3b63a41ed29729bd2055563a5ae8427ab20db5ee7a44ad78605e86c91470ecd6\",",
+      "    \"snapshot_after\": \"sha256:3b63a41ed29729bd2055563a5ae8427ab20db5ee7a44ad78605e86c91470ecd6\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:420ce776da8f5e022b2e864bc5b995e88aa9a769b40ca30cae9ea3fef122773c\",",
+      "    \"snapshot_after\": \"sha256:420ce776da8f5e022b2e864bc5b995e88aa9a769b40ca30cae9ea3fef122773c\",",
+      "  \"snapshot_after\": \"sha256:a80a7b5261fcf8ab5e5fb6e429d420cc95ce3765645c21758a31dd9595ebe5d7\",",
+      "    \"snapshot_after\": \"sha256:a80a7b5261fcf8ab5e5fb6e429d420cc95ce3765645c21758a31dd9595ebe5d7\",",
+      "  \"snapshot_after\": \"sha256:d6ba106a2ef72e3fb8b412518829255199108abfb5245b48f6c244bf06726724\",",
+      "    \"snapshot_after\": \"sha256:d6ba106a2ef72e3fb8b412518829255199108abfb5245b48f6c244bf06726724\",",
+      "  \"snapshot_after\": \"sha256:241fdb13d173848a3f495dc0fb34c3149a39c2382a02f2cc83b5e12bcae1891a\",",
+      "    \"snapshot_after\": \"sha256:241fdb13d173848a3f495dc0fb34c3149a39c2382a02f2cc83b5e12bcae1891a\",",
+      "  \"snapshot_after\": \"sha256:d6ba106a2ef72e3fb8b412518829255199108abfb5245b48f6c244bf06726724\",",
+      "    \"snapshot_after\": \"sha256:d6ba106a2ef72e3fb8b412518829255199108abfb5245b48f6c244bf06726724\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "process-inbox.md": {
+    "retained_log_sha256": "d2a8335f91f63760c6a87846c60ecfcfeb472f666aadcd4a4e764e104d4c72ee",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",\"contract\":\"inbox-content\",\"item\":\"note-drop.md\",\"path\":\"work/inbox/note-drop.md\",\"content_sha256\":\"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":26,\"start_line\":1,\"content\":\"# Dropped note\\n\\nUnrouted.\\n\",\"next_offset\":null}",
+      "  \"snapshot_after\": \"sha256:ba7be24280edbafed12d13d7d76b0368ce96cae764ce4953a2916a6f833ed176\",",
+      "    \"snapshot_after\": \"sha256:ba7be24280edbafed12d13d7d76b0368ce96cae764ce4953a2916a6f833ed176\","
+    ],
+    "added_lines": [
+      "{\"schema_version\":1,\"snapshot_id\":\"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",\"contract\":\"inbox-content\",\"item\":\"note-drop.md\",\"path\":\"work/inbox/note-drop.md\",\"content_sha256\":\"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":26,\"start_line\":1,\"content\":\"# Dropped note\\n\\nUnrouted.\\n\",\"next_offset\":null}",
+      "  \"snapshot_after\": \"sha256:7adefd955c9dd194069aa9d361474347fcb6f4ee4792bbdeb1e9483c1dd91fce\",",
+      "    \"snapshot_after\": \"sha256:7adefd955c9dd194069aa9d361474347fcb6f4ee4792bbdeb1e9483c1dd91fce\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "read-an-operation.md": {
+    "retained_log_sha256": "9c3d370bc3adebc631c3b86032aa5ef793150ee9819b017c8b68c3adff252713",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "    \"snapshot_after\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "      \"observed:sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\"",
+      "    \"snapshot_after\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "    \"snapshot_before\": \"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",",
+      "  \"observed_snapshot\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "      \"actual\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\"",
+      "      \"observed:sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\"",
+      "  \"observed_snapshot\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "      \"observed:sha256:e5ca866737fcb5dfe8b85cc2c35e2ce27a0d3751b9d8e3b5d81ff4d717f2fd93\"",
+      "    \"snapshot_after\": \"sha256:3d00193e41cbbf39fe6a6b1b957b3465f3b247796378bc2d0645171ee29c32c8\",",
+      "    \"snapshot_before\": \"sha256:495071e02baee524531ff794f9de1d272068cf276aabe7b6eb9de2d9df4bbfed\",",
+      "  \"observed_snapshot\": \"sha256:e5ca866737fcb5dfe8b85cc2c35e2ce27a0d3751b9d8e3b5d81ff4d717f2fd93\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "    \"snapshot_after\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "      \"observed:sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\"",
+      "    \"snapshot_after\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "    \"snapshot_before\": \"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",",
+      "  \"observed_snapshot\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "      \"actual\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\"",
+      "      \"observed:sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\"",
+      "  \"observed_snapshot\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "      \"observed:sha256:c188b1383aed986ff59fe08b44fda0852884e2e34d6802fa757e77fee0ab31d6\"",
+      "    \"snapshot_after\": \"sha256:6c6b723fac8141ba66393523159bca1f73488400957fecf03c79220a9941535d\",",
+      "    \"snapshot_before\": \"sha256:b2c1ae10cf38de5baeb4c53797536e4692ea8b8ad33fcd2d86607a3db0ac52bf\",",
+      "  \"observed_snapshot\": \"sha256:c188b1383aed986ff59fe08b44fda0852884e2e34d6802fa757e77fee0ab31d6\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "record-evidence.md": {
+    "retained_log_sha256": "1da2d37cca5ca78bbfc363ec7e5f911b494525eca899d861a10bfde805399c28",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "{\"ok\":true,\"observation_id\":\"observation-c5e7a09bdfe01c727161dcf3aef8fbe4\",\"workspace_id\":\"workspace-demo\",\"transaction_id\":\"transaction-20261001-090000-001\",\"receipt_path\":\"operations/transactions/transaction-20261001-090000-001.yaml\",\"artifact_revisions\":{\"workspace-demo\":1},\"snapshot_after\":\"sha256:86b26f9e795843388f5746f400030020b30154b22bae5c5c52280e36d617366c\",\"replayed\":false}",
+      "  \"snapshot_after\": \"sha256:3465da1193e15aa4f6258d59eb4b2396c7d8827116907926223d0f3f8ce110fe\",",
+      "    \"snapshot_after\": \"sha256:3465da1193e15aa4f6258d59eb4b2396c7d8827116907926223d0f3f8ce110fe\","
+    ],
+    "added_lines": [
+      "{\"ok\":true,\"observation_id\":\"observation-c5e7a09bdfe01c727161dcf3aef8fbe4\",\"workspace_id\":\"workspace-demo\",\"transaction_id\":\"transaction-20261001-090000-001\",\"receipt_path\":\"operations/transactions/transaction-20261001-090000-001.yaml\",\"artifact_revisions\":{\"workspace-demo\":1},\"snapshot_after\":\"sha256:68d1c1fae70e3c019dd488839ae57281f3094dde507907ce45833adb55379ea9\",\"replayed\":false}",
+      "  \"snapshot_after\": \"sha256:34ba34ef03ba19ca7acc8db91ccf49b55e2117380bdaecd16dcc24f935174c75\",",
+      "    \"snapshot_after\": \"sha256:34ba34ef03ba19ca7acc8db91ccf49b55e2117380bdaecd16dcc24f935174c75\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "record-module-event.md": {
+    "retained_log_sha256": "d265e207b5448c8befda548a3f75566bc9b7031b8f0a219e5aeb3d5cefdf62ed",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:271579389451e1aef32cba883b47d6d55c79fca7c112f4a4977baa3c959eeed5\",",
+      "    \"snapshot_after\": \"sha256:271579389451e1aef32cba883b47d6d55c79fca7c112f4a4977baa3c959eeed5\",",
+      "  \"snapshot_after\": \"sha256:4bee9183564933d190787e2bdbc652cbf759cd73f33fcbb159a2a46ea9dd3e2a\",",
+      "    \"snapshot_after\": \"sha256:4bee9183564933d190787e2bdbc652cbf759cd73f33fcbb159a2a46ea9dd3e2a\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:a7f577c8e321b96893eab24f7c1d10a739c311fbed66c6ace692dacf971d3305\",",
+      "    \"snapshot_after\": \"sha256:a7f577c8e321b96893eab24f7c1d10a739c311fbed66c6ace692dacf971d3305\",",
+      "  \"snapshot_after\": \"sha256:f03a78670a7e62b70bc867716a8749dd3f5d238bef46a434295e1035366b7ea0\",",
+      "    \"snapshot_after\": \"sha256:f03a78670a7e62b70bc867716a8749dd3f5d238bef46a434295e1035366b7ea0\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "review-a-note.md": {
+    "retained_log_sha256": "812dc550371fbb7f7a7cc0b4781b9da8eceb3b90cf26838fa7aee8169fcf3f9c",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:51ac330f97ae79e7d6e5aed5e9f5b527d8e5c01185ffca200c7d88d3feb3c138\",",
+      "    \"snapshot_after\": \"sha256:51ac330f97ae79e7d6e5aed5e9f5b527d8e5c01185ffca200c7d88d3feb3c138\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:80c3ea888bc697fab9082111606f2b546a6d92a266b4be60d39d4e018f79c32e\",",
+      "    \"snapshot_after\": \"sha256:80c3ea888bc697fab9082111606f2b546a6d92a266b4be60d39d4e018f79c32e\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "review-a-stage-material-angle.md": {
+    "retained_log_sha256": "f2dc050618249e34148350c03f6db465f835adf638f5589ca4ff0f2408dda07f",
+    "category": "positive material-binding edit omitted quotation evidence; repaired input before output refresh",
+    "has_unexpected_exit": true,
+    "removed_lines": [
+      "fp1: sha256:9e9911adfc31be6a4fad9373c8d97e9800fdb42bc2417a3b9ff935fdd268be7a",
+      "fp2: sha256:1c9d078927dba505c588f13735a4db105bbf1e5ceb2f40bed95abffb91a60978",
+      "sha256:ce1990f0f7650c99b91501cf253a89a648bf460b546db52fe1e94680ebcfa2ee",
+      "seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=4",
+      "True apply transaction-20261001-090000-002",
+      "{\"study-map-demo-l01\": 1, \"unit-demo-l01\": 5}",
+      "sha256:747bd8a6235881492ed30e0d8f603954a3958fe7ac900b381113424693de6e17",
+      "0",
+      "0"
+    ],
+    "added_lines": [
+      "fp1: sha256:5738477363c4b3fac036bf035feba70384cac443ff301a09ca5a5bd565ce3fbf",
+      "fp2: sha256:df2003af6306b40656e73ef4de81c9be5b87e36a524179f5115e5606fc93c53f",
+      "sha256:77baba74ed6efb74f45cd5f7368acbaab2c3f992a03ba2f12f1eef6108cdbe10",
+      "seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3",
+      "True apply transaction-20261001-090000-001",
+      "{\"study-map-demo-l01\": 1, \"unit-demo-l01\": 4}",
+      "sha256:7bb54287553d510e93b6e4b4f57f9af1bdf5709b340ed605c4e3fb3af80980c3",
+      "1",
+      "1"
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "revise-an-existing-plan.md": {
+    "retained_log_sha256": "32740a9bcffc6805fe2cdacb58e70a7f35c11435308b5d16bbf7da68b65f0330",
+    "category": "new advisory claim-impact/anchor fields from approved route.patch slice",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:2383ca4af8e6fc717c30a1c3ced2d95fd65ac3b8c7adffc58c96cdad5b59e039\",",
+      "    \"snapshot_after\": \"sha256:2383ca4af8e6fc717c30a1c3ced2d95fd65ac3b8c7adffc58c96cdad5b59e039\",",
+      "  \"snapshot_after\": \"sha256:e3da1b4d51199fdeefd9f8542bb08c319346811ebab968da665c3635de2705d9\",",
+      "    \"snapshot_after\": \"sha256:e3da1b4d51199fdeefd9f8542bb08c319346811ebab968da665c3635de2705d9\",",
+      "  \"snapshot_after\": \"sha256:38da82018a9d2e4569cf73306dcb5e86a1dbcddbba84c24b1790f01e8fe8c4fd\",",
+      "    \"snapshot_after\": \"sha256:38da82018a9d2e4569cf73306dcb5e86a1dbcddbba84c24b1790f01e8fe8c4fd\",",
+      "  \"snapshot_after\": \"sha256:96f7e226f126e586ccfb2d83a9b55a8b3057434fa1e61d4ebf8ca6e76da39762\",",
+      "    \"snapshot_after\": \"sha256:96f7e226f126e586ccfb2d83a9b55a8b3057434fa1e61d4ebf8ca6e76da39762\",",
+      "  \"snapshot_after\": \"sha256:b6e325fa1eb4b1d0a60177862f39a3a6d651a40d3b72d33874652300843b26b5\",",
+      "    \"snapshot_after\": \"sha256:b6e325fa1eb4b1d0a60177862f39a3a6d651a40d3b72d33874652300843b26b5\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:5d23ea3024c160a487a2e14c4fbaca907b67af5197e936f542eda520e9e3600b\",",
+      "    \"claim_anchors\": [],",
+      "    \"claims\": [",
+      "      {",
+      "        \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\",",
+      "        \"before\": \"stale\",",
+      "        \"after\": \"will-be-stale\",",
+      "        \"warning\": \"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",",
+      "        \"next\": \"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\"",
+      "      }",
+      "    ],",
+      "    \"snapshot_after\": \"sha256:5d23ea3024c160a487a2e14c4fbaca907b67af5197e936f542eda520e9e3600b\",",
+      "  \"snapshot_after\": \"sha256:d44d17e98b9cd66d3f08e1356984c7e5810d8aa926b10ebf95e0e7df0466b3cd\",",
+      "    \"snapshot_after\": \"sha256:d44d17e98b9cd66d3f08e1356984c7e5810d8aa926b10ebf95e0e7df0466b3cd\",",
+      "  \"snapshot_after\": \"sha256:b50c4775f4eec3ba4f4e0441485a848590a16fb3d9be7ec67e4d0b1a664e49a0\",",
+      "    \"snapshot_after\": \"sha256:b50c4775f4eec3ba4f4e0441485a848590a16fb3d9be7ec67e4d0b1a664e49a0\",",
+      "  \"snapshot_after\": \"sha256:0dcb9ee61caeb8208e2ba8908d7df6d602d6b59490dde307417fe8cc3f514e43\",",
+      "    \"snapshot_after\": \"sha256:0dcb9ee61caeb8208e2ba8908d7df6d602d6b59490dde307417fe8cc3f514e43\",",
+      "  \"snapshot_after\": \"sha256:8ea959c655a5ba97c78874b2c7b15ecf0301af56195d3d9fb9e3c28f8c391367\",",
+      "    \"snapshot_after\": \"sha256:8ea959c655a5ba97c78874b2c7b15ecf0301af56195d3d9fb9e3c28f8c391367\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "save-a-batch-of-source-analyses.md": {
+    "retained_log_sha256": "97b3868203690e503ead2974f9b74b6561a02655d53d581903630b9f356de44b",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "note.analysis.save_batch operator sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707",
+      "    \"snapshot_after\": \"sha256:a9d57b8e392cb2689b9a2aaf1ff3dfbdbda17aa7df40cfee5230a8c11159c253\",",
+      "  \"snapshot_after\": \"sha256:a9d57b8e392cb2689b9a2aaf1ff3dfbdbda17aa7df40cfee5230a8c11159c253\",",
+      "      \"actual\": \"sha256:a9d57b8e392cb2689b9a2aaf1ff3dfbdbda17aa7df40cfee5230a8c11159c253\",",
+      "      \"expected\": \"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\"",
+      "sha256:a9d57b8e392cb2689b9a2aaf1ff3dfbdbda17aa7df40cfee5230a8c11159c253",
+      "    \"snapshot_after\": \"sha256:69546500f352c85ea58a07d9fa448bfc2605ac51f9ae73ef4b26ec2dbc70eb32\",",
+      "  \"snapshot_after\": \"sha256:69546500f352c85ea58a07d9fa448bfc2605ac51f9ae73ef4b26ec2dbc70eb32\","
+    ],
+    "added_lines": [
+      "sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "note.analysis.save_batch operator sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea",
+      "    \"snapshot_after\": \"sha256:1ca81893c30ed3e79b96a842c2b9f440be3b59319dfb7f6c75d8a9bc591f7461\",",
+      "  \"snapshot_after\": \"sha256:1ca81893c30ed3e79b96a842c2b9f440be3b59319dfb7f6c75d8a9bc591f7461\",",
+      "      \"actual\": \"sha256:1ca81893c30ed3e79b96a842c2b9f440be3b59319dfb7f6c75d8a9bc591f7461\",",
+      "      \"expected\": \"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\"",
+      "sha256:1ca81893c30ed3e79b96a842c2b9f440be3b59319dfb7f6c75d8a9bc591f7461",
+      "    \"snapshot_after\": \"sha256:03ca8abcd37b7a8cf07b7b5267499eefe84ed9cddbdc9d1b8a56373175b77345\",",
+      "  \"snapshot_after\": \"sha256:03ca8abcd37b7a8cf07b7b5267499eefe84ed9cddbdc9d1b8a56373175b77345\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "shelving-session-closure.md": {
+    "retained_log_sha256": "891e669df1c97b25cd537fb8a1071bb8367f9172a8b4d5e15704cbb0da05acc1",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:9241fb7e7382ba749bd44a3437519afe6e16938c27735b0e368dcad4ffc090bc\",",
+      "    \"snapshot_after\": \"sha256:9241fb7e7382ba749bd44a3437519afe6e16938c27735b0e368dcad4ffc090bc\",",
+      "  \"snapshot_after\": \"sha256:9e5350e8dc944049016739a5384ca6af120a192175f27603136b04bad33a35e3\",",
+      "    \"snapshot_after\": \"sha256:9e5350e8dc944049016739a5384ca6af120a192175f27603136b04bad33a35e3\",",
+      "  \"snapshot_after\": \"sha256:72984961f323db09b39afe6637d464ab9b9d5dfe125ea1395b56213fa7f68e50\",",
+      "    \"snapshot_after\": \"sha256:72984961f323db09b39afe6637d464ab9b9d5dfe125ea1395b56213fa7f68e50\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:01ab84d7ad273a1d3d864645d697030ded439cddd82380fc30ed06947c4aa550\",",
+      "    \"snapshot_after\": \"sha256:01ab84d7ad273a1d3d864645d697030ded439cddd82380fc30ed06947c4aa550\",",
+      "  \"snapshot_after\": \"sha256:a65029de8c0932e91b07372ff8c5f837d0d09f2c1ea4103e519ecefcb0e51fcf\",",
+      "    \"snapshot_after\": \"sha256:a65029de8c0932e91b07372ff8c5f837d0d09f2c1ea4103e519ecefcb0e51fcf\",",
+      "  \"snapshot_after\": \"sha256:c0c6af0cfb1a51bef6a063605e0c2d321017b04b0e4c870df1312f8b93a03603\",",
+      "    \"snapshot_after\": \"sha256:c0c6af0cfb1a51bef6a063605e0c2d321017b04b0e4c870df1312f8b93a03603\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "source-routing-and-feedback.md": {
+    "retained_log_sha256": "f0d99be68567228fba0a3dfd5c5f18306c98e940c4b2c315114df407ef32ea52",
+    "category": "positive locator change omitted quotation evidence and file identity; repaired input before output refresh",
+    "has_unexpected_exit": true,
+    "removed_lines": [
+      "seal_envelope: guards auto: study-map-demo-l01=1, unit-demo-l01=4",
+      "  \"transaction_id\": \"transaction-20261001-090000-002\",",
+      "  \"receipt_path\": \"operations/transactions/transaction-20261001-090000-002.yaml\",",
+      "  \"snapshot_after\": \"sha256:ce5f52d65705f7d18993c6d51502a18e8ef07f960962505da4614a7bc0ed2f38\",",
+      "    \"transaction_id\": \"transaction-20261001-090000-002\",",
+      "    \"receipt_path\": \"operations/transactions/transaction-20261001-090000-002.yaml\",",
+      "      \"study-map-demo-l01\": 2,",
+      "      \"unit-demo-l01\": 5",
+      "    \"snapshot_after\": \"sha256:ce5f52d65705f7d18993c6d51502a18e8ef07f960962505da4614a7bc0ed2f38\",",
+      "seal_envelope: guards auto: study-map-demo-l01=2, unit-demo-l01=5",
+      "  \"transaction_id\": \"transaction-20261001-090000-003\",",
+      "  \"receipt_path\": \"operations/transactions/transaction-20261001-090000-003.yaml\",",
+      "  \"snapshot_after\": \"sha256:ef1c1d86a9f92b087a961e6c4332b9a090ec0b0e0039396d53619167274a233b\",",
+      "    \"transaction_id\": \"transaction-20261001-090000-003\",",
+      "    \"receipt_path\": \"operations/transactions/transaction-20261001-090000-003.yaml\",",
+      "      \"study-map-demo-l01\": 3,",
+      "      \"unit-demo-l01\": 6",
+      "    \"snapshot_after\": \"sha256:ef1c1d86a9f92b087a961e6c4332b9a090ec0b0e0039396d53619167274a233b\",",
+      "0 error(s), 8 warning(s) \u2014 OK"
+    ],
+    "added_lines": [
+      "seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3",
+      "  \"transaction_id\": \"transaction-20261001-090000-001\",",
+      "  \"receipt_path\": \"operations/transactions/transaction-20261001-090000-001.yaml\",",
+      "  \"snapshot_after\": \"sha256:fa1a7754551b244bd29007410162c1ceb7fb99c0858a7824d6f22241d25a4844\",",
+      "    \"transaction_id\": \"transaction-20261001-090000-001\",",
+      "    \"receipt_path\": \"operations/transactions/transaction-20261001-090000-001.yaml\",",
+      "      \"study-map-demo-l01\": 1,",
+      "      \"unit-demo-l01\": 4",
+      "    \"snapshot_after\": \"sha256:fa1a7754551b244bd29007410162c1ceb7fb99c0858a7824d6f22241d25a4844\",",
+      "seal_envelope: guards auto: study-map-demo-l01=1, unit-demo-l01=4",
+      "  \"transaction_id\": \"transaction-20261001-090000-002\",",
+      "  \"receipt_path\": \"operations/transactions/transaction-20261001-090000-002.yaml\",",
+      "  \"snapshot_after\": \"sha256:83e6c33694e77c06b8bdeedfd950c298d47b6b070dea0a00a8b9d012163632f4\",",
+      "    \"transaction_id\": \"transaction-20261001-090000-002\",",
+      "    \"receipt_path\": \"operations/transactions/transaction-20261001-090000-002.yaml\",",
+      "      \"study-map-demo-l01\": 2,",
+      "      \"unit-demo-l01\": 5",
+      "    \"snapshot_after\": \"sha256:83e6c33694e77c06b8bdeedfd950c298d47b6b070dea0a00a8b9d012163632f4\",",
+      "0 error(s), 9 warning(s) \u2014 OK"
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "start-a-module.md": {
+    "retained_log_sha256": "879d6b056683b6c17c19e5e844f31091a7c79696f63719c37cb5d95e04146c8a",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:9761b16763504576bbb9f58bd6b31f990c48f1be8e163bd5dc0c4a1877e73847\",",
+      "    \"snapshot_after\": \"sha256:9761b16763504576bbb9f58bd6b31f990c48f1be8e163bd5dc0c4a1877e73847\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:171079f48ae40b1288e2f64c6888fa7167fc188dc8c8e2ea509a90763bc27bf5\",",
+      "    \"snapshot_after\": \"sha256:171079f48ae40b1288e2f64c6888fa7167fc188dc8c8e2ea509a90763bc27bf5\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "start-a-workspace.md": {
+    "retained_log_sha256": "6849523e07b1448f1f8fbcbc1f6f6bba2b3db372a0b67e88591baf2fe64535de",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:46b2ac10fc80877308ed21ee65d1157ae99627d4da2467e75b345ff4352691d0\",",
+      "    \"snapshot_after\": \"sha256:46b2ac10fc80877308ed21ee65d1157ae99627d4da2467e75b345ff4352691d0\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:c355dd32f19b37a5d374226af7edcb0d2fcf94b3ba6bdc33ac657eed7c5dfa43\",",
+      "    \"snapshot_after\": \"sha256:c355dd32f19b37a5d374226af7edcb0d2fcf94b3ba6bdc33ac657eed7c5dfa43\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "start-here.md": {
+    "retained_log_sha256": "22de782e0080910e59fdb7a10937eac8cf5779c7e6b66067b37af8cb3d11b917",
+    "category": "merged stale detector population: three groups become two; no lost claim",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "3 3 lineage-stale"
+    ],
+    "added_lines": [
+      "2 2 lineage-stale"
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "unit-workflow.md": {
+    "retained_log_sha256": "d06545cb1f22d2045e3aea15a1f54541965cc8b42d74dc2f2c845a5a3772c471",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "  \"snapshot_after\": \"sha256:8b4f1fdc8cf8413bc48658e8273de37279d8eec18cac078c2da4554588f7506d\",",
+      "    \"snapshot_after\": \"sha256:8b4f1fdc8cf8413bc48658e8273de37279d8eec18cac078c2da4554588f7506d\",",
+      "  \"snapshot_after\": \"sha256:f57ebc8916b333da9491875a92bb01557d0645a9db22ddafc9cc9671efc47dcf\",",
+      "    \"snapshot_after\": \"sha256:f57ebc8916b333da9491875a92bb01557d0645a9db22ddafc9cc9671efc47dcf\","
+    ],
+    "added_lines": [
+      "  \"snapshot_after\": \"sha256:40c26df9d87d1715c69f74cf331e71e23bb3651b4051b65d47805e23cb993f39\",",
+      "    \"snapshot_after\": \"sha256:40c26df9d87d1715c69f74cf331e71e23bb3651b4051b65d47805e23cb993f39\",",
+      "  \"snapshot_after\": \"sha256:c9cb770c94528f13e5f005ab4dea8deee4658b5119c1f6b532de25920f89e231\",",
+      "    \"snapshot_after\": \"sha256:c9cb770c94528f13e5f005ab4dea8deee4658b5119c1f6b532de25920f89e231\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  },
+  "update-coordination.md": {
+    "retained_log_sha256": "5d0bfa243259c728c4f04ad5bd063e9aee37de281c2f556eb2842270e93b696a",
+    "category": "crypto observations changed with the admitted claim surface/schema baseline",
+    "has_unexpected_exit": false,
+    "removed_lines": [
+      "{\"ok\":true,\"section\":\"Commitments\",\"before\":\"(none)\",\"after\":\"Ship the demo module plan.\",\"expected_content_sha256\":\"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655\",\"expected_snapshot\":\"sha256:97bc851c983582701a5ef78815c4cef824711a3152a05834c447021f90269707\",\"expected_revisions\":{\"coordination\":0},\"write_paths\":[\"work/COORDINATION.md\"]}",
+      "  \"snapshot_after\": \"sha256:1a996f7c3d422e24242c873eec18851394e4f812026e46c003498d9a479f36be\",",
+      "    \"snapshot_after\": \"sha256:1a996f7c3d422e24242c873eec18851394e4f812026e46c003498d9a479f36be\","
+    ],
+    "added_lines": [
+      "{\"ok\":true,\"section\":\"Commitments\",\"before\":\"(none)\",\"after\":\"Ship the demo module plan.\",\"expected_content_sha256\":\"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655\",\"expected_snapshot\":\"sha256:dec1afb7ba3505d047c616916668c4b9302af90adb08f817362ed872e55c3cea\",\"expected_revisions\":{\"coordination\":0},\"write_paths\":[\"work/COORDINATION.md\"]}",
+      "  \"snapshot_after\": \"sha256:a4da2b5359d779c13d522af5343b7270c32f55d0a122a1ab48fe14e990562a68\",",
+      "    \"snapshot_after\": \"sha256:a4da2b5359d779c13d522af5343b7270c32f55d0a122a1ab48fe14e990562a68\","
+    ],
+    "acceptance": "pending fresh execution and reviewed exact expectations"
+  }
+}

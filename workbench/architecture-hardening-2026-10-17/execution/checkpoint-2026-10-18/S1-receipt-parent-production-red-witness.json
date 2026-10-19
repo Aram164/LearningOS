@@ -1,0 +1,19 @@
+{
+  "candidate_head": "d4ac02e6924ec0dac075e13e48d704f8656023fd",
+  "scope": "read-only production probe against disposable data; no active source mutation; not C2 acceptance",
+  "root": "/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/los-s1-frozen-probe-vmaihiv_/LearningOS/repository",
+  "faults": [
+    "receipt-visible-parent-fsync-EIO"
+  ],
+  "failure": {
+    "type": "TransactionRollbackIncomplete",
+    "message": "cannot write /private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/los-s1-frozen-probe-vmaihiv_/LearningOS/repository/operations/transactions/transaction-20261018-205616-001.yaml: injected receipt parent failure; rollback incomplete for: operations/transactions/transaction-20261018-205616-001.yaml"
+  },
+  "receipt_exists": true,
+  "data_rolled_back": true,
+  "inflight_journals": [
+    "/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/los-s1-frozen-probe-vmaihiv_/LearningOS/repository/operations/transactions/.inflight/transaction-20261018-205616-001"
+  ],
+  "defect_reproduced": true,
+  "probe_setup_note": "first attempt lacked the test project; repeated with explicit old bytes before exercising production"
+}

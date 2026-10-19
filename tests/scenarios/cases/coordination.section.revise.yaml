@@ -1,0 +1,95 @@
+operation: coordination.section.revise
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: revise-commitments
+    kind: success
+    transport: gateway
+    request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
+    artifact_ids: [coordination]
+    a5_base: true
+    expect: {site: null}
+  - id: check-preview
+    kind: success
+    transport: gateway
+    request: {section: Priorities, text: "Preview only.", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-digest
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: "Ship the demo module plan."}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.missing-digest}
+  - id: malformed-digest
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "not-a-digest"}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.malformed-digest}
+  - id: placeholder-digest
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.placeholder-digest}
+  - id: stale-digest
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.content-changed}
+  - id: blank-text
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: " ", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.blank-text}
+  - id: new-heading
+    kind: refusal
+    transport: gateway
+    request: {section: Commitments, text: "## Smuggled\n\nA new heading.", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
+    artifact_ids: []
+    expect: {site: coordination.section.revise.new-heading}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [coordination-section-revise, Commitments, --text, "Ship it.", --expected-content-sha256, "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
+        artifact_ids: [coordination]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {section: Commitments, text: "Ship the demo module plan.", expected_content_sha256: "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655"}
+    artifact_ids: [coordination]
+    expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - coordination-section-revise
+    - Commitments
+    - --text
+    - Ship it.
+    - --expected-content-sha256
+    - sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
+    - --expected-revision
+    - bogus
+    expect:
+      site: coordination.section.revise.bad-expected-revision
+untriggered:
+  - {where: "tools/learning_os/app/handlers/admin.py:232", reason: "unknown section: the payload enum and argparse choices refuse it first"}
+  - {where: "tools/learning_os/app/handlers/admin.py:239", reason: "missing COORDINATION.md: the fixture always carries it, and no step can delete it"}
+  - {where: "tools/learning_os/app/handlers/admin.py:249", reason: "unreadable coordination file: needs permissions no step can set"}
+  - {site: coordination.section.revise.unknown-section, reason: guarded-before-handler}
+  - {site: coordination.section.revise.no-coordination-file, reason: fixture-inexpressible}
+  - {site: coordination.section.revise.read-failed, reason: os-error-only}

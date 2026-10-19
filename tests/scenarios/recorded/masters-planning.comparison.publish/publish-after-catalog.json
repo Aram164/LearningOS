@@ -1,0 +1,420 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "curriculum/quarantine/masters-planning/catalog.yaml": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "masters-planning.catalog.update",
+              "channel": "operator",
+              "intent_sha256": "sha256:a8af2bef8fb7ef03d76cc5416b445b83a20356cefc428f0be707600a4f7c5ce2",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "master-planning-catalog": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "masters-planning.catalog.update",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "master-planning-catalog": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "masters-planning.catalog.update",
+                "declared_writes": [
+                  "curriculum/quarantine/masters-planning/catalog.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "masters-planning.catalog.update",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "master-planning-catalog": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:64600f9c733d3455590a51e9f5a6ec1f3daa7e52dd18928779c00237c0ae05c8",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:a8af2bef8fb7ef03d76cc5416b445b83a20356cefc428f0be707600a4f7c5ce2"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:a8af2bef8fb7ef03d76cc5416b445b83a20356cefc428f0be707600a4f7c5ce2",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/quarantine/masters-planning/catalog.yaml",
+              "sha256_after": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "master-planning-catalog": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2a651dee7d5d587cb80e6521a7ebd292b22070cf51c57683fa1dded85e7e9fee",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "56feacc807bf29d88f01771fe6f399c5864225fb074a5642dca4a3e33c7ac197",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"masters-planning.catalog.update\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"master-planning-catalog\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "masters-planning.catalog.update",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "master-planning-catalog": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {
+        "curriculum/quarantine/masters-planning/comparisons/candidate-comparison-scenario.yaml": "95eb1837fb4c9c8dce0fb07d354d238f2710d8f8d7488bf8fca56398f5f01201"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "masters-planning.catalog.update",
+              "channel": "operator",
+              "intent_sha256": "sha256:a8af2bef8fb7ef03d76cc5416b445b83a20356cefc428f0be707600a4f7c5ce2",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "master-planning-catalog": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            },
+            "KEY4": {
+              "capability": "masters-planning.comparison.publish",
+              "channel": "operator",
+              "intent_sha256": "sha256:a91056a56394ca566151e43ccd16f3da9a5c1191fec59cdfdbce3924fe311702",
+              "receipt_path": "operations/transactions/TX2.yaml",
+              "request_id": "KEY3",
+              "revisions": {
+                "candidate-comparison-scenario": 1,
+                "candidate-module-scenario-ml": 1
+              },
+              "snapshot_after": "SNAP3",
+              "snapshot_before": "SNAP1",
+              "transaction_id": "TX2"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": {
+          "entries": {
+            "KEY2": {
+              "capability": "masters-planning.catalog.update",
+              "channel": "operator",
+              "intent_sha256": "sha256:a8af2bef8fb7ef03d76cc5416b445b83a20356cefc428f0be707600a4f7c5ce2",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "master-planning-catalog": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        }
+      },
+      "operation": "masters-planning.comparison.publish",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "candidate-comparison-scenario": {
+              "after": 1,
+              "before": 0
+            },
+            "candidate-module-scenario-ml": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "masters-planning.comparison.publish",
+                "declared_writes": [
+                  "curriculum/quarantine/masters-planning/comparisons/**"
+                ]
+              }
+            ]
+          },
+          "capability": "masters-planning.comparison.publish",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "candidate-comparison-scenario": 0,
+            "candidate-module-scenario-ml": 0
+          },
+          "id": "TX2",
+          "metadata": {
+            "data_roots_sha256": "sha256:b716211d9183937eae522226adcd176b33457299b51c441e9547d7733f3aacf1",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:a91056a56394ca566151e43ccd16f3da9a5c1191fec59cdfdbce3924fe311702"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY4",
+            "intent_sha256": "sha256:a91056a56394ca566151e43ccd16f3da9a5c1191fec59cdfdbce3924fe311702",
+            "request_id": "KEY3"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP3",
+          "snapshot_before": "SNAP1",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/quarantine/masters-planning/comparisons/candidate-comparison-scenario.yaml",
+              "sha256_after": "95eb1837fb4c9c8dce0fb07d354d238f2710d8f8d7488bf8fca56398f5f01201",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "candidate-comparison-scenario": 1,
+            "candidate-module-scenario-ml": 1,
+            "master-planning-catalog": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "master-planning-catalog": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "curriculum/quarantine/masters-planning/comparisons/candidate-comparison-scenario.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "95eb1837fb4c9c8dce0fb07d354d238f2710d8f8d7488bf8fca56398f5f01201",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2a651dee7d5d587cb80e6521a7ebd292b22070cf51c57683fa1dded85e7e9fee",
+              "state": "file"
+            },
+            "operations/transactions/TX2.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "c06a6297f08b018bc2d1e9fa52d203a2ce8bfdec0351d8deb4fee377ec108324",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "79ab49686831cb7a04358c22322adfe0d49cb5c34063f2a368d2a5fe94ea7624",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "742345c0368c372d6934714611371d0b09d5dd70e710b1bfcbb9819fb6a89680",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 2
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2a651dee7d5d587cb80e6521a7ebd292b22070cf51c57683fa1dded85e7e9fee",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "56feacc807bf29d88f01771fe6f399c5864225fb074a5642dca4a3e33c7ac197",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"masters-planning.comparison.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP3\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"candidate-comparison-scenario\": 1,\n      \"candidate-module-scenario-ml\": 1\n    },\n    \"snapshot_after\": \"SNAP3\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "masters-planning.comparison.publish",
+        "error": null,
+        "idempotency_key": "KEY4",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX2.yaml",
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {
+          "artifact_revisions": {
+            "candidate-comparison-scenario": 1,
+            "candidate-module-scenario-ml": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX2.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP3",
+          "transaction_id": "TX2"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP3",
+        "transaction_id": "TX2"
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

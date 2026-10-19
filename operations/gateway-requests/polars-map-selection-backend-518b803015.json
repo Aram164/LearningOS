@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-selection-backend-518b803015",
+  "idempotency_key": "polars-map-selection-backend-518b803015",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:855922c938d7cd765960f352b432385acf7b5922cc3baf97163e475fc89e738f",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 10,
+    "study-map-job-polars-selection-backend": 9
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-selection-backend-study-map.yaml",
+    "file_sha256": "sha256:518b803015156d8a09e2fe23084c35e955df2dc0bb5d7ba7cfc0a2080ed1e9f1",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:51f4f0c0625f0dd5bd99eabe3337d9d629071d86e9795bea2c0974cab4788146"
+  }
+}

@@ -1,0 +1,496 @@
+id: study-map-m2-sad-clustering
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-clustering
+status: not-started
+current_stage: stage-sad-clustering-unsupervised
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-clustering-unsupervised
+  number: 1
+  title: Exploratory unsupervised learning
+  status: pending
+  objective: Clustering seeks useful groups without labels; the result depends on representation, similarity,
+    objective, and chosen algorithm rather than revealing a unique ground truth automatically.
+  done_when:
+  - 'Reproduce without notes: Clustering seeks useful groups without labels; the result depends on representation,
+    similarity, objective, and chosen algorithm rather than revealing a unique ground truth automatically.'
+  - Describe two plausible groupings of the UE7 example and explain why labels and a unique correct cluster
+    count are absent.
+  exam_critical: true
+  concepts:
+  - concept-clustering
+  - concept-supervised-learning
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-56679bcd3c703dc9d18a9cd9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-56679bcd3c703dc9d18a9cd9
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
+    locator: exercise-slides/UE7.pdf, PDF pp. 32-40
+    angle: Describe two plausible groupings of the UE7 example and explain why labels and a unique correct
+      cluster count are absent.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
+    scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Exploratory unsupervised learning'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:566870cbfa17f2b70e560aebd1d410e4fe9e745d322c0bc4d2abc2e2af764eb8
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-clustering-families
+  number: 2
+  title: Hierarchical, partitioning, and density families
+  status: pending
+  objective: The main families express different assumptions about cluster nesting, number, compactness,
+    shape, density, noise, and outliers.
+  done_when:
+  - 'Reproduce without notes: The main families express different assumptions about cluster nesting, number,
+    compactness, shape, density, noise, and outliers.'
+  - Compare hierarchical, partitioning and density-based assumptions using the three UE7 descriptions.
+  exam_critical: true
+  concepts:
+  - concept-clustering
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
+    locator: exercise-slides/UE7.pdf, PDF pp. 41-43
+    angle: Compare hierarchical, partitioning and density-based assumptions using the three UE7 descriptions.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
+    scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Hierarchical, partitioning, and density families'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:fef6775bf5214db776bac0ee86735d4c8a339965386c5dab1efe61b4fc19faef
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
+  - material_ref:
+      route_id: route-98f4476be143898c5a500b3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-98f4476be143898c5a500b3f
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-clustering-kmeans
+  number: 3
+  title: k-means objective and iterations
+  status: pending
+  objective: Alternating nearest-centroid assignment and centroid recomputation decreases within-cluster
+    squared distance until assignments stabilize.
+  done_when:
+  - 'Reproduce without notes: Alternating nearest-centroid assignment and centroid recomputation decreases
+    within-cluster squared distance until assignments stabilize.'
+  - Recompute the UE7 assignment/update trace before revealing each next iteration; check centroids and
+    termination.
+  exam_critical: true
+  concepts:
+  - concept-clustering
+  - concept-k-means
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
+    locator: exercise-slides/UE7.pdf, PDF pp. 44-74
+    angle: Recompute the UE7 assignment/update trace before revealing each next iteration; check centroids
+      and termination.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
+    scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'k-means objective and iterations'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:63ca7f9f110bd412c615c1b9c3d76a8891a0df8709fdb0b2e83ce8fd642bef39
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
+  - material_ref:
+      route_id: route-98b8fba3bc0fa33805b7c050
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-98b8fba3bc0fa33805b7c050
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-clustering-initialization
+  number: 4
+  title: Initialization, convergence, and local optima
+  status: pending
+  objective: k, starting centroids, scale, and outliers can change the result; convergence guarantees
+    a stable local solution, not the global optimum or the right number of clusters.
+  done_when:
+  - 'Reproduce without notes: k, starting centroids, scale, and outliers can change the result; convergence
+    guarantees a stable local solution, not the global optimum or the right number of clusters.'
+  - Explain how initialization, k and outliers affect k-means; use the completed UE7 trace as the reference
+    example.
+  exam_critical: true
+  concepts:
+  - concept-clustering
+  - concept-k-means
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
+    locator: exercise-slides/UE7.pdf, PDF pp. 75
+    angle: Explain how initialization, k and outliers affect k-means; use the completed UE7 trace as the
+      reference example.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
+    scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Initialization, convergence, and local optima'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:aac5585e87b45ce7b53a07dacd2e7d04f9e41c700c4d806814f0648850f9dd2f
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
+  - material_ref:
+      route_id: route-98b8fba3bc0fa33805b7c050
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-98b8fba3bc0fa33805b7c050
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-clustering-evaluation
+  number: 5
+  title: Comparing clustering results
+  status: pending
+  objective: Within-cluster compactness, separation, stability, and domain usefulness offer partial validation,
+    but every criterion imports assumptions and can favor different partitions.
+  done_when:
+  - 'Reproduce without notes: Within-cluster compactness, separation, stability, and domain usefulness
+    offer partial validation, but every criterion imports assumptions and can favor different partitions.'
+  - Answer the UE7 clustering retrieval questions and distinguish compactness from evidence of useful
+    grouping.
+  exam_critical: true
+  concepts:
+  - concept-clustering
+  - concept-distance-metrics
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
+    locator: exercise-slides/UE7.pdf, PDF pp. 39-40,75,87
+    angle: Answer the UE7 clustering retrieval questions and distinguish compactness from evidence of
+      useful grouping.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
+    scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Comparing clustering results'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:5d056cae68d02ca2af1dd97584c6a7075cc503a58d154b7695cf7e23a888f72d
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
+  - material_ref:
+      route_id: route-98f4476be143898c5a500b3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-98f4476be143898c5a500b3f
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: intelligence scan: cannot read --feed: [Errno 2] No such file or directory: 'work/inbox/nope.json'\n",
+  "stdout": "",
+  "stdout_json": null
+}

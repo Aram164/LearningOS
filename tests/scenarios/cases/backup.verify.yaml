@@ -1,0 +1,121 @@
+operation: backup.verify
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: verify-empty
+  kind: success
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - <CASEDATA>/manifest.json
+  - --restored-core
+  - <CASEDATA>/r-core
+  - --restored-ui
+  - <CASEDATA>/r-ui
+  - --restored-materials
+  - <CASEDATA>/r-materials
+  - --checksums-only
+  expect:
+    site: null
+- id: manifest-missing
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - no-such.json
+  - --restored-core
+  - x
+  - --restored-ui
+  - x
+  - --restored-materials
+  - x
+  - --checksums-only
+  expect:
+    site: null
+- id: manifest-not-object
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - work/inbox/note-drop.md
+  - --restored-core
+  - x
+  - --restored-ui
+  - x
+  - --restored-materials
+  - x
+  - --checksums-only
+  expect:
+    site: null
+- id: manifest-invalid
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - <CASEDATA>/manifest.json
+  - --restored-core
+  - <CASEDATA>/r-core
+  - --restored-ui
+  - <CASEDATA>/r-ui
+  - --restored-materials
+  - <CASEDATA>/r-materials
+  - --checksums-only
+  expect:
+    site: null
+- id: restore-overlaps-live
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - <CASEDATA>/manifest.json
+  - --restored-core
+  - <ROOT>
+  - --restored-ui
+  - <ROOT>/ui
+  - --restored-materials
+  - <ROOT>/materials
+  expect:
+    site: null
+- id: restored-overlap
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - <CASEDATA>/manifest.json
+  - --restored-core
+  - <CASEDATA>/r1
+  - --restored-ui
+  - <CASEDATA>/r1
+  - --restored-materials
+  - <CASEDATA>/r1
+  expect:
+    site: null
+- id: checksums-fail
+  kind: diagnostic-failure
+  transport: cli
+  argv:
+  - backup-verify
+  - --manifest
+  - <CASEDATA>/manifest.json
+  - --restored-core
+  - <CASEDATA>/r-core
+  - --restored-ui
+  - <CASEDATA>/r-ui
+  - --restored-materials
+  - <CASEDATA>/r-materials
+  - --checksums-only
+  expect:
+    site: null
+untriggered: []

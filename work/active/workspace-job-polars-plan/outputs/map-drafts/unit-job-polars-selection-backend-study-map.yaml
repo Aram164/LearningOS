@@ -1,0 +1,505 @@
+id: study-map-job-polars-selection-backend
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-selection-backend
+status: ready
+current_stage: stage-polars-04-selection-and-projection-index-logic-versus-expr
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-04-selection-and-projection-index-logic-versus-expr
+  number: 1
+  title: Selection and projection contracts
+  status: pending
+  objective: Write row and column selection as Polars expressions from intent rather than by translating pandas,
+    read the optimized plan the engine actually runs, and only then establish where pandas' label-aligned indexing
+    makes the two libraries answer different questions.
+  done_when:
+  - Ten selection queries written from intent with no pandas original, at least six without consulting anything,
+    and the API location named for each one you looked up.
+  - The grouped-threshold query (#6) solved with `over` in a single expression - no group_by-and-join.
+  - 'Three lazy plans read and the optimizer pass named from each: projection pushdown, predicate pushdown, slice
+    pushdown; and you can say what that implies about hand-selecting columns early.'
+  - The four spellings of one filter compared by return type, shape and plan, with the expression-level `filter`
+    distinguished from the frame-level one by where each may appear.
+  - Six paired pandas prompts with Series-versus-DataFrame predicted before running.
+  - The shuffled-index mask case executed, with pandas' reindex warning captured, and stated as a case where the
+    two operations cannot be made the same.
+  - '`s3a-check.py` passes (27 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-selection-family
+  - concept-projection-family
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-03-sheet
+    kind: practise
+    label: Stage exercise sheet - Part A Polars-first, Part B pandas contract, Part C lowering
+    locator: attachments/s3a-exercises.md - Part A Tasks A1-A3 first, then B and C
+    angle: Starts from intent with no pandas original, so the stage builds fluency before it builds a translation
+      table.
+    angle_detail: Part A asks for ten queries stated as intent — the grouped-threshold one is the marker, because
+      solving it with `over` instead of a group_by-and-join is the clearest single sign of thinking in Polars. Task
+      A2 reads three optimized plans and names the pass visible in each, which is the skill every later performance
+      question depends on. Part B then establishes the pandas divergences, and Part C reduces them to six lowering
+      rows.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-exercises.md
+  - id: resource-polars-03-sheet-check
+    kind: practise
+    label: Answer-key self-check - 27 assertions including the optimizer evidence
+    locator: attachments/s3a-check.py - run after Part A, again after Part B
+    angle: Asserts the optimizer passes as string evidence in explain() output, so a plan change is caught rather
+      than assumed stable.
+    angle_detail: It checks that the scan reads two of three columns, that the slice reaches the sort, and that
+      the shuffled-index mask makes pandas warn. It also demonstrates, in its own source, a float-precision failure
+      of the kind Session 1 seed case 8 predicted — a reminder that the tolerance question is not confined to the
+      cases labelled as being about tolerance.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-check.py
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-03-01-required-core-python-polars-the-defini
+    locator: Ch 11 §Filtering Rows pp. 308-312 and §Related Row Operations pp. 319-324; Ch 10 §Selecting Columns
+      pp. 281-283
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The Polars-native account of row and column selection, with no pandas comparison in sight.
+    angle_detail: 'Read Ch 11 pp. 308-312 first and deliberately without translating: it presents filtering as one
+      of three things you can do with a predicate expression, which is the framing Part A of the sheet asks you
+      to adopt. pp. 319-324 covers the row operations that are not filters — the ones you would otherwise reimplement
+      by hand. Early-release edition; confirm callables against 1.36.0.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — expressions and contexts
+    id: resource-polars-03-04-official-reference-docs-pola-rs-expres
+    locator: §'Expressions and contexts' - filter as a context, and expression-level filter
+    url: https://docs.pola.rs/user-guide/concepts/expressions-and-contexts/
+    scope_triage: reference-only
+    angle: Distinguishes the frame-level filter from the expression-level one, which Part A Task A3 turns on.
+    angle_detail: 'The page shows both without dwelling on why there are two. The answer is in the sheet: an expression-level
+      `filter` can appear inside an aggregation, where a frame-level one cannot — which is what makes conditional
+      aggregation possible in Session 6 without a pre-filtered frame per condition.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — expression expansion and selectors
+    id: resource-polars-03-05-official-reference-docs-pola-rs-column
+    locator: §'Expression expansion' and the selectors reference
+    url: https://docs.pola.rs/user-guide/expressions/expression-expansion/
+    scope_triage: reference-only
+    angle: 'The column half of selection: rules that resolve at execution rather than name lists computed now.'
+    angle_detail: 'Read after Session 2''s selector stage, as reinforcement rather than first exposure. The reason
+      it stays on this stage is Part A #9 and #10: reordering and standardizing columns without naming them is the
+      same capability, and it is what makes a projection survive a schema change.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — indexing.html
+    id: resource-polars-03-06-official-reference-pandas-pydata-org-i
+    locator: §'Boolean indexing' and §'Reindexing' - specifically alignment of a boolean Series
+    url: https://pandas.pydata.org/docs/user_guide/indexing.html
+    scope_triage: reference-only
+    angle: pandas' own statement that a boolean Series key is aligned by label, not applied by position.
+    angle_detail: This is the documented behaviour behind Part B Task B2, and it is worth having in writing because
+      the observed behaviour looks like a bug until you read it. Note that pandas emits a UserWarning when it reindexes
+      a boolean key — the warning is the only runtime signal, so the harness should capture it.
+  - kind: read
+    label: Local material — 03.02-Data-Indexing-and-Selection.ipynb
+    id: resource-polars-03-02-local-material-03-02-data-indexing-and
+    source_id: source-pydata-handbook
+    locator: §'Data Selection in DataFrame' - the loc/iloc/ix discussion
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.02-Data-Indexing-and-Selection.ipynb
+    scope_triage: reference-only
+    angle: The clearest available statement of what pandas indexing means, which is what makes the mask case make
+      sense.
+    angle_detail: 'Read it only for the label-versus-position distinction, and read it as history: `ix` is gone
+      and the notebook predates pandas 3.0. Its value is that it explains *why* pandas has three indexers, which
+      is the context for Part B''s mask exercise — a boolean Series is not a boolean list, and the notebook is where
+      that becomes intelligible rather than surprising.'
+  - kind: read
+    label: Local material — Pandas_cheatsheet.pdf
+    id: resource-polars-03-03-local-material-pandas-cheatsheet-pdf
+    source_id: source-python-cheatsheets
+    locator: The 'subset observations' and 'subset variables' panels
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+    scope_triage: reference-only
+    angle: Name recall for the pandas half of Part B only.
+    angle_detail: 2017 sheet. Use it to remember what a pandas selection is called, never to establish what it does.
+      Every signature it shows must be re-checked against 3.0.2 before it enters a table.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-04-99-axis-pass
+    locator: Sheet Part C Task C1, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: Turns this stage's six GetItem shapes into harness cases before the clinic stages begin.
+    angle_detail: 'The boolean-mask row is the one that must carry a precondition: a mask that arrived carrying
+      an index is not the same operand as a mask that arrived as a list, so the case has to record which one the
+      capture actually produced.'
+  - id: resource-polars-04-selection-and-projection-index-logic-versus-expr-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained so the migration is traceable. Its content is a short mental-model sketch; the working
+      material it promised now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/notes.md
+  - kind: read
+    label: Polars lazy optimizations - the complete pass list
+    locator: docs.pola.rs/user-guide/lazy/optimizations/ - all eight named passes
+    url: https://docs.pola.rs/user-guide/lazy/optimizations/
+    angle: The authoritative list of what the optimizer does; the sheet's plan-reading task names only the three
+      you can see.
+    angle_detail: 'Eight passes: predicate pushdown, projection pushdown, slice pushdown, common subplan elimination,
+      simplify expressions, join ordering, type coercion, cardinality estimation. Three of them are visible in a
+      small `explain()`; the other five are the reason a plan you did not write appears. Read it after Task A2 so
+      you can go back and look for the ones you missed — common subplan elimination in particular changes how you
+      should feel about repeating a subexpression, which is a habit question rather than a syntax one.'
+    scope_triage: required-now
+    id: resource-polars-03-optimizations
+  - kind: read
+    label: A bird's eye view of Polars - planning, optimizing, execution
+    locator: pola.rs/posts/polars_birds_eye_view - the Query / Query Optimization / Query Execution sections
+    url: https://pola.rs/posts/polars_birds_eye_view
+    angle: The maintainers' own account of the pipeline from LogicalPlan through PhysicalPlan to compute kernels.
+    angle_detail: 'Names the internal structures — LogicalPlan (what you intend), Expr nodes inside it, PhysicalPlan
+      (how it will be done), and the compute kernels — which is the vocabulary that makes `explain()` output readable
+      rather than decorative. Two limits worth knowing: it is a January 2024 post, so specific algorithm choices
+      may have moved, and it explicitly declines to cover the execution model in depth. The architecture is what
+      you are here for, and that part has held. It is also the closest published analogue to Stratum''s own logical/physical
+      split, which makes it useful twice.'
+    scope_triage: helpful-now
+    id: resource-polars-03-birds-eye-view
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-exercises.md
+    label: Exercise sheet - Polars-first selection, plan reading, pandas contract
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/attachments/s3a-check.py
+    label: Answer-key self-check (27 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/notes.md
+- id: stage-polars-selection-head-tail-sample
+  number: 2
+  title: HEAD, TAIL, and SAMPLE runtime operands
+  status: pending
+  objective: Implement and test selection operations whose parameters may be literals at planning time or OperandRef
+    values resolved only during execution.
+  done_when:
+  - Ten row-limiting queries written from intent, including top-k without a full sort and per-group head.
+  - '`sort().head(n)` and `head(n).sort()` compared as plans, with slice pushdown named and the reason it cannot
+    apply to the second stated.'
+  - HEAD and TAIL executed across n = 2, 0, -1, 99 on a populated and an empty frame, and recorded as syntax-only
+    on executed evidence rather than assumption - including what negative n means.
+  - 'SAMPLE''s six cases run, with case 2 (sampling the whole frame) identified as a semantic divergence and its
+    consequence stated: pandas permutes, Polars does not shuffle unless asked.'
+  - pandas `weights` recorded as unsupported and the two oversampling errors recorded as different exception classes
+    with different diagnostic granularity.
+  - A 30-cell matrix over {head, tail, sample} x {default, zero, negative, oversized, empty, runtime ref}, run through
+    BOTH the literal and the resolved-operand path, with failures raising at the same boundary on each.
+  - Six randomness properties asserted without requiring the two libraries to return identical rows.
+  - '`s3b-check.py` passes (30 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-selection-family
+  - concept-dispatch
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-selection-htsample-sheet
+    kind: practise
+    label: Stage exercise sheet - native row-limiting, the sample divergence, the randomness contract
+    locator: attachments/s3b-exercises.md - Part A, then Part B Task B2 in full
+    angle: Isolates the one divergence here that a spot check cannot find, and states the randomness contract as
+      testable properties.
+    angle_detail: 'HEAD and TAIL agree on every edge including negative n, which the sheet establishes by execution
+      so it can be used as a translation without further checking. SAMPLE is the opposite: sampling a strict subset
+      looks fine on both sides, and sampling the whole frame reveals that pandas permutes while Polars returns the
+      original order. Any code that used sample(frac=1) as a shuffle stops shuffling, silently.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-exercises.md
+  - id: resource-polars-selection-htsample-check
+    kind: practise
+    label: Answer-key self-check - 30 assertions including the six randomness properties
+    locator: attachments/s3b-check.py - run after Part B and again after Part C
+    angle: Shows how to test a random operation without asserting equal rows across two generators.
+    angle_detail: 'The C2 block is the model to copy into your own tests: reproducibility under one seed, exact
+      output cardinality, membership, no-repeats without replacement, repeats allowed with it. None of them require
+      the two libraries to agree on which rows, which is the only way this operation can be tested at all.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-check.py
+  - id: resource-selection-head-tail-sample-matrix
+    kind: practise
+    label: Selection parameter matrix
+    locator: Sheet Part C Task C1 - 30 cells across literal and OperandRef paths
+    angle: Forces the runtime path to be tested rather than assumed equivalent to the literal one.
+    angle_detail: The literal path is the easy one to write tests for and the one that cannot fail in a new way.
+      Every cell has to run twice, and the acceptance condition is that a resolved reference producing an invalid
+      value fails at the same boundary, with the same type, as the literal — including the None case.
+    scope_triage: required-now
+  - id: resource-polars-sample
+    kind: read
+    label: Polars DataFrame.sample
+    locator: n, fraction, with_replacement, shuffle, seed - and the default value of shuffle
+    angle: One default on this page decides whether a translated shuffle still shuffles.
+    angle_detail: '`shuffle=False` is the default. Read it against the pandas page and the divergence is visible
+      before you run anything — which is the exercise: the sheet asks you to predict case 2 first, and the two reference
+      pages together are enough to get it right.'
+    scope_triage: required-now
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sample.html
+  - id: resource-pandas-sample
+    kind: read
+    label: pandas DataFrame.sample
+    locator: n, frac, replace, weights, random_state, axis, ignore_index - and the frac>1 error text
+    angle: The larger of the two sampling surfaces; two of its parameters have no Polars counterpart at all.
+    angle_detail: 'Note what the page promises about ordering: pandas'' sample returns rows in random order, which
+      is why `sample(frac=1)` is the idiomatic pandas shuffle. That promise is the thing Polars does not make, and
+      the whole of the sheet''s case 2 follows from it.'
+    scope_triage: required-now
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+  - id: resource-polars-head
+    kind: read
+    label: Polars DataFrame.head/tail
+    locator: head/tail n behaviour, and the absence of a documented None case
+    angle: The Polars half of the same agreement, plus the one input where it fails differently.
+    angle_detail: The signature does not describe `n=None`, and passing it produces a Python TypeError from inside
+      rather than a Polars diagnostic. That matters here because a runtime operand can resolve to None, so the undocumented
+      input is reachable through the very path this stage exists for.
+    scope_triage: required-now
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.head.html
+  - id: resource-pandas-head
+    kind: read
+    label: pandas DataFrame.head/tail
+    locator: head/tail parameters and the documented meaning of a negative n
+    angle: Establishes that negative n is defined behaviour, not an accident to be avoided.
+    angle_detail: Worth reading because the sheet's Part B result is an *agreement*, and Session 1's evidence rule
+      says an agreement may only be called syntax-only once it has been both documented and executed. This supplies
+      the documented half.
+    scope_triage: required-now
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.head.html
+  - id: resource-note-selectionop-head-tail-sample
+    kind: read
+    label: Stratum SelectionOp note
+    locator: SelectionKind, the args/kwargs/predicate fields, and the physical method mapping
+    angle: Your own record of the operand shapes this stage must handle on both paths.
+    angle_detail: Read it for the OperandRef path specifically. The sheet's Part C matrix is built to test exactly
+      the distinction the note records — a parameter known at planning time versus one resolved during execution
+      — because that is where a failure can arrive later, or with a different type, than the literal path's.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-selectionop.md
+  - id: resource-selection-execs-case-study
+    kind: read
+    label: Attached _selection_execs.py case study
+    locator: sample handling around line 118; duplicate handling; DROPNA expression construction; OperandRef resolution
+    angle: A real implementation to audit against your own derivation - after you have derived it, not before.
+    angle_detail: 'Read it in the order the stages run, not all at once: the sample section belongs here, the duplicate
+      section to the next stage, and DROPNA to the last, where the sheet explicitly asks you to close the file first.
+      Reading ahead converts a derivation exercise into a code review, and only one of those two builds the model.'
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-exercises.md
+    label: Exercise sheet - HEAD/TAIL/SAMPLE, runtime operands, randomness contract
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/attachments/s3b-check.py
+    label: Answer-key self-check (30 assertions)
+  source_feedback: []
+- id: stage-polars-selection-duplicates
+  number: 3
+  title: DROP_DUPLICATES versus unique
+  status: pending
+  objective: Translate pandas duplicate-removal semantics into Polars unique parameters while making keep, subset,
+    order, and unsupported cases explicit.
+  done_when:
+  - Ten distinctness queries written from intent, including 'rows whose key occurs once' without a group_by and
+    join.
+  - '`unique()` run twice and its actual ordering promise stated - weaker than what any single run shows.'
+  - The full keep/subset mapping table completed by execution, with keep=False resolved to keep='none' and keep='any'
+    identified as having no pandas counterpart plus a statement of what it buys.
+  - '`maintain_order=True` present on every mapped row, and the consequence of omitting it stated: values agree,
+    order does not, and a sort-before-compare harness reports a clean pass.'
+  - 'The two duplicate masks distinguished: pandas `duplicated()` marks 2nd-and-later, Polars `is_duplicated()`
+    marks all occurrences, and `~is_first_distinct()` is the actual counterpart.'
+  - Nulls, NaNs, empty frames and a List column in the subset each run, with the List case recorded as policy rather
+    than normalized away.
+  - '`map_drop_duplicates_params` extracted and unit-tested with no frame operation, total over the pandas signature,
+    refusing unsupported combinations at mapping time.'
+  - '`s3c-check.py` passes (24 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-selection-family
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-duplicates-sheet
+    kind: practise
+    label: Stage exercise sheet - distinctness natively, the mapping table, and the two masks
+    locator: attachments/s3c-exercises.md - Part A, then Part B Task B2
+    angle: Isolates the near-identical method pair that means different things and agrees whenever there is nothing
+      to find.
+    angle_detail: 'pandas `duplicated()` and Polars `is_duplicated()` have matching names, matching return shapes,
+      and matching results on any frame without duplicates. They differ on exactly the rows the operation exists
+      for: pandas marks the repeats, Polars marks every row that has one. The real counterpart is `~is_first_distinct()`,
+      and a filter written with the wrong one drops the rows it meant to keep while reading correctly.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-exercises.md
+  - id: resource-polars-duplicates-check
+    kind: practise
+    label: Answer-key self-check - 24 assertions including both duplicate masks
+    locator: attachments/s3c-check.py - run after the mapping table
+    angle: Asserts that ~is_first_distinct equals pandas duplicated AND that is_duplicated does not.
+    angle_detail: 'The negative assertion is the important one: it pins the difference rather than only the correct
+      mapping, so a later ''simplification'' that swaps in the same-named method fails the test. It also confirms
+      that nulls count as values for dedup on both sides, which is a deliberate departure from SQL that both libraries
+      make and neither advertises.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-check.py
+  - id: resource-selection-duplicates-matrix
+    kind: practise
+    label: Duplicate-removal compatibility matrix
+    locator: Sheet Part B Tasks B1-B3 - all keep/subset/order/null combinations, quoted as row labels
+    angle: Quotes every result as a list of unique row labels, so an order divergence cannot hide behind equal values.
+    angle_detail: The fixture gives every row a unique `w`, so 'which rows survived' is answerable exactly. That
+      matters for keep='last' versus keep='first', where the sets of surviving *keys* are identical and only the
+      rows differ — a comparison on key values alone would call the two identical.
+    scope_triage: required-now
+  - id: resource-polars-unique
+    kind: read
+    label: Polars DataFrame.unique
+    locator: subset, keep ('any'/'first'/'last'/'none'), maintain_order - and the default of maintain_order
+    angle: Four keep values against pandas' three, and a default that makes no ordering promise at all.
+    angle_detail: '`keep=''any''` is the extra one: it tells the engine that any representative will do, which lets
+      it skip the bookkeeping first and last require. It is the fastest and it is never a correct translation of
+      pandas, which always promises first — so it belongs in your vocabulary for native queries and not in the mapping
+      table.'
+    scope_triage: required-now
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.unique.html
+  - id: resource-pandas-drop-duplicates
+    kind: read
+    label: pandas DataFrame.drop_duplicates
+    locator: subset, keep ('first'/'last'/False), inplace, ignore_index - and the ordering guarantee
+    angle: Establishes that pandas promises input order, which is the guarantee the Polars default does not make.
+    angle_detail: 'The parameter list is the easy half. The half that matters is what the page says about the order
+      of the result: pandas keeps the surviving rows in their original relative order, always. That is a promise
+      a translation inherits, and it is why `maintain_order=True` is not optional in the mapping.'
+    scope_triage: required-now
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-exercises.md
+    label: Exercise sheet - unique/drop_duplicates and the two duplicate masks
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/attachments/s3c-check.py
+    label: Answer-key self-check (24 assertions)
+  source_feedback: []
+- id: stage-polars-selection-dropna
+  number: 4
+  title: DROPNA from selectors and horizontal expressions
+  status: pending
+  objective: Implement pandas dropna behavior by combining runtime subset resolution, null/NaN predicates, horizontal
+    logic, and threshold counting instead of assuming drop_nulls is equivalent.
+  done_when:
+  - 'The missing-value toolkit exercised: null_count, is_nan, drop_nulls with a selector subset, fill_null, fill_null
+    strategies, fill_nan - and the design principle stated (null and NaN each have their own verb).'
+  - '`fill_null(0)` shown NOT to touch a NaN, and the reason given without reference to pandas.'
+  - The normalization sandwich derived - fill_nan(None) then drop_nulls - and shown to reproduce pandas dropna exactly,
+    with a statement of why the reverse order answers a different question.
+  - The full dropna argument surface mapped native / adapt / unsupported, with axis=1 given a real Polars form rather
+    than being dismissed.
+  - 'All three failure cases run: how+thresh together, a missing subset column in each library; and a written decision
+    on which your layer reproduces and which it improves on, and where each is raised.'
+  - One `lower_dropna` implementation covering how, thresh, subset-as-selector, empty subset, missing column, thresh
+    edges, mixed dtypes and the NaN policy - with the NaN policy appearing exactly once in the source.
+  - The closed-book rebuild done before opening `_selection_execs.py`, and the diff classified per entry as mine-wrong
+    / theirs-wrong / both-correct-different-policy.
+  - '`s3d-check.py` passes (26 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-selection-family
+  - concept-map-family
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-dropna-sheet
+    kind: practise
+    label: Stage exercise sheet - the missing-value toolkit, the normalization sandwich, the full argument surface
+    locator: attachments/s3d-exercises.md - Part A first; Part C Task C2 closed-book
+    angle: Derives pandas' dropna as a composition of two Polars concepts, which is why one call cannot translate
+      the other.
+    angle_detail: Part A builds the toolkit natively and lands on the finding that `fill_null(0)` leaves a NaN in
+      place. Part A2 then composes `fill_nan(None)` with `drop_nulls()` and gets pandas' exact semantics — so the
+      translation is a composition, not a rename, and the order is not reversible. Part B maps the whole argument
+      surface including `axis=1`, which is a schema operation sharing a function name with a row filter.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-exercises.md
+  - id: resource-polars-dropna-check
+    kind: practise
+    label: Answer-key self-check - 26 assertions including the sandwich equivalence
+    locator: attachments/s3d-check.py - run after Part A2 and after Part C
+    angle: Asserts that the composed form equals pandas row for row, and that the reversed order does not.
+    angle_detail: It also pins the thresh edges — thresh=0 and thresh above the subset size — falling out of the
+      count comparison with no special cases, which is the acceptance condition for Part C. If your implementation
+      needed a branch for either, the count is being computed wrongly and this test will not tell you so; the sheet's
+      trap note will.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-check.py
+  - id: resource-polars-missing-data
+    kind: read
+    label: Polars missing data
+    locator: §'Missing data' - null versus NaN, the validity bitmap, and the separate fill verbs
+    angle: The design rationale for two concepts where pandas has one - read it before the pandas contract, not
+      after.
+    angle_detail: This is the page that makes `fill_null` and `fill_nan` stop looking like duplicated API. Missing
+      means absent and is tracked out-of-band; NaN is a float value that arithmetic produced. Reading it first makes
+      Part A's result — fill_null leaving a NaN alone — predictable rather than surprising, which is the difference
+      between knowing Polars and having memorised a divergence.
+    scope_triage: required-now
+    url: https://docs.pola.rs/user-guide/expressions/missing-data/
+  - id: resource-polars-drop-nulls
+    kind: read
+    label: Polars DataFrame.drop_nulls
+    locator: subset as selector or names; null-only behaviour; the missing-column error
+    angle: Establishes what drop_nulls does NOT do, which is most of why this stage is not a one-line translation.
+    angle_detail: It drops nulls. It does not drop NaNs, it has no `how`, and it has no `thresh`. Each absence maps
+      to a piece of work in Part C, so read the signature as a list of the things you will have to compose yourself.
+    scope_triage: required-now
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.drop_nulls.html
+  - id: resource-pandas-dropna
+    kind: read
+    label: pandas DataFrame.dropna
+    locator: axis, how, thresh, subset, ignore_index - and the how/thresh mutual exclusion
+    angle: The contract being reproduced, including one refusal that has no Polars analogue to inherit.
+    angle_detail: pandas rejects `how` and `thresh` together as meaningless. Nothing in Polars will refuse the composed
+      expression, so that refusal has to live in your argument validation — which means the layer has a validation
+      stage whether or not it was designed with one. Note also that `axis=1` is a column operation wearing the same
+      function's name.
+    scope_triage: required-now
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+  - id: resource-selection-dropna-implementation
+    kind: practise
+    label: Rebuild DROPNA without AI
+    locator: Sheet Part C Task C2 - derive from the pandas contract, then diff against the attached file
+    angle: The one exercise in the module whose value is destroyed by looking at the answer first.
+    angle_detail: Close `_selection_execs.py` and every reference. Derive the implementation from the pandas contract
+      and the Session 2 predicates alone, then diff. Classify each difference as mine-wrong, theirs-wrong, or both-correct-different-policy
+      — the third category is the one that produces a decision to write down rather than a fix to apply.
+    scope_triage: required-now
+  - id: resource-note-missingmaskop
+    kind: read
+    label: Stratum MissingMaskOp note
+    locator: 'Complete note: the positive flag, call/method extraction, and Polars compilation'
+    angle: Your own design record for the mask operation the dropna lowering is built on.
+    angle_detail: 'Check the note''s compilation section against Part A''s finding that null and NaN need different
+      verbs: if the note treats missingness as one predicate, the fixture''s NaN row is the case that will break
+      it, and the resolution belongs back in the note as recorded evidence rather than only in the code.'
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-missingmaskop.md
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-exercises.md
+    label: Exercise sheet - DROPNA implementation and the NaN policy
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/attachments/s3d-check.py
+    label: Answer-key self-check (26 assertions)
+  source_feedback: []
+shelving:
+  state: none

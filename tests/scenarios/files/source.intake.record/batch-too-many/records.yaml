@@ -1,0 +1,232 @@
+records:
+- action: create
+  id: source-scenario-batch-01
+  partition: sources.yaml
+  title: Scenario Batch 1
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-02
+  partition: sources.yaml
+  title: Scenario Batch 2
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-03
+  partition: sources.yaml
+  title: Scenario Batch 3
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-04
+  partition: sources.yaml
+  title: Scenario Batch 4
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-05
+  partition: sources.yaml
+  title: Scenario Batch 5
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-06
+  partition: sources.yaml
+  title: Scenario Batch 6
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-07
+  partition: sources.yaml
+  title: Scenario Batch 7
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-08
+  partition: sources.yaml
+  title: Scenario Batch 8
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-09
+  partition: sources.yaml
+  title: Scenario Batch 9
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-10
+  partition: sources.yaml
+  title: Scenario Batch 10
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-11
+  partition: sources.yaml
+  title: Scenario Batch 11
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-12
+  partition: sources.yaml
+  title: Scenario Batch 12
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-13
+  partition: sources.yaml
+  title: Scenario Batch 13
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-14
+  partition: sources.yaml
+  title: Scenario Batch 14
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-15
+  partition: sources.yaml
+  title: Scenario Batch 15
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-16
+  partition: sources.yaml
+  title: Scenario Batch 16
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-17
+  partition: sources.yaml
+  title: Scenario Batch 17
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-18
+  partition: sources.yaml
+  title: Scenario Batch 18
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-19
+  partition: sources.yaml
+  title: Scenario Batch 19
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-20
+  partition: sources.yaml
+  title: Scenario Batch 20
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.
+- action: create
+  id: source-scenario-batch-21
+  partition: sources.yaml
+  title: Scenario Batch 21
+  type: book
+  discovery:
+    observed: '2026-09-23'
+    basis:
+    - kind: list-entry
+      ref: legacy/EXAMPLE-LIST.md#L10
+    possible_use: Scenario shelf.

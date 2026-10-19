@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s2b-ck-20260903",
+  "idempotency_key": "polars-sheet-s2b-ck-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:7c818d815a91e8bc5dfef0c56f6029230ea7d10577e65108ccf7f2e4e8d52d94",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 4,
+    "study-map-job-polars-expressions": 3
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-expr-selectors-expansion",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s2b-check.py",
+    "label": "Answer-key self-check (22 assertions)",
+    "file_sha256": "sha256:92cfc15882585b8646299c0e4bb51eb9bc61afa032f386cb1c32141a90368b96"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:28b9ffea74f13937db1c727e73c65fd41541021baf9f03c2a71edcd4e52484f5"
+  }
+}

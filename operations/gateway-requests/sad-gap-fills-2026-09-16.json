@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "request_id": "request-sad-gap-fills-2026-09-16",
+  "idempotency_key": "sad-gap-fills-2026-09-16-001",
+  "capability": "module.plan.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:3535aed84666acfd5deb15a77df4065c7e4e133fc03723bc67ffaa0e4770f770",
+  "expected_revisions": {
+    "module-hu-m2-statistik-analysis": 50
+  },
+  "payload": {
+    "module_id": "module-hu-m2-statistik-analysis",
+    "file": "work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/gap-fill-plan.yaml",
+    "file_sha256": "sha256:65beb033079e99dfcb95f4443685b2878fd995fe2f26ecfe3f7b9c3dbd4a8326"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:0a561e32fe74d1de0fb571a10ecdea1d576e11f7572050a8ac69f0367bfadcc6"
+  }
+}

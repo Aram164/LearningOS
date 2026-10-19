@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"request\":{\"id\":\"ai-request-prepare-ok\",\"action_id\":\"garden.shelve\",\"target\":{\"kind\":\"garden-note\",\"id\":\"garden-note-seed\"},\"provider\":\"manual-bundle\",\"status\":\"prepared\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"delivery_id\":null,\"receipt_id\":null,\"bundle_path\":\"operations/ai-actions/requests/ai-request-prepare-ok\"},\"bundle_path\":\"operations/ai-actions/requests/ai-request-prepare-ok\"}\n",
+  "stdout_json": {
+    "bundle_path": "operations/ai-actions/requests/ai-request-prepare-ok",
+    "ok": true,
+    "request": {
+      "action_id": "garden.shelve",
+      "bundle_path": "operations/ai-actions/requests/ai-request-prepare-ok",
+      "created_at": "2026-10-01T07:00:00+00:00",
+      "delivery_id": null,
+      "id": "ai-request-prepare-ok",
+      "provider": "manual-bundle",
+      "receipt_id": null,
+      "status": "prepared",
+      "target": {
+        "id": "garden-note-seed",
+        "kind": "garden-note"
+      }
+    }
+  }
+}

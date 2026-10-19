@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos/requests/learner.ability-observation.append",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ability",
+    "activity",
+    "assistance",
+    "claim",
+    "confirmation_ref",
+    "result",
+    "work_ref",
+    "workspace"
+  ],
+  "properties": {
+    "workspace": {
+      "type": "string",
+      "description": "id of the registered active workspace owning the ledger",
+      "x-los-cli": {
+        "flags": [
+          "--workspace"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "ability": {
+      "type": "string",
+      "description": "id of the active reviewed ability the claim is recorded against",
+      "x-los-cli": {
+        "flags": [
+          "--ability"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "claim": {
+      "type": "string",
+      "description": "the precise claim Aram confirmed",
+      "x-los-cli": {
+        "flags": [
+          "--claim"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "work_ref": {
+      "type": "string",
+      "description": "pointer to the actual attempt",
+      "x-los-cli": {
+        "flags": [
+          "--work-ref"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "confirmation_ref": {
+      "type": "string",
+      "description": "pointer to Aram's confirmation of this claim",
+      "x-los-cli": {
+        "flags": [
+          "--confirmation-ref"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "activity": {
+      "type": "string",
+      "description": "what was done in the recorded attempt; free text",
+      "x-los-cli": {
+        "flags": [
+          "--activity"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned",
+      "x-los-cli": {
+        "flags": [
+          "--result"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": [
+          "correct",
+          "incorrect",
+          "partial",
+          "abandoned"
+        ],
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "assistance": {
+      "type": "string",
+      "description": "optional note on assistance used during the attempt",
+      "x-los-cli": {
+        "flags": [
+          "--assistance"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": true,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition that DID hold for this attempt",
+      "x-los-cli": {
+        "flags": [
+          "--condition"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "evidence_tag": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "evidence tag for the claim; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--evidence-tag"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "condition_not_met": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition that did NOT hold; a different fact from silence, which stays unknown",
+      "x-los-cli": {
+        "flags": [
+          "--condition-not-met"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "id of the one uncorrected ability observation this record corrects; the prior bytes are preserved",
+      "x-los-cli": {
+        "flags": [
+          "--supersedes"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": false
+      }
+    },
+    "expected_snapshot": {
+      "type": "string",
+      "description": "optimistic concurrency token from manifest _generated.snapshot_id",
+      "x-los-cli": {
+        "flags": [
+          "--expected-snapshot"
+        ],
+        "position": null,
+        "action": "store",
+        "nargs": null,
+        "const": null,
+        "default": null,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "expected_revision": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+      "x-los-cli": {
+        "flags": [
+          "--expected-revision"
+        ],
+        "position": null,
+        "action": "append",
+        "nargs": null,
+        "const": null,
+        "default": [],
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": false,
+        "envelope_owned": true
+      }
+    },
+    "json": {
+      "type": "boolean",
+      "description": "no-op: this command always prints JSON",
+      "x-los-cli": {
+        "flags": [
+          "--json"
+        ],
+        "position": null,
+        "action": "store_true",
+        "nargs": 0,
+        "const": true,
+        "default": false,
+        "type": null,
+        "choices": null,
+        "metavar": null,
+        "required": false,
+        "stdin": false,
+        "transport_only": true,
+        "envelope_owned": false
+      }
+    }
+  },
+  "x-los-cli-command": {
+    "name": "ability-observation-append",
+    "help": "append one learner-confirmed ability claim",
+    "description": null,
+    "epilog": null,
+    "mutually_exclusive": [],
+    "defaults": {},
+    "handler": "learning_os.adapters.cli.invoke:learner.ability-observation.append",
+    "parser_factory": false
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "# note-scenario-prep-9\n\nStaged bytes.\n",
+      "id": "note-scenario-prep-9",
+      "path": "knowledge/notes/mathematics/note-scenario-prep-9.md"
+    }
+  ]
+}

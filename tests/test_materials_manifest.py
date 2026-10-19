@@ -1,0 +1,485 @@
+"""The external materials tree's durable inventory and its integrity checks.
+
+materials/ is tracked by no Git repository, so the manifest is the only thing
+standing between "the drive is unmounted" and silent, unnoticed data loss.
+These tests are hermetic: they build synthetic materials trees under tmp_path
+and never read the real 1.9 GB tree.
+"""
+
+from __future__ import annotations
+
+import sys
+import textwrap
+from unittest.mock import patch
+
+import materials_manifest as mm
+import pytest
+import yaml
+
+from learning_os.derive.validation import validate
+from learning_os.derive.validation.materials import uris_in as _uris_in
+from learning_os.store.loader import load_repo
+
+
+def codes(issues, severity=None):
+    return [i.code for i in issues if severity is None or i.severity == severity]
+
+
+def make_tree(base, files: dict[str, str]):
+    for rel, text in files.items():
+        path = base / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    return base
+
+
+# ------------------------------------------------------------------ manifest
+def test_build_records_every_durable_file(tmp_path):
+    base = make_tree(tmp_path / "materials", {
+        "Books/a.pdf": "alpha",
+        "ML/course/b.pdf": "beta",
+    })
+    manifest = mm.build(base)
+    assert manifest["totals"]["files"] == 2
+    assert manifest["totals"]["bytes"] == len("alpha") + len("beta")
+    assert set(manifest["files"]) == {"Books/a.pdf", "ML/course/b.pdf"}
+    assert len(manifest["files"]["Books/a.pdf"]["sha256"]) == 64
+
+
+def test_checked_in_inventory_uses_the_shared_byte_renderer(repo_root):
+    """A future third writer must not reintroduce inventory serialization churn."""
+    path = repo_root / "records/materials-manifest.yaml"
+    raw = path.read_text(encoding="utf-8")
+    assert raw == mm.render_manifest(yaml.safe_load(raw))
+
+
+def test_build_excludes_symlinks_noise_and_generated_catalogue(tmp_path):
+    base = make_tree(tmp_path / "materials", {
+        "Books/a.pdf": "alpha",
+        "README.md": "generated catalogue",
+        "FILES.txt": "generated listing",
+        "INDEX.html": "generated page",
+        "Books/.DS_Store": "junk",
+        "ML/README.md": "a real nested readme, not the catalogue",
+    })
+    (base / ".flat").mkdir()
+    (base / ".flat" / "source-a").symlink_to(base / "Books")
+
+    keys = set(mm.build(base)["files"])
+    assert keys == {"Books/a.pdf", "ML/README.md"}, keys
+
+
+def test_verify_detects_deletion_change_and_new_files(tmp_path):
+    base = make_tree(tmp_path / "materials", {
+        "a.pdf": "alpha", "b.pdf": "beta", "c.pdf": "gamma",
+    })
+    manifest = mm.build(base)
+
+    (base / "a.pdf").unlink()
+    (base / "b.pdf").write_text("beta-but-longer", encoding="utf-8")
+    (base / "d.pdf").write_text("delta", encoding="utf-8")
+
+    result = mm.verify(manifest, base)
+    assert result["missing"] == ["a.pdf"]
+    assert result["changed"] == ["b.pdf"]
+    assert result["unregistered"] == ["d.pdf"]
+
+
+def test_deep_verify_catches_same_size_corruption(tmp_path):
+    """The case a size check cannot see — a silently rewritten file."""
+    base = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest = mm.build(base)
+    (base / "a.pdf").write_text("ALPHA", encoding="utf-8")  # same length
+
+    assert mm.verify(manifest, base, deep=False)["changed"] == []
+    assert mm.verify(manifest, base, deep=True)["changed"] == ["a.pdf"]
+
+
+def test_verify_proves_a_restored_copy_is_complete(tmp_path):
+    """The restore path: a backup is trustworthy only if it can be checked."""
+    original = make_tree(tmp_path / "materials", {"x/a.pdf": "alpha", "b.pdf": "beta"})
+    manifest = mm.build(original)
+
+    good = make_tree(tmp_path / "restored-good", {"x/a.pdf": "alpha", "b.pdf": "beta"})
+    assert mm.verify(manifest, good, deep=True) == {
+        "missing": [], "changed": [], "unregistered": [], "unverifiable": []}
+
+    truncated = make_tree(tmp_path / "restored-bad", {"b.pdf": "beta"})
+    assert mm.verify(manifest, truncated, deep=True)["missing"] == ["x/a.pdf"]
+
+
+def test_main_documented_proof_catches_corruption(tmp_path, monkeypatch, capsys):
+    """1. Size-preserving corruption is caught by the documented command."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy)]):
+        assert mm.main() != 0
+        
+    out, err = capsys.readouterr()
+    assert "a.pdf" in out
+
+
+def test_main_fast_answers_weaker_question(tmp_path, monkeypatch, capsys):
+    """2. --against --fast still answers the weaker question."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy), "--fast"]):
+        assert mm.main() == 0
+        
+    out, err = capsys.readouterr()
+    assert "size + presence" in out
+
+
+def test_main_local_default_did_not_change(tmp_path, monkeypatch, capsys):
+    """3. The local default did not change (size-preserving corruption returns 0)."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    (original / "a.pdf").write_text("ALPHA", encoding="utf-8")
+    
+    with patch.object(sys, "argv", ["materials_manifest.py"]):
+        assert mm.main() == 0
+
+
+def test_main_deep_and_fast_refused(monkeypatch, capsys):
+    """4. --deep --fast is refused."""
+    with patch.object(sys, "argv", ["materials_manifest.py", "--deep", "--fast"]):
+        assert mm.main() == 2
+        
+    out, err = capsys.readouterr()
+    assert "--deep" in err
+    assert "--fast" in err
+
+
+def test_verify_missing_checksum_is_unverifiable(tmp_path):
+    """5. A missing recorded checksum is unverifiable, not corrupt."""
+    base = make_tree(tmp_path / "materials", {"a.pdf": "alpha", "b.pdf": "beta"})
+    manifest = mm.build(base)
+    del manifest["files"]["a.pdf"]["sha256"]
+    
+    res_deep = mm.verify(manifest, base, deep=True)
+    assert "a.pdf" in res_deep["unverifiable"]
+    assert "a.pdf" not in res_deep["changed"]
+    assert mm._report(res_deep, base, deep=True) != 0
+    
+    res_fast = mm.verify(manifest, base, deep=False)
+    assert res_fast["unverifiable"] == []
+    assert mm._report(res_fast, base, deep=False) == 0
+
+
+# ----------------------------------------------------------------- URI sweep
+def test_uri_sweep_handles_filenames_with_spaces():
+    """Real filenames contain spaces; a whitespace-delimited scan truncates them."""
+    text = textwrap.dedent("""\
+        Scope authority: `material://Math/course/unser skript.pdf`
+        A link: [the script](material://Math/course/Aufgabe 3 ist gut.pdf)
+        Bare: material://Math/course/plain.pdf, and a sentence end
+        material://Math/course/trailing.pdf.
+    """)
+    assert _uris_in(text) == {
+        "Math/course/unser skript.pdf",
+        "Math/course/Aufgabe 3 ist gut.pdf",
+        "Math/course/plain.pdf",
+        "Math/course/trailing.pdf",
+    }
+
+
+def test_uri_sweep_strips_fragments():
+    assert _uris_in("`material://a/b.pdf#page=12`") == {"a/b.pdf"}
+
+
+# ------------------------------------------------------------ validator tier
+def _wire(mini_repo, *, uri: str, manifest_files: dict | None):
+    """Point a canonical note at `uri`, optionally writing a manifest."""
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(note.read_text(encoding="utf-8") + f"\nSee `{uri}`.\n",
+                    encoding="utf-8")
+    if manifest_files is not None:
+        (mini_repo / "records" / "materials-manifest.yaml").write_text(
+            yaml.safe_dump({"schema_version": 1, "captured": "2026-08-07",
+                            "totals": {"files": len(manifest_files), "bytes": 0},
+                            "files": manifest_files}), encoding="utf-8")
+    return validate(load_repo(mini_repo))
+
+
+def test_missing_manifest_is_a_warning_not_an_error(mini_repo):
+    issues = _wire(mini_repo, uri="material://a.pdf", manifest_files=None)
+    assert "MATERIALS-MANIFEST" in codes(issues, "W")
+    assert codes(issues, "E") == []
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "{",
+        "- not\n- a\n- mapping\n",
+        "schema_version: 1\nfiles: []\n",
+        "schema_version: 1\nfiles:\n  a.pdf: 5\n",
+    ],
+)
+def test_malformed_materials_manifest_is_reported_without_crashing(
+    mini_repo, content
+):
+    manifest = mini_repo / "records/materials-manifest.yaml"
+    manifest.write_text(content, encoding="utf-8")
+    issues = validate(load_repo(mini_repo))
+    assert "MATERIALS-MANIFEST" in codes(issues, "E")
+
+
+def test_referenced_file_gone_from_disk_is_an_error(mini_repo):
+    materials = mini_repo.parent / "materials"
+    (materials / "a.pdf").write_text("alpha", encoding="utf-8")
+    manifest = {"a.pdf": {"size": 5, "sha256": "x"}}
+
+    clean = _wire(mini_repo, uri="material://a.pdf", manifest_files=manifest)
+    assert "MATERIAL-MISSING" not in codes(clean)
+
+    (materials / "a.pdf").unlink()
+    broken = validate(load_repo(mini_repo))
+    assert "MATERIAL-MISSING" in codes(broken, "E")
+
+
+def test_reference_absent_from_the_manifest_is_an_error(mini_repo):
+    """Unrestorable: no backup was ever known to need this file."""
+    (mini_repo.parent / "materials" / "a.pdf").write_text("alpha", encoding="utf-8")
+    issues = _wire(mini_repo, uri="material://a.pdf", manifest_files={})
+    assert "MATERIAL-UNREGISTERED" in codes(issues, "E")
+
+
+def test_unreferenced_inventory_drift_only_warns(mini_repo):
+    """Reorganising materials nags; it does not block a commit."""
+    issues = _wire(mini_repo, uri="material://a.pdf",
+                   manifest_files={"a.pdf": {"size": 5, "sha256": "x"},
+                                   "gone.pdf": {"size": 9, "sha256": "y"}})
+    (mini_repo.parent / "materials" / "a.pdf").write_text("alpha", encoding="utf-8")
+    issues = validate(load_repo(mini_repo))
+    assert "MATERIALS-DRIFT" in codes(issues, "W")
+    assert "MATERIALS-DRIFT" not in codes(issues, "E")
+
+
+def test_offline_tree_warns_once_instead_of_erroring_per_file(mini_repo):
+    """An unmounted drive is not data loss and must not produce 1,141 errors."""
+    (mini_repo.parent / "materials").rmdir()
+    manifest = {f"f{i}.pdf": {"size": 1, "sha256": "z"} for i in range(50)}
+    issues = _wire(mini_repo, uri="material://f0.pdf", manifest_files=manifest)
+    assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+
+
+def test_dangling_materials_symlink_warns_offline(mini_repo):
+    """A link to nowhere is unmounted: one warning, no per-file errors."""
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    link.symlink_to(mini_repo.parent / "no-such-tree", target_is_directory=True)
+    manifest = {f"f{i}.pdf": {"size": 1, "sha256": "z"} for i in range(50)}
+    issues = _wire(mini_repo, uri="material://f0.pdf", manifest_files=manifest)
+    assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+
+
+def test_symlinked_materials_tree_runs_the_full_inventory(mini_repo):
+    """A link to a readable tree verifies against its target: no
+    MATERIALS-OFFLINE, and the inventory behind it is real — a deleted
+    file errors and unreferenced drift warns, exactly as with a plain
+    directory."""
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    (real / "Books").mkdir(parents=True)
+    (real / "Books" / "a.pdf").write_text("alpha", encoding="utf-8")
+    farm = real / ".flat"
+    farm.mkdir()
+    (farm / "source-x").symlink_to("../Books")
+    link.symlink_to(real, target_is_directory=True)
+    manifest = {"Books/a.pdf": {"size": 5, "sha256": "x"}}
+
+    clean = _wire(mini_repo, uri="material://source-x/a.pdf",
+                  manifest_files=manifest)
+    assert "MATERIALS-OFFLINE" not in codes(clean, "W")
+    assert "MATERIAL-MISSING" not in codes(clean, "E")
+    assert "MATERIAL-UNREGISTERED" not in codes(clean, "E")
+
+    (real / "Books" / "a.pdf").unlink()
+    broken = validate(load_repo(mini_repo))
+    assert "MATERIAL-MISSING" in codes(broken, "E")
+
+    (real / "Books" / "a.pdf").write_text("alpha", encoding="utf-8")
+    drifted_manifest = dict(manifest)
+    drifted_manifest["gone.pdf"] = {"size": 9, "sha256": "y"}
+    (mini_repo / "records" / "materials-manifest.yaml").write_text(
+        yaml.safe_dump({"schema_version": 1, "captured": "2026-08-07",
+                        "totals": {"files": 2, "bytes": 0},
+                        "files": drifted_manifest}), encoding="utf-8")
+    drifted = validate(load_repo(mini_repo))
+    assert "MATERIALS-DRIFT" in codes(drifted, "W")
+
+
+def test_symlinked_materials_root_keeps_inner_aliases_inside_its_target(mini_repo):
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    real.mkdir()
+    outside = mini_repo.parent / "outside-materials"
+    outside.mkdir()
+    (outside / "a.pdf").write_text("alpha", encoding="utf-8")
+    (real / ".flat").mkdir()
+    (real / ".flat/source-x").symlink_to(outside)
+    link.symlink_to(real, target_is_directory=True)
+    issues = _wire(mini_repo, uri="material://source-x/a.pdf", manifest_files={})
+    assert "MATERIALS-OFFLINE" not in codes(issues, "W")
+    assert "MATERIAL-MISSING" in codes(issues, "E")
+
+
+def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypatch):
+    from learning_os.store.materials import resolution as materials
+
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    real.mkdir()
+    link.symlink_to(real, target_is_directory=True)
+    original = materials.os.access
+    monkeypatch.setattr(materials.os, "access", lambda path, mode: (
+        False if path == real else original(path, mode)))
+    issues = _wire(mini_repo, uri="material://a.pdf", manifest_files={})
+    assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+    assert any("not readable" in issue.message for issue in issues
+               if issue.code == "MATERIALS-OFFLINE")
+
+
+# --------------------------------------------------------------- URI carriers
+#
+# The sweep is a regex over documents, not a field walk, so how far a reference
+# extends is decided by its delimiter. Both readings below are wrong for the
+# other's input, which is why the field's contract decides between them.
+
+@pytest.mark.parametrize(
+    ("text", "expected", "why"),
+    [
+        (
+            "vault_path: material://source-a/lecture-slides/VL 01-Introduction.pdf\n",
+            "source-a/lecture-slides/VL 01-Introduction.pdf",
+            "a carrier scalar runs to end of line; filenames legitimately "
+            "contain spaces and truncating one reports it missing under a name "
+            "nobody wrote",
+        ),
+        (
+            '  vault_path: "material://source-a/exercise-slides/Übung 02 .pdf"\n',
+            "source-a/exercise-slides/Übung 02 .pdf",
+            "a quoted scalar resolves identically to a bare one",
+        ),
+        (
+            "- material: material://source-b/x y.pdf\n",
+            "source-b/x y.pdf",
+            "a carrier inside a sequence item is still a carrier",
+        ),
+        (
+            "    locator: material://source-v/Velleman.pdf (569 pp); located by\n",
+            "source-v/Velleman.pdf",
+            "locator is prose that may continue past the URI, so it keeps the "
+            "whitespace-delimited reading",
+        ),
+        (
+            "See `material://source-c/a b.pdf` inline\n",
+            "source-c/a b.pdf",
+            "the Markdown code span keeps working",
+        ),
+    ],
+)
+def test_a_material_reference_extends_as_far_as_its_field_says(text, expected, why):
+    from learning_os.derive.validation.materials import uris_in as _uris_in
+
+    assert expected in _uris_in(text), why
+
+
+def test_one_filename_in_two_normal_forms_is_one_filename():
+    """The inventory is walked off a macOS filesystem; the URIs are not.
+
+    APFS hands back decomposed names (NFD) and resolves either form to the same
+    file, so a reference can verify against the tree and then fail to match its
+    own inventory entry — reported as never inventoried, under a name identical
+    on screen to the one that is right there in the manifest.
+    """
+    import unicodedata
+
+    from learning_os.derive.validation.materials import _nfc
+
+    name = "machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 02 .pdf"
+    decomposed = unicodedata.normalize("NFD", name)
+    composed = unicodedata.normalize("NFC", name)
+    assert decomposed != composed, "the fixture must actually differ, or it proves nothing"
+    assert _nfc(decomposed) == _nfc(composed)
+    assert {_nfc(composed)} - {_nfc(decomposed)} == set()
+
+
+def test_report_summary_agrees_with_the_exit_code(tmp_path, capsys):
+    """An unregistered file is a report, so the run succeeded and must say so.
+
+    A summary that reads FAIL beside a zero exit tells the person watching the
+    log and the script reading `$?` two different things, which is the split
+    this tool exists to close.
+    """
+    base = tmp_path / "materials"
+    base.mkdir()
+    (base / "a.pdf").write_bytes(b"hello")
+    manifest = mm.build(base)
+    (base / "extra.pdf").write_bytes(b"surprise")
+
+    result = mm.verify(manifest, base, deep=True)
+    assert result["unregistered"] == ["extra.pdf"]
+    code = mm._report(result, base, deep=True)
+    out = capsys.readouterr().out
+
+    assert code == 0
+    assert "FAIL" not in out
+    assert "not a failure" in out
+
+    (base / "a.pdf").write_bytes(b"HELLO")  # same length, different bytes
+    failing = mm.verify(manifest, base, deep=True)
+    code = mm._report(failing, base, deep=True)
+    out = capsys.readouterr().out
+    assert code != 0
+    assert "FAIL" in out

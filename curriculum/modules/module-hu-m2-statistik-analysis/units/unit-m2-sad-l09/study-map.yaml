@@ -1,0 +1,514 @@
+id: study-map-m2-sad-l09
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l09
+status: not-started
+current_stage: stage-sad-l09-estimator
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l09-estimator
+  number: 1
+  title: Statistics, estimators, and estimates
+  status: pending
+  objective: An estimator is a rule applied to random samples and is therefore random; an estimate is
+    its realized numerical value for one observed sample.
+  done_when:
+  - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random;
+    an estimate is its realized numerical value for one observed sample.'
+  - 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population parameter,
+    estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval yet.'
+  exam_critical: true
+  concepts:
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 5-9,16
+    angle: Distinguishes a sample statistic as a random rule from its realized estimate and introduces
+      parameter targets.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 5-9,16. Distinguishes a sample statistic
+      as a random rule from its realized estimate and introduces parameter targets. The full lecture and
+      alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Statistics, estimators,
+        and estimates'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:8ff74585cbc05e33dc7dd896727d41f04d2a6c23f356c6fb0c0a7f6d9c5a8b71
+  - material_ref:
+      route_id: route-1396da832b2294453043b59b
+      inherit:
+      - label
+      - locator
+      - vault_path
+      - source_id
+    kind: practise
+    angle: 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population parameter,
+      estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval yet.'
+    angle_detail: 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population
+      parameter, estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval
+      yet.'
+    scope_triage: required-now
+    route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Statistics, estimators, and estimates'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a79274ae5081a453a5a23e12853e8d68632b80c2b98367127ae60580f5fc72a6
+  - material_ref:
+      route_id: route-c53fea2ffaf7c83506f57ba8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-c53fea2ffaf7c83506f57ba8
+    kind: read
+    scope_triage: helpful-now
+    locator: §5.1, physical PDF pp. 170-180
+    angle_detail: Construct the sampling distribution by repeatedly drawing samples and calculating a
+      statistic. Separate the fixed population parameter, the estimator as a random variable, and the
+      estimate calculated from this sample.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-properties
+  number: 2
+  title: Bias, consistency, efficiency, and mean squared error
+  status: pending
+  objective: Good estimators trade systematic error and variability; MSE decomposes into variance plus
+    squared bias, while consistency describes large-sample convergence.
+  done_when:
+  - 'Reproduce without notes: Good estimators trade systematic error and variability; MSE decomposes into
+    variance plus squared bias, while consistency describes large-sample convergence.'
+  - 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias, consistency
+    or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
+  exam_critical: true
+  concepts:
+  - concept-mean-squared-error
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 16-23
+    angle: Defines bias, consistency and mean squared error before interval construction; the properties
+      are about repeated samples.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 16-23. Defines bias, consistency and
+      mean squared error before interval construction; the properties are about repeated samples. The
+      full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Bias, consistency,
+        efficiency, and mean squared error'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:de4698c1a8cd9f780dc9125c607d850374ff76f7df9bf747d49fe47d2b0dbe2c
+  - material_ref:
+      route_id: route-7847d85f81696a1bf1a87cf2
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-7847d85f81696a1bf1a87cf2
+  - material_ref:
+      route_id: route-602a7c97b64cbe82ff7782a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-602a7c97b64cbe82ff7782a8
+    kind: read
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-standard-error
+  number: 3
+  title: Sampling distributions and standard errors
+  status: pending
+  objective: The standard error is the standard deviation of an estimator's sampling distribution and
+    usually shrinks with sample size; it is not the spread of the raw data.
+  done_when:
+  - 'Reproduce without notes: The standard error is the standard deviation of an estimator''s sampling
+    distribution and usually shrinks with sample size; it is not the spread of the raw data.'
+  - 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the estimator. Defer
+    bootstrap calculation in (a) to the bootstrap stage.'
+  exam_critical: true
+  concepts:
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 25-28,33-34
+    angle: Uses the sampling distribution of an estimator to explain standard error and its sample-size
+      scaling.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 25-28,33-34. Uses the sampling distribution
+      of an estimator to explain standard error and its sample-size scaling. The full lecture and alternative
+      sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Sampling distributions
+        and standard errors'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:ebbccf69e09186e39ef77d9b576fbef1138bb83cd0ca72dc157b5b52abeb9fed
+  - material_ref:
+      route_id: route-1396da832b2294453043b59b
+      inherit:
+      - label
+      - locator
+      - vault_path
+      - source_id
+    kind: practise
+    angle: 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the estimator.
+      Defer bootstrap calculation in (a) to the bootstrap stage.'
+    angle_detail: 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the
+      estimator. Defer bootstrap calculation in (a) to the bootstrap stage.'
+    scope_triage: required-now
+    route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Sampling distributions and standard errors'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ceadf336280ebcb483e86da7aad86b826e54a8a7a6323d0b6084f4f122a52782
+  - material_ref:
+      route_id: route-cdfc3800327de87be7846b02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-cdfc3800327de87be7846b02
+  - material_ref:
+      route_id: route-24878d8caf588583f067be1c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - vault_path
+    route_id: route-24878d8caf588583f067be1c
+    kind: read
+    scope_triage: helpful-now
+    node_scaffold_note: Bootstrap resampling is used here to estimate the standard error; its full method
+      is taught in the later bootstrap stage.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-z-interval
+  number: 4
+  title: z confidence intervals
+  status: pending
+  objective: With known population variance or an adequate Normal approximation, estimate plus/minus a
+    z quantile times standard error gives a repeated-sampling coverage procedure.
+  done_when:
+  - 'Reproduce without notes: With known population variance or an adequate Normal approximation, estimate
+    plus/minus a z quantile times standard error gives a repeated-sampling coverage procedure.'
+  - Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b) is a bootstrap
+    interval, not a z-interval task; reserve it for bootstrap.
+  exam_critical: true
+  concepts:
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 29-38
+    angle: Derives the known-variance Normal interval from standardizing the sample mean, then works the
+      chocolate-bar example.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 29-38. Derives the known-variance Normal
+      interval from standardizing the sample mean, then works the chocolate-bar example. The full lecture
+      and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'z confidence intervals'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:65c348756933aaef7857797c0b568aad18dac3970dbc1bf667b24a2762a13cc2
+  - material_ref:
+      route_id: route-23f516ac8b071207600e7094
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-23f516ac8b071207600e7094
+  - material_ref:
+      route_id: route-7847d85f81696a1bf1a87cf2
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-7847d85f81696a1bf1a87cf2
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-t-interval
+  number: 5
+  title: t confidence intervals
+  status: pending
+  objective: Estimating variance from small samples introduces extra uncertainty captured by Student's
+    t and its degrees of freedom.
+  done_when:
+  - 'Reproduce without notes: Estimating variance from small samples introduces extra uncertainty captured
+    by Student''s t and its degrees of freedom.'
+  - Work UE5, slides 40-77 — estimation, standard error and bootstrap intervals, then the remaining 3,
+    and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 40-44
+    angle: Replaces the unknown variance with sample variance and Student t quantiles with n−1 degrees
+      of freedom.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 40-44. Replaces the unknown variance
+      with sample variance and Student t quantiles with n−1 degrees of freedom. The full lecture and alternative
+      sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 't confidence intervals'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:1e5c13839a074d10a568182fdfc02fe9cadf95a4f8e50b5e268cf1b73ca6d239
+  - material_ref:
+      route_id: route-23f516ac8b071207600e7094
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-23f516ac8b071207600e7094
+  - material_ref:
+      route_id: route-7847d85f81696a1bf1a87cf2
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-7847d85f81696a1bf1a87cf2
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-bootstrap
+  number: 6
+  title: Bootstrap estimation
+  status: pending
+  objective: Resampling observations with replacement approximates an estimator's sampling distribution
+    when a convenient analytic standard error is unavailable.
+  done_when:
+  - 'Reproduce without notes: Resampling observations with replacement approximates an estimator''s sampling
+    distribution when a convenient analytic standard error is unavailable.'
+  - Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error, the 80%
+    interval and the distinction from sample standard deviation.
+  exam_critical: true
+  concepts:
+  - concept-bootstrap
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 45
+    angle: Motivates resampling a statistic beyond closed-form intervals; the slide does not specify with-replacement
+      resampling or percentile endpoints.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 45. Motivates resampling a statistic
+      beyond closed-form intervals; the slide does not specify with-replacement resampling or percentile
+      endpoints. The full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Bootstrap estimation'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:b6f387446a295eddfe327da4b32e5de5a61d46ffac92eebb047aa9f1a66144ce
+  - material_ref:
+      route_id: route-1396da832b2294453043b59b
+      inherit:
+      - label
+      - locator
+      - vault_path
+      - source_id
+    kind: practise
+    angle: Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error, the
+      80% interval and the distinction from sample standard deviation.
+    angle_detail: Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error,
+      the 80% interval and the distinction from sample standard deviation.
+    scope_triage: required-now
+    route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Bootstrap estimation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f4e185ca2c374c928f993961bc7cd217b94bbb7bcb9d2fc742a477809cdd465a
+  - material_ref:
+      route_id: route-cdfc3800327de87be7846b02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-cdfc3800327de87be7846b02
+  - material_ref:
+      route_id: route-b2d9fca6647fba5c03976147
+      inherit:
+      - label
+      - source_id
+    route_id: route-b2d9fca6647fba5c03976147
+    kind: read
+    scope_triage: helpful-now
+    locator: 09_point_interval_estimation (1).pdf, physical PDF pp. 68–88
+    angle: Previous-year slides show with-replacement resampling and percentile endpoints that the current
+      lecture only motivates.
+    angle_detail: Page 71 gives the n-of-n with-replacement algorithm and 95% percentile endpoints; pp.
+      82–87 contrast a Normal-based interval with empirical tail trimming. Page 88 says the five-value
+      example is too small for dependable inference. Use after current Blatt 4 and UE6.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 point and interval estimation deck' against the stage 'Bootstrap
+        estimation'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:3684c1ea41bf090353833e751d83815c4104b32ee458f7aa54b03352d9703a64
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-data-bias
+  number: 7
+  title: Statistical uncertainty versus data bias
+  status: pending
+  objective: Narrow intervals cannot repair selection bias, measurement error, dependence, or population
+    drift; the inferential model is only as credible as its sampling assumptions.
+  done_when:
+  - 'Reproduce without notes: Narrow intervals cannot repair selection bias, measurement error, dependence,
+    or population drift; the inferential model is only as credible as its sampling assumptions.'
+  exam_critical: true
+  concepts:
+  - concept-sampling-bias
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 10-14
+    angle: Frames inference around the sampled population and data-collection assumptions; narrow model
+      intervals cannot establish representative data.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 10-14. Frames inference around the sampled
+      population and data-collection assumptions; narrow model intervals cannot establish representative
+      data. The full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Statistical uncertainty
+        versus data bias'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:cecb2739273d985802f8c4a8a5a1792a1dd8ff55488a63d009985e6d23eb01bd
+  - material_ref:
+      route_id: route-c53fea2ffaf7c83506f57ba8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-c53fea2ffaf7c83506f57ba8
+    kind: read
+    scope_triage: helpful-now
+    locator: §1.3, physical PDF pp. 22-31 (sampling, nonresponse and convenience samples)
+    angle_detail: Distinguish estimator bias under a model from collecting an unrepresentative sample.
+      Pages 23-24 show selection, nonresponse and convenience-sample failure modes; pp. 29-31 provide
+      questions. Resampling the observed sample cannot by itself restore people or cases that the collection
+      process excluded.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md
+  attachments: []
+  source_feedback: []

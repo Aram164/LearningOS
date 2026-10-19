@@ -1,0 +1,26 @@
+{
+  "changed_cases": 190,
+  "exit_outcome_canonical_differences": [],
+  "revisions_and_authority_unchanged": true,
+  "changed_receipt_write_hashes": [
+    {
+      "case": "ai-action.delivery.apply/apply-garden-shelve.json",
+      "step": 2,
+      "path": "operations/ai-actions/requests/KEY1/request.yaml",
+      "reason": "request snapshot and approved delivery digest were rebound; authored delivery unchanged"
+    },
+    {
+      "case": "ai-action.delivery.apply/exact-replay.json",
+      "step": 2,
+      "path": "operations/ai-actions/requests/KEY1/request.yaml",
+      "reason": "request snapshot and approved delivery digest were rebound; authored delivery unchanged"
+    }
+  ],
+  "structural_classifications": {
+    "backup": "only added operations/goal-ledger.yaml; seven contract/schema entries bind implemented changes and tree declaration; fixture source commit and aggregate update",
+    "capability_and_bootstrap": "approved exact route.patch surface and deterministic fixture source revision",
+    "lineage_restamp": "deterministic fixture judgment commit only"
+  },
+  "crypto_classifications": "intent/approval hashes from snapshot changes; transaction/idempotency/session metadata; explicit stale-snapshot strings; backup aggregate and source fingerprint; no arbitrary authored digest allowance",
+  "status": "reviewed; requires comparison-mode paired gate"
+}

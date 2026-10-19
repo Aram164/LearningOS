@@ -1,0 +1,78 @@
+id: unit-job-polars-backend-loop
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 9 - Repeated Stratum backend implementation loop
+order: 9
+scope: Repeat the full logical-to-physical workflow across Selection, Map/Projection, Aggregation, and
+  Join so the skill transfers to new ML-pipeline operations rather than remaining tied to one file.
+status: ready
+knowledge_map:
+  summary: Repeat the full logical-to-physical workflow across Selection, Map/Projection, Aggregation,
+    and Join so the skill transfers to new ML-pipeline operations rather than remaining tied to one file.
+  nodes:
+  - id: knowledge-polars-stratum-lifecycle
+    title: Stratum operation lifecycle
+    summary: Trace capture, logical rewrite, selection, runtime resolution, execution, and comparison.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-dispatch
+    - concept-dataframe-semantics
+    - concept-selection-family
+    - concept-map-family
+    - concept-aggregation-family
+    - concept-join-family
+  - id: knowledge-polars-implementation-decision
+    title: Implementation decision loop
+    summary: Normalize, support-check, resolve, classify, execute, and verify.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-dispatch
+    - concept-dataframe-semantics
+    - concept-selection-family
+    - concept-map-family
+    - concept-aggregation-family
+    - concept-join-family
+    builds_on:
+    - knowledge-polars-stratum-lifecycle
+  - id: knowledge-polars-family-transfer
+    title: Cross-family transfer
+    summary: Apply expression and parity skills to four logical families.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-dispatch
+    - concept-dataframe-semantics
+    - concept-selection-family
+    - concept-map-family
+    - concept-aggregation-family
+    - concept-join-family
+    builds_on:
+    - knowledge-polars-implementation-decision
+  - id: knowledge-polars-regression-policy
+    title: Regression and failure policy
+    summary: Turn semantic decisions into generated and named regression tests.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-dispatch
+    - concept-dataframe-semantics
+    - concept-selection-family
+    - concept-map-family
+    - concept-aggregation-family
+    - concept-join-family
+    builds_on:
+    - knowledge-polars-family-transfer
+scope_sources:
+- source_id: source-python-depth-drills
+  authority: reference
+- source_id: source-stratum-paper
+  authority: reference
+- source_id: source-scalable-dataframe-systems-paper
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-backend-loop
+artifacts: {}
+workspace_ids: []

@@ -1,0 +1,842 @@
+# The normative corpus — which documents bind, and which have been retired.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# CRITIQUE-POINTS §3: ~7,800 lines of normative prose live under system/. No
+# agent reads all of it, so each session reads a different subset, and a
+# different subset yields a different picture of the rules. The rules do not
+# contradict each other; nothing tells a reader which of them are rules.
+#
+# Three things were unavailable before this file:
+#
+#   1. WHAT BINDS.  Nothing distinguished law from rationale. OPERATOR.md is
+#      binding; PHILOSOPHY.md is reasoning; PILOT-CRITERIA.md is a frozen gate
+#      that was passed 5/5 in July. An agent could only guess, and guessed
+#      differently each time.
+#   2. WHAT IS RETIRED.  Supersession was carried per-document and by hand.
+#      ADR-010 says "superseded by ADR-013" and ADR-012 says "Amended by
+#      ADR-013" — both correct, both working only because someone wrote them
+#      there. Whether every retired document carried such a note was unmeasured.
+#      It is now measured on every `make check`: see NORMATIVE-CORPUS-NO-NOTICE.
+#   3. WHERE TO START.  Several documents read like entry points. Exactly one
+#      is: `entrypoint` below, and the checker fails if it is not indexed,
+#      binding and current.
+#
+# HOW IT IS ENFORCED
+# ------------------
+# `tools/learning_os/store/contracts/normative_corpus.py`, wired into the validator,
+# fails on: a system/*.md or system/adr/*.md file that is not indexed; an index
+# entry with no file; a duplicate path; a supersession edge to an unindexed
+# path; a cycle; a retired document not marked retired; a retired document that
+# does not say so in its own text; and an entrypoint that is not binding.
+#
+# EDGE DIRECTION (matches the repository's own convention)
+# --------------------------------------------------------
+# Forward edges are authored on the SUCCESSOR — `supersedes:` for a document
+# retired whole, `amends:` for one whose rules are retired in part. The reverse
+# links are DERIVED, never stored, exactly as ARCHITECTURE §"note identity"
+# requires of canonical notes: "the reverse link is generated, never stored."
+#
+# VOCABULARY
+# ----------
+#   class      contract | adapter | procedure | reference | rationale
+#              | decision | review | log
+#   status     current | superseded | frozen
+#              (`frozen` = complete by design and never to change — a historical
+#               record, not a retired rule)
+#   authority  binding      must be obeyed
+#              informative  read for understanding; creates no obligation
+#              historical   records what was true; never a current rule
+#
+# Adding a document under system/ without adding it here fails `make check`.
+# That is the point: the corpus cannot grow silently again.
+
+corpus_version: 2
+entrypoint: system/OPERATOR.md
+
+documents:
+
+  # ---- the binding spine ---------------------------------------------------
+
+  - path: AGENTS.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Core's agent entry adapter points at OPERATOR and the parent workspace's
+      role instructions. Ancestor instructions belong to their owning tree.
+
+  - path: README.md
+    class: reference
+    status: current
+    authority: informative
+    owner: documentation
+    summary: >-
+      Setup and command guide; the binding operator contract governs operations.
+
+  - path: system/OPERATOR.md
+    class: contract
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      The vendor-neutral operator contract. Every AI operator, local agent and
+      interface enters here; platform adapters may add mechanics but never
+      weaken it.
+
+  - path: system/CLAUDE.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      The Claude adapter to OPERATOR.md, plus the deeper policy reference. Its
+      twelve-invariant block is a deliberate degraded-mode fallback, not
+      sediment.
+
+  - path: system/ARCHITECTURE.md
+    class: reference
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The single architectural authority: entity families, ownership rules,
+      the physical tree, and the numbered invariants.
+
+  - path: system/VALIDATION.md
+    class: reference
+    status: current
+    authority: binding
+    owner: validation
+    summary: >-
+      The rules `tools/validate.py` enforces beyond the JSON Schemas, with each
+      rule's severity.
+
+  - path: system/WORKFLOWS.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The numbered operating procedures — starting a workspace, capture and
+      routing, plan revision, unit building, session closure.
+
+  - path: system/PLAN-CREATION-SOP.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: plan-authoring
+    summary: >-
+      The mandatory procedure for every new or revised learning plan and every
+      module material mapping.
+
+  - path: system/AI-ACTIONS.md
+    class: reference
+    status: current
+    authority: binding
+    owner: ai-actions
+    summary: >-
+      Provider-independent AI actions: exact-target request bundles, capability
+      validation, approval, and receipts.
+
+  - path: system/ACCEPTANCE-TESTS.md
+    class: reference
+    status: current
+    authority: binding
+    owner: acceptance
+    summary: >-
+      The acceptance criteria the rebuild is measured against; producer-owned
+      contracts outrank any version named here.
+
+  - path: system/SEMANTIC-CONTRACT.md
+    class: reference
+    status: current
+    authority: binding
+    owner: semantics
+    summary: >-
+      The derived semantic layer (Intelligence Plane): pure predicates over
+      existing records, interpretation rather than stored truth; never a
+      canonical writer.
+
+  # ---- executable procedure transcripts ------------------------------------
+
+  - path: system/procedures/end-a-session.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §22: seal a stage write,
+      refuse a stale note, review, commit, and verify the session ledger.
+
+  - path: system/procedures/build-write-envelope.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25c: read the schema, seal
+      a capture envelope, verify the intent hash, submit, replay, and
+      refuse a stale write.
+
+  - path: system/procedures/capture-temporary-material.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §2: a workspace fragment
+      without an envelope, the bare capture refusal, and an inbox capture
+      through its envelope.
+
+  - path: system/procedures/process-inbox.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §21: list and read the
+      inbox, resolve one drop to its destination, and refuse a changed
+      drop.
+
+  - path: system/procedures/record-evidence.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §8: direct observe intake,
+      both refusals, and the untargeted ledger envelope.
+
+  - path: system/procedures/unit-workflow.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Unit workflow: the bare
+      refusal, removing and re-selecting a choice, and the study-path
+      guard.
+
+  - path: system/procedures/capture-routing.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Capture routing: the log:
+      path to a stage note and to the inbox, without moving resume or
+      implying progress.
+
+  - path: system/procedures/shelving-session-closure.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Shelving and session
+      closure: prepare and apply a shelving proposal, validate,
+      regenerate, and close the session.
+
+  - path: system/procedures/start-here.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Start here: capability
+      discovery, the open-question brief, one snapshot-pinned expansion,
+      and the named-record, scan, and saved-reasoning reads.
+
+  - path: system/procedures/create-durable-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §3: search, revise,
+      create with registered context, the question and single-analysis
+      branches, and the reference refusal.
+
+  - path: system/procedures/add-concept-relation.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §5: confirm both
+      endpoints, add the narrowest edge with context and citation,
+      and refuse the duplicate.
+
+  - path: system/procedures/update-coordination.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §9: review one section
+      diff and apply the reviewed text with its content digest,
+      refusing a stale one.
+
+  - path: system/procedures/record-module-event.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §10: one sat attempt
+      and its sitting deadline through their envelopes, with the
+      status held and the views rebuilt.
+
+  - path: system/procedures/generate-indexes-reports.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §12: the one generation
+      command, its products, their provenance marks, and the absent
+      validation report.
+
+  - path: system/procedures/review-a-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §13: one approved note
+      revision with its review date set and uncertainty preserved.
+
+  - path: system/procedures/maintain-crosswalk.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §16: narrative on the
+      note, judgment on the source record, and the table warning.
+
+  - path: system/procedures/save-a-batch-of-source-analyses.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25b: the drafts
+      file from observed bytes to submitted envelope, with stale,
+      tamper, and live-bytes refusals.
+
+  - path: system/procedures/read-an-operation.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §28: the
+      after-the-fact read surface over committed, refused, and
+      id-reused requests.
+
+  - path: system/procedures/review-exact-goal-decisions-together.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §30: the single
+      sidecar decision and the reviewed batch close, with the
+      malformed-batch refusals.
+
+  - path: system/procedures/back-up-and-restore.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §31: the backup
+      drill from manifest to full verification, with the
+      inside-root and tamper refusals.
+
+  - path: system/procedures/bootstrap-order.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Executable Scrut transcript of CLAUDE §2: the agent
+      startup order across discovery, bootstrap, guarded
+      contexts, lookup, resume, and corpus consult.
+
+  - path: system/procedures/retrieval-behavior.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Executable Scrut transcript of CLAUDE §7: answering
+      through the task-shaped reads across concepts, notes,
+      sources, modules, and coordination.
+
+  - path: system/procedures/mismatch-archive-probe.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      PARTIAL Scrut mismatch evidence for M-05 (NOT complete procedure
+      coverage): the unchanged archive move fails validation and the
+      repaired pointer fails the schema.
+
+  - path: system/procedures/start-a-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §1: create the skeleton,
+      observe the M-09 null-deadline refusal, trip the eight-workspace
+      warning, and update Next Action through its envelope.
+
+  - path: system/procedures/add-a-concept.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §4: search both
+      languages, confirm no equivalent, add the readable ID with a
+      short disambiguation, and rebuild.
+
+  - path: system/procedures/add-or-evaluate-a-source.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §6: registry search,
+      metadata-only intake with its evaluation refusal, attach,
+      evaluation revise, collection creation and entry revise.
+
+  - path: system/procedures/complete-and-archive-a-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §11: complete the
+      path-owning workspace in place, rebuild and validate, and leave
+      it unmoved per the M-05 decision.
+
+  - path: system/procedures/move-or-rename-a-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §14: move one note to a
+      new bucket with its ID preserved, ID references unchanged, and
+      generated artifacts rebuilt and validated.
+
+  - path: system/procedures/deprecate-or-supersede.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §15: supersede one note
+      atomically with its unknown-predecessor refusal, deprecate one
+      concept, and verify the generated marks.
+
+  - path: system/procedures/ingest-a-handwritten-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §17: move two synthetic
+      scans to their attachment paths, transcribe through the note
+      gateway, and set metadata and evidence.
+
+  - path: system/procedures/start-a-module.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §18: verify the single
+      module record and its registration, refuse a second one, open a
+      workspace, wire coordination, and rebuild.
+
+  - path: system/procedures/close-a-module.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §19: settle the final
+      attempt with grade and completed status, complete the workspace,
+      clear the dead deferral, and rebuild.
+
+  - path: system/procedures/carry-work-across-semesters.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §20: continue one
+      workspace, complete-and-successor with the M-10 refusal pinned,
+      split scratch, and record the dependency.
+
+  - path: system/procedures/revise-an-existing-plan.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25a: bounded patch with
+      its identity refusal, compaction, and the structural path via
+      module import, unit revise, and unit map import.
+
+  - path: system/procedures/source-routing-and-feedback.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §26: show the identity,
+      join and selection, place the page-grammar locator, and record
+      two feedback rows with the unknown-source refusal.
+
+  - path: system/procedures/review-a-stage-material-angle.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §29: bind the route to
+      its exact file, import a replacement map with refinement and
+      correction reviews, and prove the staleness gate.
+
+  # ---- operator skills ------------------------------------------------------
+  #
+  # A skill is a runbook an operator follows instead of reading the spine, so
+  # an unclassified one drifts exactly where nobody is looking: the 2026-09-05
+  # audit (F14) found one calling a non-entrypoint "the operating contract",
+  # demanding a warning gate OPERATOR does not set, and dropping the
+  # qualification on which units owe a study map. They are adapters: they may
+  # add mechanics and must never weaken the contract.
+
+  - path: system/skills/lecture-unit-builder/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: plan-authoring
+    summary: >-
+      Builds one lecture unit under WORKFLOWS §23 — knowledge map, complete
+      material menu, and the three durable notes. Owns only what is specific to
+      that task; the procedure and the acceptance gate live in the spine.
+
+  - path: system/skills/promotion-ritual/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The ritual for promoting reviewed planning work into the ordinary
+      curriculum, under the gateway capabilities the contract declares.
+
+  - path: system/skills/semester-kickoff/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The start-of-semester sequence over existing capabilities: enrolment
+      facts, module records, workspaces, and the units they owe.
+
+  # ---- standing logs and reasoning ----------------------------------------
+
+  - path: system/CRITIQUE-POINTS.md
+    class: log
+    status: current
+    authority: informative
+    owner: critique-log
+    summary: >-
+      Append-only log of what Aram judges wrong about the system. Its own rules
+      bind the operator (never act on an open point); the points themselves are
+      not work items.
+
+  - path: system/PHILOSOPHY.md
+    class: rationale
+    status: current
+    authority: informative
+    owner: philosophy
+    summary: >-
+      The user's intent. Its principle "reduce organizational burden rather
+      than create it" is the tiebreaker for ambiguity the contract does not
+      settle.
+
+  - path: system/SPEC-README.md
+    class: reference
+    status: current
+    authority: informative
+    owner: spec-index
+    summary: >-
+      The index to the frozen v3 specification package and what it replaced.
+      Its "module records" bullet is annotated in place as superseded in detail
+      by the curriculum v2 cutover.
+
+  # ---- frozen history ------------------------------------------------------
+
+  - path: system/WHY-REDESIGN.md
+    class: rationale
+    status: frozen
+    authority: historical
+    owner: philosophy
+    summary: >-
+      Why v3 exists, written before the rebuild. Reasoning, not rules.
+
+  - path: system/BUILD-SPEC.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The build specification the rebuild was executed against. Complete since
+      the 2026-07-17 cutover.
+
+  - path: system/MIGRATION.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The migration plan. Executed and reported; kept as the record of how
+      content moved.
+
+  - path: system/PILOT-CRITERIA.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The five retrieval questions frozen before the pilot ran. Passed 5/5 on
+      2026-07-17; a gate, not a live rule.
+
+  # ---- decisions -----------------------------------------------------------
+
+  - path: system/adr/ADR-001-external-review-2026-07-17.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Disposition of the 12-point external review after the Stage-2 cutover.
+
+  - path: system/adr/ADR-002-garden-layer-2026-07-18.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: The Garden and Harvest exploratory layer, and the contract governing it.
+
+  - path: system/adr/ADR-003-architecture-review-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      External architecture review and the fixes applied the same day. Its
+      Job-quarantine portions are retired by ADR-013.
+
+  - path: system/adr/ADR-004-hygiene-sweep-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Mess becomes self-announcing inside the canonical repository. Its
+      Job/shadow-scan exclusions are retired by ADR-013.
+
+  - path: system/adr/ADR-005-domain-atlas-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Cross-domain reach through a generated domain atlas, without new canon.
+
+  - path: system/adr/ADR-006-interface-layer-boundary-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The core/interface boundary: the CLI gateway is the only surface an
+      interface layer may read or write through.
+
+  - path: system/adr/ADR-007-library-taxonomy-2026-08-07.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Learning material is grouped by subject, not by the era it arrived in.
+
+  - path: system/adr/ADR-008-semantic-normalization-2026-08-08.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: A live-data and prose normalization pass; no new entity types or hierarchy.
+
+  - path: system/adr/ADR-009-faceted-library-and-resource-identity-2026-08-08.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Faceted Library and stable, id-based resource identity. Extends ADR-007.
+
+  - path: system/adr/ADR-010-job-surface-2026-08-14.md
+    class: decision
+    status: superseded
+    authority: historical
+    owner: architecture
+    summary: >-
+      The bounded first-party Job surface. Retired whole by ADR-013 when Job
+      learning became ordinary learning.
+
+  - path: system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Operator-drafted artifacts, drop records and unevaluated routes; three
+      additive schema extensions.
+
+  - path: system/adr/ADR-012-agent-ui-contract-consolidation-2026-08-19.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Public read contracts, canonical mutation receipts and UI mirrors. Its
+      Job dashboard/plan contracts are retired by ADR-013.
+
+  - path: system/adr/ADR-013-job-learning-collapse-2026-08-26.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Job learning is ordinary learning. Dissolves the Job quarantine into the
+      ordinary program, module, unit, note and source model.
+    supersedes:
+      - system/adr/ADR-010-job-surface-2026-08-14.md
+    amends:
+      - system/adr/ADR-003-architecture-review-2026-08-03.md
+      - system/adr/ADR-004-hygiene-sweep-2026-08-03.md
+      - system/adr/ADR-012-agent-ui-contract-consolidation-2026-08-19.md
+      - system/CLAUDE.md
+      - system/ARCHITECTURE.md
+
+  - path: system/adr/ADR-014-workspace-root-consolidation-2026-08-27.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Consolidation of the semestercontext root into its current shape.
+
+  - path: system/adr/ADR-015-module-concept-atlas-2026-08-28.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The Module × Concept crossing is published as evidence-carrying edges;
+      no concept is ever inferred. Extends ADR-005 and ADR-006.
+
+  - path: system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The Atlas is a focused prerequisite graph answering "what must I
+      understand to derive this concept?". Strict relations order learning and
+      semantic ones never do; arrows show study order while the inspector
+      states the canonical sentence; modules are lenses, never an axis. Amends
+      ADR-015 decision 5 only — the default the screen opens on.
+    amends:
+      - system/adr/ADR-015-module-concept-atlas-2026-08-28.md
+
+  - path: system/adr/ADR-017-atlas-authoring-2026-09-05.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The Atlas becomes authorable. A governed capability writes the concept
+      relation registry under the ordinary V2 transaction; Aram authors and the
+      AI only proposes; manual authoring never depends on an AI provider; a
+      personal question is a `role: question` note rather than a new store.
+      Amends ADR-016 decision 9 only — the read-only first release.
+    amends:
+      - system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
+
+  - path: system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Records the accepted architecture-convergence plan as twenty decisions
+      with sixteen enforced checks. The operation boundary, the ratchets, and
+      the frozen surface bind every later session.
+    amends: []
+
+  # ---- dated reviews (findings, not decisions) -----------------------------
+
+  - path: system/adr/external-review-2026-07-16.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Outside read of the pre-v3 system, deliberately carrying no system frontmatter.
+
+  - path: system/adr/human-operability-review-2026-07-17.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Post-cutover review of how operable the system is without an AI operator.
+
+  - path: system/adr/review-recommendations-2026-07-17.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: >-
+      A 30-point code/design review kept as an open backlog. Its status read is
+      dated; verify against code before relying on it.
+
+  - path: system/adr/engineering-audit-2026-08-08.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: External-perspective audit of the pushed heads; findings recorded.
+
+  - path: system/adr/semantic-state-report-2026-08-14.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Semantic recheck of the live plans and the system; remediation applied the same day.
+
+  - path: system/adr/critical-review-2026-08-19.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: >-
+      Adversarial review — the strongest case against the system as built. No
+      decision is adopted in it.

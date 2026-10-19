@@ -1,0 +1,71 @@
+id: study-map-demo-l01
+type: study-map
+plan_template_version: 1
+unit_id: unit-demo-l01
+status: active
+current_stage: stage-demo
+source_plan:
+  path: work/active/workspace-demo/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-demo
+  number: 1
+  exam_critical: false
+  concepts: []
+  title: Derive expected value
+  status: active
+  objective: Derive and explain expected value.
+  done_when:
+  - Explain the derivation.
+  scope_triage: required-now
+  resources:
+  - id: resource-demo-book-ch01
+    kind: read
+    label: Demo Book §1
+    source_id: source-demo-book
+    locator: §1 Erwartungswert, pdf pp. 12-19
+    angle: Derives the probability-weighted sum and works one discrete example.
+    angle_detail: The v12 shape — the angle is a field of its own rather than prose appended to the
+      locator after an em dash, so an interface can render it, sort by it, and check that it is there.
+    scope_triage: required-now
+  - kind: watch
+    label: Demo Book companion video — only if the derivation stalls
+    source_id: source-demo-book
+    locator: video 1
+    scope_triage: helpful-now
+  - id: resource-demo-book-appendix-a
+    kind: read
+    label: Demo Book Appendix A — depth, not needed for this stage
+    source_id: source-demo-book
+    locator: Appendix A
+    scope_triage: deferred
+  - kind: reference
+    label: Demo Book full bibliography — preserved, do not read for this stage
+    source_id: source-demo-book
+    scope_triage: reference-only
+  - kind: read
+    label: Demo Book §2 — no id and no rank, as every v1 record is
+    source_id: source-demo-book
+    locator: §2
+  working_note: curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md
+  attachments: []
+  source_feedback:
+  # Narrowed to one resource inside the source — the v3 feature.
+  - source_id: source-demo-book
+    resource_id: resource-demo-book-ch01
+    feedback: helpful
+    note: The worked derivation in §1 is what made it click.
+    recorded: '2026-08-08'
+  # A contradictory judgment about a DIFFERENT resource in the SAME source.
+  # Under v1/v2 these two collapsed into one indistinguishable pair.
+  - source_id: source-demo-book
+    resource_id: resource-demo-book-appendix-a
+    feedback: too-advanced
+    recorded: '2026-08-08'
+  # Source-level feedback with no resource_id still valid, as in v1/v2.
+  - source_id: source-demo-book
+    feedback: useful-for-review
+    recorded: '2026-08-08'

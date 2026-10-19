@@ -1,0 +1,12 @@
+{
+ "video_id": "Ic_0jSPtx_k",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l04-framing",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[01:58] \"same question and mathematically identical\" / [02:19] \"the first framing is all about people being saved\" / [02:21] \"the second is about people dying\" / [02:46] \"people want to avoid losses and they are willing to take risks to avoid losses\"",
+   "reason": "The Asian-disease experiment is run in both framings; equivalent outcomes flip the choice, which is exactly the node."
+  }
+ ]
+}

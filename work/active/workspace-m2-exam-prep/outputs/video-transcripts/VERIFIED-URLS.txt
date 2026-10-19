@@ -1,0 +1,71 @@
+# Live-URL verification for the 2026-09-15 SaD video-routes package
+# Re-verified 2026-09-16T00:15:00Z. One line per transcript in BASE/transcripts/.
+# Columns: status | url | duration_s | channel | title
+
+OK   | https://www.youtube.com/watch?v=0oc49DyA3hU | 880|StatQuest with Josh Starmer|Hypothesis Testing and The Null Hypothesis, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=2v-4NrbVVr0 | 713|Kurzes Tutorium Statistik|Zufall ohne Gedächtnis: Geometrische & Exponentialverteilung endlich verstehen (mit Alwin ☕)
+OK   | https://www.youtube.com/watch?v=3I-aLUc6ylQ | 549|Kurzes Tutorium Statistik|Streudiagramm & Korrelationskoeffizient einfach erklärt – anschaulich mit Alwins Restaurant
+OK   | https://www.youtube.com/watch?v=3oZrS3ZWVcA | 875|Kurzes Tutorium Statistik|Streumaße - Varianz, Standardabweichung, Variationskoeffizient und mehr!
+OK   | https://www.youtube.com/watch?v=7mE-K_w1v90 | 490|jbstatistics|Type I Errors, Type II Errors, and the Power of the Test
+OK   | https://www.youtube.com/watch?v=8JIe_cz6qGA | 4096|zedstatistics|Hypothesis testing (ALL YOU NEED TO KNOW!)
+OK   | https://www.youtube.com/watch?v=A82brFpdr9g | 172|StatQuest with Josh Starmer|Standard Deviation vs Standard Error, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=CF4Vdqiwhaw | 128|jbstatistics|Jimmy and Mr. S discuss the interpretation of a confidence interval
+OK   | https://www.youtube.com/watch?v=CqOfi41LfDw | 1134|StatQuest with Josh Starmer|The Essential Main Ideas of Neural Networks
+OK   | https://www.youtube.com/watch?v=D0efHEJsfHo | 975|StatQuest with Josh Starmer|How to Prune Regression Trees, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=DdwTa28W4Os | 1112|Kurzes Tutorium Statistik|Intervallschätzungen - Konfidenzintervalle
+OK   | https://www.youtube.com/watch?v=DoHTsDrzAQk | 725|Kurzes Tutorium Statistik|Zufallsvariable, Massenfunktion, Dichtefunktion und Verteilungsfunktion
+OK   | https://www.youtube.com/watch?v=EJe3jiZNwUU | 1443|zedstatistics|What are confidence intervals? Actually.
+OK   | https://www.youtube.com/watch?v=Ekbw28n6IX0 | 932|Kurzes Tutorium Statistik|Regression - Methode der kleinsten Fehlerquadrate
+OK   | https://www.youtube.com/watch?v=FZ4pEQxkVhU | 350|Kurzes Tutorium Statistik|Skalenniveaus einfach erklärt: Nominal-, Ordinal-, Intervall- und Verhältnisskala mit Beispiel
+OK   | https://www.youtube.com/watch?v=H3EjCKtlVog | 566|StatQuest with Josh Starmer|Gaussian Naive Bayes, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=HZGCoVF3YvM | 911|3Blue1Brown|Bayes theorem, the geometry of changing beliefs
+OK   | https://www.youtube.com/watch?v=HsDeAoBOyS4 | 886|Kurzes Tutorium Statistik|Boxplots ... und auch Median und Quartile ;o)
+OK   | https://www.youtube.com/watch?v=IHZwWFHWa-w | 1233|3Blue1Brown|Gradient descent, how neural networks learn | Deep Learning Chapter 2
+OK   | https://www.youtube.com/watch?v=IN2XmBhILt4 | 1053|StatQuest with Josh Starmer|Neural Networks Pt. 2: Backpropagation Main Ideas
+OK   | https://www.youtube.com/watch?v=Ilg3gGewQ5U | 767|3Blue1Brown|Backpropagation, intuitively | Deep Learning Chapter 3
+OK   | https://www.youtube.com/watch?v=J4Wdy0Wc_xQ | 594|StatQuest with Josh Starmer|StatQuest: Random Forests Part 1 - Building, Using and Evaluating
+OK   | https://www.youtube.com/watch?v=J8jNoF-K8E8 | 946|StatQuest with Josh Starmer|The Binomial Distribution and Test, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=JQc3yx0-Q9E | 1515|StatQuest with Josh Starmer|How to calculate p-values
+OK   | https://www.youtube.com/watch?v=KLs_7b7SKi4 | 819|StatQuest with Josh Starmer|Expected Values, Main Ideas!!!
+OK   | https://www.youtube.com/watch?v=Kdsp6soqA7o | 432|StatQuest with Josh Starmer|Machine Learning Fundamentals: The Confusion Matrix
+OK   | https://www.youtube.com/watch?v=L2KMttDm3aY | 934|jbstatistics|An Introduction to the Hypergeometric Distribution
+OK   | https://www.youtube.com/watch?v=LsK-xG1cLYA | 1254|StatQuest with Josh Starmer|AdaBoost, Clearly Explained
+OK   | https://www.youtube.com/watch?v=O2L2Uv9pdDA | 912|StatQuest with Josh Starmer|Naive Bayes, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=PaFPbb66DxQ | 561|StatQuest with Josh Starmer|The Main Ideas of Fitting a Line to Data (The Main Ideas of Least Squares and Linear Regression.)
+OK   | https://www.youtube.com/watch?v=Pujol1yC1_A | 793|jbstatistics|Introduction to the Central Limit Theorem
+OK   | https://www.youtube.com/watch?v=RNmDyzYw7aQ | 345|Iain Explains Signals, Systems, and Digital Comms|What is a Gaussian Distribution?
+OK   | https://www.youtube.com/watch?v=TqOeMYtOc1w | 401|StatQuest with Josh Starmer|Confidence Intervals, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=UrOXRvG9oYE | 381|jbstatistics|Overview of Some Discrete Probability Distributions (Binomial,Geometric,Hypergeometric,Poisson,NegB)
+OK   | https://www.youtube.com/watch?v=UsU-O2Z1rAs | 650|jbstatistics|What is a p-value?  (Updated and extended version)
+OK   | https://www.youtube.com/watch?v=Uv6nGIgZMVw | 534|jbstatistics|Introduction to the t Distribution (non-technical)
+OK   | https://www.youtube.com/watch?v=VMj-3S1tku0 | 8752|Andrej Karpathy|The spelled-out intro to neural networks and backpropagation: building micrograd
+OK   | https://www.youtube.com/watch?v=Vyk8HQOckIE | 679|jbstatistics|The Expected Value and Variance of Discrete Random Variables
+OK   | https://www.youtube.com/watch?v=XLCWeSVzHUU | 228|StatQuest with Josh Starmer|Sampling from a Distribution, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=XNgt7F6FqDU | 703|StatQuest with Josh Starmer|The standard error, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=XepXtl9YKwc | 372|StatQuest with Josh Starmer|Maximum Likelihood, clearly explained!!!
+OK   | https://www.youtube.com/watch?v=Xz0x-8-cgaQ | 567|StatQuest with Josh Starmer|Bootstrapping Main Ideas!!!
+OK   | https://www.youtube.com/watch?v=YAlJCEDH2uY | 455|StatQuest with Josh Starmer|The Central Limit Theorem, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=YG15m2VwSjA | 956|3Blue1Brown|Visualizing the chain rule and product rule | Chapter 4, Essence of calculus
+OK   | https://www.youtube.com/watch?v=ZlBog_1EyAM | 794|Kurzes Tutorium Statistik|Bedingte Wahrscheinlichkeit, Satz von Bayes und stochastische Unabhängigkeit
+OK   | https://www.youtube.com/watch?v=_L39rN6gz7Y | 1088|StatQuest with Josh Starmer|Decision and Classification Trees, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=aJDXIG1P738 | 223|Kurzes Tutorium Statistik|Statistik Grundlagen: Grundbegriffe einfach erklärt (Grundgesamtheit, Merkmal, Merkmalsträger)
+OK   | https://www.youtube.com/watch?v=aircAruvnKk | 1120|3Blue1Brown|But what is a neural network? | Deep learning chapter 1
+OK   | https://www.youtube.com/watch?v=bsZGt-caXO4 | 425|StatQuest with Josh Starmer|StatQuest:  One or Two Tailed P-Values
+OK   | https://www.youtube.com/watch?v=g9c66TUylZ4 | 1353|StatQuest with Josh Starmer|Regression Trees, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=iYiOVISWXS4 | 327|jbstatistics|An Introduction to the Normal Distribution
+OK   | https://www.youtube.com/watch?v=lG4VkPoG3ko | 1273|3Blue1Brown|The medical test paradox, and redesigning Bayes' rule
+OK   | https://www.youtube.com/watch?v=pYxNSUDSFH4 | 301|StatQuest with Josh Starmer|In Statistics, Probability is not Likelihood.
+OK   | https://www.youtube.com/watch?v=qcTcsEdMgBo | 547|zedstatistics|Range | Interquartile Range (IQR) | Box and whisker plot
+OK   | https://www.youtube.com/watch?v=rbYg5IsOYaM | 834|Kurzes Tutorium Statistik|Einstichproben-t-Test einfach erklärt | Beispiel, Voraussetzungen, Interpretation
+OK   | https://www.youtube.com/watch?v=sDv4f4s2SB8 | 1434|StatQuest with Josh Starmer|Gradient Descent, Step-by-Step
+OK   | https://www.youtube.com/watch?v=tIeHLnjs5U8 | 617|3Blue1Brown|Backpropagation calculus | Deep Learning Chapter 4
+OK   | https://www.youtube.com/watch?v=tTeMYuS87oU | 594|jbstatistics|An Introduction to Hypothesis Testing
+OK   | https://www.youtube.com/watch?v=udyAvvaMjfM | 315|StatQuest with Josh Starmer|Fisher's Exact Test and the Hypergeometric Distribution
+OK   | https://www.youtube.com/watch?v=vMh0zPT0tLI | 653|StatQuest with Josh Starmer|Stochastic Gradient Descent, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=vP06aMoz4v8 | 706|StatQuest with Josh Starmer|Machine Learning Fundamentals: Sensitivity and Specificity
+OK   | https://www.youtube.com/watch?v=vemZtEM63GY | 681|StatQuest with Josh Starmer|p-values: What they are and how to interpret them
+OK   | https://www.youtube.com/watch?v=xZ_z8KWkhXE | 1153|StatQuest with Josh Starmer|Pearson's Correlation, Clearly Explained!!!
+OK   | https://www.youtube.com/watch?v=ybyunHdinXo | 432|Kurzes Tutorium Statistik|Arithmetisches Mittel & Median einfach erklärt: Anwendung und Unterschied mit Beispiel
+OK   | https://www.youtube.com/watch?v=zeJD6dqJ5lo | 1874|3Blue1Brown|But what is the Central Limit Theorem?
+
+# totals: 65 live, 0 unreachable, 65 checked

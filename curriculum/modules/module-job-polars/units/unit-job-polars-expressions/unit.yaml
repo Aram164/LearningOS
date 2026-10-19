@@ -1,0 +1,60 @@
+id: unit-job-polars-expressions
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 2 - Polars expression fluency
+order: 2
+scope: Build and compose Polars expressions from intent, with explicit context, shape, schema, dependency,
+  and failure reasoning before any backend operator clinic.
+status: ready
+knowledge_map:
+  summary: Build and compose Polars expressions from intent, with explicit context, shape, schema, dependency,
+    and failure reasoning before any backend operator clinic.
+  nodes:
+  - id: knowledge-polars-expr-contexts
+    title: Expression contexts
+    summary: Predict how one Expr behaves in select, with_columns, filter, and group_by.
+    concept_ids:
+    - concept-map-family
+    - concept-projection-family
+    - concept-op-rewriting
+    - concept-dispatch
+  - id: knowledge-polars-expr-expansion
+    title: Selectors and expansion
+    summary: Resolve schema-driven expression expansion without Python column loops.
+    concept_ids:
+    - concept-map-family
+    - concept-projection-family
+    - concept-op-rewriting
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-expr-contexts
+  - id: knowledge-polars-expr-horizontal
+    title: Horizontal and conditional logic
+    summary: Compose folds, horizontal predicates, literals, and valid branches.
+    concept_ids:
+    - concept-map-family
+    - concept-projection-family
+    - concept-op-rewriting
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-expr-expansion
+  - id: knowledge-polars-expr-lowering
+    title: Logical-to-Expr lowering
+    summary: Translate backend-neutral column expressions and identify explicit fallback boundaries.
+    concept_ids:
+    - concept-map-family
+    - concept-projection-family
+    - concept-op-rewriting
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-expr-horizontal
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-expressions
+artifacts: {}
+workspace_ids: []

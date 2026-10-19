@@ -1,0 +1,49 @@
+id: unit-m2-analysis-ch04
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 4 — Reihen
+order: 104
+scope: Script Chapter 4 'Reihen', printed pp. 80-97 (PDF pp. 90-107). Current HU practice is Serie 08
+  (Aufgaben 8.1-8.3) and Hausaufgabe WV1.3, which asks one single series to be settled four different
+  ways. §4.4 (Umordnungen) is an Ausflug; §4.5 (Produktreihen) is an Exkurs and outside the exam.
+status: ready
+knowledge_map:
+  summary: A series is the sequence of its partial sums, so Chapter 4 adds no new notion of convergence
+    — it adds a decision procedure. The examinable skill is picking the right criterion and stating its
+    hypotheses correctly, which is exactly what WV1.3 drills by demanding the same series be handled with
+    the ratio, root, comparison and Leibniz criteria in turn.
+  nodes:
+  - id: knowledge-m2-analysis-ch04-reihen
+    title: Reihen (§4.1)
+    summary: 'Series as sequences of partial sums, the necessary null-sequence condition, and the two
+      series whose sums can actually be computed: geometric and telescoping.'
+  - id: knowledge-m2-analysis-ch04-konvergenzkriterien
+    title: Konvergenzkriterien für Reihen (§4.2)
+    summary: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria, each with its hypotheses
+      and its inconclusive case. The exam failure mode is method choice, not missing knowledge of the
+      list.
+    builds_on:
+    - knowledge-m2-analysis-ch04-reihen
+  - id: knowledge-m2-analysis-ch04-absolute-konvergenz
+    title: Absolute Konvergenz (§4.3)
+    summary: 'Absolute versus conditional convergence, and why the distinction is not pedantry: it is
+      the hypothesis the rearrangement result turns on.'
+    builds_on:
+    - knowledge-m2-analysis-ch04-konvergenzkriterien
+  - id: knowledge-m2-analysis-ch04-umordnungen
+    title: Ausflug – Umordnungen (§4.4)
+    summary: 'The Riemann rearrangement phenomenon: a conditionally convergent series can be reordered
+      to any value. Ausflug depth — know the statement and what it costs.'
+    builds_on:
+    - knowledge-m2-analysis-ch04-absolute-konvergenz
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 4, printed pp. 80-97 (PDF pp. 90-107); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch04

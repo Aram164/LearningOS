@@ -1,0 +1,631 @@
+# Standard plan creation and lecture-material mapping procedure
+
+This procedure is mandatory for every new or revised LearningOS plan and every
+module learning surface, including modules grouped under `program-job`.
+It turns a material review into one reviewable `module-plan-import` package
+without silently losing sources, inventing scope, forcing one study order, or
+discovering structural mistakes only after canonical files have been touched.
+
+## One plan template, one learning profile
+
+All newly authored plans use `plan_template_version: 1`. There is one shared
+stage and resource contract in `system/schema/learning-plan.schema.json`:
+
+- every stage has `id`, sequential `number`, `title`, `status`, `objective`,
+  `done_when`, `exam_critical`, `concepts`, `scope_triage`, `resources`,
+  `attachments`, and `source_feedback`;
+- stages add `working_note` plus the ordinary detour/completion state owned by
+  their module and unit. Job modules do not add a second schema or profile.
+
+Generate a valid starting record instead of copying an old plan:
+
+```bash
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-example --unit-id unit-example-l01 --title "Lecture 01"
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-job-rust-engineering \
+  --unit-id unit-job-rust-engineering-fluency \
+  --title "Rust systems fluency"
+```
+
+Every module uses the same study-map schema and gateway. Legacy records remain
+readable as history, but creation gateways reject them as templates.
+
+The interface reads the same generator rather than carrying its own defaults.
+`plan.template` is a declared read-only query (`system/contracts/capabilities.yaml`)
+answering the `plan-template-v1` envelope in `system/schema/plan-template.schema.json`:
+
+```bash
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-job-rust-engineering \
+  --unit-id unit-job-rust-engineering-fluency \
+  --title "Rust systems fluency" --json
+```
+
+Obsidian's *Create study plan* prefills from that answer. Anything that authors
+a plan — SOP, gateway, or interface — must go through this generator; a second
+copy of the defaults is the drift this standard exists to remove.
+
+Use the project environment. If `.venv/bin/python` does not exist, run
+`make setup` once. Do not assume a global `los` executable exists.
+
+## Definition of done
+
+A plan is complete only when all of the following are true:
+
+1. every local and linked learning material in scope appears in the coverage
+   audit, including duplicates, older variants, exercise assets, bibliographies,
+   and unreachable links;
+2. every item has an explicit disposition: selected, reference-only, deferred,
+   duplicate, superseded, off-scope, or unresolved;
+3. current taught material is the scope authority; filenames, numbering, books,
+   search snippets, and prior-year material are never treated as scope evidence;
+4. each normal lecture has its own unit with a knowledge map of what the lecture
+   covers; a cluster is used only when the authoritative material actually
+   defines one, while synthesis/review units are auxiliary and never replace
+   lecture units;
+5. every usable material appears as a lecture-specific option with title,
+   format, explanation angle, covered knowledge nodes, depth, scope status, and
+   exact locator; the overview is complete even when nothing is selected;
+6. `source_selections` records actual learner choices, and every unit of an
+   active or enrolled module carries a `study-map.yaml` on plan template v1
+   (OPERATOR.md rule 6). A complete material menu is not a substitute: it says
+   what may be used, not in what order or against what proof. Until 2026-08-22
+   the map was optional here, and the result was 27 enrolled lecture units with
+   a full menu, a knowledge map, and nothing to work through;
+7. the package passes the no-write preflight;
+8. the snapshot-guarded import succeeds once; and
+9. validation, generation, focused tests, and the final diff are clean.
+
+## Gate 0 — establish the contract and repository state
+
+Follow [OPERATOR.md](OPERATOR.md) task-shaped entry; do not run both
+`bootstrap --brief` and `bootstrap --compact` as routine startup — a later,
+needed expansion is allowed. For plan work, run once:
+
+```bash
+.venv/bin/python tools/los.py capabilities --compact --json
+git status --short
+```
+
+Fetch one capability's complete definition only for the capability you will
+use:
+
+```bash
+.venv/bin/python tools/los.py capabilities NAME --json
+```
+
+Full `capabilities --json` and full `bootstrap` are explicit bulk reads for
+tasks that need the complete catalogue or the full projection, not routine
+startup. For plan work, read focused context instead of the full projection:
+a named route starts with `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+(or the `--route-ids` batch) and `route-patch --check`; a named stage
+starts with `--stage-id`. Reach for `plan-edit-context UNIT_ID --brief`
+(identities, guards, id inventories, missing evidence, reusable analysis
+refs, preflight checks, and runnable expand commands) only for unit
+coverage, source-completeness, or unknown ids, then expand one route,
+stage, or the full `--audit` form only when the task needs complete bodies.
+Use `inspect ID` for records, `note-read` for note bodies, and
+`material-context QUERY --unit UNIT_ID` when the need is an explanation
+rather than a known file.
+
+Preserve unrelated changes. Read the current module, source map, units, optional
+study maps, workspace, the relevant JSON Schemas, and any earlier plan package
+before drafting. Older plans are evidence about possible coverage, never the
+semantic authority or a required output shape. Copy `snapshot_id` from
+the entry read you used **after** the coverage audit and any in-repository draft
+exist — both live under canonical roots and move the fingerprint (Gate 3). For
+structural work that entry read is `bootstrap --compact`, run once, late; for
+single-unit work it is the focused `plan-edit-context` response. Never run
+`bootstrap --brief` for plan work. The actual import requires the id; a
+preflight may run without it, but an import may not.
+
+## Gate 1 — build the material inventory before writing stages
+
+Create a coverage audit from
+`system/templates/plan-coverage-audit.template.md` in the owning workspace's
+`outputs/` directory.
+
+Inventory all of these, even when they will not be selected:
+
+- current lecture decks, recordings, transcripts, handouts, notebooks, code,
+  exercise sheets, exercise decks, solutions, mock exams, and course notices;
+- every file under the authoritative material roots, including files ignored
+  by Git and files with misleading or duplicate names;
+- prior-year and alternate versions;
+- every book, paper, course, playlist, documentation page, and URL named by a
+  deck, bibliography, preserved plan, source collection, or workspace input;
+- locally stored external course banks and their solutions; and
+- materials already registered in the module/workspace plus materials named in
+  the authoritative artifacts but not yet registered.
+
+<!-- los:reference {"kind": "command", "text": "tools/material_toc.py --toc"} -->
+`rg --files` is the first file inventory tool. If the materials tree is
+gitignored and therefore invisible to it, use a narrowly scoped `find` on the
+exact material root. Start from the checked-in rails before scanning:
+`records/materials-manifest.yaml` carries checksums for the external materials
+tree (`make inventory` rebuilds it after adding or moving sources),
+`materials/FILES.txt` (`make materials`) lists every unregistered file by
+name, and `tools/material_toc.py --toc` prints a local material's contents
+with PDF pages while `--verify --page N --expect "…"` checks a locator
+against the file. For repeated reading, refresh the digest-keyed page-text
+cache (`tools/material_text.py --refresh`, under `generated/text-cache/`)
+and read cached pages instead of re-extracting. Sibling code repositories are not automatic material
+roots. If the current task explicitly needs Stratum context, inspect only the
+relevant paths and turn confirmed learning into ordinary LearningOS records;
+do not register or copy the repository as managed LearningOS content.
+
+Open the materials. For PDFs and slide decks, extract text for search and inspect
+the relevant rendered pages for formulas, diagrams, tables, exercise prompts,
+and page ordering. Never infer contents from a filename, lecture number, file
+count, or an old plan. Hash same-looking files to distinguish duplicates from
+different editions.
+
+For linked material, open the primary/official page, verify that the locator
+still resolves and matches the claimed topic, record the verification date, and
+retain an explicit unresolved/deferred row when it does not. Search results and
+third-party summaries are discovery aids, not final evidence.
+
+The count of registered source IDs is not a completeness test. The audit's
+item-by-item inventory is the completeness evidence.
+
+An audit may carry a fenced `inventory-v1` block: explicitly scoped material
+roots plus one disposition row per observed file (`routed`, `linked`,
+`out-of-scope`, `duplicate`). When the block is present the preflight
+enumerates exactly those roots and refuses missing rows, unobserved rows,
+digest drift, and undeclared duplicate bytes; the check report binds the
+observed set and a reviewed apply refuses moved material. Audits without
+the block keep the legacy marker plus boolean path. Either way the agent
+still identifies implicit bibliography references and judges scope,
+duplicates by meaning, and usefulness — code proves row/byte equality,
+never understanding.
+
+## Gate 2 — reconcile scope and granularity
+
+Use this authority order:
+
+1. current taught deck/recording/brief;
+2. current exercises and solutions;
+3. current official bibliography or course page;
+4. prior-year variants, only after a topic-level comparison;
+5. books and external courses for explanation, derivation, or practice.
+
+Record mismatches instead of smoothing them over. An older L11 is not a current
+L11 merely because its number matches. An exercise asset that contains a topic
+missing from the lecture sequence becomes an explicitly justified topic/bridge
+unit or remains a recorded gap; it is not silently forced into the nearest
+lecture.
+
+Create one lecture unit per ordinary lecture. Split combined plans such as
+`L06–L10` into L06, L07, L08, L09, and L10. A combined exam-synthesis unit may
+remain only as an auxiliary review unit with explicit parent/child or purpose
+context.
+
+Triage chapters through cached summaries before full-reading. For a chapter
+range of a cached material, use
+`.venv/bin/python tools/material_summarize.py --read --material RELATIVE_PATH --pages START-END`
+to retrieve the existing analysis without reopening cached page text. The
+lookup checks live source bytes and exact chapter provenance, returning
+`hit`, `missing`, `stale`, or `refused` as JSON. Pass `--digest` with a previously
+selected source digest to detect changed source bytes explicitly. A hit includes
+the summary and its digest; new summaries have a checked content checksum,
+while older summaries are explicitly labelled `legacy-unrecorded` for integrity
+and retain the existing reviewed-summary trust boundary. No semantic quality
+claim follows from a checksum. Refused reads require resolving the reported
+problem; stale reads require selecting the current source and chapter again.
+Use hits for triage,
+and record an explicit grade — `accept`, `defer`, or `reject` — with a
+one-line reason and the summary digest. On a miss, full-read the chapter,
+decide, and preserve the resulting analysis as a durable reference note
+through `note.analysis.save` — that note, not a cache entry, is the retained
+record. (`--promote` into the digest-keyed summary cache remains only for
+legacy cache maintenance.) When the starting point is an explanation need
+rather than a known chapter, search saved analyses and approved assessments
+with `material-context` instead of guessing file ranges; assessment results
+carry their dossier's live freshness next to the stored review status, and
+every response binds its material observations for paged continuations. A
+unit assessment may reference a durable analysis note through `analysis_refs`
+(note id, pinned note revision, approved-content digest, exact anchor,
+material identity and inspected range) instead of copying its prose; a later
+note edit stales the dossier until re-review. Summaries and referenced analyses select and suggest angles
+only: coverage claims, locators, and routes still require the opened material,
+and a route evidenced only by a summary fails review.
+
+For every unit, finish its semantic map before considering stages:
+
+- authoritative scope material and the exact concepts actually taught;
+- stable knowledge nodes with short explanations and explicit `builds_on`
+  edges where the dependency is meaningful;
+- every first exposure, intuition, derivation, implementation, practice,
+  reference, and advanced-depth option available for those nodes;
+- one lecture-specific angle statement explaining what each option contributes,
+  rather than a generic description of the source as a whole;
+- format grouping (`course-material`, `exercise`, `book`, `video`, `website`,
+  `course`, `documentation`, `code`, or `paper`);
+- current/prerequisite/complementary/optional/prior-year/out-of-scope status,
+  with no older source presented as current; and
+- a stated exercise/practice gap when no matching asset exists.
+
+Do not choose a winner merely to make a plan look complete. The permanent
+output is a navigable knowledge-to-material graph. The learner chooses from it.
+
+## Gate 3 — build the package from the canonical template
+
+Copy `system/templates/module-plan-import.template.yaml`. Do not use YAML
+anchors, aliases, or merge keys. Quote text containing colons or YAML-sensitive
+punctuation. The gateway also serializes without aliases so shared defaults
+cannot leak anchors into authored files.
+
+When an ordinary lecture already has its knowledge nodes and complete rich
+source routing, use the tracked draft assembler instead of rebuilding the join
+in an ignored workbench script:
+
+```bash
+.venv/bin/python tools/assemble_lecture_study_maps.py \
+  --out work/active/<workspace>/outputs/lecture-map-drafts \
+  --unit <unit-id>
+```
+
+It writes no canonical file. Before it writes a draft, it refuses stale curated
+concept edges, missing concept coverage, uncovered knowledge nodes, a drifting
+plan template, or a schema-invalid map. Review the resulting YAML, then apply it
+through `unit.map.import` (or include it in the module package). This preserves
+the reproducible creation operation without treating a deterministic draft as
+learner-approved pedagogy.
+
+**Where a draft goes, and when the snapshot is taken.** OPERATOR rule 16 owns
+this: a draft is never a canonical curriculum file, and only the gateway writes
+one. `work/` is inside the canonical fingerprint, so writing a draft into a
+workspace's `outputs/` *moves the snapshot*. Capture `snapshot_id`
+after the draft and the coverage audit exist, not before — an id taken first is
+already stale by the time the import quotes it. A draft that is scratch rather
+than a reviewed record belongs outside the repository (`LearningOS/workbench/`),
+where it moves nothing.
+
+The package must contain `plan_contract.version: 2`,
+`plan_contract.plan_template_version: 1`, the repository-relative coverage-audit
+path, all six completeness checks set to `true`, and an `intentional_reorders`
+list (normally empty). Every supplied `study_map` must also declare
+`plan_template_version: 1` and sequential stage numbers. These are truth claims:
+do not set one until its audit work is complete.
+
+Plan expansion must preserve the relative order of every existing module unit
+and study-map stage. The preflight enforces this mechanically: adding a new
+record is allowed, but silently moving existing records is rejected. A genuine
+pedagogical reorder must be listed in `intentional_reorders` with target
+`module-unit-order` or `study-map-stage-order`, the affected module/map ID, and
+a concrete reason. A declaration that does not correspond to an actual reorder
+is also rejected, so stale approvals cannot linger in reusable packages.
+
+Use only schema enums. Module source-map roles are:
+
+`course-material`, `spine`, `first-exposure`, `intuition`, `derivation`,
+`implementation`, `practice`, `exam-preparation`, `optional-depth`,
+`reference`, and `candidate`.
+
+Each rich `unit_routes` entry is one source-to-lecture edge and must contain:
+
+- `unit_id`, a human-readable option `title`, and `format`;
+- `angle`, written for this lecture rather than copied from global source
+  metadata;
+- `angle_detail`, the long form of the same judgment, shown on hover;
+- `covers`, containing only knowledge-node IDs declared by that unit;
+- `depth`: `orientation`, `intuition`, `course-aligned`, `derivation`,
+  `implementation`, `practice`, or `advanced-reference`;
+- `scope`: `current`, `prerequisite`, `complementary`, `optional`, `prior-year`,
+  or `out-of-scope`; and
+- an **exact** `locator`, plus `url` or `vault_path` where they exist.
+
+Legacy string routes remain readable for backward compatibility, but a newly
+mapped lecture must use rich routes so the interface can explain the choice.
+
+### Prospective lineage for changed covers edges (Phase B)
+
+Every route-`covers` edge the package creates, repairs, or removes names
+its admitted evidence in top-level `claim_evidence` (claim id, evidence
+entries, optional read revisions), or the import refuses before apply —
+including its no-write preflight. Evidence kinds: `route-locator`
+(substring of the recorded locator), `manifest` (materials-manifest path,
+digest bound by the gateway), `repo-file` (in-repo path, hashed by the
+gateway), `external` (http(s) URL plus its verification trail in `note`).
+Declared read revisions must equal current ones. Prose-only edits and
+untouched routes carry no entry: lineage is prospective only, never
+backfill. The gateway persists the admitted records into
+`operations/transactions/lineage.yaml` in the same transaction as the
+canonical mutation, or neither commits.
+
+### What "exact" means for a locator
+
+"Chapter 9" of a 700-page book is a direction, not a locator: it does not say
+where to start and nothing can check it later. A locator is exact when a reader
+who has never seen the material can open it at the right place without
+searching.
+
+<!-- los:reference {"kind": "command", "text": "tools/material_toc.py --toc"} -->
+- **Books and papers** need the numbered division **and** a page range —
+  `Ch 9 §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393`. Naming
+  the specific pages of the sub-parts that matter is better still.
+- **Page numbers are PDF pages** everywhere in this repository: the number a
+  viewer's page box takes, counting the cover as 1. Printed page numbers
+  disagree with the viewer by a per-book offset — which is precisely the
+  ambiguity an exact locator exists to remove — so they are never used alone.
+  `tools/material_toc.py --toc` prints a local material's own contents with
+  PDF pages, and `--verify --page N --expect "…"` checks a locator against the
+  file.
+- **Decks, exercise sheets and exam papers** name the file and the slide,
+  Blatt or Aufgabe — `exercise-slides/blatt-05.pdf Aufgabe 2`.
+- **Videos, courses and articles** have no pages: they are addressed by their
+  own title, quoted — `'The medical test paradox, and redesigning Bayes' rule'`
+  — or by a numbered lecture, episode or section.
+- **Never a hedge.** "selections", "topic-matched", "relevant", "selected"
+  name a direction and leave the reader to do the finding. The validator
+  reports them as `LOCATOR-VAGUE`.
+
+When no copy is registered — no local material and no URL — do not route the
+source at all. A route whose locator cannot be opened is worse than an absence,
+because it reads as coverage.
+
+### What an angle has to say
+
+`angle` answers one question: *what does this material do for this stage that
+the other options on it do not?* A sentence that would be equally true of three
+other rows is not an angle — "covers probability" says nothing. State the
+specific difference: a derivation the deck skips, a worked example at the right
+level, the German vocabulary the exam uses, a picture that fixes a confusion.
+
+`angle_detail` carries the same judgment at length for the hover, and must add
+information rather than restate: what the reader actually gets, what it
+assumes, where it departs from the taught deck, when to choose something else.
+Naming a route's *limits* is part of the job — "stops before Naive Bayes" is as
+useful as anything it does cover.
+
+Additional package invariants:
+
+- `module_patch.unit_order` lists every final owned unit exactly once, including
+  pre-existing units not changed by this package, and agrees with the numeric
+  `order` on those units;
+- the `stages` list is the study-map ordering authority; plan expansion keeps
+  the relative sequence of existing stage IDs unless an intentional reorder is
+  explicitly declared and reviewed;
+- every unit, knowledge-node, and optional map/stage ID is unique and
+  module-scoped;
+- every material `covers` reference resolves inside its target unit;
+- when a study map is supplied, `current_stage` resolves and every working note
+  stays below its owning unit;
+- every source used by a unit scope, selection, stage resource, feedback entry,
+  or workspace update exists in the module source map;
+- every source used by a unit explicitly routes to that unit in
+  `unit_routes`;
+- source selections are empty until the learner has chosen; if a selection
+  names `stage_ids`, those IDs resolve to stages in the same optional map;
+- the workspace's `sources` and `unit_ids` contain the final intended joins;
+- older-only material is labelled as prior-year/reference/candidate and never
+  described as current; and
+- absence of a matching exercise is recorded, not filled by mislabelling a
+  nearby sheet.
+
+## Which path: choose once, then follow only that path
+
+Choose once before Gates 1–6; do not re-derive the procedure after choosing:
+
+- One material field (title, locator, angle, angle_detail, URL/vault_path)
+  on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids` for 1–20 routes in one snapshot-bound call — prefer
+  the batch over repeated single reads), then `route-patch --check` and
+  gateway apply per WORKFLOWS §25a. The route response already carries
+  the snapshot and revision guards. Reach for the unit `--brief` only
+  when the route id is unknown. No coverage audit, no plan package.
+  Read only OPERATOR Start here and WORKFLOWS §25a.
+- A locator guarded by an approved synthesis dossier is refused by
+  `route.patch`, because its bounded patch cannot replace that dossier. Use
+  the full `module-plan-import` package with the final source map, unit data
+  and replacement synthesis, then review its no-write preflight. The compact
+  `unit-plan-revise` path carries existing source selections forward, so it
+  cannot update a selected route's locator guard in this case. For a locator
+  without a dossier, `route.patch` synchronizes an unambiguous linked source
+  selection; an ambiguous legacy selection is refused and must first be
+  linked to its exact route. Do not hand-edit the canonical files.
+- One existing lecture (routes plus map for that unit): `plan-edit-context
+  UNIT_ID --brief`, source reading, coverage audit, one compact
+  `unit-plan-revise` patch, one preflight, one reviewed apply, and
+  `make plan-check`. Read OPERATOR Start here, WORKFLOWS §25a, and SOP
+  Gates 0–6.
+- Structural change (multi-unit changes, new units, unit ordering, workspace
+  joins, source-registry patches): full Gates 1–6 via `module-plan-import`.
+  Read the full SOP Gates 0–6 plus WORKFLOWS §25a.
+
+The compact paths never substitute for structural changes: identity, scope,
+coverage, source, or membership changes still require the full plan path.
+Joining an already-registered source to the module (`source_joins`) is the one
+membership-adjacent exception: it rides the compact `unit_revisions` file shape
+through the same `module-plan-import` gate, never the registry itself.
+Snapshot guards, receipts, source completeness, and learner-state protection
+apply on all three paths. Procedure owner is WORKFLOWS §25a; this SOP owns
+Gates 0–6 only.
+
+## Gate 4 — run the no-write preflight
+
+One existing lecture:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml --check > /tmp/unit-revise-check.json
+```
+
+When the reviewed draft is large, `--report-out` saves that same complete
+report itself and prints only a compact review summary — every review field
+except the sealed `gateway_envelope`, plus the saved path and SHA-256:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml --check --report-out /tmp/unit-revise-check.json
+```
+
+Apply, receipt verification, and recovery then point at the saved file
+(`--review-report /tmp/unit-revise-check.json`); the compact stdout is for
+review only and carries no approval.
+
+Structural or multi-unit change:
+
+```bash
+.venv/bin/python tools/los.py module-plan-import MODULE_ID \
+  --file work/active/WORKSPACE/outputs/PLAN.yaml --check
+```
+
+For revisions to several **existing** units in one module, the same command
+also accepts the compact shape in
+`system/templates/module-plan-revise.template.yaml`: `unit_revisions[]` names
+only route changes and stage field patches. It cannot add units, reorder stages,
+change module metadata, or update workspaces; use the full import template for
+those operations. Each `stage_patches[].fields.resources` value is the complete
+final resource array for that stage, so the existing learner-evidence gate still
+protects every evidence-bearing placement. The importer assembles unchanged
+records under one operator lock, then uses the same validation gate, lineage,
+reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
+full import. Save the compact-file `reviewed_file_sha256` from `--check` for
+`--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal
+full package and is not the file to approve. To add placements without
+copying the array, a stage patch may carry `resources_append` instead of
+`fields.resources`: new rows with fresh resource ids land after every
+existing authored placement, in order, and the importer carries the old
+rows forward itself. The same source-reading, angle-review, and
+evidence-preservation obligations apply — the new rows and their teaching
+purpose still need review.
+
+The command checks the plan contract, source routing, schemas, references,
+module ownership, unit order, study-map state, and workspace joins in a shadow
+repository, plus the real-tree perimeter layer — an undeclared sibling fails
+`--check` exactly as it would fail live. Success reports a stable review
+artifact: the reviewed-file SHA-256, current snapshot, expected revisions,
+artifact IDs, affected and byte-changing files, route/source/placement counts
+before and after, added/updated/removed routes, demotions and promotions,
+unplaced menu routes, synthesis freshness before and after, preserved
+learner-state fields, and `canonical_files_written: 0`. When the coverage
+audit carries an `inventory-v1` block the report additionally binds the
+observed material set (`observed_material`) with a generated row view
+(`inventory_view`). A failure is a
+rejected plan, not a rollback: correct the package or audit and rerun the check;
+do not patch canonical YAML to make a defective package pass.
+
+Save the complete successful JSON report outside the canonical roots. It
+contains `reviewed_file_sha256` for the original input bytes and
+`assembled_package_sha256` for the internally assembled module package;
+these are different for a compact revision. The report also retains the
+prepared `gateway_envelope`, exact write paths/checksums and actual artifact
+owners. Keep this file until receipt verification and any recovery are done.
+Moving the report under `work/` after preflight changes the guarded snapshot.
+
+Two further gates ride on the same report. A route addition, removal, locator
+change, or evidence-relevant coverage change on a unit with an approved
+synthesis dossier requires a replacement `material_synthesis` validated
+together with the new maps against the staged post-change state — pure
+`angle`/`angle_detail` edits keep the dossier. Suspicious-but-legitimate
+changes (demoting current exercises, promoting advanced-reference material,
+removing last coverage of a node, exact-to-unresolved swaps, coverage
+reduction, learner-state edits, cross-lecture moves) appear under
+`semantic_ack_required` and need a documented `acknowledgments[]`
+`{kind, target, reason}` entry each.
+Deleting stages, losing evidence-bearing resource placements, changing
+recorded completion/progress or note ownership, and deleting attachments or
+feedback are hard refusals. An acknowledgment cannot override them; use the
+owning learner-state workflow for a deliberate state transition.
+
+Read the first diagnostic completely before changing anything. Then scan for
+all occurrences of the same failure class (for example, every non-schema role
+or every missing source route) and fix the class once.
+
+## Gate 5 — apply once with optimistic concurrency
+
+After reviewing the report SHA, apply the exact reviewed bytes — no
+hand-assembled envelope, no copied snapshot, revision, or intent hash:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml \
+  --apply-reviewed-sha256 sha256:REVIEWED_FILE_HASH_FROM_CHECK \
+  --review-report /tmp/unit-revise-check.json
+```
+
+The helper hashes and parses the same single read of the file, checks it
+against the saved request, and dispatches that exact GatewayEnvelopeV2.
+The handler runs its normal validation under the gateway lock. The same flags
+exist on `module-plan-import`; save its preflight JSON as well. Neither
+snapshot, revisions nor request identity are refreshed during apply. If the
+snapshot moved underneath, the gateway answers
+`STALE_SNAPSHOT`: reload, review the intervening changes, regenerate the
+package if necessary, and preflight again. Never bypass the guard.
+
+<!-- los:reference {"kind": "command", "text": "los capability"} -->
+<!-- los:reference {"kind": "option", "text": "--replay-only", "target": "los capability"} -->
+If the response is lost, retry the same command with the same saved report:
+the original request identity makes this an exact replay, not another commit.
+The report's `gateway_envelope` can also be passed to `los capability` with
+`--replay-only` to verify recovery without reopening the revision file.
+Do not create a new preflight/request to recover an uncertain application.
+To resume and verify from the saved report alone — after an interruption,
+a lost response, or a session restart — run
+`tools/verify_plan_receipt.py --report REPORT.json --unit UNIT_ID`, which
+resolves the request and receipt identity itself and reports one state:
+`committed-and-verified`, `committed-but-verification-failed`,
+`not-applied-or-stale-preflight`, or `uncertain-requires-replay-lookup`.
+A failed verification is never permission to issue a new mutation.
+
+## Gate 6 — post-import acceptance
+
+Curriculum-only revisions run the scoped gate:
+
+```bash
+make plan-check
+```
+
+which is full offline validation with compact output and a saved warning
+report, the warning-baseline gate, the focused
+curriculum suites, projection regeneration, and a clean diff. For routine
+readouts outside `plan-check`, prefer `.venv/bin/python tools/validate.py --compact`:
+same error gate, errors plus one summary line, the full warning list stays
+in the report. Afterwards,
+verify the receipt against the projection for the touched unit:
+
+```bash
+.venv/bin/python tools/verify_plan_receipt.py \
+  --unit UNIT_ID --report /tmp/unit-revise-check.json \
+  --expect-artifacts EXACT_COMMIT_ARTIFACT_IDS_FROM_REPORT
+```
+
+(`--receipt` may still name the expected receipt explicitly; when omitted
+the command resolves it from the report through the idempotency ledger.)
+
+`make system-check` stays mandatory at the shared-code boundary: Core
+changes, schema or manifest-contract changes, gateway changes, UI changes,
+and commit/release preparation. Do not run the full release suite for every
+ordinary curriculum revision.
+
+Also run `.venv/bin/python tools/validate.py --online` when registered or newly
+selected web sources changed. If the module is still covered by a compatibility
+migration, run that migration in dry-run/report mode and require `0 action(s)`;
+a migration must preserve evolved units and source maps instead of recreating
+an older snapshot.
+
+Review the final diff against the coverage audit, not only against the package:
+every reviewed material must land in the intended unit menu with the correct
+angle and disposition, chosen material must remain distinguishable from merely
+available material, a study map must use only chosen resources, lecture
+units must not have collapsed back into a cluster, and unrelated dirty-tree
+changes must remain untouched.
+
+## Why these gates exist
+
+| Observed failure | Permanent control |
+|---|---|
+| Drafting before the complete local/web inventory | Coverage audit is required before an executable package. |
+| Trusting filenames or old lecture numbers | Materials must be opened; current/prior reconciliation is explicit. |
+| Inventing source roles or malformed YAML scalars | Canonical template, schema enums, and shadow validation. |
+| A source appeared in a stage/workspace but not its source map | Package routing preflight checks both presence and `unit_routes`. |
+| A long source list gave no reason to choose one item | Every rich route carries a lecture-specific angle, depth, scope, and knowledge coverage. |
+| A generated plan silently became the only way to view a lecture | Knowledge maps and complete material menus are permanent; a study map is one ordered projection over them and never replaces or truncates the menu. Whether a unit owes one is OPERATOR rule 6, answered per unit by the producer as `needs_study_map` — not a preference. |
+| YAML anchors changed serialized canonical files | Template forbids anchors and the gateway emits alias-free YAML. |
+| Discovering schema errors only after canonical writes | `--check` validates a shadow repository and writes zero files. |
+| Expanding a plan silently reshuffled existing units or stages | Preflight preserves relative order by default; deliberate reorders require a reasoned declaration. |
+| Applying against stale state | The real import requires `--expected-snapshot`. |
+| A compatibility migration recreated old units after planning | Post-import migration dry-run must be idempotent. |
+| A combined lecture range hid missing individual coverage | One ordinary lecture equals one unit knowledge/material map; synthesis is auxiliary. |

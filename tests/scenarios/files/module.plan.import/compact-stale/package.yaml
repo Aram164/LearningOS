@@ -1,0 +1,8 @@
+module_id: module-demo
+plan_contract:
+  version: 2
+unit_revisions:
+  - unit_id: unit-demo-l01
+    stage_patches:
+      - stage_id: stage-demo-pending
+        fields: {objective: "Apply expected value to two worked examples."}

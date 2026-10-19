@@ -1,0 +1,571 @@
+operation: module.plan.import
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: import-success
+  kind: success
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+  artifact_ids:
+  - module-demo
+  a5_base: true
+  expect:
+    site: null
+- id: staged-basis-without-check
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: work/inbox/nope.yaml
+    file_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+    staged_basis: unit-demo-l01
+  artifact_ids: []
+  expect:
+    site: null
+- id: promotion-mismatch
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    promotion:
+      schema_version: 1
+      id: master-promotion-scenario
+      type: master-planning-promotion
+      recorded_at: '2026-09-30T09:00:00+02:00'
+      candidate_module_id: candidate-module-x
+      canonical_module_id: module-other
+      catalog_revision: 0
+      verification: {}
+      adopted_sources: []
+      module_plan: {}
+  artifact_ids: []
+  expect:
+    site: null
+- id: promotion-refused
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    promotion:
+      schema_version: 1
+      id: master-promotion-scenario
+      type: master-planning-promotion
+      recorded_at: '2026-09-30T09:00:00+02:00'
+      candidate_module_id: candidate-module-x
+      canonical_module_id: module-demo
+      catalog_revision: 0
+      verification: {}
+      adopted_sources: []
+      module_plan: {}
+  artifact_ids: []
+  expect:
+    site: null
+- id: promotion-direct-cli
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --promotion
+  - '{"canonical_module_id": "module-demo"}'
+  expect:
+    site: null
+- id: missing-file
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: work/inbox/nope.yaml
+    file_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+  artifact_ids: []
+  expect:
+    site: null
+- id: sha-mismatch
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: work/inbox/note-drop.md
+    file_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+  artifact_ids: []
+  expect:
+    site: null
+- id: bad-yaml
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:cacff250bc00b11d1b54f998a1de75ae085a9146875df9043e3919a1631d81e5
+  artifact_ids: []
+  expect:
+    site: null
+- id: wrong-module
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:425644c807524ab217face7e3025b9de3b02b0da10f09fab0ee15474404cd19e
+  artifact_ids: []
+  expect:
+    site: null
+- id: compact-assembly
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:a9f3448b925bc1424cdbafd0be547e8eae1c7499116b18335bdd9d586f0a57a7
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: compact-check-apply-sha
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --check
+  - --apply-reviewed-sha256
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: null
+- id: compact-stale
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --review-report
+  - <CASEDATA>/review.json
+  - --apply-reviewed-sha256
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: null
+- id: contract-missing
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:0db5efbb89c4bbdc462ff07bb22b251aa813a702006e956c481dcf3937ccc08b
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: contract-audit
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:a7cc90a7cba7d6ad7e825d5a66566b0bdbab1f27f329bf55d0b902e805b68c8f
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: unknown-module
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-nope
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:9c7551abe36a80b845ca8646c9138fdb70317521b099137ab86bc09bf9a18402
+    check: true
+  artifact_ids: []
+  expect:
+    site: module.plan.import.unknown-module
+- id: module-patch-escape
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:e5a165bee15fa00bbf6d1bafd2e30b6f7a13c9aa5f8b3f40722997978ac6c89f
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: source-map-foreign
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:648fb19bc468986fb188afc1b3d13bb7792ad9664f943821975a4d93639c2e5b
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: source-patches-nonlist
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:bfa6ff02ac6e3fa59c38be9b443a3f25b2691bcaf73df38a134c6c462fa8df27
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: source-patch-unknown
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:9592eb08b921fae5bcd55cd9ed095ab1caa7f3003c575d9162edb2b880dc5f69
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: units-nonlist
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:1b29cc48be82584e6515af1f7811a4ca9b0ac4feec873fe86405dfcc492e75a9
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: unit-invalid
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:278c11dc7886bd66954f3a7788bd1c6335212bef2a216496c38811e158bed23d
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: unit-duplicate
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:be5be99f7c67b7dd88177bb6444115d33373abd69bb742b9810198caf09bfd4d
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: map-foreign-unit
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:efc73828663159feadfe4487db549b4d7e75da14c0a18e02c284428abfa976fd
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: stage-note-escape
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:f61863ac8e954755ee2e66f1c1a3d8ccaffa073859f2a08587c838fa8e1dc419
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: synthesis-unknown-unit
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:558f5ea408f402cd525a43962b14d9bd00eefc10cba4a6835acc748f8360b93c
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: workspace-updates-nonlist
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:dedeac1852e1d6a74b1ddc67b9feea488e87ce91568c5b9a90f508e0a86fcf3e
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: workspace-not-joined
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:d649776f42a3e7cca0e3a6531b394df3c1ac216d3420d149aa2a2e2a89bc63d0
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: workspace-splice
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:e689dc11fd31d7ed442bf729310ee983ffc51b2801660cd6c20103909b82f8ad
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: ordering-reorder
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:bdb89a206f8c5353ec71e6081ae6df108e9d56d1b700426b878fe42640d159d1
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: routing-omission
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:264562a4ade16198c02373f14af65de855a9403bacb8835f105916ae045f9fb1
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: lineage-evidence
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:0cd8ef189710da8f42cc8d0a6aad57caf50c772c8f6257359174efad0ad8f90e
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: validation-preflight
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:09e2e424c9511d0fae0311ff305bc8e13312e8332eec1b0efdea4833e4cbb49a
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: staged-outside-package
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+    check: true
+    staged_basis: unit-nope
+  artifact_ids: []
+  expect:
+    site: null
+- id: staged-unavailable
+  kind: refusal
+  transport: gateway
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:666290c2179466df973dbccc5fd9a07dfbbf23ac805aebb290cb6221720fe847
+    check: true
+    staged_basis: unit-scenario-new
+  artifact_ids: []
+  expect:
+    site: null
+- id: direct-cli-refused
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  expect:
+    site: null
+- id: apply-without-snapshot
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  expect:
+    site: null
+- id: check-with-reviewed-sha
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --check
+  - --apply-reviewed-sha256
+  - sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+  expect:
+    site: null
+- id: stale-reviewed-apply
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --apply-reviewed-sha256
+  - sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+  - --review-report
+  - <CASEDATA>/review.json
+  expect:
+    site: null
+- id: lineage-admission-direct
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --expected-snapshot
+  - sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+  expect:
+    site: module.plan.import.lineage-preflight-failed
+- id: import-hits-warning-gate
+  kind: sequence
+  steps:
+  - transport: gateway
+    operation: project.create
+    request:
+      project:
+        schema_version: 1
+        id: project-scenario-new
+        type: project
+        title: Scenario project
+        project_type: software
+        status: active
+        root_uri: project://scenario
+        objective: Characterize project creation.
+        milestone_ids: []
+        linked_module_ids: []
+        unit_ids: []
+        workspace_ids: []
+        thematic_group_ids: []
+        boundaries:
+          confidentiality: private
+          external_code_access: approved
+    artifact_ids:
+    - project-scenario-new
+  - transport: gateway
+    request:
+      module_id: module-demo
+      file: <CASEDATA>/package.yaml
+      file_sha256: sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+    artifact_ids:
+    - module-demo
+- id: exact-replay
+  kind: sequence
+  steps:
+  - transport: gateway
+    request:
+      module_id: module-demo
+      file: <CASEDATA>/package.yaml
+      file_sha256: sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+    artifact_ids:
+    - module-demo
+  - transport: gateway
+    same_envelope_as: 0
+- id: replay-only-miss
+  kind: refusal
+  transport: gateway
+  replay_only: true
+  request:
+    module_id: module-demo
+    file: <CASEDATA>/package.yaml
+    file_sha256: sha256:0db5efbb89c4bbdc462ff07bb22b251aa813a702006e956c481dcf3937ccc08b
+    check: true
+  artifact_ids: []
+  expect:
+    site: null
+- id: a9-bad-file
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - missing.yaml
+  - --check
+  expect:
+    site: module.plan.import.bad-file
+- id: a9-reviewed-bytes-changed
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --apply-reviewed-sha256
+  - sha256:0000000000000000000000000000000000000000000000000000000000000000
+  expect:
+    site: module.plan.import.reviewed-bytes-changed
+- id: a9-reviewed-needs-report
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --apply-reviewed-sha256
+  - sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+  expect:
+    site: module.plan.import.reviewed-needs-report
+- id: a9-reviewed-report-invalid
+  kind: refusal
+  transport: cli
+  argv:
+  - module-plan-import
+  - module-demo
+  - --file
+  - <CASEDATA>/package.yaml
+  - --apply-reviewed-sha256
+  - sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
+  - --review-report
+  - <CASEDATA>/report.json
+  expect:
+    site: module.plan.import.reviewed-report-invalid
+untriggered:
+- site: module.plan.import.bad-expected-revision
+  reason: fixture-inexpressible
+  proof: _prove_phase4_plan_backstop

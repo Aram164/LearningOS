@@ -1,0 +1,506 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learning-plan-v1",
+  "title": "LearningOS canonical plan template v1",
+  "x-governs": "record",
+  "description": "The shared authored-plan vocabulary for every LearningOS module.",
+  "$defs": {
+    "nonEmptyText": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "angleReview": {
+      "description": "Declared review of a stage description's relation to its route, bound to their exact payload. Refinement preserves a deliberate stage purpose. Correction additionally cites inspected local source bytes. No learning credit or independent source verification is inferred from a refinement.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reviewed_by", "reviewed_on", "fingerprint", "rationale"],
+      "properties": {
+        "kind": {"enum": ["refinement", "correction"]},
+        "reviewed_by": {"type": "string", "pattern": "\\S"},
+        "reviewed_on": {"type": "string", "format": "date"},
+        "fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "rationale": {"type": "string", "pattern": "\\S"},
+        "evidence": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["material_uri", "file_sha256", "locator"],
+            "properties": {
+              "material_uri": {"type": "string", "pattern": "^material://source-[^/]+/.+"},
+              "file_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "locator": {"type": "string", "pattern": "\\S"}
+            }
+          }
+        }
+      },
+      "allOf": [{"if": {"properties": {"kind": {"const": "correction"}}}, "then": {"required": ["evidence"]}}]
+    },
+    "resource": {
+      "type": "object",
+      "allOf": [{"if": {"required": ["angle_review"]}, "then": {"anyOf": [{"required": ["route_id"]}, {"required": ["material_ref"]}]}}],
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "route_id": {
+          "description": "Optional stable pointer to one rich material route on the owning unit. Independent resources remain valid without it.",
+          "type": "string",
+          "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "kind": {
+          "enum": [
+            "watch",
+            "read",
+            "practise",
+            "reference"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "locator": {
+          "description": "Where to start, exactly. For a book, paper or course this means the numbered chapter or section AND a page range in PDF pages (the number a viewer's page box takes, cover counted as 1) — see system/PLAN-CREATION-SOP.md. \"Chapter 9\" of a 700-page book is a direction, not a locator.",
+          "type": "string"
+        },
+        "angle": {
+          "description": "What this material does for THIS stage that the others on it do not — one line, rendered beside the label. It is a field rather than a suffix on `locator` so an interface can show it, sort by it, and check that it is there.",
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "angle_detail": {
+          "description": "The same judgment at length, for the hover: what the reader actually gets, what it assumes, and how it differs from the lecture's own treatment. Never a restatement of `angle`.",
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "angle_review": {"$ref": "#/$defs/angleReview"},
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "vault_path": {
+          "type": "string"
+        },
+        "scope_triage": {
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
+        },
+        "affordance": {
+          "description": "What the resource is a candidate for: guided work (intervention), independent target evidence (evidence), or either depending on learner state (mixed). A candidate annotation, not a suitability verdict.",
+          "enum": [
+            "intervention",
+            "evidence",
+            "mixed"
+          ]
+        },
+        "material_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route_id",
+            "inherit"
+          ],
+          "properties": {
+            "route_id": {
+              "type": "string",
+              "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "inherit": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "label",
+                  "source_id",
+                  "locator",
+                  "angle",
+                  "angle_detail",
+                  "url",
+                  "vault_path"
+                ]
+              }
+            }
+          }
+        },
+        "independent_evidence": {
+          "$ref": "#/$defs/independentEvidenceReview"
+        },
+        "node_scaffold_note": {
+          "description": "Why this placement intentionally sits on a node its route does not cover (prerequisite groundwork, contrast, deferral pointer). A non-blank note records deliberate scaffolding and silences RESOURCE-NODE-ORPHAN; the warning still fires when absent or blank.",
+          "type": "string",
+          "pattern": "\\S"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "label"
+          ]
+        },
+        {
+          "required": [
+            "material_ref"
+          ],
+          "properties": {
+            "material_ref": {
+              "properties": {
+                "inherit": {
+                  "contains": {
+                    "const": "label"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stageCore": {
+      "type": "object",
+      "required": [
+        "id",
+        "number",
+        "title",
+        "status",
+        "objective",
+        "done_when",
+        "exam_critical",
+        "concepts",
+        "scope_triage",
+        "resources",
+        "attachments",
+        "source_feedback"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "knowledge_node_id": {
+          "description": "The knowledge-map node this stage teaches. The assembler writes it from the node it joined on; hand-built stages must name it explicitly. Optional only because the pre-2026-09 backfill is incremental — a stage without it can only be linked back by id convention, and nothing can check its placements.",
+          "type": "string",
+          "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "paused",
+            "complete",
+            "skipped"
+          ]
+        },
+        "objective": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "done_when": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "estimate_minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exam_critical": {
+          "type": "boolean"
+        },
+        "concepts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "ability_ids": {
+          "description": "Ability identities this stage provides a route to; progress never grants evidence.",
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^ability-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "scope_triage": {
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
+        },
+        "runtime_target": {
+          "description": "The stage's single canonical requirement semantics. Owning stage is the only author; LearningRequirement IR is compiled from this block and nothing else.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "concept",
+            "capability",
+            "evidence_spec"
+          ],
+          "properties": {
+            "concept": {
+              "type": "string",
+              "pattern": "^(concept|knowledge)-[a-z0-9-]+$"
+            },
+            "capability": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "operands"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "recognize",
+                    "compute",
+                    "explain",
+                    "distinguish",
+                    "diagnose",
+                    "transfer",
+                    "derive",
+                    "apply",
+                    "classify"
+                  ]
+                },
+                "operands": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "pattern": "\\S"
+                  }
+                }
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            },
+            "evidence_spec": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "\\S"
+              }
+            }
+          }
+        },
+        "runtime_review": {
+          "description": "Declared human-review attestation for this stage's runtime semantics (runtime_target plus resource affordances). Not authenticated proof of review; the transaction history proves when this metadata was written, not the cognitive act itself. The fingerprint binds the attestation to this exact stage payload (see tools/learning_os/learning_runtime.py).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reviewed_by",
+            "reviewed_on",
+            "fingerprint"
+          ],
+          "properties": {
+            "reviewed_by": {
+              "description": "Declared reviewer identity — an attestation, not an authenticated fact.",
+              "type": "string",
+              "pattern": "\\S"
+            },
+            "reviewed_on": {
+              "description": "Review date, informational only; never a staleness signal.",
+              "type": "string",
+              "format": "date"
+            },
+            "fingerprint": {
+              "description": "sha256 over the reviewed runtime payload; the validator warns when it no longer matches.",
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          }
+        },
+        "attachments": {
+          "type": "array"
+        },
+        "source_feedback": {
+          "type": "array"
+        },
+        "progress": {
+          "description": "The stage's current structured progress: where work stopped and what comes next. Written only through stage.progress.update alongside a status action; resume surfaces it. Absent means nothing recorded — the working note remains the scratch record.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "updated",
+            "summary"
+          ],
+          "properties": {
+            "updated": {
+              "type": "string",
+              "format": "date"
+            },
+            "summary": {
+              "$ref": "#/$defs/nonEmptyText"
+            },
+            "next": {
+              "$ref": "#/$defs/nonEmptyText"
+            }
+          }
+        }
+      }
+    },
+    "curriculumStage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/stageCore"
+        },
+        {
+          "type": "object",
+          "required": [
+            "working_note"
+          ],
+          "properties": {
+            "working_note": {
+              "type": "string",
+              "pattern": "^curriculum/modules/.+/stages/.+/notes\\.md$"
+            },
+            "attachments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "path",
+                  "label"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "pattern": "^curriculum/modules/.+/stages/.+/attachments/.+"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/nonEmptyText"
+                  }
+                }
+              }
+            },
+            "source_feedback": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "source_id",
+                  "feedback",
+                  "recorded"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "source_id": {
+                    "type": "string",
+                    "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "resource_id": {
+                    "type": "string",
+                    "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "feedback": {
+                    "enum": [
+                      "helpful",
+                      "too-advanced",
+                      "wrong-perspective",
+                      "useful-for-derivation",
+                      "useful-for-review",
+                      "skipped"
+                    ]
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "recorded": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            },
+            "detour_id": {
+              "type": "string",
+              "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "completed": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "independentEvidenceReview": {
+      "description": "Declared content suitability, bound to an exact requirement and prompt scope/bytes. Legacy unbound reviews remain readable but cannot establish assessment readiness. Actual learner familiarity and assistance must be reported for each attempt.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed_by",
+        "reviewed_on",
+        "verified_conditions"
+      ],
+      "properties": {
+        "reviewed_by": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "verified_conditions": {
+          "description": "Conditions this prompt permits an attempt to test. This is content suitability, never proof that the conditions held for a learner.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          }
+        },
+        "note": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "requirement_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "activity_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

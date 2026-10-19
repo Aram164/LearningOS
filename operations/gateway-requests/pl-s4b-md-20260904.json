@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s4b-md-20260904",
+  "idempotency_key": "pl-s4b-md-20260904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:6110bb7fbead07585832983eb9e40214fee22aa05ecfcb12e489b0f9ba4e811d",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 3,
+    "study-map-job-polars-schema-missing-types": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "stage_id": "stage-polars-07-type-promotion-coercion-and-strictness",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s4b-exercises.md",
+    "label": "Exercise sheet - supertypes, strictness, the cast that lies",
+    "file_sha256": "sha256:df1b463a41eab6ddc7bde3b21136bf8afaec5c4e5ec13246d4d4be15e562526f"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:bcb7ddea90f9b8a9a00d336508f74d819c801d57938caf4429849d5c8c23bdca"
+  }
+}

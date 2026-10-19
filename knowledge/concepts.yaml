@@ -1,0 +1,512 @@
+concepts:
+  # ------------------------------------------------------------ statistics
+  - id: concept-descriptive-statistics
+    label: Descriptive statistics
+    aliases: [deskriptive Statistik, Lagemasse, Streuungsmasse, scale types, Skalenniveaus]
+    description: Population/sample, scale types, location and dispersion measures, quantiles, boxplots.
+  - id: concept-variance
+    label: Variance
+    aliases: [Varianz, Standardabweichung, standard deviation]
+  - id: concept-expected-value
+    label: Expected value
+    aliases: [Erwartungswert, expectation]
+  - id: concept-probability
+    label: Probability
+    aliases: [Wahrscheinlichkeit, probability axioms, Wahrscheinlichkeitsaxiome]
+  - id: concept-conditional-probability
+    label: Conditional probability
+    aliases: [bedingte Wahrscheinlichkeit]
+  - id: concept-bayes-theorem
+    label: Bayes' theorem
+    aliases: [Satz von Bayes, Bayes rule]
+  - id: concept-combinatorics
+    label: Combinatorics
+    aliases: [Kombinatorik, counting, Abzählverfahren]
+  - id: concept-random-variable
+    label: Random variable
+    aliases: [Zufallsvariable, CDF, PDF]
+  - id: concept-discrete-distributions
+    label: Discrete distributions
+    aliases: [Binomialverteilung, binomial distribution, Poisson distribution, Poissonverteilung, hypergeometric distribution]
+  - id: concept-normal-distribution
+    label: Normal distribution
+    aliases: [Normalverteilung, Gaussian distribution, Gauss-Verteilung, z-score]
+  - id: concept-central-limit-theorem
+    label: Central limit theorem
+    aliases: [Zentraler Grenzwertsatz, CLT]
+  - id: concept-maximum-likelihood
+    label: Maximum likelihood estimation
+    aliases: [MLE, Maximum-Likelihood-Schätzung, likelihood]
+  - id: concept-statistical-estimation
+    label: Statistical estimation
+    aliases: [Parameterschätzung, point estimation, confidence interval, Konfidenzintervall, t-distribution]
+    description: Point estimators (unbiased/consistent/efficient) and interval estimation.
+  - id: concept-hypothesis-testing
+    label: Hypothesis testing
+    aliases: [Hypothesentest, Testtheorie, p-value, p-Wert, z-test, t-test, Signifikanzniveau]
+  - id: concept-bootstrap
+    label: Bootstrap resampling
+    aliases: [Bootstrapping, resampling]
+
+  # ------------------------------------------------------- regression & GD
+  - id: concept-linear-regression
+    label: Linear regression
+    aliases: [lineare Regression, least squares, MLR, multivariate linear regression, Regressionsgerade]
+  - id: concept-mean-squared-error
+    label: Mean squared error
+    aliases: [MSE, quadratischer Fehler, squared loss]
+  - id: concept-normal-equation
+    label: Normal equation
+    aliases: [Normalgleichung, closed-form least squares]
+    description: "w = (XᵀX)⁻¹Xᵀy — appears in SaD 03 first as k = (AᵀA)⁻¹Aᵀy."
+  - id: concept-regularization
+    label: Regularization
+    aliases: [Regularisierung, Ridge, Lasso, L2 penalty, L1 penalty]
+  - id: concept-gradient-descent
+    label: Gradient descent
+    aliases: [Gradientenverfahren, Gradientenabstieg, SGD, stochastic gradient descent, mini-batch gradient descent]
+  - id: concept-adam-optimizer
+    label: Adam optimizer
+    aliases: [Adam, momentum, RMSProp]
+  - id: concept-convexity
+    label: Convexity
+    aliases: [Konvexität, convex optimization, PSD Hessian]
+  - id: concept-feature-scaling
+    label: Feature scaling
+    aliases: [z-normalization, z-Normalisierung, min-max scaling, standardization, Standardisierung]
+
+  # ----------------------------------------------------------- classification
+  - id: concept-logistic-regression
+    label: Logistic regression
+    aliases: [logistische Regression]
+  - id: concept-sigmoid
+    label: Sigmoid function
+    aliases: [Sigmoidfunktion, logistic function]
+  - id: concept-decision-boundary
+    label: Decision boundary
+    aliases: [Entscheidungsgrenze, separating hyperplane, Hyperebene]
+  - id: concept-cross-entropy
+    label: Cross-entropy loss
+    aliases: [Kreuzentropie, binary cross-entropy, negative log-likelihood]
+  - id: concept-naive-bayes
+    label: Naive Bayes
+    aliases: [Naïve Bayes, NB classifier, multinomial naive Bayes]
+  - id: concept-laplace-smoothing
+    label: Laplace smoothing
+    aliases: [Laplace-Glättung, additive smoothing, pseudocount]
+  - id: concept-gaussian-naive-bayes
+    label: Gaussian naive Bayes
+    aliases: [GNB]
+  - id: concept-k-nearest-neighbors
+    label: k-nearest neighbors
+    aliases: [k-NN, kNN, nächste Nachbarn, similarity-based learning]
+  - id: concept-classification-metrics
+    label: Classification evaluation metrics
+    aliases: [confusion matrix, Konfusionsmatrix, precision, recall, F1 score, Wahrheitsmatrix, micro/macro averaging]
+  - id: concept-bias-variance-tradeoff
+    label: Bias-variance tradeoff
+    aliases: [Bias-Varianz-Dilemma, overfitting, underfitting, generalization]
+  - id: concept-curse-of-dimensionality
+    label: Curse of dimensionality
+    aliases: [Fluch der Dimensionalität]
+  - id: concept-correlation
+    label: Correlation
+    aliases: [Korrelation, covariance, Kovarianz, Pearson r]
+  - id: concept-basis-functions
+    label: Basis functions
+    aliases: [basis expansion, polynomial features, Polynomregression, feature engineering]
+  - id: concept-cross-validation
+    label: Cross-validation
+    aliases: [Kreuzvalidierung, k-fold CV]
+
+  # ------------------------------------------------------------------ trees
+  - id: concept-entropy
+    label: Entropy
+    aliases: [Entropie, Shannon entropy]
+  - id: concept-information-gain
+    label: Information gain
+    aliases: [Informationsgewinn]
+  - id: concept-decision-trees
+    label: Decision trees
+    aliases: [Entscheidungsbaum, Entscheidungsbäume, ID3, pruning]
+  - id: concept-random-forest
+    label: Random forest
+    aliases: [Random Forests, bagging, boosting]
+
+  # ------------------------------------------------------- neural networks
+  - id: concept-perceptron
+    label: Perceptron
+    aliases: [Perzeptron, dual perceptron, multiclass perceptron]
+  - id: concept-kernel-trick
+    label: Kernel trick
+    aliases: [Kernel-Trick, RBF kernel, polynomial kernel, feature map]
+  - id: concept-xor-problem
+    label: XOR problem
+    aliases: [XOR-Problem, linear separability, lineare Separierbarkeit]
+  - id: concept-neural-network
+    label: Neural network
+    aliases: [neuronales Netz, MLP, multilayer perceptron, mehrschichtiges Perzeptron, forward pass, ANN]
+  - id: concept-softmax
+    label: Softmax
+    aliases: [Softmax-Funktion, differentiable argmax]
+  - id: concept-backpropagation
+    label: Backpropagation
+    aliases: [Backprop, Fehlerrückführung, computation graph, Berechnungsgraph]
+  - id: concept-chain-rule
+    label: Chain rule
+    aliases: [Kettenregel]
+  - id: concept-weight-decay
+    label: Weight decay
+    aliases: [L2 weight decay, Frobenius-norm regularization]
+  - id: concept-dropout
+    label: Dropout
+  - id: concept-early-stopping
+    label: Early stopping
+    aliases: [frühes Stoppen]
+
+  # ------------------------------------------- programming & data systems
+  - id: concept-python
+    label: Python
+    aliases: [Fluent Python, Python data model]
+    domain_hints: [programming]
+  - id: concept-git
+    label: Git
+    aliases: [GitHub, version control, Versionsverwaltung]
+    domain_hints: [programming]
+  - id: concept-scikit-learn
+    label: scikit-learn
+    aliases: [sklearn, estimator API, fit-transform]
+    domain_hints: [programming, machine-learning]
+  - id: concept-skrub
+    label: skrub DataOps
+    aliases: [skrub, DataOp, lazy computation graph]
+    domain_hints: [data-systems]
+    description: Canonical concept identity for skrub DataOps.
+  - id: concept-data-provenance
+    label: Data provenance
+    aliases: [Provenienz, lineage, provenance tracking]
+    domain_hints: [data-systems]
+
+  # ------------------------------------------------------ analysis (M2 half)
+  - id: concept-real-numbers
+    label: Real numbers
+    aliases: [reelle Zahlen, completeness, Vollständigkeit, Archimedean property, Supremum]
+  - id: concept-sequences-convergence
+    label: Sequences and convergence
+    aliases: [Folgen, Konvergenz, epsilon-N, limsup, Bolzano-Weierstrass, Teilfolgen]
+  - id: concept-series
+    label: Series
+    aliases: [Reihen, Konvergenzkriterien, ratio test, Quotientenkriterium, geometric series, alternating series]
+  - id: concept-limits-continuity
+    label: Limits and continuity
+    aliases: [Grenzwerte, Stetigkeit, intermediate value theorem, Zwischenwertsatz, epsilon-delta]
+  - id: concept-uniform-convergence
+    label: Uniform convergence
+    aliases: [gleichmäßige Konvergenz, pointwise convergence, M-test]
+  - id: concept-differentiation
+    label: Differentiation
+    aliases: [Ableitung, mean value theorem, Mittelwertsatz, Rolle, l'Hospital, derivative]
+  - id: concept-taylor-series
+    label: Taylor series
+    aliases: [Taylor, Taylorpolynom, Lagrange error bound, Restglied]
+  - id: concept-riemann-integral
+    label: Riemann integral
+    aliases: [Integralrechnung, fundamental theorem of calculus, Hauptsatz, partielle Integration, Substitution]
+  - id: concept-proof-technique
+    label: Proof technique
+    aliases: [Beweistechnik, mathematische Beweise, Musterlösungen, Induktion]
+
+  # -------------------------------------------------------- ML systems (AMLS)
+  - id: concept-ml-systems
+    label: ML systems
+    aliases: [ML system landscape, ML frameworks, ML-in-DB]
+    domain_hints: [systems]
+  - id: concept-program-rewrites
+    label: Program rewrites and operator selection
+    aliases: [size inference, rewrites, operator selection, query compilation]
+    domain_hints: [systems]
+  - id: concept-operator-fusion
+    label: Operator fusion
+    aliases: [fusion, codegen, runtime adaptation]
+    domain_hints: [systems]
+  - id: concept-data-parallelism
+    label: Data- and task-parallel execution
+    aliases: [data parallelism, task parallelism, distributed training, tensor parallelism, pipeline parallelism]
+    domain_hints: [systems]
+  - id: concept-parameter-servers
+    label: Parameter servers
+    aliases: [collective communication, ZeRO, all-reduce, async SGD]
+    domain_hints: [systems]
+  - id: concept-llm-systems
+    label: LLM training and inference systems
+    aliases: [LLM inference, transformer training, KV cache]
+    domain_hints: [systems]
+  - id: concept-hardware-accelerators
+    label: Hardware accelerators
+    aliases: [GPU, TPU, roofline model, arithmetic intensity, hybrid execution]
+    domain_hints: [systems]
+  - id: concept-data-access-optimization
+    label: Data access optimization
+    aliases: [caching, partitioning, indexing, compression, locality]
+    domain_hints: [systems]
+  - id: concept-ml-lifecycle
+    label: ML lifecycle
+    aliases: [data acquisition, data cleaning, data preparation, model selection, model management, MLOps]
+    domain_hints: [systems]
+  - id: concept-ml-fairness-explainability
+    label: ML debugging, fairness and explainability
+    aliases: [fairness metrics, explainability, saliency, occlusion, LIME, model debugging]
+    domain_hints: [systems, machine-learning]
+  - id: concept-model-serving
+    label: Model serving
+    aliases: [serving systems, inference serving, prediction service]
+    domain_hints: [systems]
+
+  # -------------------------------------------------- deep architectures
+  - id: concept-convolutional-networks
+    label: Convolutional neural networks
+    aliases: [CNN, convolution, pooling, AlexNet, ResNet, Faltungsnetz]
+  - id: concept-recurrent-networks
+    label: Recurrent neural networks
+    aliases: [RNN, LSTM, GRU, BPTT, sequence models]
+  - id: concept-tokenization
+    label: Tokenization
+    aliases: [Tokenisierung, token, Token, subword, Subwort, vocabulary, Vokabular, BPE]
+    description: Splitting text into vocabulary units; subwords avoid the type-explosion of word-level vocabularies.
+  - id: concept-embedding
+    label: Embedding
+    aliases: [Einbettung, embedding matrix, Embedding-Matrix, one-hot encoding, One-Hot-Kodierung, static embedding, vector representation, Vektorrepräsentation]
+  - id: concept-contextual-embedding
+    label: Contextual embedding
+    aliases: [kontextuelle Einbettung, kontextabhängige Einbettung, contextualized representation]
+    description: Token representation that depends on surrounding tokens, as opposed to a fixed static embedding.
+  - id: concept-attention
+    label: Attention
+    aliases: [Attention, Aufmerksamkeit, self-attention, Selbstaufmerksamkeit, scaled dot-product attention, multi-head attention, Multi-Head-Attention, attention head, query key value, QKV]
+  - id: concept-positional-encoding
+    label: Positional encoding
+    aliases: [Positionskodierung, positional embedding, Positionseinbettung]
+  - id: concept-layer-normalization
+    label: Layer normalization
+    aliases: [LayerNorm, Layer-Normalisierung, Schichtnormalisierung]
+  - id: concept-residual-connection
+    label: Residual connection
+    aliases: [Residualverbindung, skip connection, Skip-Verbindung, shortcut connection]
+  - id: concept-transformer
+    label: Transformer
+    aliases: [Transformer-Architektur, transformer block, Transformer-Block, context window, Kontextfenster]
+  - id: concept-language-modelling
+    label: Language modelling
+    aliases: [Sprachmodell, language model, LM, next-token prediction, Next-Token-Vorhersage, LLM, large language model, großes Sprachmodell, language modelling head]
+
+  # ------------------------------------------------------------ algorithms
+  - id: concept-fast-multiplication
+    label: Fast multiplication
+    aliases: [Karatsuba, schnellere Multiplikation]
+    domain_hints: [algorithms]
+  - id: concept-amortized-analysis
+    label: Amortized analysis
+    aliases: [amortisierte Analyse, potential method, Bankkonto-Methode]
+    domain_hints: [algorithms]
+  - id: concept-b-trees
+    label: B-trees
+    aliases: [B-Bäume, B-Baum]
+    domain_hints: [algorithms]
+  - id: concept-fibonacci-heaps
+    label: Fibonacci heaps
+    aliases: [Fibonacci-Heaps]
+    domain_hints: [algorithms]
+  - id: concept-splay-trees
+    label: Splay trees
+    aliases: [Splay-Bäume, self-adjusting trees]
+    domain_hints: [algorithms]
+  - id: concept-cuckoo-hashing
+    label: Cuckoo hashing
+    aliases: [Cuckoo-Hashing]
+    domain_hints: [algorithms]
+  - id: concept-shortest-paths
+    label: Shortest paths
+    aliases: [kürzeste Wege, Dijkstra, Bellman-Ford, all-pairs shortest paths]
+    domain_hints: [algorithms]
+  - id: concept-max-flow
+    label: Maximum flow
+    aliases: [maximaler Fluss, Ford-Fulkerson, min cut]
+    domain_hints: [algorithms]
+  - id: concept-bipartite-matching
+    label: Bipartite matching
+    aliases: [bipartites Matching, augmenting path, augmentierender Pfad, Hopcroft-Karp]
+    description: Matchings in bipartite graphs via augmenting paths. Distinct from stable matching — Algo 2 devotes a separate lecture to each.
+    domain_hints: [algorithms]
+  - id: concept-stable-matching
+    label: Stable matching
+    aliases: [stabiles Matching, Gale-Shapley, Heiratsproblem, stable marriage, deferred acceptance]
+    domain_hints: [algorithms]
+  - id: concept-computational-geometry
+    label: Computational geometry
+    aliases: [algorithmische Geometrie, convex hull, konvexe Hülle, sweep line, Sweep-Line, closest pair, dichtestes Punktepaar, Graham scan]
+    domain_hints: [algorithms]
+
+  # ---------------------------------- Algo 2 prerequisites (Phase 0, from the
+  # decks' own Erinnerung/Wiederholung slides — see unit-algo2-exam-prep)
+  - id: concept-asymptotic-analysis
+    label: Asymptotic analysis
+    aliases: [O-Notation, Landau notation, big-O, Laufzeitanalyse, asymptotische Analyse, Elementaroperationen]
+    domain_hints: [algorithms]
+  - id: concept-recurrences-master-theorem
+    label: Recurrences and the master theorem
+    aliases: [Mastertheorem, master theorem, Rekursionsgleichung, recurrence relation, divide and conquer, Teile und Herrsche]
+    domain_hints: [algorithms]
+  - id: concept-adt-dictionary
+    label: ADT Dictionary
+    aliases: [Wörterbuch, associative array, assoziatives Array, Symboltabelle, search-insert-delete]
+    domain_hints: [algorithms]
+  - id: concept-binary-search-trees
+    label: Binary search trees
+    aliases: [binäre Suchbäume, BST, Suchbaumeigenschaft, balancierte Suchbäume, AVL, rotation, Rotation]
+    domain_hints: [algorithms]
+  - id: concept-adt-priority-queue
+    label: ADT Priority Queue
+    aliases: [Prioritätswarteschlange, binary heap, Binärheap, binomial heap, Binomial-Heap, decrease-key, extract-min]
+    domain_hints: [algorithms]
+  - id: concept-hashing-chaining
+    label: Hashing with chaining
+    aliases: [Hashing mit Verkettung, hash table, Hashtabelle, Hashfunktion, universal hashing, universelles Hashing, Kollision]
+    domain_hints: [algorithms]
+  - id: concept-graph-basics
+    label: Graph representations and traversal
+    aliases: [Graphen, Adjazenzliste, adjacency list, BFS, DFS, Breitensuche, Tiefensuche, gerichteter Graph, Kreis, cycle]
+    domain_hints: [algorithms]
+  - id: concept-complex-roots-of-unity
+    label: Complex numbers and roots of unity
+    aliases: [komplexe Zahlen, Einheitswurzeln, roots of unity, Polynome, polynomials, Stützstellen, interpolation]
+    domain_hints: [algorithms, mathematics]
+  - id: concept-determinant-orientation
+    label: Determinants and orientation tests
+    aliases: [Determinante, cross product, Kreuzprodukt, orientation test, Orientierungstest, counterclockwise, Vorzeichen]
+    domain_hints: [algorithms, mathematics]
+  - id: concept-fft
+    label: Fast Fourier transform
+    aliases: [FFT, schnelle Fourier-Transformation, polynomial multiplication]
+    domain_hints: [algorithms]
+  # ------------------------------------------ registered 2026-08-22 to close the
+  # concept gap on the AML and SaD lecture maps. Every entry below is taught by a
+  # current 2026 deck and was previously unnameable, so 97 stages carried no
+  # coverage at all: the mechanism that decides what does not need re-teaching
+  # could not see half the semester.
+  - id: concept-supervised-learning
+    label: Supervised and unsupervised learning
+    aliases: [supervised learning, unsupervised learning, überwachtes Lernen, learning task, labelled data]
+    description: The distinction between learning from labelled examples and seeking structure without labels, and what each licenses.
+    domain_hints: [machine-learning]
+  - id: concept-linear-algebra
+    label: Vectors, matrices, and linear-algebra mechanics
+    aliases: [linear algebra, lineare Algebra, dot product, Skalarprodukt, matrix product, transpose, design matrix, vectorization]
+    description: Vectors, transposes, dot and matrix products, shapes, inverses, and the design-matrix form predictions and losses are written in.
+    domain_hints: [mathematics, machine-learning]
+  - id: concept-newton-method
+    label: Newton and second-order optimization
+    aliases: [Newton method, Newton-Verfahren, second-order optimization, Hessian, Hesse-Matrix]
+    description: Curvature-aware updates, the cost of the Hessian, and how they compare with first-order descent.
+    domain_hints: [machine-learning, mathematics]
+  - id: concept-activation-function
+    label: Activation functions
+    aliases: [activation function, Aktivierungsfunktion, ReLU, tanh, nonlinearity, Nichtlinearität]
+    description: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU and relatives change what a network can represent.
+    domain_hints: [machine-learning]
+  - id: concept-vanishing-gradients
+    label: Vanishing and exploding gradients
+    aliases: [vanishing gradient, exploding gradient, verschwindende Gradienten, gradient health]
+    description: Repeated Jacobian factors with depth, saturation, the symptoms that diagnose them, and the remedies the course covers.
+    domain_hints: [machine-learning]
+  - id: concept-universal-approximation
+    label: Universal approximation
+    aliases: [universal approximation, Universalitätssatz, expressiveness, approximation theorem]
+    description: Sufficiently wide nonlinear networks approximate broad function classes, without any guarantee of efficient learning or generalization.
+    domain_hints: [machine-learning]
+  - id: concept-clustering
+    label: Clustering
+    aliases: [clustering, Clusteranalyse, cluster analysis, grouping without labels]
+    description: Grouping unlabelled data, where representation, similarity, objective and algorithm each change the answer.
+    domain_hints: [machine-learning]
+  - id: concept-k-means
+    label: k-means
+    aliases: [k-means, k-Means, Lloyd algorithm, centroid, within-cluster sum of squares]
+    description: Alternating assignment and centroid recomputation, its monotone objective, and its dependence on k, initialization and scale.
+    domain_hints: [machine-learning]
+  - id: concept-ensemble-methods
+    label: Ensembles and stacking
+    aliases: [ensemble, Ensemble-Methoden, stacking, meta-learner, out-of-fold]
+    description: Combining diverse base predictors, and the leakage-safe out-of-fold construction that makes a meta-learner honest.
+    domain_hints: [machine-learning]
+  - id: concept-distance-metrics
+    label: Distances, similarities, and metric axioms
+    aliases: [metric axioms, Metrik, triangle inequality, Dreiecksungleichung, cosine similarity, Jaccard, Mahalanobis]
+    description: What makes a similarity a metric, and which invariance each of the directional, set-valued and covariance-aware measures encodes.
+    domain_hints: [machine-learning, mathematics]
+  - id: concept-similarity-search
+    label: Similarity-search indexing
+    aliases: [similarity search, kd-tree, metric tree, nearest-neighbour index, Ähnlichkeitssuche]
+    description: Pruning search with geometric or metric structure, and why that pruning degrades as dimensionality grows.
+    domain_hints: [machine-learning, algorithms]
+  - id: concept-simpsons-paradox
+    label: Simpson's paradox
+    aliases: [Simpson paradox, Simpsons Paradox, aggregation paradox, stratification, confounding]
+    description: A trend that reverses once groups are combined, because group sizes and hidden variables change the weighting.
+    domain_hints: [statistics]
+  - id: concept-sampling-bias
+    label: Sampling bias and representativeness
+    aliases: [sampling bias, Stichprobenverzerrung, nonresponse, survivorship bias, selection bias, representative sample]
+    description: Coverage, nonresponse, survivorship and convenience decide whether a sample supports a population claim; no interval repairs a biased sample.
+    domain_hints: [statistics]
+  - id: concept-law-of-large-numbers
+    label: Law of large numbers and Chebyshev bounds
+    aliases: [law of large numbers, Gesetz der grossen Zahlen, Chebyshev, Tschebyscheff, concentration inequality]
+    description: A distribution-free tail bound, and why sample averages stabilize as observations accumulate.
+    domain_hints: [statistics, mathematics]
+  - id: concept-chi-square-test
+    label: Chi-square tests
+    aliases: [chi-square, Chi-Quadrat, goodness of fit, test of independence, expected counts]
+    description: Goodness-of-fit and independence tests from observed against expected counts, with their degrees-of-freedom and count-size conditions.
+    domain_hints: [statistics]
+  - id: concept-nonparametric-tests
+    label: Rank and permutation tests
+    aliases: [nonparametric test, rank test, Rangtest, permutation test, Permutationstest, exchangeability]
+    description: Reducing distributional assumptions by ranking, or building the null distribution directly from exchangeability.
+    domain_hints: [statistics]
+  - id: concept-multiple-testing
+    label: Multiple testing and false discovery
+    aliases: [multiple testing, multiples Testen, family-wise error rate, false discovery rate, Bonferroni]
+    description: Repeated tests inflate the chance of at least one false positive; family-wise and false-discovery control answer different questions.
+    domain_hints: [statistics]
+  - id: concept-bayesian-network
+    label: Bayesian networks
+    aliases: [Bayesian network, Bayes-Netz, directed acyclic graph, factorization]
+    description: A DAG encoding local conditional dependencies, factorizing a joint distribution without assuming every feature is independent.
+    domain_hints: [machine-learning, statistics]
+  - id: concept-conditional-independence
+    label: Conditional independence
+    aliases: [conditional independence, bedingte Unabhängigkeit, independence, Unabhängigkeit, Markov blanket]
+    description: Independence that holds or fails only once a third variable is known — a different claim from joint factorization.
+    domain_hints: [statistics, machine-learning]
+  - id: concept-aggregation
+    label: Aggregation
+  - id: concept-aggregation-family
+    label: Aggregation family
+  - id: concept-dataframe-ops
+    label: Dataframe operations
+  - id: concept-dataframe-semantics
+    label: Dataframe semantics
+  - id: concept-dispatch
+    label: Dispatch
+  - id: concept-join-family
+    label: Join family
+  - id: concept-logical-ir
+    label: Logical IR
+  - id: concept-map-family
+    label: Map family
+  - id: concept-op-rewriting
+    label: Operation rewriting
+  - id: concept-projection-family
+    label: Projection family
+  - id: concept-selection-family
+    label: Selection family

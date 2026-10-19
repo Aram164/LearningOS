@@ -1,0 +1,53 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"contract\":\"plan-template-v1\",\"profile\":\"curriculum\",\"plan_template_version\":1,\"schema\":\"study-map.schema.json\",\"plan\":{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"plan_template_version\":1,\"unit_id\":\"unit-demo-l01\",\"status\":\"ready\",\"current_stage\":\"stage-variance\",\"source_plan\":{\"path\":\"replace-with-reviewed-plan.yaml\",\"provenance\":\"operator\"},\"detours\":[],\"stages\":[{\"id\":\"stage-variance\",\"number\":1,\"title\":\"Variance\",\"status\":\"pending\",\"objective\":\"Build working fluency in Variance.\",\"done_when\":[\"Explain and apply Variance without notes.\"],\"exam_critical\":false,\"concepts\":[],\"scope_triage\":\"required-now\",\"resources\":[],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-variance/notes.md\",\"attachments\":[],\"source_feedback\":[]}],\"shelving\":{\"state\":\"none\"}}}\n",
+  "stdout_json": {
+    "contract": "plan-template-v1",
+    "ok": true,
+    "plan": {
+      "current_stage": "stage-variance",
+      "detours": [],
+      "id": "study-map-demo-l01",
+      "plan_template_version": 1,
+      "shelving": {
+        "state": "none"
+      },
+      "source_plan": {
+        "path": "replace-with-reviewed-plan.yaml",
+        "provenance": "operator"
+      },
+      "stages": [
+        {
+          "attachments": [],
+          "concepts": [],
+          "done_when": [
+            "Explain and apply Variance without notes."
+          ],
+          "exam_critical": false,
+          "id": "stage-variance",
+          "number": 1,
+          "objective": "Build working fluency in Variance.",
+          "resources": [],
+          "scope_triage": "required-now",
+          "source_feedback": [],
+          "status": "pending",
+          "title": "Variance",
+          "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-variance/notes.md"
+        }
+      ],
+      "status": "ready",
+      "type": "study-map",
+      "unit_id": "unit-demo-l01"
+    },
+    "plan_template_version": 1,
+    "profile": "curriculum",
+    "schema": "study-map.schema.json"
+  }
+}

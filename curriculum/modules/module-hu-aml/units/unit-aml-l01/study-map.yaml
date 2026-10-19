@@ -1,0 +1,488 @@
+id: study-map-aml-l01
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l01
+status: not-started
+current_stage: stage-aml-l01-history
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l01-history
+  number: 1
+  title: Historical concept map
+  status: pending
+  objective: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks that explain
+    why later model families exist rather than as a chronology to memorize.
+  done_when:
+  - 'Reproduce without notes: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks
+    that explain why later model families exist rather than as a chronology to memorize.'
+  exam_critical: true
+  concepts:
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-perceptron
+  - concept-recurrent-networks
+  - concept-transformer
+  - concept-xor-problem
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-9c80105b5495e5d254b86990
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-bd74661a36fb5ca7273324ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-de995049c1e4ed54a8327621
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-history/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l01-formulation
+  number: 2
+  title: Learning-problem formulation
+  status: pending
+  objective: Examples, features, labels, hypotheses, learning algorithms, losses, and the distinction
+    between classification, regression, supervised, and unsupervised learning.
+  done_when:
+  - 'Reproduce without notes: Examples, features, labels, hypotheses, learning algorithms, losses, and
+    the distinction between classification, regression, supervised, and unsupervised learning.'
+  exam_critical: true
+  concepts:
+  - concept-supervised-learning
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-9c80105b5495e5d254b86990
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-21f9795d5af805470f6b7aa8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-add32fc5153a4c50969e540d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f67178b7b259703513b6e2c5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-21813de54053a6ef703d848b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b808ddb8dfc1c928b65feae7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l01-data
+  number: 3
+  title: Data representation
+  status: pending
+  objective: Datasets as matrices and vectors, illustrated through MNIST, Iris, and embeddings.
+  done_when:
+  - 'Reproduce without notes: Datasets as matrices and vectors, illustrated through MNIST, Iris, and embeddings.'
+  exam_critical: true
+  concepts:
+  - concept-embedding
+  - concept-linear-algebra
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-7449e02fa820ef5534caa5b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bd74661a36fb5ca7273324ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5f2ef3144d0180cee8b84c74
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-data/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l01-generalization
+  number: 4
+  title: Generalization and evaluation
+  status: pending
+  objective: Why training performance is not evidence of future performance and why train/test separation
+    belongs in the problem definition.
+  done_when:
+  - 'Reproduce without notes: Why training performance is not evidence of future performance and why train/test
+    separation belongs in the problem definition.'
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-21f9795d5af805470f6b7aa8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-add32fc5153a4c50969e540d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f67178b7b259703513b6e2c5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-21813de54053a6ef703d848b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b808ddb8dfc1c928b65feae7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-generalization/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l01-prerequisites
+  number: 5
+  title: Mathematical and tooling prerequisites
+  status: pending
+  objective: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and notebooks as the
+    working language assumed by later lectures.
+  done_when:
+  - 'Reproduce without notes: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and
+    notebooks as the working language assumed by later lectures.'
+  - Work Solved Lineare-Algebra Übungen and Klausuren, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-algebra
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-7449e02fa820ef5534caa5b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5f2ef3144d0180cee8b84c74
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e52061692703bb9ee2044d70
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9227586cd65661fc080b8284
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
+  attachments: []
+  source_feedback: []

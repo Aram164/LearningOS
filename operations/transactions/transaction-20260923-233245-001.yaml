@@ -1,0 +1,132 @@
+schema_version: 2
+id: transaction-20260923-233245-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-09-23T23:32:45+02:00'
+snapshot_before: sha256:566ad014e30ee43138f75d863324a95c530a64ab0dc10648df71dbf815baa566
+snapshot_after: sha256:0cdd8412c8d340aff263c8d0e34fcfed38a7f02fa1bea06d7b0452e5abd6d7df
+expected_revisions:
+  source-esl: 0
+  source-frankfurt-algo2-course: 0
+  source-guo-cpython-internals: 0
+  source-hogan-knowledge-graphs: 0
+  source-islp: 0
+  source-karpathy-micrograd: 0
+  source-kit-algorithmen2: 0
+  source-mit-18100a: 0
+  source-mit-6034-quizzes: 0
+  source-mit-6036: 0
+  source-mit-6172: 0
+  source-mit-6s191: 0
+  source-mlc-book: 0
+  source-mlsysbook-vol1: 0
+  source-mmds-book: 0
+  source-mml: 0
+  source-murphy-pml1: 0
+  source-ng-coursera: 0
+  source-nielsen-nndl: 0
+  source-nyu-dl: 0
+artifact_revisions:
+  source-esl:
+    before: 0
+    after: 1
+  source-frankfurt-algo2-course:
+    before: 0
+    after: 1
+  source-guo-cpython-internals:
+    before: 0
+    after: 1
+  source-hogan-knowledge-graphs:
+    before: 0
+    after: 1
+  source-islp:
+    before: 0
+    after: 1
+  source-karpathy-micrograd:
+    before: 0
+    after: 1
+  source-kit-algorithmen2:
+    before: 0
+    after: 1
+  source-mit-18100a:
+    before: 0
+    after: 1
+  source-mit-6034-quizzes:
+    before: 0
+    after: 1
+  source-mit-6036:
+    before: 0
+    after: 1
+  source-mit-6172:
+    before: 0
+    after: 1
+  source-mit-6s191:
+    before: 0
+    after: 1
+  source-mlc-book:
+    before: 0
+    after: 1
+  source-mlsysbook-vol1:
+    before: 0
+    after: 1
+  source-mmds-book:
+    before: 0
+    after: 1
+  source-mml:
+    before: 0
+    after: 1
+  source-murphy-pml1:
+    before: 0
+    after: 1
+  source-ng-coursera:
+    before: 0
+    after: 1
+  source-nielsen-nndl:
+    before: 0
+    after: 1
+  source-nyu-dl:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: bac3ba559664811c533575f5197f199aa46d95cfc83f847cd62692dcb9aae9f6
+  sha256_after: 9fe4e30765b07230871a45999cb6efd366d7b9885f2d408bef22bff802b00ce3
+  created: false
+- path: sources/registry/data-systems.yaml
+  sha256_before: 7163c533b4244d52af232040c5010340799f68a8cb17a9afa941d2dc673eed91
+  sha256_after: f22f1bfe51de174bf3ad2481f847a4556e135fc05767124ef55291db9ff3b871
+  created: false
+- path: sources/registry/machine-learning.yaml
+  sha256_before: 4f806e8cc560cec123063802b46cd441412f5074c81d3f23cf88bd3eb4566c9a
+  sha256_after: c137e18c57809970afbf3c55aa69a38656549f36cb3ce5c86a1f9f213522d6c9
+  created: false
+- path: sources/registry/mathematics.yaml
+  sha256_before: ea7d228cf57a85d2a2a015f2c34bb21490082cfe7465a9f0dd914e306627bcda
+  sha256_after: dcb60702e3345adc1238c010fb749e6b7442b31f6d0b6822092246af009ead5f
+  created: false
+- path: sources/registry/ml-systems.yaml
+  sha256_before: f9479b09d9860b67471991d78171aafa2b6063637f3e71485afb8ba7cc4de28a
+  sha256_after: bac2283885b4fb6d6acd92c90aee7b2f66483560313c33591c966e7d17cc50c9
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: e5786cd196c6af35c92793df17eca86fbef83a951830a5cc4093ba4e7a6831a9
+  sha256_after: 77bec79111702cfaeecf79f8d46f553e633e07140962c8a2089b95164a4ea219
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-step8-intake-batch2-20260923
+  idempotency_key: step8-intake-batch2-20260923
+  intent_sha256: sha256:1e47b2b2bc86b3d83a3c53c9af214b777eeccebea4bb6ef1991083ba90444763
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:1e47b2b2bc86b3d83a3c53c9af214b777eeccebea4bb6ef1991083ba90444763

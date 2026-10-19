@@ -1,0 +1,65 @@
+id: unit-m2-sad-l07
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 07 — Discrete Distributions
+order: 7
+scope: Current 2026 L07 deck; Bernoulli, Binomial, Hypergeometric, and Poisson distributions, their experiment
+  assumptions, PMFs, expectation and variance, and relationships or approximations between those models.
+  Geometric waiting times are complementary preparation for later work; the current L07 deck has no dedicated
+  Geometric section.
+status: ready
+knowledge_map:
+  summary: 'The lecture replaces formula matching with experiment matching: each named distribution is
+    the probability model of a particular data-generating story.'
+  nodes:
+  - id: knowledge-sad-l07-model-selection
+    title: Distribution choice from assumptions
+    summary: Number of trials, independence, replacement, changing versus fixed success probability, stopping
+      rule, and count interval determine which discrete model is valid.
+  - id: knowledge-sad-l07-bernoulli-binomial
+    title: Bernoulli trials and the Binomial distribution
+    summary: A Bernoulli variable records one success/failure, while Binomial(n,p) counts successes in
+      n independent trials with constant p; combinatorics explains its PMF.
+    builds_on:
+    - knowledge-sad-l07-model-selection
+  - id: knowledge-sad-l07-hypergeometric
+    title: Hypergeometric sampling without replacement
+    summary: Drawing from a finite population without replacement makes trials dependent and adds the
+      finite population correction absent from the Binomial model.
+    builds_on:
+    - knowledge-sad-l07-model-selection
+  - id: knowledge-sad-l07-geometric
+    title: Geometric waiting times
+    summary: 'The Geometric model counts trials until first success and has the memoryless property. Geometric
+      waiting times are complementary preparation here: L07 has no dedicated section and Übungsblatt 3
+      Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02) in Aufgabe
+      3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
+    builds_on:
+    - knowledge-sad-l07-bernoulli-binomial
+  - id: knowledge-sad-l07-poisson
+    title: Poisson event counts
+    summary: Poisson(lambda) models independent events occurring at a stable rate in an interval, with
+      equal expectation and variance.
+    builds_on:
+    - knowledge-sad-l07-model-selection
+  - id: knowledge-sad-l07-relationships
+    title: Limits, approximations, and moment signatures
+    summary: Rare-event Binomials approach Poisson; distribution moments provide fast checks, but approximation
+      conditions must be stated rather than assumed.
+    builds_on:
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-poisson
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/07_discrete_distributions.pdf (33 pages)
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 07_discrete_distributions.pptx (1).pdf
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l07

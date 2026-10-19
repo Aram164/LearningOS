@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260929-062735-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-09-29T06:27:35+02:00'
+snapshot_before: sha256:c23b68814c472584562d29410cf1fddb30c8bdc1adaf45b2fb9a8c02ef7698e4
+snapshot_after: sha256:02b97b3b4fff308201e06012e71f776b8f67a9e68070d6a58d1ca9e69b8f38dc
+expected_revisions:
+  source-grinstead-snell: 0
+  unit-m2-sad-l04: 27
+artifact_revisions:
+  source-grinstead-snell:
+    before: 0
+    after: 1
+  unit-m2-sad-l04:
+    before: 27
+    after: 28
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/material-synthesis.yaml
+  sha256_before: 3ab6d6f6cbbcdd85c0d644708c2e863b422ca4ec8629d4a010cd5b61c2c76545
+  sha256_after: 190b324f415fba8f9b604ddb7fe3e1810175012ed73448376b6d5efdaa7e68d7
+  created: false
+- path: sources/registry/mathematics.yaml
+  sha256_before: d0fe63c81db0f84e5e9aef4ca3e4caac85a69231de3df0ae719cdea112f09b87
+  sha256_after: bfb3f47ba98ddf419046b25dff40221b68a2ead66c64848095091cad421b29ee
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-grinstead-attach-20260929
+  idempotency_key: grinstead-attach-20260929
+  intent_sha256: sha256:901a50c441c41daedd1f7b8fe9cd4cdff477fd781185f7a319827e9a570da554
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:901a50c441c41daedd1f7b8fe9cd4cdff477fd781185f7a319827e9a570da554

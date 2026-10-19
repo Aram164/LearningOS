@@ -1,0 +1,44 @@
+id: unit-job-polars-schema-missing-types
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 4 - Schema, dtypes, and missing values
+order: 4
+scope: Predict and preserve schema, coercion, null/NaN, construction, I/O, and failure behavior across
+  the pinned backends.
+status: ready
+knowledge_map:
+  summary: Predict and preserve schema, coercion, null/NaN, construction, I/O, and failure behavior across
+    the pinned backends.
+  nodes:
+  - id: knowledge-polars-schema-construction
+    title: Construction and schema
+    summary: Build typed frames and distinguish eager values from lazy schema facts.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-map-family
+  - id: knowledge-polars-casting
+    title: Casting and coercion
+    summary: Classify strict, permissive, widening, and failure behavior.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-map-family
+    builds_on:
+    - knowledge-polars-schema-construction
+  - id: knowledge-polars-missing-model
+    title: Null and NaN model
+    summary: Preserve or intentionally adapt pandas missing-value behavior by dtype.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-map-family
+    builds_on:
+    - knowledge-polars-casting
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-schema-missing-types
+artifacts: {}
+workspace_ids: []

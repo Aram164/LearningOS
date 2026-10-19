@@ -1,0 +1,12 @@
+{
+ "video_id": "4jRBRDbJemM",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l11-evaluation",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[02:20] \"One way to classify mice is to set a threshold at 0.5\" / [06:55] \"even if we made one confusion matrix for each threshold that mattered\" / [07:08] \"receiver operator characteristic ROC graphs provide a\" / [14:44] \"Precision is the true positives divided by the sum of the true positives and\" / [15:12] \"its calculation and is not affected by the imbalance\"",
+   "reason": "Threshold sweep, ROC as the summary of per-threshold confusion matrices, AUC, and precision preferred over the false-positive rate under class imbalance — the metric-choice half of the node, which no other L11 route reaches at this depth."
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s2b-md-20260903",
+  "idempotency_key": "polars-sheet-s2b-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:4dc89c380d9a1a5a1d2cf20f07092cfd50d64da5121cf4147f7e1037e77019ca",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 3,
+    "study-map-job-polars-expressions": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-expr-selectors-expansion",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s2b-exercises.md",
+    "label": "Exercise sheet - selector set algebra and schema drift",
+    "file_sha256": "sha256:7f84560a018f3e274a3c001cdb33b0b8c3a2e9eea89b6faeb4387fb627681c3e"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:55e0c88696b4fb99a82d8858ae4929caec9bc80daef34dc8621d6d80b6d8d76e"
+  }
+}

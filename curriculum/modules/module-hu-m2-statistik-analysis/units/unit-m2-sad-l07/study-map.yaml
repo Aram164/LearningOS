@@ -1,0 +1,454 @@
+id: study-map-m2-sad-l07
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l07
+status: not-started
+current_stage: stage-sad-l07-model-selection
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l07-model-selection
+  number: 1
+  title: Distribution choice from assumptions
+  status: pending
+  objective: Number of trials, independence, replacement, changing versus fixed success probability, stopping
+    rule, and count interval determine which discrete model is valid.
+  done_when:
+  - 'Reproduce without notes: Number of trials, independence, replacement, changing versus fixed success
+    probability, stopping rule, and count interval determine which discrete model is valid.'
+  - Work Übungsblatt 3, Aufgabe 2 — identify Poisson, Binomial and Hypergeometric models plus approximation,
+    then the remaining 7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 2-4,16,24
+    angle: Separates fixed-trial Bernoulli counts, without-replacement draws and stable-rate interval
+      counts before a model is chosen.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 2-4,16,24. Separates fixed-trial
+      Bernoulli counts, without-replacement draws and stable-rate interval counts before a model is chosen.
+      The full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Distribution
+        choice from assumptions'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:ef4242b703e63adccf263d9df3c16946f7619ca36498743aac5a16e2498a2fba
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-475a87b6ec22bf8e77f9de71
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-52083707f01a014c3e2c267b
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-bernoulli-binomial
+  number: 2
+  title: Bernoulli trials and the Binomial distribution
+  status: pending
+  objective: A Bernoulli variable records one success/failure, while Binomial(n,p) counts successes in
+    n independent trials with constant p; combinatorics explains its PMF.
+  done_when:
+  - 'Reproduce without notes: A Bernoulli variable records one success/failure, while Binomial(n,p) counts
+    successes in n independent trials with constant p; combinatorics explains its PMF.'
+  - Work Übungsblatt 3, Aufgabe 2 — identify Poisson, Binomial and Hypergeometric models plus approximation,
+    then the remaining 7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 4-14
+    angle: Builds the Binomial mass function from repeated independent success/failure trials, then gives
+      its mean and variance.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 4-14. Builds the Binomial
+      mass function from repeated independent success/failure trials, then gives its mean and variance.
+      The full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Bernoulli
+        trials and the Binomial distribution'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:4bb6c150aacfc3b0988460a2678a9c9c3b236fa5200279f8596a8db55044315e
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-475a87b6ec22bf8e77f9de71
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-52083707f01a014c3e2c267b
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6522f11efe3a4956621f2692
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-hypergeometric
+  number: 3
+  title: Hypergeometric sampling without replacement
+  status: pending
+  objective: Drawing from a finite population without replacement makes trials dependent.
+  done_when:
+  - 'Reproduce without notes: Drawing from a finite population without replacement makes trials dependent
+    and adds the finite population correction absent from the Binomial model.'
+  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
+    and their approximation in part (d), then record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 16-22
+    angle: Uses a finite urn without replacement so each draw changes later chances; contrasts its mean
+      and variance with Binomial sampling.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 16-22. Uses a finite urn
+      without replacement so each draw changes later chances; contrasts its mean and variance with Binomial
+      sampling. The full lecture and alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Hypergeometric
+        sampling without replacement'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:725c920bbdfedcfa1777a1de08e8dbbf97184d13117cb900d43a8332d244d2c8
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-475a87b6ec22bf8e77f9de71
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-52083707f01a014c3e2c267b
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6522f11efe3a4956621f2692
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-geometric
+  number: 4
+  title: Geometric waiting times
+  status: pending
+  objective: 'The Geometric model counts trials until first success and has the memoryless property. Geometric
+    waiting times are complementary preparation here: L07 has no dedicated section and Übungsblatt 3 Aufgabe
+    2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02) in Aufgabe 3(a)(4),
+    PDF p. 3; establish whether counts include the successful trial.'
+  done_when:
+  - Derive P(T=k)=(1-p)^(k-1)*p for T starting at 1; distinguish T from failures-before-success T-1.
+  - Explain why the fixed-sample questions in Übungsblatt 3 Aufgabe 2 are not Geometric waiting-time tasks.
+  exam_critical: false
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 14
+    angle: Related negative-binomial sketch; no dedicated Geometric lesson in this deck.
+    angle_detail: Read physical PDF pages 14 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu. PDF p. 14 is related context only. The Geometric model is supplied by complementary readings;
+      Übungsblatt 3 Aufgabe 2 and UE4 pp. 36-49 do not teach it. Blatt 4 Aufgabe 3(a)(4) later uses it
+      in a CLT simulation.
+    scope_triage: reference-only
+    route_id: route-66b70c94de7bc040921d186c
+    node_scaffold_note: Closest related material, a negative-binomial sketch; the deck has no dedicated
+      Geometric lesson — reference contrast only.
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Geometric
+        waiting times'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:5ffdaaed765660827c3ae8250931c44754dca941bf6cfbb851aa4777d292696b
+  - material_ref:
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
+      inherit:
+      - label
+      - source_id
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
+    kind: read
+    scope_triage: helpful-now
+    locator: 07_discrete_distributions.pptx (1).pdf, physical PDF pp. 38–44
+    angle: The prior-year course deck derives trials-until-first-success Geometric probabilities, including
+      the successful trial.
+    angle_detail: Read pp. 38–42 for the stopping-rule contrast, PMF, CDF and die-roll question. Page
+      43 accidentally says E(X)=0.5 for p=0.5; under its convention E(X)=1/p=2. Page 44 contrasts fixed
+      trials with waiting time. No memorylessness formula is given here.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 discrete-distributions deck' against the stage 'Geometric waiting
+        times'. The stage description selects that stage's task or reading purpose from the broader route;
+        preserve the narrower description. This relation review asserts no new source observation or learner
+        achievement.
+      fingerprint: sha256:56c8c106a8a1af593f970a968b0dfdaacaf707c742ba14dd5b95af86ae712aeb
+  - material_ref:
+      route_id: route-64c6506fd426173a5b124d5a
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-64c6506fd426173a5b124d5a
+    kind: read
+    scope_triage: helpful-now
+    locator: OpenIntro §4.2 Geometric distribution, physical PDF pp. 144–147
+    angle: Uses the same trials-including-success convention as the prior-year SaD deck and states the
+      correct mean 1/p.
+    angle_detail: The insurance-file example on pp. 145–147 builds (1−p)^(n−1)p from independent Bernoulli
+      trials, gives the mean and variance, and warns that independence is essential. This is the calculation
+      check for the p. 43 prior-year typo.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro Chapter 4 — common distributions' against the stage 'Geometric
+        waiting times'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:2c3427ee5d6f2d21abef30249ec176e4fd4a98a44002818a0d2f9a73a0425828
+  - material_ref:
+      route_id: route-sad-l07-geometric-blatt4-clt
+      inherit:
+      - label
+      - source_id
+      - locator
+      - vault_path
+      - angle
+      - angle_detail
+    kind: read
+    route_id: route-sad-l07-geometric-blatt4-clt
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-poisson
+  number: 5
+  title: Poisson event counts
+  status: pending
+  objective: Poisson(lambda) models independent events occurring at a stable rate in an interval, with
+    equal expectation and variance.
+  done_when:
+  - 'Reproduce without notes: Poisson(lambda) models independent events occurring at a stable rate in
+    an interval, with equal expectation and variance.'
+  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
+    and their approximation in part (d), then record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30
+    angle: Models interval event counts with a stable rate and gives the Poisson mass and equal mean/variance.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30. Models interval event
+      counts with a stable rate and gives the Poisson mass and equal mean/variance. The full lecture and
+      alternative sources remain in the unit material menu.
+    scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Poisson
+        event counts'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:ccb72b03e94a6a50c80ac113ddc11aa97681db9f7967d966b1ba3858270cc2f6
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-475a87b6ec22bf8e77f9de71
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-52083707f01a014c3e2c267b
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3e560269a42e146f88512ee4
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-relationships
+  number: 6
+  title: Limits, approximations, and moment signatures
+  status: pending
+  objective: Rare-event Binomials approach Poisson; distribution moments provide fast checks, but approximation
+    conditions must be stated rather than assumed.
+  done_when:
+  - 'Reproduce without notes: Rare-event Binomials approach Poisson; distribution moments provide fast
+    checks, but approximation conditions must be stated rather than assumed.'
+  - Work UE4, slides 36-49 — distribution conditions and worked cases, then the remaining 3, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  - concept-expected-value
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30
+    angle: States the Binomial-to-Poisson and Hypergeometric-to-Binomial approximations and their parameter
+      conditions; derivations require a complementary source.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30. States the
+      Binomial-to-Poisson and Hypergeometric-to-Binomial approximations and their parameter conditions;
+      derivations require a complementary source. The full lecture and alternative sources remain in the
+      unit material menu.
+    scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Limits,
+        approximations, and moment signatures'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:41ae5df29ba0e7a47b1fe69b677a5613deaa389ab3b254d7baa5fee114b4c673
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-52083707f01a014c3e2c267b
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md
+  attachments: []
+  source_feedback: []

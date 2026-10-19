@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "$id": "https://learningos.local/schema/session-context.schema.json",
+  "properties": {
+    "available_minutes": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "resource_minutes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "unavailable_resources": {
+      "description": "Access failures: exact resources verified unreachable. Distinct from pedagogical unsuitability.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    },
+    "unsuitable_resources": {
+      "description": "Pedagogical unsuitability: selected resources judged wrong for the learner, though still accessible. Drives structural replacement, not access filtering.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    },
+    "failed_prerequisites": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    },
+    "prerequisite_repairs": {
+      "description": "Explicit repair mapping: failed prerequisite name to the route_id of the eligible intervention resource that repairs it. Prerequisite repair never invents this mapping.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    },
+    "exposed_resources": {
+      "description": "Explicit learner report of previously seen activities or solution resources, using their route IDs. Opening a resource alone does not populate this list. Recorded attempts also count as familiarity.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    }
+  }
+}

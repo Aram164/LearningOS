@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: reviewed bytes changed since --check; re-run --check, review the new report and its SHA, then apply that SHA\n{\"expected\": \"sha256:0000000000000000000000000000000000000000000000000000000000000000\", \"actual\": \"sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b\"}\n",
+  "stdout": "",
+  "stdout_json": null
+}

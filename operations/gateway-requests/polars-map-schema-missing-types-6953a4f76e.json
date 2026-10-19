@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-schema-missing-types-6953a4f76e",
+  "idempotency_key": "polars-map-schema-missing-types-6953a4f76e",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:968a23af17c91ad422499c2a2aab8e5235b3ebb1f185c4f1c520be3a0cad6858",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 7,
+    "study-map-job-polars-schema-missing-types": 6
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-schema-missing-types-study-map.yaml",
+    "file_sha256": "sha256:6953a4f76e7ae83eec27d977d2e93fc8fd5026c1619abb98b3ef54d0313ed24a",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:8e3353078f81eaeb355c2cccb12b73d339ce57b80e95ef2c4c254afbb81ac3c2"
+  }
+}

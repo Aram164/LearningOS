@@ -1,0 +1,25 @@
+migration: curriculum-v2
+date: '2026-08-03'
+notes: Former fixed source plans are superseded by lecture knowledge maps; quarantined material is moved intact.
+mappings:
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L01_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/unit.yaml
+  kind: replaced-by-knowledge-map
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L02_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/unit.yaml
+  kind: replaced-by-knowledge-map
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L03_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/unit.yaml
+  kind: replaced-by-knowledge-map
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L04_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/unit.yaml
+  kind: replaced-by-knowledge-map
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L05_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/unit.yaml
+  kind: replaced-by-knowledge-map
+- old: work/active/workspace-degree-planning
+  new: curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning
+  kind: move
+- old: sources/collections/degree-module-anchors.yaml
+  new: curriculum/quarantine/masters-planning/sources/degree-module-anchors.yaml
+  kind: move

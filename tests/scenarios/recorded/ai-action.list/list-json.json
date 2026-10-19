@@ -1,0 +1,44 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"actions\":[{\"id\":\"garden.shelve\",\"title\":\"Shelve with AI\",\"description\":\"Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.\",\"target_kinds\":[\"garden-note\"],\"interaction_mode\":\"discussion\",\"status\":\"implemented\",\"supported_providers\":[\"manual-bundle\",\"claude\",\"chatgpt\"]},{\"id\":\"unit.compare-materials\",\"title\":\"Compare unit materials\",\"description\":\"Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.\",\"target_kinds\":[\"unit\"],\"interaction_mode\":\"discussion\",\"status\":\"implemented\",\"supported_providers\":[\"manual-bundle\"]}]}\n",
+  "stdout_json": {
+    "actions": [
+      {
+        "description": "Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.",
+        "id": "garden.shelve",
+        "interaction_mode": "discussion",
+        "status": "implemented",
+        "supported_providers": [
+          "manual-bundle",
+          "claude",
+          "chatgpt"
+        ],
+        "target_kinds": [
+          "garden-note"
+        ],
+        "title": "Shelve with AI"
+      },
+      {
+        "description": "Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.",
+        "id": "unit.compare-materials",
+        "interaction_mode": "discussion",
+        "status": "implemented",
+        "supported_providers": [
+          "manual-bundle"
+        ],
+        "target_kinds": [
+          "unit"
+        ],
+        "title": "Compare unit materials"
+      }
+    ],
+    "ok": true
+  }
+}

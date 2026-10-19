@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "intelligence scan: 2 candidate(s) in 2 group(s) — review before Aram decides:\n2 group(s), 2 goal(s), bear on a sitting in the next 8d.\n1. [before 2026-10-09 (8d)] Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved\n   evidence: claim:covers:route-b2f1f80014860a929a3af0bc, basis:256eccf4fafba28f4b59c542c1d897062bef72a47836b19bdb53e8f7e1cd08e6, moved:module-demo, moved:unit-demo-l01, cause:coarse-pin, unit:unit-demo-l01\n2. [before 2026-10-09 (8d)] Unit unit-demo-l02 owes a study map\n   evidence: unit:unit-demo-l02\nRecord Aram's explicit decision per goal id: los goal <id> --reject|--defer|--close\n(2 decided goal(s) stay hidden — see `los goal`)\n",
+  "stdout_json": null
+}

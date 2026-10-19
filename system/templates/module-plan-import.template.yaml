@@ -1,0 +1,180 @@
+# Copy this file into the owning workspace's outputs/ directory and replace
+# every placeholder. Do not use YAML anchors, aliases, or merge keys.
+module_id: module-example
+
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-example/outputs/example-coverage-audit.md
+  # Expansion preserves existing unit/stage order by default. Add a reasoned
+  # declaration here only for a deliberate pedagogical reorder.
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+module_patch:
+  # Include every final unit exactly once, including unchanged existing units.
+  unit_order:
+    - unit-example-l01
+
+source_patches: []
+
+# Prospective lineage (Phase B): every route-covers edge this package
+# creates, repairs, or removes names its admitted evidence here, or the
+# import refuses before apply. Prose-only edits and untouched routes
+# carry no entry; history stays lazy, never backfilled.
+claim_evidence: []
+# - claim_id: covers:route-example-l01-deck
+#   evidence:
+#   - kind: route-locator
+#     ref: "Ch 1, pdf pp. 10-12"
+#   - kind: manifest
+#     ref: mathematics/example/book.pdf
+#   - kind: repo-file
+#     ref: work/active/workspace-example/outputs/coverage-audit.md
+#   - kind: external
+#     ref: https://example.edu/reading
+#     note: opened 2026-09-08; goals name X; no Y coverage
+#   reads: {module-example: 3}  # optional; refused when stale
+
+source_map:
+  type: module-source-map
+  module_id: module-example
+  sources:
+    - source_id: source-example-course
+      role: course-material
+      why: "Current taught material is the scope authority."
+      priority: 0
+      unit_routes:
+        - unit_id: unit-example-l01
+          title: Current L01 lecture deck
+          format: course-material
+          angle: "Defines the taught scope and presents the lecturer's notation and examples."
+          covers:
+            - knowledge-example-l01-formulation
+            - knowledge-example-l01-core-result
+          depth: course-aligned
+          scope: current
+          locator: lecture-slides/01-example.pdf
+    - source_id: source-example-book
+      role: spine
+      why: "Selected explanation after the current course pass."
+      priority: 1
+      unit_routes:
+        - unit_id: unit-example-l01
+          title: Example book — independent derivation
+          format: book
+          angle: "Re-derives the core result from first principles and supplies one worked example."
+          covers:
+            - knowledge-example-l01-core-result
+          depth: derivation
+          scope: complementary
+          locator: "Chapter 1: exact sections"
+
+units:
+  - unit:
+      id: unit-example-l01
+      type: unit
+      module_id: module-example
+      kind: lecture
+      title: Example Lecture 01
+      order: 1
+      scope: "Current L01 material: exact concepts actually taught."
+      status: ready
+      knowledge_map:
+        summary: "The lecture moves from the learning problem to its core result and application."
+        nodes:
+          - id: knowledge-example-l01-formulation
+            title: Problem formulation
+            summary: "State the inputs, target, assumptions, and objective."
+          - id: knowledge-example-l01-core-result
+            title: Core result
+            summary: "Derive and interpret the lecture's central result."
+            builds_on:
+              - knowledge-example-l01-formulation
+      scope_sources:
+        - source_id: source-example-course
+          authority: slides
+          locator: lecture-slides/01-example.pdf
+      # The complete menu lives in source_map.unit_routes. Keep this empty until
+      # the learner actually chooses material; never preselect every available source.
+      source_selections: []
+      current_study_map: study-map-example-l01
+      artifacts: {}
+      workspace_ids:
+        - workspace-example
+    # Remove both current_study_map above and this study_map when no ordered path
+    # has been chosen. Never invent a different stage shape: every active plan
+    # uses plan-template v1, with only the curriculum boundary fields added.
+    study_map:
+      id: study-map-example-l01
+      type: study-map
+      plan_template_version: 1
+      unit_id: unit-example-l01
+      status: ready
+      current_stage: stage-example-l01-orientation
+      source_plan:
+        path: work/active/workspace-example/outputs/example-module-plan.yaml
+        provenance: operator
+      detours: []
+      stages:
+        - id: stage-example-l01-orientation
+          number: 1
+          title: Orient to Example Lecture 01
+          status: pending
+          objective: State the problem, assumptions, and core result in the course's notation.
+          done_when:
+            - Reproduce the formulation and explain the result without notes.
+          # Add estimate_minutes only when someone has actually estimated this stage.
+          exam_critical: true
+          concepts: []
+          scope_triage: required-now
+          resources: []
+          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-orientation/notes.md
+          attachments: []
+          source_feedback: []
+      shelving:
+        state: none
+
+workspace_updates:
+  - id: workspace-example
+    # These are final joins, not only the records newly added by this package.
+    sources:
+      - source-example-course
+      - source-example-book
+    unit_ids:
+      - unit-example-l01
+    sections:
+      Current Scope: "One individual current unit per ordinary lecture."
+      Next Action: "Open unit-example-l01, compare material angles, and choose what to study."
+
+# Optional atomic synthesis replacement. When this package adds, removes, or
+# evidentially changes the routes of a unit with an approved dossier, the
+# replacement is validated together with the new maps against the staged
+# post-change state, and all writes commit or roll back together. Pure
+# angle/angle_detail edits need no replacement. Omit this key otherwise.
+# material_syntheses:
+#   - unit_id: unit-example-l01
+#     dossier:
+#       id: material-synthesis-example-l01
+#       type: unit-material-synthesis
+#       unit_id: unit-example-l01
+#       status: approved
+#       basis: {}  # supply the exact post-change basis; the gateway validates it, but does not derive it
+#       route_assessments: []  # exactly one entry per final route
+#       comparisons: []
+#       concept_groups: []  # every local knowledge node mapped exactly once
+
+# Optional pre-apply acknowledgments for context-dependent changes the
+# preflight flags under semantic_ack_required: demotion, promotion,
+# scope-escalation, locator-regression, coverage-loss, coverage-reduction,
+# learner-state, cross-unit-move. Each needs kind, target, and reason.
+# acknowledgments:
+#   - kind: demotion
+#     target: route-example-l01-deck
+#     reason: "Superseded by the new derivation; the tutorial keeps the drill."

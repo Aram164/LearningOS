@@ -1,0 +1,46 @@
+id: unit-m2-analysis-ch01
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: 'Analysis Kapitel 1 — Wiederholung: Grundlagen'
+order: 101
+scope: Script Chapter 1 'Wiederholung – Grundlagen', printed pp. 1-6 (PDF pp. 11-16). The whole chapter
+  carries the Wiederholung label, which under the course contract (script p. vii) means the content is
+  assumed known and is not re-taught in the lecture — so this session is a checked repair pass, not a
+  first exposure. It owns the induction technique every later chapter reuses.
+status: ready
+knowledge_map:
+  summary: The chapter fixes the number sets, the induction principle and the standard inequalities the
+    rest of the script argues with. Nothing here is new material by the course's own account; what makes
+    it a session is that a gap in induction or in the Bernoulli/triangle inequalities surfaces later as
+    a failed convergence proof, where it is far more expensive to find.
+  nodes:
+  - id: knowledge-m2-analysis-ch01-zahlenmengen
+    title: Zahlenmengen und Notation (§1.1)
+    summary: The number sets N, Z, Q, R and the notation the script uses for them, together with the logical
+      and set symbols fixed in the Bezeichnungen section. This is the vocabulary every later definition
+      is written in.
+  - id: knowledge-m2-analysis-ch01-induktion
+    title: Vollständige Induktion (§1.2)
+    summary: 'The induction principle and its schema: base case, hypothesis, step. The script assumes
+      it from M1, and it is the one Chapter 1 technique that reappears as an exam task in its own right
+      and inside recursive-sequence arguments.'
+    builds_on:
+    - knowledge-m2-analysis-ch01-zahlenmengen
+  - id: knowledge-m2-analysis-ch01-beziehungen
+    title: Wichtige Beziehungen in der Analysis (§1.3)
+    summary: The standard inequalities and identities the later chapters apply without comment — triangle
+      inequality, Bernoulli, binomial theorem, geometric sum. They are the estimation toolkit every epsilon
+      argument reaches for.
+    builds_on:
+    - knowledge-m2-analysis-ch01-induktion
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 1, printed pp. 1-6 (PDF pp. 11-16); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch01

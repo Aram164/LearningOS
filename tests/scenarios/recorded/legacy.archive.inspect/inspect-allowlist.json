@@ -1,0 +1,43 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"id\":\"legacy-archive-lock\",\"type\":\"legacy-archive-lock\",\"created_at\":\"2026-10-01T07:00:00+00:00\",\"entries\":[{\"relative_path\":\"safe-notes/note.md\",\"size\":28,\"sha256\":\"sha256:892b109a0c8d7380207ce68c73fd5afdb9232e5269b8a175388b93bb587408c2\",\"category\":\"notes\",\"disposition\":\"historical-only\",\"canonical_targets\":[{\"path\":\"work/inbox/note-drop.md\",\"exists\":true,\"checksum_matches\":false,\"sha256\":\"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d\"}]}],\"excluded\":{\"count\":4,\"status\":\"sealed-not-inspected\"},\"verification\":{\"verified_at\":\"2026-10-01T07:00:00+00:00\",\"status\":\"verified\",\"issues\":[]}}\n",
+  "stdout_json": {
+    "created_at": "2026-10-01T07:00:00+00:00",
+    "entries": [
+      {
+        "canonical_targets": [
+          {
+            "checksum_matches": false,
+            "exists": true,
+            "path": "work/inbox/note-drop.md",
+            "sha256": "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"
+          }
+        ],
+        "category": "notes",
+        "disposition": "historical-only",
+        "relative_path": "safe-notes/note.md",
+        "sha256": "sha256:892b109a0c8d7380207ce68c73fd5afdb9232e5269b8a175388b93bb587408c2",
+        "size": 28
+      }
+    ],
+    "excluded": {
+      "count": 4,
+      "status": "sealed-not-inspected"
+    },
+    "id": "legacy-archive-lock",
+    "schema_version": 1,
+    "type": "legacy-archive-lock",
+    "verification": {
+      "issues": [],
+      "status": "verified",
+      "verified_at": "2026-10-01T07:00:00+00:00"
+    }
+  }
+}

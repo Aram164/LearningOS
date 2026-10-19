@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/masters-planning.catalog.update.schema.json",
+  "title": "payload for capability masters-planning.catalog.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "file": {
+      "type": "string",
+      "description": "reviewed academic-only catalog as a YAML file"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "revision": {},
+        "updated_at": {},
+        "candidate_modules": {},
+        "candidate_sources": {},
+        "comparison_ids": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "candidate_modules",
+        "candidate_sources",
+        "comparison_ids",
+        "id",
+        "revision",
+        "schema_version",
+        "type",
+        "updated_at"
+      ],
+      "description": "The accepted fields are the full catalog record governed by system/schema/master-planning-catalog.schema.json."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

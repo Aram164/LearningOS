@@ -1,0 +1,1558 @@
+id: study-map-m2-sad-l15
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l15
+status: not-started
+current_stage: stage-sad-l15-neuron
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l15-neuron
+  number: 1
+  title: Artificial neurons and linear-model equivalence
+  status: pending
+  objective: A neuron computes an affine weighted sum followed by an activation; with the identity activation,
+    a one-layer network is multivariate linear regression.
+  done_when:
+  - 'Reproduce without notes: A neuron computes an affine weighted sum followed by an activation; with
+    the identity activation, a one-layer network is multivariate linear regression.'
+  - 'Work Blatt 5 Aufgabe 2(a): Calculate only the two affine outputs by matrix multiplication.'
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 2-7
+    angle: The current lecture's focused reading for artificial neurons and linear-model equivalence.
+    angle_detail: Read physical PDF pages 2-7 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Artificial neurons
+        and linear-model equivalence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:44d3b6a077f63eb66e50782cd0bbaebf0aa9386f4b986b75a9170ad4f7472191
+  - material_ref:
+      route_id: route-0da2566fcc8b7596c490b316
+      inherit:
+      - vault_path
+      - source_id
+    kind: practise
+    label: Blatt 5 Aufgabe 2(a)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a)
+    angle: Calculate only the two affine outputs by matrix multiplication.
+    angle_detail: Calculate only the two affine outputs by matrix multiplication.
+    scope_triage: required-now
+    route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Artificial neurons and linear-model equivalence'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c83c8b70af9b50df819d56b89adda9042602f4bfea6c6b2fec571db2beeac6b4
+  - material_ref:
+      route_id: route-c4d58a44da44dd50667c670f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-c4d58a44da44dd50667c670f
+  - material_ref:
+      route_id: route-12b55602b4c303311d439198
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-12b55602b4c303311d439198
+  - material_ref:
+      route_id: route-a04a07038b21e44d84b93c0b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a04a07038b21e44d84b93c0b
+  - material_ref:
+      route_id: route-bbf99a1908887e14e567f182
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-bbf99a1908887e14e567f182
+  - material_ref:
+      route_id: route-f9b2e466618b722b3b41db6a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9b2e466618b722b3b41db6a
+  - material_ref:
+      route_id: route-652350e4a873de885cb7f5bd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-652350e4a873de885cb7f5bd
+  - material_ref:
+      route_id: route-42d0090fddb4b47c5e23a43d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-42d0090fddb4b47c5e23a43d
+  - material_ref:
+      route_id: route-7e22f14226c54dedd0fe872b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-7e22f14226c54dedd0fe872b
+  - material_ref:
+      route_id: route-f05cea7efdaaf0843d93227a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f05cea7efdaaf0843d93227a
+  - material_ref:
+      route_id: route-2c917d2dd5af49d5877101be
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2c917d2dd5af49d5877101be
+  - material_ref:
+      route_id: route-0958e6d1b97b3d1d030ab6f8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0958e6d1b97b3d1d030ab6f8
+  - material_ref:
+      route_id: route-d7d137ca0c87d35db285b49d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-d7d137ca0c87d35db285b49d
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-neuron/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-activation
+  number: 2
+  title: Nonlinearity, activation functions, and XOR
+  status: pending
+  objective: Stacking purely linear layers remains linear; nonlinear activations such as sigmoid, tanh,
+    and ReLU let multilayer networks represent boundaries like XOR.
+  done_when:
+  - 'Reproduce without notes: Stacking purely linear layers remains linear; nonlinear activations such
+    as sigmoid, tanh, and ReLU let multilayer networks represent boundaries like XOR.'
+  - Work UE6, slides 39-68 — neurons, forward pass, softmax and loss, then the remaining 2, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-activation-function
+  - concept-neural-network
+  - concept-xor-problem
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 9-13,22
+    angle: The current lecture's focused reading for nonlinearity, activation functions, and xor.
+    angle_detail: Read physical PDF pages 9-13,22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Nonlinearity,
+        activation functions, and XOR'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5726a54cabb963ee8d4cb6c023be2ea6eea8a91ef5f2d459617d05c343b11dd6
+  - material_ref:
+      route_id: route-c4d58a44da44dd50667c670f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-c4d58a44da44dd50667c670f
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-a04a07038b21e44d84b93c0b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a04a07038b21e44d84b93c0b
+  - material_ref:
+      route_id: route-bbf99a1908887e14e567f182
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-bbf99a1908887e14e567f182
+  - material_ref:
+      route_id: route-04c9e37880237050c4ac3b25
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-04c9e37880237050c4ac3b25
+  - material_ref:
+      route_id: route-b252f1f176fedf4bbd32e974
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b252f1f176fedf4bbd32e974
+  - material_ref:
+      route_id: route-f9b2e466618b722b3b41db6a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9b2e466618b722b3b41db6a
+  - material_ref:
+      route_id: route-652350e4a873de885cb7f5bd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-652350e4a873de885cb7f5bd
+  - material_ref:
+      route_id: route-24a20095c2e04038e9907ea0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-24a20095c2e04038e9907ea0
+  - material_ref:
+      route_id: route-b3e5bcb8f3813cbc477ac799
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-b3e5bcb8f3813cbc477ac799
+  - material_ref:
+      route_id: route-cd063de282ab01a8105e0ced
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-cd063de282ab01a8105e0ced
+  - material_ref:
+      route_id: route-7e22f14226c54dedd0fe872b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-7e22f14226c54dedd0fe872b
+  - material_ref:
+      route_id: route-f05cea7efdaaf0843d93227a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f05cea7efdaaf0843d93227a
+  - material_ref:
+      route_id: route-2c917d2dd5af49d5877101be
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2c917d2dd5af49d5877101be
+  - material_ref:
+      route_id: route-0958e6d1b97b3d1d030ab6f8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0958e6d1b97b3d1d030ab6f8
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-activation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-output
+  number: 3
+  title: One-hot targets, output layers, and softmax
+  status: pending
+  objective: Regression and classification require different output parameterizations; softmax converts
+    class scores into a normalized categorical distribution.
+  done_when:
+  - 'Reproduce without notes: Regression and classification require different output parameterizations;
+    softmax converts class scores into a normalized categorical distribution.'
+  - 'Work Blatt 5 Aufgabe 2(a)-(b): Compute the logits, softmax probabilities and classification decisions;
+    reserve cross-entropy for the loss stage.'
+  exam_critical: true
+  concepts:
+  - concept-neural-network
+  - concept-softmax
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 8-9
+    angle: The current lecture's focused reading for one-hot targets, output layers, and softmax.
+    angle_detail: Read physical PDF pages 8-9 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'One-hot targets,
+        output layers, and softmax'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:44c53279d84d691c5597ded15d98884bd34383c31cfc68c60a51466ddb9fc717
+  - material_ref:
+      route_id: route-0da2566fcc8b7596c490b316
+      inherit:
+      - vault_path
+      - source_id
+    kind: practise
+    label: Blatt 5 Aufgabe 2(a)-(b)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a)-(b)
+    angle: Compute the logits, softmax probabilities and classification decisions; reserve cross-entropy
+      for the loss stage.
+    angle_detail: Compute the logits, softmax probabilities and classification decisions; reserve cross-entropy
+      for the loss stage.
+    scope_triage: required-now
+    route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'One-hot targets, output layers, and softmax'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:5ba82b3b5c48a3b89b92277136bbe0ece644b78f57c088ecf6ad2387fe97d9aa
+  - material_ref:
+      route_id: route-c4d58a44da44dd50667c670f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-c4d58a44da44dd50667c670f
+  - material_ref:
+      route_id: route-9984975c91ebce32858e5066
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-9984975c91ebce32858e5066
+  - material_ref:
+      route_id: route-12b55602b4c303311d439198
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-12b55602b4c303311d439198
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-a04a07038b21e44d84b93c0b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a04a07038b21e44d84b93c0b
+  - material_ref:
+      route_id: route-24a20095c2e04038e9907ea0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-24a20095c2e04038e9907ea0
+  - material_ref:
+      route_id: route-b3e5bcb8f3813cbc477ac799
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-b3e5bcb8f3813cbc477ac799
+  - material_ref:
+      route_id: route-2c917d2dd5af49d5877101be
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2c917d2dd5af49d5877101be
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-output/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-forward
+  ability_ids:
+  - ability-mlp-forward-shapes
+  number: 4
+  title: Multilayer forward passes, shapes, and parameter counts
+  status: pending
+  objective: Matrix multiplication, biases, activations, and layer dimensions define the forward graph;
+    parameter counting follows directly from adjacent widths and bias vectors.
+  done_when:
+  - 'Reproduce without notes: Matrix multiplication, biases, activations, and layer dimensions define
+    the forward graph; parameter counting follows directly from adjacent widths and bias vectors.'
+  - 'Work Blatt 5 Aufgabe 2(a),(d): Check the matrix shapes and derive the one-layer decision rule; use
+    the deck for multilayer composition. This sheet is a one-layer task.'
+  exam_critical: true
+  concepts:
+  - concept-linear-algebra
+  - concept-neural-network
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 15-22
+    angle: The current lecture's focused reading for multilayer forward passes, shapes, and parameter
+      counts.
+    angle_detail: Read physical PDF pages 15-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Multilayer forward
+        passes, shapes, and parameter counts'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:cbe3840463067d07e9775beca2d69f697383fbe61e0dd50985261d5326606010
+  - material_ref:
+      route_id: route-0da2566fcc8b7596c490b316
+      inherit:
+      - vault_path
+      - source_id
+    kind: practise
+    label: Blatt 5 Aufgabe 2(a),(d)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a),(d)
+    angle: Check the matrix shapes and derive the one-layer decision rule; use the deck for multilayer
+      composition. This sheet is a one-layer task.
+    angle_detail: Check the matrix shapes and derive the one-layer decision rule; use the deck for multilayer
+      composition. This sheet is a one-layer task.
+    scope_triage: required-now
+    route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Multilayer forward passes, shapes, and parameter counts'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9060a7702f285e0521fdb5abd2959d1f3fcae90ae8127c89929bc41861ba7717
+  - material_ref:
+      route_id: route-c4d58a44da44dd50667c670f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-c4d58a44da44dd50667c670f
+  - material_ref:
+      route_id: route-9984975c91ebce32858e5066
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-9984975c91ebce32858e5066
+  - material_ref:
+      route_id: route-12b55602b4c303311d439198
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-12b55602b4c303311d439198
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-a04a07038b21e44d84b93c0b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a04a07038b21e44d84b93c0b
+  - material_ref:
+      route_id: route-72038ca94d1def42039ebf3e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-72038ca94d1def42039ebf3e
+  - material_ref:
+      route_id: route-bbf99a1908887e14e567f182
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-bbf99a1908887e14e567f182
+  - material_ref:
+      route_id: route-b252f1f176fedf4bbd32e974
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b252f1f176fedf4bbd32e974
+  - material_ref:
+      route_id: route-3afec9d94d803b94257c2dfa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3afec9d94d803b94257c2dfa
+  - material_ref:
+      route_id: route-f9b2e466618b722b3b41db6a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9b2e466618b722b3b41db6a
+  - material_ref:
+      route_id: route-652350e4a873de885cb7f5bd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-652350e4a873de885cb7f5bd
+  - material_ref:
+      route_id: route-42d0090fddb4b47c5e23a43d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-42d0090fddb4b47c5e23a43d
+  - material_ref:
+      route_id: route-407fecf00c9736189282c28a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-407fecf00c9736189282c28a
+  - material_ref:
+      route_id: route-ce599e1e41abe030047befab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-ce599e1e41abe030047befab
+  - material_ref:
+      route_id: route-808f7b40861516f88124d45b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-808f7b40861516f88124d45b
+  - material_ref:
+      route_id: route-0e40ebef08584b95092d66e7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0e40ebef08584b95092d66e7
+  - material_ref:
+      route_id: route-0d655a34bc389bac4233fa9a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d655a34bc389bac4233fa9a
+  - material_ref:
+      route_id: route-b3e5bcb8f3813cbc477ac799
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-b3e5bcb8f3813cbc477ac799
+  - material_ref:
+      route_id: route-cd063de282ab01a8105e0ced
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-cd063de282ab01a8105e0ced
+  - material_ref:
+      route_id: route-7e22f14226c54dedd0fe872b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-7e22f14226c54dedd0fe872b
+  - material_ref:
+      route_id: route-f05cea7efdaaf0843d93227a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f05cea7efdaaf0843d93227a
+  - material_ref:
+      route_id: route-2c917d2dd5af49d5877101be
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2c917d2dd5af49d5877101be
+  - material_ref:
+      route_id: route-f83d6fa3f35068422cce50fa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-f83d6fa3f35068422cce50fa
+  - material_ref:
+      route_id: route-0958e6d1b97b3d1d030ab6f8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0958e6d1b97b3d1d030ab6f8
+  - material_ref:
+      route_id: route-d7d137ca0c87d35db285b49d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-d7d137ca0c87d35db285b49d
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-forward/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-backprop
+  ability_ids:
+  - ability-sad-backprop-local
+  number: 5
+  title: Loss gradients and backpropagation
+  status: pending
+  objective: The chain rule propagates output error backward through each operation, producing parameter
+    gradients reused by gradient-based optimizers.
+  done_when:
+  - 'Reproduce without notes: The chain rule propagates output error backward through each operation,
+    producing parameter gradients reused by gradient-based optimizers.'
+  - Work Cornell CS4780 HW9 — neural networks and ReLU, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-backpropagation
+  - concept-chain-rule
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 24-31
+    angle: The current lecture's focused reading for loss gradients and backpropagation.
+    angle_detail: Read physical PDF pages 24-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Loss gradients
+        and backpropagation'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:a66b4f5f10b77c379f1119bbc6a27ad8dde9778a04fcde6b910fc76b564e05f6
+  - material_ref:
+      route_id: route-dd5f555433ae41e4cd19802b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-dd5f555433ae41e4cd19802b
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-72038ca94d1def42039ebf3e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-72038ca94d1def42039ebf3e
+  - material_ref:
+      route_id: route-bbf99a1908887e14e567f182
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-bbf99a1908887e14e567f182
+  - material_ref:
+      route_id: route-b252f1f176fedf4bbd32e974
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b252f1f176fedf4bbd32e974
+  - material_ref:
+      route_id: route-3afec9d94d803b94257c2dfa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-3afec9d94d803b94257c2dfa
+  - material_ref:
+      route_id: route-f9b2e466618b722b3b41db6a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9b2e466618b722b3b41db6a
+  - material_ref:
+      route_id: route-24a20095c2e04038e9907ea0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-24a20095c2e04038e9907ea0
+  - material_ref:
+      route_id: route-42d0090fddb4b47c5e23a43d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-42d0090fddb4b47c5e23a43d
+  - material_ref:
+      route_id: route-407fecf00c9736189282c28a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-407fecf00c9736189282c28a
+  - material_ref:
+      route_id: route-ce599e1e41abe030047befab
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-ce599e1e41abe030047befab
+  - material_ref:
+      route_id: route-808f7b40861516f88124d45b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-808f7b40861516f88124d45b
+  - material_ref:
+      route_id: route-0e40ebef08584b95092d66e7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0e40ebef08584b95092d66e7
+  - material_ref:
+      route_id: route-0d655a34bc389bac4233fa9a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0d655a34bc389bac4233fa9a
+  - material_ref:
+      route_id: route-b3e5bcb8f3813cbc477ac799
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-b3e5bcb8f3813cbc477ac799
+  - material_ref:
+      route_id: route-cd063de282ab01a8105e0ced
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-cd063de282ab01a8105e0ced
+  - material_ref:
+      route_id: route-f05cea7efdaaf0843d93227a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f05cea7efdaaf0843d93227a
+  - material_ref:
+      route_id: route-0958e6d1b97b3d1d030ab6f8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0958e6d1b97b3d1d030ab6f8
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-backprop/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-training
+  number: 6
+  title: Training, generalization, and practical choices
+  status: pending
+  objective: Initialization, batches, learning rate, stopping, data volume, regularization, and validation
+    interact; lower training loss alone is not evidence of a better model.
+  done_when:
+  - 'Reproduce without notes: Initialization, batches, learning rate, stopping, data volume, regularization,
+    and validation interact; lower training loss alone is not evidence of a better model.'
+  - 'Work Blatt 5 Aufgabe 2(c): After the output/loss explanation, compute both cross-entropy losses from
+    the probabilities in (b). This is a loss check, not evidence of a training trajectory.'
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 26,28,32
+    angle: The current lecture's focused reading for training, generalization, and practical choices.
+    angle_detail: Read physical PDF pages 26,28,32 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Training, generalization,
+        and practical choices'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:503064ff8371bd980a38c9d6e0bc7acf216937f70dad717ff57049fd6dcaa29a
+  - material_ref:
+      route_id: route-0da2566fcc8b7596c490b316
+      inherit:
+      - vault_path
+      - source_id
+    kind: practise
+    label: Blatt 5 Aufgabe 2(c)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(c)
+    angle: After the output/loss explanation, compute both cross-entropy losses from the probabilities
+      in (b). This is a loss check, not evidence of a training trajectory.
+    angle_detail: After the output/loss explanation, compute both cross-entropy losses from the probabilities
+      in (b). This is a loss check, not evidence of a training trajectory.
+    scope_triage: required-now
+    route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Training, generalization, and practical choices'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:95c3c1be81a711d3f44e27f68e7ebf82b9b0ba25c1a7c6388495f3605d50bea7
+  - material_ref:
+      route_id: route-c4d58a44da44dd50667c670f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-c4d58a44da44dd50667c670f
+  - material_ref:
+      route_id: route-9984975c91ebce32858e5066
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-9984975c91ebce32858e5066
+  - material_ref:
+      route_id: route-12b55602b4c303311d439198
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-12b55602b4c303311d439198
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-53e4963eac07776c8fbfef06
+      inherit:
+      - label
+      - vault_path
+      - source_id
+    kind: read
+    locator: Ch7 Error-based Learning, PDF pp. 351-375 (regression, error surfaces and gradient descent)
+    angle: Revisits regression and gradient descent as prerequisites for neural-network training.
+    angle_detail: The inspected Chapter 7 introduction names regression, gradient descent, logistic regression
+      and support vector machines, not multilayer networks or backpropagation. PDF pp. 351-375 develop
+      regression error surfaces and weight updates. Use the L15 lecture for neural-network and backpropagation
+      content.
+    scope_triage: helpful-now
+    route_id: route-53e4963eac07776c8fbfef06
+    angle_review:
+      kind: correction
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Corrects an unsupported claim that Chapter 7 teaches multilayer networks and backpropagation.
+        The inspected introduction and regression/GD pages support a prerequisite role only.
+      fingerprint: sha256:819bf66ec2d21669ebd2518452b814ae120ebe102089befe3e0593c47d5f9dd4
+      evidence:
+      - material_uri: material://source-kelleher-fmlpda/kelleher.pdf
+        file_sha256: sha256:f63e0c8a76517fef8df937e1bc3cd8f6df77af124af398f011117c83464fab60
+        locator: PDF pp. 351, 360, 365, 370, 375
+  - material_ref:
+      route_id: route-a04a07038b21e44d84b93c0b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-a04a07038b21e44d84b93c0b
+  - material_ref:
+      route_id: route-72038ca94d1def42039ebf3e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-72038ca94d1def42039ebf3e
+  - material_ref:
+      route_id: route-b252f1f176fedf4bbd32e974
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b252f1f176fedf4bbd32e974
+  - material_ref:
+      route_id: route-407fecf00c9736189282c28a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-407fecf00c9736189282c28a
+  - material_ref:
+      route_id: route-808f7b40861516f88124d45b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-808f7b40861516f88124d45b
+  - material_ref:
+      route_id: route-0e40ebef08584b95092d66e7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0e40ebef08584b95092d66e7
+  - material_ref:
+      route_id: route-b3e5bcb8f3813cbc477ac799
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-b3e5bcb8f3813cbc477ac799
+  - material_ref:
+      route_id: route-ad3786dcb831f567e01bc525
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-ad3786dcb831f567e01bc525
+  - material_ref:
+      route_id: route-f83d6fa3f35068422cce50fa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-f83d6fa3f35068422cce50fa
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-training/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-universality
+  number: 7
+  title: Expressiveness and universal approximation
+  status: pending
+  objective: Sufficiently wide nonlinear networks can approximate broad function classes, but the theorem
+    does not guarantee efficient learning, good generalization, or a practical architecture.
+  done_when:
+  - 'Reproduce without notes: Sufficiently wide nonlinear networks can approximate broad function classes,
+    but the theorem does not guarantee efficient learning, good generalization, or a practical architecture.'
+  exam_critical: true
+  concepts:
+  - concept-universal-approximation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 34
+    angle: The current lecture's focused reading for expressiveness and universal approximation.
+    angle_detail: Read physical PDF pages 34 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Expressiveness
+        and universal approximation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4dbfd71c5460a7f83e6306286d18c73bcd6bbe5c937970759d505dd98948909d
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-04c9e37880237050c4ac3b25
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-04c9e37880237050c4ac3b25
+  - material_ref:
+      route_id: route-652350e4a873de885cb7f5bd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-652350e4a873de885cb7f5bd
+  - material_ref:
+      route_id: route-24a20095c2e04038e9907ea0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-24a20095c2e04038e9907ea0
+  - material_ref:
+      route_id: route-0958e6d1b97b3d1d030ab6f8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-0958e6d1b97b3d1d030ab6f8
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-universality/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l15-outlook
+  number: 8
+  title: CNN, RNN, and Transformer outlook
+  status: pending
+  objective: Convolutions encode locality and sharing, recurrent networks encode sequence state, and attention-based
+    Transformers model interactions; these are orientation topics beyond the core MLP calculations.
+  done_when:
+  - 'Reproduce without notes: Convolutions encode locality and sharing, recurrent networks encode sequence
+    state, and attention-based Transformers model interactions; these are orientation topics beyond the
+    core MLP calculations.'
+  exam_critical: true
+  concepts:
+  - concept-recurrent-networks
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 35-38
+    angle: The current CNN/RNN/Transformer outlook, with exam inclusion unresolved.
+    angle_detail: Read physical PDF pages 35-38 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. No official exam exclusion was verified. The inherited exam_critical flag is preserved
+      pending an authoritative scope decision.
+    scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'CNN, RNN, and
+        Transformer outlook'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:b318abd1c37a33a943edd48b09e6fdb964026bad008300c6587dbf264239948a
+  - material_ref:
+      route_id: route-37563c3b8ff1e0463522c15c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-37563c3b8ff1e0463522c15c
+  - material_ref:
+      route_id: route-f83d6fa3f35068422cce50fa
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-f83d6fa3f35068422cce50fa
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-outlook/notes.md
+  attachments: []
+  source_feedback: []

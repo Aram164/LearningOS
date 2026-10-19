@@ -1,0 +1,12 @@
+id: unit-seminar-iug-portfolio
+type: unit
+module_id: module-hu-seminar-iug
+kind: exam-block
+title: Seminar portfolio and pending grade
+order: 1
+scope: Existing portfolio deliverables and administrative follow-up.
+status: paused
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids: []

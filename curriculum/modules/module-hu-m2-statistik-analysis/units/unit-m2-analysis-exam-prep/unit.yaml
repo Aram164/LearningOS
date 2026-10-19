@@ -1,0 +1,47 @@
+id: unit-m2-analysis-exam-prep
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: exam-block
+title: Analysis — calibration, retrieval and timed transfer
+order: 108
+scope: The two Analysis sessions that are not a script chapter. Calibration owns the course contract (script
+  pp. iv-vii), the exam boundary, and the cold diagnostic that decides which chapters need which support.
+  Retrieval owns mixed Analysis-only practice, the HU WV set under exam conditions, the scope-filtered
+  external Klausuren, and the theorem-condition ledger. Switching between Analysis and Statistics is rehearsed
+  in unit-m2-combined-exam-rehearsal, not here. Chapter 8 and every Exkurs stay deferred.
+status: ready
+knowledge_map:
+  summary: Everything in the chapter units is learning one chapter; this unit is the two jobs that cut
+    across all of them. Calibration is run once, before Chapter 1, and answers what counts as in scope
+    and at what depth. Retrieval is run repeatedly, after chapters are in place, and is the only session
+    where whole papers are worked cold and timed.
+  nodes:
+  - id: knowledge-m2-analysis-calibrate
+    title: Calibrate the script-led method and the exam boundary
+    summary: Read the course contract and fix the three depths it defines — Wiederholung required, Ausflug
+      at overview depth, Exkurs out of scope — then run a cold diagnostic so the chapter sessions can
+      be entered at the right level rather than uniformly from zero.
+  - id: knowledge-m2-analysis-anx
+    title: Analysis-only retrieval and timed transfer
+    summary: Mixed retrieval across all seven chapters, the HU WV set at its stated 30-45 minutes per
+      task, scope-filtered external Klausuren under exam conditions, and a theorem-condition ledger that
+      records which hypotheses were dropped.
+    builds_on:
+    - knowledge-m2-analysis-calibrate
+  - id: knowledge-m2-analysis-exkurse
+    title: Deferred – Chapter 8 and the non-exam Exkurse
+    summary: 'The explicit deferral ledger: script Chapter 8 in full, and every section labelled Exkurs.
+      Held as a named boundary so a deferred topic is never re-discovered as a gap, and so the decision
+      can be revisited if the lecturer changes scope.'
+    builds_on:
+    - knowledge-m2-analysis-calibrate
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf course contract pp. iv-vii and Inhaltsverzeichnis pp. ii-iii; Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-exam-prep

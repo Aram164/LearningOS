@@ -1,0 +1,12 @@
+{
+ "video_id": "d5pnfFvggYk",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l06-concentration",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[00:00] \"the Chebyshev inequality is just a simple application of the Markov inequality\" / [00:31] \"In more precise terms, we have the following inequality\" / [00:42] \"the variance divided by the square of that number\" / [01:24] \"To prove the Chebyshev inequality\"",
+   "reason": "The bound is stated precisely and then proved; this is the Chebyshev half of the node that the prior video never stated."
+  }
+ ]
+}

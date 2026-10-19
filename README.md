@@ -1,0 +1,293 @@
+# Learning OS v3 — Repository
+
+Plain-file knowledge repository for deep technical learning. Fresh Git repository, scaffolded 2026-07-16 (Stage 1, Phase 2 of the migration).
+
+Operational learning is module-first: program/area → module → optional
+component → unit → one current study map → ordered stages. The physical
+tree is under `curriculum/`; workspaces coordinate units through explicit IDs,
+and durable knowledge remains under `knowledge/`. The manifest resume
+pointer is a shortcut only—it never hides other modules or study maps.
+
+## Quick start
+
+The **operator** is whoever drives this repository through its rules — normally
+Claude reading `CLAUDE.md`, but a person with a text editor and Git can operate
+it by hand. The repository is the source of truth; the operator only files,
+links, and rebuilds views. Everything under `generated/` is a disposable view —
+never edit it.
+
+1. **With Claude:** open this folder in a chat and say what you're working on.
+   The operator starts from `system/OPERATOR.md` via `.venv/bin/python tools/los.py
+   capabilities --compact --json` and `.venv/bin/python tools/los.py bootstrap --brief`
+   (guards, resume, owed work, deadlines, and runnable expands on one page),
+   then reads your active workspace and the coordination facts behind it, plus
+   the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map;
+   on a fresh install run `make setup` first, then `make views` —
+   `generated/` starts empty).
+   That's the whole interface.
+2. **By hand:** the one-page home is `generated/reading-room.md` (run
+   `make views` to refresh) — exams, workspaces, recent notes, queues, all
+   linked. Exam facts live in each owning academic module; the full "what should I
+   do next?" dashboard is `generated/coordination-view.md`; your knowledge is
+   under `knowledge/notes/`; capture anything into `work/inbox/` (the
+   operator writes it through a `capture.create` envelope per WORKFLOWS
+   §25c — the bare `.venv/bin/python tools/los.py capture --text "…"` is refused
+   without one).
+3. **After editing:** run `make check`. The pre-commit hook blocks commits while
+   the validator reports **errors**; warnings print and never block. To see
+   whether you introduced one, run `make warnings` — it compares the warning
+   signatures against `operations/validation-warning-baseline.yaml` and fails
+   only on a new or grown one.
+
+The rest of this file is the full manual; the four commands are under
+[Commands](#commands).
+
+- **What binds:** `system/contracts/normative-corpus.yaml` — every `system/*.md` and `system/adr/*.md` file classified exactly once (class, status, authority, owner, supersession). Read it before treating anything under `system/` as law; `make check` fails if a document is added without being classified or if a retired one still claims to bind.
+- **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
+- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the Claude adapter and deeper policy reference. Root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to `system/CLAUDE.md`
+- **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
+- **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed the same day (`migration/final-report.md`). This repository is the operational root.
+- **Legacy:** the frozen pre-v3 tree is shelved at `../legacy/`; the former Job source retained after ADR-013 is at `../legacy/Job/`.
+- **Roots:** materials → `../materials/` (`material://<source-id>/…` resolves there), code projects → `../projects/` — both outside the authored tree by design (materials move in Stage 2, Step 8).
+
+## How to use it (the whole manual)
+
+**Start a session:** open this folder in a chat. The operator boots from
+`system/OPERATOR.md` with `bootstrap --brief` (guards, resume, owed work,
+deadlines, expands), then reads your active workspace and the coordination
+facts behind it — plus the at-a-glance block of `generated/domain-atlas.md`
+(on a fresh install run `make setup` first, then `make views`),
+so every session starts with the full cross-domain map in view. You just say
+what you're working on.
+
+**"What should I do next?"** → the operator rebuilds and reads the coordination
+view (exam spine + every workspace's next action). Recommendations are computed
+fresh, never read from stored plans.
+
+**Study something:** name the concept — German works ("Kettenregel",
+"Hypothesentest"). You get: your notes on it, its prerequisites (dependency
+report), and the best source for the purpose — first learning, review,
+derivation, drill (selector views).
+
+**Capture anything:** drop it in `work/inbox/` or your workspace `scratch/` —
+photos of handwritten pages included. No naming, no filing; say what it is and
+the operator routes it. If you ever catch yourself making a filing decision,
+stop — that's the operator's job.
+
+**Something becomes worth keeping:** it turns into a note under `knowledge/`
+(your reasoning preserved verbatim; the operator asks before any semantic
+rewrite, split, or merge).
+
+**A fact changes** ("I registered for X", "deferring Y"): say it once. Exam
+events land ONLY in the owning academic `module.yaml`, decisions in `COORDINATION.md` —
+never in prose copies.
+
+**An effort ends:** its workspace is archived whole; the durable notes stay.
+
+**Trust but verify:** `.venv/bin/python tools/validate.py --compact` after any batch of
+edits (session-end habit); the full warning list lands in
+`generated/reports/validation-report.md`. Never edit anything under the generated output tree —
+it's a disposable view; delete it freely.
+
+## Without the operator (human fallback — no Claude needed)
+
+Everything is plain text; nothing requires any tool to read. The four questions:
+
+- **Exam dates, registrations, grades?** Open the owning academic module under
+  `curriculum/modules/` — it is
+  commented and readable raw. This file is the only truth for those facts.
+- **What should I do next?** Run `make views` (or `.venv/bin/python tools/generate.py`),
+  then open `generated/coordination-view.md` — exam spine, every workspace's
+  next action, neglect signals. Check its `Generated:` line — it names
+  uncommitted changes when the tree is dirty; if views feel stale, rebuild
+  (the post-commit hook does this automatically after commits).
+- **Where is my knowledge on X?** Browse `knowledge/notes/<domain>/` —
+  filenames say what they are — or ctrl-F `generated/concept-index.md`
+  (German terms work; aliases are indexed). The prerequisite graph is drawn in
+  `generated/concept-map.md`; the one-page cross-domain map (every domain's
+  notes, shelves, and what's deliberately outside retrieval) is
+  `generated/domain-atlas.md`.
+- **Where do I put this?** `work/inbox/` — no naming, no filing, ever.
+
+If something looks broken: `make check` names every problem; `git log` is the
+history; `generated/` can always be deleted and rebuilt. No proprietary
+anything — a text editor and Git are enough to operate this repository forever.
+
+## Commands
+
+<!-- los:generated name=cli-command-list -->
+ability-candidate-append, ability-context, ability-observation-append, ai-action-append-slices, ai-action-apply-delivery, ai-action-import-delivery, ai-action-list, ai-action-prepare, ai-action-status, ai-action-validate-delivery, atlas-context, atlas-question-save, backup-manifest, backup-verify, bootstrap, capabilities, capability, capture, collection-entry-revise, concept-relations-change, coordination-section-revise, detour-create, detour-resolve, dossier, garden-seed-create, generate, goal, health-report, inbox-list, inbox-read, inbox-resolve, inspect, intelligence-scan, legacy-archive-inspect, legacy-archive-lock-publish, legacy-archive-status, lineage-restamp, masters-planning-catalog-update, masters-planning-comparison-publish, masters-planning-dashboard, material-context, material-span, module-attempt, module-list, module-materials-compact, module-plan-import, module-sitting, note-analysis-prepare, note-analysis-save, note-analysis-save-batch, note-create, note-evidence, note-read, note-revise, observation-append, observe, operations, path-attach, path-note, path-progress, plan-edit-context, plan-template, program-list, project-create, project-list, project-update, related, resume, route-patch, runtime-session, search, semantic, session-end, shelving-apply, shelving-prepare, source-feedback, source-intake, source-revise, stage-attach, stage-note, stage-progress, stage-result, status, unit-list, unit-map-import, unit-material-synthesis-publish, unit-note, unit-plan-revise, unit-source-selection, validate, workspace-next-action
+<!-- /los:generated -->
+
+```bash
+make setup      # once per clone/move: create .venv, install deps, install Git hooks
+make setup-lean # fresh-clone fast path: runtime-only .venv (no pytest/ruff)
+make check      # validate (schemas + VALIDATION.md rules) — errors block, warnings do not
+make warnings   # the warning delta against the recorded baseline; fails only on a NEW one
+make views      # rebuild everything under the gitignored output tree
+make status     # one-screen repository state
+make inventory  # rebuild the materials manifest (see "Materials durability")
+make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
+make test       # complete suite, including full-repository integration checks
+make code-check # static reachability/layer/cycle gate; reads code only
+make system-check # Core lint/validation/tests + the sibling UI's complete check
+make stress     # deliberate deep audit: release pair + production/fuzz/concurrency + URLs
+make            # list the one-word commands
+```
+
+Use `make check` after ordinary edits, `make system-check` before a paired
+Core/UI release, and `make stress` when deliberately auditing resilience. The
+stress command is the single owner of repeated generation, atomic publication,
+concurrent CLI reads, repeated UI rounds, and online URL reachability; those
+checks should not be reconstructed as personal shell recipes.
+
+Interface layers (the Obsidian UI project, scripts, other agents) use the
+stable CLI gateway instead of parsing YAML — `.venv/bin/python tools/los.py status
+--json | validate | generate | capture` (ADR-006). Provider-independent AI
+actions use the same gateway through `ai-action-list`, `ai-action-prepare`,
+`ai-action-import-delivery`, `ai-action-validate-delivery`,
+`ai-action-apply-delivery`, and `ai-action-status`; see `system/AI-ACTIONS.md`.
+The loader stays the single authority; the CLI only delegates.
+
+`make setup` creates a project-local virtual environment at `.venv/` (gitignored)
+and installs the package with its `dev` dependencies from `pyproject.toml`, so
+the tooling never touches your system Python —
+this sidesteps the PEP 668 / Homebrew "externally-managed-environment" error you
+hit on a clean macOS install. Every later `make` target and the Core Git hooks use
+`.venv/bin/python` automatically when it exists, and fall back to the system
+`python3` otherwise. Build with a specific interpreter via
+`make setup PYTHON=python3.14`.
+
+(Equivalent direct calls once the venv exists: `.venv/bin/python tools/validate.py`
+[`--online` adds the URL audit], `.venv/bin/python tools/generate.py`,
+`.venv/bin/python -m pytest -m "not full_repo"`, `.venv/bin/python -m pytest`.)
+Python 3.12+ is required. The package version and exact runtime/development
+dependencies are declared only in `pyproject.toml`; the tools fail fast with
+the setup command if a dependency is missing or too old. Tool ownership and
+lifecycle status are indexed in `tools/README.md`.
+
+Three Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
+**pre-commit** blocks any commit while the validator reports errors (warnings
+print but never block) and runs the defect-oriented static checks; **post-commit** rebuilds `generated/` so the local
+dashboards are never stale; **pre-push** requires clean Core and UI worktrees
+and runs `make system-check`, so the release pair is verified through one
+command instead of two remembered checklists. The paired pre-push hook is also
+installed into the sibling UI checkout when it is present. Each installed hook
+checks itself against its tracked canonical source; if they differ, the gate
+fails with the single repair command `make hooks`.
+
+## Changing a schema (the data contract)
+
+Every record schema is `additionalProperties: false`, and canonical records carry
+no per-record version. That is strict by design, but it means editing a schema
+silently redefines what "valid" means for data already on disk — and years later
+there is no way to ask "what format was this note written under, and what brings
+it forward?"
+
+`system/contracts/data-contract.yaml` records the current format version and a
+fingerprint over `system/schema/*.schema.json` (the schemas governing stored
+records; capability payload schemas are excluded — they validate requests, not
+data at rest). `make check` compares them, so a schema edit cannot land without a
+deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
+
+1. **Does existing data still validate?** `tests/fixtures/formats/v<N>/` holds a
+   frozen snapshot of each historical format and is loaded against the *current*
+   schemas. If those tests still pass, the change is backward-compatible.
+2. **If not, write the migration** under `tools/migrations/` — idempotent,
+   dry-run by default, and bounded to the last data-contract generation it
+   understands. A completed migration cannot be replayed on a later live
+   format; write a new migration instead. See `tools/migrations/README.md`.
+3. **Bump the contract:**
+   `.venv/bin/python tools/schema_contract.py --bump --note "…" [--migration …]`
+4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
+   it to `FORMATS` in `tests/test_format_fixtures.py`.
+
+Never edit or regenerate an existing fixture — see
+`tests/fixtures/formats/README.md`. A fixture that tracks current code can never
+fail, and one that gets edited to pass destroys the record of the format it was
+supposed to preserve.
+
+## Changing the manifest (the interface contract)
+
+The data contract above governs what this repository *stores*. What it
+*publishes* is a separate contract with separate consumers:
+`generated/manifest.json` is the one shape every interface reads, and
+`system/contracts/manifest-contract.yaml` declares its version and its exact key
+sets.
+
+They are versioned independently and deliberately: a record can gain an optional
+field without changing the projection, and the projection can be reshaped
+without touching a single stored record.
+
+| what | contract | version owner |
+|---|---|---|
+| canonical record format | `system/contracts/data-contract.yaml` | read from this file; `make contract` reports it |
+| published manifest shape | `system/contracts/manifest-contract.yaml` | read from this file; `make contract` reports it |
+
+`build_manifest` checks itself against that declaration on every build, so a
+change to the published shape fails here rather than downstream. That is the
+point: until 2026-08-08 only the consumer declared the version (in the Obsidian
+UI's lock file), so Core could add a top-level key, pass its own tests, push —
+and break the other repository. It happened, with `topics`.
+
+When `MANIFEST-CONTRACT-DRIFT` fires:
+
+1. **Bump:** `.venv/bin/python tools/manifest_contract.py --bump --note "…"` — it rebuilds
+   with enforcement off, adopts the shape actually produced, and records the
+   history entry. `--show` prints the current shape without changing anything.
+2. **Mirror into the UI in the same change** — `contracts/manifest-v<N>.lock.json`,
+   `MANIFEST_CONTRACT_VERSION`, `ManifestV<N>`, and the fixture vault manifest.
+   Core and the UI release together; a bump that lands alone is the exact bug
+   this contract exists to prevent.
+
+Additive still bumps. Consumers declare an exact version and fail closed, so
+"only added a key" is not "invisible".
+
+## Materials durability
+
+`materials/` is the one part of the system Git does not protect. It sits outside
+the authored tree by design (~1.9 GB of PDFs, slides and notebooks) and is
+tracked by no repository, yet hundreds of `material://` references resolve into
+it. A lost drive would therefore turn a large part of the knowledge base into
+dangling pointers, and nothing would say so.
+
+`records/materials-manifest.yaml` is the repository's own durable record of that
+tree — every file's path, size and SHA-256. It is version-controlled, so the
+inventory survives even when the files do not. With it, `make check`
+distinguishes cases that otherwise look identical:
+
+| situation | what you get |
+|---|---|
+| drive unmounted | one `MATERIALS-OFFLINE` warning — not data loss |
+| file moved or removed on purpose | `MATERIALS-DRIFT` warning — run `make inventory` |
+| file a canonical record points at is gone | `MATERIAL-MISSING` **error** |
+| reference to a file never inventoried | `MATERIAL-UNREGISTERED` **error** |
+
+Presence and size are checked on every `make check` (a few hundred
+milliseconds); content is not, because hashing 1.9 GB does not belong in a
+pre-commit hook. `make verify-materials` does the full SHA-256 pass.
+
+**Backup, and proving a restore worked.** Copy `materials/` wherever you keep
+backups — it is ordinary files, so any tool will do. What the manifest adds is
+the ability to *check* a restore instead of hoping:
+
+```bash
+python tools/materials_manifest.py --against /Volumes/backup/materials --deep
+```
+
+That reports every file missing from the copy, every file whose contents differ,
+and every file present in the copy but unknown to the inventory — exit code 1 if
+the restore is incomplete. Run it after restoring, and occasionally against the
+backup itself; a backup nobody has ever verified is a guess.
+
+Rebuild the manifest with `make inventory` after deliberately adding, moving or
+removing sources, and commit it with the change that caused it.
+
+## Transactional writes and Projects
+
+Canonical UI/CLI mutations are declared in
+`system/contracts/capabilities.yaml` and committed atomically through the
+shared transaction service. Successful writes produce receipts and increment
+only the affected artifact revisions. The Bachelor thesis is the first
+first-class Project; its former module ID remains a compatibility alias while
+the legacy module identifier is still supported.

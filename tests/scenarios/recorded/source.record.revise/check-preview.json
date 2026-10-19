@@ -1,0 +1,94 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"source.record.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"check\": true,\n    \"records\": 1,\n    \"diff\": [\n      {\n        \"id\": \"source-demo-book\",\n        \"partition\": \"sources.yaml\",\n        \"fields\": {\n          \"evaluations\": {\n            \"before\": [\n              {\n                \"concepts\": [\n                  \"concept-expected-value\"\n                ],\n                \"level\": \"introductory\",\n                \"roles\": [\n                  \"first-learning\"\n                ],\n                \"strengths\": [\n                  \"clear intuition\"\n                ]\n              }\n            ],\n            \"after\": [\n              {\n                \"concepts\": [\n                  \"concept-expected-value\"\n                ],\n                \"level\": \"introductory\",\n                \"roles\": [\n                  \"first-learning\"\n                ],\n                \"strengths\": [\n                  \"clear intuition\",\n                  \"scenario coverage\"\n                ]\n              }\n            ]\n          }\n        },\n        \"refers\": {\n          \"routes\": [\n            {\n              \"module_id\": \"module-demo\",\n              \"unit_id\": \"unit-demo-l01\",\n              \"route_id\": \"route-b2f1f80014860a929a3af0bc\"\n            }\n          ],\n          \"dossiers\": [],\n          \"collections\": [\n            {\n              \"collection\": \"shelf\",\n              \"group\": \"Demo\",\n              \"why\": \"The main demo reading.\"\n            }\n          ]\n        },\n        \"affected_units\": [],\n        \"replacements\": {},\n        \"rebases\": {}\n      }\n    ],\n    \"diff_sha256\": \"sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34\",\n    \"expected_revisions\": {\n      \"source-demo-book\": 0\n    },\n    \"artifact_ids\": [\n      \"source-demo-book\"\n    ]\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "source.record.revise",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_ids": [
+        "source-demo-book"
+      ],
+      "check": true,
+      "diff": [
+        {
+          "affected_units": [],
+          "fields": {
+            "evaluations": {
+              "after": [
+                {
+                  "concepts": [
+                    "concept-expected-value"
+                  ],
+                  "level": "introductory",
+                  "roles": [
+                    "first-learning"
+                  ],
+                  "strengths": [
+                    "clear intuition",
+                    "scenario coverage"
+                  ]
+                }
+              ],
+              "before": [
+                {
+                  "concepts": [
+                    "concept-expected-value"
+                  ],
+                  "level": "introductory",
+                  "roles": [
+                    "first-learning"
+                  ],
+                  "strengths": [
+                    "clear intuition"
+                  ]
+                }
+              ]
+            }
+          },
+          "id": "source-demo-book",
+          "partition": "sources.yaml",
+          "rebases": {},
+          "refers": {
+            "collections": [
+              {
+                "collection": "shelf",
+                "group": "Demo",
+                "why": "The main demo reading."
+              }
+            ],
+            "dossiers": [],
+            "routes": [
+              {
+                "module_id": "module-demo",
+                "route_id": "route-b2f1f80014860a929a3af0bc",
+                "unit_id": "unit-demo-l01"
+              }
+            ]
+          },
+          "replacements": {}
+        }
+      ],
+      "diff_sha256": "sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34",
+      "expected_revisions": {
+        "source-demo-book": 0
+      },
+      "ok": true,
+      "records": 1
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

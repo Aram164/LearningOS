@@ -1,0 +1,315 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": "1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "unit.material-synthesis.publish",
+              "channel": "operator",
+              "intent_sha256": "sha256:6ed30469e9cd5ac93a15c3d4ed46a6157464ded3f0a5625b695eeed66887c4c9",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "file:operations/transactions/lineage.yaml": 1,
+                "material-synthesis-demo-l01": 1,
+                "unit-demo-l01": 4
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "unit.material-synthesis.publish",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "file:operations/transactions/lineage.yaml": {
+              "after": 1,
+              "before": 0
+            },
+            "material-synthesis-demo-l01": {
+              "after": 1,
+              "before": 0
+            },
+            "unit-demo-l01": {
+              "after": 4,
+              "before": 3
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "unit.material-synthesis.publish",
+                "declared_writes": [
+                  "curriculum/modules/**/units/**/material-synthesis.yaml",
+                  "operations/transactions/lineage.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "unit.material-synthesis.publish",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "file:operations/transactions/lineage.yaml": 0,
+            "material-synthesis-demo-l01": 0,
+            "unit-demo-l01": 3
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:2e15527884b178c83921274a2d0410b8872c6cf378c9347b8bee12ef204a4cb4",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:6ed30469e9cd5ac93a15c3d4ed46a6157464ded3f0a5625b695eeed66887c4c9"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:6ed30469e9cd5ac93a15c3d4ed46a6157464ded3f0a5625b695eeed66887c4c9",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml",
+              "sha256_after": "1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a",
+              "sha256_before": null
+            },
+            {
+              "created": false,
+              "path": "operations/transactions/lineage.yaml",
+              "sha256_after": "99e323ac09264a9f4a8303f92f6730a6d20c2b4720076ec5174db0ca8f299ea4",
+              "sha256_before": "73c0ae2934b4f4be7a5cf736750021c030d79f95d3a64cccaa8c6ec477d5db6a"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "file:operations/transactions/lineage.yaml": 1,
+            "material-synthesis-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bbbbed0911813276b27ea16fd0d34d73233aad54b22c2343877676ca140e9a0",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2b7989dfc212493f58320e5ccfb72afa093fbc0825020d192ffde06dd969cfba",
+              "state": "file"
+            },
+            "operations/transactions/lineage.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "99e323ac09264a9f4a8303f92f6730a6d20c2b4720076ec5174db0ca8f299ea4",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f426454d21a1310155f333b6f5c7c01df06c7e98efd406b4bd8ae8777e57a56b",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.material-synthesis.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1,\n      \"material-synthesis-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "unit.material-synthesis.publish",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "file:operations/transactions/lineage.yaml": 1,
+            "material-synthesis-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "operation": "unit.material-synthesis.publish",
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bbbbed0911813276b27ea16fd0d34d73233aad54b22c2343877676ca140e9a0",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2b7989dfc212493f58320e5ccfb72afa093fbc0825020d192ffde06dd969cfba",
+              "state": "file"
+            },
+            "operations/transactions/lineage.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "99e323ac09264a9f4a8303f92f6730a6d20c2b4720076ec5174db0ca8f299ea4",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f426454d21a1310155f333b6f5c7c01df06c7e98efd406b4bd8ae8777e57a56b",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1216ac3293b3114f2242c2ef6d77d3d0d346b76d50171e5c6b23280f615a158a",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bbbbed0911813276b27ea16fd0d34d73233aad54b22c2343877676ca140e9a0",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2b7989dfc212493f58320e5ccfb72afa093fbc0825020d192ffde06dd969cfba",
+              "state": "file"
+            },
+            "operations/transactions/lineage.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "99e323ac09264a9f4a8303f92f6730a6d20c2b4720076ec5174db0ca8f299ea4",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f426454d21a1310155f333b6f5c7c01df06c7e98efd406b4bd8ae8777e57a56b",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.material-synthesis.publish\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1,\n      \"material-synthesis-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "unit.material-synthesis.publish",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": true,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "file:operations/transactions/lineage.yaml": 1,
+            "material-synthesis-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": true,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

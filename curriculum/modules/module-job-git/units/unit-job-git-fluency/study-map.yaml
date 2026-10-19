@@ -1,0 +1,1610 @@
+id: study-map-job-git-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-git-fluency
+status: ready
+current_stage: stage-git-01-snapshots-objects-the-commit-dag-and-refs
+source_plan:
+  path: Job/plans/job-track-git.yaml
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-git-01-snapshots-objects-the-commit-dag-and-refs
+  number: 1
+  title: Snapshots, objects, the commit DAG, and refs
+  status: pending
+  objective: Predict and control Snapshots, objects, the commit DAG, and refs in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a labeled object/ref graph plus a command-to-state-change table with at least twelve entries.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — version control
+    id: resource-git-01-01-required-core-missing-csail-mit-edu-ve
+    locator: MIT's bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4
+    url: https://missing.csail.mit.edu/2026/version-control/
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-01-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: MIT's bottom-up model and Pro Git Chs. 1, 3.1, 10.2–10.4
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — git-handbook
+    id: resource-git-01-03-local-material-git-handbook
+    source_id: source-git-handbook-archive
+    locator: Four-region visual map
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — gitglossary
+    id: resource-git-01-04-official-reference-git-scm-com-gitglos
+    locator: Git glossary and object terminology
+    url: https://git-scm.com/docs/gitglossary
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — version control
+    id: resource-git-01-05-guided-exercises-missing-csail-mit-edu
+    locator: Complete the MIT lecture exercises and inspect objects in the disposable repository from
+      this stage
+    url: https://missing.csail.mit.edu/2026/version-control/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-git-01-06-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: HU Berlin introductory telling
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Internals Git Objects
+    id: resource-git-01-07-optional-depth-git-scm-com-git-interna
+    locator: Git internals reference
+    url: https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
+    scope_triage: deferred
+  - kind: practise
+    label: Initialize a disposable repo, create three snapshots, and predict every new object before inspecting
+      .git/objects with git cat-file.
+    id: resource-git-01-08-initialize-a-disposable-repo-create-th
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Draw a commit with two parents and explain why it is still one snapshot.
+    id: resource-git-01-09-draw-a-commit-with-two-parents-and-exp
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Classify HEAD, main, origin/main, an annotated tag, and a commit hash as symbolic ref, direct
+      ref, remote-tracking ref, tag object/ref, or object ID.
+    id: resource-git-01-10-classify-head-main-origin-main-an-anno
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Recreate the four-region diagram—working tree, index, local DAG, remote—without notes.
+    id: resource-git-01-11-recreate-the-four-region-diagram-worki
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Explain in 90 seconds why Git can recover a commit after a branch ref moves.
+    id: resource-git-01-12-explain-in-90-seconds-why-git-can-reco
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-01-snapshots-objects-the-commit-dag-and-refs/notes.md
+- id: stage-git-02-the-state-triangle-working-tree-index-and-head
+  number: 2
+  title: 'The state triangle: working tree, index, and HEAD'
+  status: pending
+  objective: 'Predict and control The state triangle: working tree, index, and HEAD in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.'
+  done_when:
+  - a state-triangle worksheet with six scenarios, predicted output, observed output, and corrections.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-02-01-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Pro Git Ch. 2.2 and the state-triangle pages
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Required core — wt-inspect.html
+    id: resource-git-02-02-required-core-wt-inspect-html
+    source_id: source-git-handbook-archive
+    locator: Pro Git Ch. 2.2 and the state-triangle pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-inspect.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — idx-review-diffs.html
+    id: resource-git-02-03-required-core-idx-review-diffs-html
+    source_id: source-git-handbook-archive
+    locator: Pro Git Ch. 2.2 and the state-triangle pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-review-diffs.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — idx-stage.html
+    id: resource-git-02-04-local-material-idx-stage-html
+    source_id: source-git-handbook-archive
+    locator: Stage/unstage/discard/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stage.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — idx-unstage.html
+    id: resource-git-02-05-local-material-idx-unstage-html
+    source_id: source-git-handbook-archive
+    locator: Stage/unstage/discard/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-unstage.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — wt-discard-unstaged.html
+    id: resource-git-02-06-local-material-wt-discard-unstaged-htm
+    source_id: source-git-handbook-archive
+    locator: Stage/unstage/discard/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — wt-rename-delete.html
+    id: resource-git-02-07-local-material-wt-rename-delete-html
+    source_id: source-git-handbook-archive
+    locator: Stage/unstage/discard/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git status
+    id: resource-git-02-08-official-reference-git-scm-com-git-sta
+    locator: Status, diff, restore, and clean
+    url: https://git-scm.com/docs/git-status
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git diff
+    id: resource-git-02-09-official-reference-git-scm-com-git-dif
+    locator: Status, diff, restore, and clean
+    url: https://git-scm.com/docs/git-diff
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git restore
+    id: resource-git-02-10-official-reference-git-scm-com-git-res
+    locator: Status, diff, restore, and clean
+    url: https://git-scm.com/docs/git-restore
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git clean
+    id: resource-git-02-11-official-reference-git-scm-com-git-cle
+    locator: Status, diff, restore, and clean
+    url: https://git-scm.com/docs/git-clean
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — idx-review.html
+    id: resource-git-02-12-guided-exercises-idx-review-html
+    source_id: source-git-handbook-archive
+    locator: Work every scenario in then predict and verify the three versions of each path
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-review.html
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-git-02-13-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: HU working-tree and staging explanation
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: In a disposable repo, make HEAD/index/working-tree versions of one line all differ and identify
+      each with the three diff forms.
+    id: resource-git-02-14-in-a-disposable-repo-make-head-index-w
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Stage a file, edit it again, and explain why it appears in both staged and unstaged sections.
+    id: resource-git-02-15-stage-a-file-edit-it-again-and-explain
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Practice restore --staged while proving the working edit survives.
+    id: resource-git-02-16-practice-restore-staged-while-proving
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Create ignored, untracked, tracked-modified, and staged files and predict short-status codes.
+    id: resource-git-02-17-create-ignored-untracked-tracked-modif
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Run git clean only with -n in one drill, then explain why no recovery promise exists.
+    id: resource-git-02-18-run-git-clean-only-with-n-in-one-drill
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-02-the-state-triangle-working-tree-index-and-head/notes.md
+- id: stage-git-03-intentional-staging-and-atomic-commits
+  number: 3
+  title: Intentional staging and atomic commits
+  status: pending
+  objective: Predict and control Intentional staging and atomic commits in a disposable repository, explain
+    every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a three-commit series whose individual diffs are independently explainable and green.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — idx-stage-hunks.html
+    id: resource-git-03-01-required-core-idx-stage-hunks-html
+    source_id: source-git-handbook-archive
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stage-hunks.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — local-commit.html
+    id: resource-git-03-02-required-core-local-commit-html
+    source_id: source-git-handbook-archive
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-commit.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-03-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Interactive staging and commit construction and Pro Git Chs. 2.2–2.3, 7.2
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — local-amend.html
+    id: resource-git-03-04-local-material-local-amend-html
+    source_id: source-git-handbook-archive
+    locator: Amend as object replacement
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-amend.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git add
+    id: resource-git-03-05-official-reference-git-scm-com-git-add
+    locator: git-add and git-commit
+    url: https://git-scm.com/docs/git-add
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git commit
+    id: resource-git-03-06-official-reference-git-scm-com-git-com
+    locator: git-add and git-commit
+    url: https://git-scm.com/docs/git-commit
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Use the stage's intertwined-edit drill, then review every staged snapshot
+      with diff --cached and test it before commit.
+    id: resource-git-03-07-guided-exercises-use-the-stage-s-inter
+    locator: Use the stage's intertwined-edit drill, then review every staged snapshot with diff --cached
+      and test it before commit.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — beyond code
+    id: resource-git-03-08-alternative-explanation-missing-csail
+    locator: MIT guidance on durable commit messages
+    url: https://missing.csail.mit.edu/2026/beyond-code/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Interactive Staging
+    id: resource-git-03-09-optional-depth-git-scm-com-git-tools-i
+    locator: Pro Git interactive staging details
+    url: https://git-scm.com/book/en/v2/Git-Tools-Interactive-Staging
+    scope_triage: deferred
+  - kind: practise
+    label: Make intertwined behavior, test, comment, and formatting edits, then split them into three
+      commits with add -p.
+    id: resource-git-03-10-make-intertwined-behavior-test-comment
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Before each commit, reconstruct its complete tree from git diff --cached --stat and --check.
+    id: resource-git-03-11-before-each-commit-reconstruct-its-com
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Write subject/body messages using Problem → Solution → Implications.
+    id: resource-git-03-12-write-subject-body-messages-using-prob
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Amend only a private practice commit, then compare old and new object IDs.
+    id: resource-git-03-13-amend-only-a-private-practice-commit-t
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Reorder the exercise so every intermediate commit passes its relevant test.
+    id: resource-git-03-14-reorder-the-exercise-so-every-intermed
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-03-intentional-staging-and-atomic-commits/notes.md
+- id: stage-git-04-branches-head-revision-syntax-and-detached-work
+  number: 4
+  title: Branches, HEAD, revision syntax, and detached work
+  status: pending
+  objective: Predict and control Branches, HEAD, revision syntax, and detached work in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a revision-navigation quiz with ten correct object IDs and a rescued detached commit.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — local-branch-switch.html
+    id: resource-git-04-01-required-core-local-branch-switch-html
+    source_id: source-git-handbook-archive
+    locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-branch-switch.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-04-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Branch and HEAD model plus Pro Git Chs. 3.1–3.3 and 7.1
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — gitrevisions
+    id: resource-git-04-03-official-reference-git-scm-com-gitrevi
+    locator: Revision selection and switching
+    url: https://git-scm.com/docs/gitrevisions
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git switch
+    id: resource-git-04-04-official-reference-git-scm-com-git-swi
+    locator: Revision selection and switching
+    url: https://git-scm.com/docs/git-switch
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — learngitbranching.js.org
+    id: resource-git-04-05-guided-exercises-learngitbranching-js
+    locator: Complete the branch, detached-HEAD, and revision-navigation drills; then solve the visual
+      branch exercises
+    url: https://learngitbranching.js.org/
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-git-04-06-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: HU branch diagrams
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Revision Selection
+    id: resource-git-04-07-optional-depth-git-scm-com-git-tools-r
+    locator: Pro Git revision selection
+    url: https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection
+    scope_triage: deferred
+  - kind: practise
+    label: Build a graph with two branches and predict branch tips after six commits and switches.
+    id: resource-git-04-08-build-a-graph-with-two-branches-and-pr
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Detach HEAD, commit, switch away, find the commit via reflog, and rescue it with a new branch.
+    id: resource-git-04-09-detach-head-commit-switch-away-find-th
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: On a merge commit, distinguish HEAD~1, HEAD^1, and HEAD^2.
+    id: resource-git-04-10-on-a-merge-commit-distinguish-head-1-h
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Use switch --detach and switch -c deliberately, narrating HEAD changes.
+    id: resource-git-04-11-use-switch-detach-and-switch-c-deliber
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Delete only a fully merged practice branch and explain Git's refusal for an unmerged branch.
+    id: resource-git-04-12-delete-only-a-fully-merged-practice-br
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-04-branches-head-revision-syntax-and-detached-work/notes.md
+- id: stage-git-05-merge-bases-three-way-merges-and-conflicts
+  number: 5
+  title: Merge bases, three-way merges, and conflicts
+  status: pending
+  objective: Predict and control Merge bases, three-way merges, and conflicts in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - four annotated graph snapshots and a conflict-resolution record containing base/ours/theirs/decision/test.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — local-merge.html
+    id: resource-git-05-01-required-core-local-merge-html
+    source_id: source-git-handbook-archive
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-merge.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — collab-conflicts.html
+    id: resource-git-05-02-required-core-collab-conflicts-html
+    source_id: source-git-handbook-archive
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-conflicts.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-05-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Three-way merge and conflicts and Pro Git Chs. 3.2, 7.8
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git merge
+    id: resource-git-05-04-official-reference-git-scm-com-git-mer
+    locator: git-merge and unmerged index entries
+    url: https://git-scm.com/docs/git-merge
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git ls files
+    id: resource-git-05-05-official-reference-git-scm-com-git-ls
+    locator: git-merge and unmerged index entries
+    url: https://git-scm.com/docs/git-ls-files
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — learngitbranching.js.org
+    id: resource-git-05-06-guided-exercises-learngitbranching-js
+    locator: Create all four conflict forms in the stage and inspect base/ours/theirs; also complete the
+      merge section
+    url: https://learngitbranching.js.org/
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — version control
+    id: resource-git-05-07-alternative-explanation-missing-csail
+    locator: MIT's DAG-first merge explanation
+    url: https://missing.csail.mit.edu/2026/version-control/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Advanced Merging
+    id: resource-git-05-08-optional-depth-git-scm-com-git-tools-a
+    locator: Advanced merging
+    url: https://git-scm.com/book/en/v2/Git-Tools-Advanced-Merging
+    scope_triage: deferred
+  - kind: practise
+    label: Produce and distinguish a fast-forward, clean three-way merge, content conflict, and modify/delete
+      conflict.
+    id: resource-git-05-09-produce-and-distinguish-a-fast-forward
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect conflict stages with git ls-files -u and show :1:path, :2:path, and :3:path.
+    id: resource-git-05-10-inspect-conflict-stages-with-git-ls-fi
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Resolve one conflict by synthesizing behavior from both sides and add a regression test.
+    id: resource-git-05-11-resolve-one-conflict-by-synthesizing-b
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Abort a merge and prove the pre-merge state is restored.
+    id: resource-git-05-12-abort-a-merge-and-prove-the-pre-merge
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Enable rerere in the disposable repo, repeat a conflict, and inspect what Git reused.
+    id: resource-git-05-13-enable-rerere-in-the-disposable-repo-r
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-05-merge-bases-three-way-merges-and-conflicts/notes.md
+- id: stage-git-06-rebase-and-deliberate-history-editing
+  number: 6
+  title: Rebase and deliberate history editing
+  status: pending
+  objective: Predict and control Rebase and deliberate history editing in a disposable repository, explain
+    every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - before/after DAGs, an old→new ID table, and a reviewable rewritten series.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — local-rebase.html
+    id: resource-git-06-01-required-core-local-rebase-html
+    source_id: source-git-handbook-archive
+    locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-rebase.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-06-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Rebase and history editing plus Pro Git Chs. 3.6, 7.6
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git rebase
+    id: resource-git-06-03-official-reference-git-scm-com-git-reb
+    locator: git-rebase including interactive commands and --rebase-merges
+    url: https://git-scm.com/docs/git-rebase
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — learngitbranching.js.org
+    id: resource-git-06-04-guided-exercises-learngitbranching-js
+    locator: Perform the old-ID→new-ID drills and the rebase levels
+    url: https://learngitbranching.js.org/
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — version control
+    id: resource-git-06-05-alternative-explanation-missing-csail
+    locator: MIT advanced Git list
+    url: https://missing.csail.mit.edu/2026/version-control/#advanced-git
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Rewriting History
+    id: resource-git-06-06-optional-depth-git-scm-com-git-tools-r
+    locator: Rewriting history
+    url: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
+    scope_triage: deferred
+  - kind: practise
+    label: Rebase a three-commit feature onto a moved main and map every old ID to its replacement.
+    id: resource-git-06-07-rebase-a-three-commit-feature-onto-a-m
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Use rebase -i to reorder, reword, fixup, and split one commit.
+    id: resource-git-06-08-use-rebase-i-to-reorder-reword-fixup-a
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Insert exec tests so the rebase stops on a bad intermediate commit.
+    id: resource-git-06-09-insert-exec-tests-so-the-rebase-stops
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Trigger a conflict, explain current/onto semantics, then use continue, skip, and abort in separate
+      drills.
+    id: resource-git-06-10-trigger-a-conflict-explain-current-ont
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: State a decision rule for merge versus rebase and defend it on three collaboration scenarios.
+    id: resource-git-06-11-state-a-decision-rule-for-merge-versus
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-06-rebase-and-deliberate-history-editing/notes.md
+- id: stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog
+  number: 7
+  title: 'Undo and recovery: restore, reset, revert, and reflog'
+  status: pending
+  objective: 'Predict and control Undo and recovery: restore, reset, revert, and reflog in a disposable
+    repository, explain every state transition, and prove the result with inspection or recovery evidence.'
+  done_when:
+  - a six-row recovery decision matrix with evidence from successful drills.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — local-undo.html
+    id: resource-git-07-01-required-core-local-undo-html
+    source_id: source-git-handbook-archive
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/local-undo.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — collab-safety.html
+    id: resource-git-07-02-required-core-collab-safety-html
+    source_id: source-git-handbook-archive
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-safety.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-07-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Recovery map and Pro Git Chs. 2.4, 7.7, 10.7
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — wt-discard-unstaged.html
+    id: resource-git-07-04-local-material-wt-discard-unstaged-htm
+    source_id: source-git-handbook-archive
+    locator: Destructive working-tree boundary
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git restore
+    id: resource-git-07-05-official-reference-git-scm-com-git-res
+    locator: Restore, reset, revert, and reflog
+    url: https://git-scm.com/docs/git-restore
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git reset
+    id: resource-git-07-06-official-reference-git-scm-com-git-res
+    locator: Restore, reset, revert, and reflog
+    url: https://git-scm.com/docs/git-reset
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git revert
+    id: resource-git-07-07-official-reference-git-scm-com-git-rev
+    locator: Restore, reset, revert, and reflog
+    url: https://git-scm.com/docs/git-revert
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git reflog
+    id: resource-git-07-08-official-reference-git-scm-com-git-ref
+    locator: Restore, reset, revert, and reflog
+    url: https://git-scm.com/docs/git-reflog
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Execute all six loss/recovery scenarios and explain the preserved layers
+      before each command.
+    id: resource-git-07-09-guided-exercises-execute-all-six-loss
+    locator: Execute all six loss/recovery scenarios and explain the preserved layers before each command.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — git-scm.com — Git Tools Reset Demystified
+    id: resource-git-07-10-alternative-explanation-git-scm-com-gi
+    locator: Reset demystified
+    url: https://git-scm.com/book/en/v2/Git-Tools-Reset-Demystified
+    scope_triage: helpful-now
+  - kind: practise
+    label: Recover separately from an unwanted unstaged edit, accidental stage, bad private commit, bad
+      shared commit, hard reset, and deleted branch.
+    id: resource-git-07-11-recover-separately-from-an-unwanted-un
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: For soft, mixed, and hard reset, predict HEAD/index/working-tree contents before running.
+    id: resource-git-07-12-for-soft-mixed-and-hard-reset-predict
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Revert a normal commit and a merge commit, explaining mainline parent selection.
+    id: resource-git-07-13-revert-a-normal-commit-and-a-merge-com
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Lose a commit deliberately, find it in reflog, and rescue it with a branch rather than another
+      destructive move.
+    id: resource-git-07-14-lose-a-commit-deliberately-find-it-in
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Add an untracked file, prove why reflog cannot recover it after clean, and write the safety
+      rule.
+    id: resource-git-07-15-add-an-untracked-file-prove-why-reflog
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog/notes.md
+- id: stage-git-08-stash-and-honest-work-in-progress-management
+  number: 8
+  title: Stash and honest work-in-progress management
+  status: pending
+  objective: Predict and control Stash and honest work-in-progress management in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a stash inclusion matrix and one recovered context-switch scenario.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — collab-stash.html
+    id: resource-git-08-01-required-core-collab-stash-html
+    source_id: source-git-handbook-archive
+    locator: Stash model and intent plus Pro Git Ch. 7.3
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-stash.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — wt-stash.html
+    id: resource-git-08-02-required-core-wt-stash-html
+    source_id: source-git-handbook-archive
+    locator: Stash model and intent plus Pro Git Ch. 7.3
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-stash.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-08-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Stash model and intent plus Pro Git Ch. 7.3
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git stash
+    id: resource-git-08-04-official-reference-git-scm-com-git-sta
+    locator: git-stash object and option reference
+    url: https://git-scm.com/docs/git-stash
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the staged/unstaged/untracked inclusion matrix and one conflict-on-apply
+      drill.
+    id: resource-git-08-05-guided-exercises-complete-the-staged-u
+    locator: Complete the staged/unstaged/untracked inclusion matrix and one conflict-on-apply drill.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — Compare a stash with a named WIP branch using the local commit guidance.
+    id: resource-git-08-06-alternative-explanation-compare-a-stas
+    locator: Compare a stash with a named WIP branch using the local commit guidance.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Stashing and Cleaning
+    id: resource-git-08-07-optional-depth-git-scm-com-git-tools-s
+    locator: Stashing and cleaning
+    url: https://git-scm.com/book/en/v2/Git-Tools-Stashing-and-Cleaning
+    scope_triage: deferred
+  - kind: practise
+    label: Create staged, unstaged, and untracked work; stash with default, --include-untracked, and --keep-index
+      in separate resets and record what remains.
+    id: resource-git-08-08-create-staged-unstaged-and-untracked-w
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect a stash as commits and compare its parents.
+    id: resource-git-08-09-inspect-a-stash-as-commits-and-compare
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Apply one stash onto a changed base and resolve the conflict without losing either intention.
+    id: resource-git-08-10-apply-one-stash-onto-a-changed-base-an
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Contrast apply with pop and prove why apply is the safer first move.
+    id: resource-git-08-11-contrast-apply-with-pop-and-prove-why
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Replace a long-lived stash with a named WIP branch and interactive cleanup.
+    id: resource-git-08-12-replace-a-long-lived-stash-with-a-name
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-08-stash-and-honest-work-in-progress-management/notes.md
+- id: stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams
+  number: 9
+  title: Remotes, remote-tracking refs, fetch, and upstreams
+  status: pending
+  objective: Predict and control Remotes, remote-tracking refs, fetch, and upstreams in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a four-repository/ref diagram with before/after fetch evidence.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — remote-model.html
+    id: resource-git-09-01-required-core-remote-model-html
+    source_id: source-git-handbook-archive
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-model.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — remote-fetch.html
+    id: resource-git-09-02-required-core-remote-fetch-html
+    source_id: source-git-handbook-archive
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-fetch.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-09-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Remote model and fetch flow and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — remote-clone.html
+    id: resource-git-09-04-local-material-remote-clone-html
+    source_id: source-git-handbook-archive
+    locator: Clone/init/connect/upstream intentions
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-clone.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — remote-clone-init.html
+    id: resource-git-09-05-local-material-remote-clone-init-html
+    source_id: source-git-handbook-archive
+    locator: Clone/init/connect/upstream intentions
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-clone-init.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — remote-add-origin.html
+    id: resource-git-09-06-local-material-remote-add-origin-html
+    source_id: source-git-handbook-archive
+    locator: Clone/init/connect/upstream intentions
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-add-origin.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — remote-upstream.html
+    id: resource-git-09-07-local-material-remote-upstream-html
+    source_id: source-git-handbook-archive
+    locator: Clone/init/connect/upstream intentions
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-upstream.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git remote
+    id: resource-git-09-08-official-reference-git-scm-com-git-rem
+    locator: Remote, clone, fetch, and refspec docs
+    url: https://git-scm.com/docs/git-remote
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git clone
+    id: resource-git-09-09-official-reference-git-scm-com-git-clo
+    locator: Remote, clone, fetch, and refspec docs
+    url: https://git-scm.com/docs/git-clone
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git fetch
+    id: resource-git-09-10-official-reference-git-scm-com-git-fet
+    locator: Remote, clone, fetch, and refspec docs
+    url: https://git-scm.com/docs/git-fetch
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git fetch
+    id: resource-git-09-11-official-reference-git-scm-com-git-fet
+    locator: Remote, clone, fetch, and refspec docs
+    url: https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt-ltrefspecgt
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Build the bare-upstream/two-clone lab, then predict every local and remote-tracking
+      ref before fetch.
+    id: resource-git-09-12-guided-exercises-build-the-bare-upstre
+    locator: Build the bare-upstream/two-clone lab, then predict every local and remote-tracking ref before
+      fetch.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-git-09-13-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: HU remote workflow
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Create a bare remote and two clones locally; draw all refs immediately after clone.
+    id: resource-git-09-14-create-a-bare-remote-and-two-clones-lo
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Commit in clone A, fetch in clone B, and prove files and local branch did not change.
+    id: resource-git-09-15-commit-in-clone-a-fetch-in-clone-b-and
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add origin and upstream to a fork simulation and state the push/fetch role of each.
+    id: resource-git-09-16-add-origin-and-upstream-to-a-fork-simu
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect the default fetch refspec and manually fetch one differently named branch.
+    id: resource-git-09-17-inspect-the-default-fetch-refspec-and
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Delete a remote branch, fetch --prune, and distinguish deleted remote-tracking refs from local
+      branches.
+    id: resource-git-09-18-delete-a-remote-branch-fetch-prune-and
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams/notes.md
+- id: stage-git-10-pull-push-divergence-and-force-with-lease
+  number: 10
+  title: Pull, push, divergence, and force-with-lease
+  status: pending
+  objective: Predict and control Pull, push, divergence, and force-with-lease in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - synchronization decision tree plus four before/after graphs.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — remote-fetch-pull.html
+    id: resource-git-10-01-required-core-remote-fetch-pull-html
+    source_id: source-git-handbook-archive
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-fetch-pull.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — remote-pull.html
+    id: resource-git-10-02-required-core-remote-pull-html
+    source_id: source-git-handbook-archive
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-pull.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — remote-push.html
+    id: resource-git-10-03-required-core-remote-push-html
+    source_id: source-git-handbook-archive
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/remote-push.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-10-04-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Fetch/integrate/push pages and Pro Git Chs. 2.5, 3.5
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git pull
+    id: resource-git-10-05-official-reference-git-scm-com-git-pul
+    locator: Pull and push semantics
+    url: https://git-scm.com/docs/git-pull
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git push
+    id: resource-git-10-06-official-reference-git-scm-com-git-pus
+    locator: Pull and push semantics
+    url: https://git-scm.com/docs/git-push
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Create every ahead/behind/diverged state in two clones, including a stale
+      force-with-lease refusal.
+    id: resource-git-10-07-guided-exercises-create-every-ahead-be
+    locator: Create every ahead/behind/diverged state in two clones, including a stale force-with-lease
+      refusal.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — git-scm.com — Git Branching Remote Branches
+    id: resource-git-10-08-alternative-explanation-git-scm-com-gi
+    locator: Remote branches
+    url: https://git-scm.com/book/en/v2/Git-Branching-Remote-Branches
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git on the Server The Protocols
+    id: resource-git-10-09-optional-depth-git-scm-com-git-on-the
+    locator: Protocol and transfer details
+    url: https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols
+    scope_triage: deferred
+  - kind: practise
+    label: In two clones, create fast-forward, local-ahead, remote-ahead, and diverged states and identify
+      each before integration.
+    id: resource-git-10-10-in-two-clones-create-fast-forward-loca
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Resolve divergence once with merge and once with rebase; compare graphs.
+    id: resource-git-10-11-resolve-divergence-once-with-merge-and
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Produce a non-fast-forward rejection and explain the server's protected information.
+    id: resource-git-10-12-produce-a-non-fast-forward-rejection-a
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Rewrite a private branch, then demonstrate a successful force-with-lease and a stale-lease
+      refusal.
+    id: resource-git-10-13-rewrite-a-private-branch-then-demonstr
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Configure an explicit pull policy in the disposable repo and explain the choice.
+    id: resource-git-10-14-configure-an-explicit-pull-policy-in-t
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-10-pull-push-divergence-and-force-with-lease/notes.md
+- id: stage-git-11-pull-requests-forks-and-reviewable-contribution-flow
+  number: 11
+  title: Pull requests, forks, and reviewable contribution flow
+  status: pending
+  objective: Predict and control Pull requests, forks, and reviewable contribution flow in a disposable
+    repository, explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - local fork workflow, PR document, review checklist, and two defensible integration histories.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — collab-pr.html
+    id: resource-git-11-01-required-core-collab-pr-html
+    source_id: source-git-handbook-archive
+    locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-pr.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-11-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Local PR workflow and Pro Git Chs. 5.1–5.2, 6.2
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.github.com — collaborating with pull requests
+    id: resource-git-11-03-official-reference-docs-github-com-col
+    locator: GitHub pull-request collaboration
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Run the local fork simulation, draft the PR, perform one structured review,
+      and compare merge/squash/rebase histories.
+    id: resource-git-11-04-guided-exercises-run-the-local-fork-si
+    locator: Run the local fork simulation, draft the PR, perform one structured review, and compare merge/squash/rebase
+      histories.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — beyond code
+    id: resource-git-11-05-alternative-explanation-missing-csail
+    locator: MIT contributing and maintainer-time guidance
+    url: https://missing.csail.mit.edu/2026/beyond-code/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — docs.github.com — reviewing changes in pull requests
+    id: resource-git-11-06-optional-depth-docs-github-com-reviewi
+    locator: GitHub review documentation
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
+    scope_triage: deferred
+  - kind: practise
+    label: Simulate upstream plus fork locally and create a feature from the current upstream base.
+    id: resource-git-11-07-simulate-upstream-plus-fork-locally-an
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Write a PR description with problem, approach, alternatives, test evidence, and risks.
+    id: resource-git-11-08-write-a-pr-description-with-problem-ap
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add reviewer feedback as a follow-up commit, then prepare both a preserved-series and squashed
+      result.
+    id: resource-git-11-09-add-reviewer-feedback-as-a-follow-up-c
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Rebase the feature after upstream moves and verify range-diff.
+    id: resource-git-11-10-rebase-the-feature-after-upstream-move
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Review a peer-like synthetic diff for correctness, maintainability, scope, tests, and commit
+      quality.
+    id: resource-git-11-11-review-a-peer-like-synthetic-diff-for
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-11-pull-requests-forks-and-reviewable-contribution-flow/notes.md
+- id: stage-git-12-selective-history-cherry-pick-tags-and-releases
+  number: 12
+  title: 'Selective history: cherry-pick, tags, and releases'
+  status: pending
+  objective: 'Predict and control Selective history: cherry-pick, tags, and releases in a disposable repository,
+    explain every state transition, and prove the result with inspection or recovery evidence.'
+  done_when:
+  - a backport record with dependency analysis, test proof, and release-tag policy.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — collab-tags.html
+    id: resource-git-12-01-required-core-collab-tags-html
+    source_id: source-git-handbook-archive
+    locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-tags.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-12-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Tags and releases plus Pro Git Chs. 2.6, 5.3, 7.1
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git cherry pick
+    id: resource-git-12-03-official-reference-git-scm-com-git-che
+    locator: Cherry-pick and tag references
+    url: https://git-scm.com/docs/git-cherry-pick
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git tag
+    id: resource-git-12-04-official-reference-git-scm-com-git-tag
+    locator: Cherry-pick and tag references
+    url: https://git-scm.com/docs/git-tag
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the dependency-aware backport and annotated-release-tag drills
+      in the local bare-remote lab.
+    id: resource-git-12-05-guided-exercises-complete-the-dependen
+    locator: Complete the dependency-aware backport and annotated-release-tag drills in the local bare-remote
+      lab.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — git-scm.com — Distributed Git Maintaining a Project
+    id: resource-git-12-06-alternative-explanation-git-scm-com-di
+    locator: Distributed maintenance workflow
+    url: https://git-scm.com/book/en/v2/Distributed-Git-Maintaining-a-Project
+    scope_triage: helpful-now
+  - kind: practise
+    label: Cherry-pick one fix onto an older maintenance branch and map source ID to new ID.
+    id: resource-git-12-07-cherry-pick-one-fix-onto-an-older-main
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Trigger a cherry-pick conflict caused by missing context and decide whether to adapt or abort.
+    id: resource-git-12-08-trigger-a-cherry-pick-conflict-caused
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Cherry-pick a two-commit dependency chain in wrong and correct order and explain the result.
+    id: resource-git-12-09-cherry-pick-a-two-commit-dependency-ch
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Create lightweight and annotated tags, inspect their object types, and push them to a local
+      bare remote.
+    id: resource-git-12-10-create-lightweight-and-annotated-tags
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Simulate a mistaken release tag and correct it by issuing a new tag rather than silently moving
+      the published name.
+    id: resource-git-12-11-simulate-a-mistaken-release-tag-and-co
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-12-selective-history-cherry-pick-tags-and-releases/notes.md
+- id: stage-git-13-history-archaeology-log-show-blame-search-and-bisect
+  number: 13
+  title: 'History archaeology: log, show, blame, search, and bisect'
+  status: pending
+  objective: 'Predict and control History archaeology: log, show, blame, search, and bisect in a disposable
+    repository, explain every state transition, and prove the result with inspection or recovery evidence.'
+  done_when:
+  - bisect transcript, culprit proof, and a reproducible history-investigation checklist.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — collab-inspect.html
+    id: resource-git-13-01-required-core-collab-inspect-html
+    source_id: source-git-handbook-archive
+    locator: History inspection intentions and Pro Git Chs. 2.3, 7.5, 7.10
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-inspect.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-13-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: History inspection intentions and Pro Git Chs. 2.3, 7.5, 7.10
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git log
+    id: resource-git-13-03-official-reference-git-scm-com-git-log
+    locator: log, blame, and bisect
+    url: https://git-scm.com/docs/git-log
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git blame
+    id: resource-git-13-04-official-reference-git-scm-com-git-bla
+    locator: log, blame, and bisect
+    url: https://git-scm.com/docs/git-blame
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git bisect
+    id: resource-git-13-05-official-reference-git-scm-com-git-bis
+    locator: log, blame, and bisect
+    url: https://git-scm.com/docs/git-bisect
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Create the 16-commit regression corpus, automate bisect, and compare -S,
+      -G, path history, and blame evidence.
+    id: resource-git-13-06-guided-exercises-create-the-16-commit
+    locator: Create the 16-commit regression corpus, automate bisect, and compare -S, -G, path history,
+      and blame evidence.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — version control
+    id: resource-git-13-07-alternative-explanation-missing-csail
+    locator: MIT's motivating history questions
+    url: https://missing.csail.mit.edu/2026/version-control/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Searching
+    id: resource-git-13-08-optional-depth-git-scm-com-git-tools-s
+    locator: Pro Git searching and debugging
+    url: https://git-scm.com/book/en/v2/Git-Tools-Searching
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — git-scm.com — Git Tools Debugging with Git
+    id: resource-git-13-09-optional-depth-git-scm-com-git-tools-d
+    locator: Pro Git searching and debugging
+    url: https://git-scm.com/book/en/v2/Git-Tools-Debugging-with-Git
+    scope_triage: deferred
+  - kind: practise
+    label: Create a 16-commit synthetic history with one regression and locate it manually, then with
+      bisect.
+    id: resource-git-13-10-create-a-16-commit-synthetic-history-w
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Automate bisect with a deterministic test command and interpret exit codes 0, 1–127, and 125.
+    id: resource-git-13-11-automate-bisect-with-a-deterministic-t
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Compare log -S with log -G on a symbol rename.
+    id: resource-git-13-12-compare-log-s-with-log-g-on-a-symbol-r
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Follow a moved file with path history and inspect one line through blame plus show.
+    id: resource-git-13-13-follow-a-moved-file-with-path-history
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Write a five-sentence archaeology conclusion separating observed fact, message evidence, and
+      inference.
+    id: resource-git-13-14-write-a-five-sentence-archaeology-conc
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-13-history-archaeology-log-show-blame-search-and-bisect/notes.md
+- id: stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook
+  number: 14
+  title: 'Repository hygiene: ignore rules, attributes, config, hooks, and secrets'
+  status: pending
+  objective: 'Predict and control Repository hygiene: ignore rules, attributes, config, hooks, and secrets
+    in a disposable repository, explain every state transition, and prove the result with inspection or
+    recovery evidence.'
+  done_when:
+  - a repository-hygiene policy and automated checks runnable without a hook.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — collab-gitignore.html
+    id: resource-git-14-01-required-core-collab-gitignore-html
+    source_id: source-git-handbook-archive
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-gitignore.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — collab-safety.html
+    id: resource-git-14-02-required-core-collab-safety-html
+    source_id: source-git-handbook-archive
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/collab-safety.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-14-03-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Ignore and safety pages plus Pro Git Chs. 8.1–8.3
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — wt-ignore.html
+    id: resource-git-14-04-local-material-wt-ignore-html
+    source_id: source-git-handbook-archive
+    locator: Working-tree ignore/stop-tracking/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-ignore.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — idx-stop-tracking.html
+    id: resource-git-14-05-local-material-idx-stop-tracking-html
+    source_id: source-git-handbook-archive
+    locator: Working-tree ignore/stop-tracking/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/idx-stop-tracking.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — wt-rename-delete.html
+    id: resource-git-14-06-local-material-wt-rename-delete-html
+    source_id: source-git-handbook-archive
+    locator: Working-tree ignore/stop-tracking/rename pages
+    vault_path: material://source-git-handbook-archive/git-handbook/intentions/wt-rename-delete.html
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — gitignore
+    id: resource-git-14-07-official-reference-git-scm-com-gitigno
+    locator: Ignore, attributes, configuration, and hooks
+    url: https://git-scm.com/docs/gitignore
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — gitattributes
+    id: resource-git-14-08-official-reference-git-scm-com-gitattr
+    locator: Ignore, attributes, configuration, and hooks
+    url: https://git-scm.com/docs/gitattributes
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — git config
+    id: resource-git-14-09-official-reference-git-scm-com-git-con
+    locator: Ignore, attributes, configuration, and hooks
+    url: https://git-scm.com/docs/git-config
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — githooks
+    id: resource-git-14-10-official-reference-git-scm-com-githook
+    locator: Ignore, attributes, configuration, and hooks
+    url: https://git-scm.com/docs/githooks
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete ignore exceptions, text normalization, config-origin, hook-independent
+      checks, and fake-secret response drills.
+    id: resource-git-14-11-guided-exercises-complete-ignore-excep
+    locator: Complete ignore exceptions, text normalization, config-origin, hook-independent checks, and
+      fake-secret response drills.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — docs.github.com — removing sensitive data from a repository
+    id: resource-git-14-12-alternative-explanation-docs-github-co
+    locator: GitHub secret-removal guidance
+    url: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
+    scope_triage: helpful-now
+  - kind: practise
+    label: Build ignore cases for generated files, nested exceptions, and a tracked file; prove each with
+      check-ignore -v.
+    id: resource-git-14-13-build-ignore-cases-for-generated-files
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Stop tracking a safe generated file while preserving it on disk.
+    id: resource-git-14-14-stop-tracking-a-safe-generated-file-wh
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add attributes for text normalization and demonstrate a renormalization diff in a disposable
+      repo.
+    id: resource-git-14-15-add-attributes-for-text-normalization
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Compare config --show-origin across scopes without changing global settings.
+    id: resource-git-14-16-compare-config-show-origin-across-scop
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Commit a fake secret, detect it, remove it from current history in the sandbox, and state the
+      separate revocation requirement.
+    id: resource-git-14-17-commit-a-fake-secret-detect-it-remove
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook/notes.md
+- id: stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay
+  number: 15
+  title: Worktrees, parallel tickets, and advanced repository layouts
+  status: pending
+  objective: Predict and control Worktrees, parallel tickets, and advanced repository layouts in a disposable
+    repository, explain every state transition, and prove the result with inspection or recovery evidence.
+  done_when:
+  - a parallel-ticket workflow plus a decision table for repository layouts.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-15-01-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Pro Git worktrees and submodules Chs. 7.11, 7.13
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — git worktree
+    id: resource-git-15-02-official-reference-git-scm-com-git-wor
+    locator: git-worktree and submodule model
+    url: https://git-scm.com/docs/git-worktree
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — git-scm.com — gitsubmodules
+    id: resource-git-15-03-official-reference-git-scm-com-gitsubm
+    locator: git-worktree and submodule model
+    url: https://git-scm.com/docs/gitsubmodules
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Create, lock, move, remove, and prune disposable worktrees; then complete
+      the clone/worktree/submodule/subtree/package decision table.
+    id: resource-git-15-04-guided-exercises-create-lock-move-remo
+    locator: Create, lock, move, remove, and prune disposable worktrees; then complete the clone/worktree/submodule/subtree/package
+      decision table.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — version control
+    id: resource-git-15-05-alternative-explanation-missing-csail
+    locator: MIT advanced Git worktree pointer
+    url: https://missing.csail.mit.edu/2026/version-control/#advanced-git
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — git-scm.com — partial clone
+    id: resource-git-15-06-optional-depth-git-scm-com-partial-clo
+    locator: Partial clone design
+    url: https://git-scm.com/docs/partial-clone
+    scope_triage: deferred
+  - kind: practise
+    label: Create two linked worktrees for independent branches and show their separate HEAD/index/working-tree
+      state.
+    id: resource-git-15-07-create-two-linked-worktrees-for-indepe
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Attempt to check out one branch twice and explain the protection.
+    id: resource-git-15-08-attempt-to-check-out-one-branch-twice
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Make an object in one worktree and prove it is visible through the shared database in the other
+      without changing branches.
+    id: resource-git-15-09-make-an-object-in-one-worktree-and-pro
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Lock, move, remove, and prune a disposable worktree through Git commands, never manual deletion.
+    id: resource-git-15-10-lock-move-remove-and-prune-a-disposabl
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Compare clone, worktree, submodule, subtree, and package dependency for five project scenarios.
+    id: resource-git-15-11-compare-clone-worktree-submodule-subtr
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay/notes.md
+- id: stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov
+  number: 16
+  title: 'Capstone: two clones, one feature, one failure, full recovery'
+  status: pending
+  objective: 'Predict and control Capstone: two clones, one feature, one failure, full recovery in a disposable
+    repository, explain every state transition, and prove the result with inspection or recovery evidence.'
+  done_when:
+  - capstone repository bundle, before/after graphs, PR/review text, recovery transcript, bisect proof,
+    and a zero-guesswork command decision journal.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-git
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — git-handbook
+    id: resource-git-16-01-required-core-git-handbook
+    source_id: source-git-handbook-archive
+    locator: Synthesize the local handbook and Pro Git
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
+    scope_triage: required-now
+  - kind: read
+    label: Required core — ProGit_2ed.pdf
+    id: resource-git-16-02-required-core-progit-2ed-pdf
+    source_id: source-progit
+    locator: Synthesize the local handbook and Pro Git
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — docs
+    id: resource-git-16-03-official-reference-git-scm-com-docs
+    locator: Use the command references already assigned in Stages 1–15
+    url: https://git-scm.com/docs
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Execute the two-clone/fork capstone exactly as specified, then verify every
+      graph and recovery claim from a clean shell.
+    id: resource-git-16-04-guided-exercises-execute-the-two-clone
+    locator: Execute the two-clone/fork capstone exactly as specified, then verify every graph and recovery
+      claim from a clean shell.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-git-16-05-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: Closed-book second telling from the HU handout
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Retrieval — Re-solve one randomly selected intention from every region without opening the
+      handbook.
+    id: resource-git-16-06-retrieval-re-solve-one-randomly-select
+    locator: Re-solve one randomly selected intention from every region without opening the handbook.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Build upstream, fork, contributor, and reviewer repositories and diagram every ref.
+    id: resource-git-16-07-build-upstream-fork-contributor-and-re
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Produce a four-commit feature with tests, clean it using interactive staging/rebase, and draft
+      a PR.
+    id: resource-git-16-08-produce-a-four-commit-feature-with-tes
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Move upstream independently, create both a semantic conflict and a non-fast-forward rejection,
+      then integrate safely.
+    id: resource-git-16-09-move-upstream-independently-create-bot
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Introduce a regression, locate it with automated bisect, revert it on a shared branch, and
+      cherry-pick the fix to maintenance.
+    id: resource-git-16-10-introduce-a-regression-locate-it-with
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Delete a private branch after a hard reset, recover its best commit through reflog, and tag
+      a local release.
+    id: resource-git-16-11-delete-a-private-branch-after-a-hard-r
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: practise
+    label: Finish by explaining every object/ref movement closed-book and rerun all tests.
+    id: resource-git-16-12-finish-by-explaining-every-object-ref
+    locator: Exercise 6
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov/notes.md

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/ability.candidate.append.schema.json",
+  "title": "payload for capability ability.candidate.append",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "carries",
+    "changes",
+    "from_ability",
+    "kind",
+    "source_ref",
+    "to_ability"
+  ],
+  "properties": {
+    "carries": {
+      "type": "string",
+      "description": "what the candidate connection carries, as non-empty text"
+    },
+    "changes": {
+      "type": "string",
+      "description": "what changes across the candidate connection, as non-empty text"
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "conditions carried on the candidate connection; repeat the flag once per condition"
+    },
+    "from_ability": {
+      "type": "string",
+      "description": "id of the ability where the candidate connection starts; it must name an existing, non-retired ability"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "equivalence",
+        "extension",
+        "connection"
+      ],
+      "description": "the candidate connection kind: equivalence, extension or connection"
+    },
+    "source_ref": {
+      "type": "string",
+      "description": "where the candidate connection was found, as a whitespace-free conversation://, note:// or project:// reference"
+    },
+    "to_ability": {
+      "type": "string",
+      "description": "id of the ability where the candidate connection ends; it must name an existing, non-retired ability distinct from the start"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 1,
+  "idempotency_changed": {},
+  "outcome": "diagnostic-failure",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: route patch lineage preflight failed; no canonical files were written\n- route route-b2f1f80014860a929a3af0bc changes covers or material identity without claim evidence; Phase B requires admitted evidence for covers:route-b2f1f80014860a929a3af0bc\n",
+  "stdout": "",
+  "stdout_json": null
+}

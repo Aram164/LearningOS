@@ -1,0 +1,68 @@
+{
+  "core": "074f4717e14527798752de84b3c9c4e88348b658",
+  "core_git_status_after": "",
+  "emitters": {
+    "goals": [
+      "claims-needing-review",
+      "covering-routes-stale",
+      "inspection-without-dossier",
+      "repeated-question-gap",
+      "reviewer-correction-pattern",
+      "source-changed-under-claim"
+    ],
+    "scan": [
+      "evidence-superseded",
+      "lineage-stale",
+      "study-map-obligation"
+    ]
+  },
+  "evidence_only_guard": {
+    "apply_engine_artifacts": [
+      "file:operations/transactions/lineage.yaml"
+    ],
+    "apply_semantic_owners": [],
+    "check_owners_before_ledger_is_prepared": []
+  },
+  "extra_report_fields": {
+    "receipt_verify_exit": 0,
+    "receipt_verify_stdout": "state: committed-and-verified\nverify-plan-receipt: ok (request request-reviewed-51281d66f9a145f3856db84c71ada1ba, receipt operations/transactions/transaction-20261018-040743-001.yaml, snapshot sha256:99cc69253b29\u2026, 1 writes, unit unit-demo-l01)",
+    "reviewed_apply_exit": 0
+  },
+  "goal_schema_accepts_new_tokens": true,
+  "population": {
+    "active_resolution": {
+      "no-resolved-file-or-url": 172,
+      "resolved:.ipynb": 8,
+      "resolved:.md": 6,
+      "resolved:.pdf": 524,
+      "url-no-resolved-file": 184
+    },
+    "multi_file_routes": [
+      "route-1feb31839f78659d79b486bb",
+      "route-e52061692703bb9ee2044d70"
+    ],
+    "routes": 914,
+    "supported": 128,
+    "unrecorded": 786
+  },
+  "restamp": {
+    "eligible": 0,
+    "needs-rejudgment": 12,
+    "needs-review": 9
+  },
+  "scan": {
+    "detectors": {
+      "claims-needing-review": 107,
+      "lineage-stale": 21,
+      "source-changed-under-claim": 21,
+      "study-map-obligation": 3
+    },
+    "goals": 152,
+    "groups": 52,
+    "outside_id_grammar": 128
+  },
+  "zero_defect_hypergeometric_upper_95": {
+    "20": 16,
+    "30": 10
+  }
+}

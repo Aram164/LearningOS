@@ -1,0 +1,126 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"artifacts\":{\"ultimate_reference\":\"note-demo\"},\"current_study_map\":\"study-map-demo-l01\",\"id\":\"unit-demo-l01\",\"kind\":\"lecture\",\"knowledge_map\":{\"nodes\":[{\"id\":\"knowledge-demo-outcomes\",\"summary\":\"A random variable assigns a number to each outcome.\",\"title\":\"Outcome values\"},{\"builds_on\":[\"knowledge-demo-outcomes\"],\"concept_ids\":[\"concept-expected-value\"],\"id\":\"knowledge-demo-expectation\",\"summary\":\"Expectation weights every value by its probability.\",\"title\":\"Probability-weighted average\"}],\"summary\":\"Expected value connects outcome values to their probabilities.\"},\"module_id\":\"module-demo\",\"needs_study_map\":false,\"note_sections\":[],\"notes_text\":\"\",\"notes_updated\":null,\"order\":1,\"path\":\"curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml\",\"project_ids\":[\"project-demo\"],\"revision\":3,\"scope\":\"The lecture as taught.\",\"scope_sources\":[{\"authority\":\"slides\",\"locator\":\"Lecture 1\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"locator\":\"lecture-01.pdf\",\"purpose\":\"Current derivation\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\"}],\"status\":\"active\",\"title\":\"Expected value\",\"type\":\"unit\",\"workspace_ids\":[\"workspace-demo\"]},{\"artifacts\":{\"ultimate_reference\":\"note-demo\"},\"id\":\"unit-demo-l02\",\"kind\":\"lecture\",\"knowledge_map\":{\"nodes\":[{\"concept_ids\":[\"concept-variance\"],\"id\":\"knowledge-demo-variance\",\"summary\":\"Variance weights squared deviations by probability.\",\"title\":\"Spread around the mean\"}],\"summary\":\"Variance measures the spread around the expected value.\"},\"module_id\":\"module-demo\",\"needs_study_map\":true,\"note_sections\":[],\"notes_text\":\"\",\"notes_updated\":null,\"order\":2,\"path\":\"curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml\",\"project_ids\":[],\"revision\":0,\"scope\":\"The follow-up lecture as taught.\",\"scope_sources\":[{\"authority\":\"slides\",\"locator\":\"Lecture 2\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"locator\":\"lecture-02.pdf\",\"purpose\":\"Follow-up derivation\",\"route_id\":\"route-7d42915c4988c513e6caa207\",\"source_id\":\"source-demo-book\"}],\"status\":\"active\",\"title\":\"Variance\",\"type\":\"unit\",\"workspace_ids\":[\"workspace-demo\"]}]\n",
+  "stdout_json": [
+    {
+      "artifacts": {
+        "ultimate_reference": "note-demo"
+      },
+      "current_study_map": "study-map-demo-l01",
+      "id": "unit-demo-l01",
+      "kind": "lecture",
+      "knowledge_map": {
+        "nodes": [
+          {
+            "id": "knowledge-demo-outcomes",
+            "summary": "A random variable assigns a number to each outcome.",
+            "title": "Outcome values"
+          },
+          {
+            "builds_on": [
+              "knowledge-demo-outcomes"
+            ],
+            "concept_ids": [
+              "concept-expected-value"
+            ],
+            "id": "knowledge-demo-expectation",
+            "summary": "Expectation weights every value by its probability.",
+            "title": "Probability-weighted average"
+          }
+        ],
+        "summary": "Expected value connects outcome values to their probabilities."
+      },
+      "module_id": "module-demo",
+      "needs_study_map": false,
+      "note_sections": [],
+      "notes_text": "",
+      "notes_updated": null,
+      "order": 1,
+      "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+      "project_ids": [
+        "project-demo"
+      ],
+      "revision": 3,
+      "scope": "The lecture as taught.",
+      "scope_sources": [
+        {
+          "authority": "slides",
+          "locator": "Lecture 1",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "source_selections": [
+        {
+          "locator": "lecture-01.pdf",
+          "purpose": "Current derivation",
+          "route_id": "route-b2f1f80014860a929a3af0bc",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "status": "active",
+      "title": "Expected value",
+      "type": "unit",
+      "workspace_ids": [
+        "workspace-demo"
+      ]
+    },
+    {
+      "artifacts": {
+        "ultimate_reference": "note-demo"
+      },
+      "id": "unit-demo-l02",
+      "kind": "lecture",
+      "knowledge_map": {
+        "nodes": [
+          {
+            "concept_ids": [
+              "concept-variance"
+            ],
+            "id": "knowledge-demo-variance",
+            "summary": "Variance weights squared deviations by probability.",
+            "title": "Spread around the mean"
+          }
+        ],
+        "summary": "Variance measures the spread around the expected value."
+      },
+      "module_id": "module-demo",
+      "needs_study_map": true,
+      "note_sections": [],
+      "notes_text": "",
+      "notes_updated": null,
+      "order": 2,
+      "path": "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml",
+      "project_ids": [],
+      "revision": 0,
+      "scope": "The follow-up lecture as taught.",
+      "scope_sources": [
+        {
+          "authority": "slides",
+          "locator": "Lecture 2",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "source_selections": [
+        {
+          "locator": "lecture-02.pdf",
+          "purpose": "Follow-up derivation",
+          "route_id": "route-7d42915c4988c513e6caa207",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "status": "active",
+      "title": "Variance",
+      "type": "unit",
+      "workspace_ids": [
+        "workspace-demo"
+      ]
+    }
+  ]
+}

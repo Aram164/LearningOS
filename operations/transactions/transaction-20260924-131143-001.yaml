@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-131143-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:11:43+02:00'
+snapshot_before: sha256:8b551b1d024f9e38416ebccd2e8dc46e56cfcaa92620102a5f7352ca344ae67d
+snapshot_after: sha256:0c9595bb74339299ba616a8480a46b16226efe3d120de4a418d21dce0ba694cd
+expected_revisions:
+  note-sad-l10-testing-discipline-pp056-065: 0
+artifact_revisions:
+  note-sad-l10-testing-discipline-pp056-065:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l10-testing-discipline-pp056-065.md
+  sha256_before: null
+  sha256_after: d5b0bca7801db2f9bad080420ef7705c313bc645b11b6fc8c4aa3e9203e4d6fc
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-7e382d98e3bd4f07a3be21101e943fa8
+  idempotency_key: sad-source-angle-7e382d98e3bd4f07a3be21101e943fa8
+  intent_sha256: sha256:d467598e6a2bb565eb00f737d831b77a1b7b129acea63009cad50a420d7c710a
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:d467598e6a2bb565eb00f737d831b77a1b7b129acea63009cad50a420d7c710a

@@ -1,0 +1,29 @@
+schema_version: 1
+contract: learningos-ai-adapters
+# Adapter availability is core contract data, never a UI decision and never a
+# Python literal. `prepare` refuses a provider whose adapter is unavailable, so
+# the boundary holds for the CLI exactly as it does for the Obsidian launcher.
+preferred: manual-bundle
+adapters:
+  - id: manual-bundle
+    provider: manual-bundle
+    available: true
+    supported_modes:
+      - discussion
+    supports_direct_delivery: true
+    supports_attachments: true
+  - id: claude-code
+    provider: claude
+    available: false
+    supported_modes:
+      - discussion
+      - run
+    supports_direct_delivery: true
+    supports_attachments: true
+  - id: chatgpt-handoff
+    provider: chatgpt
+    available: false
+    supported_modes:
+      - discussion
+    supports_direct_delivery: false
+    supports_attachments: true

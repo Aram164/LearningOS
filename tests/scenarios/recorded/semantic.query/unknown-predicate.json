@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: unknown semantic predicate: Nope\nlos: see `los semantic --list` for the 26 registered names\n",
+  "stdout": "",
+  "stdout_json": null
+}

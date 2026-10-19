@@ -1,0 +1,21 @@
+{
+  "candidate_after": {
+    "executable": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository/.venv/bin/python",
+    "prefix": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository/.venv",
+    "source": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/candidate/repository/tools/learning_os/__init__.py",
+    "version": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  },
+  "candidate_before": {
+    "links": {
+      "bin": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/bin",
+      "include": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/include",
+      "lib": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/lib"
+    },
+    "pyvenv_cfg": "home = /opt/homebrew/opt/python@3.14/bin\ninclude-system-site-packages = false\nversion = 3.14.4\nexecutable = /opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/bin/python3.14\ncommand = /opt/homebrew/opt/python@3.14/bin/python3.14 -m venv /Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv\n"
+  },
+  "original": {
+    "prefix": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv",
+    "purelib": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository/.venv/lib/python3.14/site-packages",
+    "version": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  }
+}

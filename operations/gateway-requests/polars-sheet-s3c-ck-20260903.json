@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s3c-ck-20260903",
+  "idempotency_key": "polars-sheet-s3c-ck-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:071c9fb43dd980b7b598ebf4a621808631db551ed811672f3cb8eca4d395870f",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 6,
+    "study-map-job-polars-selection-backend": 5
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "stage_id": "stage-polars-selection-duplicates",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s3c-check.py",
+    "label": "Answer-key self-check (24 assertions)",
+    "file_sha256": "sha256:c297fce244361519237535172c6b63c400e9c527967b27206684194646a7e4b6"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:8566e591d9181b4a338de586f04e682d59ed8fd4dcbf2d26880326ee76a28136"
+  }
+}

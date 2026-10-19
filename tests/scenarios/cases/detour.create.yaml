@@ -1,0 +1,75 @@
+operation: detour.create
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: create-required
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, title: "Revisit expectation", classification: required-now}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: create-deferred
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, title: "Later reading", classification: deferred}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    expect: {site: null}
+  - id: unknown-stage
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-nope, title: "Nowhere", classification: deferred}
+    artifact_ids: []
+    expect: {site: detour.create.unknown-stage}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, stage_id: stage-demo, title: "Nowhere", classification: deferred}
+    artifact_ids: []
+    expect: {site: detour.create.unknown-unit}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [detour-create, unit-demo-l01, stage-demo, --title, "Revisit expectation", --classification, required-now]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, stage_id: stage-demo, title: "Revisit expectation", classification: required-now}
+        artifact_ids: [unit-demo-l01, study-map-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, title: "Revisit expectation", classification: required-now}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    argv:
+    - detour-create
+    - unit-demo-l01
+    - stage-demo
+    - --title
+    - Later reading
+    - --classification
+    - deferred
+    - --expected-revision
+    - bogus
+    expect: {site: detour.create.bad-expected-revision}
+  - id: no-study-map
+    kind: refusal
+    transport: gateway
+    request:
+      unit_id: unit-demo-l02
+      stage_id: stage-demo
+      title: Later reading
+      classification: deferred
+    artifact_ids: []
+    expect: {site: detour.create.no-study-map}
+untriggered:
+  - {site: detour.create.unknown-classification, reason: guarded-before-handler}

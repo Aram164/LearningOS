@@ -1,0 +1,133 @@
+operation: atlas.question.save
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: save-question
+    kind: success
+    transport: gateway
+    request: {question: {id: note-demo-question-1, title: "Why does variance build on expectation?", text: "The registry says variance builds on expectation. What breaks if I learn them in the other order?", target: {concepts: [concept-expected-value]}}}
+    artifact_ids: [note-demo-question-1]
+    a5_base: true
+    expect: {site: null}
+  - id: not-a-question
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.not-a-question}
+  - id: new-needs-fields
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo-half}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.new-needs-fields}
+  - id: bad-id-shape
+    kind: refusal
+    transport: gateway
+    request: {question: {id: "Q1", title: "shapeless", text: "an id outside the note pattern", target: {concepts: [concept-expected-value]}}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.bad-new-note}
+  - id: unknown-concept
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo-question-2, title: "about nothing", text: "a target outside the registry", target: {concepts: [concept-nope]}}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.unknown-concept}
+  - id: missing-connection
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo-question-3, title: "a missing edge", text: "no such relation row exists", target: {from: concept-expected-value, type: builds-on, to: concept-variance}}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.missing-connection}
+  - id: blank-text
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo-blank, title: "blank body", text: " ", target: {concepts: [concept-expected-value]}}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.blank-text}
+  - id: bad-answer-note
+    kind: refusal
+    transport: gateway
+    request: {question: {id: note-demo-question-4, title: "answered by nothing", text: "the answer note does not resolve", target: {concepts: [concept-expected-value]}, answer_notes: [note-nope]}}
+    artifact_ids: []
+    expect: {site: atlas.question.save.bad-answer-note}
+  - id: unknown-fields
+    kind: refusal
+    transport: cli
+    argv: [atlas-question-save, --question, '{"id":"note-demo-x","bogus":1}']
+    expect: {site: atlas.question.save.unknown-fields}
+  - id: id-not-string
+    kind: refusal
+    transport: cli
+    argv: [atlas-question-save, --question, '{"id":5}']
+    expect: {site: atlas.question.save.id-not-string}
+  - id: target-not-object
+    kind: refusal
+    transport: cli
+    argv: [atlas-question-save, --question, '{"id":"note-demo-x","target":[1]}']
+    expect: {site: atlas.question.save.target-not-object}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [atlas-question-save, --question, '{"id":"note-demo-question-9","title":"t","text":"x","target":{"concepts":["concept-expected-value"]}}']
+    expect: {site: null}
+  - id: retarget-refused
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {question: {id: note-demo-seq-1, title: "first target", text: "created, then retargeted", target: {concepts: [concept-expected-value]}}}
+        artifact_ids: [note-demo-seq-1]
+      - transport: gateway
+        request: {question: {id: note-demo-seq-1, target: {concepts: [concept-variance]}}}
+        artifact_ids: []
+    expect: {site: atlas.question.save.retarget-refused}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {question: {id: note-demo-question-1, title: "Why does variance build on expectation?", text: "The registry says variance builds on expectation. What breaks if I learn them in the other order?", target: {concepts: [concept-expected-value]}}}
+        artifact_ids: [note-demo-question-1]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {question: {id: note-demo-question-1, title: "Why does variance build on expectation?", text: "The registry says variance builds on expectation. What breaks if I learn them in the other order?", target: {concepts: [concept-expected-value]}}}
+    artifact_ids: [note-demo-question-1]
+    expect: {site: null}
+
+  - id: bad-expected-revision
+    kind: refusal
+    transport: gateway
+    request:
+      question:
+        id: note-demo-q9
+        title: bad revision pin
+        text: a question whose revision pin is malformed
+        target:
+          concepts:
+          - concept-expected-value
+    artifact_ids:
+    - ''
+    expect:
+      site: atlas.question.save.bad-expected-revision
+  - id: bad-question-fields
+    kind: refusal
+    transport: gateway
+    request:
+      question:
+        id: note-demo-q9
+        title: bogus state
+        text: a question whose state value is outside the enum
+        target:
+          concepts:
+          - concept-expected-value
+        state: bogus
+    artifact_ids:
+    - note-demo-q9
+    expect:
+      site: atlas.question.save.bad-question-fields
+untriggered:
+  - {where: "tools/learning_os/app/handlers/atlas.py:289", reason: "question not an object: the payload type and argparse json_object refuse it first"}
+  - {where: "tools/learning_os/app/handlers/atlas.py:343", reason: "question destination already exists: needs a non-note file at the question path, which no step can author"}

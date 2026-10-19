@@ -1,0 +1,245 @@
+id: study-map-m2-analysis-exam-prep
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-exam-prep
+status: not-started
+current_stage: stage-m2-analysis-calibrate
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-calibrate
+  number: 1
+  title: Calibrate the script-led method and the exam boundary
+  status: pending
+  objective: Read the course contract and fix the three depths it defines — Wiederholung required, Ausflug
+    at overview depth, Exkurs out of scope — then run a cold diagnostic so the chapter sessions can be
+    entered at the right level rather than uniformly from zero.
+  done_when:
+  - 'Reproduce without notes: Read the course contract and fix the three depths it defines — Wiederholung
+    required, Ausflug at overview depth, Exkurs out of scope — then run a cold diagnostic so the chapter
+    sessions can be entered at the right level rather than uniformly from zero.'
+  exam_critical: true
+  concepts:
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskriptbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-analysis-grundlagen-handouts/Maths220_Proofs-in-Calculus.pdf
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-ableitingermusterloesung
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-anx
+  number: 2
+  title: Analysis-only retrieval and timed transfer
+  status: pending
+  objective: Mixed retrieval across all seven chapters, the HU WV set at its stated 30-45 minutes per
+    task, scope-filtered external Klausuren under exam conditions, and a theorem-condition ledger that
+    records which hypotheses were dropped.
+  done_when:
+  - 'Reproduce without notes: Mixed retrieval across all seven chapters, the HU WV set at its stated 30-45
+    minutes per task, scope-filtered external Klausuren under exam conditions, and a theorem-condition
+    ledger that records which hypotheses were dropped.'
+  - Work HU Aufgaben zur Wiederholung und Vertiefung — the exam-format set, held for timed sittings, and
+    record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskriptbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern-3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-analysis-grundlagen-handouts/Maths220_Proofs-in-Calculus.pdf
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-an-exam-prep-ableitingermusterloesung
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-exkurse
+  number: 3
+  title: Deferred – Chapter 8 and the non-exam Exkurse
+  status: pending
+  objective: 'The explicit deferral ledger: script Chapter 8 in full, and every section labelled Exkurs.
+    Held as a named boundary so a deferred topic is never re-discovered as a gap, and so the decision
+    can be revisited if the lecturer changes scope.'
+  done_when:
+  - 'Reproduce without notes: The explicit deferral ledger: script Chapter 8 in full, and every section
+    labelled Exkurs. Held as a named boundary so a deferred topic is never re-discovered as a gap, and
+    so the decision can be revisited if the lecturer changes scope.'
+  exam_critical: true
+  concepts:
+  - concept-asymptotic-analysis
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-exkurse/notes.md
+  attachments: []
+  source_feedback: []

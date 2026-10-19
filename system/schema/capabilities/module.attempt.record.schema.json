@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.attempt.record.schema.json",
+  "title": "payload for capability module.attempt.record",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "date",
+    "module_id",
+    "result",
+    "termin"
+  ],
+  "properties": {
+    "date": {
+      "type": "string",
+      "description": "sitting date (YYYY-MM-DD)"
+    },
+    "grade": {
+      "type": "number",
+      "description": "optional grade (1.0-5.0; validation requires result passed unless the module is completed)"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "the id of the module whose module.yaml gains the attempt row; ids outside the module registry refuse"
+    },
+    "notes": {
+      "type": "string",
+      "description": "optional note kept on the attempt row"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "registered",
+        "withdrawn",
+        "sat",
+        "passed",
+        "failed"
+      ],
+      "description": "what Aram stated about this termin"
+    },
+    "termin": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3
+      ],
+      "description": "which termin this attempt is for"
+    }
+  }
+}

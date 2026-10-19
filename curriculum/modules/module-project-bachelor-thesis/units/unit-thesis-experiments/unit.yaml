@@ -1,0 +1,13 @@
+id: unit-thesis-experiments
+type: unit
+module_id: module-project-bachelor-thesis
+kind: milestone
+title: Experiment design & evaluation
+order: 2
+scope: A later thesis milestone; scope is intentionally not invented.
+status: needs-map
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-thesis-mle-medical

@@ -1,0 +1,117 @@
+{
+  "does_not_cover": [
+    "Never derives a likelihood or fits parameters: no MLE, no data-estimated sigma.",
+    "No continuity correction applied despite the discrete-to-continuous bridging.",
+    "No quantile tables or CDF lookups: the interval uses only the rough two-sigma rule.",
+    "Normal approximation as this unit defines it (knowledge-sad-l08-approximation): the 100-dice interval uses only the rough two-sigma rule, with no continuity correction and no discrete-model approximation worked through."
+  ],
+  "notes": "Long lesson with simulation and theory halves; basic probability assumed. IID and finite-variance conditions arrive late — students should not stop early. [reviewed] approximation claim withdrawn: the node bundles continuity correction, which this video never performs.",
+  "segments": [
+    {
+      "end": "02:00",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "00:00",
+      "topic": "Galton board motivating precise claims about many random events"
+    },
+    {
+      "end": "05:01",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "02:00",
+      "topic": "Simplified peg model and the sums-approach-bell-curve idea"
+    },
+    {
+      "end": "08:07",
+      "is_derivation": false,
+      "is_worked_example": true,
+      "start": "05:01",
+      "topic": "Weighted-die simulations showing symmetry emerging with sum size"
+    },
+    {
+      "end": "13:19",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "08:07",
+      "topic": "Exact sum distributions via counting and convolution"
+    },
+    {
+      "end": "16:01",
+      "is_derivation": true,
+      "is_worked_example": false,
+      "start": "13:19",
+      "topic": "Mean drift, variance addition and the square-root spread rule"
+    },
+    {
+      "end": "19:02",
+      "is_derivation": true,
+      "is_worked_example": false,
+      "start": "16:01",
+      "topic": "Normal formula assembled: exponential shape, spread and unit area"
+    },
+    {
+      "end": "21:19",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "19:02",
+      "topic": "Fitted normal parameters and conversion to standard units"
+    },
+    {
+      "end": "24:51",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "21:19",
+      "topic": "Universal-shape animation plus the formal limit statement"
+    },
+    {
+      "end": "27:07",
+      "is_derivation": false,
+      "is_worked_example": true,
+      "start": "24:51",
+      "topic": "Rule-of-thumb interval worked on one hundred die rolls"
+    },
+    {
+      "end": "30:04",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "27:07",
+      "topic": "Empirical averages and the independence plus identical-distribution conditions"
+    },
+    {
+      "end": "31:11",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "30:04",
+      "topic": "Finite-variance condition and outlook to the follow-up video"
+    }
+  ],
+  "suggested_locator": "05:01-08:07 for the phenomenon; 16:01-19:02 for the formula; 24:51-27:07 for the worked interval",
+  "teaches": [
+    {
+      "confidence": "high",
+      "knowledge_node": "knowledge-sad-l08-clt",
+      "timestamp_range": "02:00-08:07",
+      "why": "Shows sums of varied dice tending to bell shape as size grows."
+    },
+    {
+      "confidence": "high",
+      "knowledge_node": "knowledge-sad-l08-normal",
+      "timestamp_range": "16:01-19:02",
+      "why": "Assembles the density piece by piece including spread and unit area."
+    },
+    {
+      "confidence": "medium",
+      "knowledge_node": "knowledge-sad-l08-standardization",
+      "timestamp_range": "19:02-21:19",
+      "why": "Recenters by the sum mean and rescales to unit spread."
+    },
+    {
+      "confidence": "medium",
+      "knowledge_node": "knowledge-sad-l08-transform-sum",
+      "timestamp_range": "13:19-16:01",
+      "why": "Tracks mean and spread of growing sums with the root-size rule."
+    }
+  ],
+  "unit_id": "unit-m2-sad-l08",
+  "video_id": "zeJD6dqJ5lo"
+}

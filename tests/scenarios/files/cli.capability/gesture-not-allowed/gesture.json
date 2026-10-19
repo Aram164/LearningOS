@@ -1,0 +1,14 @@
+{
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:f7eb09daaf8ccbed6a5ff902eb2b77193a3c8ae1e82413c84ac5a0fb14854335"
+  },
+  "capability": "note.create",
+  "channel": "operator",
+  "expected_revisions": {},
+  "expected_snapshot": "sha256:1c44325f29523fa0ea60da63c951bc22c356a50e409dd233939f635f06df5647",
+  "idempotency_key": "scenario-capability-gesture",
+  "payload": {},
+  "request_id": "request-scenario-capability-gesture",
+  "schema_version": 2
+}

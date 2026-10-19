@@ -1,0 +1,662 @@
+# Manual dispositions for MASTERS-DATAENG-RESOURCES.md (origin key m-dataeng).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-cmu-15445
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:13:u2', role: companion, title: "CMU Database Group course overview"}
+  - {ref: 'm-dataeng:19:u1', role: companion, title: "BusTub (the course's educational DBMS)"}
+- id: source-kleppmann-ddia
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:53:e1', role: mention, note: "chapter 11, stream processing"}
+  - {ref: 'm-dataeng:98:e1', role: mention}
+- id: source-abedjan-data-profiling
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:69:e1', role: mention}
+  - {ref: 'm-dataeng:156:e1', role: mention}
+- id: source-huyen-dmls
+  kind: existing-active-source
+  extra_mentions: ['m-dataeng:80']
+  occurrences: []
+- id: source-cmu-10414
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:88:u2', role: child, title: "Lectures page"}
+  - {ref: 'm-dataeng:88:u3', role: companion, title: "Lecture videos (YouTube playlist)"}
+- id: source-mlsysbook-vol1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:90:u1', role: companion, title: "Living textbook site", note: "site root; Vol 2 is source-mlsysbook-vol2"}
+- id: source-mlsysbook-vol2
+  kind: existing-active-source
+  extra_mentions: ['m-dataeng:90']
+  occurrences: []
+- id: source-hogan-knowledge-graphs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:116:u2', role: companion, title: "arXiv version (2003.02320)"}
+  - {ref: 'm-dataeng:129:e1', role: duplicate, note: "back-reference to §11"}
+- id: source-mit-6824
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:204:e1', role: duplicate, note: "back-reference to §9"}
+- id: source-mmds-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:51:u1', role: companion, title: "Stanford CS246 course page", note: "⚠ CS246 is the course behind the book; kept with the book because the row uses it for chapter 4"}
+- id: source-skrub
+  kind: new-active-source
+  title: "skrub — machine learning with dataframes (Python library)"
+  type: software
+  shelf: thematic-group-ml-systems
+  extra_mentions: ['m-dataeng:158']
+  occurrences:
+  - {ref: 'm-dataeng:200:u1', role: landing}
+- id: source-mit-missing-semester
+  kind: new-active-source
+  title: "MIT — The Missing Semester of Your CS Education"
+  type: course
+  shelf: thematic-group-software
+  occurrences:
+  - {ref: 'm-dataeng:206:u1', role: landing}
+- id: candidate-source-ostep
+  kind: new-masters-candidate
+  title: "Arpaci-Dusseau — Operating Systems: Three Easy Pieces (OSTEP)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:205:u1', role: landing}
+- id: candidate-source-berkeley-cs186
+  kind: new-masters-candidate
+  title: "UC Berkeley CS186 — Introduction to Database Systems (incl. RookieDB projects)"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:14:u1', role: landing}
+  - {ref: 'm-dataeng:14:u2', role: companion, title: "Lecture videos (community mirror repository)"}
+  - {ref: 'm-dataeng:14:u3', role: companion, title: "Project specifications"}
+  - {ref: 'm-dataeng:25:u1', role: companion, title: "RookieDB course projects (Java)"}
+  - {ref: 'm-dataeng:25:u2', role: duplicate}
+  - {ref: 'm-dataeng:182:u1', role: duplicate, note: "discussion worksheets and exam archive on the course site"}
+- id: candidate-source-mit-65830
+  kind: new-masters-candidate
+  title: "MIT 6.5830 — Database Systems (current run, GoDB labs)"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:15:u1', role: landing}
+  - {ref: 'm-dataeng:15:u2', role: companion, title: "Notes, assignments and practice quizzes"}
+  - {ref: 'm-dataeng:26:u2', role: duplicate}
+  - {ref: 'm-dataeng:183:u1', role: duplicate}
+- id: candidate-source-mit-6830-fall2010
+  kind: new-masters-candidate
+  title: "MIT 6.830 — Database Systems (Fall 2010, OCW; SimpleDB Java labs)"
+  type: course
+  note: "a different course year from candidate-source-mit-65830, kept distinct"
+  occurrences:
+  - {ref: 'm-dataeng:26:u1', role: child, title: "Assignments (SimpleDB Java labs)"}
+  - {ref: 'm-dataeng:183:u2', role: landing}
+- id: candidate-source-silberschatz-db-concepts
+  kind: new-masters-candidate
+  title: "Silberschatz, Korth & Sudarshan — Database System Concepts (7th ed.)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:16:u1', role: landing}
+- id: candidate-source-garcia-molina-complete-book
+  kind: new-masters-candidate
+  title: "Garcia-Molina, Ullman & Widom — Database Systems: The Complete Book"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:17:e1', role: mention}
+- id: candidate-source-hellerstein-architecture-dbs
+  kind: new-masters-candidate
+  title: "Hellerstein, Stonebraker & Hamilton — Architecture of a Database System"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:18:u1', role: landing}
+- id: candidate-source-cmu-15721
+  kind: new-masters-candidate
+  title: "CMU 15-721 — Advanced Database Systems"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:27:u1', role: landing}
+  - {ref: 'm-dataeng:38:e1', role: duplicate, note: "back-reference in the DMH section"}
+- id: candidate-source-petrov-database-internals
+  kind: new-masters-candidate
+  title: "Petrov — Database Internals (O'Reilly)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:28:e1', role: mention}
+- id: candidate-source-grove-query-engines
+  kind: new-masters-candidate
+  title: "Grove — How Query Engines Work"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:29:u1', role: landing}
+- id: candidate-source-bloch-effective-java
+  kind: new-masters-candidate
+  title: "Bloch — Effective Java (3rd ed.)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:30:e1', role: mention}
+- id: candidate-source-graefe-volcano
+  kind: new-masters-candidate
+  title: "Graefe — Volcano: An Extensible and Parallel Query Evaluation System"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:31:e1', role: mention}
+- id: candidate-source-graefe-cascades
+  kind: new-masters-candidate
+  title: "Graefe — The Cascades Framework for Query Optimization"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:31:e1', role: mention}
+- id: candidate-source-tum-dpmh
+  kind: new-masters-candidate
+  title: "TUM — Data Processing on Modern Hardware (Giceva, SS21 slides)"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:37:u1', role: landing}
+- id: candidate-source-drepper-memory
+  kind: new-masters-candidate
+  title: "Drepper — What Every Programmer Should Know About Memory"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:39:u1', role: landing}
+- id: candidate-source-monetdb-x100
+  kind: new-masters-candidate
+  title: "Boncz, Zukowski & Nes — MonetDB/X100: Hyper-Pipelining Query Execution (CIDR 2005)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-neumann-compiling-query-plans
+  kind: new-masters-candidate
+  title: "Neumann — Efficiently Compiling Efficient Query Plans for Modern Hardware (VLDB 2011)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-hyper
+  kind: new-masters-candidate
+  title: "Kemper & Neumann — HyPer"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-morsel-driven-parallelism
+  kind: new-masters-candidate
+  title: "Leis et al. — Morsel-Driven Parallelism (SIGMOD 2014)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-gregg-systems-performance
+  kind: new-masters-candidate
+  title: "Gregg — Systems Performance (2nd ed.)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:41:e1', role: mention}
+- id: candidate-source-agner-fog-optimization
+  kind: new-masters-candidate
+  title: "Agner Fog — Software Optimization Resources (manuals)"
+  type: documentation
+  note: "the row also names perf and VTune tutorials without links"
+  occurrences:
+  - {ref: 'm-dataeng:42:u1', role: landing}
+- id: candidate-source-akidau-streaming-systems
+  kind: new-masters-candidate
+  title: "Akidau, Chernyak & Lax — Streaming Systems (O'Reilly)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:48:e1', role: mention}
+- id: candidate-source-akidau-streaming-101
+  kind: new-masters-candidate
+  title: "Akidau — The World Beyond Batch: Streaming 101 and 102"
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:49:u1', role: landing}
+- id: candidate-source-carbone-flink
+  kind: new-masters-candidate
+  title: "Carbone et al. — Apache Flink: Stream and Batch Processing in a Single Engine"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:50:e1', role: mention}
+- id: candidate-source-carbone-async-snapshots
+  kind: new-masters-candidate
+  title: "Carbone et al. — Lightweight Asynchronous Snapshots for Distributed Dataflows"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:50:e1', role: mention}
+- id: candidate-source-stanford-cs246
+  kind: new-masters-candidate
+  title: "Stanford CS246 — Mining Massive Data Sets"
+  type: course
+  extra_mentions: ['m-dataeng:51']
+  occurrences: []
+- id: candidate-source-apache-flink-docs
+  kind: new-masters-candidate
+  title: "Apache Flink documentation and training"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:52:u1', role: landing}
+  - {ref: 'm-dataeng:101:e1', role: mention}
+  - {ref: 'm-dataeng:184:u1', role: companion, title: "Flink training exercises (with solution branches)"}
+- id: candidate-source-apache-spark-docs
+  kind: new-masters-candidate
+  title: "Apache Spark documentation and tutorials"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:101:e1', role: mention}
+- id: candidate-source-reis-housley-fde
+  kind: new-masters-candidate
+  title: "Reis & Housley — Fundamentals of Data Engineering (O'Reilly)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:101:e1', role: mention}
+- id: candidate-source-boehm-dia-ws2526
+  kind: new-masters-candidate
+  title: "Boehm — Data Integration and Large-scale Analysis (WiSe 2025/26 course page)"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:59:u1', role: landing}
+  - {ref: 'm-dataeng:59:u3', role: companion, title: "Boehm's teaching overview"}
+- id: candidate-source-boehm-dia-ws2122
+  kind: new-masters-candidate
+  title: "Boehm — Data Integration and Large-scale Analysis (WS 2021/22, TU Graz, all PDFs)"
+  type: course
+  note: "a different course year from candidate-source-boehm-dia-ws2526, kept distinct"
+  occurrences:
+  - {ref: 'm-dataeng:59:u2', role: landing}
+- id: candidate-source-dia-student-notes
+  kind: new-masters-candidate
+  title: "DIA-Notes (student summary of Boehm's DIA lecture)"
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:59:u4', role: landing}
+- id: candidate-source-doan-halevy-ives
+  kind: new-masters-candidate
+  title: "Doan, Halevy & Ives — Principles of Data Integration"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:60:e1', role: mention}
+  - {ref: 'm-dataeng:72:e1', role: duplicate}
+- id: candidate-source-ilyas-chu-data-cleaning
+  kind: new-masters-candidate
+  title: "Ilyas & Chu — Data Cleaning (ACM Books)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:61:e1', role: mention}
+  - {ref: 'm-dataeng:82:e1', role: duplicate}
+- id: candidate-source-apache-systemds
+  kind: new-masters-candidate
+  title: "Apache SystemDS"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:62:u1', role: landing}
+- id: candidate-source-data-tamer
+  kind: new-masters-candidate
+  title: "Stonebraker et al. — Data Curation at Scale: The Data Tamer System (CIDR 2013)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:63:e1', role: mention}
+- id: candidate-source-magellan
+  kind: new-masters-candidate
+  title: "Konda et al. — Magellan: Toward Building Entity Matching Management Systems (VLDB 2016)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:63:e1', role: mention}
+- id: candidate-source-hpi-naumann-courses
+  kind: new-masters-candidate
+  title: "HPI (Naumann group) — Data Profiling and Information Integration courses"
+  type: course
+  extra_mentions: ['m-dataeng:159']
+  occurrences:
+  - {ref: 'm-dataeng:70:u1', role: landing}
+  - {ref: 'm-dataeng:70:u2', role: companion, title: "openHPI course: Data Engineering und Data Science"}
+- id: candidate-source-naumann-herschel-duplicate-detection
+  kind: new-masters-candidate
+  title: "Naumann & Herschel — An Introduction to Duplicate Detection"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:71:e1', role: mention}
+- id: candidate-source-papadakis-blocking-survey
+  kind: new-masters-candidate
+  title: "Papadakis et al. — Blocking and Filtering Techniques for Entity Resolution: A Survey (ACM CSUR 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:71:e1', role: mention}
+- id: candidate-source-deequ-paper
+  kind: new-masters-candidate
+  title: "Schelter et al. — Automating Large-Scale Data Quality Verification (VLDB 2018, Deequ)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:78:e1', role: mention}
+- id: candidate-source-mlinspect-cidr2021
+  kind: new-masters-candidate
+  title: "Grafberger, Guha, Stoyanovich & Schelter — mlinspect: Lightweight Inspection of Native Machine Learning Pipelines (CIDR 2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:78:e1', role: mention}
+  - {ref: 'm-dataeng:198:u1', role: companion, title: "mlinspect code repository"}
+- id: candidate-source-hidden-technical-debt
+  kind: new-masters-candidate
+  title: "Sculley et al. — Hidden Technical Debt in Machine Learning Systems (NeurIPS 2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:78:e1', role: mention}
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-mit-dcai
+  kind: new-masters-candidate
+  title: "MIT — Introduction to Data-Centric AI"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:79:u1', role: landing}
+  - {ref: 'm-dataeng:79:u2', role: companion, title: "Lecture videos (YouTube)"}
+  - {ref: 'm-dataeng:79:u3', role: companion, title: "Labs (GitHub)"}
+- id: candidate-source-stanford-cs329s
+  kind: new-masters-candidate
+  title: "Stanford CS329S — Machine Learning Systems Design (Huyen)"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:80:u1', role: landing}
+- id: candidate-source-deequ
+  kind: new-masters-candidate
+  title: "Deequ / PyDeequ (data quality library)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:81:u1', role: landing}
+  - {ref: 'm-dataeng:158:e1', role: mention}
+  - {ref: 'm-dataeng:199:e1', role: mention}
+- id: candidate-source-great-expectations
+  kind: new-masters-candidate
+  title: "Great Expectations (data validation)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:81:u2', role: landing}
+- id: candidate-source-tfdv
+  kind: new-masters-candidate
+  title: "TensorFlow Data Validation (TFX) tutorials"
+  type: documentation
+  extra_mentions: ['m-dataeng:81']
+  occurrences: []
+- id: candidate-source-openrefine
+  kind: new-masters-candidate
+  title: "OpenRefine"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:158:e1', role: mention}
+- id: candidate-source-stanford-mlsys-seminar
+  kind: new-masters-candidate
+  title: "Stanford MLSys Seminar (talk series)"
+  type: video
+  extra_mentions: ['m-dataeng:110']
+  occurrences:
+  - {ref: 'm-dataeng:89:u1', role: landing}
+  - {ref: 'm-dataeng:89:u2', role: companion, title: "YouTube channel"}
+- id: candidate-source-tfx-paper
+  kind: new-masters-candidate
+  title: "Baylor et al. — TFX: A TensorFlow-Based Production-Scale ML Platform (KDD 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-clipper
+  kind: new-masters-candidate
+  title: "Crankshaw et al. — Clipper: A Low-Latency Online Prediction Serving System (NSDI 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-model-cards
+  kind: new-masters-candidate
+  title: "Mitchell et al. — Model Cards for Model Reporting (FAT* 2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-mlflow
+  kind: new-masters-candidate
+  title: "MLflow (experiment tracking and model registry)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-weights-and-biases
+  kind: new-masters-candidate
+  title: "Weights & Biases (experiment tracking)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-torchserve
+  kind: new-masters-candidate
+  title: "TorchServe (model serving)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-triton-inference-server
+  kind: new-masters-candidate
+  title: "NVIDIA Triton Inference Server"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-onnx-runtime
+  kind: new-masters-candidate
+  title: "ONNX Runtime"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-mapreduce-paper
+  kind: new-masters-candidate
+  title: "Dean & Ghemawat — MapReduce (OSDI 2004)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-rdd-paper
+  kind: new-masters-candidate
+  title: "Zaharia et al. — Resilient Distributed Datasets (NSDI 2012)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-dremel-paper
+  kind: new-masters-candidate
+  title: "Melnik et al. — Dremel (VLDB 2010)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-gfs-paper
+  kind: new-masters-candidate
+  title: "Ghemawat, Gobioff & Leung — The Google File System (SOSP 2003)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-systemds-paper
+  kind: new-masters-candidate
+  title: "Boehm et al. — SystemDS: A Declarative Machine Learning System (CIDR 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-learned-index-structures
+  kind: new-masters-candidate
+  title: "Kraska et al. — The Case for Learned Index Structures (SIGMOD 2018)"
+  type: paper
+  note: "the row's other entries (ML-for-databases surveys, Schelter's and Boehm's overviews) name no identifiable item"
+  occurrences:
+  - {ref: 'm-dataeng:108:e1', role: mention}
+- id: candidate-source-keshav-how-to-read-a-paper
+  kind: new-masters-candidate
+  title: "Keshav — How to Read a Paper"
+  type: paper
+  extra_mentions: ['m-algo:110', 'm-bench:45']
+  occurrences:
+  - {ref: 'm-dataeng:109:u1', role: landing}
+  - {ref: 'm-dataeng:159:e1', role: duplicate, note: "back-reference to §10; also points to the HPI slides"}
+- id: candidate-source-cmu-db-tech-talks
+  kind: new-masters-candidate
+  title: "CMU Database Group — seminar series (Vaccination Database Tech Talks)"
+  type: video
+  occurrences:
+  - {ref: 'm-dataeng:110:u1', role: landing}
+- id: candidate-source-stanford-cs520
+  kind: new-masters-candidate
+  title: "Stanford CS520 — Knowledge Graphs"
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:117:u1', role: landing}
+- id: candidate-source-w3c-rdf-sparql
+  kind: new-masters-candidate
+  title: "W3C RDF and SPARQL specifications"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:118:e1', role: mention}
+- id: candidate-source-cypher-property-graphs
+  kind: new-masters-candidate
+  title: "Property graphs and Cypher"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:118:e1', role: mention}
+- id: candidate-source-apache-jena
+  kind: new-masters-candidate
+  title: "Apache Jena (triple store)"
+  type: software
+  extra_mentions: ['m-dataeng:118', 'm-dataeng:120']
+  occurrences: []
+- id: candidate-source-neo4j
+  kind: new-masters-candidate
+  title: "Neo4j (graph database)"
+  type: software
+  extra_mentions: ['m-dataeng:118', 'm-dataeng:120']
+  occurrences: []
+- id: candidate-source-transe
+  kind: new-masters-candidate
+  title: "Bordes et al. — Translating Embeddings for Modeling Multi-relational Data (TransE, NeurIPS 2013)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:119:e1', role: mention}
+- id: candidate-source-kge-survey
+  kind: new-masters-candidate
+  title: "Wang et al. — Knowledge Graph Embedding: A Survey (IEEE TKDE 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:119:e1', role: mention}
+- id: candidate-source-pykeen
+  kind: new-masters-candidate
+  title: "PyKEEN (knowledge graph embeddings library)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:120:u1', role: landing}
+- id: candidate-source-fair-principles
+  kind: new-masters-candidate
+  title: "Wilkinson et al. — The FAIR Guiding Principles for scientific data management and stewardship (Scientific Data 2016)"
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:127:e1', role: mention}
+- id: candidate-source-nfdi
+  kind: new-masters-candidate
+  title: "NFDI and NFDI4DataScience"
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:128:u1', role: landing}
+- id: candidate-source-orkg
+  kind: new-masters-candidate
+  title: "Open Research Knowledge Graph (ORKG)"
+  type: website
+  note: "the row also names GO-FAIR and RDM basics without an identifiable item"
+  occurrences:
+  - {ref: 'm-dataeng:130:u1', role: landing}
+- id: candidate-source-newman-building-microservices
+  kind: new-masters-candidate
+  title: "Newman — Building Microservices (2nd ed., O'Reilly)"
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:138:e1', role: mention}
+- id: candidate-source-kubernetes-docs
+  kind: new-masters-candidate
+  title: "CNCF / Kubernetes documentation"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:139:e1', role: mention}
+- id: candidate-source-aws-well-architected
+  kind: new-masters-candidate
+  title: "AWS Well-Architected Framework (and labs)"
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:139:e1', role: mention}
+  - {ref: 'm-dataeng:147:u1', role: companion, title: "Well-Architected Labs", note: "the row also names the AWS Free Tier"}
+- id: candidate-source-twelve-factor-app
+  kind: new-masters-candidate
+  title: "The Twelve-Factor App"
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:140:u1', role: landing}
+- id: candidate-source-fowler-lewis-microservices
+  kind: new-masters-candidate
+  title: "Fowler & Lewis — Microservices (article)"
+  type: website
+  extra_mentions: ['m-dataeng:140']
+  occurrences: []
+- id: candidate-source-terraform
+  kind: new-masters-candidate
+  title: "Terraform (infrastructure as code)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-aws-cdk
+  kind: new-masters-candidate
+  title: "AWS CDK (infrastructure as code)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-serverless-framework
+  kind: new-masters-candidate
+  title: "Serverless Framework"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-cstack-db-tutorial
+  kind: new-masters-candidate
+  title: "cstack — Let's Build a Simple Database (db_tutorial)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:188:u1', role: landing}
+- id: candidate-source-mini-lsm
+  kind: new-masters-candidate
+  title: "mini-lsm (build an LSM storage engine in Rust)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:189:u1', role: landing}
+- id: candidate-source-toydb
+  kind: new-masters-candidate
+  title: "toydb (distributed SQL database in Rust)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:190:u1', role: landing}
+- id: candidate-source-risinglight
+  kind: new-masters-candidate
+  title: "RisingLight (educational OLAP database in Rust)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:191:u1', role: landing}
+- id: candidate-source-apache-calcite
+  kind: new-masters-candidate
+  title: "Apache Calcite (query optimizer framework)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:192:u1', role: landing}
+- id: candidate-source-duckdb
+  kind: new-masters-candidate
+  title: "DuckDB (engine source and blog)"
+  type: software
+  note: "a different object from the registered source-duckdb-python-docs (Python API docs)"
+  occurrences:
+  - {ref: 'm-dataeng:193:u1', role: landing}
+  - {ref: 'm-dataeng:193:u2', role: companion, title: "DuckDB blog"}
+- id: candidate-source-apache-datafusion
+  kind: new-masters-candidate
+  title: "Apache DataFusion (query engine in Rust)"
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:194:u1', role: landing}
+- id: out-of-scope:venue
+  kind: out-of-scope
+  reason: "Publication venue or proceedings index; papers are chosen from it at use time, so it is not itself a teaching object"
+  occurrences: ['m-dataeng:107:u1', 'm-dataeng:107:u2', 'm-dataeng:107:u3', 'm-dataeng:157:e1']
+- id: out-of-scope:discovery-pointer
+  kind: out-of-scope
+  reason: "Article or list used to discover sources; the sources it yielded are dispositioned separately"
+  occurrences: ['m-dataeng:177:u1']
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-dataeng:121:e1', 'm-dataeng:131:e1', 'm-dataeng:141:e1', 'm-dataeng:149:e1', 'm-dataeng:150:e1', 'm-dataeng:160:e1', 'm-dataeng:166:e1', 'm-dataeng:167:e1', 'm-dataeng:168:e1', 'm-dataeng:169:e1']

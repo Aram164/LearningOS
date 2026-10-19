@@ -1,0 +1,37 @@
+{
+  "does_not_cover": [
+    "Names no discrete model at all: no Bernoulli, binomial, geometric, hypergeometric, or Poisson content.",
+    "Shows no PMF, parameter, fitting step, or distribution-choice reasoning of any kind.",
+    "Title promises sampling a distribution but delivers only generic histogram intuition plus t-test anecdotes."
+  ],
+  "notes": "Thin 3:48 explainer; honest thin record. t-test and p-value discussion belongs to unit-m2-sad-l10 nodes — reassignment signal, never in teaches. Useful only as a simulation-motivation prelude.",
+  "segments": [
+    {
+      "end": "01:16",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "00:03",
+      "topic": "Histogram of heights and its smooth-curve approximation"
+    },
+    {
+      "end": "02:01",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "01:23",
+      "topic": "Meaning of sampling: computer draws by described probabilities"
+    },
+    {
+      "end": "03:39",
+      "is_derivation": false,
+      "is_worked_example": false,
+      "start": "02:05",
+      "topic": "Why sample: probe t-tests on simulated draws, consider size"
+    }
+  ],
+  "suggested_locator": "01:23-02:01 for the one core idea; rest is motivation only",
+  "teaches": [],
+  "unit_id": "unit-m2-sad-l07",
+  "video_id": "XLCWeSVzHUU",
+  "review_flag": "wrong-lecture",
+  "review_note": "ROUTE IS ON THE WRONG LECTURE. Names no discrete distribution whatsoever (no Bernoulli, binomial, geometric, hypergeometric, Poisson). Its actual content (sampling, t-tests, p-values) belongs to unit-m2-sad-l10. Recommend reassignment. Gateway change, not a file edit."
+}

@@ -1,0 +1,41 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {},
+      "review": {
+        "states": {},
+        "version": 0
+      },
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "reviewed",
+      "version": 0
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"touched\":[],\"owned_changes\":[],\"unrelated_changes\":[],\"committed\":false,\"pushed\":false,\"validation\":\"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md\",\"ownership_conflicts\":[],\"session_id\":\"channel:operator\",\"client\":null,\"stale_paths\":[],\"stale_hours\":24,\"other_sessions\":{},\"session_closed\":false}\n",
+  "stdout_json": {
+    "client": null,
+    "committed": false,
+    "ok": true,
+    "other_sessions": {},
+    "owned_changes": [],
+    "ownership_conflicts": [],
+    "pushed": false,
+    "session_closed": false,
+    "session_id": "channel:operator",
+    "stale_hours": 24,
+    "stale_paths": [],
+    "touched": [],
+    "unrelated_changes": [],
+    "validation": "0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md"
+  }
+}

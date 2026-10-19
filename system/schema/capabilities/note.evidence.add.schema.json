@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/note.evidence.add.schema.json",
+  "title": "payload for capability note.evidence.add",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_type",
+    "note_id",
+    "ref"
+  ],
+  "properties": {
+    "evidence_type": {
+      "type": "string",
+      "enum": [
+        "derivation",
+        "explanation",
+        "implementation",
+        "exercise",
+        "exam",
+        "external"
+      ],
+      "description": "Evidence entry type; one of derivation, explanation, implementation, exercise, exam, external."
+    },
+    "note_id": {
+      "type": "string",
+      "description": "Id of the note that gains the evidence entry."
+    },
+    "ref": {
+      "type": "string",
+      "description": "typed URI for the trail, e.g. material://…, note://…, https://…"
+    }
+  }
+}

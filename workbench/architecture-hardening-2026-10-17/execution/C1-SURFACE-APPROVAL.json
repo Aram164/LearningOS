@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "status": "approved",
+  "approved_by": "Aram",
+  "recorded_at_utc": "2026-10-18T12:33:40.070403+00:00",
+  "approval_source": "Explicit user reply in this chat to the exact C1 surface packet question",
+  "user_reply": "Approve this exact C1 surface packet",
+  "packet": "C1-SURFACE-PACKET.json",
+  "packet_sha256": "8e7781d6d10071e25eb0bc51cc0d068bbecffd51340946f1d82a7c107c31d2cf",
+  "base_core": "074f4717e14527798752de84b3c9c4e88348b658",
+  "contract_sha256": "ffcca27a2d0c516d12e8394ae4247b94a0491345885aadbf74e6e2892468ebaf",
+  "approved_keys": [
+    "catalog.commands.route.patch",
+    "cli.goal",
+    "cli.route-patch",
+    "request_schemas.goal.decide.schema.json",
+    "request_schemas.route.patch.schema.json"
+  ],
+  "scope": "Only the five exact before/after surface changes in the immutable packet",
+  "exclusions": [
+    "C1 acceptance",
+    "independent acceptance",
+    "installation",
+    "publication",
+    "live content changes"
+  ],
+  "candidate_a11_rows_applied": false,
+  "next_step": "At authorized resumption, verify current exact diff matches the packet, add the dated A11 approval entries, and run the surface gate. Implementation remains paused at the existing usage boundary."
+}

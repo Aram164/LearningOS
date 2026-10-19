@@ -1,0 +1,39 @@
+schema_version: 2
+id: transaction-20260920-034358-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-09-20T03:43:58+02:00'
+snapshot_before: sha256:d65da439b9d219a6a82e746987bdd46aee44082abe25571bce751065494ebb36
+snapshot_after: sha256:3ae27636b70a61fc95e0fc3cd418722a7a8ac3f28e724d2ffb3f2e8a361e1d5f
+expected_revisions:
+  unit-job-polars-backend-loop: 2
+artifact_revisions:
+  unit-job-polars-backend-loop:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  sha256_before: 168441c0f615dce35579f21e3c10c6da7aa9972ba7945ebc58f00b3628857f45
+  sha256_after: 59515e81582386fdd943f9ded1acb11ff9abda19ad44b873e5b8286be968d46e
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-11783007a82345cf89785fd990075b39
+  idempotency_key: reviewed-728630e495824aba9c20c424e74713ce
+  intent_sha256: sha256:667bfbcfea4620ced1eb674eaac86eab44931a1c88c8f736cb852db0c7010828
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:667bfbcfea4620ced1eb674eaac86eab44931a1c88c8f736cb852db0c7010828

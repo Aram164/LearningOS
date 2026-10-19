@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-pandas-fluency-20260903",
+  "idempotency_key": "polars-map-pandas-fluency-20260903",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:613965356bf9039a22be77e98b640caa3820ec167759cbea62ad4dfc628b6314",
+  "expected_revisions": {
+    "unit-job-polars-pandas-fluency": 10,
+    "study-map-job-polars-pandas-fluency": 9
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-pandas-fluency",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-pandas-fluency-study-map.yaml",
+    "file_sha256": "sha256:eadae497cd3dd8f82b62dd2c3a1d9164842e440fb6003166616a27d21ec36b01",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:edc9859e33d8a95804cd5a6693a64c8d7ac59c47c3bfe81fb805206c99c1bffc"
+  }
+}

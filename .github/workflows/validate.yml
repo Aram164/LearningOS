@@ -1,0 +1,141 @@
+# Learning OS v3 — CI validation (added 2026-08-03, ADR-003 S5).
+# Runs the same validator the pre-commit hook runs locally, so a bad state
+# can never live unnoticed on the remote. Weekly run adds --online (URL-rot
+# audit over the sources registry — the job local runs skip).
+name: validate
+
+on:
+  push:
+    branches: ['**']
+  pull_request: {}
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC ≈ 08:00 Berlin
+  workflow_dispatch: {}
+
+# Read-only: this workflow checks out both repositories and runs the local
+# paired gate. It never pushes, tags, releases, or otherwise needs write
+# access to anything — narrowing this is free safety, not a functional change.
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    # Phase 4 Linux pytest alone took 86 minutes; the complete local
+    # source gate took 130 minutes. Keep complete paired coverage with
+    # a bounded allowance for extraction tests and the UI checks.
+    timeout-minutes: 180
+    defaults:
+      run:
+        working-directory: repository
+    steps:
+      - name: Check out Core
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          fetch-depth: 0
+
+      # The public manifest has a separately released UI consumer. Checking
+      # its mirror only in the UI repository recreates the failure topology the
+      # producer-owned manifest contract removed: Core can pass while shipping
+      # a shape the UI cannot decode.
+      #
+      # Prefer a same-named consumer branch when one exists, otherwise use main.
+      # This makes a two-repository change test the pair being reviewed without
+      # reintroducing a permanent branch pin. The old static pin verified one
+      # historical branch forever; the old unpinned form verified every Core
+      # feature branch against UI main even when its matching UI branch existed.
+      - name: Resolve the matching consumer branch
+        id: consumer-ref
+        env:
+          REQUESTED_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          if git ls-remote --exit-code --heads \
+            https://github.com/Aram164/learningos-obsidian-ui.git \
+            "refs/heads/$REQUESTED_REF" >/dev/null 2>&1; then
+            echo "ref=$REQUESTED_REF" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the paired UI consumer
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          ref: ${{ steps.consumer-ref.outputs.ref }}
+          path: obsidian-ui
+
+      # Named by SHA, not only by ref: a branch name can move between the
+      # checkout above and anyone reading this log later. Printing the exact
+      # commit is what lets a reviewer answer "which UI did this run actually
+      # verify against?" without re-running anything.
+      - name: Print the resolved UI ref and commit
+        working-directory: obsidian-ui
+        env:
+          RESOLVED_UI_REF: ${{ steps.consumer-ref.outputs.ref }}
+        run: |
+          printf 'UI ref resolved: %s\n' "$RESOLVED_UI_REF"
+          printf 'UI commit checked out: %s\n' "$(git rev-parse HEAD)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The documented project environment is the repository venv: parser
+      # diagnostics are characterized bytes pinned to this interpreter, and
+      # the procedure transcripts invoke $LOS_REPO/.venv/bin/python.
+      - name: Install Core development dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Install UI dependencies
+        working-directory: obsidian-ui
+        run: npm ci --ignore-scripts
+
+      # The procedure transcripts (tests/test_procedures.py, PLAN D11) run under
+      # Scrut v0.5.0. The release archive is pinned by GitHub's published
+      # SHA-256 and checked before use; the binary stays outside the checkout,
+      # clear of the tree-contract test, and reaches the gate as LOS_SCRUT_BIN.
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftotext -v
+
+      - name: Install Scrut v0.5.0 (pinned digest)
+        run: |
+          set -eu
+          dir="$RUNNER_TEMP/scrut"
+          mkdir -p "$dir"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
+            https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+          echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
+          tar -xzf "$dir/scrut.tar.gz" -C "$dir"
+          bin="$(find "$dir" -type f -name scrut | head -n 1)"
+          test -n "$bin"
+          chmod 0755 "$bin"
+          test "$("$bin" --version)" = "scrut 0.5.0"
+          echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
+
+      # The exact local paired release gate — not a partial duplicate of it.
+      # This installs both dependency sets above specifically because
+      # `make system-check` ends by running the UI's own complete `npm run
+      # check` (build, typecheck, contract gate, fixture suites, and the
+      # real cross-process Gateway recovery harness against this Core), so
+      # ordinary CI exercises the identical command a release does locally.
+      #
+      # `live_install` tests need state no checkout can carry: the
+      # maintainer's gitignored data, or the wrapper root above repository/.
+      # They are deselected here by name, never skipped, so the summary line
+      # counts them as deselected; the live installation's own
+      # `make system-check` still runs them.
+      - name: paired release gate (make system-check)
+        env:
+          PYTEST_ADDOPTS: '-m "not live_install"'
+          LOS_RATCHET_BASE: origin/main
+        run: make system-check
+      - name: URL-rot audit (weekly only)
+        if: github.event_name == 'schedule'
+        run: .venv/bin/python tools/validate.py --online

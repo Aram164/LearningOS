@@ -1,0 +1,19 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: no note matches all 1 term; per-term note hits: zzz-no-such-term=0\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"note-content-search\",\"items\":[],\"total\":0,\"next_offset\":null}\n",
+  "stdout_json": {
+    "contract": "note-content-search",
+    "items": [],
+    "next_offset": null,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "total": 0
+  }
+}

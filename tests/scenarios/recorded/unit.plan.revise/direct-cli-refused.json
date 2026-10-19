@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: unit revision contract failed; no canonical files were written\n- plan_contract.plan_template_version must be 1\n- plan_contract.coverage_audit must name the completed audit\n- plan_contract.checks must be a mapping\n",
+  "stdout": "",
+  "stdout_json": null
+}

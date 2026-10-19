@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "",
+      "id": "note-scenario-prep-9",
+      "path": "knowledge/notes/mathematics/note-scenario-prep-9.md",
+      "title": "Title note-scenario-prep-9"
+    }
+  ]
+}

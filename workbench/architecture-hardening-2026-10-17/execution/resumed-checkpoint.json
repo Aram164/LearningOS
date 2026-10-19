@@ -1,0 +1,11 @@
+{
+  "captured_at": "2026-10-18T12:00:04.602048+00:00",
+  "core_digest": "bbc25eecd96e4e3eba20f1b5f6b8be7bbe470ca757312ec3791217982a6f7fd2",
+  "new_files": "candidate-new-files-20261018-resume.tar",
+  "new_files_sha256": "b2bd7c368df60adc5ecc70f912bec4c08d684f3094377bb84228a43daa3b3666",
+  "original_inputs_unchanged": true,
+  "original_outer_dirty_bytes_unchanged": true,
+  "patch": "candidate-core-20261018-resume.patch",
+  "patch_sha256": "6ac48e2c8e0c3ef58d8f5e2c6fd2bf21da8a4e02face0c1921c55ac3ff35bbde",
+  "ui_digest": "4092ea79920358b1aaa0fd6cdb1188abcb68bcc6376cd64cdc0127d2fc2d0d1d"
+}

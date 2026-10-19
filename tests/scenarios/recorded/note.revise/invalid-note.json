@@ -1,0 +1,271 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "knowledge/garden/garden-seed.md": "89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "garden.seed.create",
+              "channel": "operator",
+              "intent_sha256": "sha256:5078c0574d9a0a27d6c66eb776b1bf04c4cd8e39b14f8ad7526398ad910b7371",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "garden-request:KEY2": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "garden.seed.create",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "garden-request:KEY2": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "garden.seed.create",
+                "declared_writes": [
+                  "knowledge/garden/**"
+                ]
+              }
+            ]
+          },
+          "capability": "garden.seed.create",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "garden-request:KEY2": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:3068f91675e3fc04efcc070b44ee43faa94d8f7634b178c54075a8bdea5ff608",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:5078c0574d9a0a27d6c66eb776b1bf04c4cd8e39b14f8ad7526398ad910b7371"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:5078c0574d9a0a27d6c66eb776b1bf04c4cd8e39b14f8ad7526398ad910b7371",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "knowledge/garden/garden-seed.md",
+              "sha256_after": "89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "garden-request:KEY2": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "knowledge/garden/garden-seed.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7beaccb182002d6f008319aebe7ae5afb00bada10d68fd9e5dfd364d0ec2ba97",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2500099a09c793253c0703ef79c810542411077461da4375816331dc34e402ac",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "be8889e3088fd7e5f2548466035da0a63f5a2edd4dbe010aebc26bf95ff8c730",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"garden.seed.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"seed_path\": \"knowledge/garden/garden-seed.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"garden-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "garden.seed.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "garden-request:KEY2": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "seed_path": "knowledge/garden/garden-seed.md",
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "operation": "note.revise",
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "commit_sha": null,
+          "paths": {
+            "knowledge/garden/garden-seed.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7beaccb182002d6f008319aebe7ae5afb00bada10d68fd9e5dfd364d0ec2ba97",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2500099a09c793253c0703ef79c810542411077461da4375816331dc34e402ac",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "be8889e3088fd7e5f2548466035da0a63f5a2edd4dbe010aebc26bf95ff8c730",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        },
+        "before": {
+          "commit_sha": null,
+          "paths": {
+            "knowledge/garden/garden-seed.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7beaccb182002d6f008319aebe7ae5afb00bada10d68fd9e5dfd364d0ec2ba97",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "2500099a09c793253c0703ef79c810542411077461da4375816331dc34e402ac",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "be8889e3088fd7e5f2548466035da0a63f5a2edd4dbe010aebc26bf95ff8c730",
+              "state": "file"
+            }
+          },
+          "review": null,
+          "schema_version": 3,
+          "session_id": "channel:operator",
+          "state": "recording",
+          "version": 1
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"note.revise\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: invalid revised note: <ROOT>/knowledge/garden/garden-seed.md: frontmatter is not a mapping\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout_json": {
+        "capability": "note.revise",
+        "error": {
+          "code": "INVALID_REQUEST",
+          "details": {},
+          "message": "los: invalid revised note: <ROOT>/knowledge/garden/garden-seed.md: frontmatter is not a mapping",
+          "retryable": false
+        },
+        "idempotency_key": "KEY4",
+        "ok": false,
+        "receipt_path": null,
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {},
+        "schema_version": 2,
+        "snapshot_after": null,
+        "transaction_id": null
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
+}

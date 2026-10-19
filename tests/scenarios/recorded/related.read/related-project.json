@@ -1,0 +1,31 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"id\":\"module-demo\",\"type\":\"module\",\"title\":\"Demo Module\",\"path\":\"curriculum/modules/module-demo/module.yaml\",\"via\":[\"project_relationship\"]},{\"id\":\"unit-demo-l01\",\"type\":\"unit\",\"title\":\"Expected value\",\"path\":\"curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml\",\"via\":[\"unit_ids\"]}]\n",
+  "stdout_json": [
+    {
+      "id": "module-demo",
+      "path": "curriculum/modules/module-demo/module.yaml",
+      "title": "Demo Module",
+      "type": "module",
+      "via": [
+        "project_relationship"
+      ]
+    },
+    {
+      "id": "unit-demo-l01",
+      "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+      "title": "Expected value",
+      "type": "unit",
+      "via": [
+        "unit_ids"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+schema_version: 2
+id: transaction-20261002-213945-001
+type: transaction-receipt
+status: committed
+capability: inbox.resolve
+committed_at: '2026-10-02T21:39:45+02:00'
+snapshot_before: sha256:9a9343dda8814fc868b59c96e5b6bd9eefa4cd1b078479237729194965f61d86
+snapshot_after: sha256:9b7a88ef9a0719af695d1ef4ec9ebc0650fe2b4a75a2494f9e92f6b5d0f5e075
+expected_revisions:
+  file:archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md: 0
+  file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 0
+artifact_revisions:
+  file:archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md:
+    before: 0
+    after: 1
+  file:work/inbox/complaints/2026-09-28-remote-video-examination.md:
+    before: 0
+    after: 1
+writes:
+- path: archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md
+  sha256_before: null
+  sha256_after: b7ff8f152bbd962885827e31abd15dcef4ca15c7484bae45b7f4b21f59936df7
+  created: true
+- path: work/inbox/complaints/2026-09-28-remote-video-examination.md
+  sha256_before: b7ff8f152bbd962885827e31abd15dcef4ca15c7484bae45b7f4b21f59936df7
+  sha256_after: null
+  created: false
+metadata:
+  routed_to:
+  - proposal; no tool adopted
+  data_roots_sha256: sha256:fb95cc4f9bc5f875831ab5f0b331f083825194d5ce88e7d40e105f951fd0c788
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: inbox.resolve
+    declared_writes:
+    - work/inbox/**
+    - archive/inbox/**
+request:
+  channel: operator
+  request_id: request-inbox-resolve-int2-07-32433548
+  idempotency_key: inbox-resolve-int2-07
+  intent_sha256: sha256:7872a1c2b22438a914e68c0e9f07f3f3eedfc14698e6e4407a9f030592507e16
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:7872a1c2b22438a914e68c0e9f07f3f3eedfc14698e6e4407a9f030592507e16

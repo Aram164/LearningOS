@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"replayed\": true,\n    \"note_id\": \"note-demo-analysis\",\n    \"note_path\": \"knowledge/notes/mathematics/note-demo-analysis.md\"\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "note.analysis.save",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": true,
+    "request_id": "KEY1",
+    "result": {
+      "note_id": "note-demo-analysis",
+      "note_path": "knowledge/notes/mathematics/note-demo-analysis.md",
+      "ok": true,
+      "replayed": true
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

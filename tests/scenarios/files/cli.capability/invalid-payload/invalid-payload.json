@@ -1,0 +1,16 @@
+{
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:58dfc3fed9d5b0ce12aeb048c6c00a565b00413cbf79a6a018afc07278ce7eea"
+  },
+  "capability": "capture.create",
+  "channel": "operator",
+  "expected_revisions": {
+    "capture-request:scenario-capability-badpayload": 0
+  },
+  "expected_snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+  "idempotency_key": "scenario-capability-badpayload",
+  "payload": {},
+  "request_id": "request-scenario-capability-badpayload",
+  "schema_version": 2
+}

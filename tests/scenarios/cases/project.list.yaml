@@ -1,0 +1,43 @@
+operation: project.list
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: list-projects
+  kind: success
+  transport: cli
+  argv:
+  - project-list
+  expect:
+    site: null
+- id: list-by-status
+  kind: success
+  transport: cli
+  argv:
+  - project-list
+  - --status
+  - active
+  expect:
+    site: null
+- id: cli-list-projects
+  kind: success
+  transport: cli
+  argv:
+  - project-list
+  expect:
+    site: null
+- id: cli-list-by-status
+  kind: success
+  transport: cli
+  argv:
+  - project-list
+  - --status
+  - active
+  expect:
+    site: null
+untriggered: []

@@ -1,0 +1,51 @@
+/Library/Developer/CommandLineTools/usr/bin/make lint
+.venv/bin/python -m ruff check tools tests
+All checks passed!
+/Library/Developer/CommandLineTools/usr/bin/make code-check
+.venv/bin/python tools/code_reachability.py
+code reachability: 273/273 modules statically classified; 11 historical allowlisted
+code architecture: PASS (static imports and declared CLI handler edges; no runtime coverage claim)
+/Library/Developer/CommandLineTools/usr/bin/make typecheck
+.venv/bin/python -m mypy
+Success: no issues found in 7 source files
+.venv/bin/python tools/validate.py --no-report
+W WS-NEGLECT: workspace 'workspace-aml-exam-prep' untouched for 32 days (per Git)
+W WS-NEGLECT: workspace 'workspace-library-reconciliation' untouched for 24 days (per Git)
+W WS-NEGLECT: workspace 'workspace-thesis-mle-medical' untouched for 71 days (per Git)
+
+0 error(s), 3 warning(s) — OK
+.venv/bin/python tools/warning_baseline.py --check
+warning-baseline: 0 warning(s) across 0 signature(s); baseline 0 across 0 (recorded 2026-10-02)
+warning-baseline: OK — zero errors, no new warning signature.
+.venv/bin/python -m pytest -q
+........................................................................ [  0%]
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  3%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 10%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+........................................................................ [ 20%]
+........................................................................ [ 21%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+................................................
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/selectors.py:398: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+1920 passed, 1 deselected in 483.74s (0:08:03)

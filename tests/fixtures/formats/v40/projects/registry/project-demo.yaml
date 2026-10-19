@@ -1,0 +1,21 @@
+schema_version: 1
+id: project-demo
+type: project
+revision: 0
+title: Demo project
+project_type: thesis
+status: active
+root_uri: github://example/demo
+objective: A minimal first-class project, wired only to records this fixture contains.
+milestone_ids: []
+linked_module_ids:
+- module-demo
+unit_ids:
+- unit-demo-l01
+workspace_ids:
+- workspace-demo
+thematic_group_ids: []
+boundaries:
+  confidentiality: private
+  external_code_access: none
+  notes: Fixture record; references nothing outside this tree.

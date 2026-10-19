@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/route.patch.schema.json",
+  "title": "payload for capability route.patch",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "changes",
+    "route_id",
+    "unit_id"
+  ],
+  "properties": {
+    "changes": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "angle": {
+          "type": "string"
+        },
+        "angle_detail": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "vault_path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "A nonempty map of declared descriptive material fields to their new text; keys outside this list refuse, and empty text refuses."
+    },
+    "check": {
+      "type": "boolean",
+      "description": "return the field diff, affected files, snapshot and exact expected revisions without writing"
+    },
+    "claim_evidence": {
+      "type": "object",
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string"
+              },
+              "ref": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "page_end": {
+                "type": "integer"
+              },
+              "window": {
+                "type": "string"
+              },
+              "node": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "ref"
+            ]
+          },
+          "minItems": 1
+        },
+        "reads": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "evidence"
+      ],
+      "description": "One reviewed covers claim for exactly the patched route; local readable material requires a matching excerpt at an explicit page or transcript window. Excerpts remain outside tracked output."
+    },
+    "route_id": {
+      "type": "string",
+      "description": "exact id of the route to patch, as plan-edit-context reports it"
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit whose route to patch"
+    }
+  }
+}

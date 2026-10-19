@@ -1,0 +1,8 @@
+# SUPERSEDED by ADR-007 — this partition was named after the
+# migration batch that ingested its records, not their subject.
+# Every record moved to sources/registry/<subject>.yaml with its id
+# unchanged. The original is archived verbatim at
+# migration/adr-007/originals/stage2b-unsorted-intake.yaml.
+#
+# Safe to delete:  git rm sources/registry/stage2b-unsorted-intake.yaml
+sources: []

@@ -1,0 +1,87 @@
+operation: material.context
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: query-hit
+    kind: success
+    transport: cli
+    argv: [material-context, derivation]
+    expect: {site: null}
+  - id: query-empty
+    kind: success
+    transport: cli
+    argv: [material-context, zzz-no-match-at-all]
+    expect: {site: null}
+  - id: concept-only
+    kind: success
+    transport: cli
+    argv: [material-context, --concept, concept-expected-value]
+    expect: {site: null}
+  - id: material-only
+    kind: success
+    transport: cli
+    argv: [material-context, --material, source-demo-book/book.pdf]
+    expect: {site: null}
+  - id: unit-scoped
+    kind: success
+    transport: cli
+    argv: [material-context, derivation, --unit, unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: page-one
+    kind: success
+    transport: cli
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5", --expected-observations, "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6"]
+    expect: {site: null}
+  - id: empty-need
+    kind: refusal
+    transport: cli
+    argv: [material-context]
+    expect: {site: material.context.empty-need}
+  - id: related-without-unit
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --include-related]
+    expect: {site: material.context.related-needs-unit}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --unit, unit-nope]
+    expect: {site: material.context.unknown-unit}
+  - id: unknown-concept
+    kind: refusal
+    transport: cli
+    argv: [material-context, --concept, concept-nope]
+    expect: {site: material.context.unknown-concept}
+  - id: bad-material
+    kind: refusal
+    transport: cli
+    argv: [material-context, --material, /abs/path.pdf]
+    expect: {site: material.context.bad-material}
+  - id: bad-window
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --limit, 99]
+    expect: {site: material.context.bad-window}
+  - id: offset-no-snapshot
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --offset, 1]
+    expect: {site: material.context.bad-window}
+  - id: offset-no-observations
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --offset, 1, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: material.context.offset-needs-observations}
+  - id: observations-mismatch
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: material.context.stale-snapshot}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [material-context, derivation, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: material.context.stale-snapshot}
+untriggered:
+  - {site: material.context.read-failed, reason: os-error-only}

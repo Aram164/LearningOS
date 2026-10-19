@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/review.apply.schema.json",
+  "title": "payload for capability review.apply",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "selected",
+    "unit_id"
+  ],
+  "properties": {
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "proposal IDs to apply, where every ID must exist in the current proposal"
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "ID of the unit whose shelving proposal is applied"
+    }
+  }
+}

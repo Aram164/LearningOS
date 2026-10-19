@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "request_id": "request-coursera-retire-aml",
+  "idempotency_key": "coursera-retire-aml-2026-09-16",
+  "capability": "module.plan.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:fad4deeab0c35bb8fa68990099211094f2f56808f2d52e0e622aa491f375a7dc",
+  "expected_revisions": {
+    "module-hu-aml": 12
+  },
+  "payload": {
+    "module_id": "module-hu-aml",
+    "file": "work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coursera-retire-plan.yaml",
+    "file_sha256": "sha256:31a5b67080d49fa7b509b359450b9efd34130ff6777f885cbc4146d0a680295e"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:9f2087c23e4c79a23595814b78e69ec8b9d0718d975f9ffa95d70ad0562eb340"
+  }
+}

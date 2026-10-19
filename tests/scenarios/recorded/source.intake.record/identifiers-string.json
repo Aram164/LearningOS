@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: source-demo-book: 'identifiers' must be a label->address mapping\n",
+  "stdout": "",
+  "stdout_json": null
+}

@@ -1,0 +1,281 @@
+# Manual dispositions for MASTERS-MATH-RESOURCES.md (origin key m-math).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-papoulis-pillai
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:25:e1', role: mention}
+- id: source-nocedal-wright
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:36:e1', role: mention}
+- id: source-bertsimas-tsitsiklis-lp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:46:e1', role: mention}
+- id: source-korte-vygen
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:47:e1', role: mention}
+  - {ref: 'm-math:62:e1', role: duplicate, note: "back-reference to ADM II"}
+- id: source-arora-barak
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:60:e1', role: mention, note: "PCP and hardness-of-approximation chapters"}
+- id: source-bishop-prml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:71:e1', role: mention, note: "chapters 2 and 8"}
+- id: source-gallager-stochastic-processes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:106:e1', role: mention, note: "MIT 6.262 problem sets and quizzes, held on the record as identifiers.mit-6262"}
+- id: source-toussaint-optimization-script
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:35:u2', role: companion, title: "Course page WS 20/21 (single slide decks)"}
+  - {ref: 'm-math:35:u3', role: companion, title: "LaTeX sources (GitHub)"}
+  - {ref: 'm-math:35:u4', role: child, title: "Slides: No Free Lunch"}
+  - {ref: 'm-math:35:u5', role: child, title: "Slides: Bayesian Optimization"}
+  - {ref: 'm-math:105:e1', role: duplicate, note: "the exercises are part of the script"}
+  - {ref: 'm-math:114:u1', role: duplicate, note: "the lecturer's GitHub, already named in §3"}
+- id: source-caltech-lfd
+  kind: existing-active-source
+  extra_mentions: ['m-math:19']
+  occurrences: []
+- id: source-mit-6041sc
+  kind: existing-active-source
+  extra_mentions: ['m-math:28']
+  occurrences: []
+- id: source-boyd-convex-optimization
+  kind: existing-active-source
+  extra_mentions: ['m-math:104']
+  occurrences: []
+- id: source-schrijver-combinatorial-notes
+  kind: existing-active-source
+  extra_mentions: ['m-math:109']
+  occurrences: []
+- id: source-mml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:116:u1', role: companion, title: "Exercises and Jupyter companion code (GitHub)"}
+- id: candidate-source-stanford-stats214
+  kind: new-masters-candidate
+  title: "Stanford CS229M / STATS214 — Machine Learning Theory (Ma)"
+  type: course
+  occurrences:
+  - {ref: 'm-math:15:u1', role: landing}
+- id: candidate-source-wainwright-hds
+  kind: new-masters-candidate
+  title: "Wainwright — High-Dimensional Statistics: A Non-Asymptotic Viewpoint"
+  type: book
+  occurrences:
+  - {ref: 'm-math:17:e1', role: mention}
+- id: candidate-source-candes-wakin-compressive-sampling
+  kind: new-masters-candidate
+  title: "Candès & Wakin — An Introduction to Compressive Sampling (IEEE SPM 2008)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:18:e1', role: mention}
+- id: candidate-source-grimmett-stirzaker
+  kind: new-masters-candidate
+  title: "Grimmett & Stirzaker — Probability and Random Processes"
+  type: book
+  occurrences:
+  - {ref: 'm-math:27:e1', role: mention}
+- id: candidate-source-grimmett-stirzaker-exercises
+  kind: new-masters-candidate
+  title: "Grimmett & Stirzaker — One Thousand Exercises in Probability"
+  type: book
+  occurrences:
+  - {ref: 'm-math:107:e1', role: mention}
+- id: candidate-source-bertsekas-tsitsiklis-probability
+  kind: new-masters-candidate
+  title: "Bertsekas & Tsitsiklis — Introduction to Probability"
+  type: book
+  note: "⚠ the list marks it as a bridge for the bachelor Mathe-2 retake; decide at use whether it becomes an active source"
+  occurrences:
+  - {ref: 'm-math:28:e1', role: mention}
+- id: candidate-source-norris-markov-chains
+  kind: new-masters-candidate
+  title: "Norris — Markov Chains"
+  type: book
+  occurrences:
+  - {ref: 'm-math:29:u1', role: landing}
+- id: candidate-source-kochenderfer-wheeler-optimization
+  kind: new-masters-candidate
+  title: "Kochenderfer & Wheeler — Algorithms for Optimization (MIT Press)"
+  type: book
+  occurrences:
+  - {ref: 'm-math:38:u1', role: landing}
+- id: candidate-source-garnett-bayesian-optimization
+  kind: new-masters-candidate
+  title: "Garnett — Bayesian Optimization"
+  type: book
+  occurrences:
+  - {ref: 'm-math:39:u1', role: landing}
+- id: candidate-source-ceres-solver
+  kind: new-masters-candidate
+  title: "Ceres Solver"
+  type: software
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-scipy-optimize
+  kind: new-masters-candidate
+  title: "scipy.optimize"
+  type: documentation
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-jaxopt
+  kind: new-masters-candidate
+  title: "JAXopt tutorials"
+  type: documentation
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-mit-18433
+  kind: new-masters-candidate
+  title: "MIT 18.433 — Combinatorial Optimization (Goemans notes)"
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+  - {ref: 'm-math:109:e1', role: mention, note: "problem sets with solutions"}
+- id: candidate-source-mit-6251
+  kind: new-masters-candidate
+  title: "MIT 6.251J — Introduction to Mathematical Programming"
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+  - {ref: 'm-math:109:e1', role: mention}
+- id: candidate-source-mit-ocw-integer-programming
+  kind: new-masters-candidate
+  title: "MIT OCW — Integer Programming and Combinatorial Optimization"
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+- id: candidate-source-matousek-gaertner-lp
+  kind: new-masters-candidate
+  title: "Matoušek & Gärtner — Understanding and Using Linear Programming"
+  type: book
+  note: "⚠ the list marks it as a bridge for the bachelor Mathe-2 retake; decide at use whether it becomes an active source"
+  occurrences:
+  - {ref: 'm-math:50:e1', role: mention}
+- id: candidate-source-wolsey-integer-programming
+  kind: new-masters-candidate
+  title: "Wolsey — Integer Programming"
+  type: book
+  occurrences:
+  - {ref: 'm-math:51:e1', role: mention}
+- id: candidate-source-vazirani-approximation
+  kind: new-masters-candidate
+  title: "Vazirani — Approximation Algorithms"
+  type: book
+  occurrences:
+  - {ref: 'm-math:58:e1', role: mention}
+- id: candidate-source-goemans-williamson-maxcut
+  kind: new-masters-candidate
+  title: "Goemans & Williamson — Improved Approximation Algorithms for MAX CUT and Satisfiability Using Semidefinite Programming (JACM 1995)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:59:e1', role: mention}
+- id: candidate-source-cmu-approximation-notes
+  kind: new-masters-candidate
+  title: "Gupta & O'Donnell (CMU) — Approximation Algorithms lecture notes"
+  type: lecture
+  occurrences:
+  - {ref: 'm-math:61:e1', role: mention}
+- id: candidate-source-kay-ssp-vol1
+  kind: new-masters-candidate
+  title: "Kay — Fundamentals of Statistical Signal Processing, Vol. I: Estimation Theory"
+  type: book
+  occurrences:
+  - {ref: 'm-math:68:e1', role: mention}
+- id: candidate-source-kay-ssp-vol2
+  kind: new-masters-candidate
+  title: "Kay — Fundamentals of Statistical Signal Processing, Vol. II: Detection Theory"
+  type: book
+  occurrences:
+  - {ref: 'm-math:68:e1', role: mention}
+- id: candidate-source-poor-detection-estimation
+  kind: new-masters-candidate
+  title: "Poor — An Introduction to Signal Detection and Estimation (Springer)"
+  type: book
+  occurrences:
+  - {ref: 'm-math:69:e1', role: mention}
+- id: candidate-source-factor-graphs-sum-product
+  kind: new-masters-candidate
+  title: "Kschischang, Frey & Loeliger — Factor Graphs and the Sum-Product Algorithm (IEEE IT 2001)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:70:e1', role: mention}
+- id: candidate-source-donoho-amp
+  kind: new-masters-candidate
+  title: "Donoho, Maleki & Montanari — Message-Passing Algorithms for Compressed Sensing (PNAS 2009)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:72:e1', role: mention}
+- id: candidate-source-cover-thomas
+  kind: new-masters-candidate
+  title: "Cover & Thomas — Elements of Information Theory (2nd ed.)"
+  type: book
+  occurrences:
+  - {ref: 'm-math:79:e1', role: mention}
+- id: candidate-source-mackay-itila
+  kind: new-masters-candidate
+  title: "MacKay — Information Theory, Inference, and Learning Algorithms"
+  type: book
+  occurrences:
+  - {ref: 'm-math:80:u1', role: landing}
+- id: candidate-source-stanford-ee376a
+  kind: new-masters-candidate
+  title: "Stanford EE376A — Information Theory (Weissman)"
+  type: course
+  occurrences:
+  - {ref: 'm-math:81:e1', role: mention}
+- id: candidate-source-information-bottleneck
+  kind: new-masters-candidate
+  title: "Tishby, Pereira & Bialek — The Information Bottleneck Method (1999)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:82:e1', role: mention}
+- id: candidate-source-deep-vib
+  kind: new-masters-candidate
+  title: "Alemi et al. — Deep Variational Information Bottleneck (ICLR 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-math:82:e1', role: mention}
+- id: candidate-source-stanford-ee364a
+  kind: new-masters-candidate
+  title: "Stanford EE364a — Convex Optimization I (Boyd): homework and final archive"
+  type: course
+  note: "the row also names the book's Additional Exercises and their solutions repository"
+  occurrences:
+  - {ref: 'm-math:104:e1', role: mention}
+- id: candidate-source-mit-6042j
+  kind: new-masters-candidate
+  title: "MIT 6.042J — Mathematics for Computer Science (OCW)"
+  type: course
+  note: "the list suggests it as a proof-technique refresher alongside the bachelor"
+  occurrences:
+  - {ref: 'm-math:108:e1', role: mention}
+- id: candidate-source-cvxpy
+  kind: new-masters-candidate
+  title: "CVXPY"
+  type: software
+  occurrences:
+  - {ref: 'm-math:113:u1', role: landing}
+- id: candidate-source-project-euler
+  kind: new-masters-candidate
+  title: "Project Euler (mathematical programming problems)"
+  type: website
+  occurrences:
+  - {ref: 'm-math:115:e1', role: mention}
+- id: candidate-source-exercism
+  kind: new-masters-candidate
+  title: "Exercism (programming exercises)"
+  type: website
+  occurrences:
+  - {ref: 'm-math:115:e1', role: mention}
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-math:73:e1', 'm-math:83:e1', 'm-math:89:e1', 'm-math:90:e1', 'm-math:91:e1', 'm-math:92:e1', 'm-math:93:e1']

@@ -1,0 +1,81 @@
+# Compact, atomic revision of existing units in one module. The importer reads
+# unchanged routes, units and study maps from the guarded live snapshot; do not
+# copy their full records here. Use module-plan-import.template.yaml for new
+# units, module reordering, workspace joins or source-registry changes.
+# Joining an ALREADY REGISTERED source to the module is compact: list it under
+# source_joins (it must exist in the registry — creation stays with
+# `los source-intake`), then add its routes under unit_revisions as usual.
+module_id: module-example
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-example/outputs/coverage-audit.md
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+source_joins:
+  # Each join names a source already in the registry plus its reviewed module
+  # role; joins apply before the route additions below, atomically, in order.
+  # - source_id: source-example-course
+  #   role: spine
+  #   why: The course text carries this module's core derivations.
+  #   priority: 1
+
+unit_revisions:
+  - unit_id: unit-example-l01
+    route_changes:
+      add: []
+      # Each addition names a source already joined to this module (above or
+      # previously) and the full rich route; the route's unit_id is this unit.
+      # - source_id: source-example-course
+      #   route:
+      #     id: route-example-l01-drills
+      #     unit_id: unit-example-l01
+      #     title: Drill set
+      #     format: practice
+      #     angle: Drills the lecture's core result in the course's notation.
+      #     covers:
+      #       - knowledge-example-l01-core-result
+      #     depth: practice
+      #     scope: current
+      #     locator: "Problem set 1, Aufgaben 1-3"
+      update:
+        - route_id: route-example-l01-book
+          fields:
+            angle: The exact section used for this lecture and what it explains.
+      remove: []
+    stage_patches:
+      - stage_id: stage-example-l01-reading
+        fields:
+          objective: Explain the result under its stated assumptions.
+          # Replacing resources means providing the complete final array for
+          # this stage. Evidence-bearing placements must remain present.
+          # resources: []
+      # Appending places new rows after every existing placement, in order,
+      # without copying the old array. Each row needs a fresh resource id;
+      # old rows, their order, and their evidence stay untouched. One patch
+      # cannot combine resources_append with fields.resources.
+      # - stage_id: stage-example-l01-reading
+      #   resources_append:
+      #     - id: resource-example-l01-added
+      #       kind: read
+      #       scope_triage: helpful-now
+      #       material_ref:
+      #         route_id: route-example-l01-book
+      #         inherit: [label, source_id, locator, angle, angle_detail]
+  - unit_id: unit-example-l02
+    stage_patches:
+      - stage_id: stage-example-l02-practice
+        fields:
+          done_when:
+            - Solve one unfamiliar problem and explain each step.
+
+# Include these only when the corresponding change needs them.
+claim_evidence: []
+acknowledgments: []

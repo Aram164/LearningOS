@@ -1,0 +1,196 @@
+{
+  "canonical_changed": {
+    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "84b6e4477efcd2a4e88d3619eb15dde5d2ca885b5b4f349f1ddd4a657cd46a58"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "module.materials.compact",
+          "channel": "operator",
+          "intent_sha256": "sha256:2ca8faa3d60b4b1a81b164df7f26f7baa7aa9bc0fcee22f2d6b5146eb734d17a",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "module-demo": 1,
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "module-demo": {
+          "after": 1,
+          "before": 0
+        },
+        "study-map-demo-l01": {
+          "after": 1,
+          "before": 0
+        },
+        "unit-demo-l01": {
+          "after": 4,
+          "before": 3
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "module.materials.compact",
+            "declared_writes": [
+              "curriculum/modules/*/source-map.yaml",
+              "curriculum/modules/*/units/*/study-map.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "module.materials.compact",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "module-demo": 0,
+        "study-map-demo-l01": 0,
+        "unit-demo-l01": 3
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:b41b2e616199f6818bbf77cf041fd664c5cba7a5170fa7cadcea9206c9756106",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:2ca8faa3d60b4b1a81b164df7f26f7baa7aa9bc0fcee22f2d6b5146eb734d17a"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:2ca8faa3d60b4b1a81b164df7f26f7baa7aa9bc0fcee22f2d6b5146eb734d17a",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+          "sha256_after": "84b6e4477efcd2a4e88d3619eb15dde5d2ca885b5b4f349f1ddd4a657cd46a58",
+          "sha256_before": "506b0fdd350e11960069e09ffd099e7ac616076a8b3425557614e9167bbfe141"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "module-demo": 1,
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "84b6e4477efcd2a4e88d3619eb15dde5d2ca885b5b4f349f1ddd4a657cd46a58",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "c668dbf3f18fdf1f6e3604a3dbb45e94c379fe330823231a80a679de28bc3930",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "48972b7706f7b707f25d3a8b09b0dff7556d3171bc791040000365c6dd4bd78d",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "33a7b0ee15c79a55af8781e27a6d30e07f86a95907b400a6103eb78bf64c2f48",
+          "state": "file"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"schema_version\": 1,\n    \"module_id\": \"module-demo\",\n    \"map_bytes_saved\": 35,\n    \"referenced_routes\": 1,\n    \"plan_sha256\": \"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93\",\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"\n    ],\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"study-map-demo-l01\",\n      \"unit-demo-l01\"\n    ],\n    \"expected_revisions\": {\n      \"module-demo\": 0,\n      \"study-map-demo-l01\": 0,\n      \"unit-demo-l01\": 3\n    },\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"module-demo\": 1,\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "module.materials.compact",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "affected_files": [
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+      ],
+      "artifact_ids": [
+        "module-demo",
+        "study-map-demo-l01",
+        "unit-demo-l01"
+      ],
+      "artifact_revisions": {
+        "module-demo": 1,
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "expected_revisions": {
+        "module-demo": 0,
+        "study-map-demo-l01": 0,
+        "unit-demo-l01": 3
+      },
+      "map_bytes_saved": 35,
+      "module_id": "module-demo",
+      "ok": true,
+      "plan_sha256": "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93",
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "referenced_routes": 1,
+      "replayed": false,
+      "schema_version": 1,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

@@ -1,0 +1,7 @@
+# The consolidated registry is intentionally empty since ADR-007.
+#
+# Every source record lives in its subject partition under
+# sources/registry/. The loader reads the consolidated file and the
+# partition directory as one registry, so this file remains valid and
+# available if a record ever needs a home before its subject is settled.
+sources: []

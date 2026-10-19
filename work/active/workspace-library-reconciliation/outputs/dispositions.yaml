@@ -1,0 +1,3761 @@
+# Reviewed dispositions for the library reconciliation. Written by
+# tools/library_reconciliation.py merge/freeze; edit decisions, not layout.
+schema: library-reconciliation-dispositions/v1
+reviewed_input_hashes:
+  legacy/LEARNING-RESOURCES.md: e4c16dd08db7227c32baba46e5b0248b0fee8a61734779d44d01481f0f0c0f14
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-ALGO-RESOURCES.md: 95c8d1d981c2b98cd1f06761e14480686eb3881ed35272e519fcbdc56a0d291b
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-BENCHMARKING-RESOURCES.md: f7a29d6a319ba440521e603b15d1ae6e6b0e1eff28e8858f7e49ce29f4c60811
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-DATAENG-RESOURCES.md: e2175edf25b676b55813b006347696b21bdcf06a560bcf18a5835f579fd8abdf
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-MATH-RESOURCES.md: 7814f6686c643fc79cedf583c08b6bfcaeb5c0a5b7528893d394bd23fde9002f
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-ML-RESOURCES.md: 88f165e30a3398c73de3a0ca80ed93e08dfb5fde15b1022c0d3f54e9bf914e5f
+  repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-RUNTIME-RESOURCES.md: ea40e3bed169e67e39f97dcb677b53708d830b0195ae314bf21bd77977caddeb
+  repository/work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md: ebaf250e138c1b64eb6db47f343ef8549880927b94afb63f0bb889ab6e552832
+  repository/work/active/workspace-aml-exam-prep/inputs/DL-AMLS-Learning-Plan.md: 3d7fad121b408b39e4a0fc5ac8a454a3c154d4770bfaf45449d6048ad44fe484
+  repository/work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md: 8caec15846041958602712c62dfc14e9bceb9459ec130645a00b610e88131543
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_00_proof_presentation.md: e79486cd0b4817b541ddb23c0703aa201bde0667b89c6115bb74aa14c1239b34
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_01_foundations.md: f0a84f25d2932138efed12a8b8304c1a7ffb0d88d084dd15dd545f93176974bb
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_02_sequences.md: f4a6b75e7887a82b6cde101f69360f662e737907e3f305bda521abefd1c4996f
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_03_series.md: a9460c44f8905a5fd2c1b671d16ed8248e22a37fee100fe573efbd0726a07390
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_04_limits_continuity.md: 560bff080169b40cf68e55f32a64ec2c6cc843359e7398845d3ced7fd032e2aa
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_05_exp_log_uniform.md: 9b073887068134618e740fa48b12e7227d146326763446a784c9a3fdea87da5f
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_06_differentiation.md: 2c5c878aef062340bcea1ee62e4ec5485575659fcf0504466d64d751cd9f5f10
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_07_taylor.md: e8d847379b4efb18fd9ea72dd47d07ef0cf04d1dc84c3e59212c7833adef98ea
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_08_integration.md: a2d7eb8a421bdb08e285854dcc42d83db0a70f5337e301df8d3025ddf5386628
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_09_exam_transfer.md: 8a601287f2f8d1996ab8c6a9f78c9c04139296eb198bd8b463d66cd3fba05369
+  repository/work/active/workspace-m2-exam-prep/inputs/AN_Node_Plans_INDEX.md: d087e0a237421799935f37f5c76b5026cef5b6b2020705d20840a49fd6337af9
+  repository/work/active/workspace-m2-exam-prep/inputs/Chat1_Foundations_AML_SaD_Plan.md: db183d3a93575de9d422910f71e937bfa078104e6d1932d5f336299b1ddd3d7a
+  repository/work/active/workspace-m2-exam-prep/inputs/Chat8_Analysis_SaD_Plan.md: 62976790b28a1a8b7827a66a1cd13618eda9363c8af7bb401015f5915591cb9d
+  repository/work/active/workspace-thesis-mle-medical/inputs/original-thesis-brief.md: 61f1bcdfc21eaf17492059588443d40495fcca98ea2b2bbe9db7d8b4d2bba2c2
+  repository/sources/sources.yaml: 033e3667f6921153972df2258e5af1eb474d0dbd20306b07f17aaaac7cfc1d7c
+  repository/sources/registry/algorithms.yaml: 4ce5a0c038e799d532d04abf0c59bd43e745131f9b35755c8337e1c3829b3eaa
+  repository/sources/registry/data-systems.yaml: 6f55e53fc8dbae2ce7c8330916ec2ca058387c0363981f9ebda2d378affa423d
+  repository/sources/registry/degree-anchors.yaml: 109ebc1c5d89bef66871a25edec20cbcbb85565f2773702012af25f07a1510b7
+  repository/sources/registry/external-shelf.yaml: e084341639157213d022d95e769215651062f8d5f538755f12b83b0e83b0d8ce
+  repository/sources/registry/external-supplements.yaml: 9c80d42135f9c2399c551f2b7473fc502b6fa7a41f827b0d318080b552ac7970
+  repository/sources/registry/machine-learning.yaml: 0b5d11aa0a9c78f71152f4c54031a1691bff7904f691fb5098779673aecd351d
+  repository/sources/registry/mathematics.yaml: cb7b2200587fc115c236f13b3bd4073f961c9863749714e55bd32151d04d8949
+  repository/sources/registry/method-admin.yaml: 8bf7f7d4602947871a719e5d018254071a340a58e71e81faf2f104becd653aab
+  repository/sources/registry/ml-systems.yaml: 40fe22e3c779a3f21aeda269f3d7fcf80f432df794972141fb76d4bed9a62040
+  repository/sources/registry/optimization.yaml: 51a08162f0da5bf4846a05c31f0f2dd42f0b0b2ebe08342664326fc465c2a6b4
+  repository/sources/registry/software.yaml: 66949866ceb04e13bb4f2c4a889f25289c0ab7b47c50236ea5121a83199ca2e9
+  repository/sources/registry/stage2-sources.yaml: 3d16b611be51ce9f18280293b6f9b92746fa66fd92338d2e8a6c78c677c27ee2
+  repository/sources/registry/stage2b-unsorted-intake.yaml: 374cef2f91b54711aa52aa956f1b791de2cdbe2f512157f7dd41d6d934ddd866
+  repository/sources/collections/algorithms-bookshelf.yaml: e9a1a4c6ad635c7817a250bcb83c4c1d22187621a2199ce1279eabbabf3b3ec4
+  repository/sources/collections/algorithms-lecture-series.yaml: 63f48860c65bf4f6dcdc880b5142ee8aca16babd74d510b64403c9df131ddf3e
+  repository/sources/collections/exam-practice-banks.yaml: 88cbf2869e088599b8a6216e02815593c543e7efa0afb6f04cc2128929ee7de0
+  repository/sources/collections/math-bookshelf.yaml: daeca23f099ee1a7f76f1d75c6a7263edb825561e934ff8b37034d8ec7bd970c
+  repository/sources/collections/math-lecture-series.yaml: 2fceb0cc4a91bc9d7f05d496de7f6bb917a7c0a96c2212a076b9ba53f389b632
+  repository/sources/collections/ml-bookshelf.yaml: 5dce56a9bd9a642d498c695145cbeddf1d1251e4d518c7cb5770df9e18d43aa5
+  repository/sources/collections/ml-broaden-later.yaml: d2b0d189b78c4064734b39d97c5f865aff78ff9a3404bbe6a9a59563c7e71eda
+  repository/sources/collections/ml-explainers.yaml: 99e5691d99ffcbb8c6981f8d927452ed8f877c75948ba76485f1094b6e775c72
+  repository/sources/collections/ml-lecture-series.yaml: 38226027ec173673743c0eaf0ffd986935c82ac3e7d57dd17b1d2818591ffe21
+  repository/sources/collections/ml-systems-bookshelf.yaml: 86d0b1b8f4d5f914f08cbd429bf744314f2b9e8d4fadea1c556ee5a2fa58c5a3
+  repository/sources/collections/ml-systems-lecture-series.yaml: 510faaed8b277c44315d34fd3e128048c85dd3cc15a0d7f18bd6719bf29d5e83
+  repository/sources/collections/papers-shelf.yaml: 3e0e3309629f3d2e83efc444702356237dd239671ffe93ad03fd41608a0d6f8e
+  repository/sources/collections/programming-bookshelf.yaml: a7887f1c3957074f2e068ecc2e11b2ce1df50ab189f97141e37c04c24c9635bf
+  repository/sources/collections/programming-video-courses.yaml: 0ef7252108fee37670ebbc2b7f230adfa0073ed8e9ddb6afefc13e57057c4ae9
+  repository/sources/collections/project-toolbox.yaml: 237440f333dd66892090d8ee3a2f4b3c9cf11f8d33f73a40341818535f0a0bb2
+  repository/sources/collections/python-internals-shelf.yaml: 5ee74343e5f9fd45f23c4c5311346f793d0f05b15da310b839a1d47e5259d19e
+  repository/curriculum/quarantine/masters-planning/sources/degree-module-anchors.yaml: 50fbcf5de050c3cca38f8a1183dbc60e7ede4b8a4faca69584f0310120e4f109
+  repository/curriculum/quarantine/masters-planning/catalog.yaml: absent
+  repository/records/materials-manifest.yaml: 9161235611dc5e54f527e5a3ec632fe182652040acc9ab2dcf2c167e2aeb69cc
+  repository/tools/build_materials_tree.py: 0ad8b6b834f1292e230c6c61c20523c60db861558182e6a9390d76b8e6dfb0a3
+  repository/migration/inventory.json: aa7af1262dc33d9ee31419ec662f7e6471d299b0131b86e6aa5444c759d074e9
+  repository/migration/material-moves.csv: 0a1d4b09bd6f79252f3e67f0d57d7f2048d4272a1dc6d674fc165d8cf5bbe5ad
+  repository/migration/path-map.csv: 0d20152110b69eabac961b077c3bc806591f22f6e4bf4f15f654ced01d824e46
+objects:
+- id: source-3b1b-essence-of-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:130:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-an04:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:24:s1', role: reference, basis: source-id}
+- id: source-3b1b-linear-algebra
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:52:u1', role: landing, basis: exact-url}
+- id: source-3b1b-neural-networks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:51:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:26:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:473:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:473:u2', role: alias, note: the same videos hosted on KI-Campus}
+- id: source-abbott-understanding-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:198:p1', role: local, basis: material-moves, note: LearningOS/materials/source-abbott-understanding-analysis/abbott.pdf}
+  - {ref: 'ws-m2-an02:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:25:s1', role: reference, basis: source-id}
+- id: source-abedjan-data-profiling
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:69:e1', role: mention}
+  - {ref: 'm-dataeng:156:e1', role: mention}
+- id: source-ableitinger-musterloesungen
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:33:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:27:s1', role: reference, basis: source-id}
+- id: source-albumentations-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:218:u1', role: landing, basis: exact-url}
+- id: source-algo2-frankfurt-klausuren
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:317:u1', role: landing, note: online exam archive; the record holds only the local set}
+  - {ref: 'lr:317:p1', role: local, basis: material-moves, note: LearningOS/materials/source-algo2-frankfurt-klausuren}
+  - {ref: 'ws-algo2-chat9:39:u1', role: landing}
+- id: source-amls-prior-archives
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:126:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:126:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:344:e1', role: duplicate, note: back-reference to the SS23 recordings row}
+  - {ref: 'm-ml:101:u1', role: companion, title: SS25 course page}
+  - {ref: 'm-ml:101:u2', role: landing, basis: exact-url}
+  - {ref: 'm-ml:101:u3', role: companion, title: Boehm's teaching overview (archive from SS19)}
+- id: source-amls-ss26-lectures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:125:u1', role: landing, basis: exact-url}
+- id: source-analysis-drill-blaetter-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an02:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:49:p1', role: local, note: 'renamed on disk: Grenzwerte-von-Folgen.pdf'}
+  - {ref: 'ws-m2-chat8:49:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:49:p3', role: local, note: 'renamed on disk: auf-2-2_Folgen_Loesungen.pdf'}
+  - {ref: 'ws-m2-chat8:49:p4', role: local, note: 'renamed on disk: Bestimmt_Scan.pdf'}
+  - {ref: 'ws-m2-chat8:51:p1', role: local, note: 'renamed on disk: KIT_Blatt-Reihen.pdf'}
+  - {ref: 'ws-m2-chat8:51:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:51:p3', role: local, note: 'renamed on disk: auf-2-3_Reihen_Loesungen.pdf'}
+  - {ref: 'ws-m2-chat8:54:p1', role: local, note: 'renamed on disk: u10_Loesung.pdf'}
+  - {ref: 'ws-m2-chat8:54:p2', role: local, note: 'renamed on disk: IngMath2_Aufgaben.pdf'}
+  - {ref: 'ws-m2-chat8:55:p1', role: local, note: 'renamed on disk: Aufgabensammlung-M1_Loesung.pdf'}
+  - {ref: 'ws-m2-chat8:55:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:114:p1', role: local, note: 'renamed on disk: Bestimmt_Scan.pdf'}
+  - {ref: 'ws-m2-chat8:115:p1', role: local, note: 'renamed on disk: auf-2-2_Folgen_Loesungen.pdf'}
+  - {ref: 'ws-m2-chat8:115:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:115:p3', role: duplicate, note: the same file named twice in the step}
+  - {ref: 'ws-m2-chat8:151:p1', role: local, note: 'renamed on disk: IngMath2_Aufgaben.pdf'}
+  - {ref: 'ws-m2-chat8:151:p2', role: local, basis: manifest-basename}
+- id: source-analysis-grundlagen-handouts
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an01:24:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:24:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:46:p1', role: local, note: 'renamed on disk: Mengen-und-Abbildungen.pdf'}
+  - {ref: 'ws-m2-chat8:46:p2', role: local, note: 'renamed on disk: Relationen.pdf'}
+  - {ref: 'ws-m2-chat8:53:p1', role: local, note: 'renamed on disk: Maths220_Proofs-in-Calculus.pdf'}
+  - {ref: 'ws-m2-chat8:133:p1', role: local, note: 'renamed on disk: Maths220_Proofs-in-Calculus.pdf'}
+- id: source-analysis-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:297:u1', role: companion, title: Marburg Analysis I Klausuren (source PDF)}
+  - {ref: 'lr:297:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+  - {ref: 'lr:298:u1', role: companion, title: Regensburg Analysis I Klausur (source PDF)}
+  - {ref: 'lr:298:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+  - {ref: 'lr:299:u1', role: companion, title: MIT 18.100C (Fall 2012) problem sets (OCW)}
+  - {ref: 'lr:299:u2', role: companion, title: MIT 18.100C (Fall 2012) practice final (OCW)}
+  - {ref: 'lr:299:p1', role: local}
+  - {ref: 'lr:299:p2', role: local, basis: manifest-basename}
+  - {ref: 'lr:301:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:302:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:303:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:304:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:305:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an09:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:58:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:177:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:177:p2', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+- id: source-analysis-skript
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:293:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:298:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:30:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:31:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:32:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:32:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:59:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:60:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:65:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an01:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:21:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:21:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:6:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-skript}
+  - {ref: 'ws-m2-chat8:32:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:47:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:48:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:48:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:50:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:52:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:56:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:57:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:174:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:175:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:178:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:219:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:272:p1', role: local, basis: manifest-basename}
+- id: source-arora-barak
+  kind: existing-active-source
+  extra_mentions: ['m-algo:39']
+  occurrences:
+  - {ref: 'm-algo:25:u1', role: companion, title: Draft book PDF (Princeton)}
+  - {ref: 'm-math:60:e1', role: mention, note: PCP and hardness-of-approximation chapters}
+- id: source-asimov-nn-zoo
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:61:u1', role: landing, basis: exact-url}
+- id: source-augmix
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:248:u1', role: landing, basis: exact-url}
+- id: source-automate-boring-stuff
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:185:p1', role: local, basis: inventory-size}
+- id: source-awesome-ml-books
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:232:u1', role: landing, basis: exact-url}
+- id: source-baertl-statistik-buch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:209:e1', role: mention}
+- id: source-batchelder-names
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:364:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:364:u2', role: companion, basis: exact-identifier}
+- id: source-belkin-double-descent
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:249:e1', role: mention}
+- id: source-bendersky-normal-equation
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:55:u1', role: landing, basis: exact-url}
+- id: source-berkeley-cs189
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:188:u1', role: landing, basis: exact-url}
+- id: source-bermbach-csb
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:11:u1', role: duplicate, note: the module profile links the same book website}
+  - {ref: 'm-bench:13:u1', role: companion, title: Companion website}
+- id: source-bertsimas-tsitsiklis-lp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:46:e1', role: mention}
+- id: source-bishop-prml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:210:e1', role: mention}
+  - {ref: 'm-math:71:e1', role: mention, note: chapters 2 and 8}
+  - {ref: 'm-ml:16:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:60:e1', role: duplicate, note: 'back-reference; chapters 3–5, 7, 8'}
+  - {ref: 'm-ml:69:e1', role: mention, note: 'chapters 9, 12, 13'}
+  - {ref: 'm-ml:92:e1', role: duplicate, note: 'back-reference; chapters 1–4, 6.4, 9, 12'}
+  - {ref: 'm-ml:192:u1', role: companion, basis: exact-identifier}
+- id: source-blitzstein-hwang
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:164:u1', role: alias, note: Aram's Drive copy of the same book; the record holds the local copy}
+  - {ref: 'lr:164:u2', role: companion, title: Official source (Stat 110 site)}
+- id: source-boyd-convex-optimization
+  kind: existing-active-source
+  extra_mentions: ['m-math:104']
+  occurrences:
+  - {ref: 'm-math:37:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:20:u1', role: landing, basis: exact-url}
+- id: source-brandon-foltz
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:120:u1', role: landing, basis: exact-url}
+- id: source-buneman-why-where
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:250:p1', role: local, note: ⚠ local copy removed by the 2026-07-17 purge (migration/materials-reconciliation-2026-07-17.md); the record has no material}
+- id: source-calmcode-sklearn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:103:u1', role: landing, basis: exact-url}
+- id: source-caltech-lfd
+  kind: existing-active-source
+  extra_mentions: ['m-math:19']
+  occurrences:
+  - {ref: 'lr:267:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:59:u1', role: companion, title: Telecourse (18 recorded lectures)}
+  - {ref: 'm-ml:189:u1', role: landing, basis: exact-url}
+- id: source-captum
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:217:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:131:u1', role: alias, note: site root; the record stores the tutorials page}
+  - {ref: 'ws-aml-dl-amls:27:u2', role: landing, basis: exact-url}
+- id: source-clrs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:181:p1', role: local, basis: material-moves, note: LearningOS/materials/source-clrs/clrs-de.pdf}
+  - {ref: 'lr:181:p2', role: local, note: 'English 3rd edition, the same edition as the German 4. Auflage'}
+  - {ref: 'ws-algo2-chat9:32:p1', role: local, basis: material-moves, note: LearningOS/materials/source-clrs/clrs-de.pdf}
+  - {ref: 'ws-algo2-chat9:32:p2', role: local, note: English 3rd edition (clrs-en3.pdf)}
+- id: source-cmu-10414
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:124:u1', role: child, title: Lectures page}
+  - {ref: 'lr:124:u2', role: companion, title: Lecture videos (YouTube playlist)}
+  - {ref: 'lr:341:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:341:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-dataeng:88:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:88:u2', role: child, title: Lectures page}
+  - {ref: 'm-dataeng:88:u3', role: companion, title: Lecture videos (YouTube playlist)}
+  - {ref: 'm-ml:104:e1', role: duplicate, note: back-reference to MLMMI}
+- id: source-cmu-15445
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:13:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:13:u2', role: companion, title: CMU Database Group course overview}
+  - {ref: 'm-dataeng:19:u1', role: companion, title: BusTub (the course's educational DBMS)}
+  - {ref: 'm-dataeng:181:u1', role: landing, basis: exact-url}
+- id: source-cmu-15451-splay-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:329:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:329:u2', role: companion, title: Older full course notes (Spring 2016)}
+- id: source-compiler-construction-shelf
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:35:e1', role: mention, note: the shelf holds the 2006 (2nd) edition the row names}
+- id: source-corey-schafer-oop
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:372:u1', role: landing, basis: exact-url}
+- id: source-cornell-cs6120
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:25:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:38:e1', role: duplicate, note: back-reference to §2}
+  - {ref: 'm-runtime:93:e1', role: mention, note: the course's implementation tasks on the Bril IR}
+- id: source-cs229-2022-videos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:114:u1', role: landing, basis: exact-url}
+- id: source-cs229-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:114:u3', role: landing, note: web source of the notes; the record holds only the local copy}
+  - {ref: 'lr:180:p1', role: local, basis: material-moves, note: LearningOS/materials/source-cs229-notes/cs229-notes.pdf}
+- id: source-cs229-problem-sets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:264:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:264:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:91:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:190:u1', role: landing, basis: exact-url}
+- id: source-cs229-project-archive
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:231:u1', role: alias, note: record stores projects_backup.html}
+  - {ref: 'lr:231:u2', role: companion, basis: exact-identifier}
+- id: source-cs231n-2017-videos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:123:u1', role: landing, basis: exact-url}
+- id: source-cs231n-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:53:u1', role: child, title: ConvNets notes}
+  - {ref: 'lr:53:u2', role: child, title: Understanding and visualizing CNNs}
+  - {ref: 'lr:59:u1', role: child, title: 'Image classification (k-NN, cross-validation)'}
+  - {ref: 'lr:59:u2', role: child, title: Optimization / SGD}
+  - {ref: 'm-ml:27:u1', role: companion, title: Course site (current run)}
+  - {ref: 'm-ml:191:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:25:u1', role: child, title: ConvNets notes}
+  - {ref: 'ws-aml-dl-amls:25:u2', role: child, title: Understanding and visualizing CNNs}
+- id: source-cs4780
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:113:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:113:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:266:u1', role: companion, basis: exact-identifier}
+- id: source-cs4780-homeworks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:266:p1', role: local, basis: material-moves, note: LearningOS/materials/source-cs4780-homeworks}
+  - {ref: 'lr:266:p2', role: local, note: the homework folder's README.md (HW map)}
+- id: source-csc411-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:178:p1', role: local}
+- id: source-cygan-parameterized
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:19:u1', role: landing, basis: exact-url}
+  - {ref: 'm-algo:45:u1', role: landing, basis: exact-url}
+  - {ref: 'm-algo:134:e1', role: mention, note: the book's exercises and hints}
+- id: source-d2l
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:30:u1', role: landing, basis: exact-url}
+- id: source-daniel-jung
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:131:e1', role: mention}
+- id: source-data-gov
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:240:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:240:u2', role: companion, basis: exact-identifier}
+- id: source-data-school-sklearn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:102:u1', role: landing, basis: exact-url}
+- id: source-deitmar-uebungsbuch
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences:
+  - {ref: 'ws-m2-an01:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:30:s1', role: reference, basis: source-id}
+- id: source-dekking-mips
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:166:e1', role: mention}
+- id: source-distill-momentum
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:60:u1', role: landing, basis: exact-url}
+- id: source-dmmls-boehm
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:202:e1', role: mention}
+  - {ref: 'm-ml:102:e1', role: mention}
+- id: source-dms-grundwerkzeuge
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:182:p1', role: local}
+  - {ref: 'ws-algo2-chat9:32:p3', role: local}
+- id: source-docker-get-started
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:223:u1', role: landing, basis: exact-url}
+- id: source-domingos-useful-things
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:57:u1', role: landing, basis: exact-url}
+- id: source-duckdb-python-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:220:u1', role: landing, basis: exact-url}
+- id: source-eecs498
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:122:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:122:u2', role: companion, title: Course site (Fall 2020)}
+- id: source-esl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:179:p1', role: local, basis: material-moves, note: LearningOS/materials/source-esl/esl.pdf}
+  - {ref: 'm-ml:17:u1', role: landing, note: official free PDF page; the record holds only the local copy}
+  - {ref: 'm-ml:72:e1', role: duplicate, note: back-reference; chapter 14}
+- id: source-fahrmeir-arbeitsbuch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:260:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf}
+- id: source-fahrmeir-statistik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:163:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-statistik/statistik.pdf}
+  - {ref: 'lr:260:p2', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-statistik/statistik.pdf}
+- id: source-fairlearn-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:222:u1', role: landing, basis: exact-url}
+- id: source-fau-klausur-ws1415
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:283:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:283:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf}
+- id: source-fiset-graph-theory
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:136:u1', role: landing, basis: exact-url}
+- id: source-fluent-python
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:174:p1', role: local}
+  - {ref: 'm-ml:165:e1', role: mention}
+- id: source-forster-wessoly
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences:
+  - {ref: 'lr:197:p1', role: local, basis: material-moves, note: LearningOS/materials/source-forster-wessoly/forster-wessoly.pdf}
+  - {ref: 'ws-m2-an01:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:28:s1', role: reference, basis: source-id}
+- id: source-fortmann-roe-bias-variance
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:58:u1', role: landing, basis: exact-url}
+- id: source-fpp-statistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:208:e1', role: mention}
+- id: source-frankfurt-algo2-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:317:u2', role: landing, basis: exact-url}
+  - {ref: 'lr:320:u1', role: child, title: 'Übungsblatt 2: Netzwerkfluss I'}
+  - {ref: 'lr:320:u2', role: duplicate}
+  - {ref: 'lr:320:u3', role: child, title: 'Übungsblatt 3: Netzwerkfluss II'}
+  - {ref: 'lr:320:u4', role: child, title: 'Übungsblatt 4: Amortisierte Analyse'}
+  - {ref: 'lr:328:u1', role: landing, basis: exact-url}
+- id: source-fritzsche-trainingsbuch
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences:
+  - {ref: 'ws-m2-an00:34:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:31:s1', role: reference, basis: source-id}
+- id: source-gallager-stochastic-processes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:26:u1', role: companion, basis: exact-identifier}
+  - {ref: 'm-math:106:e1', role: mention, note: 'MIT 6.262 problem sets and quizzes, held on the record as identifiers.mit-6262'}
+- id: source-geron-handson
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:200:p1', role: local, basis: material-moves, note: LearningOS/materials/source-geron-handson/geron-copy2.pdf}
+  - {ref: 'lr:200:p2', role: duplicate, note: second local copy in the AMLS folder}
+  - {ref: 'lr:269:p1', role: local, basis: material-moves, note: LearningOS/materials/source-geron-handson/geron-copy2.pdf}
+- id: source-goodfellow-dl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:186:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:31:u1', role: landing, basis: exact-url}
+- id: source-google-colab
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:230:u1', role: landing, basis: exact-url}
+- id: source-google-dataset-search
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:238:u1', role: landing, basis: exact-url}
+- id: source-google-ml-crash-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:104:u1', role: landing, basis: exact-url}
+- id: source-google-sre-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:26:u1', role: landing, basis: exact-url}
+- id: source-gpu-mode-lectures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:56:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:127:u1', role: landing, basis: exact-url}
+- id: source-grad-cam
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:247:u1', role: landing, basis: exact-url}
+- id: source-grieser-analysis1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an01:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:29:s1', role: reference, basis: source-id}
+- id: source-grinstead-snell
+  kind: existing-active-source
+  extra_mentions: ['lr:172']
+  occurrences: []
+- id: source-guo-cpython-internals
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:381:u1', role: companion, title: Series page (pgbovine.net)}
+- id: source-henze-stochastik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:167:e1', role: mention}
+- id: source-hettinger-super
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:363:u1', role: landing, basis: exact-url}
+- id: source-hinton-nnml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:105:u1', role: landing, basis: exact-url}
+- id: source-hogan-knowledge-graphs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:116:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:116:u2', role: companion, title: arXiv version (2003.02320)}
+  - {ref: 'm-dataeng:129:e1', role: duplicate, note: back-reference to §11}
+- id: source-htsym-scaling-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:204:u2', role: landing, basis: exact-url}
+- id: source-huyen-ai-engineering
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:206:e1', role: mention}
+- id: source-huyen-dmls
+  kind: existing-active-source
+  extra_mentions: ['m-dataeng:80']
+  occurrences:
+  - {ref: 'lr:201:p1', role: local, basis: material-moves, note: LearningOS/materials/source-huyen-dmls/designing-ml-systems.pdf}
+- id: source-islp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:162:e1', role: mention}
+  - {ref: 'm-ml:50:u1', role: landing, note: official site with Python labs; the record holds only the local copy}
+  - {ref: 'm-ml:94:e1', role: duplicate}
+- id: source-islp-community-solutions
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:265:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:265:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:265:u3', role: companion, basis: exact-identifier}
+- id: source-jain-performance-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:14:e1', role: mention}
+- id: source-jbstatistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:118:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:331:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:408:u1', role: landing, basis: exact-url}
+- id: source-jeff-erickson-algorithms
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:135:u1', role: landing, basis: exact-url}
+  - {ref: 'm-algo:16:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-algo2-chat9:33:u1', role: landing, basis: exact-url}
+- id: source-jurafsky-slp3
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:113:u1', role: landing, basis: exact-url}
+- id: source-kaggle-datasets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:239:u1', role: landing, basis: exact-url}
+- id: source-kaptur-byterun
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:380:u1', role: landing, basis: exact-url}
+- id: source-karpathy-micrograd
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:97:u1', role: companion, title: 'Neural Networks: Zero to Hero (playlist)', note: '⚠ the row links the whole playlist but describes micrograd, its first lecture; whether the playlist becomes its own source is left to first use'}
+  - {ref: 'm-ml:28:u1', role: companion, title: 'Neural Networks: Zero to Hero (series page)'}
+  - {ref: 'm-ml:198:u1', role: companion, title: micrograd repository}
+- id: source-kelleher-fmlpda
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:207:p1', role: local}
+- id: source-kirk-hwu-pmpp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:55:e1', role: mention}
+  - {ref: 'm-runtime:128:e1', role: duplicate}
+- id: source-kit-algorithmen2
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:327:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:327:u2', role: companion, title: Course page}
+- id: source-kleinberg-tardos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:199:p1', role: local, basis: manifest-basename}
+  - {ref: 'm-algo:13:e1', role: mention}
+  - {ref: 'm-algo:135:e1', role: mention, note: the book's solved exercises}
+- id: source-kleppmann-ddia
+  kind: existing-active-source
+  extra_mentions: ['m-bench:25']
+  occurrences:
+  - {ref: 'm-dataeng:53:e1', role: mention, note: 'chapter 11, stream processing'}
+  - {ref: 'm-dataeng:98:e1', role: mention}
+  - {ref: 'm-dataeng:137:u1', role: landing, basis: exact-url}
+- id: source-korte-vygen
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:47:e1', role: mention}
+  - {ref: 'm-math:62:e1', role: duplicate, note: back-reference to ADM II}
+- id: source-kroese-dsml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:177:p1', role: local, basis: material-moves, note: LearningOS/materials/source-kroese-dsml/kroese.pdf}
+- id: source-kurzes-tutorium-statistik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:119:u1', role: alias, note: channel-id URL; the record stores the @pdmb handle. ⚠ unverified that both name the same channel}
+- id: source-lebl-basic-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:183:p1', role: local, basis: material-moves, note: LearningOS/materials/source-lebl-basic-analysis/realanal.pdf}
+  - {ref: 'lr:183:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:35:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:35:p3', role: local, basis: manifest-basename}
+- id: source-mathepeter
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:131:e1', role: mention}
+- id: source-mcgeoch-experimental-algorithmics
+  kind: existing-active-source
+  extra_mentions: ['m-bench:48']
+  occurrences:
+  - {ref: 'm-algo:67:e1', role: mention}
+- id: source-mit-1805
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:262:u1', role: landing, basis: exact-url}
+- id: source-mit-1806
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:128:u1', role: landing, basis: exact-url}
+- id: source-mit-18100a
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:129:u1', role: companion, title: Lecture videos (YouTube playlist)}
+  - {ref: 'lr:129:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mit-18100a/mit18_100af20_lec_full2.pdf}
+  - {ref: 'lr:300:u1', role: child, title: Assignments and exams page (OCW)}
+  - {ref: 'lr:300:u2', role: companion, title: Community solutions repo (18.100B), note: '⚠ solutions are for 18.100B, a sibling course; kept as the check aid the row describes'}
+  - {ref: 'ws-m2-an01:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:34:u1', role: companion, title: Lecture videos (YouTube playlist)}
+  - {ref: 'ws-m2-chat8:34:p1', role: local, basis: manifest-basename}
+- id: source-mit-18650
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:95:u1', role: landing, basis: exact-url}
+- id: source-mit-18657
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:103:u1', role: landing, basis: exact-url}
+- id: source-mit-18s096-matrix-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:148:u1', role: landing, basis: exact-url}
+- id: source-mit-6006
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:319:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:319:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-algo:132:u2', role: landing, basis: exact-url}
+- id: source-mit-6034-quizzes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:263:u1', role: child, title: Past exams (Fall 2010)}
+  - {ref: 'lr:263:u2', role: companion, title: Past exams (Spring 2005), note: 'another course year''s quiz set, kept with the quiz bank'}
+  - {ref: 'lr:263:u3', role: child, title: Quiz 3 (2010)}
+  - {ref: 'lr:263:u4', role: child, title: Quiz 3 (2007)}
+- id: source-mit-6036
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:115:u1', role: alias, note: course/ page of the same run; the record stores about/}
+  - {ref: 'lr:146:u1', role: alias, note: MIT Learn catalogue entry for the same course}
+  - {ref: 'lr:268:u1', role: alias, note: course/ page of the same run; the record stores about/}
+  - {ref: 'lr:268:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:268:u3', role: companion, basis: exact-identifier}
+  - {ref: 'lr:268:u4', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:193:e1', role: mention}
+- id: source-mit-6041sc
+  kind: existing-active-source
+  extra_mentions: ['m-math:28']
+  occurrences:
+  - {ref: 'lr:117:u1', role: landing, basis: exact-url}
+- id: source-mit-6046j
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:134:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:318:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:318:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-algo:132:u1', role: landing, basis: exact-url}
+- id: source-mit-6172
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:340:u1', role: child, title: Practice quizzes with solutions (OCW)}
+- id: source-mit-6824
+  kind: existing-active-source
+  extra_mentions: ['m-algo:102', 'm-algo:91']
+  occurrences:
+  - {ref: 'm-dataeng:99:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:204:e1', role: duplicate, note: back-reference to §9}
+- id: source-mit-6s191
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:94:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:94:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:94:u3', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:43:u1', role: landing, basis: exact-url}
+- id: source-mit-d4m-big-data
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:149:u1', role: landing, basis: exact-url}
+- id: source-mit-machine-vision
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:151:u1', role: landing, basis: exact-url}
+- id: source-mit-ocw-nn-training
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:98:e1', role: mention}
+- id: source-mit-understanding-world-data
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:150:u1', role: landing, basis: exact-url}
+- id: source-mit-visual-navigation
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:152:u1', role: landing, basis: exact-url}
+- id: source-mitx-686x
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:147:u1', role: landing, basis: exact-url}
+- id: source-mitzenmacher-upfal
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:35:e1', role: mention}
+- id: source-mlc-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:205:u1', role: alias, note: courses page; the record stores mlc.ai/}
+- id: source-mlinspect-debugging
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:251:p1', role: local, note: ⚠ local copy removed by the 2026-07-17 purge (migration/materials-reconciliation-2026-07-17.md); the record has no material}
+- id: source-mlsysbook-vol1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:203:u1', role: companion, title: Combined book (Vol 1 + Vol 2), note: combined-book URL; Vol 2 is source-mlsysbook-vol2}
+  - {ref: 'lr:203:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf}
+  - {ref: 'lr:343:u1', role: companion, title: Book site with quizzes, note: site root; Vol 2 is source-mlsysbook-vol2}
+  - {ref: 'lr:343:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf}
+  - {ref: 'lr:343:p3', role: alias, note: stale pre-split snapshot; not in the materials manifest}
+  - {ref: 'm-dataeng:90:u1', role: companion, title: Living textbook site, note: site root; Vol 2 is source-mlsysbook-vol2}
+- id: source-mlsysbook-vol2
+  kind: existing-active-source
+  extra_mentions: ['lr:203', 'lr:343', 'm-dataeng:90']
+  occurrences:
+  - {ref: 'lr:203:p2', role: local, basis: manifest-basename}
+  - {ref: 'lr:343:p2', role: local, basis: manifest-basename}
+- id: source-mmds-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:56:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:51:u1', role: companion, title: Stanford CS246 course page, note: ⚠ CS246 is the course behind the book; kept with the book because the row uses it for chapter 4}
+  - {ref: 'm-dataeng:51:u2', role: landing, basis: exact-url}
+- id: source-mml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:175:u1', role: landing, basis: exact-url}
+  - {ref: 'm-math:116:u1', role: companion, title: Exercises and Jupyter companion code (GitHub)}
+  - {ref: 'm-ml:21:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:95:e1', role: duplicate}
+- id: source-mohri-foundations-ml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:14:u1', role: landing, basis: exact-url}
+- id: source-mueller-kernel-tutorial
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:14:e1', role: mention}
+- id: source-murphy-pml1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:176:u1', role: landing, note: official PDF release; the record holds only the local copy}
+  - {ref: 'lr:176:u2', role: companion, title: Exercise solutions (official PDF)}
+  - {ref: 'lr:176:p1', role: local, basis: material-moves, note: LearningOS/materials/source-murphy-pml1/pml1.pdf}
+  - {ref: 'lr:176:p2', role: local, note: solutions copy; no file of this name in the materials manifest}
+  - {ref: 'm-ml:71:u1', role: companion, title: Book site (Book 1 and Book 2), note: the site covers both volumes; Book 2 is candidate-source-murphy-pml2}
+- id: source-ng-coursera
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:116:u1', role: companion, title: '2011 course, full 103-video mirror (playlist)', note: '⚠ edition: the record''s url is the 2022 Coursera specialization while its materials-repo and evaluation describe the 2011 course; step 8 should split the editions or correct the landing'}
+  - {ref: 'lr:116:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:270:u1', role: companion, basis: exact-identifier}
+- id: source-nielsen-nndl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:173:u1', role: child, title: Chapter 1}
+  - {ref: 'ws-aml-dl-amls:19:u1', role: child, title: Chapter 1}
+- id: source-nocedal-wright
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:36:e1', role: mention}
+- id: source-numpy-subclassing-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:373:u1', role: landing, basis: exact-url}
+- id: source-nyu-dl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:127:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:200:u1', role: companion, title: Course repository with notebooks}
+- id: source-ohlbach-eisinger-beweise
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:35:s2', role: reference, basis: source-id}
+- id: source-open-data-structures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:141:u1', role: landing, basis: exact-url}
+- id: source-openintro-statistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:165:p1', role: local, basis: material-moves, note: LearningOS/materials/source-openintro-statistics/openintro.pdf}
+- id: source-ottmann-widmayer
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:182:p2', role: local}
+- id: source-pagh-cuckoo-hashing
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:138:e1', role: mention}
+- id: source-pandas-subclassing-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:373:u2', role: landing, basis: exact-url}
+- id: source-papoulis-pillai
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:25:e1', role: mention}
+- id: source-patrick-loeber-pytorch-cnn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:101:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:101:u2', role: companion, basis: exact-identifier}
+  - {ref: 'ws-m2-chat1:511:u1', role: landing, basis: exact-url}
+- id: source-pierce-tapl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:13:e1', role: mention}
+  - {ref: 'm-runtime:46:e1', role: duplicate, note: back-reference to §1}
+- id: source-pitman-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:168:p1', role: local, basis: material-moves, note: LearningOS/materials/source-pitman-probability/pitman.pdf}
+- id: source-pouyanfar-dl-survey
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:252:u1', role: landing, basis: exact-url}
+- id: source-prince-udl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:29:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:38:e1', role: duplicate, note: back-reference; second half of the book}
+- id: source-prisma-method
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:352:u1', role: landing, basis: exact-url}
+- id: source-professor-leonard
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:132:u1', role: companion, basis: exact-identifier}
+  - {ref: 'ws-m2-an02:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:31:u1', role: companion, basis: exact-identifier}
+- id: source-pydata-handbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:188:u1', role: companion, title: Prose web book}
+  - {ref: 'lr:188:p1', role: local}
+  - {ref: 'm-ml:166:u1', role: companion, title: Prose web book}
+- id: source-python-cheatsheets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:228:p1', role: local}
+- id: source-python-docs-classes-mro
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:374:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:374:u2', role: companion, basis: exact-identifier}
+- id: source-python-tutor
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:366:u1', role: landing, basis: exact-url}
+- id: source-pytorch-tutorials
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:226:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:167:e1', role: mention}
+  - {ref: 'ws-aml-dl-amls:27:u1', role: landing, basis: exact-url}
+- id: source-realpython-legb
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:365:u1', role: landing, basis: exact-url}
+- id: source-redbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:46:u1', role: landing, basis: exact-url}
+- id: source-reducible-fft
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:137:u1', role: landing, basis: exact-url}
+- id: source-rohrer-e2eml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:50:u1', role: alias, note: record stores e2eml.school/blog.html; ⚠ unverified which of the two domains is current}
+  - {ref: 'lr:67:u1', role: child}
+  - {ref: 'lr:67:u2', role: child}
+  - {ref: 'lr:68:u1', role: child, title: 'Ch 6–9: How optimization works (4 parts)'}
+  - {ref: 'lr:69:u1', role: child}
+  - {ref: 'lr:70:u1', role: child}
+  - {ref: 'lr:71:u1', role: child}
+  - {ref: 'lr:72:u1', role: child}
+  - {ref: 'lr:73:u1', role: child}
+  - {ref: 'lr:74:u1', role: child}
+  - {ref: 'lr:75:u1', role: child}
+  - {ref: 'lr:76:u1', role: child}
+  - {ref: 'lr:76:u2', role: child}
+  - {ref: 'lr:77:u1', role: child}
+  - {ref: 'lr:78:u1', role: child}
+  - {ref: 'lr:79:u1', role: child}
+  - {ref: 'lr:79:u2', role: child}
+  - {ref: 'lr:80:u1', role: child}
+  - {ref: 'lr:81:u1', role: child}
+  - {ref: 'lr:81:u2', role: child, title: 'Making Python Faster: multiprocessing'}
+  - {ref: 'lr:81:u3', role: child, title: 'Making Python Faster: threading'}
+  - {ref: 'lr:82:u1', role: child}
+  - {ref: 'lr:83:u1', role: child, title: 'Resource list: Linear Algebra'}
+  - {ref: 'lr:83:u2', role: child, title: 'Resource list: Calculus'}
+  - {ref: 'lr:83:u3', role: child, title: 'Resource list: Statistics'}
+  - {ref: 'lr:83:u4', role: child, title: 'Resource list: NumPy'}
+  - {ref: 'lr:83:u5', role: child, title: 'Resource list: C++'}
+  - {ref: 'lr:83:u6', role: child, title: 'Resource list: Git'}
+  - {ref: 'lr:84:u1', role: child}
+- id: source-ross-first-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:170:p1', role: local, basis: material-moves, note: LearningOS/materials/source-ross-first-course/ross.pdf}
+- id: source-rudin-principles
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:184:p1', role: local, basis: inventory-size}
+  - {ref: 'ws-m2-chat8:35:p1', role: local}
+- id: source-sad-2025-recordings
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:100:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:226:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:306:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:331:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:408:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:441:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:475:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+- id: source-sad-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:284:u1', role: companion, title: Uni Köln Musterlösung (source PDF)}
+  - {ref: 'lr:284:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:285:u1', role: companion, title: Regensburg (Löh) W-Theorie & Statistik Klausur (source PDF)}
+  - {ref: 'lr:285:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:286:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:287:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:289:p1', role: local}
+- id: source-schaums-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:171:p1', role: local, basis: material-moves, note: LearningOS/materials/source-schaums-probability/schaums-probability.pdf}
+- id: source-schoelkopf-smola-lwk
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:15:e1', role: mention}
+- id: source-schrijver-combinatorial-notes
+  kind: existing-active-source
+  extra_mentions: ['m-math:109']
+  occurrences:
+  - {ref: 'm-math:48:u1', role: landing, basis: exact-url}
+- id: source-setosa-ols
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:60:u2', role: landing, basis: exact-url}
+- id: source-sklearn-user-guide
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:56:u1', role: child, title: 'Example: underfitting vs. overfitting'}
+  - {ref: 'lr:56:u2', role: child, title: Linear models (Ridge/Lasso) user guide}
+  - {ref: 'lr:221:u1', role: child, title: Getting started}
+  - {ref: 'lr:221:u2', role: child, title: Developing estimators}
+  - {ref: 'lr:221:u3', role: child, title: Pipelines and composite estimators (compose guide)}
+  - {ref: 'lr:221:u4', role: child, title: 'Example: ColumnTransformer with mixed types'}
+  - {ref: 'lr:227:u1', role: child, title: Algorithm cheat-sheet (estimator map)}
+  - {ref: 'lr:229:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:229:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:229:u3', role: companion, title: Documentation PDF}
+  - {ref: 'm-ml:49:u1', role: landing, basis: exact-url}
+- id: source-sleator-tarjan-splay
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:138:e1', role: mention}
+- id: source-software-foundations
+  kind: existing-active-source
+  extra_mentions: ['m-runtime:69']
+  occurrences:
+  - {ref: 'm-runtime:14:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:90:e1', role: duplicate, note: back-reference to §1; its exercises}
+- id: source-ssbd-understanding-ml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:13:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:61:u1', role: landing, basis: exact-url}
+- id: source-stanford-cs149
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:342:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:342:u2', role: companion, basis: exact-identifier}
+- id: source-stat110
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:96:u1', role: alias, note: row says HarvardX STAT110x; the link is the Stat 110 course site. Record stores projects.iq.harvard.edu/stat110; ⚠ unverified which site is current}
+  - {ref: 'lr:96:u2', role: child, title: Handouts}
+  - {ref: 'lr:261:u1', role: child, title: Strategic practice and homework with solutions}
+- id: source-statquest
+  kind: existing-active-source
+  extra_mentions: ['lr:54']
+  occurrences: []
+- id: source-strang-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:133:p1', role: local}
+  - {ref: 'ws-m2-an05:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:32:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:31:p1', role: local, basis: material-moves, note: LearningOS/materials/source-strang-calculus}
+- id: source-stratum-paper
+  kind: existing-active-source
+  extra_mentions: ['lr:225']
+  occurrences: []
+- id: source-sutton-barto-rl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:187:u1', role: companion, title: Full book PDF (2018)}
+  - {ref: 'lr:187:p1', role: local, basis: manifest-basename}
+  - {ref: 'm-ml:62:u1', role: landing, basis: exact-url}
+- id: source-tijms-understanding-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:169:p1', role: local}
+- id: source-timm
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:219:u1', role: landing, basis: exact-url}
+- id: source-torchvision-transforms-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:216:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:28:u1', role: landing, basis: exact-url}
+- id: source-toussaint-optimization-script
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:35:u1', role: landing, basis: exact-url}
+  - {ref: 'm-math:35:u2', role: companion, title: Course page WS 20/21 (single slide decks)}
+  - {ref: 'm-math:35:u3', role: companion, title: LaTeX sources (GitHub)}
+  - {ref: 'm-math:35:u4', role: child, title: 'Slides: No Free Lunch'}
+  - {ref: 'm-math:35:u5', role: child, title: 'Slides: Bayesian Optimization'}
+  - {ref: 'm-math:105:e1', role: duplicate, note: the exercises are part of the script}
+  - {ref: 'm-math:114:u1', role: duplicate, note: 'the lecturer''s GitHub, already named in §3'}
+- id: source-tu-python-ml-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:99:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:275:u1', role: child, title: Sheet 4 (linear algebra in Python)}
+  - {ref: 'ws-m2-chat1:477:u1', role: child, title: 'Sheet 5 (autograd, Numba, Cython)'}
+- id: source-tuwien-ad2-fibonacci
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:321:u1', role: landing, basis: exact-url}
+- id: source-ultrascale-playbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:204:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:120:u1', role: landing, basis: exact-url}
+- id: source-velleman-how-to-prove-it
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:35:s1', role: reference, basis: source-id}
+- id: source-vershynin-hdp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:16:u1', role: landing, basis: exact-url}
+- id: source-wayne-kt-slides
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:330:u1', role: landing, basis: exact-url}
+- id: source-williamson-shmoys
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:57:u1', role: landing, basis: exact-url}
+- id: source-zacharski-data-mining
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:189:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:189:p1', role: local, basis: manifest-basename}
+- id: source-zedstatistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:121:u1', role: landing, basis: exact-url}
+- id: source-zeiler-fergus-occlusion
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:246:e1', role: mention}
+- id: source-cs229-2018-videos
+  kind: new-active-source
+  title: Stanford CS229 Machine Learning (Autumn 2018 lectures, Andrew Ng)
+  type: video
+  shelf: thematic-group-machine-learning
+  note: a different course year from source-cs229-2022-videos, kept distinct per the plan's edition rule
+  occurrences:
+  - {ref: 'lr:114:u2', role: landing}
+- id: source-kaggle-winning-solutions
+  kind: new-active-source
+  title: Kaggle — Winning solutions of Kaggle competitions (curated notebook)
+  type: website
+  shelf: thematic-group-machine-learning
+  note: named in the supervisor's thesis brief (study winning-solution write-ups)
+  occurrences:
+  - {ref: 'ws-thesis-brief:14:u1', role: landing}
+- id: source-mit-missing-semester
+  kind: new-active-source
+  title: MIT — The Missing Semester of Your CS Education
+  type: course
+  shelf: thematic-group-software
+  note: ⚠ already used by the active study map of unit-job-engineering-tools-fluency through inline URLs without a source ID (found outside the declared inputs)
+  occurrences:
+  - {ref: 'm-bench:104:e1', role: mention}
+  - {ref: 'm-dataeng:206:u1', role: landing}
+- id: source-skrub
+  kind: new-active-source
+  title: skrub — machine learning with dataframes (Python library)
+  type: software
+  shelf: thematic-group-ml-systems
+  note: not registered in July because of the Job quarantine, which ADR-013 retired
+  extra_mentions: ['m-dataeng:158']
+  occurrences:
+  - {ref: 'lr:224:u1', role: landing}
+  - {ref: 'm-dataeng:200:u1', role: landing}
+- id: candidate-source-adversarial-robustness-toolbox
+  kind: new-masters-candidate
+  title: Adversarial Robustness Toolbox (ART)
+  type: software
+  occurrences:
+  - {ref: 'm-ml:83:u2', role: landing}
+  - {ref: 'm-ml:202:u1', role: duplicate, note: already listed in §7}
+- id: candidate-source-agner-fog-optimization
+  kind: new-masters-candidate
+  title: Agner Fog — Software Optimization Resources (manuals)
+  type: documentation
+  note: the row also names perf and VTune tutorials without links
+  occurrences:
+  - {ref: 'm-dataeng:42:u1', role: landing}
+- id: candidate-source-akidau-streaming-101
+  kind: new-masters-candidate
+  title: 'Akidau — The World Beyond Batch: Streaming 101 and 102'
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:49:u1', role: landing}
+- id: candidate-source-akidau-streaming-systems
+  kind: new-masters-candidate
+  title: Akidau, Chernyak & Lax — Streaming Systems (O'Reilly)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:48:e1', role: mention}
+- id: candidate-source-allen-kennedy
+  kind: new-masters-candidate
+  title: Allen & Kennedy — Optimizing Compilers for Modern Architectures
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:36:e1', role: mention}
+- id: candidate-source-alon-spencer
+  kind: new-masters-candidate
+  title: Alon & Spencer — The Probabilistic Method
+  type: book
+  occurrences:
+  - {ref: 'm-algo:37:e1', role: mention}
+- id: candidate-source-apache-calcite
+  kind: new-masters-candidate
+  title: Apache Calcite (query optimizer framework)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:192:u1', role: landing}
+- id: candidate-source-apache-datafusion
+  kind: new-masters-candidate
+  title: Apache DataFusion (query engine in Rust)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:194:u1', role: landing}
+- id: candidate-source-apache-flink-docs
+  kind: new-masters-candidate
+  title: Apache Flink documentation and training
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:52:u1', role: landing}
+  - {ref: 'm-dataeng:101:e1', role: mention}
+  - {ref: 'm-dataeng:184:u1', role: companion, title: Flink training exercises (with solution branches)}
+- id: candidate-source-apache-jena
+  kind: new-masters-candidate
+  title: Apache Jena (triple store)
+  type: software
+  extra_mentions: ['m-dataeng:118', 'm-dataeng:120']
+  occurrences: []
+- id: candidate-source-apache-spark-docs
+  kind: new-masters-candidate
+  title: Apache Spark documentation and tutorials
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:101:e1', role: mention}
+- id: candidate-source-apache-systemds
+  kind: new-masters-candidate
+  title: Apache SystemDS
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:62:u1', role: landing}
+- id: candidate-source-appel-modern-compiler
+  kind: new-masters-candidate
+  title: Appel — Modern Compiler Implementation in ML (or Java/C)
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:24:e1', role: mention}
+- id: candidate-source-arp-dos-and-donts
+  kind: new-masters-candidate
+  title: Arp et al. — Dos and Don'ts of Machine Learning in Computer Security (USENIX Security 2022)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-atcoder
+  kind: new-masters-candidate
+  title: AtCoder (competitive programming)
+  type: website
+  occurrences:
+  - {ref: 'm-algo:143:e1', role: mention}
+- id: candidate-source-attention-is-all-you-need
+  kind: new-masters-candidate
+  title: Vaswani et al. — Attention Is All You Need (2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-attiya-welch
+  kind: new-masters-candidate
+  title: Attiya & Welch — Distributed Computing
+  type: book
+  occurrences:
+  - {ref: 'm-algo:97:e1', role: mention, note: the row also points back to Lynch and Fokkink}
+- id: candidate-source-automata-logics-infinite-games
+  kind: new-masters-candidate
+  title: Grädel, Thomas & Wilke (eds.) — Automata, Logics, and Infinite Games (LNCS 2500)
+  type: book
+  occurrences:
+  - {ref: 'm-algo:77:e1', role: mention}
+- id: candidate-source-aws-builders-library
+  kind: new-masters-candidate
+  title: Amazon Builders' Library
+  type: website
+  occurrences:
+  - {ref: 'm-bench:23:u1', role: landing}
+  - {ref: 'm-bench:65:e1', role: duplicate, note: back-reference to §1–§2; also names Nygard}
+- id: candidate-source-aws-cdk
+  kind: new-masters-candidate
+  title: AWS CDK (infrastructure as code)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-aws-well-architected
+  kind: new-masters-candidate
+  title: AWS Well-Architected Framework (and labs)
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:139:e1', role: mention}
+  - {ref: 'm-dataeng:147:u1', role: companion, title: Well-Architected Labs, note: the row also names the AWS Free Tier}
+- id: candidate-source-badnets
+  kind: new-masters-candidate
+  title: Gu et al. — BadNets (2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-baier-katoen
+  kind: new-masters-candidate
+  title: Baier & Katoen — Principles of Model Checking
+  type: book
+  occurrences:
+  - {ref: 'm-algo:79:e1', role: mention}
+- id: candidate-source-barendregt-lambda-typed
+  kind: new-masters-candidate
+  title: Barendregt — Lambda Calculi with Types (handbook chapter)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:48:e1', role: mention}
+- id: candidate-source-benchbase
+  kind: new-masters-candidate
+  title: BenchBase (CMU multi-DBMS benchmarking framework)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:89:u1', role: landing}
+- id: candidate-source-bentley-programming-pearls
+  kind: new-masters-candidate
+  title: Bentley — Programming Pearls
+  type: book
+  occurrences:
+  - {ref: 'm-algo:70:e1', role: mention}
+- id: candidate-source-berkeley-cs186
+  kind: new-masters-candidate
+  title: UC Berkeley CS186 — Introduction to Database Systems (incl. RookieDB projects)
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:14:u1', role: landing}
+  - {ref: 'm-dataeng:14:u2', role: companion, title: Lecture videos (community mirror repository)}
+  - {ref: 'm-dataeng:14:u3', role: companion, title: Project specifications}
+  - {ref: 'm-dataeng:25:u1', role: companion, title: RookieDB course projects (Java)}
+  - {ref: 'm-dataeng:25:u2', role: duplicate}
+  - {ref: 'm-dataeng:182:u1', role: duplicate, note: discussion worksheets and exam archive on the course site}
+- id: candidate-source-bert
+  kind: new-masters-candidate
+  title: Devlin et al. — BERT (2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-bertsekas-tsitsiklis-probability
+  kind: new-masters-candidate
+  title: Bertsekas & Tsitsiklis — Introduction to Probability
+  type: book
+  note: ⚠ the list marks it as a bridge for the bachelor Mathe-2 retake; decide at use whether it becomes an active source
+  occurrences:
+  - {ref: 'm-math:28:e1', role: mention}
+- id: candidate-source-biggio-roli-wild-patterns
+  kind: new-masters-candidate
+  title: 'Biggio & Roli — Wild Patterns: Ten Years After the Rise of Adversarial Machine Learning (Pattern Recognition 2018)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:80:e1', role: mention}
+- id: candidate-source-bloch-effective-java
+  kind: new-masters-candidate
+  title: Bloch — Effective Java (3rd ed.)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:30:e1', role: mention}
+- id: candidate-source-boehm-dia-ws2122
+  kind: new-masters-candidate
+  title: Boehm — Data Integration and Large-scale Analysis (WS 2021/22, TU Graz, all PDFs)
+  type: course
+  note: a different course year from candidate-source-boehm-dia-ws2526, kept distinct
+  occurrences:
+  - {ref: 'm-dataeng:59:u2', role: landing}
+- id: candidate-source-boehm-dia-ws2526
+  kind: new-masters-candidate
+  title: Boehm — Data Integration and Large-scale Analysis (WiSe 2025/26 course page)
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:59:u1', role: landing}
+  - {ref: 'm-dataeng:59:u3', role: companion, title: Boehm's teaching overview}
+- id: candidate-source-brunton-kutz-data-driven
+  kind: new-masters-candidate
+  title: Brunton & Kutz — Data-Driven Science and Engineering
+  type: book
+  occurrences:
+  - {ref: 'm-ml:140:u1', role: landing}
+- id: candidate-source-brunton-piml-videos
+  kind: new-masters-candidate
+  title: Steve Brunton — Physics-Informed Machine Learning (YouTube series)
+  type: video
+  extra_mentions: ['m-ml:140']
+  occurrences: []
+- id: candidate-source-building-green-software
+  kind: new-masters-candidate
+  title: Currie, Hsu & Bergman — Building Green Software (O'Reilly 2024)
+  type: book
+  occurrences:
+  - {ref: 'm-bench:35:e1', role: mention}
+- id: candidate-source-cachin-reliable-distributed
+  kind: new-masters-candidate
+  title: Cachin, Guerraoui & Rodrigues — Introduction to Reliable and Secure Distributed Programming
+  type: book
+  occurrences:
+  - {ref: 'm-algo:98:e1', role: mention}
+- id: candidate-source-caida
+  kind: new-masters-candidate
+  title: CAIDA datasets and tools
+  type: website
+  occurrences:
+  - {ref: 'm-bench:57:e1', role: mention}
+- id: candidate-source-candes-wakin-compressive-sampling
+  kind: new-masters-candidate
+  title: Candès & Wakin — An Introduction to Compressive Sampling (IEEE SPM 2008)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:18:e1', role: mention}
+- id: candidate-source-carbone-async-snapshots
+  kind: new-masters-candidate
+  title: Carbone et al. — Lightweight Asynchronous Snapshots for Distributed Dataflows
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:50:e1', role: mention}
+- id: candidate-source-carbone-flink
+  kind: new-masters-candidate
+  title: 'Carbone et al. — Apache Flink: Stream and Batch Processing in a Single Engine'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:50:e1', role: mention}
+- id: candidate-source-carlini-site
+  kind: new-masters-candidate
+  title: Nicholas Carlini — adversarial-example paper list and evaluation essays
+  type: website
+  occurrences:
+  - {ref: 'm-ml:82:u1', role: landing}
+- id: candidate-source-carlini-wagner
+  kind: new-masters-candidate
+  title: Carlini & Wagner — Towards Evaluating the Robustness of Neural Networks (2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-ceres-solver
+  kind: new-masters-candidate
+  title: Ceres Solver
+  type: software
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-chaitin-register-allocation
+  kind: new-masters-candidate
+  title: Chaitin — Register Allocation & Spilling via Graph Coloring (1982)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:29:e1', role: mention}
+- id: candidate-source-chapelle-ssl
+  kind: new-masters-candidate
+  title: Chapelle, Schölkopf & Zien (eds.) — Semi-Supervised Learning (MIT Press)
+  type: book
+  occurrences:
+  - {ref: 'm-ml:19:e1', role: mention}
+- id: candidate-source-chaudhuri-self-tuning-dbs
+  kind: new-masters-candidate
+  title: 'Chaudhuri & Narasayya — Self-Tuning Database Systems: A Decade of Progress (VLDB 2007)'
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-chibicc
+  kind: new-masters-candidate
+  title: chibicc (a small C compiler, commit by commit)
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:97:u1', role: landing}
+- id: candidate-source-cleverhans
+  kind: new-masters-candidate
+  title: cleverhans (adversarial example library and tutorials)
+  type: software
+  occurrences:
+  - {ref: 'm-ml:202:u2', role: landing}
+- id: candidate-source-clipper
+  kind: new-masters-candidate
+  title: 'Crankshaw et al. — Clipper: A Low-Latency Online Prediction Serving System (NSDI 2017)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-cloud-carbon-footprint
+  kind: new-masters-candidate
+  title: Cloud Carbon Footprint (tool)
+  type: software
+  extra_mentions: ['m-bench:38']
+  occurrences: []
+- id: candidate-source-cmu-15721
+  kind: new-masters-candidate
+  title: CMU 15-721 — Advanced Database Systems
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:27:u1', role: landing}
+  - {ref: 'm-dataeng:38:e1', role: duplicate, note: back-reference in the DMH section}
+- id: candidate-source-cmu-15855
+  kind: new-masters-candidate
+  title: CMU 15-855 — Graduate Computational Complexity (O'Donnell)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:26:u1', role: landing, title: Lecture videos (YouTube playlist)}
+  - {ref: 'm-algo:133:e1', role: mention, note: the course's homework sets}
+- id: candidate-source-cmu-anlp
+  kind: new-masters-candidate
+  title: CMU CS11-711 — Advanced NLP (Neubig, 2024 run)
+  type: course
+  occurrences:
+  - {ref: 'm-ml:115:u1', role: landing}
+- id: candidate-source-cmu-approximation-notes
+  kind: new-masters-candidate
+  title: Gupta & O'Donnell (CMU) — Approximation Algorithms lecture notes
+  type: lecture
+  occurrences:
+  - {ref: 'm-math:61:e1', role: mention}
+- id: candidate-source-cmu-db-tech-talks
+  kind: new-masters-candidate
+  title: CMU Database Group — seminar series (Vaccination Database Tech Talks)
+  type: video
+  occurrences:
+  - {ref: 'm-dataeng:110:u1', role: landing}
+- id: candidate-source-codecarbon
+  kind: new-masters-candidate
+  title: CodeCarbon (energy and emissions tracking for ML workloads)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:38:u1', role: landing}
+  - {ref: 'm-bench:99:u1', role: companion, title: Code repository}
+- id: candidate-source-codeforces
+  kind: new-masters-candidate
+  title: Codeforces (competitive programming)
+  type: website
+  occurrences:
+  - {ref: 'm-algo:143:e1', role: mention}
+- id: candidate-source-color-coding
+  kind: new-masters-candidate
+  title: Alon, Yuster & Zwick — Color-Coding (JACM 1995)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:49:e1', role: mention}
+- id: candidate-source-compressed-linear-algebra
+  kind: new-masters-candidate
+  title: Elgohary et al. — Compressed Linear Algebra for Large-Scale Machine Learning (VLDB 2016)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-concrete-semantics
+  kind: new-masters-candidate
+  title: Nipkow & Klein — Concrete Semantics with Isabelle/HOL
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:66:u1', role: landing}
+- id: candidate-source-cook-theorem-proving
+  kind: new-masters-candidate
+  title: Cook — The Complexity of Theorem-Proving Procedures (1971)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-cooper-torczon
+  kind: new-masters-candidate
+  title: Cooper & Torczon — Engineering a Compiler (3rd ed.)
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:27:e1', role: mention}
+- id: candidate-source-cover-thomas
+  kind: new-masters-candidate
+  title: Cover & Thomas — Elements of Information Theory (2nd ed.)
+  type: book
+  occurrences:
+  - {ref: 'm-math:79:e1', role: mention}
+- id: candidate-source-cp-algorithms
+  kind: new-masters-candidate
+  title: CP-Algorithms (algorithm implementation reference)
+  type: website
+  occurrences:
+  - {ref: 'm-algo:140:u1', role: landing}
+- id: candidate-source-crafting-interpreters
+  kind: new-masters-candidate
+  title: Nystrom — Crafting Interpreters
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:28:u1', role: landing}
+  - {ref: 'm-runtime:98:u1', role: companion, title: Book code repository}
+- id: candidate-source-criterion-rs
+  kind: new-masters-candidate
+  title: criterion.rs (Rust benchmarking)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-crovella-krishnamurthy
+  kind: new-masters-candidate
+  title: 'Crovella & Krishnamurthy — Internet Measurement: Infrastructure, Traffic and Applications'
+  type: book
+  occurrences:
+  - {ref: 'm-bench:55:e1', role: mention}
+- id: candidate-source-crp
+  kind: new-masters-candidate
+  title: Achtibat et al. — From Attribution Maps to Human-Understandable Explanations through Concept Relevance Propagation (Nature Machine Intelligence 2023)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:128:e1', role: mention}
+- id: candidate-source-cstack-db-tutorial
+  kind: new-masters-candidate
+  title: cstack — Let's Build a Simple Database (db_tutorial)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:188:u1', role: landing}
+- id: candidate-source-cuda-best-practices
+  kind: new-masters-candidate
+  title: NVIDIA CUDA C++ Best Practices Guide
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:57:e1', role: mention}
+- id: candidate-source-cuda-programming-guide
+  kind: new-masters-candidate
+  title: NVIDIA CUDA C++ Programming Guide
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:57:e1', role: mention}
+- id: candidate-source-cvxpy
+  kind: new-masters-candidate
+  title: CVXPY
+  type: software
+  occurrences:
+  - {ref: 'm-math:113:u1', role: landing}
+- id: candidate-source-cypher-property-graphs
+  kind: new-masters-candidate
+  title: Property graphs and Cypher
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:118:e1', role: mention}
+- id: candidate-source-cytron-ssa
+  kind: new-masters-candidate
+  title: Cytron et al. — Efficiently Computing Static Single Assignment Form (TOPLAS 1991)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:29:e1', role: mention}
+- id: candidate-source-data-tamer
+  kind: new-masters-candidate
+  title: 'Stonebraker et al. — Data Curation at Scale: The Data Tamer System (CIDR 2013)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:63:e1', role: mention}
+- id: candidate-source-de-berg-computational-geometry
+  kind: new-masters-candidate
+  title: 'de Berg, Cheong, van Kreveld & Overmars — Computational Geometry: Algorithms and Applications'
+  type: book
+  occurrences:
+  - {ref: 'm-algo:17:e1', role: mention}
+- id: candidate-source-deep-equilibrium-models
+  kind: new-masters-candidate
+  title: Bai et al. — Deep Equilibrium Models (NeurIPS 2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-deep-vib
+  kind: new-masters-candidate
+  title: Alemi et al. — Deep Variational Information Bottleneck (ICLR 2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:82:e1', role: mention}
+- id: candidate-source-deepxde
+  kind: new-masters-candidate
+  title: DeepXDE
+  type: software
+  occurrences:
+  - {ref: 'm-ml:141:u1', role: landing}
+- id: candidate-source-deequ
+  kind: new-masters-candidate
+  title: Deequ / PyDeequ (data quality library)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:81:u1', role: landing}
+  - {ref: 'm-dataeng:158:e1', role: mention}
+  - {ref: 'm-dataeng:199:e1', role: mention}
+- id: candidate-source-deequ-paper
+  kind: new-masters-candidate
+  title: Schelter et al. — Automating Large-Scale Data Quality Verification (VLDB 2018, Deequ)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+  - {ref: 'm-dataeng:78:e1', role: mention}
+- id: candidate-source-demaine-cache-oblivious
+  kind: new-masters-candidate
+  title: Demaine — Cache-Oblivious Algorithms and Data Structures (survey)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:58:u1', role: landing}
+- id: candidate-source-dia-student-notes
+  kind: new-masters-candidate
+  title: DIA-Notes (student summary of Boehm's DIA lecture)
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:59:u4', role: landing}
+- id: candidate-source-dijkstra-self-stabilizing
+  kind: new-masters-candidate
+  title: Dijkstra — Self-stabilizing Systems in Spite of Distributed Control (CACM 1974)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:99:e1', role: mention}
+- id: candidate-source-dimacs-challenges
+  kind: new-masters-candidate
+  title: DIMACS Implementation Challenges
+  type: website
+  occurrences:
+  - {ref: 'm-algo:68:e1', role: mention}
+- id: candidate-source-doan-halevy-ives
+  kind: new-masters-candidate
+  title: Doan, Halevy & Ives — Principles of Data Integration
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:60:e1', role: mention}
+  - {ref: 'm-dataeng:72:e1', role: duplicate}
+- id: candidate-source-dolev-self-stabilization
+  kind: new-masters-candidate
+  title: Dolev — Self-Stabilization (MIT Press)
+  type: book
+  occurrences:
+  - {ref: 'm-algo:99:e1', role: mention}
+- id: candidate-source-donoho-amp
+  kind: new-masters-candidate
+  title: Donoho, Maleki & Montanari — Message-Passing Algorithms for Compressed Sensing (PNAS 2009)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:72:e1', role: mention}
+- id: candidate-source-downey-fellows
+  kind: new-masters-candidate
+  title: Downey & Fellows — Fundamentals of Parameterized Complexity
+  type: book
+  occurrences:
+  - {ref: 'm-algo:47:e1', role: mention}
+- id: candidate-source-dremel-paper
+  kind: new-masters-candidate
+  title: Melnik et al. — Dremel (VLDB 2010)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-drepper-memory
+  kind: new-masters-candidate
+  title: Drepper — What Every Programmer Should Know About Memory
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:39:u1', role: landing}
+- id: candidate-source-duckdb
+  kind: new-masters-candidate
+  title: DuckDB (engine source and blog)
+  type: software
+  note: a different object from the registered source-duckdb-python-docs (Python API docs)
+  occurrences:
+  - {ref: 'm-dataeng:193:u1', role: landing}
+  - {ref: 'm-dataeng:193:u2', role: companion, title: DuckDB blog}
+- id: candidate-source-duckdb-tpc-extensions
+  kind: new-masters-candidate
+  title: DuckDB tpch/tpcds extensions (TPC data generators)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:94:e1', role: mention}
+- id: candidate-source-easley-kleinberg-networks
+  kind: new-masters-candidate
+  title: Easley & Kleinberg — Networks, Crowds, and Markets
+  type: book
+  occurrences:
+  - {ref: 'm-algo:60:u1', role: landing}
+- id: candidate-source-efficient-large-scale-lm-training
+  kind: new-masters-candidate
+  title: Narayanan et al. — Efficient Large-Scale Language Model Training on GPU Clusters (SC 2021)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-egg
+  kind: new-masters-candidate
+  title: egg and egglog (e-graph rewriting)
+  type: software
+  note: the row also names the egg paper (POPL 2021) without a link
+  occurrences:
+  - {ref: 'm-runtime:102:u1', role: landing}
+- id: candidate-source-elevate
+  kind: new-masters-candidate
+  title: Hagedorn et al. — Achieving High-Performance the Functional Way (ELEVATE, ICFP 2020)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:18:u1', role: companion, title: Steuwer's publication list}
+- id: candidate-source-exercism
+  kind: new-masters-candidate
+  title: Exercism (programming exercises)
+  type: website
+  occurrences:
+  - {ref: 'm-algo:142:e1', role: mention}
+  - {ref: 'm-math:115:e1', role: mention}
+- id: candidate-source-factor-graphs-sum-product
+  kind: new-masters-candidate
+  title: Kschischang, Frey & Loeliger — Factor Graphs and the Sum-Product Algorithm (IEEE IT 2001)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:70:e1', role: mention}
+- id: candidate-source-fair-principles
+  kind: new-masters-candidate
+  title: Wilkinson et al. — The FAIR Guiding Principles for scientific data management and stewardship (Scientific Data 2016)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:127:e1', role: mention}
+- id: candidate-source-fairmlbook
+  kind: new-masters-candidate
+  title: Barocas, Hardt & Narayanan — Fairness and Machine Learning
+  type: book
+  occurrences:
+  - {ref: 'm-ml:130:u1', role: landing}
+- id: candidate-source-fastai-course
+  kind: new-masters-candidate
+  title: fast.ai — Practical Deep Learning course
+  type: course
+  occurrences:
+  - {ref: 'm-ml:201:u1', role: landing}
+- id: candidate-source-flamegraph
+  kind: new-masters-candidate
+  title: FlameGraph (Brendan Gregg) and perf examples
+  type: software
+  occurrences:
+  - {ref: 'm-bench:92:u1', role: landing}
+- id: candidate-source-flashattention
+  kind: new-masters-candidate
+  title: Dao et al. — FlashAttention (2022)
+  type: paper
+  extra_mentions: ['m-runtime:130']
+  occurrences: []
+- id: candidate-source-flp-impossibility
+  kind: new-masters-candidate
+  title: Fischer, Lynch & Paterson — Impossibility of Distributed Consensus with One Faulty Process (JACM 1985)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-fokkink-distributed-algorithms
+  kind: new-masters-candidate
+  title: 'Fokkink — Distributed Algorithms: An Intuitive Approach'
+  type: book
+  extra_mentions: ['m-algo:97']
+  occurrences:
+  - {ref: 'm-algo:88:e1', role: mention}
+- id: candidate-source-fowler-lewis-microservices
+  kind: new-masters-candidate
+  title: Fowler & Lewis — Microservices (article)
+  type: website
+  extra_mentions: ['m-dataeng:140']
+  occurrences: []
+- id: candidate-source-fox-brewer-harvest-yield
+  kind: new-masters-candidate
+  title: Fox & Brewer — Harvest, Yield, and Scalable Tolerant Systems (1999)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:27:e1', role: mention}
+- id: candidate-source-garcia-molina-complete-book
+  kind: new-masters-candidate
+  title: 'Garcia-Molina, Ullman & Widom — Database Systems: The Complete Book'
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:17:e1', role: mention}
+- id: candidate-source-garnett-bayesian-optimization
+  kind: new-masters-candidate
+  title: Garnett — Bayesian Optimization
+  type: book
+  occurrences:
+  - {ref: 'm-math:39:u1', role: landing}
+- id: candidate-source-georges-rigorous-java-performance
+  kind: new-masters-candidate
+  title: Georges et al. — Statistically Rigorous Java Performance Evaluation (OOPSLA 2007)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-gfs-paper
+  kind: new-masters-candidate
+  title: Ghemawat, Gobioff & Leung — The Google File System (SOSP 2003)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-goemans-williamson-maxcut
+  kind: new-masters-candidate
+  title: Goemans & Williamson — Improved Approximation Algorithms for MAX CUT and Satisfiability Using Semidefinite Programming (JACM 1995)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:59:e1', role: mention}
+- id: candidate-source-goodfellow-fgsm
+  kind: new-masters-candidate
+  title: Goodfellow et al. — Explaining and Harnessing Adversarial Examples (2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-google-benchmark
+  kind: new-masters-candidate
+  title: google/benchmark (C++ microbenchmarking)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-gpipe
+  kind: new-masters-candidate
+  title: Huang et al. — GPipe
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-gpt3
+  kind: new-masters-candidate
+  title: Brown et al. — Language Models are Few-Shot Learners (GPT-3, 2020)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-graedel-rwth-scripts
+  kind: new-masters-candidate
+  title: 'Grädel — lecture scripts: Automata, Games and Logic; Algorithmic Model Theory (RWTH)'
+  type: lecture
+  occurrences:
+  - {ref: 'm-algo:78:u1', role: landing}
+- id: candidate-source-graefe-cascades
+  kind: new-masters-candidate
+  title: Graefe — The Cascades Framework for Query Optimization
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:31:e1', role: mention}
+- id: candidate-source-graefe-volcano
+  kind: new-masters-candidate
+  title: 'Graefe — Volcano: An Extensible and Parallel Query Evaluation System'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:31:e1', role: mention}
+- id: candidate-source-great-expectations
+  kind: new-masters-candidate
+  title: Great Expectations (data validation)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:81:u2', role: landing}
+- id: candidate-source-green-software-practitioner
+  kind: new-masters-candidate
+  title: Green Software Foundation — Green Software Practitioner course
+  type: course
+  occurrences:
+  - {ref: 'm-bench:34:u1', role: landing}
+- id: candidate-source-gregg-systems-performance
+  kind: new-masters-candidate
+  title: Gregg — Systems Performance (2nd ed.)
+  type: book
+  extra_mentions: ['m-bench:17']
+  occurrences:
+  - {ref: 'm-dataeng:41:e1', role: mention}
+- id: candidate-source-grimmett-stirzaker
+  kind: new-masters-candidate
+  title: Grimmett & Stirzaker — Probability and Random Processes
+  type: book
+  occurrences:
+  - {ref: 'm-math:27:e1', role: mention}
+- id: candidate-source-grimmett-stirzaker-exercises
+  kind: new-masters-candidate
+  title: Grimmett & Stirzaker — One Thousand Exercises in Probability
+  type: book
+  occurrences:
+  - {ref: 'm-math:107:e1', role: mention}
+- id: candidate-source-grove-query-engines
+  kind: new-masters-candidate
+  title: Grove — How Query Engines Work
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:29:u1', role: landing}
+- id: candidate-source-gupta-chasing-carbon
+  kind: new-masters-candidate
+  title: 'Gupta et al. — Chasing Carbon: The Elusive Environmental Footprint of Computing (HPCA 2021)'
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-gurobi
+  kind: new-masters-candidate
+  title: Gurobi optimizer and modelling tutorials
+  type: software
+  occurrences:
+  - {ref: 'm-algo:69:e1', role: mention}
+- id: candidate-source-gusfield-strings
+  kind: new-masters-candidate
+  title: Gusfield — Algorithms on Strings, Trees, and Sequences
+  type: book
+  occurrences:
+  - {ref: 'm-algo:59:e1', role: mention}
+- id: candidate-source-handbook-comsoc
+  kind: new-masters-candidate
+  title: Brandt et al. (eds.) — Handbook of Computational Social Choice
+  type: book
+  occurrences:
+  - {ref: 'm-algo:18:u1', role: landing}
+- id: candidate-source-hellerstein-architecture-dbs
+  kind: new-masters-candidate
+  title: Hellerstein, Stonebraker & Hamilton — Architecture of a Database System
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+  - {ref: 'm-dataeng:18:u1', role: landing}
+- id: candidate-source-hertz-krogh-palmer
+  kind: new-masters-candidate
+  title: Hertz, Krogh & Palmer — Introduction to the Theory of Neural Computation
+  type: book
+  occurrences:
+  - {ref: 'm-ml:63:e1', role: mention}
+- id: candidate-source-hidden-technical-debt
+  kind: new-masters-candidate
+  title: Sculley et al. — Hidden Technical Debt in Machine Learning Systems (NeurIPS 2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:78:e1', role: mention}
+  - {ref: 'm-dataeng:91:e1', role: mention}
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-highs
+  kind: new-masters-candidate
+  title: HiGHS (open-source LP/MIP solver)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:69:e1', role: mention}
+- id: candidate-source-highscalability
+  kind: new-masters-candidate
+  title: High Scalability (architecture case-study archive)
+  type: website
+  note: the row also names the engineering blogs of Netflix, Cloudflare and Discord without links
+  occurrences:
+  - {ref: 'm-bench:28:u1', role: landing}
+- id: candidate-source-hinton-distillation
+  kind: new-masters-candidate
+  title: Hinton et al. — Distilling the Knowledge in a Neural Network (2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-hoefler-belli-scientific-benchmarking
+  kind: new-masters-candidate
+  title: Hoefler & Belli — Scientific Benchmarking of Parallel Computing Systems (SC 2015)
+  type: paper
+  extra_mentions: ['m-bench:48']
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-horace-he-brrr
+  kind: new-masters-candidate
+  title: He — Making Deep Learning Go Brrrr From First Principles
+  type: website
+  occurrences:
+  - {ref: 'm-runtime:59:e1', role: mention}
+  - {ref: 'm-runtime:129:u1', role: landing}
+- id: candidate-source-hotcarbon
+  kind: new-masters-candidate
+  title: HotCarbon workshop (proceedings)
+  type: website
+  occurrences:
+  - {ref: 'm-bench:37:u1', role: landing}
+- id: candidate-source-hpi-naumann-courses
+  kind: new-masters-candidate
+  title: HPI (Naumann group) — Data Profiling and Information Integration courses
+  type: course
+  extra_mentions: ['m-dataeng:159']
+  occurrences:
+  - {ref: 'm-dataeng:70:u1', role: landing}
+  - {ref: 'm-dataeng:70:u2', role: companion, title: 'openHPI course: Data Engineering und Data Science'}
+- id: candidate-source-huggingface-course
+  kind: new-masters-candidate
+  title: Hugging Face — LLM/NLP course
+  type: course
+  occurrences:
+  - {ref: 'm-ml:116:u1', role: landing}
+- id: candidate-source-huppler-good-benchmark
+  kind: new-masters-candidate
+  title: Huppler — The Art of Building a Good Benchmark (TPCTC 2009)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-hutton-programming-haskell
+  kind: new-masters-candidate
+  title: Hutton — Programming in Haskell
+  type: book
+  extra_mentions: ['m-runtime:49']
+  occurrences: []
+- id: candidate-source-hyper
+  kind: new-masters-candidate
+  title: Kemper & Neumann — HyPer
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-hyperfine
+  kind: new-masters-candidate
+  title: hyperfine (command-line benchmarking)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-hyvarinen-oja-ica
+  kind: new-masters-candidate
+  title: 'Hyvärinen & Oja — Independent Component Analysis: Algorithms and Applications (Neural Networks 2000)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:70:u1', role: landing}
+- id: candidate-source-ilyas-chu-data-cleaning
+  kind: new-masters-candidate
+  title: Ilyas & Chu — Data Cleaning (ACM Books)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:61:e1', role: mention}
+  - {ref: 'm-dataeng:82:e1', role: duplicate}
+- id: candidate-source-information-bottleneck
+  kind: new-masters-candidate
+  title: Tishby, Pereira & Bialek — The Information Bottleneck Method (1999)
+  type: paper
+  occurrences:
+  - {ref: 'm-math:82:e1', role: mention}
+- id: candidate-source-instructgpt
+  kind: new-masters-candidate
+  title: Ouyang et al. — Training Language Models to Follow Instructions with Human Feedback (InstructGPT, 2022)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-intel-rapl
+  kind: new-masters-candidate
+  title: Intel RAPL energy measurement (via perf/powercap)
+  type: documentation
+  extra_mentions: ['m-bench:38']
+  occurrences: []
+- id: candidate-source-isabelle-tutorials
+  kind: new-masters-candidate
+  title: Isabelle tutorials (Prog-Prove; Tutorial on Isabelle/HOL)
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:67:u1', role: landing}
+- id: candidate-source-jaxopt
+  kind: new-masters-candidate
+  title: JAXopt tutorials
+  type: documentation
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-jmh
+  kind: new-masters-candidate
+  title: JMH (Java Microbenchmark Harness)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-kaggle-learn
+  kind: new-masters-candidate
+  title: Kaggle Learn
+  type: course
+  extra_mentions: ['m-ml:201']
+  occurrences: []
+- id: candidate-source-kahip
+  kind: new-masters-candidate
+  title: KaHIP / KaMIS (Karlsruhe graph partitioning and independent sets)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:148:u1', role: landing}
+- id: candidate-source-kalibera-jones-rigorous-benchmarking
+  kind: new-masters-candidate
+  title: Kalibera & Jones — Rigorous Benchmarking in Reasonable Time
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-karger-min-cut
+  kind: new-masters-candidate
+  title: Karger — Global Min-Cuts in RNC (min-cut paper)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:39:e1', role: mention}
+- id: candidate-source-karniadakis-piml-review
+  kind: new-masters-candidate
+  title: Karniadakis et al. — Physics-informed machine learning (Nature Reviews Physics 2021)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:139:e1', role: mention}
+- id: candidate-source-karp-reducibility
+  kind: new-masters-candidate
+  title: Karp — Reducibility Among Combinatorial Problems (1972)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-karpathy-lets-build-gpt
+  kind: new-masters-candidate
+  title: 'Karpathy — Let''s build GPT (Neural Networks: Zero to Hero lecture)'
+  type: video
+  note: ⚠ one lecture of the Zero-to-Hero playlist, whose parent record is undecided (see lr:97:u1)
+  extra_mentions: ['m-ml:119', 'm-ml:40']
+  occurrences: []
+- id: candidate-source-kay-ssp-vol1
+  kind: new-masters-candidate
+  title: 'Kay — Fundamentals of Statistical Signal Processing, Vol. I: Estimation Theory'
+  type: book
+  occurrences:
+  - {ref: 'm-math:68:e1', role: mention}
+- id: candidate-source-kay-ssp-vol2
+  kind: new-masters-candidate
+  title: 'Kay — Fundamentals of Statistical Signal Processing, Vol. II: Detection Theory'
+  type: book
+  occurrences:
+  - {ref: 'm-math:68:e1', role: mention}
+- id: candidate-source-kepler
+  kind: new-masters-candidate
+  title: Kepler (Kubernetes energy metrics)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:99:u3', role: landing}
+- id: candidate-source-kernel-pca-paper
+  kind: new-masters-candidate
+  title: Schölkopf, Smola & Müller — Nonlinear Component Analysis as a Kernel Eigenvalue Problem (1998)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:73:e1', role: mention}
+- id: candidate-source-keshav-how-to-read-a-paper
+  kind: new-masters-candidate
+  title: Keshav — How to Read a Paper
+  type: paper
+  extra_mentions: ['m-algo:110', 'm-bench:45']
+  occurrences:
+  - {ref: 'm-dataeng:109:u1', role: landing}
+  - {ref: 'm-dataeng:159:e1', role: duplicate, note: back-reference to §10; also points to the HPI slides}
+- id: candidate-source-kge-survey
+  kind: new-masters-candidate
+  title: 'Wang et al. — Knowledge Graph Embedding: A Survey (IEEE TKDE 2017)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:119:e1', role: mention}
+- id: candidate-source-kochenderfer-wheeler-optimization
+  kind: new-masters-candidate
+  title: Kochenderfer & Wheeler — Algorithms for Optimization (MIT Press)
+  type: book
+  occurrences:
+  - {ref: 'm-math:38:u1', role: landing}
+- id: candidate-source-kolter-madry-adversarial
+  kind: new-masters-candidate
+  title: 'Kolter & Madry — Adversarial Robustness: Theory and Practice (tutorial)'
+  type: website
+  occurrences:
+  - {ref: 'm-ml:79:u1', role: landing}
+- id: candidate-source-kubernetes-docs
+  kind: new-masters-candidate
+  title: CNCF / Kubernetes documentation
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:139:e1', role: mention}
+- id: candidate-source-lamport-time-clocks
+  kind: new-masters-candidate
+  title: Lamport — Time, Clocks, and the Ordering of Events in a Distributed System (CACM 1978)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-lean4-theorem-proving
+  kind: new-masters-candidate
+  title: Theorem Proving in Lean 4
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:69:e1', role: mention}
+- id: candidate-source-learn-you-a-haskell
+  kind: new-masters-candidate
+  title: Learn You a Haskell for Great Good!
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:49:u1', role: landing}
+- id: candidate-source-learned-index-structures
+  kind: new-masters-candidate
+  title: Kraska et al. — The Case for Learned Index Structures (SIGMOD 2018)
+  type: paper
+  note: the row's other entries (ML-for-databases surveys, Schelter's and Boehm's overviews) name no identifiable item
+  occurrences:
+  - {ref: 'm-dataeng:108:e1', role: mention}
+- id: candidate-source-lilian-weng-blog
+  kind: new-masters-candidate
+  title: Lilian Weng — Lil'Log
+  type: website
+  occurrences:
+  - {ref: 'm-ml:41:u1', role: landing}
+- id: candidate-source-llama-cpp
+  kind: new-masters-candidate
+  title: llama.cpp
+  type: software
+  occurrences:
+  - {ref: 'm-ml:203:u2', role: landing}
+- id: candidate-source-llvm-kaleidoscope
+  kind: new-masters-candidate
+  title: LLVM Kaleidoscope tutorial
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:26:u1', role: landing}
+- id: candidate-source-llvm-paper
+  kind: new-masters-candidate
+  title: 'Lattner & Adve — LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation (CGO 2004)'
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:39:e1', role: mention}
+- id: candidate-source-lrp-bach-2015
+  kind: new-masters-candidate
+  title: Bach et al. — On Pixel-Wise Explanations by Layer-Wise Relevance Propagation (PLoS ONE 2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:127:e1', role: mention}
+- id: candidate-source-lrp-overview
+  kind: new-masters-candidate
+  title: 'Montavon et al. — Layer-Wise Relevance Propagation: An Overview (2019)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:127:e1', role: mention}
+- id: candidate-source-lynch-distributed-algorithms
+  kind: new-masters-candidate
+  title: Lynch — Distributed Algorithms
+  type: book
+  extra_mentions: ['m-algo:97']
+  occurrences:
+  - {ref: 'm-algo:87:e1', role: mention}
+- id: candidate-source-mackay-itila
+  kind: new-masters-candidate
+  title: MacKay — Information Theory, Inference, and Learning Algorithms
+  type: book
+  occurrences:
+  - {ref: 'm-math:80:u1', role: landing}
+- id: candidate-source-madry-pgd
+  kind: new-masters-candidate
+  title: Madry et al. — Towards Deep Learning Models Resistant to Adversarial Attacks (2018)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-madrylab-robustness
+  kind: new-masters-candidate
+  title: MadryLab robustness library
+  type: software
+  occurrences:
+  - {ref: 'm-ml:202:u3', role: landing}
+- id: candidate-source-magellan
+  kind: new-masters-candidate
+  title: 'Konda et al. — Magellan: Toward Building Entity Matching Management Systems (VLDB 2016)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:63:e1', role: mention}
+- id: candidate-source-mapreduce-paper
+  kind: new-masters-candidate
+  title: Dean & Ghemawat — MapReduce (OSDI 2004)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-matousek-gaertner-lp
+  kind: new-masters-candidate
+  title: Matoušek & Gärtner — Understanding and Using Linear Programming
+  type: book
+  note: ⚠ the list marks it as a bridge for the bachelor Mathe-2 retake; decide at use whether it becomes an active source
+  occurrences:
+  - {ref: 'm-math:50:e1', role: mention}
+- id: candidate-source-mcsherry-cost
+  kind: new-masters-candidate
+  title: McSherry, Isard & Murray — Scalability! But at what COST? (HotOS 2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:27:e1', role: mention}
+- id: candidate-source-megatron-lm
+  kind: new-masters-candidate
+  title: Shoeybi et al. — Megatron-LM (2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+  - {ref: 'm-runtime:123:u1', role: companion, title: NVIDIA/Megatron-LM repository}
+- id: candidate-source-mini-lsm
+  kind: new-masters-candidate
+  title: mini-lsm (build an LSM storage engine in Rust)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:189:u1', role: landing}
+- id: candidate-source-mit-18433
+  kind: new-masters-candidate
+  title: MIT 18.433 — Combinatorial Optimization (Goemans notes)
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+  - {ref: 'm-math:109:e1', role: mention, note: problem sets with solutions}
+- id: candidate-source-mit-6035
+  kind: new-masters-candidate
+  title: MIT 6.035 — Computer Language Engineering (OCW)
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:92:e1', role: mention}
+- id: candidate-source-mit-6042j
+  kind: new-masters-candidate
+  title: MIT 6.042J — Mathematics for Computer Science (OCW)
+  type: course
+  note: the list suggests it as a proof-technique refresher alongside the bachelor
+  occurrences:
+  - {ref: 'm-math:108:e1', role: mention}
+- id: candidate-source-mit-6251
+  kind: new-masters-candidate
+  title: MIT 6.251J — Introduction to Mathematical Programming
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+  - {ref: 'm-math:109:e1', role: mention}
+- id: candidate-source-mit-65830
+  kind: new-masters-candidate
+  title: MIT 6.5830 — Database Systems (current run, GoDB labs)
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:15:u1', role: landing}
+  - {ref: 'm-dataeng:15:u2', role: companion, title: 'Notes, assignments and practice quizzes'}
+  - {ref: 'm-dataeng:26:u2', role: duplicate}
+  - {ref: 'm-dataeng:183:u1', role: duplicate}
+- id: candidate-source-mit-6828
+  kind: new-masters-candidate
+  title: MIT 6.1810 / 6.828 — Operating System Engineering (OCW, xv6 labs)
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:110:e1', role: mention}
+- id: candidate-source-mit-6830-fall2010
+  kind: new-masters-candidate
+  title: MIT 6.830 — Database Systems (Fall 2010, OCW; SimpleDB Java labs)
+  type: course
+  note: a different course year from candidate-source-mit-65830, kept distinct
+  occurrences:
+  - {ref: 'm-dataeng:26:u1', role: child, title: Assignments (SimpleDB Java labs)}
+  - {ref: 'm-dataeng:183:u2', role: landing}
+- id: candidate-source-mit-6854
+  kind: new-masters-candidate
+  title: MIT 6.854 — Advanced Algorithms (Karger)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:15:e1', role: mention}
+- id: candidate-source-mit-6856
+  kind: new-masters-candidate
+  title: MIT 6.856J — Randomized Algorithms (Karger, OCW Fall 2002)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:38:u1', role: landing}
+- id: candidate-source-mit-dcai
+  kind: new-masters-candidate
+  title: MIT — Introduction to Data-Centric AI
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:79:u1', role: landing}
+  - {ref: 'm-dataeng:79:u2', role: companion, title: Lecture videos (YouTube)}
+  - {ref: 'm-dataeng:79:u3', role: companion, title: Labs (GitHub)}
+- id: candidate-source-mit-ocw-integer-programming
+  kind: new-masters-candidate
+  title: MIT OCW — Integer Programming and Combinatorial Optimization
+  type: course
+  occurrences:
+  - {ref: 'm-math:49:e1', role: mention}
+- id: candidate-source-mixed-precision-training
+  kind: new-masters-candidate
+  title: Micikevicius et al. — Mixed Precision Training (2018)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-ml-molecular-materials
+  kind: new-masters-candidate
+  title: Butler et al. — Machine learning for molecular and materials science (Nature 2018)
+  type: paper
+  note: the row also names quantum-ML reviews by von Lilienfeld, Müller and Tkatchenko without an identifiable item
+  occurrences:
+  - {ref: 'm-ml:149:e1', role: mention}
+- id: candidate-source-ml-reproducibility-checklist
+  kind: new-masters-candidate
+  title: Pineau — Machine Learning Reproducibility Checklist
+  type: documentation
+  extra_mentions: ['m-ml:158']
+  occurrences: []
+- id: candidate-source-mlflow
+  kind: new-masters-candidate
+  title: MLflow (experiment tracking and model registry)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+  - {ref: 'm-ml:203:u3', role: landing}
+- id: candidate-source-mlinspect-cidr2021
+  kind: new-masters-candidate
+  title: 'Grafberger, Guha, Stoyanovich & Schelter — mlinspect: Lightweight Inspection of Native Machine Learning Pipelines (CIDR 2021)'
+  type: paper
+  note: a different paper of the same family as the registered source-mlinspect-debugging
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+  - {ref: 'm-dataeng:78:e1', role: mention}
+  - {ref: 'm-dataeng:198:u1', role: companion, title: mlinspect code repository}
+- id: candidate-source-mlir-paper
+  kind: new-masters-candidate
+  title: 'Lattner et al. — MLIR: Scaling Compiler Infrastructure for Domain Specific Computation (CGO 2021)'
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:39:e1', role: mention}
+- id: candidate-source-mlir-toy
+  kind: new-masters-candidate
+  title: MLIR Toy tutorial
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:26:u2', role: landing}
+  - {ref: 'm-runtime:104:e1', role: duplicate, note: 'MLIR examples in the LLVM monorepo, pointing back to §2'}
+- id: candidate-source-mlperf
+  kind: new-masters-candidate
+  title: MLPerf (MLCommons) benchmarks
+  type: website
+  occurrences:
+  - {ref: 'm-bench:93:u1', role: landing}
+- id: candidate-source-model-cards
+  kind: new-masters-candidate
+  title: Mitchell et al. — Model Cards for Model Reporting (FAT* 2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-molnar-iml
+  kind: new-masters-candidate
+  title: Molnar — Interpretable Machine Learning
+  type: book
+  occurrences:
+  - {ref: 'm-ml:129:u1', role: landing}
+- id: candidate-source-monetdb-x100
+  kind: new-masters-candidate
+  title: 'Boncz, Zukowski & Nes — MonetDB/X100: Hyper-Pipelining Query Execution (CIDR 2005)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-morsel-driven-parallelism
+  kind: new-masters-candidate
+  title: Leis et al. — Morsel-Driven Parallelism (SIGMOD 2014)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-motwani-raghavan
+  kind: new-masters-candidate
+  title: Motwani & Raghavan — Randomized Algorithms
+  type: book
+  occurrences:
+  - {ref: 'm-algo:36:e1', role: mention}
+- id: candidate-source-muchnick
+  kind: new-masters-candidate
+  title: Muchnick — Advanced Compiler Design and Implementation
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:37:e1', role: mention}
+- id: candidate-source-murphy-pml2
+  kind: new-masters-candidate
+  title: 'Murphy — Probabilistic Machine Learning: Advanced Topics (Book 2)'
+  type: book
+  extra_mentions: ['m-ml:71']
+  occurrences: []
+- id: candidate-source-muthukrishnan-data-streams
+  kind: new-masters-candidate
+  title: 'Muthukrishnan — Data Streams: Algorithms and Applications'
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:57:u1', role: landing}
+- id: candidate-source-nand2tetris
+  kind: new-masters-candidate
+  title: Nand2Tetris
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:108:u1', role: landing}
+- id: candidate-source-nanogpt
+  kind: new-masters-candidate
+  title: nanoGPT (Karpathy)
+  type: software
+  occurrences:
+  - {ref: 'm-ml:198:u2', role: landing}
+- id: candidate-source-nanotron
+  kind: new-masters-candidate
+  title: nanotron (Hugging Face)
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:123:u2', role: landing}
+- id: candidate-source-naumann-herschel-duplicate-detection
+  kind: new-masters-candidate
+  title: Naumann & Herschel — An Introduction to Duplicate Detection
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:71:e1', role: mention}
+- id: candidate-source-neo4j
+  kind: new-masters-candidate
+  title: Neo4j (graph database)
+  type: software
+  extra_mentions: ['m-dataeng:118', 'm-dataeng:120']
+  occurrences: []
+- id: candidate-source-networkit
+  kind: new-masters-candidate
+  title: NetworKit (scalable network analysis)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:149:u1', role: landing}
+- id: candidate-source-neumann-compiling-query-plans
+  kind: new-masters-candidate
+  title: Neumann — Efficiently Compiling Efficient Query Plans for Modern Hardware (VLDB 2011)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:40:e1', role: mention}
+- id: candidate-source-neural-odes
+  kind: new-masters-candidate
+  title: Chen et al. — Neural Ordinary Differential Equations (NeurIPS 2018)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-newman-building-microservices
+  kind: new-masters-candidate
+  title: Newman — Building Microservices (2nd ed., O'Reilly)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:138:e1', role: mention}
+- id: candidate-source-nfdi
+  kind: new-masters-candidate
+  title: NFDI and NFDI4DataScience
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:128:u1', role: landing}
+- id: candidate-source-niedermeier-fpt
+  kind: new-masters-candidate
+  title: Niedermeier — Invitation to Fixed-Parameter Algorithms
+  type: book
+  occurrences:
+  - {ref: 'm-algo:46:e1', role: mention}
+- id: candidate-source-nltk
+  kind: new-masters-candidate
+  title: NLTK
+  type: software
+  occurrences:
+  - {ref: 'm-ml:118:e1', role: mention}
+- id: candidate-source-normalizing-flows-vi
+  kind: new-masters-candidate
+  title: Rezende & Mohamed — Variational Inference with Normalizing Flows (ICML 2015)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:42:e1', role: mention}
+- id: candidate-source-norris-markov-chains
+  kind: new-masters-candidate
+  title: Norris — Markov Chains
+  type: book
+  occurrences:
+  - {ref: 'm-math:29:u1', role: landing}
+- id: candidate-source-numpy-tutorials
+  kind: new-masters-candidate
+  title: NumPy official tutorials
+  type: documentation
+  extra_mentions: ['m-ml:167']
+  occurrences: []
+- id: candidate-source-nygard-release-it
+  kind: new-masters-candidate
+  title: Nygard — Release It! (2nd ed.)
+  type: book
+  extra_mentions: ['m-bench:65']
+  occurrences:
+  - {ref: 'm-bench:24:e1', role: mention}
+- id: candidate-source-oink
+  kind: new-masters-candidate
+  title: Oink (parity game solver)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-onnx-runtime
+  kind: new-masters-candidate
+  title: ONNX Runtime
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-openrefine
+  kind: new-masters-candidate
+  title: OpenRefine
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:158:e1', role: mention}
+- id: candidate-source-oplss
+  kind: new-masters-candidate
+  title: OPLSS — Oregon Programming Languages Summer School (video archive)
+  type: video
+  occurrences:
+  - {ref: 'm-runtime:17:u1', role: landing}
+- id: candidate-source-orkg
+  kind: new-masters-candidate
+  title: Open Research Knowledge Graph (ORKG)
+  type: website
+  note: the row also names GO-FAIR and RDM basics without an identifiable item
+  occurrences:
+  - {ref: 'm-dataeng:130:u1', role: landing}
+- id: candidate-source-ostep
+  kind: new-masters-candidate
+  title: 'Arpaci-Dusseau — Operating Systems: Three Easy Pieces (OSTEP)'
+  type: book
+  note: ⚠ likely needed by an operating-systems module in the bachelor; register actively when such a module's plan is built
+  occurrences:
+  - {ref: 'm-bench:105:e1', role: mention, note: the book's homework simulators}
+  - {ref: 'm-dataeng:205:u1', role: landing}
+  - {ref: 'm-runtime:109:e1', role: mention}
+- id: candidate-source-owl-automata
+  kind: new-masters-candidate
+  title: Owl (ω-automata library)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-pace-challenge
+  kind: new-masters-candidate
+  title: PACE Challenge (parameterized algorithms implementation challenge)
+  type: website
+  extra_mentions: ['m-algo:68']
+  occurrences:
+  - {ref: 'm-algo:48:u1', role: landing}
+  - {ref: 'm-algo:147:u1', role: duplicate, note: winning solvers are linked per year from the same site}
+- id: candidate-source-pagedattention
+  kind: new-masters-candidate
+  title: Kwon et al. — Efficient Memory Management for LLM Serving with PagedAttention (SOSP 2023)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:135:e1', role: mention}
+- id: candidate-source-papadakis-blocking-survey
+  kind: new-masters-candidate
+  title: 'Papadakis et al. — Blocking and Filtering Techniques for Entity Resolution: A Survey (ACM CSUR 2020)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:71:e1', role: mention}
+- id: candidate-source-papadimitriou-complexity
+  kind: new-masters-candidate
+  title: Papadimitriou — Computational Complexity
+  type: book
+  occurrences:
+  - {ref: 'm-algo:28:e1', role: mention}
+- id: candidate-source-papers-with-code
+  kind: new-masters-candidate
+  title: Papers with Code
+  type: website
+  occurrences:
+  - {ref: 'm-ml:158:u1', role: landing}
+- id: candidate-source-parameter-server
+  kind: new-masters-candidate
+  title: Li et al. — Scaling Distributed Machine Learning with the Parameter Server (OSDI 2014)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-patterson-carbon-emissions
+  kind: new-masters-candidate
+  title: Patterson et al. — Carbon Emissions and Large Neural Network Training (2021)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-patterson-carbon-plateau
+  kind: new-masters-candidate
+  title: Patterson et al. — The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-pavlo-self-driving-dbms
+  kind: new-masters-candidate
+  title: Pavlo et al. — Self-Driving Database Management Systems (CIDR 2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-paxos-made-simple
+  kind: new-masters-candidate
+  title: Lamport — Paxos Made Simple
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-paxson-sound-measurement
+  kind: new-masters-candidate
+  title: Paxson — Strategies for Sound Internet Measurement (IMC 2004)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:56:e1', role: mention}
+- id: candidate-source-pedregosa-sklearn-jmlr
+  kind: new-masters-candidate
+  title: 'Pedregosa et al. — Scikit-learn: Machine Learning in Python (JMLR 2011)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:53:e1', role: mention}
+- id: candidate-source-petrov-database-internals
+  kind: new-masters-candidate
+  title: Petrov — Database Internals (O'Reilly)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:28:e1', role: mention}
+- id: candidate-source-pinns-paper
+  kind: new-masters-candidate
+  title: Raissi, Perdikaris & Karniadakis — Physics-Informed Neural Networks (J. Computational Physics 2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:138:e1', role: mention}
+  - {ref: 'm-ml:141:u2', role: companion, title: Reference implementation (maziarraissi/PINNs)}
+- id: candidate-source-pipedream
+  kind: new-masters-candidate
+  title: Narayanan et al. — PipeDream
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-plfa
+  kind: new-masters-candidate
+  title: Wadler, Kokke & Siek — Programming Language Foundations in Agda (PLFA)
+  type: book
+  extra_mentions: ['m-runtime:49']
+  occurrences:
+  - {ref: 'm-runtime:15:u1', role: landing}
+- id: candidate-source-plzoo
+  kind: new-masters-candidate
+  title: PL Zoo (Bauer)
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:99:u1', role: landing}
+- id: candidate-source-poor-detection-estimation
+  kind: new-masters-candidate
+  title: Poor — An Introduction to Signal Detection and Estimation (Springer)
+  type: book
+  occurrences:
+  - {ref: 'm-math:69:e1', role: mention}
+- id: candidate-source-pope-scaling-inference
+  kind: new-masters-candidate
+  title: Pope et al. — Efficiently Scaling Transformer Inference (MLSys 2023)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:134:e1', role: mention}
+- id: candidate-source-project-euler
+  kind: new-masters-candidate
+  title: Project Euler (mathematical programming problems)
+  type: website
+  occurrences:
+  - {ref: 'm-algo:142:e1', role: mention}
+  - {ref: 'm-math:115:e1', role: mention}
+- id: candidate-source-pykeen
+  kind: new-masters-candidate
+  title: PyKEEN (knowledge graph embeddings library)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:120:u1', role: landing}
+- id: candidate-source-pytorch-fsdp
+  kind: new-masters-candidate
+  title: Zhao et al. — PyTorch FSDP (2023)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-qbe
+  kind: new-masters-candidate
+  title: QBE (compiler backend)
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:101:u1', role: landing}
+- id: candidate-source-rag
+  kind: new-masters-candidate
+  title: Lewis et al. — Retrieval-Augmented Generation (2020)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:117:e1', role: mention}
+- id: candidate-source-raschka-pytorch-sklearn
+  kind: new-masters-candidate
+  title: Raschka, Liu & Mirjalili — Machine Learning with PyTorch and Scikit-Learn
+  type: book
+  occurrences:
+  - {ref: 'm-ml:51:e1', role: mention}
+- id: candidate-source-rasmussen-williams-gpml
+  kind: new-masters-candidate
+  title: Rasmussen & Williams — Gaussian Processes for Machine Learning
+  type: book
+  extra_mentions: ['m-math:39']
+  occurrences:
+  - {ref: 'm-ml:93:u1', role: landing}
+- id: candidate-source-rdd-paper
+  kind: new-masters-candidate
+  title: Zaharia et al. — Resilient Distributed Datasets (NSDI 2012)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+- id: candidate-source-reis-housley-fde
+  kind: new-masters-candidate
+  title: Reis & Housley — Fundamentals of Data Engineering (O'Reilly)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:101:e1', role: mention}
+- id: candidate-source-ripe-atlas
+  kind: new-masters-candidate
+  title: RIPE Atlas (measurement infrastructure)
+  type: website
+  occurrences:
+  - {ref: 'm-bench:57:e1', role: mention}
+- id: candidate-source-rise-lang
+  kind: new-masters-candidate
+  title: rise-lang / ELEVATE (IR and rewrite-strategy language, code)
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:103:u1', role: landing}
+- id: candidate-source-rise-shine
+  kind: new-masters-candidate
+  title: RISE & Shine (Steuwer et al.)
+  type: paper
+  extra_mentions: ['m-runtime:18']
+  occurrences: []
+- id: candidate-source-risinglight
+  kind: new-masters-candidate
+  title: RisingLight (educational OLAP database in Rust)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:191:u1', role: landing}
+- id: candidate-source-robustbench
+  kind: new-masters-candidate
+  title: RobustBench
+  type: website
+  occurrences:
+  - {ref: 'm-ml:83:u1', role: landing}
+- id: candidate-source-roughgarden-agt-twenty-lectures
+  kind: new-masters-candidate
+  title: Roughgarden — Twenty Lectures on Algorithmic Game Theory (book; CS364A videos)
+  type: book
+  note: named on the CS261 line as sitting on the same page as the CS261 notes; the line gives it no separate link
+  extra_mentions: ['m-algo:14']
+  occurrences: []
+- id: candidate-source-samek-explainable-ai
+  kind: new-masters-candidate
+  title: 'Samek, Montavon, Vedaldi, Hansen & Müller (eds.) — Explainable AI: Interpreting, Explaining and Visualizing Deep Learning (LNCS 11700)'
+  type: book
+  occurrences:
+  - {ref: 'm-ml:125:e1', role: mention}
+- id: candidate-source-sanders-basic-toolbox
+  kind: new-masters-candidate
+  title: 'Sanders, Mehlhorn, Dietzfelbinger & Dementiev — Sequential and Parallel Algorithms and Data Structures: The Basic Toolbox'
+  type: book
+  note: a different, newer book than the registered German Grundwerkzeuge (source-dms-grundwerkzeuge)
+  occurrences:
+  - {ref: 'm-algo:66:u1', role: landing}
+- id: candidate-source-scaphandre
+  kind: new-masters-candidate
+  title: Scaphandre (RAPL-based power agent)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:99:u2', role: landing}
+- id: candidate-source-schnet
+  kind: new-masters-candidate
+  title: 'Schütt et al. — SchNet: A continuous-filter CNN for modeling quantum interactions (NeurIPS 2017)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:148:e1', role: mention}
+- id: candidate-source-sci-specification
+  kind: new-masters-candidate
+  title: Software Carbon Intensity (SCI) specification
+  type: documentation
+  extra_mentions: ['m-bench:34']
+  occurrences: []
+- id: candidate-source-scipy-optimize
+  kind: new-masters-candidate
+  title: scipy.optimize
+  type: documentation
+  occurrences:
+  - {ref: 'm-math:40:e1', role: mention}
+- id: candidate-source-selinger-lambda-notes
+  kind: new-masters-candidate
+  title: Selinger — Lecture Notes on the Lambda Calculus
+  type: lecture
+  occurrences:
+  - {ref: 'm-runtime:45:u1', role: landing}
+- id: candidate-source-serverless-framework
+  kind: new-masters-candidate
+  title: Serverless Framework
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-shamir-ip-pspace
+  kind: new-masters-candidate
+  title: Shamir — IP = PSPACE (1992)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-shokri-membership-inference
+  kind: new-masters-candidate
+  title: Shokri et al. — Membership Inference Attacks Against Machine Learning Models (2017)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-sigmod-reproducibility
+  kind: new-masters-candidate
+  title: SIGMOD Availability & Reproducibility Initiative (ACM artifact badging)
+  type: website
+  occurrences:
+  - {ref: 'm-bench:48:u1', role: landing}
+  - {ref: 'm-bench:98:u1', role: duplicate}
+- id: candidate-source-silberschatz-db-concepts
+  kind: new-masters-candidate
+  title: Silberschatz, Korth & Sudarshan — Database System Concepts (7th ed.)
+  type: book
+  occurrences:
+  - {ref: 'm-dataeng:16:u1', role: landing}
+- id: candidate-source-silver-ucl-rl
+  kind: new-masters-candidate
+  title: David Silver — UCL Reinforcement Learning lectures
+  type: video
+  extra_mentions: ['m-ml:62']
+  occurrences: []
+- id: candidate-source-sipser-toc
+  kind: new-masters-candidate
+  title: Sipser — Introduction to the Theory of Computation
+  type: book
+  occurrences:
+  - {ref: 'm-algo:27:e1', role: mention}
+- id: candidate-source-sorensen-urzyczyn
+  kind: new-masters-candidate
+  title: Sørensen & Urzyczyn — Lectures on the Curry-Howard Isomorphism
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:47:e1', role: mention}
+- id: candidate-source-spacy
+  kind: new-masters-candidate
+  title: spaCy
+  type: software
+  occurrences:
+  - {ref: 'm-ml:118:e1', role: mention}
+- id: candidate-source-spec-benchmarks
+  kind: new-masters-candidate
+  title: SPEC benchmarks (run and reporting rules)
+  type: website
+  occurrences:
+  - {ref: 'm-bench:100:u1', role: landing}
+- id: candidate-source-speculative-decoding
+  kind: new-masters-candidate
+  title: Leviathan et al. — Fast Inference from Transformers via Speculative Decoding (2023)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:135:e1', role: mention}
+- id: candidate-source-spj-great-research-paper
+  kind: new-masters-candidate
+  title: Peyton Jones — How to Write a Great Research Paper (talk and slides)
+  type: video
+  occurrences:
+  - {ref: 'm-bench:45:u1', role: landing}
+- id: candidate-source-spot
+  kind: new-masters-candidate
+  title: Spot (LTL and ω-automata library)
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-stanford-cs143
+  kind: new-masters-candidate
+  title: Stanford CS143 — Compilers (Cool compiler assignments)
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:91:u1', role: landing}
+- id: candidate-source-stanford-cs168
+  kind: new-masters-candidate
+  title: Stanford CS168 — The Modern Algorithmic Toolbox (Roughgarden & Valiant)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:55:u1', role: landing}
+- id: candidate-source-stanford-cs224n
+  kind: new-masters-candidate
+  title: Stanford CS224N — Natural Language Processing with Deep Learning (Manning)
+  type: course
+  occurrences:
+  - {ref: 'm-ml:114:u1', role: landing}
+- id: candidate-source-stanford-cs228
+  kind: new-masters-candidate
+  title: Stanford CS228 — Probabilistic Graphical Models (course notes)
+  type: course
+  occurrences:
+  - {ref: 'm-ml:18:u1', role: landing}
+- id: candidate-source-stanford-cs236
+  kind: new-masters-candidate
+  title: Stanford CS236 — Deep Generative Models
+  type: course
+  occurrences:
+  - {ref: 'm-ml:39:u1', role: landing}
+- id: candidate-source-stanford-cs246
+  kind: new-masters-candidate
+  title: Stanford CS246 — Mining Massive Data Sets
+  type: course
+  extra_mentions: ['m-dataeng:51']
+  occurrences: []
+- id: candidate-source-stanford-cs25
+  kind: new-masters-candidate
+  title: Stanford CS25 — Transformers United
+  type: course
+  occurrences:
+  - {ref: 'm-ml:40:u1', role: landing}
+- id: candidate-source-stanford-cs261
+  kind: new-masters-candidate
+  title: Stanford CS261 — A Second Course in Algorithms (Roughgarden)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:14:u1', role: landing, title: Lecture notes and videos}
+  - {ref: 'm-algo:136:u1', role: companion, title: Roughgarden's site (CS161/CS261 problem sets)}
+- id: candidate-source-stanford-cs329s
+  kind: new-masters-candidate
+  title: Stanford CS329S — Machine Learning Systems Design (Huyen)
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:80:u1', role: landing}
+- id: candidate-source-stanford-cs520
+  kind: new-masters-candidate
+  title: Stanford CS520 — Knowledge Graphs
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:117:u1', role: landing}
+- id: candidate-source-stanford-ee364a
+  kind: new-masters-candidate
+  title: 'Stanford EE364a — Convex Optimization I (Boyd): homework and final archive'
+  type: course
+  note: the row also names the book's Additional Exercises and their solutions repository
+  occurrences:
+  - {ref: 'm-math:104:e1', role: mention}
+- id: candidate-source-stanford-ee376a
+  kind: new-masters-candidate
+  title: Stanford EE376A — Information Theory (Weissman)
+  type: course
+  occurrences:
+  - {ref: 'm-math:81:e1', role: mention}
+- id: candidate-source-stanford-mlsys-seminar
+  kind: new-masters-candidate
+  title: Stanford MLSys Seminar (talk series)
+  type: video
+  extra_mentions: ['m-dataeng:110']
+  occurrences:
+  - {ref: 'm-dataeng:89:u1', role: landing}
+  - {ref: 'm-dataeng:89:u2', role: companion, title: YouTube channel}
+- id: candidate-source-stanford-stats214
+  kind: new-masters-candidate
+  title: Stanford CS229M / STATS214 — Machine Learning Theory (Ma)
+  type: course
+  occurrences:
+  - {ref: 'm-math:15:u1', role: landing}
+- id: candidate-source-stas-ml-engineering
+  kind: new-masters-candidate
+  title: Bekman — Machine Learning Engineering Open Book
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:121:u1', role: landing}
+- id: candidate-source-strubell-energy-policy
+  kind: new-masters-candidate
+  title: Strubell et al. — Energy and Policy Considerations for Deep Learning in NLP (ACL 2019)
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-suomela-local-algorithms
+  kind: new-masters-candidate
+  title: Suomela — Survey of Local Algorithms (ACM CSUR 2013)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:101:e1', role: mention}
+- id: candidate-source-systemds-paper
+  kind: new-masters-candidate
+  title: 'Boehm et al. — SystemDS: A Declarative Machine Learning System (CIDR 2020)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:100:e1', role: mention}
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-systemml-spark
+  kind: new-masters-candidate
+  title: 'Boehm et al. — SystemML: Declarative Machine Learning on Spark (VLDB 2016)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-szegedy-intriguing
+  kind: new-masters-candidate
+  title: Szegedy et al. — Intriguing Properties of Neural Networks (2014)
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:81:e1', role: mention}
+- id: candidate-source-tene-how-not-to-measure-latency
+  kind: new-masters-candidate
+  title: Tene — How NOT to Measure Latency (talk; coordinated omission)
+  type: video
+  extra_mentions: ['m-bench:90']
+  occurrences:
+  - {ref: 'm-bench:58:e1', role: mention}
+- id: candidate-source-terraform
+  kind: new-masters-candidate
+  title: Terraform (infrastructure as code)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:148:e1', role: mention}
+- id: candidate-source-tfdv
+  kind: new-masters-candidate
+  title: TensorFlow Data Validation (TFX) tutorials
+  type: documentation
+  extra_mentions: ['m-dataeng:81']
+  occurrences: []
+- id: candidate-source-tfx-paper
+  kind: new-masters-candidate
+  title: 'Baylor et al. — TFX: A TensorFlow-Based Production-Scale ML Platform (KDD 2017)'
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:91:e1', role: mention}
+- id: candidate-source-thakur-approaching-ml
+  kind: new-masters-candidate
+  title: Thakur — Approaching (Almost) Any Machine Learning Problem
+  type: book
+  occurrences:
+  - {ref: 'm-ml:52:u1', role: landing}
+- id: candidate-source-thomas-languages-automata-logic
+  kind: new-masters-candidate
+  title: Thomas — Languages, Automata, and Logic (handbook chapter)
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:80:e1', role: mention}
+- id: candidate-source-tinygrad
+  kind: new-masters-candidate
+  title: tinygrad
+  type: software
+  occurrences:
+  - {ref: 'm-ml:199:u1', role: landing}
+- id: candidate-source-tla-plus
+  kind: new-masters-candidate
+  title: TLA+ video course and hyperbook (Lamport)
+  type: course
+  occurrences:
+  - {ref: 'm-algo:90:u1', role: landing}
+  - {ref: 'm-algo:102:e1', role: duplicate, note: back-reference to §8}
+  - {ref: 'm-algo:150:u1', role: companion, title: TLA+ Examples repository}
+- id: candidate-source-torchserve
+  kind: new-masters-candidate
+  title: TorchServe (model serving)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-toydb
+  kind: new-masters-candidate
+  title: toydb (distributed SQL database in Rust)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:190:u1', role: landing}
+- id: candidate-source-tpc-benchmarks
+  kind: new-masters-candidate
+  title: TPC benchmarks (TPC-C, TPC-H, TPC-DS)
+  type: website
+  extra_mentions: ['m-bench:94']
+  occurrences:
+  - {ref: 'm-bench:16:u2', role: landing}
+- id: candidate-source-transe
+  kind: new-masters-candidate
+  title: Bordes et al. — Translating Embeddings for Modeling Multi-relational Data (TransE, NeurIPS 2013)
+  type: paper
+  occurrences:
+  - {ref: 'm-dataeng:119:e1', role: mention}
+- id: candidate-source-triton
+  kind: new-masters-candidate
+  title: Triton (GPU kernel language) and tutorials
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:58:u1', role: landing}
+  - {ref: 'm-runtime:130:u1', role: duplicate, note: section B names the tutorials again}
+- id: candidate-source-triton-inference-server
+  kind: new-masters-candidate
+  title: NVIDIA Triton Inference Server
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-tuebingen-probabilistic-ml
+  kind: new-masters-candidate
+  title: Tübingen — Probabilistic Machine Learning (Hennig)
+  type: course
+  occurrences:
+  - {ref: 'm-ml:194:e1', role: mention}
+- id: candidate-source-tum-dpmh
+  kind: new-masters-candidate
+  title: TUM — Data Processing on Modern Hardware (Giceva, SS21 slides)
+  type: course
+  occurrences:
+  - {ref: 'm-dataeng:37:u1', role: landing}
+- id: candidate-source-tvm
+  kind: new-masters-candidate
+  title: 'Chen et al. — TVM: An Automated End-to-End Optimizing Compiler for Deep Learning (OSDI 2018)'
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:103:e1', role: mention}
+- id: candidate-source-twelve-factor-app
+  kind: new-masters-candidate
+  title: The Twelve-Factor App
+  type: website
+  occurrences:
+  - {ref: 'm-dataeng:140:u1', role: landing}
+- id: candidate-source-uva-dl-notebooks
+  kind: new-masters-candidate
+  title: UvA Deep Learning notebooks
+  type: website
+  occurrences:
+  - {ref: 'm-ml:32:u1', role: landing}
+- id: candidate-source-varma-simon-cv-bias
+  kind: new-masters-candidate
+  title: Varma & Simon — Bias in Error Estimation when Using Cross-Validation for Model Selection
+  type: paper
+  occurrences:
+  - {ref: 'm-ml:53:e1', role: mention}
+- id: candidate-source-vazirani-approximation
+  kind: new-masters-candidate
+  title: Vazirani — Approximation Algorithms
+  type: book
+  occurrences:
+  - {ref: 'm-math:58:e1', role: mention}
+- id: candidate-source-vllm
+  kind: new-masters-candidate
+  title: vLLM
+  type: software
+  occurrences:
+  - {ref: 'm-ml:203:u1', role: landing}
+- id: candidate-source-w3c-rdf-sparql
+  kind: new-masters-candidate
+  title: W3C RDF and SPARQL specifications
+  type: documentation
+  occurrences:
+  - {ref: 'm-dataeng:118:e1', role: mention}
+- id: candidate-source-wadler-propositions-as-types
+  kind: new-masters-candidate
+  title: Wadler — Propositions as Types (CACM 2015)
+  type: paper
+  note: the row also names the talk on YouTube without a link
+  occurrences:
+  - {ref: 'm-runtime:16:u1', role: landing}
+- id: candidate-source-wainwright-hds
+  kind: new-masters-candidate
+  title: 'Wainwright — High-Dimensional Statistics: A Non-Asymptotic Viewpoint'
+  type: book
+  occurrences:
+  - {ref: 'm-math:17:e1', role: mention}
+- id: candidate-source-weights-and-biases
+  kind: new-masters-candidate
+  title: Weights & Biases (experiment tracking)
+  type: software
+  occurrences:
+  - {ref: 'm-dataeng:92:e1', role: mention}
+- id: candidate-source-wolsey-integer-programming
+  kind: new-masters-candidate
+  title: Wolsey — Integer Programming
+  type: book
+  occurrences:
+  - {ref: 'm-math:51:e1', role: mention}
+- id: candidate-source-write-you-a-haskell
+  kind: new-masters-candidate
+  title: Diehl — Write You a Haskell
+  type: website
+  occurrences:
+  - {ref: 'm-runtime:100:u1', role: landing}
+- id: candidate-source-wrk2
+  kind: new-masters-candidate
+  title: wrk2 (constant-throughput HTTP load generator)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:90:u1', role: landing}
+- id: candidate-source-xxai
+  kind: new-masters-candidate
+  title: 'Holzinger et al. (eds.) — xxAI: Beyond Explainable AI (Springer 2022, open access)'
+  type: book
+  occurrences:
+  - {ref: 'm-ml:126:u1', role: landing}
+- id: candidate-source-ycsb
+  kind: new-masters-candidate
+  title: YCSB — Yahoo! Cloud Serving Benchmark (and Cooper et al., SoCC 2010)
+  type: software
+  occurrences:
+  - {ref: 'm-bench:16:u1', role: landing}
+- id: candidate-source-zennit
+  kind: new-masters-candidate
+  title: Zennit (LRP/CRP library)
+  type: software
+  occurrences:
+  - {ref: 'm-ml:131:u2', role: landing}
+- id: candidate-source-zero
+  kind: new-masters-candidate
+  title: Rajbhandari et al. — ZeRO (SC 2020)
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-zobel-writing-for-cs
+  kind: new-masters-candidate
+  title: Zobel — Writing for Computer Science (Springer)
+  type: book
+  extra_mentions: ['m-bench:45']
+  occurrences: []
+- id: unresolved:unspecific-reference
+  kind: unresolved
+  reason: Names a body of work or a family of items rather than an identifiable teaching object; resolve when the module is chosen
+  extra_mentions: ['m-dataeng:108', 'm-dataeng:42']
+  occurrences:
+  - {ref: 'm-algo:100:e1', note: Schmid's SIGCOMM/INFOCOM work on self-adjusting networks}
+  - {ref: 'm-runtime:68:e1', note: Nipkow's embedding notes or a standard survey on deep vs. shallow embeddings}
+- id: out-of-scope:action-item
+  kind: out-of-scope
+  reason: A to-do for obtaining material from people or course platforms; not a teaching object
+  occurrences:
+  - {ref: 'lr:273:e1'}
+  - {ref: 'lr:274:e1'}
+  - {ref: 'lr:275:e1'}
+- id: out-of-scope:course-logistics
+  kind: out-of-scope
+  reason: Course administration (Moodle, topic lists, chair pages); not a teaching object
+  occurrences:
+  - {ref: 'lr:353:e1'}
+  - {ref: 'm-runtime:82:u1'}
+- id: out-of-scope:discovery-pointer
+  kind: out-of-scope
+  reason: Article or list used to discover sources; the sources it yielded are dispositioned separately
+  occurrences:
+  - {ref: 'lr:142:u1'}
+  - {ref: 'm-dataeng:177:u1'}
+  - {ref: 'm-ml:150:u1'}
+  - {ref: 'm-ml:157:u1'}
+- id: out-of-scope:external-code-repository
+  kind: out-of-scope
+  reason: Stratum is an external sibling code repository (CLAUDE.md §13); LearningOS never indexes it
+  occurrences:
+  - {ref: 'lr:225:p1'}
+- id: out-of-scope:folder-reference
+  kind: out-of-scope
+  reason: Folder named as a location in prose; the files it held are dispositioned through their own occurrences
+  occurrences:
+  - {ref: 'lr:164:p1'}
+  - {ref: 'lr:172:p1'}
+  - {ref: 'lr:293:p2'}
+  - {ref: 'lr:307:p1'}
+  - {ref: 'm-bench:77:p1'}
+  - {ref: 'ws-m2-chat8:23:p1'}
+  - {ref: 'ws-m2-chat8:33:p1'}
+  - {ref: 'ws-m2-chat8:33:p2'}
+  - {ref: 'ws-m2-chat8:40:p1'}
+  - {ref: 'ws-m2-chat8:42:p1'}
+  - {ref: 'ws-m2-chat8:42:p2'}
+  - {ref: 'ws-m2-chat8:42:p3'}
+  - {ref: 'ws-m2-chat8:42:p4'}
+- id: out-of-scope:fragment
+  kind: out-of-scope
+  reason: Elided URL or path pattern in prose, not a locator
+  occurrences:
+  - {ref: 'lr:283:p2'}
+- id: out-of-scope:internal-document
+  kind: out-of-scope
+  reason: Internal plan or note document (moved per migration/path-map.csv)
+  occurrences:
+  - {ref: 'lr:40:p11', note: 'the six Master''s lists, declared as origins in this pass'}
+  - {ref: 'lr:54:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'lr:54:p2', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'lr:54:p3', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'lr:102:p1', basis: path-map, note: archive/workspaces/2026/workspace-mlprov/inputs/Sklearn-5h-Crash-Plan.md}
+  - {ref: 'lr:125:p1', basis: path-map, note: curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml}
+  - {ref: 'lr:156:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'lr:158:p1', basis: path-map, note: knowledge/notes/mathematics/note-sad-source-crosswalk.md + sources/sources.yaml evaluations}
+  - {ref: 'lr:158:p2', basis: path-map, note: work/active/workspace-m2-exam-prep/inputs/SaD-Module-Overview.md}
+  - {ref: 'lr:203:p3', basis: path-map, note: curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml}
+  - {ref: 'lr:221:p1', basis: path-map, note: archive/workspaces/2026/workspace-mlprov/inputs/Sklearn-5h-Crash-Plan.md}
+  - {ref: 'lr:224:p1', basis: path-map, note: knowledge/notes/data-systems/note-skrub-dataop-dag.md}
+  - {ref: 'lr:224:p2', basis: path-map, note: knowledge/notes/data-systems/note-skrub-evaluation-engine.md}
+  - {ref: 'lr:256:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'lr:311:p1', basis: path-map, note: work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md}
+  - {ref: 'lr:385:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'lr:385:p2', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'lr:385:p3', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'lr:385:p4', basis: path-map, note: work/active/workspace-aml-exam-prep/inputs/DL-AMLS-Learning-Plan.md}
+  - {ref: 'lr:385:p5', note: deleted legacy plan copy}
+  - {ref: 'm-algo:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-algo:91:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-algo:110:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-bench:3:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:3:p3', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:17:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:25:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:45:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:48:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:59:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:77:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-dataeng:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-dataeng:177:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/Ultimate-Index.md}
+  - {ref: 'm-math:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-math:19:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ML-RESOURCES.md}
+  - {ref: 'm-math:39:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ML-RESOURCES.md}
+  - {ref: 'm-ml:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-ml:4:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-runtime:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-runtime:3:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-runtime:70:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'ws-aml-dl-amls:56:p1', basis: path-map, note: knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md}
+  - {ref: 'ws-m2-an-index:3:p1', note: the workspace's own inputs folder}
+  - {ref: 'ws-m2-an-index:14:p1', note: the module's canonical source map}
+  - {ref: 'ws-m2-an-index:33:p1'}
+  - {ref: 'ws-m2-an-index:34:p1'}
+  - {ref: 'ws-m2-an-index:35:p1'}
+  - {ref: 'ws-m2-an-index:36:p1'}
+  - {ref: 'ws-m2-an-index:37:p1'}
+  - {ref: 'ws-m2-an-index:38:p1'}
+  - {ref: 'ws-m2-an-index:39:p1'}
+  - {ref: 'ws-m2-an-index:40:p1'}
+  - {ref: 'ws-m2-an-index:41:p1'}
+  - {ref: 'ws-m2-an-index:42:p1'}
+  - {ref: 'ws-m2-chat1:5:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:6:p1', basis: path-map-basename, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'ws-m2-chat1:12:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:13:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'ws-m2-chat1:14:p1', basis: path-map, note: knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md}
+  - {ref: 'ws-m2-chat1:15:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'ws-m2-chat1:16:p1', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'ws-m2-chat1:18:p1', note: 'pattern for the per-lecture unit folders, now knowledge notes'}
+  - {ref: 'ws-m2-chat1:381:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:443:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:444:p1', note: 'a per-lecture unit folder, now knowledge notes'}
+  - {ref: 'ws-m2-chat1:481:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:557:p1', basis: path-map, note: archive/workspaces/2026/workspace-semester-brain-sose26/inputs/LEARNING-RESOURCES.md}
+  - {ref: 'ws-m2-chat1:597:p1', basis: path-map, note: archive/workspaces/2026/workspace-semester-brain-sose26/inputs/SEMESTER-STATUS.md}
+  - {ref: 'ws-m2-chat1:623:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat8:22:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat8:42:p5', basis: path-map, note: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml}
+  - {ref: 'ws-m2-chat8:187:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+- id: out-of-scope:module-descriptor
+  kind: out-of-scope
+  reason: 'TU Moses module description: candidate-module evidence, not a learning source'
+  occurrences:
+  - {ref: 'm-algo:9:u1', basis: moses-host}
+  - {ref: 'm-algo:21:u1', basis: moses-host}
+  - {ref: 'm-algo:31:u1', basis: moses-host}
+  - {ref: 'm-algo:41:u1', basis: moses-host}
+  - {ref: 'm-algo:51:u1', basis: moses-host}
+  - {ref: 'm-algo:62:u1', basis: moses-host}
+  - {ref: 'm-algo:73:u1', basis: moses-host}
+  - {ref: 'm-algo:83:u1', basis: moses-host}
+  - {ref: 'm-algo:93:u1', basis: moses-host}
+  - {ref: 'm-algo:93:u2', basis: moses-host}
+  - {ref: 'm-algo:105:u1', basis: moses-host}
+  - {ref: 'm-algo:105:u2', basis: moses-host}
+  - {ref: 'm-bench:9:u1', basis: moses-host}
+  - {ref: 'm-bench:19:u1', basis: moses-host}
+  - {ref: 'm-bench:30:u1', basis: moses-host}
+  - {ref: 'm-bench:41:u1', basis: moses-host}
+  - {ref: 'm-bench:51:u1', basis: moses-host}
+  - {ref: 'm-bench:61:u1', basis: moses-host}
+  - {ref: 'm-dataeng:9:u1', basis: moses-host}
+  - {ref: 'm-dataeng:21:u1', basis: moses-host}
+  - {ref: 'm-dataeng:33:u1', basis: moses-host}
+  - {ref: 'm-dataeng:44:u1', basis: moses-host}
+  - {ref: 'm-dataeng:55:u1', basis: moses-host}
+  - {ref: 'm-dataeng:65:u1', basis: moses-host}
+  - {ref: 'm-dataeng:74:u1', basis: moses-host}
+  - {ref: 'm-dataeng:84:u1', basis: moses-host}
+  - {ref: 'm-dataeng:94:u1', basis: moses-host}
+  - {ref: 'm-dataeng:103:u1', basis: moses-host}
+  - {ref: 'm-dataeng:112:u1', basis: moses-host}
+  - {ref: 'm-dataeng:123:u1', basis: moses-host}
+  - {ref: 'm-dataeng:133:u1', basis: moses-host}
+  - {ref: 'm-dataeng:143:u1', basis: moses-host}
+  - {ref: 'm-dataeng:152:u1', basis: moses-host}
+  - {ref: 'm-math:9:u1', basis: moses-host}
+  - {ref: 'm-math:21:u1', basis: moses-host}
+  - {ref: 'm-math:31:u1', basis: moses-host}
+  - {ref: 'm-math:42:u1', basis: moses-host}
+  - {ref: 'm-math:53:u1', basis: moses-host}
+  - {ref: 'm-math:64:u1', basis: moses-host}
+  - {ref: 'm-math:75:u1', basis: moses-host}
+  - {ref: 'm-ml:10:u1', basis: moses-host}
+  - {ref: 'm-ml:10:u2', basis: moses-host}
+  - {ref: 'm-ml:23:u1', basis: moses-host}
+  - {ref: 'm-ml:23:u2', basis: moses-host}
+  - {ref: 'm-ml:34:u1', basis: moses-host}
+  - {ref: 'm-ml:34:u2', basis: moses-host}
+  - {ref: 'm-ml:45:u1', basis: moses-host}
+  - {ref: 'm-ml:55:u1', basis: moses-host}
+  - {ref: 'm-ml:65:u1', basis: moses-host}
+  - {ref: 'm-ml:75:u1', basis: moses-host}
+  - {ref: 'm-ml:87:u1', basis: moses-host}
+  - {ref: 'm-ml:97:u1', basis: moses-host}
+  - {ref: 'm-ml:109:u1', basis: moses-host}
+  - {ref: 'm-ml:109:u2', basis: moses-host}
+  - {ref: 'm-ml:109:u3', basis: moses-host}
+  - {ref: 'm-ml:121:u1', basis: moses-host}
+  - {ref: 'm-ml:134:u1', basis: moses-host}
+  - {ref: 'm-ml:144:u1', basis: moses-host}
+  - {ref: 'm-ml:153:u1', basis: moses-host}
+  - {ref: 'm-ml:153:u2', basis: moses-host}
+  - {ref: 'm-ml:153:u3', basis: moses-host}
+  - {ref: 'm-ml:161:u1', basis: moses-host}
+  - {ref: 'm-runtime:9:u1', basis: moses-host}
+  - {ref: 'm-runtime:20:u1', basis: moses-host}
+  - {ref: 'm-runtime:31:u1', basis: moses-host}
+  - {ref: 'm-runtime:41:u1', basis: moses-host}
+  - {ref: 'm-runtime:51:u1', basis: moses-host}
+  - {ref: 'm-runtime:62:u1', basis: moses-host}
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: Planning, cross-reference or strategy note inside a resource list; not a teaching object
+  occurrences:
+  - {ref: 'm-algo:71:e1'}
+  - {ref: 'm-algo:103:e1'}
+  - {ref: 'm-algo:111:e1'}
+  - {ref: 'm-algo:117:e1'}
+  - {ref: 'm-algo:118:e1'}
+  - {ref: 'm-algo:119:e1'}
+  - {ref: 'm-algo:120:e1'}
+  - {ref: 'm-algo:121:e1'}
+  - {ref: 'm-algo:122:e1'}
+  - {ref: 'm-bench:39:e1'}
+  - {ref: 'm-bench:49:e1'}
+  - {ref: 'm-bench:67:e1'}
+  - {ref: 'm-bench:73:e1'}
+  - {ref: 'm-bench:74:e1'}
+  - {ref: 'm-bench:75:e1'}
+  - {ref: 'm-bench:76:e1'}
+  - {ref: 'm-dataeng:121:e1'}
+  - {ref: 'm-dataeng:131:e1'}
+  - {ref: 'm-dataeng:141:e1'}
+  - {ref: 'm-dataeng:149:e1'}
+  - {ref: 'm-dataeng:150:e1'}
+  - {ref: 'm-dataeng:160:e1'}
+  - {ref: 'm-dataeng:166:e1'}
+  - {ref: 'm-dataeng:167:e1'}
+  - {ref: 'm-dataeng:168:e1'}
+  - {ref: 'm-dataeng:169:e1'}
+  - {ref: 'm-math:73:e1'}
+  - {ref: 'm-math:83:e1'}
+  - {ref: 'm-math:89:e1'}
+  - {ref: 'm-math:90:e1'}
+  - {ref: 'm-math:91:e1'}
+  - {ref: 'm-math:92:e1'}
+  - {ref: 'm-math:93:e1'}
+  - {ref: 'm-ml:105:e1'}
+  - {ref: 'm-ml:119:e1'}
+  - {ref: 'm-ml:132:e1'}
+  - {ref: 'm-ml:142:e1'}
+  - {ref: 'm-ml:151:e1'}
+  - {ref: 'm-ml:159:e1'}
+  - {ref: 'm-ml:168:e1'}
+  - {ref: 'm-ml:174:e1'}
+  - {ref: 'm-ml:175:e1'}
+  - {ref: 'm-ml:176:e1'}
+  - {ref: 'm-ml:177:e1'}
+  - {ref: 'm-ml:178:e1'}
+  - {ref: 'm-runtime:60:e1'}
+  - {ref: 'm-runtime:76:e1'}
+  - {ref: 'm-runtime:77:e1'}
+  - {ref: 'm-runtime:78:e1'}
+  - {ref: 'm-runtime:79:e1'}
+  - {ref: 'm-runtime:80:e1'}
+  - {ref: 'm-runtime:136:e1'}
+- id: out-of-scope:project-data
+  kind: out-of-scope
+  reason: A project's own data folder, not a learning source
+  occurrences:
+  - {ref: 'ws-aml-dl-amls:53:p1', note: AMLS image-detection project validation set}
+- id: out-of-scope:template-placeholder
+  kind: out-of-scope
+  reason: Example or convention path in the index's own instructions (status vocabulary, folder-layout rule), not an item
+  occurrences:
+  - {ref: 'lr:32:p1'}
+  - {ref: 'lr:40:p1'}
+  - {ref: 'lr:40:p2'}
+  - {ref: 'lr:40:p3'}
+  - {ref: 'lr:40:p4'}
+  - {ref: 'lr:40:p5'}
+  - {ref: 'lr:40:p6'}
+  - {ref: 'lr:40:p7'}
+  - {ref: 'lr:40:p8'}
+  - {ref: 'lr:40:p9'}
+  - {ref: 'lr:40:p10'}
+- id: out-of-scope:tooling
+  kind: out-of-scope
+  reason: Tooling named in instructions; not a learning source
+  occurrences:
+  - {ref: 'lr:32:p2', note: retired pre-v3 validator}
+- id: out-of-scope:venue
+  kind: out-of-scope
+  reason: Publication venue or proceedings index; papers are chosen from it at use time, so it is not itself a teaching object
+  occurrences:
+  - {ref: 'm-algo:109:e1'}
+  - {ref: 'm-bench:66:e1'}
+  - {ref: 'm-dataeng:107:u1'}
+  - {ref: 'm-dataeng:107:u2'}
+  - {ref: 'm-dataeng:107:u3'}
+  - {ref: 'm-dataeng:157:e1'}

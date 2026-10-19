@@ -1,0 +1,96 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{},\"commands\":{\"stage.progress.update\":{\"handler\":\"stage_progress\",\"cli_command\":\"stage-progress\",\"admission\":\"direct-user-gesture\",\"writes\":[\"curriculum/modules/**/units/**\",\"curriculum/resume.yaml\"],\"invariants\":[\"one active stage\",\"the resume pointer names the stage this action made current and commits in the same transaction\",\"other units keep their own active study maps\",\"an optional progress summary/next is recorded on the stage row with today's date\"]}},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"payload_schema_path\":\"system/schema/capabilities/stage.progress.update.schema.json\",\"payload_schema\":{\"$schema\":\"https://json-schema.org/draft/2020-12/schema\",\"$id\":\"capabilities/stage.progress.update.schema.json\",\"title\":\"payload for capability stage.progress.update\",\"description\":\"Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.\",\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"stage_id\",\"status\",\"unit_id\"],\"properties\":{\"progress_next\":{\"type\":\"string\",\"description\":\"record what comes next (requires --progress-summary)\"},\"progress_summary\":{\"type\":\"string\",\"description\":\"record where work stopped (stored on the stage row, surfaced by resume)\"},\"stage_id\":{\"type\":\"string\",\"description\":\"stage of the unit's current study map to update\"},\"status\":{\"type\":\"string\",\"enum\":[\"active\",\"paused\",\"complete\",\"skipped\",\"revisit\"],\"description\":\"new status for the stage\"},\"unit_id\":{\"type\":\"string\",\"description\":\"unit whose stage to update\"}},\"dependentRequired\":{\"progress_next\":[\"progress_summary\"]}}}\n",
+  "stdout_json": {
+    "capability_contract_version": 2,
+    "cli_protocol": 6,
+    "commands": {
+      "stage.progress.update": {
+        "admission": "direct-user-gesture",
+        "cli_command": "stage-progress",
+        "handler": "stage_progress",
+        "invariants": [
+          "one active stage",
+          "the resume pointer names the stage this action made current and commits in the same transaction",
+          "other units keep their own active study maps",
+          "an optional progress summary/next is recorded on the stage row with today's date"
+        ],
+        "writes": [
+          "curriculum/modules/**/units/**",
+          "curriculum/resume.yaml"
+        ]
+      }
+    },
+    "contract_version": 2,
+    "gateway": "tools/los.py",
+    "operator_contract": "system/OPERATOR.md",
+    "payload_schema": {
+      "$id": "capabilities/stage.progress.update.schema.json",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "dependentRequired": {
+        "progress_next": [
+          "progress_summary"
+        ]
+      },
+      "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+      "properties": {
+        "progress_next": {
+          "description": "record what comes next (requires --progress-summary)",
+          "type": "string"
+        },
+        "progress_summary": {
+          "description": "record where work stopped (stored on the stage row, surfaced by resume)",
+          "type": "string"
+        },
+        "stage_id": {
+          "description": "stage of the unit's current study map to update",
+          "type": "string"
+        },
+        "status": {
+          "description": "new status for the stage",
+          "enum": [
+            "active",
+            "paused",
+            "complete",
+            "skipped",
+            "revisit"
+          ],
+          "type": "string"
+        },
+        "unit_id": {
+          "description": "unit whose stage to update",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage_id",
+        "status",
+        "unit_id"
+      ],
+      "title": "payload for capability stage.progress.update",
+      "type": "object"
+    },
+    "payload_schema_path": "system/schema/capabilities/stage.progress.update.schema.json",
+    "projection": "generated/manifest.json",
+    "queries": {},
+    "root": "<ROOT>",
+    "rules": {
+      "ai_actions_are_provider_independent": true,
+      "artifact_revision_conflicts_fail_closed": true,
+      "bounded_ai_actions_use_exact_context": true,
+      "canonical_writes_are_transactional": true,
+      "module_plan_preflight_required": true,
+      "ordinary_interfaces_read_projection_only": true,
+      "shelving_requires_explicit_approval": true,
+      "successful_writes_have_receipts": true
+    }
+  }
+}

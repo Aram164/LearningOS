@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260916-022239-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-16T02:22:39+02:00'
+snapshot_before: sha256:6af788d330fbfca4044170dde797e2edf115a505128e912094b6b6e91672bb98
+snapshot_after: sha256:ec774ed8af322710f2861201621a98b0db5377ce0b165da362c5db35a2d8fadf
+expected_revisions:
+  unit-aml-l03: 5
+  study-map-aml-l03: 3
+artifact_revisions:
+  study-map-aml-l03:
+    before: 3
+    after: 4
+  unit-aml-l03:
+    before: 5
+    after: 6
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml
+  sha256_before: dc10e4d6a693704b91c9400d115ef5f39e1405e4b6a698a79e835498193fa83d
+  sha256_after: c5e09bcfc3abe8a1b823700df597c4ab792e1fb66bcd482644d1e1312dd951af
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l03/unit.yaml
+  sha256_before: c8ea92cb84c82bbe9096f312eb33b057dd28d4532604791e07157ade64673b2b
+  sha256_after: c8ea92cb84c82bbe9096f312eb33b057dd28d4532604791e07157ade64673b2b
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-coursera-retire-unit-aml-l03
+  idempotency_key: coursera-retire-unit-aml-l03-2026-09-16
+  intent_sha256: sha256:cce472690b56ab3efea8f22a693bcc7513c562de2b2cc0977ab4a07a8076f493
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:cce472690b56ab3efea8f22a693bcc7513c562de2b2cc0977ab4a07a8076f493

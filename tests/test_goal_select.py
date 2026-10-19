@@ -1,0 +1,461 @@
+"""Finding 1: a detector without a selector is worse than no detector.
+
+1a feeds the dedup channel: `los goal` records Aram's explicit decisions
+and the scan reads them back as `known_ids`, so rejected goals stay
+rejected. 1b clusters the queue by shared cause (Calcite's CSE applied to
+the goal queue, where the redundancy actually lives). 1c orders it by exam
+proximity — a hand-written sort, not a learned cost model.
+"""
+
+from __future__ import annotations
+
+import datetime as _dt
+import json
+from pathlib import Path
+
+import pytest
+import yaml
+from repo_builders import run_los, seed_goal_ledger, seed_live_goal_ids
+
+from learning_os.derive.semantics import ScanInput, scan_observations
+from learning_os.derive.semantics.claim_status import ClaimStatus
+from learning_os.derive.semantics.goals import (
+    CandidateGoal,
+    GoalCluster,
+    cluster_goals,
+    rank_clusters,
+)
+from learning_os.derive.semantics.scan import collect_observations
+from learning_os.derive.semantics.scan import read_goal_ledger as _read_goal_ledger
+
+
+def _goal(goal_id: str, detector: str, evidence=()) -> CandidateGoal:
+    return CandidateGoal(
+        goal_id=goal_id, detector=detector, title=f"Title {goal_id}",
+        rationale=f"Rationale {goal_id}", evidence=tuple(evidence))
+
+
+# ---- 1a: the ledger feeds known_ids ------------------------------------------
+
+
+def test_goal_reject_writes_a_schema_valid_ledger(mini_repo: Path, repo_root: Path):
+    (goal_id,) = seed_live_goal_ids(mini_repo, "reject-me")
+    proc = run_los(mini_repo, "goal", goal_id, "--reject",
+                   "--note", "route dropped")
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {
+        "ok": True, "goal_id": goal_id, "state": "rejected"}
+    ledger = yaml.safe_load(
+        (mini_repo / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
+    import json as _json
+
+    from jsonschema import Draft202012Validator, FormatChecker
+
+    schema = _json.loads(
+        (repo_root / "system/schema/goal-ledger.schema.json").read_text(encoding="utf-8"))
+    errors = list(Draft202012Validator(
+        schema, format_checker=FormatChecker()).iter_errors(ledger))
+    assert errors == []
+    assert ledger["decisions"][goal_id]["state"] == "rejected"
+    assert ledger["decisions"][goal_id]["note"] == "route dropped"
+
+
+def test_goal_decision_is_revisable(mini_repo: Path):
+    (goal_id,) = seed_live_goal_ids(mini_repo, "revisable")
+    assert run_los(mini_repo, "goal", goal_id, "--defer").returncode == 0
+    # The deferral leaves the scan, but the id stays ledger-known and
+    # re-decidable.
+    assert run_los(mini_repo, "goal", goal_id, "--close").returncode == 0
+    ledger = yaml.safe_load(
+        (mini_repo / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
+    assert ledger["decisions"][goal_id]["state"] == "closed"
+
+
+def test_exact_batch_requires_review_and_preserves_other_decisions(mini_repo):
+    ids = seed_live_goal_ids(mini_repo, "batch-one", "batch-two")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    args = ("goal", *ids, "--defer", "--note", "Explicit scoped decision")
+    assert run_los(mini_repo, *args).returncode == 3
+    checked = run_los(mini_repo, *args, "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    assert report["goal_ids"] == ids
+    assert ledger_path.read_bytes() == before
+    # A different proposal cannot borrow the same authority.
+    assert run_los(mini_repo, "goal", *ids, "--close", "--reviewed-sha256",
+                   report["reviewed_sha256"]).returncode == 3
+    applied = run_los(mini_repo, *args, "--reviewed-sha256", report["reviewed_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    data = yaml.safe_load(ledger_path.read_text())["decisions"]
+    assert data["g-untouched"]["state"] == "rejected"
+    assert all(data[goal_id]["state"] == "deferred" for goal_id in ids)
+
+
+def test_batch_refuses_a_changed_ledger(mini_repo):
+    ids = seed_live_goal_ids(mini_repo, "batch-one", "batch-two")
+    seed_goal_ledger(mini_repo, {"another": "rejected"})
+    args = ("goal", *ids, "--close")
+    checked = json.loads(run_los(mini_repo, *args, "--check").stdout)
+    assert run_los(mini_repo, "goal", "another", "--close").returncode == 0
+    before = (mini_repo / "operations/goal-ledger.yaml").read_bytes()
+    assert run_los(mini_repo, *args, "--reviewed-sha256", checked["reviewed_sha256"]).returncode == 3
+    assert (mini_repo / "operations/goal-ledger.yaml").read_bytes() == before
+
+
+def test_goal_refuses_unknown_ids_with_suggestions(mini_repo: Path):
+    """F7: a typo'd id refuses with did-you-mean; the ledger is untouched."""
+    (goal_id,) = seed_live_goal_ids(mini_repo, "suggested")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    typo = goal_id[:-1] + ("X" if not goal_id.endswith("X") else "Y")
+    proc = run_los(mini_repo, "goal", typo, "--reject")
+    assert proc.returncode == 2
+    assert f"goal not found: {typo}" in proc.stderr
+    assert "did you mean" in proc.stderr
+    assert goal_id in proc.stderr
+    assert ledger_path.read_bytes() == before
+
+
+def test_goal_unknown_batch_keeps_input_order_and_extra_lines(mini_repo: Path):
+    """SPEC (cq) 6: batch order, first message and extra lines preserved."""
+    from learning_os.domain.suggest import not_found
+
+    (goal_id,) = seed_live_goal_ids(mini_repo, "ordered")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    known = sorted(["g-untouched", goal_id])
+    proc = run_los(mini_repo, "goal", "bogus-second", "bogus-first", "--reject")
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    first = not_found("goal", "bogus-second", known)
+    second = not_found("goal", "bogus-first", known)
+    assert first == "goal not found: bogus-second"
+    assert second == "goal not found: bogus-first"
+    assert proc.stderr == (f"los: INVALID_REQUEST: {first}\n"
+                           f"los: {second}\n")
+    assert ledger_path.read_bytes() == before
+
+
+def test_goal_unknown_carries_typed_details(mini_repo: Path):
+    """SPEC (cq) 6: the unknown-goal miss is a typed NOT_FOUND."""
+    from learning_os.domain.suggest import not_found
+
+    (goal_id,) = seed_live_goal_ids(mini_repo, "typed")
+    seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    typo = goal_id[:-1] + ("X" if not goal_id.endswith("X") else "Y")
+    proc = run_los(mini_repo, "goal", typo, "--reject", "--json")
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    error = json.loads(proc.stderr)["error"]
+    assert error["code"] == "INVALID_REQUEST"
+    assert error["retryable"] is False
+    assert error["message"] == not_found(
+        "goal", typo, sorted(["g-untouched", goal_id]))
+    assert error["details"]["reason"] == "NOT_FOUND"
+    assert goal_id in error["details"]["suggestions"]
+
+
+def test_goal_scan_failure_degrades_to_ledger_only(mini_repo: Path, monkeypatch):
+    """SPEC (cq) 6: scan diagnostics and ledger-only behavior preserved."""
+    import learning_os.app.handlers.goals as goals_mod
+    from learning_os.app.context import OpContext
+    from learning_os.domain.failures import NotFound
+    from learning_os.domain.suggest import not_found, suggestions
+
+    seed_goal_ledger(mini_repo, {"g-ledger": "rejected"})
+
+    def boom(root):
+        raise OSError("disk gone")
+
+    monkeypatch.setattr(goals_mod, "intelligence_scan", boom)
+    ctx = OpContext(root=mini_repo, operation="goal.decide",
+                    channel="cli", invocation="command", gateway=None)
+    with pytest.raises(NotFound) as caught:
+        goals_mod.goal(ctx, {"goal_id": ["bogus-id"], "reject": True})
+    exc = caught.value
+    assert type(exc) is NotFound
+    diag = ("the live scan is unavailable (disk gone); "
+            "deciding only ledger-known ids")
+    first = not_found("goal", "bogus-id", ["g-ledger"])
+    assert str(exc) == diag
+    assert exc.extra_stderr == (f"los: {first}",)
+    assert exc.site == "goal.decide.unknown-goal"
+    assert exc.gateway_message == f"los: {diag}\nlos: {first}"
+    assert exc.exit_code == 2
+    assert exc.reason == "NOT_FOUND"
+    assert exc.suggestions == suggestions("bogus-id", ["g-ledger"])
+    # A ledger-known id still decides under a failed scan.
+    result = goals_mod.goal(
+        ctx, {"goal_id": ["g-ledger"], "reject": True, "check": True, "note": "Explicit scoped rejection"})
+    assert result.payload["goal_ids"] == ["g-ledger"]
+
+
+def test_goal_batch_with_unknown_id_writes_nothing(mini_repo: Path):
+    """F7: a batch is all-or-nothing; one unknown id refuses the batch."""
+    (goal_id,) = seed_live_goal_ids(mini_repo, "batched")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    checked = run_los(mini_repo, "goal", goal_id, "bogus-id", "--defer", "--check")
+    assert checked.returncode == 2
+    assert "bogus-id" in checked.stderr
+    applied = run_los(mini_repo, "goal", goal_id, "bogus-id", "--defer")
+    assert applied.returncode == 2
+    assert "bogus-id" in applied.stderr
+    assert ledger_path.read_bytes() == before
+    assert goal_id not in yaml.safe_load(ledger_path.read_text())["decisions"]
+
+
+@pytest.mark.parametrize("ids", [("same", "same"), ("lineage-stale:*",), (" ",)])
+def test_goal_batches_never_expand_patterns_or_duplicate_ids(mini_repo, ids):
+    assert run_los(mini_repo, "goal", *ids, "--defer", "--check").returncode == 2
+    assert not (mini_repo / "operations/goal-ledger.yaml").exists()
+
+
+def test_deferred_goal_reappears_on_explicit_revisit_date(mini_repo: Path):
+    today = _dt.date.today()
+    revisit_on = (today + _dt.timedelta(days=3)).isoformat()
+    seed_goal_ledger(mini_repo, {"g1": "rejected"})
+    proc = run_los(mini_repo, "goal", "g1", "--defer", "--revisit-on", revisit_on)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["revisit_on"] == revisit_on
+    assert _read_goal_ledger(mini_repo, today=today) == ("g1",)
+    assert _read_goal_ledger(mini_repo, today=today + _dt.timedelta(days=3)) == ()
+    assert _read_goal_ledger(mini_repo, today=today + _dt.timedelta(days=4)) == ()
+
+
+def test_revisit_date_refuses_non_deferral_and_invalid_dates(mini_repo: Path):
+    for args in (
+        ("--close", "2099-01-01"),
+        ("--defer", "20260930"),
+        ("--defer", "not-a-date"),
+        ("--defer", _dt.date.today().isoformat()),
+    ):
+        proc = run_los(mini_repo, "goal", "g1", args[0], "--revisit-on", args[1])
+        assert proc.returncode == 2
+    assert not (mini_repo / "operations/goal-ledger.yaml").exists()
+
+
+def test_decided_goals_leave_the_scan(mini_repo: Path):
+    seed_goal_ledger(mini_repo, {
+        "study-map-obligation:unit-x": "rejected",
+        "lineage-stale:claim-y@" + "b"*64: "rejected",
+    })
+    assert run_los(mini_repo, "goal", "study-map-obligation:unit-x", "--reject", "--note", "Reviewed decision").returncode == 0
+    assert run_los(mini_repo, "goal", "lineage-stale:claim-y@" + "b"*64, "--defer").returncode == 0
+    decided = _read_goal_ledger(mini_repo)
+    assert decided == ("lineage-stale:claim-y@" + "b"*64, "study-map-obligation:unit-x")
+    assert collect_observations(mini_repo, days=0).known_ids == decided
+    goals = scan_observations(ScanInput(
+        claims=(ClaimStatus("claim-y", "stale", "a"*64, "b"*64, moved=("unit-x",)),),
+        obligations=("unit-x",),
+        known_ids=decided,
+    ))
+    assert goals == ()
+
+
+def test_malformed_ledger_reads_as_no_decisions(mini_repo: Path):
+    ledger = mini_repo / "operations/goal-ledger.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text("decisions: [not, a, mapping]\n", encoding="utf-8")
+    assert _read_goal_ledger(mini_repo) == ()
+    with pytest.raises(ValueError, match="preserved audit state"):
+        collect_observations(mini_repo, days=0)
+
+
+def test_goal_refuses_a_blank_id(mini_repo: Path):
+    proc = run_los(mini_repo, "goal", "  ", "--reject")
+    assert proc.returncode == 2
+
+
+def test_quiet_scan_reports_no_candidates_in_text(mini_repo: Path):
+    proc = run_los(mini_repo, "intelligence-scan", "--days", "0")
+    assert proc.returncode == 0, proc.stderr
+    assert "no candidates" in proc.stdout
+
+
+# ---- 1b: clustering -----------------------------------------------------------
+
+
+def test_shared_cause_clusters_nothing_lost():
+    goals = [
+        _goal("covering-routes-stale:r1", "covering-routes-stale",
+              ["route:r1", "node:n1", "node:n2", "unit:u1"]),
+        _goal("covering-routes-stale:r2", "covering-routes-stale",
+              ["route:r2", "node:n2", "node:n1", "unit:u1"]),
+        _goal("covering-routes-stale:r3", "covering-routes-stale",
+              ["route:r3", "node:n9", "unit:u2"]),
+    ]
+    clusters = cluster_goals(goals)
+    assert len(clusters) == 2
+    big = next(cluster for cluster in clusters if len(cluster.member_ids) == 2)
+    assert big.detector == "covering-routes-stale"
+    assert big.member_ids == ("covering-routes-stale:r1", "covering-routes-stale:r2")
+    assert big.cause == ("unit:u1",)
+    assert "2 routes" in big.title
+    assert "unit:u1" in big.title
+    assert sorted(member for cluster in clusters for member in cluster.member_ids) == sorted(
+        goal.goal_id for goal in goals)
+
+
+def test_one_unit_is_one_decision_despite_extra_nodes():
+    """The ch04 regression: routes over the same moved unit cluster
+    together even when one route also covers one more node. The extra
+    node does not create a second revalidation decision."""
+    goals = [
+        _goal("covering-routes-stale:r1", "covering-routes-stale",
+              ["route:r1", "node:ch04-a", "node:ch04-b", "unit:u-ch04"]),
+        _goal("covering-routes-stale:r2", "covering-routes-stale",
+              ["route:r2", "node:ch04-a", "node:ch04-b",
+               "node:ch04-extra", "unit:u-ch04"]),
+    ]
+    (cluster,) = cluster_goals(goals)
+    assert cluster.member_ids == (
+        "covering-routes-stale:r1", "covering-routes-stale:r2")
+    assert cluster.cause == ("unit:u-ch04",)
+
+
+def test_lineage_causes_cluster():
+    goals = [
+        _goal("lineage-stale:a", "lineage-stale",
+              ["claim:a", "cause:evidence:file:x", "cause:evidence:rev:y"]),
+        _goal("lineage-stale:b", "lineage-stale",
+              ["claim:b", "cause:evidence:rev:y", "cause:evidence:file:x"]),
+    ]
+    (cluster,) = cluster_goals(goals)
+    assert cluster.member_ids == ("lineage-stale:a", "lineage-stale:b")
+    assert cluster.cause == ("cause:evidence:file:x", "cause:evidence:rev:y")
+
+
+def test_changed_source_goals_stand_alone():
+    """Each changed-source goal fires for its own route row alone and
+    shares no cause with its siblings: no shared prefix, no merge."""
+    goals = [
+        _goal("source-changed-under-claim:covers:r1",
+              "source-changed-under-claim",
+              ["claim:covers:r1", "route:r1"]),
+        _goal("source-changed-under-claim:covers:r2",
+              "source-changed-under-claim",
+              ["claim:covers:r2", "route:r2"]),
+    ]
+    clusters = cluster_goals(goals)
+    assert len(clusters) == 2
+    assert all(len(cluster.member_ids) == 1 for cluster in clusters)
+
+
+def test_review_goals_cluster_per_unit():
+    """Review debt prints per unit — one decision per group — while a
+    unitless claim still stands alone."""
+    goals = [
+        _goal("claims-needing-review:covers:r1", "claims-needing-review",
+              ["claim:covers:r1", "unit:u1"]),
+        _goal("claims-needing-review:covers:r2", "claims-needing-review",
+              ["claim:covers:r2", "unit:u1"]),
+        _goal("claims-needing-review:covers:r3", "claims-needing-review",
+              ["claim:covers:r3", "unit:u2"]),
+        _goal("claims-needing-review:scope:x", "claims-needing-review",
+              ["claim:scope:x"]),
+    ]
+    clusters = cluster_goals(goals)
+    assert len(clusters) == 3
+    big = next(cluster for cluster in clusters
+               if len(cluster.member_ids) == 2)
+    assert big.detector == "claims-needing-review"
+    assert big.member_ids == ("claims-needing-review:covers:r1",
+                              "claims-needing-review:covers:r2")
+    assert big.cause == ("unit:u1",)
+    assert "2 claims need review in unit:u1" == big.title
+    assert sorted(member for cluster in clusters
+                  for member in cluster.member_ids) == sorted(
+                      goal.goal_id for goal in goals)
+
+
+def test_causeless_detectors_stay_single():
+    goals = [
+        _goal("study-map-obligation:u1", "study-map-obligation", ["unit:u1"]),
+        _goal("study-map-obligation:u2", "study-map-obligation", ["unit:u2"]),
+        _goal("repeated-question-gap:q", "repeated-question-gap", ["question-class:q"]),
+    ]
+    clusters = cluster_goals(goals)
+    assert len(clusters) == 3
+    assert all(len(cluster.member_ids) == 1 for cluster in clusters)
+    by_member = {cluster.member_ids[0]: cluster for cluster in clusters}
+    assert by_member["study-map-obligation:u1"].title == "Title study-map-obligation:u1"
+
+
+def test_clustering_is_deterministic():
+    goals = [
+        _goal(f"covering-routes-stale:r{n}", "covering-routes-stale",
+              [f"route:r{n}", "node:shared", "unit:u1"])
+        for n in range(10)
+    ]
+    first, second = cluster_goals(goals), cluster_goals(list(reversed(goals)))
+    assert first == second
+    assert len(first) == 1
+    assert len(first[0].member_ids) == 10
+
+
+# ---- 1c: exam-proximity ranking -------------------------------------------------
+
+
+_TODAY = _dt.date(2026, 9, 11)
+
+
+def _cluster(cluster_id: str, *members: str) -> GoalCluster:
+    return GoalCluster(cluster_id=cluster_id, detector="covering-routes-stale",
+                       title=cluster_id, member_ids=tuple(members))
+
+
+def test_enrolled_sitting_inside_30_days_comes_first():
+    urgent = _cluster("c-urgent", "g1")
+    near = _cluster("c-near", "g2")
+    study = _cluster("c-study", "g3")
+    rest = _cluster("c-rest", "g4")
+    retired = _cluster("c-retired", "g5")
+    deadlines = [
+        {"kind": "exam", "module_id": "m-urgent", "start_date": "2026-09-30"},
+        {"kind": "exam", "module_id": "m-near", "start_date": "2026-11-15"},
+    ]
+    status = {"m-urgent": "enrolled", "m-near": "enrolled",
+              "m-study": "active", "m-retired": "archived"}
+    modules = {"c-urgent": {"m-urgent"}, "c-near": {"m-near"},
+               "c-study": {"m-study"}, "c-retired": {"m-retired"}}
+    ranked = rank_clusters(
+        [rest, retired, study, near, urgent], today=_TODAY,
+        deadlines=deadlines, module_status=status, cluster_modules=modules)
+    assert [(row.cluster.cluster_id, row.tier) for row in ranked] == [
+        ("c-urgent", 1), ("c-near", 2), ("c-study", 3),
+        ("c-rest", 4), ("c-retired", 5)]
+    assert ranked[0].nearest_sitting == "2026-09-30"
+    assert ranked[0].days_until == 19
+
+
+def test_retired_module_sorts_last_despite_a_near_sitting():
+    retired = _cluster("c-retired", "g1")
+    ranked = rank_clusters(
+        [retired], today=_TODAY,
+        deadlines=[{"kind": "exam", "module_id": "m-old", "start_date": "2026-09-20"}],
+        module_status={"m-old": "archived"},
+        cluster_modules={"c-retired": {"m-old"}})
+    assert ranked[0].tier == 5
+
+
+def test_ties_break_on_cluster_size_then_id():
+    small = _cluster("c-a", "g1")
+    big = _cluster("c-b", "g1", "g2", "g3")
+    ranked = rank_clusters([small, big], today=_TODAY, deadlines=[],
+                           module_status={})
+    assert [row.cluster.cluster_id for row in ranked] == ["c-b", "c-a"]
+
+
+def test_malformed_deadlines_never_go_urgent():
+    cluster = _cluster("c-x", "g1")
+    ranked = rank_clusters(
+        [cluster], today=_TODAY,
+        deadlines=[{"kind": "exam", "module_id": "m", "start_date": "not-a-date"},
+                   {"kind": "registration-window", "module_id": "m",
+                    "start_date": "2026-09-12"},
+                   "garbage"],
+        module_status={"m": "enrolled"},
+        cluster_modules={"c-x": {"m"}})
+    assert ranked[0].tier == 3

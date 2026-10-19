@@ -1,0 +1,82 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"key\":\"context://unit-demo-l01/resume-dossier@43b434951a78d3b1\",\"via\":\"resume pointer\",\"content\":{\"stage\":{\"module_id\":\"module-demo\",\"unit_id\":\"unit-demo-l01\",\"study_map_id\":\"study-map-demo-l01\",\"stage_id\":\"stage-demo\"},\"via\":\"resume pointer\",\"requirement\":{\"id\":\"req-demo-l01-demo\",\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"],\"source_stage\":{\"module_id\":\"module-demo\",\"unit_id\":\"unit-demo-l01\",\"stage_id\":\"stage-demo\"}},\"observations\":[],\"open-items\":[],\"sittings\":[{\"label\":\"Elapsed sitting with no attempt\",\"start_date\":\"2000-01-01\",\"end_date\":\"2000-01-01\",\"registration_state\":\"unrecorded\"},{\"label\":\"2. Termin\",\"start_date\":\"2026-10-09\",\"end_date\":\"2026-10-09\",\"registration_state\":\"registered\"}],\"titles\":{\"module\":\"Demo Module\",\"unit\":\"Expected value\",\"stage\":\"Derive expected value\"},\"top-cluster\":{\"cluster_id\":\"lineage-stale:cluster:4f923881\",\"detector\":\"lineage-stale\",\"title\":\"Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved\",\"tier\":1,\"nearest_sitting\":\"2026-10-09\",\"member_count\":1},\"stage-note\":{\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"lines\":0,\"updated\":null,\"excerpt\":\"\"},\"stage-progress\":null,\"stage-results\":null}}\n",
+  "stdout_json": {
+    "content": {
+      "observations": [],
+      "open-items": [],
+      "requirement": {
+        "capability": {
+          "kind": "explain",
+          "operands": [
+            "expectation"
+          ]
+        },
+        "concept": "knowledge-demo-expectation",
+        "conditions": [
+          "unfamiliar-example"
+        ],
+        "evidence_spec": [
+          "explain-reason"
+        ],
+        "id": "req-demo-l01-demo",
+        "source_stage": {
+          "module_id": "module-demo",
+          "stage_id": "stage-demo",
+          "unit_id": "unit-demo-l01"
+        }
+      },
+      "sittings": [
+        {
+          "end_date": "2000-01-01",
+          "label": "Elapsed sitting with no attempt",
+          "registration_state": "unrecorded",
+          "start_date": "2000-01-01"
+        },
+        {
+          "end_date": "2026-10-09",
+          "label": "2. Termin",
+          "registration_state": "registered",
+          "start_date": "2026-10-09"
+        }
+      ],
+      "stage": {
+        "module_id": "module-demo",
+        "stage_id": "stage-demo",
+        "study_map_id": "study-map-demo-l01",
+        "unit_id": "unit-demo-l01"
+      },
+      "stage-note": {
+        "excerpt": "",
+        "lines": 0,
+        "updated": null,
+        "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+      },
+      "stage-progress": null,
+      "stage-results": null,
+      "titles": {
+        "module": "Demo Module",
+        "stage": "Derive expected value",
+        "unit": "Expected value"
+      },
+      "top-cluster": {
+        "cluster_id": "lineage-stale:cluster:4f923881",
+        "detector": "lineage-stale",
+        "member_count": 1,
+        "nearest_sitting": "2026-10-09",
+        "tier": 1,
+        "title": "Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved"
+      },
+      "via": "resume pointer"
+    },
+    "key": "context://unit-demo-l01/resume-dossier@43b434951a78d3b1",
+    "via": "resume pointer"
+  }
+}

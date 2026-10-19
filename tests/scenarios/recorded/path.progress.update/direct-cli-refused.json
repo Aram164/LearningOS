@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability path.progress.update --payload-file ENVELOPE.json` (payload schema: `los capabilities path.progress.update --json`; envelope: WORKFLOWS §25c)\n",
+  "stdout": "",
+  "stdout_json": null
+}

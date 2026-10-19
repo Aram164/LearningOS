@@ -1,0 +1,62 @@
+schema_version: 1
+id: transaction-20260822-150641-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:06:41+02:00'
+snapshot_before: sha256:bdc1be032d27c85a80cd73a1708bba003396d9a0d3cc97f47265053fb3262b1a
+snapshot_after: sha256:e3b256592cc2b77211f8ed3e9a2100cd9e9243d9cdc2c822de0877891c5e1467
+expected_revisions: {}
+artifact_revisions:
+  study-map-aml-l11:
+    before: 0
+    after: 1
+  unit-aml-l11:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-attention/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-block/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-embeddings/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-language-task/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-parallelization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-position/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-qkv/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-tokenization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-training/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/study-map.yaml
+  sha256_before: null
+  sha256_after: ff63e391e9703417c2ef6ab773669a7306517587c019260801f5a75918bcba2a
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/unit.yaml
+  sha256_before: 49d35204fd89a3d2824324ff52a36d4d45d482c2e0dfceb8f3d72ed7fcaa79e8
+  sha256_after: d53f27b0752f8e11d330d3fc57298d3177f43a48d9f39e4d42bbc66f67e8d3a5
+  created: false
+metadata: {}

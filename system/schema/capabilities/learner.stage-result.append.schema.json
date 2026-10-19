@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/learner.stage-result.append.schema.json",
+  "title": "payload for capability learner.stage-result.append",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activity",
+    "result",
+    "stage",
+    "unit",
+    "workspace"
+  ],
+  "properties": {
+    "activity": {
+      "type": "string",
+      "description": "what was done in the recorded attempt; free text"
+    },
+    "assistance": {
+      "type": "string",
+      "description": "optional note on assistance used during the attempt"
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "a condition label for this attempt; labels only until a target is authored"
+    },
+    "note": {
+      "type": "string",
+      "description": "free-text note stored with the result; prose only, never evidence"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ],
+      "description": "outcome of the recorded attempt: correct, incorrect, partial or abandoned"
+    },
+    "stage": {
+      "type": "string",
+      "description": "stage of the unit's current study map the result is recorded against"
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "explicitly correct one earlier stage result; preserves its bytes"
+    },
+    "unit": {
+      "type": "string",
+      "description": "unit whose stage the result is recorded against"
+    },
+    "workspace": {
+      "type": "string",
+      "description": "id of the registered active workspace owning the ledger"
+    }
+  }
+}

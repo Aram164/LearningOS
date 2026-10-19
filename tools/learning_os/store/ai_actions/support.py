@@ -1,0 +1,99 @@
+"""Hashing, atomic writes, path containment, garden identity, and the one
+place the manifest AI shape is defined."""
+
+from __future__ import annotations
+
+import datetime as dt
+import hashlib
+import re
+from collections.abc import Callable
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+import yaml
+
+from learning_os.domain.ai_errors import DeliveryScopeError, DeliveryValidationError
+from learning_os.store import observations
+
+#: Request ids must match the manifest contract's `ai_actions/requests[]/id`
+#: pattern (system/contracts/manifest-v*.schema.json). A persisted bundle with
+#: any other id breaks every projection read, so both the prepare path and the
+#: validator enforce this before anything depends on it (JF-08).
+REQUEST_ID_PATTERN = r"^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$"
+REQUEST_ID_RE = re.compile(REQUEST_ID_PATTERN)
+
+
+def check_request_id(request_id: str) -> str:
+    """Return ``request_id`` if it is projectable, else raise."""
+    if not REQUEST_ID_RE.fullmatch(str(request_id)):
+        raise DeliveryValidationError(
+            f"request id {request_id!r} does not match {REQUEST_ID_PATTERN!r}; "
+            "no request was prepared")
+    return str(request_id)
+
+
+def read_yaml(path: Path, default: Any = None) -> Any:
+    if not path.is_file():
+        return default
+    value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return default if value is None else value
+
+
+def dump_yaml(value: Any) -> str:
+    return yaml.safe_dump(value, sort_keys=False, allow_unicode=True, width=100)
+
+
+
+
+def sha256_bytes(content: bytes) -> str:
+    return "sha256:" + hashlib.sha256(content).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    return sha256_bytes(path.read_bytes())
+
+
+def now_utc() -> dt.datetime:
+    return observations.now().astimezone(dt.UTC)
+
+
+def iso(value: dt.datetime) -> str:
+    return value.isoformat(timespec="seconds")
+
+
+def _safe_relative(value: str) -> PurePosixPath:
+    rel = PurePosixPath(str(value))
+    if rel.is_absolute() or any(part in {"", ".", ".."} for part in rel.parts):
+        raise DeliveryValidationError(f"unsafe bundle path: {value}")
+    return rel
+
+
+def inside(root: Path, rel: str) -> Path:
+    target = (root / Path(*_safe_relative(rel).parts)).resolve()
+    try:
+        target.relative_to(root.resolve())
+    except ValueError as exc:
+        raise DeliveryScopeError(f"path escapes repository boundary: {rel}") from exc
+    return target
+
+
+def snapshot(root: Path) -> str:
+    # Local import avoids a cycle when genout projects AI-action state.
+    from learning_os.store.fingerprint import source_fingerprint
+    from learning_os.store.loader import load_repo
+
+    return f"sha256:{source_fingerprint(load_repo(root))}"
+
+
+def parse_frontmatter_request_id(path: Path) -> str | None:
+    """Best-effort provenance read for an existing AI-derived transcription."""
+    try:
+        for line in path.read_text(encoding="utf-8", errors="replace").splitlines()[:12]:
+            if line.startswith("request_id:"):
+                return line.split(":", 1)[1].strip() or None
+    except OSError:
+        return None
+    return None
+
+
+Clock = Callable[[], dt.datetime]

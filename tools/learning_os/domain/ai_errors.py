@@ -1,0 +1,112 @@
+"""Refusal types and the delivery size ceilings that bound an import."""
+
+from __future__ import annotations
+
+from learning_os.domain.failures import NotFound
+
+
+class AIActionError(Exception):
+    """Base class for a refused AI-action operation."""
+
+
+MAX_DELIVERY_ENTRIES = 512
+
+
+MAX_DELIVERY_BYTES = 32 * 1024 * 1024
+
+
+class ActionNotFoundError(AIActionError):
+    pass
+
+
+class ActionPolicyError(AIActionError):
+    pass
+
+
+class ConfidentialityError(AIActionError):
+    pass
+
+
+class DeliveryValidationError(AIActionError):
+    pass
+
+
+class DeliveryBindingError(DeliveryValidationError):
+    """Approved delivery bytes cannot be bound to the envelope's approval."""
+
+
+class DeliveryScopeError(DeliveryValidationError):
+    """A delivery target falls outside its capability's write scope."""
+
+
+class DeliveryIdempotencyConflict(DeliveryValidationError):
+    """The delivery's idempotency key names a different approved intent."""
+
+
+class StaleDeliveryError(AIActionError):
+    pass
+
+
+class DeliveryRevisionConflict(StaleDeliveryError):
+    """A delivery apply raced an artifact revision, not the snapshot."""
+
+
+class TargetNotFoundError(AIActionError):
+    pass
+
+
+class UnresolvedMaterialError(AIActionError):
+    """A mandatory route's exact material cannot be read; no request was prepared."""
+
+
+class ContinuationRefusedError(AIActionError):
+    """A follow-up slice was refused; the request keeps its earlier passes."""
+
+
+class RouteNotFound(NotFound, ActionPolicyError):
+    """An append-slices route miss, typed for its A9 site.
+
+    The ``NotFound`` leg carries the unit's route domain as structured
+    suggestions; the ``ActionPolicyError`` leg keeps the legacy
+    ``(INVALID_REQUEST, retryable=False, exit=1)`` outcome."""
+
+
+class ConceptNotFound(NotFound, ContinuationRefusedError):
+    """An append-slices concept miss, typed for its A9 site.
+
+    The ``NotFound`` leg carries the concept domain as structured
+    suggestions; the ``ContinuationRefusedError`` leg keeps the legacy
+    ``(INVALID_REQUEST, retryable=False, exit=1)`` outcome."""
+
+
+class RequestNotFound(NotFound, TargetNotFoundError):
+    """A prepared-request miss in the AI store ((cx) D-8).
+
+    The ``NotFound`` leg carries the miss-only request inventory as
+    structured suggestions; the ``TargetNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class DeliveryNotFound(NotFound, TargetNotFoundError):
+    """An imported-delivery miss in the AI store ((cx) D-8).
+
+    The ``NotFound`` leg carries the miss-only delivery inventory as
+    structured suggestions; the ``TargetNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class ActionNotFound(NotFound, ActionNotFoundError):
+    """A prepared-action miss over the loaded registry ((cx) D-8).
+
+    The ``NotFound`` leg carries the already-loaded action ids as
+    structured suggestions; the ``ActionNotFoundError`` leg keeps the
+    legacy class, message and exit for every existing caller."""
+
+
+class TargetNotFound(NotFound, TargetNotFoundError):
+    """A prepare-target miss over its loaded domain ((cx) D-8).
+
+    The ``NotFound`` leg carries the garden or unit ids the lookup
+    already loaded as structured suggestions; the
+    ``TargetNotFoundError`` leg keeps the legacy class, message and
+    exit for every existing caller."""

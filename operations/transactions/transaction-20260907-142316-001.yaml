@@ -1,0 +1,56 @@
+schema_version: 2
+id: transaction-20260907-142316-001
+type: transaction-receipt
+status: committed
+capability: module.materials.compact
+committed_at: '2026-09-07T14:23:16+02:00'
+snapshot_before: sha256:65f679d2d90b5ed2f006b1b0e5e4a5a2ed322774b24ec0d9747eb0f5976abd7d
+snapshot_after: sha256:3be041d58427bd37cdcd334ecd72a4ec07f61050b792d70fbf68416dc442be46
+expected_revisions:
+  module-job-polars: 2
+  study-map-job-polars-backend-loop: 0
+  study-map-job-polars-expressions: 12
+  unit-job-polars-backend-loop: 1
+  unit-job-polars-expressions: 13
+artifact_revisions:
+  module-job-polars:
+    before: 2
+    after: 3
+  study-map-job-polars-backend-loop:
+    before: 0
+    after: 1
+  study-map-job-polars-expressions:
+    before: 12
+    after: 13
+  unit-job-polars-backend-loop:
+    before: 1
+    after: 2
+  unit-job-polars-expressions:
+    before: 13
+    after: 14
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  sha256_before: 8945f2b7364012cafe0d83a71d735284162d8175274d1c5d182d578a136dda5f
+  sha256_after: 168441c0f615dce35579f21e3c10c6da7aa9972ba7945ebc58f00b3628857f45
+  created: false
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  sha256_before: 578b0cf15c35ed1920b49dcf4e98a59e6e173ee98a2945ca1d1cbb6ee2b53b28
+  sha256_after: 2cdfc2f10b4d2ae2122ae0d536a36f9c34dfc5de41d7221680c8fd124b0ea9ea
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.materials.compact
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-materials-compact-module-job-polars-01cc89b30600415eb5ab72707ffdfa45
+  idempotency_key: materials-compact-module-job-polars-01cc89b30600415eb5ab72707ffdfa45
+  intent_sha256: sha256:56226856dead17fe329c3c1ab023da0b65d054a4685c69c269689490c73d6e92
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:56226856dead17fe329c3c1ab023da0b65d054a4685c69c269689490c73d6e92

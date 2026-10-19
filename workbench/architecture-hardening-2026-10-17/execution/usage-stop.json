@@ -1,0 +1,11 @@
+{
+  "primary_used_percent_at_stop": 95,
+  "primary_remaining_percent_at_stop": 5,
+  "weekly_used_percent_at_stop": 30,
+  "reset_redeemed": false,
+  "migration_remaining_estimate_percent": 80,
+  "migration_remaining_range_percent": [
+    75,
+    85
+  ]
+}

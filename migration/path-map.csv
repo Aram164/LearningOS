@@ -1,0 +1,121 @@
+old_path,new_path,type,decided_in_phase
+Plans/ML/foundations/reference/AML-SaD_Master_Wiring.md,knowledge/notes/cross-domain/note-aml-sad-master-wiring.md,note(crosswalk)+relations+source-evaluations,pilot
+Plans/ML/foundations/reference/Regression_SaD-AML-ISLP_Bridge.md,knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md,note(synthesis),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l07-linear-classifiers.md,note(reference),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l07-exercise-bank.md,note(exercise-bank),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l07-mock-exam.md,note(mock-exam),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_BonusSheet04_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt04-solutions.md,note(exercise-bank),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L07_Mini_Plan.md,operational-plan(copy),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l02-descriptive-basics.md,note(reference),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l02-exercise-bank.md,note(exercise-bank),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L02_Mini_Plan.md,operational-plan(copy),pilot
+Plans/Math/sad/SaD_Source-Crosswalk_L01-L15.md,knowledge/notes/mathematics/note-sad-source-crosswalk.md + sources/sources.yaml evaluations,crosswalk-decomposition,pilot
+Plans/ML/foundations/AML/my notes/AML_Book-Concept-Crosswalk_L02-L10.md,sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2),crosswalk-decomposition(partial),pilot
+Plans/Math/sad/SaD/notes/Teil 03.pdf,knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-01..11.jpg (120dpi renders; original preserved in legacy),handwritten-attachment,pilot
+SEMESTER-STATUS.md (exam facts §0.5/§8) + Pruefungsplan session 2026-07-03,records/modules.yaml,module-facts,pilot
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l02-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l02-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_BonusSheet01_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt01-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l03-linear-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l03-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l03-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_BonusSheet02_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt02-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l04-nonlinear-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l04-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l04-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l05-logistic-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l05-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l05-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_BonusSheet03_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt03-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l06-gradient-descent.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l06-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l06-mock-exam.md,note(mock-exam),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l01-introduction.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l01-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l03-correlation-regression.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l03-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l04-probability-bayes.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l04-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l05-combinatorics.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l05-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect11 instance-based/SaD_L11_Reference.md,knowledge/notes/mathematics/note-sad-l11-instance-based.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/SaD_06-10_Probability-Inference_DeepPlan.md,knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L02_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L03_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L04_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L05_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L06_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L01_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L03_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L04_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L05_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Libraries/sklearn/Sklearn-mlprov-Object-Map.md,knowledge/notes/programming/note-sklearn-mlprov-object-map.md,note(reference),stage2
+Plans/Libraries/skrub/skrub-DataOp-DAG-Reference.md,knowledge/notes/data-systems/note-skrub-dataop-dag.md,note(reference),stage2
+Plans/Libraries/skrub/skrub-Evaluation-Engine-Reference.md,knowledge/notes/data-systems/note-skrub-evaluation-engine.md,note(reference),stage2
+Plans/Programming/Git/Git-GitHub-Reference-by-Block.md,knowledge/notes/programming/note-git-github-reference.md,note(reference),stage2
+Plans/Programming/python/Python-Intermediate-Roadmap.md,knowledge/notes/programming/note-python-intermediate-roadmap.md,note(reference),stage2
+Plans/ML/foundations/Chat1_Foundations_AML_SaD_Plan.md,work/active/workspace-m2-exam-prep/inputs/Chat1_Foundations_AML_SaD_Plan.md,operational-plan(copy),stage2
+Plans/Math/analysis/Chat8_Analysis_SaD_Plan.md,work/active/workspace-m2-exam-prep/inputs/Chat8_Analysis_SaD_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD-Module-Overview.md,work/active/workspace-m2-exam-prep/inputs/SaD-Module-Overview.md,operational-plan(copy),stage2
+Plans/ML/systems/DL-AMLS-Learning-Plan.md,work/active/workspace-aml-exam-prep/inputs/DL-AMLS-Learning-Plan.md,operational-plan(copy),stage2
+Plans/ML/systems/Chat2_AMLS_Theory_Plan.md,work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md,operational-plan(copy),stage2
+Plans/CS-Theory/algo2/Chat9_Algo2_Plan.md,work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md,operational-plan(copy),stage2
+Plans/crosscutting/job/Chat6_Job_Onboarding_Plan.md,work/active/workspace-job-deem/inputs/Chat6_Job_Onboarding_Plan.md,operational-plan(copy),stage2
+Plans/Programming/rust/Rust-Learning-Plan.md,work/active/workspace-job-deem/inputs/Rust-Learning-Plan.md,operational-plan(copy),stage2
+Plans/Programming/python/Python-OOP-Scope-Repair-Plan.md,work/active/workspace-job-deem/inputs/Python-OOP-Scope-Repair-Plan.md,operational-plan(copy),stage2
+Plans/Programming/python/Programming-Toolbox-Bootcamp.md,work/active/workspace-job-deem/inputs/Programming-Toolbox-Bootcamp.md,operational-plan(copy),stage2
+Plans/Programming/Git/Git-GitHub-Interactive-Overview.html,work/active/workspace-job-deem/outputs/Git-GitHub-Interactive-Overview.html,authored-artifact(copy),stage2
+Masters-Planning/MTS-Ground-Truth.md,work/active/workspace-degree-planning/inputs/MTS-Ground-Truth.md,operational-plan(copy),stage2
+Masters-Planning/MASTERS-MODULE-PLAN.md,work/active/workspace-degree-planning/inputs/MASTERS-MODULE-PLAN.md,operational-plan(copy),stage2
+Masters-Planning/MASTERS-MODULE-MENU.md,work/active/workspace-degree-planning/inputs/MASTERS-MODULE-MENU.md,operational-plan(copy),stage2
+Masters-Planning/MASTERS-STATUS.md,work/active/workspace-degree-planning/inputs/MASTERS-STATUS.md,operational-plan(copy),stage2
+Masters-Planning/DEGREE-WIRING.md,work/active/workspace-degree-planning/inputs/DEGREE-WIRING.md,operational-plan(copy),stage2
+Plans/crosscutting/seminar/Chat7_Seminar_IuG_Plan.md,archive/workspaces/2026/workspace-seminar-iug/inputs/Chat7_Seminar_IuG_Plan.md,operational-plan(copy),stage2
+Plans/crosscutting/seminar/Chat7_Seminar_Presentation_Sprint.md,archive/workspaces/2026/workspace-seminar-iug/inputs/Chat7_Seminar_Presentation_Sprint.md,operational-plan(copy),stage2
+Plans/crosscutting/seminar/Vortrag-Quellenpaket-und-Bauplan.md,archive/workspaces/2026/workspace-seminar-iug/inputs/Vortrag-Quellenpaket-und-Bauplan.md,operational-plan(copy),stage2
+Plans/crosscutting/seminar/Seminar/deliverables,archive/workspaces/2026/workspace-seminar-iug/outputs,workspace-outputs(copy),stage2
+Plans/ML/mlprov/Chat4_PPDS_mlprov_Plan.md,archive/workspaces/2026/workspace-mlprov/inputs/Chat4_PPDS_mlprov_Plan.md,operational-plan(copy),stage2
+Plans/Libraries/sklearn/Sklearn-5h-Crash-Plan.md,archive/workspaces/2026/workspace-mlprov/inputs/Sklearn-5h-Crash-Plan.md,operational-plan(copy),stage2
+Plans/ML/systems/Chat3_AMLS_Project_Plan.md,archive/workspaces/2026/workspace-amls-project/inputs/Chat3_AMLS_Project_Plan.md,operational-plan(copy),stage2
+SEMESTER-STATUS.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/SEMESTER-STATUS.md,operational(archive-copy),stage2
+SESSION-LOG.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/SESSION-LOG.md,operational(archive-copy),stage2
+HANDOFF.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/HANDOFF.md,operational(archive-copy),stage2
+CHAT-DIVISION.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/CHAT-DIVISION.md,operational(archive-copy),stage2
+LEARNING-RESOURCES.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/LEARNING-RESOURCES.md,operational(archive-copy),stage2
+MASTERS-PROJECT-KICKOFF-PROMPT.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/MASTERS-PROJECT-KICKOFF-PROMPT.md,operational(archive-copy),stage2
+Plans/README.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/Plans-README.md,operational(archive-copy),stage2
+Plans/WIRING.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/Plans-WIRING.md,operational(archive-copy),stage2
+Plans/ML/foundations/HANDOFF-AML-SaD.md,archive/workspaces/2026/workspace-semester-brain-sose26/inputs/HANDOFF-AML-SaD.md,operational(archive-copy),stage2
+Masters-Planning/TOOLING.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/TOOLING.md,operational(archive-copy),stage2
+Masters-Planning/DASHBOARD.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/DASHBOARD.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-MODULE-MENU.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-RUNTIME-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-RUNTIME-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-ALGO-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-ARCHITECTURE.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ARCHITECTURE.md,operational(archive-copy),stage2
+Masters-Planning/SYSTEM-MANUAL.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/SYSTEM-MANUAL.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-MATH-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MATH-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/CONCEPT-INDEX.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/CONCEPT-INDEX.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-MODULE-PLAN.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-PLAN.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-STATUS.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-STATUS.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-DATAENG-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-ML-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ML-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/MTS-Ground-Truth.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MTS-Ground-Truth.md,operational(archive-copy),stage2
+Masters-Planning/Ultimate-Index.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/Ultimate-Index.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-HANDOFF.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-HANDOFF.md,operational(archive-copy),stage2
+Masters-Planning/MASTERS-BENCHMARKING-RESOURCES.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-BENCHMARKING-RESOURCES.md,operational(archive-copy),stage2
+Masters-Planning/DEGREE-WIRING.md,archive/workspaces/2026/workspace-masters-planning-v2/inputs/DEGREE-WIRING.md,operational(archive-copy),stage2
+Masters-Planning/module-cards,archive/workspaces/2026/workspace-masters-planning-v2/inputs/module-cards,operational(archive-copy),stage2
+Masters-Planning/templates,archive/workspaces/2026/workspace-masters-planning-v2/inputs/templates,operational(archive-copy),stage2
+"Plans/Math/sad/SaD/notes/Teil 01.pdf",knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1+2.pdf (lossless qpdf split; original preserved in legacy),handwritten-attachment,stage2-closeout
+"Plans/Math/sad/SaD/notes/Teil 02.pdf",knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1+2.pdf (lossless qpdf split; original preserved in legacy),handwritten-attachment,stage2-closeout
+Plans/ML/mlprov/zitfCqCT,DELETED (identified 2026-07-17: truncated zip duplicate of the intact PPDS folder),corrupt-duplicate,stage2-closeout
+LearningOS/projects/ppds-mlprov (code),DELETED 2026-07-17 per Aram (GitHub Aram164/2026-ppds-mlprov-students-Aram-private @ dfb97c0 verified pushed; kept exercise PDF + submission zip),purge,post-cutover
+LearningOS/projects/amls-project (code),DELETED 2026-07-17 per Aram (GitHub Abdalla1423/amls-project @ a2ffc7f verified pushed; kept exercise PDF + uncommitted-changes patch),purge,post-cutover
+"legacy/Plans/crosscutting/seminar + archive/workspaces/2026/workspace-seminar-iug + materials/_unsorted/Seminar-reference",DELETED 2026-07-17 per Aram (module record module-hu-seminar-iug kept — grade pending; md deliverables recoverable from legacy git history; pptx/pdf gone),purge,post-cutover
+"legacy/Plans/ML/mlprov + archive/workspaces/2026/workspace-mlprov",DELETED 2026-07-17 per Aram,purge,post-cutover
+"workspace-job-deem + knowledge/notes/data-systems/note-skrub-* + materials/_unsorted/Job-papers + projects/stratum + legacy/Plans/crosscutting/job",Job/ (QUARANTINED — CLAUDE.md §13: scan only on explicit command),job-quarantine,post-cutover
+Plans/ML/systems/AMLS-Source-Crosswalk.md,curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml,crosswalk-decomposition,legacy-exit-review
+Plans/Math/analysis/AN_Source-Crosswalk.md,curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml,crosswalk-decomposition,legacy-exit-review
+Plans/Math/sad/SaD_Book-Difficulty-Map_L01-L15.md,curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml,source-evaluations,legacy-exit-review
+Plans/Math/sad/SaD/notes/SaD_L01-L05_Full_Units.pdf,LearningOS/materials/_unsorted/Legacy-SaD-review/SaD_L01-L05_Full_Units.pdf,preserved-material-copy,legacy-exit-review

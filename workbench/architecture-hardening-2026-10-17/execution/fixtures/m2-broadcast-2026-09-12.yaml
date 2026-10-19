@@ -1,0 +1,312 @@
+module_id: module-hu-m2-statistik-analysis
+source_id: source-analysis-skript
+path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+revisions:
+  damaged:
+    commit: 51b0c5d3ae7baf69f58cbeb3f84d95c0b71da6f6
+    source_map_sha256: 3aa44bc60fe84537e979530f2638ac6dace13055f90111ac44bb5a9e1663dcca
+    routes:
+    - id: route-an-ch02-analysisskript
+      unit_id: unit-m2-analysis-ch02
+      title: unser skript.pdf Kapitel 2 — the scope authority
+      format: course-material
+      angle: The chapter that installs the one axiom the rest of the script cannot
+        do without, in the form this examiner states it.
+      angle_detail: 'Read what the task actually asks: not ''compute the supremum''
+        but ''determine it and prove your answer'', with maximum and minimum asked
+        separately so the sup-versus-max distinction has to be argued rather than
+        assumed. Its own Tipp routes the solution through monotonicity and convergence
+        of two auxiliary sequences — that is, it answers a Chapter 2 question with
+        Chapter 3 machinery, which is the dependency this session should leave in
+        place. Beyond this one Hausaufgabe there is no current HU practice for Chapter
+        2; that gap has been open and unowned since the 2026-08-03 audit.'
+      covers:
+      - knowledge-m2-analysis-ch02-koerperaxiome
+      - knowledge-m2-analysis-ch02-anordnung
+      - knowledge-m2-analysis-ch02-intervalle-betrag
+      - knowledge-m2-analysis-ch02-supremum-infimum
+      - knowledge-m2-analysis-ch02-vollstaendigkeitsaxiom
+      - knowledge-m2-analysis-ch02-folgerungen
+      - knowledge-m2-analysis-ch02-potenzen-wurzeln
+      - knowledge-m2-analysis-ch02-maschinenzahlen
+      depth: course-aligned
+      scope: current
+      locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness
+        of B = {1/2^n + (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with
+        proof; ana_inf_serie07.pdf, Übungsaufgabe 7.1 (Heron) reaches §2.3.6'
+      vault_path: material://source-analysis-skript/unser skript.pdf
+    - id: route-an-ch02-analysisskripthu
+      unit_id: unit-m2-analysis-ch02
+      title: HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with
+        proof
+      format: exercise
+      angle: The only current HU task on this chapter, and it is graded — so it is
+        the most reliable single signal of the expected depth.
+      angle_detail: 'Read what the task actually asks: not ''compute the supremum''
+        but ''determine it and prove your answer'', with maximum and minimum asked
+        separately so the sup-versus-max distinction has to be argued rather than
+        assumed. Its own Tipp routes the solution through monotonicity and convergence
+        of two auxiliary sequences — that is, it answers a Chapter 2 question with
+        Chapter 3 machinery, which is the dependency this session should leave in
+        place. Beyond this one Hausaufgabe there is no current HU practice for Chapter
+        2; that gap has been open and unowned since the 2026-08-03 audit.'
+      covers:
+      - knowledge-m2-analysis-ch02-supremum-infimum
+      - knowledge-m2-analysis-ch02-intervalle-betrag
+      depth: practice
+      scope: current
+      locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness
+        of B = {1/2^n + (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with
+        proof; ana_inf_serie07.pdf, Übungsaufgabe 7.1 (Heron) reaches §2.3.6'
+      vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    - id: route-an-exam-prep-analysisskript
+      unit_id: unit-m2-analysis-exam-prep
+      title: unser skript.pdf — the course contract and the chapter map
+      format: course-material
+      angle: The document that decides what counts as in scope, at what depth, and
+        therefore what every other route on every other session is for.
+      angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims
+        there govern the whole plan: Wiederholung sections are assumed known and are
+        not re-taught; Ausflug sections should be understood and applied but are not
+        an exam focus; Exkurs sections are explicitly outside the exam. And the sentence
+        that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
+        the positive form beside it: definitions, results and their application in
+        concrete problems are what the exam asks for. Every ''reference-only'' label
+        in this module traces back to that page.'
+      covers:
+      - knowledge-m2-analysis-calibrate
+      - knowledge-m2-analysis-anx
+      - knowledge-m2-analysis-exkurse
+      depth: course-aligned
+      scope: current
+      locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii;
+        Inhaltsverzeichnis pp. ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed
+        p. 226 (PDF p. 236) onward'
+      vault_path: material://source-analysis-skript/unser skript.pdf
+    - id: route-an-exam-prep-analysisskripthu
+      unit_id: unit-m2-analysis-exam-prep
+      title: HU Aufgaben zur Wiederholung und Vertiefung — the exam-format set, held
+        for timed sittings
+      format: exercise
+      angle: The only current HU material that states its own exam conditions — the
+        closest available simulation of the Analysis half of the paper.
+      angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims
+        there govern the whole plan: Wiederholung sections are assumed known and are
+        not re-taught; Ausflug sections should be understood and applied but are not
+        an exam focus; Exkurs sections are explicitly outside the exam. And the sentence
+        that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
+        the positive form beside it: definitions, results and their application in
+        concrete problems are what the exam asks for. Every ''reference-only'' label
+        in this module traces back to that page.'
+      covers:
+      - knowledge-m2-analysis-anx
+      depth: practice
+      scope: current
+      locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii;
+        Inhaltsverzeichnis pp. ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed
+        p. 226 (PDF p. 236) onward'
+      vault_path: material://source-analysis-skript/ana_inf_serieWV.pdf
+    - id: route-an-exam-prep-analysisskriptbeweise
+      unit_id: unit-m2-analysis-exam-prep
+      title: kleine_beweise.pdf — the whole list, and its disclaimer
+      format: course-material
+      angle: One page that answers the question the course contract leaves open —
+        if proofs need not be reproduced, which ones are still worth understanding.
+      angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims
+        there govern the whole plan: Wiederholung sections are assumed known and are
+        not re-taught; Ausflug sections should be understood and applied but are not
+        an exam focus; Exkurs sections are explicitly outside the exam. And the sentence
+        that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
+        the positive form beside it: definitions, results and their application in
+        concrete problems are what the exam asks for. Every ''reference-only'' label
+        in this module traces back to that page.'
+      covers:
+      - knowledge-m2-analysis-calibrate
+      - knowledge-m2-analysis-anx
+      depth: course-aligned
+      scope: current
+      locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii;
+        Inhaltsverzeichnis pp. ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed
+        p. 226 (PDF p. 236) onward'
+      vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    - id: route-an-exam-prep-analysisskript-2
+      unit_id: unit-m2-analysis-exam-prep
+      title: The deferral ledger — Kapitel 8 and every Exkurs, named once and left
+      format: course-material
+      angle: One list of everything the course contract puts outside the exam, so
+        a deferred section is never re-discovered as a gap.
+      angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims
+        there govern the whole plan: Wiederholung sections are assumed known and are
+        not re-taught; Ausflug sections should be understood and applied but are not
+        an exam focus; Exkurs sections are explicitly outside the exam. And the sentence
+        that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
+        the positive form beside it: definitions, results and their application in
+        concrete problems are what the exam asks for. Every ''reference-only'' label
+        in this module traces back to that page.'
+      covers:
+      - knowledge-m2-analysis-exkurse
+      depth: course-aligned
+      scope: current
+      locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii;
+        Inhaltsverzeichnis pp. ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed
+        p. 226 (PDF p. 236) onward'
+      vault_path: material://source-analysis-skript/unser skript.pdf
+  repaired:
+    commit: 074f4717e14527798752de84b3c9c4e88348b658
+    source_map_sha256: ad818c0bd1ea8d3d316dc6e6bcf610698bfefea7d8d59d262ccedb88d11b7528
+    routes:
+    - id: route-an-ch02-analysisskript
+      unit_id: unit-m2-analysis-ch02
+      title: unser skript.pdf Kapitel 2 — the scope authority
+      format: course-material
+      angle: The chapter that installs the one axiom the rest of the script cannot
+        do without, in the form this examiner states it.
+      angle_detail: Read §2.3 as the chapter and the rest as its setting. Completeness
+        is stated here in the supremum form, and every convergence theorem from Chapter
+        3 onward is either a direct consequence or reaches it through Bolzano-Weierstraß
+        — so the exact statement, including which sets it applies to, is worth more
+        than any amount of practice on §2.1. The §2.4 Ausflug on machine numbers is
+        the chapter's Informatik payoff; the contract puts it at overview depth, and
+        no other source on this menu covers it at all.
+      covers:
+      - knowledge-m2-analysis-ch02-koerperaxiome
+      - knowledge-m2-analysis-ch02-anordnung
+      - knowledge-m2-analysis-ch02-intervalle-betrag
+      - knowledge-m2-analysis-ch02-supremum-infimum
+      - knowledge-m2-analysis-ch02-vollstaendigkeitsaxiom
+      - knowledge-m2-analysis-ch02-folgerungen
+      - knowledge-m2-analysis-ch02-potenzen-wurzeln
+      - knowledge-m2-analysis-ch02-maschinenzahlen
+      depth: course-aligned
+      scope: current
+      locator: unser skript.pdf Kapitel 2, printed p. 7 (PDF p. 17)–printed p. 40
+        (PDF p. 50); §2.1 Körperaxiome (Wiederholung) printed p. 8 (PDF p. 18), §2.2
+        Anordnung printed p. 9 (PDF p. 19), §2.3.1 Intervalle und Betrag printed p.
+        13 (PDF p. 23), §2.3.2 Supremum und Infimum printed p. 15 (PDF p. 25), §2.3.3
+        Vollständigkeitsaxiom printed p. 16 (PDF p. 26), §2.3.4 Folgerungen printed
+        p. 18 (PDF p. 28), §2.3.5 Potenzen printed p. 22 (PDF p. 32), §2.3.6 Wurzeln
+        printed p. 23 (PDF p. 33), §2.4 Ausflug – Maschinenzahlen printed p. 26 (PDF
+        p. 36)
+      vault_path: material://source-analysis-skript/unser skript.pdf
+    - id: route-an-ch02-analysisskripthu
+      unit_id: unit-m2-analysis-ch02
+      title: HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with
+        proof
+      format: exercise
+      angle: The only current HU task on this chapter, and it is graded — so it is
+        the most reliable single signal of the expected depth.
+      angle_detail: 'Read what the task actually asks: not ''compute the supremum''
+        but ''determine it and prove your answer'', with maximum and minimum asked
+        separately so the sup-versus-max distinction has to be argued rather than
+        assumed. Its own Tipp routes the solution through monotonicity and convergence
+        of two auxiliary sequences — that is, it answers a Chapter 2 question with
+        Chapter 3 machinery, which is the dependency this session should leave in
+        place. Beyond this one Hausaufgabe there is no current HU practice for Chapter
+        2; that gap has been open and unowned since the 2026-08-03 audit.'
+      covers:
+      - knowledge-m2-analysis-ch02-supremum-infimum
+      - knowledge-m2-analysis-ch02-intervalle-betrag
+      depth: practice
+      scope: current
+      locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness
+        of B = {1/2^n + (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with
+        proof; ana_inf_serie07.pdf, Übungsaufgabe 7.1 (Heron) reaches §2.3.6'
+      vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    - id: route-an-exam-prep-analysisskript
+      unit_id: unit-m2-analysis-exam-prep
+      title: unser skript.pdf — the course contract and the chapter map
+      format: course-material
+      angle: The document that decides what counts as in scope, at what depth, and
+        therefore what every other route on every other session is for.
+      angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims
+        there govern the whole plan: Wiederholung sections are assumed known and are
+        not re-taught; Ausflug sections should be understood and applied but are not
+        an exam focus; Exkurs sections are explicitly outside the exam. And the sentence
+        that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
+        the positive form beside it: definitions, results and their application in
+        concrete problems are what the exam asks for. Every ''reference-only'' label
+        in this module traces back to that page.'
+      covers:
+      - knowledge-m2-analysis-calibrate
+      - knowledge-m2-analysis-anx
+      - knowledge-m2-analysis-exkurse
+      depth: course-aligned
+      scope: current
+      locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii;
+        Inhaltsverzeichnis pp. ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed
+        p. 226 (PDF p. 236) onward'
+      vault_path: material://source-analysis-skript/unser skript.pdf
+    - id: route-an-exam-prep-analysisskripthu
+      unit_id: unit-m2-analysis-exam-prep
+      title: HU Aufgaben zur Wiederholung und Vertiefung — the exam-format set, held
+        for timed sittings
+      format: exercise
+      angle: The only current HU material that states its own exam conditions — the
+        closest available simulation of the Analysis half of the paper.
+      angle_detail: 'This is the set to protect. It is named on the Chapter 3, 4 and
+        5 sessions so those sessions know what they are preparing for, but it is worked
+        here, cold and timed, not there. Its own framing is unusually explicit: exam-format
+        questions, 30-45 minutes each, covering Chapters 1 to 5 only. That coverage
+        boundary is also the honest limit of this rehearsal — there is no HU-format
+        material for Chapters 6 and 7 at all, so a full Analysis mock has to be assembled
+        from external papers and labelled as an assembly.'
+      covers:
+      - knowledge-m2-analysis-anx
+      depth: practice
+      scope: current
+      locator: 'ana_inf_serieWV.pdf: WV1.1 Folgen, WV1.2 Stetigkeit, WV1.3 Konvergenzkriterien,
+        WV1.4 Bisektionsverfahren — 20 points each, and the sheet''s own instruction:
+        these cover Kapitel 1 to 5 (up to §5.5), ''die so auch in einer Klausur enthalten
+        sein könnten'', to be attempted first under exam conditions at about 30-45
+        minutes per task'
+      vault_path: material://source-analysis-skript/ana_inf_serieWV.pdf
+    - id: route-an-exam-prep-analysisskriptbeweise
+      unit_id: unit-m2-analysis-exam-prep
+      title: kleine_beweise.pdf — the whole list, and its disclaimer
+      format: course-material
+      angle: One page that answers the question the course contract leaves open —
+        if proofs need not be reproduced, which ones are still worth understanding.
+      angle_detail: 'Read once at calibration to see the shape of the answer: twenty
+        results for a 225-page script, concentrated in Chapters 3 and 6. Then use
+        it per chapter, where it is routed individually, to repair a failed application.
+        The disclaimer is real and is why this is a calibration input rather than
+        an authority — it is an experienced reader''s shortlist, not exam intelligence,
+        and the plan treats it as the former.'
+      covers:
+      - knowledge-m2-analysis-calibrate
+      - knowledge-m2-analysis-anx
+      depth: course-aligned
+      scope: current
+      locator: 'kleine_beweise.pdf (2 pp, SoSe 2025 Tutorium zur Prüfungsvorbereitung,
+        Hannah Shorten and Noah-Joël Seegert): twenty results across Kapitel 3 to
+        7, with the printed caveat that the list was compiled by student assistants
+        and ''steht in keinem uns bekannten Zusammenhang mit den Inhalten der Klausur'''
+      vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    - id: route-an-exam-prep-analysisskript-2
+      unit_id: unit-m2-analysis-exam-prep
+      title: The deferral ledger — Kapitel 8 and every Exkurs, named once and left
+      format: course-material
+      angle: One list of everything the course contract puts outside the exam, so
+        a deferred section is never re-discovered as a gap.
+      angle_detail: 'Handled lightly and deliberately: the script states that Exkurse
+        are not exam-relevant, so none of these sections gets a session, a stage or
+        a material menu, and none of the chapter sessions spends time on them. They
+        are written down once, here, for two reasons only — so that meeting a power-series
+        or Newton-method task in an external bank is recognised as out-of-scope rather
+        than as a hole, and so that the decision is reversible in one place if the
+        lecturer ever says otherwise. One of them has value elsewhere: §3.2''s Landau
+        notation is the same O-notation Algorithmen 2 uses, and Labs/Schreyer p. 94
+        covers it if it is ever wanted for that reason rather than this one.'
+      covers:
+      - knowledge-m2-analysis-exkurse
+      depth: course-aligned
+      scope: current
+      locator: 'unser skript.pdf Kapitel 8 Exkurse printed p. 226 (PDF p. 236) to
+        the end; and the Exkurs sections in Chapters 3-7: §3.2 Landau-Notation printed
+        p. 46 (PDF p. 56), §3.4 Lösung homogener Rekursionsgleichungen printed p.
+        52 (PDF p. 62), §4.5 Produktreihen printed p. 95 (PDF p. 105), §5.8 Potenzreihen
+        printed p. 130 (PDF p. 140), §6.2 Ableitung von Potenzreihen printed p. 144
+        (PDF p. 154), §6.6 Numerisches Lösen von Gleichungen printed p. 153 (PDF p.
+        163), §6.9 Potenzreihen und Taylorentwicklungen printed p. 173 (PDF p. 183),
+        §7.4 Numerische Integration printed p. 215 (PDF p. 225)'
+      vault_path: material://source-analysis-skript/unser skript.pdf

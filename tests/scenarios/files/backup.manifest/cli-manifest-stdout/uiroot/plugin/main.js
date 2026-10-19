@@ -1,0 +1,1 @@
+// scenario UI build artifact

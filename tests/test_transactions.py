@@ -1,0 +1,1264 @@
+from __future__ import annotations
+
+import ast
+import fcntl
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+import yaml
+from gateway_helpers import approved_v2_envelope
+from repo_builders import add_curriculum
+
+import learning_os.app.commit as ops_commit
+import learning_os.app.context as context_module
+import learning_os.app.lock as plumbing_support
+import learning_os.derive.ai_actions as ai_projection
+import learning_os.store.fingerprint as fingerprint_module
+import learning_os.store.session_ledger as session_support
+import learning_os.store.transactions as transaction_module
+from learning_os.app.context import OpContext
+from learning_os.app.proposal import TransactionProposal
+from learning_os.domain.failures import (
+    StaleSnapshot,
+    TransactionConflict,
+    TransactionSnapshotConflict,
+    WriteRefused,
+)
+from learning_os.domain.validation import Issue
+from learning_os.store.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+    intent_sha256,
+    verified_gateway_snapshot,
+)
+from learning_os.store.contracts.json_schema import (
+    ContractValidationError,
+    validate_contract,
+)
+from learning_os.store.fingerprint import source_fingerprint
+from learning_os.store.loader import load_repo
+from learning_os.store.transactions import (
+    PostCommitFailure,
+    ProjectionFailure,
+    TransactionFailure,
+    TransactionRecoveryConflict,
+    TransactionService,
+    artifact_revision,
+    canonical_fingerprint,
+)
+
+TOOLS = Path(__file__).resolve().parent.parent / "tools"
+
+
+def _write_transaction(root, writes, *, capability="legacy.write",
+                       expected_revisions=None, artifact_ids=(),
+                       deletes=(), metadata=None, validate_extra=None):
+    """The dissolved support._write_transaction construction, inlined."""
+    request = current_gateway_request()
+    ctx = OpContext(
+        root=root, operation=capability,
+        channel=request.channel if request is not None else session_support.DEFAULT_SESSION_CHANNEL,
+        invocation="command", gateway=request)
+    proposal = TransactionProposal(
+        capability=capability, writes=writes, artifact_ids=artifact_ids,
+        deletes=deletes, expected_revisions=expected_revisions or {},
+        metadata=metadata, validate_extra=validate_extra)
+    return ops_commit.commit_proposal(ctx, proposal)
+
+
+def _snapshot_ok(root, expected) -> bool:
+    """OpContext.require_snapshot as the dissolved _expected_ok boolean."""
+    ctx = OpContext(
+        root=root, operation="test.probe", channel="operator",
+        invocation="command", gateway=current_gateway_request())
+    try:
+        ctx.require_snapshot(expected)
+    except (StaleSnapshot, WriteRefused):
+        return False
+    return True
+
+
+def _gateway_context(capability: str, suffix: str) -> GatewayRequestContext:
+    intent = "sha256:" + "a" * 64
+    return GatewayRequestContext(
+        request_id=f"request-{suffix}",
+        idempotency_key=f"idempotency-{suffix}",
+        capability=capability,
+        channel="operator",
+        intent_sha256=intent,
+        approval_kind="operator-approval",
+        approval_subject_sha256=intent,
+    )
+
+
+# --------------------------------------------------------------------------
+# One fingerprint, one root list.
+#
+# Two implementations existed until 2026-08-18: `transactions.canonical_
+# fingerprint` produced the value a receipt records as snapshot_before/after,
+# and `genout.source_fingerprint` produced the value the projection publishes
+# as `_generated.snapshot_id` — the token the UI hands back to guard its next
+# write. Same roots, same algorithm, nothing holding them together. Add a
+# canonical root to one and forget the other and the receipt starts describing
+# a different state than the one the write was checked against, silently.
+#
+# Value equality on a fixture is too weak to guard this on its own: a root the
+# fixture happens not to contain could diverge without moving either digest.
+# So the structure is asserted too.
+# --------------------------------------------------------------------------
+
+def test_the_receipt_and_the_projection_share_one_digest_function():
+    assert canonical_fingerprint is fingerprint_module.canonical_fingerprint
+
+
+def test_only_one_module_declares_the_canonical_root_list():
+    """No second copy of the root list may appear anywhere under tools/."""
+    roots = set(fingerprint_module.CANONICAL_ROOTS)
+    declaring: list[str] = []
+    for path in sorted(TOOLS.rglob("*.py")):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if not isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+                continue
+            try:
+                literal = set(ast.literal_eval(node))
+            except (ValueError, TypeError, SyntaxError):
+                continue
+            if roots <= literal:
+                declaring.append(path.relative_to(TOOLS).as_posix())
+                break
+    assert declaring == ["learning_os/store/fingerprint.py"], (
+        f"the canonical root list is declared in more than one place: {declaring}"
+    )
+
+
+def test_the_receipt_and_the_projection_agree_on_a_real_repository(mini_repo: Path):
+    assert source_fingerprint(load_repo(mini_repo)) == canonical_fingerprint(mini_repo)
+
+
+def test_source_fingerprint_cache_does_not_mutate_the_loaded_repo(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    repo = load_repo(mini_repo)
+    calls = 0
+    original = fingerprint_module.canonical_fingerprint
+
+    def counted(root: Path):
+        nonlocal calls
+        calls += 1
+        return original(root)
+
+    monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
+    first = source_fingerprint(repo)
+    assert source_fingerprint(repo) == first
+    assert calls == 1
+    assert not hasattr(repo, "_source_fingerprint_cache")
+
+
+def test_combined_fingerprints_match_separate_walks(mini_repo: Path):
+    """#104: one traversal yields byte-identical canonical and data digests."""
+    from learning_os.store.fingerprint import (
+        canonical_data_and_stat_fingerprints,
+        canonical_fingerprint,
+        data_roots_fingerprint,
+    )
+
+    canonical, data, _stat = canonical_data_and_stat_fingerprints(mini_repo)
+    assert canonical == canonical_fingerprint(mini_repo)
+    assert data == data_roots_fingerprint(mini_repo)
+
+
+def test_transaction_walks_twice_but_reads_each_file_once(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    """#104 step 1 + #112: pre once, post once, each byte read once.
+
+    The guard still walks twice — the pre walk and the post walk are both
+    stat-complete, and the new file is found by the post walk only — but
+    the shared digest layer serves the post walk's unchanged bytes from
+    the pre walk's reads. The cache starts cold so the transaction's own
+    pre-walk reads are counted too.
+    """
+    from learning_os.store import digests
+
+    digests.clear()
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+    base = _gateway_context("capture.create", "two-walks")
+    context = GatewayRequestContext(
+        request_id=base.request_id,
+        idempotency_key=base.idempotency_key,
+        capability=base.capability,
+        channel=base.channel,
+        intent_sha256=base.intent_sha256,
+        approval_kind=base.approval_kind,
+        approval_subject_sha256=base.approval_subject_sha256,
+        expected_snapshot=expected,
+    )
+    reads: dict[str, int] = {}
+    original_read = fingerprint_module.read_bytes_inside
+
+    def counted_read(root: Path, path: Path) -> bytes:
+        key = str(path.relative_to(root)) if isinstance(path, Path) else str(path)
+        reads[key] = reads.get(key, 0) + 1
+        return original_read(root, path)
+
+    monkeypatch.setattr(fingerprint_module, "read_bytes_inside", counted_read)
+    walks: list[str] = []
+    original_pre = transaction_module.canonical_fingerprint
+    original_post = transaction_module.canonical_data_and_stat_fingerprints
+
+    def counted_pre(root: Path, **kwargs):
+        walks.append("pre")
+        return original_pre(root, **kwargs)
+
+    def counted_post(root: Path, **kwargs):
+        walks.append("post")
+        return original_post(root, **kwargs)
+
+    monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted_pre)
+    monkeypatch.setattr(
+        transaction_module, "canonical_data_and_stat_fingerprints", counted_post)
+    target = mini_repo / "work/inbox/two-walks.md"
+    artifact = "capture-test:two-walks"
+    target_rel = target.relative_to(mini_repo).as_posix()
+    digests.clear()
+
+    with plumbing_support.operator_lock(mini_repo):
+        with gateway_request_context(context), verified_gateway_snapshot(
+            mini_repo, expected
+        ):
+            code, errors, confirmation = _write_transaction(
+                mini_repo,
+                {target: "two walks\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
+
+    assert (code, errors) == (0, [])
+    assert confirmation["snapshot_after"].startswith("sha256:")
+    assert walks == ["pre", "post"]
+    assert reads.get(target_rel) == 1
+    assert len(reads) > 1, "no unchanged file was read — this proves nothing"
+    for rel, count in reads.items():
+        assert count == 1, f"{rel} read {count} times, expected once"
+
+
+def test_a_transaction_refuses_an_already_invalid_repository(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    target = mini_repo / "work/inbox/strict-validation.md"
+    monkeypatch.setattr(
+        ops_commit,
+        "validate",
+        lambda _repo, online=False: [
+            Issue("E", "PREEXISTING", "the repository is already invalid", "somewhere.yaml")
+        ],
+    )
+    monkeypatch.setattr(ops_commit, "_publish", lambda _root: None)
+
+    artifact = "capture-test:strict-validation"
+    with gateway_request_context(
+        _gateway_context("capture.create", "strict-validation")
+    ):
+        code, errors, confirmation = _write_transaction(
+            mini_repo,
+            {target: "must roll back\n"},
+            capability="capture.create",
+            expected_revisions={artifact: 0},
+            artifact_ids=[artifact],
+        )
+
+    assert code == 2
+    assert "PREEXISTING" in errors[0]
+    assert confirmation == {}
+    assert not target.exists()
+
+
+def test_validation_and_publication_share_one_loaded_repository(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    target = mini_repo / "work/inbox/one-load.md"
+    loads = 0
+    original = load_repo
+
+    def counted(root: Path):
+        nonlocal loads
+        loads += 1
+        return original(root)
+
+    monkeypatch.setattr(ops_commit, "load_repo", counted)
+
+    def unexpected_projection_load(_root: Path):
+        raise AssertionError(
+            "manifest projection must reuse the repository loaded for validation"
+        )
+
+    monkeypatch.setattr(ai_projection, "load_repo", unexpected_projection_load)
+    artifact = "capture-test:one-load"
+    with gateway_request_context(_gateway_context("capture.create", "one-load")):
+        code, errors, confirmation = _write_transaction(
+            mini_repo,
+            {target: "one load\n"},
+            capability="capture.create",
+            expected_revisions={artifact: 0},
+            artifact_ids=[artifact],
+        )
+
+    assert (code, errors) == (0, [])
+    assert confirmation["transaction_id"]
+    assert loads == 1
+
+
+def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    """Keep entry/final/projection safety while removing the handler duplicate."""
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+    base = _gateway_context("capture.create", "bounded-fingerprints")
+    context = GatewayRequestContext(
+        request_id=base.request_id,
+        idempotency_key=base.idempotency_key,
+        capability=base.capability,
+        channel=base.channel,
+        intent_sha256=base.intent_sha256,
+        approval_kind=base.approval_kind,
+        approval_subject_sha256=base.approval_subject_sha256,
+        expected_snapshot=expected,
+    )
+    calls = 0
+    original = fingerprint_module.canonical_fingerprint
+    original_combined = fingerprint_module.canonical_data_and_stat_fingerprints
+
+    def counted(root: Path) -> str:
+        nonlocal calls
+        calls += 1
+        return original(root)
+
+    def counted_combined(root: Path):
+        nonlocal calls
+        calls += 1
+        return original_combined(root)
+
+    monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
+    monkeypatch.setattr(context_module, "canonical_fingerprint", counted)
+    monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted)
+    monkeypatch.setattr(
+        fingerprint_module, "canonical_data_and_stat_fingerprints",
+        counted_combined)
+    monkeypatch.setattr(
+        transaction_module, "canonical_data_and_stat_fingerprints",
+        counted_combined)
+    target = mini_repo / "work/inbox/bounded-fingerprints.md"
+    artifact = "capture-test:bounded-fingerprints"
+
+    with plumbing_support.operator_lock(mini_repo):
+        with gateway_request_context(context), verified_gateway_snapshot(
+            mini_repo, expected
+        ):
+            # cmd_capability owns the locked entry comparison. This assertion
+            # represents the named handler's former duplicate and must not scan.
+            assert _snapshot_ok(mini_repo, expected) is True
+            code, errors, confirmation = _write_transaction(
+                mini_repo,
+                {target: "bounded\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
+
+    assert (code, errors) == (0, [])
+    assert confirmation["snapshot_after"].startswith("sha256:")
+    assert calls == 2, (
+        "one pre-write scan plus one combined post-commit scan "
+        "(canonical, data-roots, and stat in a single walk)"
+    )
+
+
+def test_operator_lock_is_reentrant_in_one_dispatch(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    calls: list[int] = []
+    monkeypatch.setattr(
+        fcntl,
+        "flock",
+        lambda _fd, operation: calls.append(operation),
+    )
+
+    # The outer acquire probes non-blocking first; the inner re-entrant
+    # acquire performs no lock operation at all.
+    probe = fcntl.LOCK_EX | fcntl.LOCK_NB
+    with plumbing_support.operator_lock(tmp_path):
+        with plumbing_support.operator_lock(tmp_path):
+            assert calls == [probe]
+
+    assert calls == [probe, fcntl.LOCK_UN]
+
+
+def test_projection_publication_refuses_a_changed_canonical_snapshot(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    target = mini_repo / "work/inbox/projection-race.md"
+    external = mini_repo / "knowledge/notes/mathematics/external-race.md"
+    original_publish = ops_commit._publish_repo
+
+    def publish_then_mutate(repo):
+        original_publish(repo)
+        external.write_text("changed outside the transaction\n", encoding="utf-8")
+
+    monkeypatch.setattr(ops_commit, "_publish_repo", publish_then_mutate)
+    artifact = "capture-test:projection-race"
+    with gateway_request_context(
+        _gateway_context("capture.create", "projection-race")
+    ):
+        with pytest.raises(ProjectionFailure) as caught:
+            _write_transaction(
+                mini_repo,
+                {target: "transaction content\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
+
+    assert caught.value.rollback_complete is False
+    assert "changed during projection publication" in str(caught.value)
+    assert "rollback incomplete" in str(caught.value)
+    assert not target.exists()
+    assert external.is_file(), "rollback must not erase an unrelated external edit"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_transaction_rechecks_approved_snapshot_before_writing(tmp_path: Path):
+    canonical = tmp_path / "knowledge/note.md"
+    canonical.parent.mkdir(parents=True)
+    canonical.write_text("approved\n", encoding="utf-8")
+    expected = f"sha256:{canonical_fingerprint(tmp_path)}"
+    canonical.write_text("changed elsewhere\n", encoding="utf-8")
+    target = tmp_path / "projects/registry/project-demo.yaml"
+
+    with pytest.raises(TransactionSnapshotConflict) as refusal:
+        TransactionService(tmp_path).commit(
+            capability="project.create",
+            writes={target: "id: project-demo\n"},
+            artifact_ids=["project-demo"],
+            expected_snapshot=expected,
+        )
+
+    assert refusal.value.expected == expected
+    assert refusal.value.actual == f"sha256:{canonical_fingerprint(tmp_path)}"
+    assert not target.exists()
+    assert not list((tmp_path / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_snapshot_conflict_precedes_a_revision_conflict(tmp_path: Path):
+    canonical = tmp_path / "knowledge/note.md"
+    canonical.parent.mkdir(parents=True)
+    canonical.write_text("approved\n", encoding="utf-8")
+    approved = f"sha256:{canonical_fingerprint(tmp_path)}"
+    canonical.write_text("changed\n", encoding="utf-8")
+    ledger = tmp_path / "operations/transactions/revisions.yaml"
+    ledger.parent.mkdir(parents=True)
+    ledger.write_text(
+        "schema_version: 1\ntype: artifact-revision-ledger\nrevisions:\n"
+        "  project-demo: 1\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TransactionSnapshotConflict):
+        TransactionService(tmp_path).commit(
+            capability="project.update",
+            writes={tmp_path / "projects/registry/project-demo.yaml": "id: project-demo\n"},
+            artifact_ids=["project-demo"],
+            expected_revisions={"project-demo": 0},
+            expected_snapshot=approved,
+        )
+
+
+def test_snapshot_check_does_not_parse_the_repository(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+
+    def unexpected_load(_root: Path):
+        raise AssertionError("a content digest must not require a domain parse")
+
+    monkeypatch.setattr(context_module, "load_repo", unexpected_load)
+
+    assert _snapshot_ok(mini_repo, expected) is True
+
+
+def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Path, capsys):
+    """Found by synthetic use against the real vault.
+
+    `detour-create` with a current snapshot was refused as "use
+    GatewayEnvelopeV2"; the same command with a stale or invented one was
+    refused first as a projection conflict, telling the caller to reload and
+    retry. No snapshot makes a direct CLI write succeed, so that advice sends a
+    script into a loop against a door closed for another reason.
+    """
+    assert current_gateway_request() is None
+    assert _snapshot_ok(mini_repo, "sha256:" + "0" * 64) is False
+    ctx = OpContext(
+        root=mini_repo, operation="test.probe", channel="operator",
+        invocation="command", gateway=None)
+    with pytest.raises(StaleSnapshot) as caught:
+        ctx.require_snapshot("sha256:" + "0" * 64)
+    err = caught.value.gateway_message
+    assert "direct CLI application is disabled" in err
+    assert "reloading will not change this" in err
+    assert "projection conflict" not in err
+    assert capsys.readouterr().err == ""
+
+
+def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
+    canvas = mini_repo / "Untitled 37.canvas"
+    regular = mini_repo / "work/inbox/kept.md"
+    session_support.record_touched(mini_repo, [canvas, regular])
+    recorded = json.loads(
+        session_support.session_ledger(mini_repo).read_text(encoding="utf-8")
+    )
+    assert "Untitled 37.canvas" not in recorded["paths"]
+    row = recorded["paths"]["work/inbox/kept.md"]
+    assert row["state"] == "absent"
+    assert row["channel"] == "operator"
+    assert row["recorded_at"]
+    assert recorded["session_id"] == "channel:operator"
+
+
+def test_failed_transaction_restores_canonical_state(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+    before = canonical_fingerprint(root)
+    service = TransactionService(root)
+    with pytest.raises(TransactionFailure):
+        service.commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"], validate_state=lambda: ["forced failure"],
+        )
+    assert target.read_text(encoding="utf-8") == "old\n"
+    assert canonical_fingerprint(root) == before
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_atomic_transaction_write_fsyncs_file_and_parent_directory(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    calls: list[int] = []
+    monkeypatch.setattr(transaction_module.os, "fsync", lambda fd: calls.append(fd))
+    target = tmp_path / "durable.yaml"
+
+    transaction_module.atomic_write_bytes(target, b"durable\n")
+
+    assert target.read_bytes() == b"durable\n"
+    assert len(calls) == 2
+
+
+def test_artifact_revision_conflicts_are_scoped(tmp_path: Path):
+    root = tmp_path
+    a = root / "projects/registry/project-a.yaml"
+    b = root / "projects/registry/project-b.yaml"
+    a.parent.mkdir(parents=True)
+    service = TransactionService(root)
+    first = service.commit(capability="project.create", writes={a: "a\n"}, artifact_ids=["project-a"])
+    assert first.revisions == {"project-a": 1}
+    # A write to another artifact does not conflict with project-a changing.
+    second = service.commit(
+        capability="project.create", writes={b: "b\n"}, artifact_ids=["project-b"],
+        expected_revisions={"project-b": 0},
+    )
+    assert second.revisions == {"project-b": 1}
+    with pytest.raises(TransactionConflict):
+        service.commit(
+            capability="project.update", writes={a: "a2\n"}, artifact_ids=["project-a"],
+            expected_revisions={"project-a": 0},
+        )
+    assert artifact_revision(root, "project-a") == 1
+
+
+def test_each_commit_has_exactly_one_append_only_receipt(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    result = TransactionService(root).commit(
+        capability="project.create", writes={target: "demo\n"}, artifact_ids=["project-demo"]
+    )
+    receipts = list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert receipts == [result.receipt_path]
+    receipt = yaml.safe_load(result.receipt_path.read_text(encoding="utf-8"))
+    assert receipt["status"] == "committed"
+    assert receipt["capability"] == "project.create"
+    assert receipt["artifact_revisions"]["project-demo"] == {"before": 0, "after": 1}
+
+
+def test_each_commit_records_the_post_commit_data_roots_digest(tmp_path: Path):
+    from learning_os.store.fingerprint import data_roots_fingerprint
+
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    result = TransactionService(root).commit(
+        capability="project.create", writes={target: "demo\n"}, artifact_ids=["project-demo"]
+    )
+    receipt = yaml.safe_load(result.receipt_path.read_text(encoding="utf-8"))
+    assert receipt["metadata"]["data_roots_sha256"] == (
+        f"sha256:{data_roots_fingerprint(root)}"
+    )
+
+
+def _receipt_contract_fixture(*, schema_version: int, metadata: dict) -> dict:
+    receipt = {
+        "schema_version": schema_version,
+        "id": "transaction-20260825-120000-001",
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "capture.create",
+        "committed_at": "2026-08-25T12:00:00+00:00",
+        "snapshot_before": "sha256:" + "1" * 64,
+        "snapshot_after": "sha256:" + "2" * 64,
+        "expected_revisions": {},
+        "artifact_revisions": {},
+        "writes": [],
+        "metadata": metadata,
+    }
+    if schema_version == 2:
+        receipt.update({
+            "authority": {
+                "capability_contract_version": 2,
+                "enforced": True,
+                "grants": [],
+            },
+            "request": {
+                "channel": "operator",
+                "request_id": "request-demo",
+                "idempotency_key": "idempotency-demo",
+                "intent_sha256": "sha256:" + "3" * 64,
+                "approval": {
+                    "kind": "operator-approval",
+                    "subject_sha256": "sha256:" + "3" * 64,
+                },
+            },
+        })
+    return receipt
+
+
+@pytest.mark.parametrize("metadata", [
+    {"credential": "synthetic-secret"},
+    {
+        "request_id": "ai-request-demo",
+        "delivery_id": "delivery-demo",
+        "action_id": "garden-shelve",
+        "approved_delivery": {
+            "delivery_sha256": "sha256:" + "4" * 64,
+            "artifact_sha256": {},
+        },
+        "created_ids": ["/Users/example/private-record"],
+        "updated_ids": [],
+        "deleted_ids": [],
+        "superseded_ids": [],
+        "validation": {
+            "schemas": "passed",
+            "references": "passed",
+            "boundaries": "passed",
+            "projection": "passed",
+        },
+    },
+    {
+        "request_id": "ai-request-demo",
+        "delivery_id": "delivery-demo",
+        "action_id": "garden.shelve",
+        "approved_delivery": {
+            "delivery_sha256": "sha256:" + "4" * 64,
+            "artifact_sha256": {"../private.txt": "sha256:" + "5" * 64},
+        },
+        "created_ids": [],
+        "updated_ids": [],
+        "deleted_ids": [],
+        "superseded_ids": [],
+        "validation": {
+            "schemas": "passed",
+            "references": "passed",
+            "boundaries": "passed",
+            "projection": "passed",
+        },
+    },
+])
+def test_receipt_v2_rejects_sensitive_or_absolute_path_metadata(
+    mini_repo: Path,
+    metadata: dict,
+):
+    with pytest.raises(ContractValidationError):
+        validate_contract(
+            mini_repo,
+            "transaction-receipt.schema.json",
+            _receipt_contract_fixture(schema_version=2, metadata=metadata),
+        )
+
+
+def test_receipt_v1_metadata_remains_readable_for_history(mini_repo: Path):
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=1,
+            metadata={"historical_extension": {"legacy_shape": True}},
+        ),
+    )
+
+
+def test_receipt_v2_allows_only_the_known_safe_ai_metadata_shape(mini_repo: Path):
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2,
+            metadata={
+                "request_id": "ai-request-demo",
+                "delivery_id": "delivery-demo",
+                "action_id": "garden.shelve",
+                "approved_delivery": {
+                    "delivery_sha256": "sha256:" + "4" * 64,
+                    "artifact_sha256": {
+                        "artifacts/transcription.md": "sha256:" + "5" * 64,
+                    },
+                },
+                "created_ids": ["transcription-garden-demo"],
+                "updated_ids": ["garden-demo"],
+                "deleted_ids": [],
+                "superseded_ids": [],
+                "validation": {
+                    "schemas": "passed",
+                    "references": "passed",
+                    "boundaries": "passed",
+                    "projection": "passed",
+                },
+            },
+        ),
+    )
+
+
+def test_receipt_v2_allows_the_recorded_data_roots_digest(mini_repo: Path):
+    digest = "sha256:" + "ab" * 32
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2, metadata={"data_roots_sha256": digest}),
+    )
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2,
+            metadata={
+                "data_roots_sha256": digest,
+                "request_id": "ai-request-demo",
+                "delivery_id": "delivery-demo",
+                "action_id": "garden.shelve",
+                "approved_delivery": {
+                    "delivery_sha256": "sha256:" + "4" * 64,
+                    "artifact_sha256": {},
+                },
+                "created_ids": [],
+                "updated_ids": [],
+                "deleted_ids": [],
+                "superseded_ids": [],
+                "validation": {
+                    "schemas": "passed",
+                    "references": "passed",
+                    "boundaries": "passed",
+                    "projection": "passed",
+                },
+            },
+        ),
+    )
+
+
+def test_failed_transaction_removes_new_binary_files(tmp_path: Path):
+    root = tmp_path
+    target = root / "curriculum/modules/module-demo/units/unit-demo/attachments/note.png"
+    service = TransactionService(root)
+    with pytest.raises(TransactionFailure):
+        service.commit(
+            capability="unit.note.append",
+            writes={target: b"not-really-a-png"},
+            artifact_ids=["unit-demo"],
+            validate_state=lambda: ["forced failure"],
+        )
+    assert not target.exists()
+    assert artifact_revision(root, "unit-demo") == 0
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_post_commit_bookkeeping_failure_preserves_commit_and_raises(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+
+    def fail_bookkeeping(_paths):
+        raise RuntimeError("forced touched-ledger failure")
+
+    with pytest.raises(TransactionFailure, match="transaction committed but post-commit hooks failed: forced touched-ledger failure"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            touched=fail_bookkeeping,
+        )
+
+    assert target.read_text(encoding="utf-8") == "new\n"
+    assert artifact_revision(root, "project-demo") == 1
+    assert list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_post_commit_failure_carries_receipt_facts_for_retry(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+
+    def fail_bookkeeping(_paths):
+        raise RuntimeError("forced touched-ledger failure")
+
+    with pytest.raises(PostCommitFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            touched=fail_bookkeeping,
+        )
+    failure = caught.value
+    receipts = list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    stored = yaml.safe_load(receipts[0].read_text(encoding="utf-8"))
+    assert failure.transaction_id == stored["id"]
+    assert failure.receipt_path == "operations/transactions/" + receipts[0].name
+    assert failure.snapshot_after == stored["snapshot_after"]
+    assert failure.snapshot_after.startswith("sha256:")
+
+
+def test_projection_failure_with_complete_rollback_is_typed(tmp_path: Path):
+    """Errno text without magic words still proves the failing subsystem."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=lambda: None,
+        )
+    assert caught.value.rollback_complete is True
+    assert "rollback incomplete" not in str(caught.value)
+    assert not target.exists()
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_seeded_publisher_type_error_fails_once_not_republished(tmp_path: Path):
+    """A TypeError raised inside a seed-accepting publisher is a projection
+    failure; it must never be read as "this publisher takes no seed" and
+    re-run unseeded (#104 step 1)."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    calls: list[str | None] = []
+
+    def broken_publish(snapshot_after_id: str | None = None) -> str:
+        calls.append(snapshot_after_id)
+        raise TypeError("bug inside the projection")
+
+    with pytest.raises(ProjectionFailure):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=broken_publish,
+            rollback_publish=lambda: None,
+        )
+    assert len(calls) == 1
+    assert calls[0] is not None and calls[0].startswith("sha256:")
+    assert not target.exists()
+
+
+def test_projection_failure_with_broken_rollback_is_typed_incomplete(
+    tmp_path: Path,
+):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    def fail_rollback_publish() -> None:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert caught.value.rollback_complete is False
+    assert "rollback incomplete" in str(caught.value)
+
+
+def test_validation_failure_with_unpublishable_prestate_leaves_no_orphan(tmp_path: Path):
+    """A pre-existing defect is a validation refusal, not an unknown outcome (JF-11).
+
+    Canonical validation fails on the tree, unwind proves pre-state, and
+    re-publication refuses for a content reason: the defect pre-exists the
+    write, so the journal is removed and the message must not claim an
+    incomplete rollback.
+    """
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure("cannot publish the manifest: 1 file(s) could not be read")
+
+    with pytest.raises(TransactionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=lambda: ["E PARSE: some note has invalid YAML frontmatter"],
+            rollback_publish=fail_rollback_publish,
+        )
+    assert caught.value.pre_existing_defect is True
+    assert "rollback incomplete" not in str(caught.value)
+    assert "pre-exists this write" in str(caught.value)
+    assert "E PARSE" in str(caught.value)
+    assert not target.exists()
+    inflight = root / "operations/transactions/.inflight"
+    assert list(inflight.glob("transaction-*")) == []
+    assert list((root / "operations/transactions").glob("transaction-*.yaml")) == []
+
+
+def test_projection_failure_over_unpublishable_prestate_is_typed_pre_existing(
+    tmp_path: Path,
+):
+    """Projection stage, same rule: proven pre-state that cannot publish (JF-11)."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise TransactionFailure("the published manifest no longer matches (drifted shape)")
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure("the published manifest no longer matches (drifted shape)")
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert caught.value.rollback_complete is True
+    assert caught.value.pre_existing_defect is True
+    assert "rollback incomplete" not in str(caught.value)
+    assert not target.exists()
+    inflight = root / "operations/transactions/.inflight"
+    assert list(inflight.glob("transaction-*")) == []
+    assert list((root / "operations/transactions").glob("transaction-*.yaml")) == []
+
+
+def test_republication_failure_with_concurrent_change_stays_unknown(
+    tmp_path: Path,
+):
+    """A foreign change during the window keeps crash semantics (JF-11).
+
+    Unwind proves the write set was restored, but the tree no longer
+    equals the transaction's pre-state, so a content re-publication
+    failure cannot be blamed on a pre-existing defect: the outcome stays
+    unknown and the journal stays for recovery.
+    """
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    foreign = root / "knowledge/notes/foreign.md"
+
+    def hostile_validate():
+        foreign.parent.mkdir(parents=True, exist_ok=True)
+        foreign.write_bytes(b"foreign\n")
+        return ["forced validation failure"]
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure(
+            "the published manifest no longer matches (drifted shape)")
+
+    with pytest.raises(TransactionFailure, match="rollback incomplete"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=hostile_validate,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert foreign.is_file(), "rollback must not erase the foreign edit"
+    inflight = root / "operations/transactions/.inflight"
+    assert len(list(inflight.glob("transaction-*"))) == 1
+
+
+def test_transaction_owned_writes_share_the_receipt_identity(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    request = root / "operations/ai-actions/requests/request-demo/request.yaml"
+    observed: list[str] = []
+
+    def complete_request(transaction_id: str):
+        observed.append(transaction_id)
+        return {request: f"status: completed\nreceipt_id: {transaction_id}\n"}
+
+    result = TransactionService(root).commit(
+        capability="ai-action.demo",
+        writes={target: "demo\n"},
+        artifact_ids=["project-demo"],
+        transaction_writes=complete_request,
+    )
+
+    assert observed == [result.transaction_id]
+    assert f"receipt_id: {result.transaction_id}" in request.read_text(encoding="utf-8")
+    receipt = yaml.safe_load(result.receipt_path.read_text(encoding="utf-8"))
+    assert {row["path"] for row in receipt["writes"]} == {
+        "operations/ai-actions/requests/request-demo/request.yaml",
+        "projects/registry/project-demo.yaml",
+    }
+
+
+def test_incomplete_rollback_is_reported_with_the_unrestored_path(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+    original_write = transaction_module.atomic_write_bytes
+
+    def fail_only_when_restoring(path: Path, content: bytes):
+        if path == target and content == b"old\n":
+            raise TransactionFailure("forced restore failure")
+        return original_write(path, content)
+
+    monkeypatch.setattr(transaction_module, "atomic_write_bytes", fail_only_when_restoring)
+    with pytest.raises(TransactionFailure, match="rollback incomplete for: projects/registry/project-demo.yaml"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=lambda: ["forced validation failure"],
+        )
+
+    # The caller is told the truth: this is not presented as a clean rollback.
+    assert target.read_text(encoding="utf-8") == "new\n"
+
+
+def test_process_interruption_leaves_durable_intent_and_reconciles(mini_repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    root = mini_repo
+    add_curriculum(root)
+    
+    wrapper = root / "wrapper.py"
+    wrapper.write_text("""
+import os
+import sys
+from pathlib import Path
+
+TOOLS_DIR = Path(__file__).parent.parent.parent / "tools"
+sys.path.insert(0, str(TOOLS_DIR))
+
+from learning_os.store import transactions
+import los
+
+original_write = transactions.atomic_write_bytes
+call_count = 0
+target_calls = int(sys.argv[1])
+
+def crashing_write(path, content):
+    global call_count
+    original_write(path, content)
+    call_count += 1
+    if call_count == target_calls:
+        os._exit(77)
+
+transactions.atomic_write_bytes = crashing_write
+
+sys.argv = [sys.argv[0]] + sys.argv[2:]
+los.main()
+    """)
+
+    envelope = approved_v2_envelope(
+        root,
+        capability="stage.progress.update",
+        payload={
+            "unit_id": "unit-demo-l01",
+            "stage_id": "stage-demo",
+            "status": "complete",
+        },
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="test-crash",
+    )
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    
+    crashes_reached = 0
+    for crash_after in [1, 2, 3, 4, 5]:
+        root_run = tmp_path / f"repo_run_{crash_after}"
+        import shutil
+        shutil.copytree(root, root_run)
+        
+        env_file = root_run / "env.json"
+        
+        envelope["expected_snapshot"] = f"sha256:{canonical_fingerprint(root_run)}"
+        envelope["approval"]["subject_sha256"] = "sha256:" + "0" * 64
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+        
+        env_file.write_text(json.dumps(envelope))
+        
+        proc = subprocess.run([
+            sys.executable,
+            str(wrapper),
+            str(crash_after),
+            "--root", str(root_run),
+            "capability",
+            "stage.progress.update",
+            "--payload-file", str(env_file),
+        ], capture_output=True, text=True)
+        
+        if proc.returncode != 77:
+            print(f"Skipping {crash_after} - rc={proc.returncode} stdout={proc.stdout} stderr={proc.stderr}")
+            continue
+            
+        # Re-run properly to trigger reconciliation and successful commit/idempotent check
+        proc2 = subprocess.run([
+            sys.executable,
+            str(TOOLS / "los.py"),
+            "--root", str(root_run),
+            "capability",
+            "stage.progress.update",
+            "--payload-file", str(env_file),
+        ], capture_output=True, text=True)
+        
+        assert proc2.returncode == 0, f"Replay failed after crash {crash_after}: {proc2.stderr}"
+        crashes_reached += 1
+        
+    assert crashes_reached > 0, "The test never reached the transaction crash points"
+
+def test_a_rollback_that_cannot_finish_refuses_instead_of_continuing(mini_repo: Path):
+    """Recovery must not report success it did not achieve.
+
+    A reconciliation that quietly gives up leaves exactly the half-applied tree
+    it was called to repair, and the command holding the lock then reads that
+    tree as canonical truth — the failure the whole mechanism exists to prevent.
+    """
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_text(encoding="utf-8")
+    target.write_text("partially written by a process that died\n", encoding="utf-8")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-broken"
+    record.mkdir(parents=True)
+    (record / "intent.json").write_text(json.dumps({
+        "transaction_id": "tx-broken",
+        "receipt_path": "operations/transactions/transaction-tx-broken.yaml",
+        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
+                     "backup_id": "backup-0"}],
+    }), encoding="utf-8")
+    # backup-0 is deliberately absent: the crash took the copy with it.
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert exc_info.value.conflicts[0]["reason"] == "LEGACY_JOURNAL_UNPROVABLE"
+
+    # The record survives, so a later attempt can still act on it, and the
+    # damaged file is not silently presented as repaired.
+    assert (record / "intent.json").is_file()
+    assert target.read_text(encoding="utf-8") != original
+
+
+def _v2_crash_journal(record: Path, transaction_id: str, relative: str,
+                    before: bytes, after: bytes) -> None:
+    """A version-2 crash journal: pre-state plus intended post-state."""
+    record.mkdir(parents=True)
+    (record / "backup-0").write_bytes(before)
+    (record / "intent.json").write_text(json.dumps({
+        "schema_version": 2,
+        "transaction_id": transaction_id,
+        "receipt_path": f"operations/transactions/{transaction_id}.yaml",
+        "paths": [{
+            "path": relative,
+            "before": {"kind": "file",
+                       "sha256": f"sha256:{hashlib.sha256(before).hexdigest()}",
+                       "backup_id": "backup-0"},
+            "after": {"kind": "file",
+                      "sha256": f"sha256:{hashlib.sha256(after).hexdigest()}"},
+        }],
+    }), encoding="utf-8")
+
+
+def test_reconciliation_restores_the_previous_bytes_and_is_idempotent(mini_repo: Path):
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    target.write_bytes(b"half-applied\n")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-good"
+    _v2_crash_journal(record, "tx-good", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
+
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
+    assert not record.exists()
+
+    # Running again is a no-op rather than a second, different outcome.
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
+
+
+def test_rollback_discards_a_projection_describing_the_undone_state(mini_repo: Path):
+    """A restored tree must not be described by the manifest of the reverted write.
+
+    The projection is published through a callback the committing process owns,
+    so a crash between publication and the receipt leaves `generated/` newer than
+    the canonical files recovery just restored — and the UI reads that manifest
+    as current.
+    """
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    manifest = mini_repo / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(json.dumps(
+        {"_generated": {"source_fingerprint": "0" * 64}, "records": []}), encoding="utf-8")
+
+    target.write_bytes(b"half-applied\n")
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
+    _v2_crash_journal(record, "tx-crashed", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
+
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+
+    assert target.read_bytes() == original
+    assert not manifest.exists(), "the manifest still describes the transaction that was undone"
+
+
+def test_rollback_keeps_a_projection_that_still_matches(mini_repo: Path):
+    """Only a stale projection is discarded; a current one is left alone."""
+    manifest = mini_repo / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    target.write_bytes(b"half-applied\n")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
+    _v2_crash_journal(record, "tx-crashed", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
+
+    # Written to match the state rollback is about to restore.
+    target_restored = original
+    target.write_bytes(target_restored)
+    manifest.write_text(json.dumps({
+        "_generated": {"source_fingerprint": transaction_module.canonical_fingerprint(mini_repo)},
+        "records": []}), encoding="utf-8")
+    target.write_bytes(b"half-applied\n")
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
+    assert manifest.exists(), "a projection matching canonical state must survive"

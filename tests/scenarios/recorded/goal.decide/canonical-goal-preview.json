@@ -1,0 +1,30 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"check\":true,\"reviewed_sha256\":\"sha256:040b47bb1c5010aa2a7aaa289db719f727d22d4a6750b83fbf6ac18c9a67adfb\",\"goal_ids\":[\"study-map-obligation:unit-demo-l02\"],\"state\":\"closed\",\"changes\":[{\"goal_id\":\"study-map-obligation:unit-demo-l02\",\"before\":null,\"after\":{\"state\":\"closed\",\"decided_at\":\"2026-10-01\"}}]}\n",
+  "stdout_json": {
+    "changes": [
+      {
+        "after": {
+          "decided_at": "2026-10-01",
+          "state": "closed"
+        },
+        "before": null,
+        "goal_id": "study-map-obligation:unit-demo-l02"
+      }
+    ],
+    "check": true,
+    "goal_ids": [
+      "study-map-obligation:unit-demo-l02"
+    ],
+    "ok": true,
+    "reviewed_sha256": "sha256:040b47bb1c5010aa2a7aaa289db719f727d22d4a6750b83fbf6ac18c9a67adfb",
+    "state": "closed"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/masters-planning.comparison.publish.schema.json",
+  "title": "payload for capability masters-planning.comparison.publish",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_module_id"
+  ],
+  "properties": {
+    "candidate_module_id": {
+      "type": "string",
+      "description": "id of the candidate module the comparison must name"
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed prospective source comparison as a YAML file"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "candidate_module_id": {},
+        "status": {},
+        "basis": {},
+        "source_assessments": {},
+        "comparisons": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "candidate_module_id",
+        "comparisons",
+        "id",
+        "schema_version",
+        "source_assessments",
+        "status",
+        "type"
+      ],
+      "description": "The accepted fields are the full comparison record governed by system/schema/candidate-source-comparison.schema.json."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

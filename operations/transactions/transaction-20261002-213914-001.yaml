@@ -1,0 +1,47 @@
+schema_version: 2
+id: transaction-20261002-213914-001
+type: transaction-receipt
+status: committed
+capability: inbox.resolve
+committed_at: '2026-10-02T21:39:14+02:00'
+snapshot_before: sha256:943f403809b04d77ff9d7c452b7b27b581b2da05a132670268d6327b2e76530f
+snapshot_after: sha256:b6a3205bd6e75f2dc246a2629d4d583ed9de6ebd3ecd742ebd821363a22af0e0
+expected_revisions:
+  file:archive/inbox/2026/complaints/2026-09-28-sad-plan-import-friction.md: 0
+  file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 0
+artifact_revisions:
+  file:archive/inbox/2026/complaints/2026-09-28-sad-plan-import-friction.md:
+    before: 0
+    after: 1
+  file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md:
+    before: 0
+    after: 1
+writes:
+- path: archive/inbox/2026/complaints/2026-09-28-sad-plan-import-friction.md
+  sha256_before: null
+  sha256_after: 61f741838c41d87f0402dc02716d2fa7bdb7ac16096a186dfbb9eedc0a5308bc
+  created: true
+- path: work/inbox/complaints/2026-09-28-sad-plan-import-friction.md
+  sha256_before: 61f741838c41d87f0402dc02716d2fa7bdb7ac16096a186dfbb9eedc0a5308bc
+  sha256_after: null
+  created: false
+metadata:
+  routed_to:
+  - '#55'
+  data_roots_sha256: sha256:91cd9232c22acb5486a1a14ff813bcac320278ac904b77bcec4b69ec3a769284
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: inbox.resolve
+    declared_writes:
+    - work/inbox/**
+    - archive/inbox/**
+request:
+  channel: operator
+  request_id: request-inbox-resolve-int2-02-f677c232
+  idempotency_key: inbox-resolve-int2-02
+  intent_sha256: sha256:cdebba13d9f9bf76b89eb071b8e95f0a36e4b61864b033bfd18302c4482fd259
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:cdebba13d9f9bf76b89eb071b8e95f0a36e4b61864b033bfd18302c4482fd259

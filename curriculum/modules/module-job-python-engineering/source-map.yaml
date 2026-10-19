@@ -1,0 +1,28 @@
+type: module-source-map
+module_id: module-job-python-engineering
+sources:
+- source_id: source-cosmicpython-architecture-patterns
+  role: reference
+  why: Referenced by migrated learning plan job-track-python.
+  priority: 0
+  unit_routes: []
+- source_id: source-fluent-python
+  role: reference
+  why: Referenced by migrated learning plan job-track-python.
+  priority: 0
+  unit_routes: []
+- source_id: source-pydata-handbook
+  role: reference
+  why: Referenced by migrated learning plan job-track-python.
+  priority: 0
+  unit_routes: []
+- source_id: source-python-depth-drills
+  role: reference
+  why: Referenced by migrated learning plan job-track-python.
+  priority: 0
+  unit_routes: []
+- source_id: source-slatkin-effective-python
+  role: reference
+  why: Referenced by migrated learning plan job-track-python.
+  priority: 0
+  unit_routes: []

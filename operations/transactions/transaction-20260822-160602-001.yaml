@@ -1,0 +1,26 @@
+schema_version: 1
+id: transaction-20260822-160602-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T16:06:02+02:00'
+snapshot_before: sha256:55b6da4385e1ca0becc83c53853f807908fc601241678c9089cec4675528a7cc
+snapshot_after: sha256:2bf0c62172a627586824d9bf4b65f96e003b8f5d25fd9816ef1a8dc72499ae93
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l09:
+    before: 1
+    after: 2
+  unit-m2-sad-l09:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/study-map.yaml
+  sha256_before: d2b5f2e57feb11555bcefc028621601362984ce4d8241d6de991f8e060235e7c
+  sha256_after: cc3693f774c7873736325610644c373af89b91e4fb208f2e0b3f6bae5a9f0375
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/unit.yaml
+  sha256_before: 76be060a273d17a66b6cd014e48b644fe7b8d0f3d8e622645a5cadb0b2d997a6
+  sha256_after: 76be060a273d17a66b6cd014e48b644fe7b8d0f3d8e622645a5cadb0b2d997a6
+  created: false
+metadata: {}

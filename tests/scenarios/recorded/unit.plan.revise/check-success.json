@@ -1,0 +1,192 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.plan.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"claims\": [\n      {\n        \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\",\n        \"before\": \"stale\",\n        \"after\": \"will-be-stale\",\n        \"warning\": \"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\n        \"next\": \"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\"\n      }\n    ],\n    \"ok\": true,\n    \"mode\": \"check\",\n    \"module_id\": \"module-demo\",\n    \"package_sha256\": \"sha256:e2e984ab32ee1121de295f7ad2ca1971c2e10ed7d47a8e5cc6f504fa9c6d266b\",\n    \"expected_snapshot\": \"SNAP1\",\n    \"expected_revisions\": {\n      \"module-demo\": 0\n    },\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"unit-demo-l01\"\n    ],\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/source-map.yaml\"\n    ],\n    \"byte_changing_files\": [\n      \"curriculum/modules/module-demo/source-map.yaml\"\n    ],\n    \"route_counts\": {\n      \"before\": 2,\n      \"after\": 2\n    },\n    \"source_records\": {\n      \"before\": 1,\n      \"after\": 1\n    },\n    \"units\": {\n      \"unit-demo-l01\": {\n        \"unit_id\": \"unit-demo-l01\",\n        \"routes_before\": 1,\n        \"routes_after\": 1,\n        \"added\": [],\n        \"updated\": [\n          \"route-b2f1f80014860a929a3af0bc\"\n        ],\n        \"removed\": [],\n        \"evidential_changed\": [],\n        \"demoted_current_or_prerequisite\": [],\n        \"promoted_advanced_reference\": [],\n        \"scope_escalations\": [],\n        \"exact_to_unresolved\": [],\n        \"uncovered_knowledge_nodes\": [],\n        \"placements_before\": 5,\n        \"placements_after\": 5,\n        \"triage_before\": {\n          \"untriaged\": 5\n        },\n        \"triage_after\": {\n          \"untriaged\": 5\n        },\n        \"unplaced_routes\": [],\n        \"learner_state_changes\": {},\n        \"learner_state_preserved\": {\n          \"stage-demo\": [\n            \"status\",\n            \"working_note\",\n            \"attachments\",\n            \"source_feedback\",\n            \"runtime_review\",\n            \"completed\"\n          ],\n          \"stage-demo-pending\": [\n            \"status\",\n            \"working_note\",\n            \"attachments\",\n            \"source_feedback\",\n            \"runtime_review\",\n            \"completed\"\n          ]\n        },\n        \"resource_learner_changes\": [],\n        \"map_state_changes\": [],\n        \"destructive_learner_changes\": []\n      }\n    },\n    \"routes_added\": [],\n    \"routes_removed\": [],\n    \"routes_updated\": [\n      \"route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"synthesis\": {\n      \"unit-demo-l01\": {\n        \"before\": {\n          \"present\": false,\n          \"fresh\": false,\n          \"detail\": null\n        },\n        \"after\": {\n          \"replaced\": false,\n          \"fresh\": false,\n          \"detail\": null\n        }\n      }\n    },\n    \"semantic_ack_required\": [],\n    \"commit_artifact_ids\": [\n      \"module-demo\"\n    ],\n    \"canonical_files_written\": 0,\n    \"units_checked\": [\n      \"unit-demo-l01\"\n    ],\n    \"files_checked\": 1,\n    \"reviewed_file_sha256\": null,\n    \"assembled_package_sha256\": \"sha256:e2e984ab32ee1121de295f7ad2ca1971c2e10ed7d47a8e5cc6f504fa9c6d266b\",\n    \"capability\": \"unit.plan.revise\",\n    \"changes\": \"present\",\n    \"expected_write_paths\": [\n      \"curriculum/modules/module-demo/source-map.yaml\"\n    ],\n    \"claim_anchors\": [],\n    \"expected_write_sha256\": {\n      \"curriculum/modules/module-demo/source-map.yaml\": \"fd61cbf6b3f01ae90ec63ef8985ebc9b156325f2ba98a66abe20aa8b834bb3ff\"\n    },\n    \"gateway_envelope\": {\n      \"schema_version\": 2,\n      \"request_id\": \"KEY3\",\n      \"idempotency_key\": \"KEY4\",\n      \"capability\": \"unit.plan.revise\",\n      \"channel\": \"operator\",\n      \"expected_snapshot\": \"SNAP1\",\n      \"expected_revisions\": {\n        \"module-demo\": 0\n      },\n      \"payload\": {\n        \"unit_id\": \"unit-demo-l01\",\n        \"record\": {\n          \"plan_contract\": {\n            \"checks\": {\n              \"current_and_prior_scope_reconciled\": true,\n              \"duplicates_and_numbering_checked\": true,\n              \"exclusions_and_unresolved_gaps_recorded\": true,\n              \"linked_inventory_complete\": true,\n              \"local_inventory_complete\": true,\n              \"materials_opened_and_content_checked\": true\n            },\n            \"coverage_audit\": \"work/active/workspace-demo/outputs/demo-coverage-audit.md\",\n            \"plan_template_version\": 1,\n            \"version\": 1\n          },\n          \"route_changes\": {\n            \"update\": [\n              {\n                \"fields\": {\n                  \"angle_detail\": \"A reviewed detailed fixture angle.\"\n                },\n                \"route_id\": \"route-b2f1f80014860a929a3af0bc\"\n              }\n            ]\n          },\n          \"unit_id\": \"unit-demo-l01\"\n        }\n      },\n      \"approval\": {\n        \"kind\": \"operator-approval\",\n        \"subject_sha256\": \"sha256:1f3afd082539dd0af23f8f04a50616d5994a2b8c5e9417facfdd4676d5227497\"\n      }\n    }\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "unit.plan.revise",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "affected_files": [
+        "curriculum/modules/module-demo/source-map.yaml"
+      ],
+      "artifact_ids": [
+        "module-demo",
+        "unit-demo-l01"
+      ],
+      "assembled_package_sha256": "sha256:e2e984ab32ee1121de295f7ad2ca1971c2e10ed7d47a8e5cc6f504fa9c6d266b",
+      "byte_changing_files": [
+        "curriculum/modules/module-demo/source-map.yaml"
+      ],
+      "canonical_files_written": 0,
+      "capability": "unit.plan.revise",
+      "changes": "present",
+      "claim_anchors": [],
+      "claims": [
+        {
+          "after": "will-be-stale",
+          "before": "stale",
+          "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
+          "next": "unit-plan-revise unit-demo-l01 --file REVISION.yaml --check",
+          "warning": "covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check"
+        }
+      ],
+      "commit_artifact_ids": [
+        "module-demo"
+      ],
+      "expected_revisions": {
+        "module-demo": 0
+      },
+      "expected_snapshot": "SNAP1",
+      "expected_write_paths": [
+        "curriculum/modules/module-demo/source-map.yaml"
+      ],
+      "expected_write_sha256": {
+        "curriculum/modules/module-demo/source-map.yaml": "fd61cbf6b3f01ae90ec63ef8985ebc9b156325f2ba98a66abe20aa8b834bb3ff"
+      },
+      "files_checked": 1,
+      "gateway_envelope": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:1f3afd082539dd0af23f8f04a50616d5994a2b8c5e9417facfdd4676d5227497"
+        },
+        "capability": "unit.plan.revise",
+        "channel": "operator",
+        "expected_revisions": {
+          "module-demo": 0
+        },
+        "expected_snapshot": "SNAP1",
+        "idempotency_key": "KEY4",
+        "payload": {
+          "record": {
+            "plan_contract": {
+              "checks": {
+                "current_and_prior_scope_reconciled": true,
+                "duplicates_and_numbering_checked": true,
+                "exclusions_and_unresolved_gaps_recorded": true,
+                "linked_inventory_complete": true,
+                "local_inventory_complete": true,
+                "materials_opened_and_content_checked": true
+              },
+              "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md",
+              "plan_template_version": 1,
+              "version": 1
+            },
+            "route_changes": {
+              "update": [
+                {
+                  "fields": {
+                    "angle_detail": "A reviewed detailed fixture angle."
+                  },
+                  "route_id": "route-b2f1f80014860a929a3af0bc"
+                }
+              ]
+            },
+            "unit_id": "unit-demo-l01"
+          },
+          "unit_id": "unit-demo-l01"
+        },
+        "request_id": "KEY3",
+        "schema_version": 2
+      },
+      "mode": "check",
+      "module_id": "module-demo",
+      "ok": true,
+      "package_sha256": "sha256:e2e984ab32ee1121de295f7ad2ca1971c2e10ed7d47a8e5cc6f504fa9c6d266b",
+      "reviewed_file_sha256": null,
+      "route_counts": {
+        "after": 2,
+        "before": 2
+      },
+      "routes_added": [],
+      "routes_removed": [],
+      "routes_updated": [
+        "route-b2f1f80014860a929a3af0bc"
+      ],
+      "semantic_ack_required": [],
+      "source_records": {
+        "after": 1,
+        "before": 1
+      },
+      "synthesis": {
+        "unit-demo-l01": {
+          "after": {
+            "detail": null,
+            "fresh": false,
+            "replaced": false
+          },
+          "before": {
+            "detail": null,
+            "fresh": false,
+            "present": false
+          }
+        }
+      },
+      "units": {
+        "unit-demo-l01": {
+          "added": [],
+          "demoted_current_or_prerequisite": [],
+          "destructive_learner_changes": [],
+          "evidential_changed": [],
+          "exact_to_unresolved": [],
+          "learner_state_changes": {},
+          "learner_state_preserved": {
+            "stage-demo": [
+              "status",
+              "working_note",
+              "attachments",
+              "source_feedback",
+              "runtime_review",
+              "completed"
+            ],
+            "stage-demo-pending": [
+              "status",
+              "working_note",
+              "attachments",
+              "source_feedback",
+              "runtime_review",
+              "completed"
+            ]
+          },
+          "map_state_changes": [],
+          "placements_after": 5,
+          "placements_before": 5,
+          "promoted_advanced_reference": [],
+          "removed": [],
+          "resource_learner_changes": [],
+          "routes_after": 1,
+          "routes_before": 1,
+          "scope_escalations": [],
+          "triage_after": {
+            "untriaged": 5
+          },
+          "triage_before": {
+            "untriaged": 5
+          },
+          "uncovered_knowledge_nodes": [],
+          "unit_id": "unit-demo-l01",
+          "unplaced_routes": [],
+          "updated": [
+            "route-b2f1f80014860a929a3af0bc"
+          ]
+        }
+      },
+      "units_checked": [
+        "unit-demo-l01"
+      ]
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

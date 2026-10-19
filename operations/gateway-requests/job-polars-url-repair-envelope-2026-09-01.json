@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-job-polars-url-repair-20260901-001",
+  "idempotency_key": "job-polars-url-repair-20260901-001",
+  "capability": "unit.map.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:2e63f0de9cc636019b2299d80e40d80d38fe0a82222be91230332932502a11d3",
+  "expected_revisions": {
+    "unit-job-polars-pandas-fluency": 1,
+    "study-map-job-polars-pandas-fluency": 1
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:a29d15d5036cf7728c6e85c39b1c7cb4116a42900313dce8a6dbd19173234d72"
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-pandas-fluency",
+    "file": "operations/gateway-requests/job-polars-url-repair-map-2026-09-01.yaml",
+    "file_sha256": "sha256:9aa67c56b71fcd0cf88be953f6980bdca76029a0d4ef5ddc2193735b9210fef4",
+    "replace": true
+  }
+}

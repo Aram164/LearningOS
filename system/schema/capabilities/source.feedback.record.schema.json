@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/source.feedback.record.schema.json",
+  "title": "payload for capability source.feedback.record",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "feedback",
+    "source_id",
+    "stage_id",
+    "unit_id"
+  ],
+  "properties": {
+    "feedback": {
+      "type": "string",
+      "enum": [
+        "helpful",
+        "too-advanced",
+        "wrong-perspective",
+        "useful-for-derivation",
+        "useful-for-review",
+        "skipped"
+      ],
+      "description": "the recorded experience of the resource: helpful, too-advanced, wrong-perspective, useful-for-derivation, useful-for-review or skipped"
+    },
+    "note": {
+      "type": "string",
+      "description": "optional note stored with the feedback"
+    },
+    "resource_id": {
+      "type": "string",
+      "description": "optional resource-* id on the same stage to attach this judgment to"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "source the feedback is recorded against"
+    },
+    "stage_id": {
+      "type": "string",
+      "description": "stage the feedback is recorded against"
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "unit whose stage the feedback is recorded against"
+    }
+  }
+}

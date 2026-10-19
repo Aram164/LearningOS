@@ -1,0 +1,18 @@
+id: unit-bridge-aml-sad-master-wiring
+type: unit
+module_id: module-foundation-ml-math-bridges
+kind: bridge
+title: AML × SaD master wiring
+order: 2
+scope: Cross-module concept and source wiring retained as a durable artifact.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts:
+  ultimate_reference: note-aml-sad-master-wiring
+workspace_ids:
+- workspace-aml-exam-prep
+- workspace-m2-exam-prep
+related_module_ids:
+- module-hu-aml
+- module-hu-m2-statistik-analysis

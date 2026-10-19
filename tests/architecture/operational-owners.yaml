@@ -1,0 +1,26 @@
+schema: 1
+roots: ["operations/", "<STATE>/"]
+io_helpers:
+  - {module: learning_os.store.durable_fs, callers: [learning_os.store.transactions]}
+excluded:
+  - {glob: "operations/diagnostics/**", reason: "disposable diagnostics store (effects.yaml: cache)"}
+  - {glob: "operations/gateway-requests/**", reason: "operator-authored envelopes; Core never writes them"}
+entries:
+  - {glob: "operations/transactions/transaction-*.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/revisions.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/idempotency.yaml", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/.inflight/**", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/.settled/**", sink: module, owner: learning_os.store.transactions}
+  - {glob: "operations/transactions/.authority-check", sink: module, owner: learning_os.store.transactions}
+  # Five existing writers: source revision also republishes dossier lineage.
+  # Sixth writer: candidate route.patch authority amendment, pending A11 approval.
+  - {glob: "operations/transactions/lineage.yaml", sink: "engine:apply", capabilities: [unit.material-synthesis.publish, lineage.restamp, module.plan.import, unit.plan.revise, source.record.revise, route.patch]}
+  - {glob: "operations/legacy/**", sink: "engine:apply", capabilities: [legacy.archive.lock.publish]}
+  - {glob: "operations/ai-actions/**", sink: module, owner: learning_os.store.ai_actions}
+  - {glob: "operations/ai-actions/**", sink: "engine:apply", capabilities: [ai-action.delivery.apply]}
+  - {glob: "operations/goal-ledger.yaml", sink: "engine:apply", capabilities: [goal.decision.record]}
+  - {glob: "operations/migrations/**", sink: module, owner: migrations}
+  - {glob: "<STATE>/learningos-*-touched.json", sink: module, owner: learning_os.store.session_ledger}
+  - {glob: "<STATE>/learningos-*-released.json", sink: module, owner: learning_os.store.session_ledger}
+  - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.app.lock}
+  - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.app.lock}

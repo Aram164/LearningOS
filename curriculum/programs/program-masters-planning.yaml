@@ -1,0 +1,10 @@
+id: program-masters-planning
+type: program
+title: Master’s Planning
+kind: quarantine
+status: quarantined
+default: false
+semester_bound: false
+description: Prospective planning only; excluded from current work and default search.
+boundary_action: Open Master’s Planning
+semesters: []

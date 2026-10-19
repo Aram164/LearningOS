@@ -1,0 +1,36 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":true,\"check\":true,\"records\":1,\"diff\":[{\"id\":\"source-demo-book\",\"action\":\"correct\",\"partition\":\"sources.yaml\",\"fields\":{\"title\":{\"before\":\"Demo Book\",\"after\":\"Scenario Title\"}}}],\"diff_sha256\":\"sha256:7adf5d3adb3985bdc47def97ae52ed95b9ad156268a1c47671157f80481b1dc0\",\"expected_revisions\":{\"source-demo-book\":0},\"artifact_ids\":[\"source-demo-book\"]}\n",
+  "stdout_json": {
+    "artifact_ids": [
+      "source-demo-book"
+    ],
+    "check": true,
+    "diff": [
+      {
+        "action": "correct",
+        "fields": {
+          "title": {
+            "after": "Scenario Title",
+            "before": "Demo Book"
+          }
+        },
+        "id": "source-demo-book",
+        "partition": "sources.yaml"
+      }
+    ],
+    "diff_sha256": "sha256:7adf5d3adb3985bdc47def97ae52ed95b9ad156268a1c47671157f80481b1dc0",
+    "expected_revisions": {
+      "source-demo-book": 0
+    },
+    "ok": true,
+    "records": 1
+  }
+}

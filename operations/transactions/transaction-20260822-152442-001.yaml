@@ -1,0 +1,54 @@
+schema_version: 1
+id: transaction-20260822-152442-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:24:42+02:00'
+snapshot_before: sha256:0ef80c800f037b7f192cd1fa268bf041cf537e0ff6bf439d3ed1a93ed823277e
+snapshot_after: sha256:255ad9598e911b5b8fafafb50377de748444ec7992966d94f03b238c1341c197
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l12:
+    before: 0
+    after: 1
+  unit-m2-sad-l12:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/study-map.yaml
+  sha256_before: null
+  sha256_after: ede35c82fb20fdf32ec284d3e3ea396750629ecb08709ffe820b90da96048293
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/unit.yaml
+  sha256_before: d4670b6effa56839c063a435ba2de5f4eb53c5544a93b254c69acaea9eb10889
+  sha256_after: 0017b7796ff1c1181d59bc222128e865f4fbb5ea6d3a456d01df115469787e83
+  created: false
+metadata: {}

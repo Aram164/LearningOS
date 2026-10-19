@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260905-194939-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-05T19:49:39+02:00'
+snapshot_before: sha256:9178edf61521ab364fdf82c7609c5f64b072291d77db5405950139679e85e67b
+snapshot_after: sha256:6eaaf73b0c5e2c19c9e4cb62680c80f451d3e9ae4c46258c239a71dfe4f80dc3
+expected_revisions:
+  unit-m2-sad-l03: 8
+  study-map-m2-sad-l03: 2
+artifact_revisions:
+  study-map-m2-sad-l03:
+    before: 2
+    after: 3
+  unit-m2-sad-l03:
+    before: 8
+    after: 9
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml
+  sha256_before: 64ff41ba2e85af36638cc0451c8e3dde0a5abb557a02a004c0c43d2673e8e099
+  sha256_after: 22a0216628f5317cb5ba30a3281a355302e7520761127526f59717d02304b03f
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/unit.yaml
+  sha256_before: f4323a30ffcc35b19d52775366e886783e5981404d39c35936090c4982b2b398
+  sha256_after: f4323a30ffcc35b19d52775366e886783e5981404d39c35936090c4982b2b398
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-f01-route-identity-20260905-unit-m2-sad-l03
+  idempotency_key: f01-route-identity-20260905-unit-m2-sad-l03
+  intent_sha256: sha256:6bec85e8fb5c504de4c08131d434e3e129258c4b1a7bbd92ec92c63745a3679a
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6bec85e8fb5c504de4c08131d434e3e129258c4b1a7bbd92ec92c63745a3679a

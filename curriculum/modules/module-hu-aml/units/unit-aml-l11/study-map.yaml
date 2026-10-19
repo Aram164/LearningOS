@@ -1,0 +1,641 @@
+id: study-map-aml-l11
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l11
+status: not-started
+current_stage: stage-aml-l11-language-task
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l11-language-task
+  number: 1
+  title: Language modelling as next-token prediction
+  status: pending
+  objective: A sequence probability is factorized into conditional next-token probabilities; the model
+    predicts a distribution over the vocabulary at each position.
+  done_when:
+  - 'Reproduce without notes: A sequence probability is factorized into conditional next-token probabilities;
+    the model predicts a distribution over the vocabulary at each position.'
+  exam_critical: true
+  concepts:
+  - concept-language-modelling
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-480b485364dfde6ba7eba3ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-language-task/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-tokenization
+  number: 2
+  title: Words, tokens, types, and instances
+  status: pending
+  objective: Text is converted into token identities; vocabulary, token instances, sequence length and
+    subword choices determine the model's discrete input representation.
+  done_when:
+  - 'Reproduce without notes: Text is converted into token identities; vocabulary, token instances, sequence
+    length and subword choices determine the model''s discrete input representation.'
+  exam_critical: true
+  concepts:
+  - concept-tokenization
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-4c72e8b44dc1933ab9c46826
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-tokenization/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-embeddings
+  number: 3
+  title: Static and contextual embeddings
+  status: pending
+  objective: Embedding lookup maps token identities to vectors, while contextual embeddings let the same
+    token acquire a different representation from surrounding tokens.
+  done_when:
+  - 'Reproduce without notes: Embedding lookup maps token identities to vectors, while contextual embeddings
+    let the same token acquire a different representation from surrounding tokens.'
+  exam_critical: true
+  concepts:
+  - concept-contextual-embedding
+  - concept-embedding
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-b4767511bb52dcb8e0cdd2d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-e0a9ab589c30dad9eb7dcbad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-embeddings/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-attention
+  number: 4
+  title: Simplified self-attention
+  status: pending
+  objective: Dot-product similarities become softmax weights whose weighted sum mixes token representations;
+    the deck's first worked example deliberately omits learned Q/K/V projections.
+  done_when:
+  - 'Reproduce without notes: Dot-product similarities become softmax weights whose weighted sum mixes
+    token representations; the deck''s first worked example deliberately omits learned Q/K/V projections.'
+  exam_critical: true
+  concepts:
+  - concept-attention
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-3224d420145c8529499ae635
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-61efa9f1147d5765ad520338
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-attention/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-qkv
+  number: 5
+  title: Queries, keys, values, and multi-head attention
+  status: pending
+  objective: Learned projections create queries, keys and values; scaled dot products produce attention
+    weights, and multiple heads learn different interaction patterns.
+  done_when:
+  - 'Reproduce without notes: Learned projections create queries, keys and values; scaled dot products
+    produce attention weights, and multiple heads learn different interaction patterns.'
+  exam_critical: true
+  concepts:
+  - concept-attention
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-075378562a94297205c269f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-qkv/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-position
+  number: 6
+  title: Positional information
+  status: pending
+  objective: Because attention itself is permutation-insensitive, positional representations inject order
+    before tokens enter the block.
+  done_when:
+  - 'Reproduce without notes: Because attention itself is permutation-insensitive, positional representations
+    inject order before tokens enter the block.'
+  exam_critical: true
+  concepts:
+  - concept-attention
+  - concept-positional-encoding
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-position/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-block
+  number: 7
+  title: Transformer block
+  status: pending
+  objective: Multi-head attention and a position-wise feedforward network are wrapped with residual connections
+    and layer normalization; shapes and information flow connect back to L08-L10.
+  done_when:
+  - 'Reproduce without notes: Multi-head attention and a position-wise feedforward network are wrapped
+    with residual connections and layer normalization; shapes and information flow connect back to L08-L10.'
+  exam_critical: true
+  concepts:
+  - concept-attention
+  - concept-layer-normalization
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-61efa9f1147d5765ad520338
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-block/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-training
+  number: 8
+  title: Language-model outputs and cross-entropy training
+  status: pending
+  objective: Block outputs become vocabulary logits and softmax probabilities, and cross-entropy trains
+    the model to predict the observed next token.
+  done_when:
+  - 'Reproduce without notes: Block outputs become vocabulary logits and softmax probabilities, and cross-entropy
+    trains the model to predict the observed next token.'
+  exam_critical: true
+  concepts:
+  - concept-cross-entropy
+  - concept-language-modelling
+  - concept-softmax
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-480b485364dfde6ba7eba3ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-training/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l11-parallelization
+  number: 9
+  title: 'Bonus: matrix attention and causal masking'
+  status: pending
+  objective: The bonus section expresses attention as a matrix operation, scales by the key dimension
+    and masks future positions; it is retained as learn-anyway safety material while exam scope remains
+    ambiguous.
+  done_when:
+  - 'Reproduce without notes: The bonus section expresses attention as a matrix operation, scales by the
+    key dimension and masks future positions; it is retained as learn-anyway safety material while exam
+    scope remains ambiguous.'
+  exam_critical: true
+  concepts:
+  - concept-attention
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-075378562a94297205c269f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-parallelization/notes.md
+  attachments: []
+  source_feedback: []

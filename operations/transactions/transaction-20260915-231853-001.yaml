@@ -1,0 +1,49 @@
+schema_version: 2
+id: transaction-20260915-231853-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-15T23:18:53+02:00'
+snapshot_before: sha256:929f9f2ccf16fb14831d439163bd51edd13d28253b4d10fff578dc3c3feb99db
+snapshot_after: sha256:9f7f018b8388fd83e3b789e8e40fbc586c03064e632459baee07dfc0748e4fcd
+expected_revisions:
+  module-hu-m2-statistik-analysis: 46
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 46
+    after: 47
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 8a43dd799ebca53113487a68baf93db7fc6f95dceb6f4dda94173abbd0b1cbf6
+  sha256_after: da3c3860ba2df10aa6ccf46ac6c45b7ce4c4710bd081e950413ec36cd96d90f1
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: ca44aff79e3ef7d65d2f2ef38d859cd6f6d0acd4f3836500a1c1f8d101f18759
+  sha256_after: 1b2acbb09fab4c2f20669789504503cff746e91d85ee90107a3ee5987bf7aaad
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-video-routes-2026-09-15
+  idempotency_key: video-routes-import-2026-09-15-retry2
+  intent_sha256: sha256:101de853f81114237f5a152522a138b1e90c4601f7bba55cde0f85a2ef0eff95
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:101de853f81114237f5a152522a138b1e90c4601f7bba55cde0f85a2ef0eff95

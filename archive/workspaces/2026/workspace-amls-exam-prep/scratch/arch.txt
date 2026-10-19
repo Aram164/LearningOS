@@ -1,0 +1,1488 @@
+Architecture of ML Systems (AMLS)
+
+02 Languages, Architectures, and System Landscape
+Prof. Dr. Matthias Boehm
+
+Technische Universität Berlin
+Berlin Institute for the Foundations of Learning and Data
+Big Data Engineering (DAMS Lab)
+Last update: Apr 23, 2026
+
+Announcements / Org
+ #1 Hybrid & Video Recording
+
+ Hybrid lectures (in-person, zoom) with optional attendance
+https://tu-berlin.zoom.us/j/9529634787?pwd=R1ZsN1M3SC9BOU1OcFdmem9zT202UT09
+ Zoom video recordings, links from website
+https://mboehm7.github.io/teaching/ss26_amls/index.htm
+
+ #2 Course Registrations
+ TU Berlin:
+
+340 (TUB ISIS registrations)
+
+~340
+
+ #3 Projects / Alternative Exercise
+
+ Task description on course website since Apr 12
+ Project Selection by Apr 30, Submission by July 15
+ https://forms.gle/pQiGCgzcHd3hCDbM9
+
+2
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+~35
+
+Agenda
+ Data Science Lifecycle
+ ML Systems Stack
+ Language Abstractions
+ ML Systems Benchmarks
+
+3
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Data Science Lifecycle
+
+4
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+The Data Science Lifecycle
+(aka KDD Process, aka CRISP-DM)
+Data extraction, schema alignment, entity
+resolution, data validation, data cleaning, outlier
+detection, missing value imputation, semantic type
+detection, data augmentation, feature selection,
+feature engineering, feature transformations
+
+Data Integration
+Data Cleaning
+Data Preparation
+
+Data-centric View:
+Application/workload/system perspectives
+
+Data
+Scientist
+
+Model Selection
+Training
+Hyper-parameters
+
+Key observation: SotA data
+integration/cleaning based on ML
+
+Validate & Debug
+Deployment
+Scoring & Feedback
+
+Exploratory Process
+(experimentation, refinements, ML pipelines)
+Data/SW
+Engineer
+5
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+DevOps
+Engineer
+
+The Data Science Lifecycle, cont.
+ Classic KDD Process
+(Knowledge Discovery in Databases)
+ Descriptive
+(association rules,
+clustering)
+ Predictive
+
+Select
+
+Preprocess
+
+Transform
+
+Mining
+
+Evaluate
+
+[Usama M. Fayyad, Gregory Piatetsky-Shapiro, Padhraic Smyth: From Data
+Mining to Knowledge Discovery in Databases. AI Magazine 17(3) (1996)]
+
+6
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+The Data Science Lifecycle, cont.
+ CRISP-DM
+
+ CRoss-Industry
+Standard Process for
+Data Mining
+ Additional focus on
+business understanding
+and deployment
+
+7
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+[https://statistikdresden.de/archives/1128]
+
+The 80% Argument
+ Data Sourcing Effort
+
+ Data scientists spend 80-90% time on finding
+relevant datasets and data integration/cleaning.
+
+[Michael Stonebraker, Ihab F. Ilyas:
+Data Integration: The Current
+Status and the Way Forward.
+IEEE Data Eng. Bull. 41(2) (2018)]
+
+ Technical Debts in ML Systems
+
+ Glue code, pipeline jungles,
+dead code paths
+ Plain-old-data types,
+multiple languages, prototypes
+ Abstraction and configuration debts
+ Data testing, reproducibility,
+process management, and cultural debts
+
+8
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+ML
+
+[D. Sculley et al.: Hidden
+Technical Debt in Machine
+Learning Systems. NeurIPS 2015]
+
+A Text Classification Scenario
+Sentences
+
+ Example ML Pipeline
+
+Feature Extraction
+
+(e.g., doc structure, sentences,
+tokenization, n-grams)
+
+Token
+ΔFX Features
+Sentence
+Sentence
+Classification
+Classification
+M
+
+ Training and Scoring
+
+FX
+
+9
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+B
+
+MY
+
+transformapply
+Scoring
+transformdecode
+ΔFŶ
+
+ΔFX
+
+Y
+
+X
+
+FY
+MX
+
+(e.g., ⨝, ∪)
+
+“Model”
+(weights, meta data)
+
+transformencode
+Training
+
+…
+
+ΔX
+ΔŶ
+
+large-scale,
+distributed
+training
+
+embedded
+scoring
+
+ML Systems Stack
+
+10
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+What is an ML System?
+
+ML Applications
+(entire KDD/DS
+lifecycle)
+
+Statistics
+
+Runtime Techniques
+(Execution, Data Access)
+
+Data
+Mining
+
+Machine
+Learning
+(ML)
+
+Rapidly Evolving
+ML System
+
+Distributed
+Systems
+Data
+Management
+Operating
+Systems
+11
+
+Classification
+Regression
+Recommenders
+Clustering
+Dim Reduction
+Neural Networks
+
+Accelerators
+HW
+Architecture
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Compilation
+Techniques
+HPC
+Prog.
+Language
+Compilers
+
+Driving Factors for ML
+ Improved Algorithms and Models
+
+[Credit: Andrew Ng’14]
+
+ Success across data and application domains
+(e.g., health care, finance, transport, production)
+ More complex models which leverage large data
+
+ Availability of Large Data Collections
+
+ Increasing automation and monitoring  data
+(simplified by cloud computing & services, annotation services)
+ Feedback loops, simulation/data prog./augmentation
+ Trend: self-supervised learning (*-GPT-x)
+
+ HW & SW Advancements
+
+ Higher performance of hardware and infrastructure (cloud)
+ Open-source large-scale computation frameworks,
+ML systems, and vendor-provides libraries
+
+12
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Feedback Loop
+Data
+Usage
+
+Model
+
+Stack of ML Systems
+Hyper-parameter
+Tuning
+Model and Feature
+Selection
+Data Programming &
+Augmentation
+Data Preparation
+(e.g., one-hot, binning)
+Data Integration & Data
+Cleaning
+
+13
+
+Training
+
+Validation &
+Debugging
+
+Deployment &
+Scoring
+
+ML Apps & Algorithms
+
+Supervised, unsupervised, RL
+linear algebra, libs, AutoML
+
+Language Abstractions
+
+Eager interpretation, lazy
+evaluation, prog. compilation
+
+Fault Tolerance
+
+Approximation, lineage,
+checkpointing, checksums, ECC
+
+Execution Strategies
+
+Local, distributed, cloud
+(data, task, parameter server)
+
+Data Representations
+
+Dense & sparse tensor/matrix;
+compress, partition, cache
+
+HW & Infrastructure
+
+CPUs, NUMA, GPUs, FPGAs,
+ASICs, RDMA, SSD/NVM
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Improve accuracy vs.
+performance vs.
+resource requirements
+ Specialization &
+Heterogeneity
+
+Accelerators (GPUs, FPGAs, ASICs)
+ Memory- vs Compute-intensive
+
+ CPU: dense/sparse, large mem, high mem-bandwidth, moderate compute
+ GPU: dense, small mem, slow PCI, very high bandwidth/compute
+
+ Graphics Processing Units (GPUs)
+
+Ops
+
+ Extensively used for deep learning training and scoring
+ NVIDIA Volta: “tensor cores” for 4x4 mm  64 2B FMA instruction
+
+DL
+ML
+
+Roofline
+Analysis
+
+Operational Intensity
+
+ Field-Programmable Gate Arrays (FPGAs)
+
+ Customizable HW accelerators for prefiltering, compression, DL
+ Examples: Microsoft Catapult/Brainwave Neural Processing Units (NPUs)
+
+ Application-Specific Integrated Circuits (ASIC)
+
+ Spectrum of chips: DL accelerators to computer vision
+ Examples: Google TPUs (64K 2B FMA), NVIDIA DLA, Intel NNP, IBM TrueNorth
+
+ Quantum: Examples: IBM Q (Qiskit), Google Sycamore (Cirq  TensorFlow Quantum)
+14
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Apps
+
+Lang
+Faults
+Exec
+Data
+HW
+
+Data Representation
+ ML- vs DL-centric Systems
+
+ ML: dense and sparse matrices or tensors, different sparse
+formats (CSR, CSC, COO), frames (heterogeneous)
+ DL: mostly dense tensors,
+relies on embeddings for NLP, graphs
+
+ Data-Parallel Operations for ML
+
+Apps
+
+Example Word Embedding:
+vec(Berlin) – vec(Germany)
++ vec(France) ≈ vec(Paris)
+Node1 Node2
+
+ Distributed matrices: RDD<MatrixIndexes,MatrixBlock>
+ Data properties: distributed caching, partitioning, compression
+
+ Lossy Compression  Acc/Perf-Tradeoff
+
+ Sparsification (reduce non-zero values)
+ Quantization (reduce value domain), learned
+ Data types: bfloat16, Intel Flexpoint (mantissa, exp)
+
+15
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+[Credit: Song Han’16]
+
+Lang
+Faults
+Exec
+Data
+HW
+
+Execution Strategies
+ Batch Algorithms: Data and Task Parallel
+ Data-parallel operations
+ Different physical operators
+
+ Mini-Batch Algorithms: Parameter Server
+ Data-parallel and model-parallel PS
+ Update strategies (e.g.,
+async, sync, backup)
+ Data partitioning strategies
+ Federated ML (trend since 2018)
+
+ Lots of PS Decisions  Acc/Perf-Tradeoff
+
+ Configurations (#workers, batch size/param schedules, update type/freq)
+ Transfer optimizations: lossy compression, sparsification, residual accumulation,
+gradient clipping, and momentum corrections
+
+16
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Apps
+
+Lang
+Faults
+Exec
+Data
+HW
+
+Fault Tolerance & Resilience
+ Resilience Problem
+
+ Increasing error rates at scale (soft/hard mem/disk/net errors)
+ Robustness for preemption
+ Need cost-effective resilience
+
+ Fault Tolerance in Large-Scale Computation
+
+ Block replication (min=1, max=3) in distributed file systems
+ ECC; checksums for blocks, broadcast, shuffle
+ Checkpointing (MapReduce: all task outputs; Spark/DL: on request)
+ Lineage-based recomputation for recovery in Spark
+
+ ML-specific Schemes (exploit app characteristics)
+
+ Estimate contribution from lost partition to avoid stragglers
+ Example: user-defined “compensation” functions
+
+17
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Apps
+
+Lang
+Faults
+Exec
+Data
+HW
+
+[Bianca Schroeder, Eduardo Pinheiro, WolfDietrich Weber: DRAM errors in the wild: a
+large-scale field study. SIGMETRICS 2009]
+[Sebastian Schelter, Stephan Ewen, Kostas
+Tzoumas, Volker Markl: "All roads lead to
+Rome": optimistic recovery for distributed
+iterative data processing. CIKM 2013]
+
+Language Abstractions
+ Optimization Scope
+
+Apps
+
+Lang
+Faults
+Exec
+Data
+HW
+
+ #1 Eager Interpretation (debugging, no opt)
+ #2 Lazy expression evaluation
+(some opt, avoid materialization)
+ #3 Program compilation (full opt, difficult)
+
+ Optimization Objective
+
+ Most common: min time s.t. memory constraints
+ Multi-objective: min cost s.t. time, min time s.t. acc, max acc s.t. time
+
+ Trend: Fusion and Code Generation
+ Custom fused operations
+ Examples: SystemML, Weld, Taco,
+Julia, TF XLA,TVM, TensorRT
+
+18
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Sparsity-Exploiting Operator
+
+ML Applications
+ ML Algorithms (cost/benefit – time vs acc)
+
+Apps
+
+ Unsupervised/supervised; batch/mini-batch; first/second-order ML
+ Mini-batch DL: variety of NN architectures and SGD optimizers
+
+[Credit: Daniel Kang‘17]
+
+ Specialized Apps: Video Analytics in NoScope
+ Difference detectors / specialized
+models for “short-circuit evaluation”
+
+ AutoML (time vs acc)
+
+ Not algorithms but tasks (e.g., doClassify(X, y) + search space)
+ Examples: MLBase, Auto-WEKA, TuPAQ, Auto-sklearn, Auto-WEKA 2.0
+ AutoML services at Microsoft Azure, Amazon AWS, Google Cloud
+
+ Data Programming and Augmentation (acc?)
+
+ Generate noisy labels for pre-training
+ Exploit expert rules, simulation models, rotations/shifting,
+and labeling IDEs (Software 2.0)
+
+19
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Lang
+Faults
+Exec
+Data
+HW
+
+[Chris Thornton, Frank Hutter, et al:
+Auto-WEKA: combined selection and
+hyperparameter optimization of
+classification algorithms. KDD 2013]
+
+[Credit:
+Jonathan
+Tremblay‘18]
+
+Language Abstractions
+
+20
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Landscape of ML Systems
+Mlbase
+
+TUPAQ
+Emma
+OctoML
+
+Glade
+
+Cümülön(-D)
+
+Hemingway
+Velox
+
+vLLM
+Longview
+
+Matlab
+Julia
+
+Octave
+Weka
+
+SPSS
+SAS
+21
+
+VW
+
+Mahout
+Samsara
+
+TensorDB
+
+Orion
+
+F
+
+BUDS
+Santoku
+
+LibFM
+
+scikit-learn Sherlock ModelHub
+Mahout
+
+Spark R
+
+Spark ML
+
+SystemML
+
+Brainwash
+
+Columbus
+
+SimSQL
+
+GraphLab
+
+MS (Rev) R
+
+KeystoneML
+Flink ML
+
+MADlib
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Hamlet
+
+Bismarck
+
+RIOT
+
+DAPHNE
+Ray
+
+SciDB
+
+BigR
+
+ScalOps
+
+Fa
+
+R4ML
+
+ModelDB
+
+MXNet
+Torch
+
+BigDL
+RAPIDS
+
+Pathways
+
+OpenAI Triton
+
+SAP HANA
+
+ORE
+AzureML
+
+DeepDive
+Zombie
+
+HP
+Distributed R
+RIOT-DB
+
+SystemDS DMac
+Photon ML
+
+Ludwig
+
+Dask
+
+OptiML
+
+Cumulon
+
+LINVIEW
+
+Horovod
+R
+
+Tupleware
+
+Kasen
+
+AIDA
+
+JAX
+
+PyTorch
+
+Keras
+
+TensorFlow
+Theano
+
+Caffe
+
+CNTK
+
+Singa
+
+DL4J
+
+Landscape of ML Systems, cont.
+including Classification of SystemML/SystemDS
+#1 Language Abstraction
+Linear Algebra
+Programs
+Computation Graphs
+Algorithm Libraries
+Operator Libraries
+Collections
+Graphs
+Matrices
+Tensors
+Frames
+22
+
+Types
+Matthias Boehm | FG DAMS | AMLS SoSe#4
+2026Data
+– 02 System
+Architecture
+
+#2 Execution Strategies
+Parameter Server
+(Modell-Parallel)
+Task-Parallel
+Constructs
+Data-Parallel
+Operations
+Local (single node)
+HW accelerators
+(GPUs, FPGAs, ASICs)
+Distributed
+
+#3 Distribution
+
+UDF-based Systems
+ User-defined Functions (UDF)
+
+ Data type: Input usually collections of cells, rows, or blocks
+ Implement loss and overall optimizer by yourself / UDF abstractions
+ Examples: data-parallel (e.g., Spark MLlib)
+or In-DBMS analytics (MADlib, AIDA)
+
+ Example SQL
+
+23
+
+Matrix Product in SQL
+
+Matrix Product w/ UDF
+
+Optimization w/ UDA
+
+SELECT A.i, B.j,
+SUM(A.val*B.val)
+FROM A, B
+WHERE A.j = B.i
+GROUP BY A.i, B.j;
+
+SELECT A.i, B.j,
+dot(A.row, B.col)
+FROM A, B;
+
+Init(state)
+Accumulate(state,data)
+Merge(state,data)
+Finalize(state,data)
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Graph-based Systems
+
+[Grzegorz Malewicz et al: Pregel:
+a system for large-scale graph
+processing. SIGMOD 2010,
+SIGMOD 2020 Test of Time Award]
+
+ Google Pregel
+
+ Name: Seven Bridges of Koenigsberg (Euler 1736)
+ “Think-like-a-vertex” (vertex-centric processing)
+ Iterative processing in super steps, comm.: message passing
+
+1
+4
+
+ Programming Model
+
+ Represent graph as collection of vertices w/ edge (adjacency) lists
+ Implement algorithms via Vertex API
+ Terminate if all vertices halted / no more msgs
+public abstract class Vertex {
+public String getID();
+public long superstep();
+public VertexValue getValue();
+
+}
+24
+
+public compute(Iterator<Message> msgs);
+public sendMsgTo(String v, Message msg);
+public void voteToHalt();
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+2
+5
+7
+
+2
+7
+4
+1
+
+[1, 3, 4]
+[5, 6]
+[1, 2]
+[1, 2, 4]
+
+Worker
+1
+
+5
+3
+6
+
+[6, 7]
+[2]
+[5, 7]
+
+Worker
+2
+
+3
+6
+
+Graph-based Systems, cont.
+ Example1: Connected Components
+
+ Connected components
+Step 0
+1
+of graph (subgraphs
+2
+3
+of connected nodes)
+4
+5
+ Propagate max(current, msgs)
+6
+7
+if != current to neighbors,
+terminate if no msgs
+
+ Example 2: Page Rank
+ Ranking of webpages by importance / impact
+ #1: Initialize vertices to 1/numVertices()
+ #2: In each super step
+ Compute current vertex value:
+
+value = 0.15/numVertices()+0.85*sum(msg)
+
+ Send to all neighbors:
+
+value/numOutgoingEdges()
+
+25
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Step 1
+
+4
+4
+
+4
+
+3
+7
+
+7
+
+7
+
+Step 2
+
+4
+4
+
+4
+
+4
+
+Step 3
+converged
+
+7
+7
+
+7
+[Credit: https://
+en.wikipedia.org/
+wiki/PageRank]
+
+Graph-based Systems, cont.
+ Excursus: Graph Processing
+via Sparse Linear Algebra
+ SystemDS’
+components()
+
+ SystemDS’
+pageRank()
+[Jure Leskovec, Anand Rajaraman,
+Jeffrey D. Ullman: Mining of Massive
+Datasets, Stanford 2014]
+
+26
+
+# initialize state with vertex ids
+c = seq(1,nrow(G));
+diff = Inf;
+iter = 1;
+# iterative computation of connected components
+while( diff > 0 & (maxi==0 | iter<=maxi) ) {
+u = max(rowMaxs(G * t(c)), c);
+diff = sum(u != c)
+c = u; # update assignment
+iter = iter + 1;
+}
+alpha = ifdef(argAlpha, 0.85);
+while( i < maxi ) {
+# power iteration on G w/ Gij = 1/degree
+p = alpha*(G %*% p) + (1-alpha)*(e %*% u %*% p);
+i += 1;
+}
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Linear Algebra Systems
+ Comparison Query Optimization
+
+ Rule- and cost-based rewrites and operator ordering
+ Physical operator selection and query compilation
+ Linear algebra / other ML operators, DAGs, control flow, sparse/dense formats
+
+ #1 Interpretation (operation at-a-time)
+
+ Examples: R, PyTorch, Morpheus [PVLDB’17]
+
+ #2 Lazy Expression Compilation (DAG at-a-time)
+ Examples: RIOT [CIDR’09], TensorFlow [OSDI’16]
+Mahout Samsara [MLSystems’16]
+ Examples w/ control structures: Weld [CIDR’17],
+OptiML [ICML’11], Emma [SIGMOD’15]
+
+ #3 Program Compilation (entire program)
+
+ Examples: SystemML [PVLDB’16], Julia
+Cumulon [SIGMOD’13], Tupleware [PVLDB’15]
+
+27
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Optimization Scope
+1: X = read($1); # n x m matrix
+2: y = read($2); # n x 1 vector
+3: maxi = 50; lambda = 0.001;
+4: intercept = $3;
+5: ...
+6: r = -(t(X) %*% y);
+7: norm_r2 = sum(r * r); p = -r;
+8: w = matrix(0, ncol(X), 1); i = 0;
+9: while(i<maxi & norm_r2>norm_r2_trgt)
+10: {
+11:
+q = (t(X) %*% X %*% p)+lambda*p;
+12:
+alpha = norm_r2 / sum(p * q);
+13:
+w = w + alpha * p;
+14:
+old_norm_r2 = norm_r2;
+15:
+r = r + alpha * q;
+16:
+norm_r2 = sum(r * r);
+17:
+beta = norm_r2 / old_norm_r2;
+18:
+p = -r + beta * p; i = i + 1;
+19: }
+20: write(w, $4, format="text");
+
+PL
+
+DB
+
+HPC
+
+Compilers for
+Large-scale ML
+
+[Dan Moldovan et al.: AutoGraph:
+Imperative-style Coding with Graphbased Performance. SysML 2019.]
+
+Linear Algebra Systems, cont.
+
+Note: TF 2.0
+
+ Some
+Examples …
+
+(1.x)
+X = read("./X");
+y = read("./y");
+p = t(X) %*% y;
+w = matrix(0,ncol(X),1);
+
+var X = drmFromHDFS("./X")
+val y = drmFromHDFS("./y")
+var p = (X.t %*% y).collect
+var w = dense(...)
+X = X.par(256).checkpoint()
+
+# read via queues
+sess = tf.Session()
+# ...
+w = tf.Variable(tf.zeros(...,
+dtype=tf.float64))
+
+while(...) {
+q = t(X) %*% X %*% p;
+...
+}
+
+while(...) {
+q = (X.t %*% X %*% p)
+.collect
+...
+}
+
+while ...:
+v1 = tf.matrix_transpose(X)
+v2 = tf.matmult(X, p)
+v3 = tf.matmult(v1, v2)
+q = sess.run(v3)
+...
+
+(Custom DSL
+w/ R-like syntax;
+program compilation)
+
+28
+
+(Embedded DSL in Scala;
+lazy evaluation)
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+(Embedded DSL in Python;
+lazy [and eager] evaluation)
+
+ML Libraries / Model Zoos
+ #1 Fixed Algorithm Implementations
+ Often on top of existing linear
+algebra or UDF abstractions
+
+ #2 Model Zoos / APIs
+
+ Pre-trained models
+ Hugging Face
+(https://huggingface.co/models)
+ YOLOv2 – v7
+ PyTorch/TensorFlow
+Model Zoos
+
+29
+
+SparkML/
+MLlib
+Single-node Example (Python)
+
+Distributed Example (Spark Scala)
+
+from numpy import genfromtxt
+from sklearn.linear_model \
+import LinearRegression
+
+import org.apache.spark.ml
+
+.regression.LinearRegression
+
+X = genfromtxt('X.csv')
+y = genfromtxt('y.csv')
+
+val X = sc.read.csv('X.csv')
+val y = sc.read.csv('y.csv')
+val Xy = prepare(X, y).cache()
+
+reg = LinearRegression()
+.fit(X, y)
+out = reg.score(X, y)
+
+val reg = new LinearRegression()
+.fit(Xy)
+val out reg.transform(Xy)
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+DNN Frameworks
+
+AMLS’24 Project:
+Additional DNN Optimizers
+
+ High-level DNN Frameworks
+
+ Language abstraction for DNN construction and model fitting
+ Examples:
+opt = keras.optimizers.rmsprop(
+model = Sequential()
+lr=0.0001, decay=1e-6)
+model.add(Conv2D(32, (3, 3),
+Caffe, Keras
+padding='same',
+
+# Let's train the model using RMSprop
+model.compile(loss='cat…_crossentropy',
+optimizer=opt,
+metrics=['accuracy'])
+
+input_shape=x_train.shape[1:]))
+model.add(Activation('relu'))
+model.add(Conv2D(32, (3, 3)))
+model.add(Activation('relu'))
+model.fit(x_train, y_train,
+model.add(
+batch_size=batch_size,
+MaxPooling2D(pool_size=(2, 2)))
+epochs=epochs,
+model.add(Dropout(0.25))
+validation_data=(x_test, y_test),
+...
+shuffle=True)
+
+ Low-level DNN Frameworks
+
+ Examples: TensorFlow, MXNet, PyTorch, CNTK
+
+30
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+LLM Offline and Online Inference
+ vLLM: LLM Inference and Serving
+
+[https://docs.vllm.ai/en/stable/
+getting_started/examples/basic.html#]
+
+ Management of attention key/value cache
+ Batching of incoming requests, eviction mechanisms
+ HuggingFace models and hardware accelerators
+from vllm import LLM, SamplingParams
+# Sample prompts.
+prompts = [
+"Hello, my name is",
+"The president of the United States is",
+"The capital of France is",
+"The future of AI is",
+]
+# Create a sampling params object.
+sampling_params = SamplingParams(
+temperature=0.8, top_p=0.95)
+...
+
+31
+
+# Create an LLM.
+llm = LLM(model="facebook/opt-125m")
+# Generate texts from the prompts (RequestOutput)
+outputs = llm.generate(prompts, sampling_params)
+# Print the outputs.
+print("\nGenerated Outputs:\n" + "-" * 60)
+for output in outputs:
+prompt = output.prompt
+generated_text = output.outputs[0].text
+print(f"Prompt:
+{prompt!r}")
+print(f"Output:
+{generated_text!r}")
+print("-" * 60)
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Feature-centric Tools
+ DeepDive
+
+ Knowledge base construction via SQL/MLNs
+ Grounding: SQL queries  factor graph
+ Inference: statistical inference on factor graph
+ Incremental maintenance via sampling / variational approach
+
+ Overton (Apple)
+
+ Building, monitoring, improving ML pipelines
+ High-level abstractions: tasks and payloads
+ Data slicing, multi-task learning, data augmentation
+
+ Ludwig (Uber AI)
+
+ Data types and configuration files
+ Encoders, combiners, decoders
+ Example “visual question answering”:
+
+32
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+AMLS’25 Project: Extended
+Feature Transformations
+
+[Jaeho Shin et al: Incremental
+Knowledge Base Construction
+Using DeepDive. PVLDB 2015]
+
+[Christopher Ré et al: Overton: A Data
+System for Monitoring and Improving
+Machine-Learned Products, CIDR 2020]
+
+[Piero Molino, Yaroslav Dudin, Sai Sumanth
+Miryala: Ludwig: a type-based declarative
+deep learning toolbox. CoRR 2019]
+
+ML Systems Benchmarks
+
+33
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+“Big Data” Benchmarks w/ ML Components
+ BigBench  TPCx-AI
+
+ 30 workloads (6 statistics, 17 data mining)
+ Different data sources, processing types
+ Note: TPCx-BB, TPCx-HS [TPCTC 2016], TPCx-AI (09/2021)
+
+ HiBench (Intel)
+
+ MapReduce Micro benchmarks (WC, TeraSort)
+ IR/ML (e.g., PageRank, K-means, Naïve Bayes)
+
+ GenBase
+
+ Preprocessing and ML in array databases
+
+ SparkBench
+
+ Existing library algorithms (ML, Graph, SQL, stream)
+ ML: LogReg, SVM, matrix factorization, PageRank
+
+34
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+[Ahmad Ghazal et al: BigBench:
+towards an industry standard
+benchmark for big data analytics.
+SIGMOD 2013]
+[Tilmann Rabl et al: TPCx-AI - An Industry
+Standard Benchmark for Artificial Intelligence
+and Machine Learning Systems. PVLDB 2023]
+[Lan Yi, Jinquan Dai: Experience from
+Hadoop Benchmarking with HiBench:
+From Micro-Benchmarks Toward End-toEnd Pipelines. WBDB 2013]
+[Rebecca Taft et al: GenBase: a
+complex analytics genomics
+benchmark. SIGMOD 2014]
+[Dakshi Agrawal et al:
+SparkBench - A Spark Performance
+Testing Suite. TPCTC 2015]
+
+Linear Algebra and DNN Benchmarks
+ SLAB: Scalable LA Benchmark (UCSD)
+
+ Ops: TRANS, NORM, GRM, MVM, ADD, GMM
+ Pipelines/Decompositions: MMC, SVD
+ Algorithms: OLS, LogReg, NMF, HRSE
+
+ DAWNBench (Stanford)
+
+ Image Classification ImageNet: 93% top-5 val err
+ Image Classification CIFAR10: 94% test accuracy
+ Question Answering SQuAD: 0.75 F1 measure
+
+ MLPerf
+
+ Image classification ImageNet, object detection
+COCO, translation WMT En-Ger, recommendation
+MovieLens, reinforcement learning Go
+ Train to target accuracy
+ Open (diff model) vs closed divisions
+
+35
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+AMLS’25 / DIA’25/26 Project:
+SSB Benchmark Implementation
+[Anthony Thomas, Arun Kumar: A Comparative
+Evaluation of Systems for Scalable Linear
+Algebra-based Analytics. PVLDB 2018]
+
+[Cody Coleman et al.: DAWNBench: An Endto-End Deep Learning Benchmark and
+Competition, ML Systems Workshop 2017]
+
+[Peter Mattson et al.:
+MLPerf Training
+Benchmark, MLSys 2020]
+[https://mlcommons.org/en/training-normal-11/,
+https://mlcommons.org/en/training-hpc-10/]
+
+DNN Benchmarks, cont.
+V0.6
+
+MLPerf v0.6:
+https://mlperf.org/training-results-0-6/,
+MLPerf v0.7:
+https://mlperf.org/training-results-0-7
+… MLPerf v2.1 (11/2022)
+
+96 x DGX-2H = 96 * 16
+= 1536 V100 GPUs
+ ~ 96 * $400K = $35M – $40M
+[https://www.forbes.com/sites/
+tiriasresearch/2019/06/19/
+nvidia-offers-a-turnkey-supercomputerthe-dgx-superpod/#693400f43ee5]
+
+36
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+AutoML and Data Cleaning
+ MLBench
+
+[Yu Liu et.al: MLBench: Benchmarking
+Machine Learning Services Against
+Human Experts. PVLDB 2018]
+
+ Compare AutoML w/ human experts (Kaggle)
+ Classification, regression; AUC vs Runtime
+
+ (Open Source) AutoML Benchmark
+
+[Pieter Gijsbers et al.:
+An Open Source AutoML Benchmark.
+Automated ML Workshop 2019]
+
+ CleanML
+
+[Peng Li et al: CleanML: A Benchmark
+for Joint Data Cleaning and Machine
+Learning, ICDE 2021]
+
+ 39 classification datasets, AUC metric, 10-fold CV
+ Extensible metrics, OS AutoML frameworks, datasets
+ Train/Test on dirty vs clean data (2x2)
+ Missing values, outliers, duplicates, mislabels
+
+[Tianhe Yu et al: Meta-World: A Bench-mark
+and Evaluation for Multi-Task and Meta
+Reinforce-ment Learning, CoRL 2019]
+
+ Meta Worlds Benchmark
+
+ Meta-reinforcement and multi-task learning
+ 50 robotic tasks (e.g., get coffee, open window)
+
+ Feature Type Inference
+
+[Vraj Shah et al.: Towards Benchmarking Feature
+Type Inference for AutoML Platforms, SIGMOD 2021]
+
+ Dirty/clean ML model training/test
+
+37
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+Data-centric ML and other Directions
+ Excursus: ML-Commons Working Groups
+https://mlcommons.org/working-groups/
+ #1 DataPerf Working Group
+
+ Renamed to Data-centric ML Research Working Group
+ https://mlcommons.org/en/groups/research-dataperf/
+
+ #2 AI Safety Working Group
+
+ v0.5: chatbots w/ typical, malicious, vulnerable users
+ Defines 13 hazard categories
+ https://mlcommons.org/working-groups/ai-safety/ai-safety/
+
+ And many more: e.g., datasets, metadata, medical domain
+
+38
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+[https://huggingface.co/
+papers/2404.12241]
+
+Summary & QA
+ Data Science Lifecycle
+ ML Systems Stack
+ Language Abstractions
+ ML System Benchmarks
+ Recommended Reading (a critical perspective on a broad sense of ML systems)
+ [M. Jordan: SysML: Perspectives and Challenges. Keynote at SysML 2018]
+ “ML […] is far from being a solid engineering
+discipline that can yield robust, scalable solutions
+to modern data-analytic problems”
+ https://www.youtube.com/watch?v=4inIBmY8dQI
+
+39
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 02 System Architecture
+
+

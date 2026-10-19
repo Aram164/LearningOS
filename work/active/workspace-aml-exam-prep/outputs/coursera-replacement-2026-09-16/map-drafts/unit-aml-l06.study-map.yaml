@@ -1,0 +1,967 @@
+id: study-map-aml-l06
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l06
+status: not-started
+current_stage: stage-aml-l06-gradient
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l06-gradient
+  number: 1
+  title: Gradient and descent direction
+  status: pending
+  objective: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours,
+    and local search.
+  done_when:
+  - 'Reproduce without notes: Partial derivatives as a vector, steepest increase, negative-gradient updates,
+    contours, and local search.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 2, and record every miss with the step
+    it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convexity
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9a435fb743f7e6a7298b2ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-ccf52017d2ae69a5358cd92c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a76058ff6f618590fb01fb47
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-gradient/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-batch-gd
+  number: 2
+  title: Batch gradient descent
+  status: pending
+  objective: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic
+    examples.
+  done_when:
+  - 'Reproduce without notes: Initialization, simultaneous vectorized updates, convergence, loss curves,
+    and linear/logistic examples.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 3, and record every miss with the step
+    it failed at.
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-f0ccf205ed8c7df0ef0c8687
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9a435fb743f7e6a7298b2ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-batch-gd/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-rate-scaling
+  number: 3
+  title: Learning rate and feature scaling
+  status: pending
+  objective: Divergence versus slow progress, conditioning, normalized feature ranges, and practical diagnostics.
+  done_when:
+  - 'Reproduce without notes: Divergence versus slow progress, conditioning, normalized feature ranges,
+    and practical diagnostics.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 2, and record every miss with the step
+    it failed at.
+  exam_critical: true
+  concepts:
+  - concept-feature-scaling
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-ccf52017d2ae69a5358cd92c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a76058ff6f618590fb01fb47
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c0cbb7729f0cd68049a83d24
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-rate-scaling/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-stochastic
+  number: 4
+  title: SGD and mini-batches
+  status: pending
+  objective: Per-example/noisy updates, batching, epochs, efficiency, and the convergence-speed tradeoff.
+  done_when:
+  - 'Reproduce without notes: Per-example/noisy updates, batching, epochs, efficiency, and the convergence-speed
+    tradeoff.'
+  - Work Bonusblatt 03 — gradient descent, then the remaining 2, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-f0ccf205ed8c7df0ef0c8687
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c446c7532bc169a9759f14ce
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-stochastic/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-convexity
+  number: 5
+  title: Convexity, optima, and Hessians
+  status: pending
+  objective: Local versus global optima, positive-semidefinite Hessians, and why the regression objectives
+    are well behaved.
+  done_when:
+  - 'Reproduce without notes: Local versus global optima, positive-semidefinite Hessians, and why the
+    regression objectives are well behaved.'
+  - Work CS229 practice midterm — one-step Newton proof, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-convexity
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-09ae79cd78e352276370c8d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c16dd407fb2579c179f20a8a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-154131351c522c66e593975b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-convexity/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-optimizers
+  number: 6
+  title: Momentum, RMSProp, and Adam
+  status: pending
+  objective: Moving averages of gradients and squared gradients, adaptive steps, bias correction, and
+    combined updates.
+  done_when:
+  - 'Reproduce without notes: Moving averages of gradients and squared gradients, adaptive steps, bias
+    correction, and combined updates.'
+  exam_critical: true
+  concepts:
+  - concept-adam-optimizer
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c446c7532bc169a9759f14ce
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-78d45203d54588d647811548
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c0cbb7729f0cd68049a83d24
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-optimizers/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l06-newton
+  number: 7
+  title: Newton and second-order optimization
+  status: pending
+  objective: Curvature-aware updates, Hessian cost, and comparison with first-order methods.
+  done_when:
+  - 'Reproduce without notes: Curvature-aware updates, Hessian cost, and comparison with first-order methods.'
+  - Work CS229 practice midterm — one-step Newton proof, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  - concept-newton-method
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d2797d2723a780a4c3715a01
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-c16dd407fb2579c179f20a8a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-154131351c522c66e593975b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-newton/notes.md
+  attachments: []
+  source_feedback: []

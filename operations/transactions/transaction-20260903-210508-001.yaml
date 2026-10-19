@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260903-210508-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-03T21:05:08+02:00'
+snapshot_before: sha256:e2ffd2e997133e6f4882cd0d266e000ffd94e0994606bcf947b9f512f37343fb
+snapshot_after: sha256:a00035d049e2bbc580fe781243a01561b7eee340f80d71813589816988b1e401
+expected_revisions:
+  unit-job-polars-expressions: 7
+  study-map-job-polars-expressions: 6
+artifact_revisions:
+  study-map-job-polars-expressions:
+    before: 6
+    after: 7
+  unit-job-polars-expressions:
+    before: 7
+    after: 8
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/attachments/s2d-exercises.md
+  sha256_before: null
+  sha256_after: 971ddd27ae75344adbe973fee92690bb5c77ecd747a6445cefae67c7184ebd72
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  sha256_before: 1675ae5d6f4c10413a45068836214f7abc98b385716a56e4f41b4a80a0815b16
+  sha256_after: 98ca7b752997a509390b73a16133d14ba4936a482f819bb15fbe49658f40dccc
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-polars-sheet-s2d-md-20260903
+  idempotency_key: polars-sheet-s2d-md-20260903
+  intent_sha256: sha256:b9e4169b9ef2898da45bdd95adb93a8c08d59e4ee653c283eff228db60d709ca
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:b9e4169b9ef2898da45bdd95adb93a8c08d59e4ee653c283eff228db60d709ca

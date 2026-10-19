@@ -1,0 +1,714 @@
+id: study-map-aml-l05
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l05
+status: not-started
+current_stage: stage-aml-l05-classification
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l05-classification
+  number: 1
+  title: Binary classification problem
+  status: pending
+  objective: Positive/negative classes, discrete outputs, and why ordinary linear regression plus a threshold
+    is unstable.
+  done_when:
+  - 'Reproduce without notes: Positive/negative classes, discrete outputs, and why ordinary linear regression
+    plus a threshold is unstable.'
+  - Work Übung 05 — logistic-regression geometry, then the remaining 2, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2cf4ce0fbf139b5333dd3dad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-c42e153ad62162b678786456
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-b5479427410717e42df4b6af
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7523f3a6574bcd59ec9049dc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d9862a44cc8942f98c03bde5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eccea71ae818f6a6266c1280
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-classification/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l05-boundary
+  number: 2
+  title: Linear decision boundary
+  status: pending
+  objective: The separator w·x=0, score signs, threshold geometry, and basis expansion for curved boundaries.
+  done_when:
+  - 'Reproduce without notes: The separator w·x=0, score signs, threshold geometry, and basis expansion
+    for curved boundaries.'
+  - Work Übung 05 — logistic-regression geometry, then the remaining 3, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-basis-functions
+  - concept-decision-boundary
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2cf4ce0fbf139b5333dd3dad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-57a9e25c00310eb54bc52039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-c42e153ad62162b678786456
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-7523f3a6574bcd59ec9049dc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d9862a44cc8942f98c03bde5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-760cfc6e64bcdad0cfffaa15
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eccea71ae818f6a6266c1280
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-boundary/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l05-sigmoid
+  number: 3
+  title: Sigmoid, probability, and log-odds
+  status: pending
+  objective: Squashing linear scores to [0,1], probabilistic interpretation, thresholds, odds, and logits.
+  done_when:
+  - 'Reproduce without notes: Squashing linear scores to [0,1], probabilistic interpretation, thresholds,
+    odds, and logits.'
+  - Work Übung 05 — logistic-regression geometry, then the remaining 1, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-2cf4ce0fbf139b5333dd3dad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-0ee0354952ef0e7d2bd1cb22
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-b5479427410717e42df4b6af
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-da6e469fc665bfad1ee8045c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-37104c3c217b32519e132f1f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7523f3a6574bcd59ec9049dc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cba6b8ab6cc94afb1e892c0f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bd9f3f470427052f4909004e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4a733a6604d1778a6f47a552
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d9862a44cc8942f98c03bde5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2831f4fe57446ddaa2334a7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-760cfc6e64bcdad0cfffaa15
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eccea71ae818f6a6266c1280
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-sigmoid/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l05-likelihood
+  number: 4
+  title: Bernoulli likelihood
+  status: pending
+  objective: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood
+    estimation.
+  done_when:
+  - 'Reproduce without notes: Probability of observed labels, products over examples, log-likelihood,
+    and maximum-likelihood estimation.'
+  - Work Cornell CS4780 HW4 — logistic likelihood, then the remaining 1, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-maximum-likelihood
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-0ee0354952ef0e7d2bd1cb22
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-b5479427410717e42df4b6af
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-da6e469fc665bfad1ee8045c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-37104c3c217b32519e132f1f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bd9f3f470427052f4909004e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4a733a6604d1778a6f47a552
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2831f4fe57446ddaa2334a7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-65bed215329cde7808ec68c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6ed79aede3381149c06a6b34
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-likelihood/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l05-cross-entropy
+  number: 5
+  title: Cross-entropy loss
+  status: pending
+  objective: Negative log-likelihood, the combined binary loss, why MSE is unsuitable here, and vectorization.
+  done_when:
+  - 'Reproduce without notes: Negative log-likelihood, the combined binary loss, why MSE is unsuitable
+    here, and vectorization.'
+  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-cross-entropy
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-57a9e25c00310eb54bc52039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-0ee0354952ef0e7d2bd1cb22
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-da6e469fc665bfad1ee8045c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-37104c3c217b32519e132f1f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-cba6b8ab6cc94afb1e892c0f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bd9f3f470427052f4909004e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-d9862a44cc8942f98c03bde5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2831f4fe57446ddaa2334a7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-760cfc6e64bcdad0cfffaa15
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-65bed215329cde7808ec68c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-cross-entropy/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l05-gradient
+  number: 6
+  title: Gradient and optimization handoff
+  status: pending
+  objective: dL/dw = Xᵀ(σ(Xw)-y)/m, convexity, no closed form, and the bridge to gradient descent.
+  done_when:
+  - 'Reproduce without notes: dL/dw = Xᵀ(σ(Xw)-y)/m, convexity, no closed form, and the bridge to gradient
+    descent.'
+  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-24446ef673e9b912e6cd5177
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-57a9e25c00310eb54bc52039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-37104c3c217b32519e132f1f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bd9f3f470427052f4909004e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-4a733a6604d1778a6f47a552
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-65bed215329cde7808ec68c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-6ed79aede3381149c06a6b34
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-gradient/notes.md
+  attachments: []
+  source_feedback: []

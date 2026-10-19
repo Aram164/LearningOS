@@ -1,0 +1,233 @@
+{
+  "canonical_changed": {
+    "work/inbox/pack/one.md": null,
+    "work/inbox/pack/two.md": null
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "inbox.resolve",
+          "channel": "operator",
+          "intent_sha256": "sha256:b9191f8b8f14b0f1911cdaf1d3baf75dc6a3d4d571e750c9bca9ccbaba98911c",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "file:archive/inbox/2026/pack/one.md": 1,
+            "file:archive/inbox/2026/pack/two.md": 1,
+            "file:work/inbox/pack/one.md": 1,
+            "file:work/inbox/pack/two.md": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "file:archive/inbox/2026/pack/one.md": {
+          "after": 1,
+          "before": 0
+        },
+        "file:archive/inbox/2026/pack/two.md": {
+          "after": 1,
+          "before": 0
+        },
+        "file:work/inbox/pack/one.md": {
+          "after": 1,
+          "before": 0
+        },
+        "file:work/inbox/pack/two.md": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "inbox.resolve",
+            "declared_writes": [
+              "work/inbox/**",
+              "archive/inbox/**"
+            ]
+          }
+        ]
+      },
+      "capability": "inbox.resolve",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "file:archive/inbox/2026/pack/one.md": 0,
+        "file:archive/inbox/2026/pack/two.md": 0,
+        "file:work/inbox/pack/one.md": 0,
+        "file:work/inbox/pack/two.md": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:bd7df41d90eda284d1a38eaa65c45cc8b7268ec0fd2f26e03b3000059c59bde2",
+        "fingerprint_definition": 2,
+        "routed_to": [
+          "note-demo"
+        ]
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:b9191f8b8f14b0f1911cdaf1d3baf75dc6a3d4d571e750c9bca9ccbaba98911c"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:b9191f8b8f14b0f1911cdaf1d3baf75dc6a3d4d571e750c9bca9ccbaba98911c",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "archive/inbox/2026/pack/one.md",
+          "sha256_after": "2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806",
+          "sha256_before": null
+        },
+        {
+          "created": true,
+          "path": "archive/inbox/2026/pack/two.md",
+          "sha256_after": "27dd8ed44a83ff94d557f9fd0412ed5a8cbca69ea04922d88c01184a07300a5a",
+          "sha256_before": null
+        },
+        {
+          "created": false,
+          "path": "work/inbox/pack/one.md",
+          "sha256_after": null,
+          "sha256_before": "2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806"
+        },
+        {
+          "created": false,
+          "path": "work/inbox/pack/two.md",
+          "sha256_after": null,
+          "sha256_before": "27dd8ed44a83ff94d557f9fd0412ed5a8cbca69ea04922d88c01184a07300a5a"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "file:archive/inbox/2026/pack/one.md": 1,
+        "file:archive/inbox/2026/pack/two.md": 1,
+        "file:work/inbox/pack/one.md": 1,
+        "file:work/inbox/pack/two.md": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "commit_sha": null,
+      "paths": {
+        "archive/inbox/2026/pack/one.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "2c8b08da5ce60398e1f19af0e5dccc744df274b826abe585eaba68c525434806",
+          "state": "file"
+        },
+        "archive/inbox/2026/pack/two.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "27dd8ed44a83ff94d557f9fd0412ed5a8cbca69ea04922d88c01184a07300a5a",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "31d69251b3cd4760a3ff0d632e5333c51e0d8320f7813da6940f1729d0e01453",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "c5bb2651eee9560e1a2fd5c77d01962db075c2499fb8934564ac5e220a0bad54",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "d9d0874f1ebb56a3717f429024d6551a1d6cee93e31c6d0a7900938523a46d69",
+          "state": "file"
+        },
+        "work/inbox/pack/one.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "state": "absent"
+        },
+        "work/inbox/pack/two.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "state": "absent"
+        }
+      },
+      "review": null,
+      "schema_version": 3,
+      "session_id": "channel:operator",
+      "state": "recording",
+      "version": 1
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"inbox.resolve\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"resolved\": \"pack\",\n    \"archived\": [\n      \"archive/inbox/2026/pack/one.md\",\n      \"archive/inbox/2026/pack/two.md\"\n    ],\n    \"routed_to\": [\n      \"note-demo\"\n    ],\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:archive/inbox/2026/pack/one.md\": 1,\n      \"file:archive/inbox/2026/pack/two.md\": 1,\n      \"file:work/inbox/pack/one.md\": 1,\n      \"file:work/inbox/pack/two.md\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "inbox.resolve",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "archived": [
+        "archive/inbox/2026/pack/one.md",
+        "archive/inbox/2026/pack/two.md"
+      ],
+      "artifact_revisions": {
+        "file:archive/inbox/2026/pack/one.md": 1,
+        "file:archive/inbox/2026/pack/two.md": 1,
+        "file:work/inbox/pack/one.md": 1,
+        "file:work/inbox/pack/two.md": 1
+      },
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "resolved": "pack",
+      "routed_to": [
+        "note-demo"
+      ],
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

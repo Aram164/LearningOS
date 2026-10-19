@@ -1,0 +1,280 @@
+schema_version: 2
+id: transaction-20260903-134800-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-03T13:48:00+02:00'
+snapshot_before: sha256:12f30fe43b5f6e65f97f9cc9c1dd1d3206ae2327cdab976e6d627656d836f18b
+snapshot_after: sha256:d91f1b51927c9bad1b82e006bdc8495fa01751836a7d5c962244ec3745554845
+expected_revisions:
+  module-job-polars: 1
+  unit-job-polars-aggregation-windows: 0
+  unit-job-polars-backend-loop: 0
+  unit-job-polars-capstone-transition: 0
+  unit-job-polars-expressions: 0
+  unit-job-polars-joins-reshape: 0
+  unit-job-polars-lazy-udf-interop: 0
+  unit-job-polars-order-text-time: 0
+  unit-job-polars-pandas-fluency: 2
+  unit-job-polars-schema-missing-types: 0
+  unit-job-polars-selection-backend: 0
+artifact_revisions:
+  module-job-polars:
+    before: 1
+    after: 2
+  unit-job-polars-aggregation-windows:
+    before: 0
+    after: 1
+  unit-job-polars-backend-loop:
+    before: 0
+    after: 1
+  unit-job-polars-capstone-transition:
+    before: 0
+    after: 1
+  unit-job-polars-expressions:
+    before: 0
+    after: 1
+  unit-job-polars-joins-reshape:
+    before: 0
+    after: 1
+  unit-job-polars-lazy-udf-interop:
+    before: 0
+    after: 1
+  unit-job-polars-order-text-time:
+    before: 0
+    after: 1
+  unit-job-polars-pandas-fluency:
+    before: 2
+    after: 3
+  unit-job-polars-schema-missing-types:
+    before: 0
+    after: 1
+  unit-job-polars-selection-backend:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-job-polars/module.yaml
+  sha256_before: e85ec8d3edda9849ba8db067c414614f28c089879e33693ef3413d6582081bd7
+  sha256_after: 57f255d191ade0f8e9eb7738af702b0d457a981f82e1985b155f27ae67215510
+  created: false
+- path: curriculum/modules/module-job-polars/source-map.yaml
+  sha256_before: bdc31c1828e676537b45b99cb54fd4b51b35450daf63a4bfcb2dc745cdc35861
+  sha256_after: b1cec3f30dbf98770469dca53788897d7604b2c37d6060dab1f1e828ff5b3214
+  created: false
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-10-groupby-aggregation-counting-and-de-duplication/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-11-windows-and-per-group-transformations/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-aggregation-signature-contract/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
+  sha256_before: null
+  sha256_after: 1b5f648cda8af3d0bc14f0b8ea2af5343cd626c85f6a19fcb56cfffc5d2fc9bd
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/unit.yaml
+  sha256_before: null
+  sha256_after: 61007d47c9b9c7767a5b2de768604e4e10c07fbe91bdb8d8ebfd6f1cbffe273c
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-decision-loop/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-family-transfer/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-regression-policy/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-trace-lifecycle/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  sha256_before: null
+  sha256_after: 8945f2b7364012cafe0d83a71d735284162d8175274d1c5d182d578a136dda5f
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/unit.yaml
+  sha256_before: null
+  sha256_after: c80e27cedf8d895bba77a678e30601fec2b22c24055e34ddd6177c4cdc56bbde
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-18-capstone-specify-implement-and-prove-a-mirrored/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-capstone-property-stress/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/stages/stage-polars-version-transition-lab/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
+  sha256_before: null
+  sha256_after: ac86b6a1d7ca9413ed6506bdeb3553db10398d57378c1b1c10e76b4588c9099d
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/unit.yaml
+  sha256_before: null
+  sha256_after: 211e72414ac6b43e80fc0a3068d33f437884efb0951f51e8809cca0220b6960c
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-assignmap-lowering/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-selectors-expansion/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  sha256_before: null
+  sha256_after: ea0498c536dd81ec1df0faeb48f4b3de4e364138acb34fe5677c65f13d928dec
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/unit.yaml
+  sha256_before: null
+  sha256_after: fab9ee4a2b435e4718b37394385bff62bde6a8bcecb6dc445f69e600690d9836
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
+  sha256_before: null
+  sha256_after: 8c9d7d016f9cda17f717ad0a0e5820456ca1c83eb92468a9851c7b68a83ffdac
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/unit.yaml
+  sha256_before: null
+  sha256_after: 0665b15dd3fae218e8399a68dc1204a52eb0473e60c56e773c8d834aee291742
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  sha256_before: null
+  sha256_after: 2421e98018dbd7b116a078d745bd9d2f7030096da6656761beae2bf56b96d6e3
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/unit.yaml
+  sha256_before: null
+  sha256_after: 68a9f171296ab80b11a4e5d95109cfef3bc98dd5576ec4fb4d592a6514c3bb5d
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-08-ordering-sorting-and-determinism/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-09-strings-datetimes-and-namespace-translation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
+  sha256_before: null
+  sha256_after: 0b59fbc5d13249653e1871b14b971531edd86acb5c7e797aea5df800fa8eb997
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/unit.yaml
+  sha256_before: null
+  sha256_after: 7d7c69643a5414f79ee9c3256f3a5d05d5c80342cebe43f74126eec6db17d549
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  sha256_before: 9aa67c56b71fcd0cf88be953f6980bdca76029a0d4ef5ddc2193735b9210fef4
+  sha256_after: 1fecb9fa6852592dba00a42b81e447705f2de1d89ae05e5db2c534dcfcb754ca
+  created: false
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/unit.yaml
+  sha256_before: 6f9983b692b5caba428d4baa9c6cf5160a5ae1605bfb5483f5914957c6c504f7
+  sha256_after: 175f2c49ed40d02f14f3243fd9c507e36cbcf20db86a52bfbb14d89a8cac3e18
+  created: false
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-03-construction-i-o-schema-and-chunks/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/stages/stage-polars-07-type-promotion-coercion-and-strictness/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
+  sha256_before: null
+  sha256_after: 37d7ed0539edc899cdebb91543a0e53bcb498c5b5a44208470155c31fdd74c72
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/unit.yaml
+  sha256_before: null
+  sha256_after: 297bec25f719fb4fe7bddfdf47b53b77fd22f9b9888521e5e2c33b54f87cce0b
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-dropna/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-duplicates/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/stages/stage-polars-selection-head-tail-sample/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
+  sha256_before: null
+  sha256_after: 2df389b8f0908f0015ff615c8f01e22c325a8415d53548408818ba7db771ca26
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/unit.yaml
+  sha256_before: null
+  sha256_after: 32c6e97843836dbe34b24a8b5279b67d363b9d044a55ce72f9b13322c4742ca2
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: codex
+  request_id: request-job-polars-session-migration-20260903-001
+  idempotency_key: job-polars-session-migration-20260903-001
+  intent_sha256: sha256:f3277ec2fd787ec5a7d76d083df508ccf7e84d4bc3a4a0291017b4b19732a08a
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:f3277ec2fd787ec5a7d76d083df508ccf7e84d4bc3a4a0291017b4b19732a08a

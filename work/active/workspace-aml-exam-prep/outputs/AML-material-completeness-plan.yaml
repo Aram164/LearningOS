@@ -1,0 +1,3594 @@
+module_id: module-hu-aml
+plan_contract:
+  version: 1
+  coverage_audit: work/active/workspace-aml-exam-prep/outputs/AML-material-coverage-audit-2026-08-22.md
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+module_patch:
+  unit_order:
+  - unit-aml-l01
+  - unit-aml-l02
+  - unit-aml-l03
+  - unit-aml-l04
+  - unit-aml-l05
+  - unit-aml-l06
+  - unit-aml-l07
+  - unit-aml-l08
+  - unit-aml-l09
+  - unit-aml-l10
+  - unit-aml-l11
+  - unit-aml-exam-prep
+source_patches: []
+source_map:
+  type: module-source-map
+  module_id: module-hu-aml
+  sources:
+  - source_id: source-aml-ss26-lectures
+    role: course-material
+    why: Current L01-L11 decks define the 2026 scope. The primer, bonus sheets and Übung 02-11 provide course-aligned
+      practice; older L01-L10 variants are prior-year alternatives, and the older L11 RNN deck is superseded and
+      out of the 2026 exam scope.
+    priority: 0
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Current L01 lecture deck
+      format: course-material
+      angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
+        tasks, dataset notation, course expectations, and the examples the lecturer can examine.
+      covers:
+      - knowledge-aml-l01-history
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-data
+      - knowledge-aml-l01-generalization
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 01-Introduction.pdf
+    - unit_id: unit-aml-l01
+      title: Linear-algebra primer
+      format: course-material
+      angle: A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use it to
+        identify prerequisite gaps, not as a second full lecture.
+      covers:
+      - knowledge-aml-l01-prerequisites
+      - knowledge-aml-l01-data
+      depth: course-aligned
+      scope: prerequisite
+      locator: Primer_Linear_Algebra.pdf
+    - unit_id: unit-aml-l01
+      title: Older L01 lecture variant
+      format: course-material
+      angle: A prior-year version useful only for alternate examples or explanations omitted from the current
+        deck.
+      covers:
+      - knowledge-aml-l01-history
+      - knowledge-aml-l01-formulation
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
+    - unit_id: unit-aml-l02
+      title: Current L02 lecture deck
+      format: course-material
+      angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+        Lp distances, scaling, and sensitivity to irrelevant features.'
+      covers:
+      - knowledge-aml-l02-representation
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      - knowledge-aml-l02-dimensionality
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 02-nearest-neighbor.pdf
+    - unit_id: unit-aml-l02
+      title: Übung 02 — k-NN search with vector embeddings
+      format: exercise
+      angle: 'The current applied companion: CLIP embeddings, Stanford Dogs, NumPy, neighbour search, scaling,
+        and validation tasks turn the lecture geometry into executable work.'
+      covers:
+      - knowledge-aml-l02-representation
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      - knowledge-aml-l02-validation
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 02 .pdf
+    - unit_id: unit-aml-l02
+      title: Bonusblatt 01 — k-NN task
+      format: exercise
+      angle: Hand-worked k-NN classification and distance reasoning; Aufgabe 1 is vectorization support for L03,
+        while Aufgabe 2 is the direct L02 practice.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt01.pdf
+    - unit_id: unit-aml-l02
+      title: Older L02 lecture variant
+      format: course-material
+      angle: Prior-year alternate examples; the current 78-page deck remains the authority if wording or scope
+        differs.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
+    - unit_id: unit-aml-l03
+      title: Current L03 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+        vectorization, and the design matrix.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-linear-algebra
+      - knowledge-aml-l03-vectorization
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 03-linear-regression.pdf
+    - unit_id: unit-aml-l03
+      title: Übung 03 — vectorization and linear regression
+      format: exercise
+      angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization, and
+        a one-predictor regression implementation.
+      covers:
+      - knowledge-aml-l03-linear-algebra
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-loss
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 03.pdf
+    - unit_id: unit-aml-l03
+      title: Bonusblatt 01 — vectorization task
+      format: exercise
+      angle: Dimension and vectorization checks that expose shape mistakes before the design-matrix material.
+      covers:
+      - knowledge-aml-l03-linear-algebra
+      - knowledge-aml-l03-vectorization
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt01.pdf
+    - unit_id: unit-aml-l03
+      title: Bonusblatt 02 — linear-regression task
+      format: exercise
+      angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction from
+        fitted lines.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt02.pdf
+    - unit_id: unit-aml-l03
+      title: Older L03 lecture variant
+      format: course-material
+      angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
+        is unclear.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
+    - unit_id: unit-aml-l04
+      title: Current L04 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
+        Ridge, Lasso, and their geometric comparison.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-normal-equation
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 04-non-linear-regression.pdf
+    - unit_id: unit-aml-l04
+      title: Übung 04 — nonlinear regression and regularization
+      format: exercise
+      angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+        the second exercise sheet in one current tutorial deck.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 04.pdf
+    - unit_id: unit-aml-l04
+      title: Bonusblatt 02 — multivariate-regression task
+      format: exercise
+      angle: Interpreting a fitted multivariate equation and changing categorical predictors; the classification
+        task on the same sheet is a preview of L05.
+      covers:
+      - knowledge-aml-l04-multivariate
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt02.pdf
+    - unit_id: unit-aml-l04
+      title: Older L04 lecture variant
+      format: course-material
+      angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison only.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
+    - unit_id: unit-aml-l05
+      title: Current L05 lecture deck
+      format: course-material
+      angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
+        Bernoulli MLE to vectorized cross-entropy derivation.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      - knowledge-aml-l05-gradient
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 05-logistic-regression.pdf
+    - unit_id: unit-aml-l05
+      title: Übung 05 — logistic-regression geometry
+      format: exercise
+      angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The archive's
+        TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning object.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 05.pdf
+    - unit_id: unit-aml-l05
+      title: Übung 06 — logistic loss and fitted classifier
+      format: exercise
+      angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation,
+        and regularized logistic regression; it also begins the L06 optimizer bridge.
+      covers:
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-cross-entropy
+      - knowledge-aml-l05-gradient
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 06 .pdf
+    - unit_id: unit-aml-l05
+      title: Bonusblatt 02 — classification task
+      format: exercise
+      angle: A compact alien sentiment-classification problem for turning words/features into a binary prediction
+        setup.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt02.pdf
+    - unit_id: unit-aml-l05
+      title: Older L05 lecture variant
+      format: course-material
+      angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs a second
+        telling.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    - unit_id: unit-aml-l06
+      title: Current L06 lecture deck
+      format: course-material
+      angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+        convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-convexity
+      - knowledge-aml-l06-optimizers
+      - knowledge-aml-l06-newton
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 06-gradient_descent.pdf
+    - unit_id: unit-aml-l06
+      title: Übung 06 — gradient-descent bridge
+      format: exercise
+      angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
+        portions for L06 and its model/loss portions for L05.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 06 .pdf
+    - unit_id: unit-aml-l06
+      title: Bonusblatt 03 — gradient descent
+      format: exercise
+      angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt03.pdf
+    - unit_id: unit-aml-l06
+      title: Older L06 lecture variant
+      format: course-material
+      angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-optimizers
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
+    - unit_id: unit-aml-l07
+      title: Current L07 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature
+        maps, kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
+      covers:
+      - knowledge-aml-l07-linear-geometry
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-xor
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      - knowledge-aml-l07-multiclass
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 07-linear-classifiers.pdf
+    - unit_id: unit-aml-l07
+      title: Übung 07 — perceptron and kernel matrix
+      format: exercise
+      angle: A worked perceptron update, primal-to-dual rewrite, Gram/kernel matrix, common kernels, and exercise
+        discussion.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-kernels
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 07.pdf
+    - unit_id: unit-aml-l07
+      title: Bonusblatt 03 — model choice and decision boundary
+      format: exercise
+      angle: Compare k-NN, logistic regression, and perceptron boundaries, then reason about learning-rate and
+        feature-scaling effects inherited from L06.
+      covers:
+      - knowledge-aml-l07-linear-geometry
+      - knowledge-aml-l07-perceptron
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt03.pdf
+    - unit_id: unit-aml-l07
+      title: Bonusblatt 04 — perceptron and separability
+      format: exercise
+      angle: Aufgaben 1–2 trace the perceptron and test linear separability; Aufgaben 3–4 belong to the L08 neural-network
+        bridge.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-xor
+      - knowledge-aml-l07-linear-geometry
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt04.pdf
+    - unit_id: unit-aml-l07
+      title: Older L07 lecture variant
+      format: course-material
+      angle: Prior-year alternate examples for perceptron and kernels; do not import SVM content from external
+        sources.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
+    - unit_id: unit-aml-l08
+      title: Current L08 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+        softmax, and the full accuracy/precision/recall/F1 averaging block.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      - knowledge-aml-l08-metrics
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 08-feedforward-neural-network.pdf
+    - unit_id: unit-aml-l08
+      title: Bonusblatt 04 — neural-network tasks
+      format: exercise
+      angle: Aufgaben 3–4 move from a single-layer gate to a multilayer network and are the only local dedicated
+        L08 practice; Aufgaben 1–2 remain L07.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: practice
+      scope: current
+      locator: bonus-exercises/zusatz-blatt04.pdf
+    - unit_id: unit-aml-l08
+      title: Older L08 lecture variant
+      format: course-material
+      angle: Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics
+        scope.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
+    - unit_id: unit-aml-l09
+      title: Current L09 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+        example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-stopping
+      - knowledge-aml-l09-gradient-health
+      - knowledge-aml-l09-autograd
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 09-neural-networks.pdf
+    - unit_id: unit-aml-l09
+      title: Older L09 lecture variant
+      format: course-material
+      angle: Prior-year second telling of backpropagation and training; current slides establish that batch normalization
+        is not in scope.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-gradient-health
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
+    - unit_id: unit-aml-l10
+      title: Current L10 lecture deck
+      format: course-material
+      angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
+        complete CNNs, and the LeNet-to-ResNet architecture lineage.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 10-cnn.pdf
+    - unit_id: unit-aml-l10
+      title: Older L10 lecture variant
+      format: course-material
+      angle: Prior-year alternate filter and architecture examples; no local L10 exercise sheet is present.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-architectures
+      depth: advanced-reference
+      scope: prior-year
+      locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    - unit_id: unit-aml-l07
+      title: Übung 08 — dual and kernel perceptron
+      format: exercise
+      angle: The current lecturer-worked route through the dual perceptron, Gram-matrix computations and the transition
+        from kernelized linear classifiers toward multilayer networks.
+      covers:
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-multiclass
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 08.pdf
+    - unit_id: unit-aml-l08
+      title: Übung 08–09 — MLP and feedforward practice
+      format: exercise
+      angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+        output heads and course-sheet calculations.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
+    - unit_id: unit-aml-l09
+      title: Übung 10 — computation graphs and autodiff
+      format: exercise
+      angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
+        backpropagation and the framework/autodiff connection.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-autograd
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
+    - unit_id: unit-aml-l10
+      title: Übung 11 — CNN calculations and fourth sheet
+      format: exercise
+      angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
+        shapes, architecture examples and the fourth sheet/bonus discussion.'
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 11.pdf
+    - unit_id: unit-aml-l11
+      title: Current L11 Transformers lecture deck
+      format: course-material
+      angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified attention,
+        Q/K/V multi-head attention, positional information, Transformer blocks, language modelling, and the bonus
+        parallelization/masking section.'
+      covers:
+      - knowledge-aml-l11-language-task
+      - knowledge-aml-l11-tokenization
+      - knowledge-aml-l11-embeddings
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-qkv
+      - knowledge-aml-l11-position
+      - knowledge-aml-l11-block
+      - knowledge-aml-l11-training
+      - knowledge-aml-l11-parallelization
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 11-transformers.pdf (81 pages)
+    - unit_id: unit-aml-exam-prep
+      title: Current AML L01–L11 scope spine
+      format: course-material
+      angle: Provides the exact 2026 definitions, notation, worked examples and topic boundaries for calibration,
+        repair and mixed-exam transfer.
+      covers:
+      - knowledge-aml-exam-scope
+      - knowledge-aml-exam-calibration
+      - knowledge-aml-exam-classical
+      - knowledge-aml-exam-neural
+      - knowledge-aml-exam-integration
+      depth: course-aligned
+      scope: current
+      locator: lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf
+    - unit_id: unit-aml-exam-prep
+      title: Current AML exercises and bonus sheets
+      format: exercise
+      angle: Course-native calculations and lecturer-worked solution language for the full syllabus; used before
+        external repair sources and paired with the existing per-lecture banks and mocks.
+      covers:
+      - knowledge-aml-exam-calibration
+      - knowledge-aml-exam-classical
+      - knowledge-aml-exam-neural
+      - knowledge-aml-exam-error-control
+      depth: practice
+      scope: current
+      locator: exercise-slides/Übung 02-11.pdf and bonus-exercises/zusatz-blatt01-04.pdf
+    - unit_id: unit-aml-exam-prep
+      title: Übung 10 — exam notice and Themen list
+      format: exercise
+      angle: 'The course''s explicit scope and logistics evidence: eleven topics ending in Transformers, plus
+        the first-sitting rules used as the rehearsal baseline until a second-sitting notice appears.'
+      covers:
+      - knowledge-aml-exam-scope
+      - knowledge-aml-exam-logistics
+      depth: orientation
+      scope: current
+      locator: exercise-slides/Übung 10.pdf, slides 2–3
+  - source_id: source-islp
+    role: spine
+    why: Gentle statistical-learning spine; Ch 2 for framing, Ch 10 for neural networks/CNNs/RNNs, and scoped
+      chapters for L02–L07.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: ISLP Chapter 2 — statistical learning
+      format: book
+      angle: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised tasks, model
+        flexibility, train/test error, and the vocabulary behind problem formulation.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-generalization
+      depth: intuition
+      scope: complementary
+      locator: Chapter 2, especially §§2.1–2.2
+    - unit_id: unit-aml-l02
+      title: ISLP k-NN, flexibility, and validation selections
+      format: book
+      angle: The clearest gentle reading for the U-shaped test-error curve, k-NN versus linear models, bias-variance,
+        and choosing k by validation.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: intuition
+      scope: complementary
+      locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4
+    - unit_id: unit-aml-l03
+      title: ISLP Chapter 3 — linear regression
+      format: book
+      angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
+        and diagnostics beyond the deck's derivation-first treatment.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      depth: intuition
+      scope: complementary
+      locator: §§3.1–3.3
+    - unit_id: unit-aml-l04
+      title: ISLP polynomial regression, Ridge, and Lasso
+      format: book
+      angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
+        splines/subset selection because they exceed the lecture.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: intuition
+      scope: complementary
+      locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    - unit_id: unit-aml-l05
+      title: ISLP logistic-regression sections
+      format: book
+      angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting;
+        lighter on the full vectorized cross-entropy derivation than the deck.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      depth: intuition
+      scope: complementary
+      locator: §4.3, especially §§4.3.1 and 4.3.4
+    - unit_id: unit-aml-l06
+      title: ISLP neural-network optimization selection
+      format: book
+      angle: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as a compact training/SGD
+        review after the lecture, not as the primary L06 explanation.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      depth: orientation
+      scope: optional
+      locator: §10.7
+    - unit_id: unit-aml-l07
+      title: ISLP one-versus-all and kernel enrichment
+      format: book
+      angle: §9.4.2 is an exact one-page match for one-vs-rest. The kernel material is taught through SVMs, so
+        §9.3.2 is enrichment only and must not redefine the lecture as an SVM unit.
+      covers:
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-multiclass
+      depth: advanced-reference
+      scope: optional
+      locator: §9.4.2; optional §9.3.2 only
+    - unit_id: unit-aml-l08
+      title: ISLP feedforward-network introduction
+      format: book
+      angle: The gentlest book-length account of network notation, forward passes, parameter counting, and output
+        construction; good when the deck moves too quickly through shapes.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: intuition
+      scope: complementary
+      locator: §§10.1–10.2
+    - unit_id: unit-aml-l09
+      title: ISLP training, regularization, and double descent
+      format: book
+      angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout, and
+        the interpolation-threshold picture of double descent.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-stopping
+      depth: intuition
+      scope: complementary
+      locator: §§10.7–10.8
+    - unit_id: unit-aml-l10
+      title: ISLP convolutional-neural-network section
+      format: book
+      angle: A gentle full CNN pass through convolutional layers, pooling, architecture, and data augmentation;
+        ideal before deeper shape and architecture references.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      depth: intuition
+      scope: complementary
+      locator: §10.3, pp. 406–415
+  - source_id: source-esl
+    role: optional-depth
+    why: Graduate-depth statistical learning; selected only after the course/ISLP pass and never as the first
+      neural-network source.
+    priority: 10
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: ESL nearest-neighbour and model-selection depth
+      format: book
+      angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit bias-variance
+        decomposition, and cross-validation.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-dimensionality
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: derivation
+      scope: optional
+      locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
+    - unit_id: unit-aml-l03
+      title: ESL least-squares statistical depth
+      format: book
+      angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after the
+        deck or ISLP.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-probabilistic
+      depth: advanced-reference
+      scope: optional
+      locator: Chapter 3 selected sections
+    - unit_id: unit-aml-l04
+      title: ESL Ridge and Lasso depth
+      format: book
+      angle: 'The strongest advanced explanation of shrinkage: SVD geometry for Ridge, constrained optimization,
+        and why Lasso creates sparsity.'
+      covers:
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: derivation
+      scope: optional
+      locator: §§3.4.1–3.4.3
+    - unit_id: unit-aml-l05
+      title: ESL logistic-regression depth
+      format: book
+      angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown through
+        Newton/IRLS rather than the L06 gradient-descent route.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      depth: advanced-reference
+      scope: optional
+      locator: §4.4, especially §§4.4.1 and 4.4.4
+    - unit_id: unit-aml-l07
+      title: ESL perceptron convergence
+      format: book
+      angle: One of the few local book treatments of the Rosenblatt algorithm and its convergence result; kernel
+        chapters are SVM-heavy and therefore not the lecture spine.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-linear-geometry
+      depth: derivation
+      scope: optional
+      locator: §4.5.1
+    - unit_id: unit-aml-l08
+      title: ESL neural-network historical and statistical view
+      format: book
+      angle: A graduate statistical-learning perspective on feedforward networks; useful for context after the
+        simpler forward-pass sources.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: advanced-reference
+      scope: optional
+      locator: Chapter 11 selected sections
+    - unit_id: unit-aml-l09
+      title: ESL neural-network training depth
+      format: book
+      angle: Historical/statistical treatment of fitting and regularization; broader but less directly aligned
+        with the deck computation-graph notation.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: advanced-reference
+      scope: optional
+      locator: Chapter 11 training selections
+    - unit_id: unit-aml-l10
+      title: ESL early weight-sharing example
+      format: book
+      angle: LeCun ZIP-code networks show the historical origin of local connectivity and weight sharing, but
+        ESL has no modern full CNN treatment.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-architectures
+      depth: advanced-reference
+      scope: optional
+      locator: §11.7
+  - source_id: source-murphy-pml1
+    role: derivation
+    why: Best end-to-end MLE/optimization and neural-network derivation spine; exact sections are routed per lecture.
+    priority: 2
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: Murphy k-NN and dimensionality
+      format: book
+      angle: A concise derivation/reference for exemplar methods and the curse of dimensionality, plus a careful
+        bias-variance discussion.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-dimensionality
+      - knowledge-aml-l02-bias-variance
+      depth: derivation
+      scope: complementary
+      locator: §16.1; §4.7.6
+    - unit_id: unit-aml-l03
+      title: Murphy linear regression and Gaussian MLE
+      format: book
+      angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact
+        matrix notation.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-probabilistic
+      depth: derivation
+      scope: complementary
+      locator: Chapter 11 selected sections
+    - unit_id: unit-aml-l04
+      title: Murphy basis functions and regularized regression
+      format: book
+      angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections,
+        and regularization.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: derivation
+      scope: complementary
+      locator: Chapter 11 regression and regularization selections
+    - unit_id: unit-aml-l05
+      title: Murphy logistic regression end to end
+      format: book
+      angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+        joining L05 to L06.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      - knowledge-aml-l05-gradient
+      depth: derivation
+      scope: complementary
+      locator: Chapter 10, especially §§10.2.3–10.2.5
+    - unit_id: unit-aml-l06
+      title: Murphy optimization chapter
+      format: book
+      angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+        methods, and second-order ideas.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-convexity
+      - knowledge-aml-l06-optimizers
+      - knowledge-aml-l06-newton
+      depth: derivation
+      scope: complementary
+      locator: Chapter 8, especially §8.4
+    - unit_id: unit-aml-l07
+      title: Murphy kernels and perceptron link
+      format: book
+      angle: A reference for Mercer/popular kernels and the view of perceptron as hard-threshold logistic regression;
+        avoid unrelated SVM depth.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: derivation
+      scope: optional
+      locator: §§10.2.5, 17.1–17.1.2
+    - unit_id: unit-aml-l08
+      title: Murphy MLPs, XOR, and activations
+      format: book
+      angle: A derivation-oriented telling of XOR by stacking, layer equations, and why saturation and ReLU matter.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: derivation
+      scope: complementary
+      locator: §13.2
+    - unit_id: unit-aml-l09
+      title: Murphy reverse-mode backprop and training
+      format: book
+      angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+        products, gradient pathologies, and all three regularizers.'
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-gradient-health
+      depth: derivation
+      scope: complementary
+      locator: §§13.3–13.5
+    - unit_id: unit-aml-l10
+      title: Murphy convolution and classic CNN architectures
+      format: book
+      angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
+        and ResNet coverage.'
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: derivation
+      scope: complementary
+      locator: §§14.1–14.3
+    - unit_id: unit-aml-l03
+      title: Murphy §11.2.2 — least squares as a negative log-likelihood
+      format: book
+      angle: Introduces the regression objective as the negative log likelihood rather than as a chosen loss,
+        which is the bridge the deck marks optional; §11.2.4 then reads the same fit as goodness of fit.
+      covers:
+      - knowledge-aml-l03-probabilistic
+      depth: derivation
+      scope: complementary
+      locator: §11.2.2 Least squares estimation p. 372; §11.2.4 Measuring goodness of fit p. 380
+    - unit_id: unit-aml-l06
+      title: Murphy §8.1.3 — convex versus nonconvex, and the Hessian test
+      format: book
+      angle: States the convexity condition the lecture asserts, and gives the positive-(semi)definite Hessian
+        test that decides whether the regression objectives are well behaved.
+      covers:
+      - knowledge-aml-l06-convexity
+      depth: derivation
+      scope: complementary
+      locator: §8.1.3 Convex vs nonconvex optimization pp. 277–281 (Hessian and positive-definite test on pp.
+        277 and 280)
+    - unit_id: unit-aml-l06
+      title: Murphy §8.3 — Newton and the quasi-Newton family
+      format: book
+      angle: 'Derives the curvature-aware update the deck compares against first-order methods, and prices the
+        Hessian: BFGS and trust regions are what you use when you cannot afford it.'
+      covers:
+      - knowledge-aml-l06-newton
+      depth: derivation
+      scope: complementary
+      locator: §8.3 Second-order methods pp. 289–291 (Newton's method p. 289, BFGS and quasi-Newton p. 290, trust
+        region p. 291)
+    - unit_id: unit-aml-l06
+      title: Murphy §8.4.6 — the adaptive optimizers derived in one place
+      format: book
+      angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
+        bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
+      covers:
+      - knowledge-aml-l06-optimizers
+      - knowledge-aml-l06-stochastic
+      depth: derivation
+      scope: complementary
+      locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300, Adam p.
+        300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
+    - unit_id: unit-aml-l06
+      title: Murphy solution manual §10.1 — gradient and Hessian worked out
+      format: book
+      angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic log-likelihood:
+        the one place on the shelf where the convexity claim and the Newton update are computed rather than asserted.'
+      covers:
+      - knowledge-aml-l06-convexity
+      - knowledge-aml-l06-newton
+      depth: practice
+      scope: complementary
+      locator: solutions-public.pdf §10.1 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+        (solves exercise 10.1 of the main text)
+    - unit_id: unit-aml-l11
+      title: Murphy §15.4 — attention as a soft dictionary lookup
+      format: book
+      angle: 'Gives the interpretation the deck''s first worked example leaves implicit: attention weights are
+        a softmax over similarity scores, i.e. a differentiable dictionary lookup, before any learned projection
+        appears.'
+      covers:
+      - knowledge-aml-l11-attention
+      depth: derivation
+      scope: complementary
+      locator: §15.4 Attention pp. 518–525 (attention as soft dictionary lookup p. 519, parametric attention p.
+        521)
+    - unit_id: unit-aml-l11
+      title: Murphy §15.5 — the Transformer assembled step by step
+      format: book
+      angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional encoding,
+        then the assembled block — in equations, and closes with the comparison against CNNs and RNNs that the
+        lecture only gestures at.
+      covers:
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-qkv
+      - knowledge-aml-l11-position
+      - knowledge-aml-l11-block
+      depth: derivation
+      scope: complementary
+      locator: §15.5 Transformers pp. 526–532 (self-attention p. 526, multi-headed attention p. 527, positional
+        encoding p. 528, putting it all together p. 529, comparing transformers, CNNs and RNNs p. 531)
+    - unit_id: unit-aml-l11
+      title: Murphy §15.7 — language modelling as the training objective
+      format: book
+      angle: Connects the block's outputs back to next-token prediction and the same cross-entropy introduced
+        in L05; read for the objective, not for the LLM survey.
+      covers:
+      - knowledge-aml-l11-language-task
+      - knowledge-aml-l11-training
+      depth: advanced-reference
+      scope: optional
+      locator: §15.7 Language models and unsupervised representation learning pp. 537–546 (non-generative models
+        p. 538, generative causal LLMs p. 542)
+    - unit_id: unit-aml-l11
+      title: Murphy §20.5 — where static embeddings come from
+      format: book
+      angle: The deck states that embedding lookup maps tokens to vectors; this section is how those vectors are
+        learned, which is the contrast that makes 'contextual' mean something.
+      covers:
+      - knowledge-aml-l11-embeddings
+      depth: derivation
+      scope: complementary
+      locator: §20.5 Word embeddings pp. 705–712 (latent semantic analysis p. 705, word2vec p. 707, GloVe p. 710,
+        word analogies p. 710)
+    - unit_id: unit-aml-exam-prep
+      title: Murphy — the derivation bank behind the two repair clusters
+      format: book
+      angle: 'Consulted by section after a diagnosed miss, never read linearly: Ch 8 for the optimizer and convexity
+        cluster, §15.4–15.5 for the Transformer cluster.'
+      covers:
+      - knowledge-aml-exam-classical
+      - knowledge-aml-exam-neural
+      depth: derivation
+      scope: complementary
+      locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
+        solution manual §10.1 and §13.1
+  - source_id: source-csc411-notes
+    role: reference
+    why: Compact independent notes for regression, classifiers, metrics, neural networks, backpropagation, and
+      CNNs.
+    priority: 11
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: CSC411 compact k-NN notes
+      format: documentation
+      angle: A short independent notation check for nearest-neighbour algorithms and their geometric/statistical
+        interpretation.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      depth: orientation
+      scope: complementary
+      locator: §3.4 and §8.4
+    - unit_id: unit-aml-l03
+      title: CSC411 linear-regression notes
+      format: documentation
+      angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      depth: orientation
+      scope: complementary
+      locator: Chapter 2
+    - unit_id: unit-aml-l04
+      title: CSC411 nonlinear regression and regularization
+      format: documentation
+      angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting, then regularization.'
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: course-aligned
+      scope: complementary
+      locator: Chapter 3 selected sections
+    - unit_id: unit-aml-l05
+      title: CSC411 classification and logistic loss
+      format: documentation
+      angle: A concise explanation of why linear regression is unsuitable for classification and how logistic
+        scoring fixes it.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-cross-entropy
+      depth: orientation
+      scope: complementary
+      locator: Classification selections
+    - unit_id: unit-aml-l06
+      title: CSC411 gradient-descent reference
+      format: documentation
+      angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      depth: orientation
+      scope: complementary
+      locator: Optimization selections
+    - unit_id: unit-aml-l07
+      title: CSC411 linear-classifier reference
+      format: documentation
+      angle: Independent notes for classifier scores, decision boundaries, perceptron-style updates, and feature
+        mappings.
+      covers:
+      - knowledge-aml-l07-linear-geometry
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-kernels
+      depth: orientation
+      scope: complementary
+      locator: Linear-classifier selections
+    - unit_id: unit-aml-l08
+      title: CSC411 network and metrics notes
+      format: documentation
+      angle: A compact alternate notation for feedforward networks plus classification evaluation definitions.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-metrics
+      depth: orientation
+      scope: complementary
+      locator: §3.3 and §8.3 selections
+    - unit_id: unit-aml-l09
+      title: CSC411 backpropagation notes
+      format: documentation
+      angle: A concise second derivation for backward passes and training when the full books are too slow.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: orientation
+      scope: complementary
+      locator: Neural-network training selections
+    - unit_id: unit-aml-l10
+      title: CSC411 CNN notes
+      format: documentation
+      angle: A compact independent reference for convolutional layers, shape flow, and architecture structure.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      depth: orientation
+      scope: complementary
+      locator: CNN selections
+  - source_id: source-kroese-dsml
+    role: reference
+    why: Independent data-science/ML text; selected sections support evaluation, neural networks, and implementation.
+    priority: 12
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Kroese ML workflow framing
+      format: book
+      angle: An independent data-science view of models, data, evaluation, and workflow; useful as a terminology
+        cross-check.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-generalization
+      depth: orientation
+      scope: optional
+      locator: Introductory ML and evaluation selections
+    - unit_id: unit-aml-l02
+      title: Kroese k-NN and cross-validation
+      format: book
+      angle: Statistical phrasing of neighbour prediction and validation with denser notation than ISLP.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-validation
+      depth: advanced-reference
+      scope: optional
+      locator: §7.6 and §2.5.2
+    - unit_id: unit-aml-l03
+      title: Kroese regression reference
+      format: book
+      angle: An independent matrix/statistical formulation of regression for checking notation and evaluation
+        concepts.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-probabilistic
+      depth: advanced-reference
+      scope: optional
+      locator: Regression selections
+    - unit_id: unit-aml-l04
+      title: Kroese nonlinear and regularized regression
+      format: book
+      angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve
+        a specific derivation gap.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: advanced-reference
+      scope: optional
+      locator: Regression and regularization selections
+    - unit_id: unit-aml-l05
+      title: Kroese logistic and softmax models
+      format: book
+      angle: Connects binary logistic regression to its multiclass softmax generalization and evaluation language.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-cross-entropy
+      depth: derivation
+      scope: optional
+      locator: §7.5
+    - unit_id: unit-aml-l08
+      title: Kroese networks and evaluation
+      format: book
+      angle: Rigorous matrix notation for forward networks paired with an independent metric reference.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-metrics
+      depth: derivation
+      scope: optional
+      locator: §9.2 and §7.2
+    - unit_id: unit-aml-l09
+      title: Kroese layer-wise backpropagation
+      format: book
+      angle: The four backward rules in rigorous matrix notation; particularly useful for verifying shapes.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: derivation
+      scope: complementary
+      locator: §9.3
+    - unit_id: unit-aml-l10
+      title: Kroese CNN reference
+      format: book
+      angle: A dense independent account of convolutional networks and implementation-oriented examples.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      depth: advanced-reference
+      scope: optional
+      locator: CNN selections
+  - source_id: source-mml
+    role: derivation
+    why: Mathematical safety net, especially Ch 5 chain rule/matrix calculus and Ch 7 optimization; it has no
+      useful k-NN or logistic-regression first pass.
+    priority: 5
+    unit_routes:
+    - unit_id: unit-aml-l03
+      title: MML linear regression as MLE
+      format: book
+      angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra
+        rather than the model intuition is the gap.
+      covers:
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-probabilistic
+      depth: derivation
+      scope: optional
+      locator: Chapter 9
+    - unit_id: unit-aml-l04
+      title: MML multivariate regression and MAP/Ridge bridge
+      format: book
+      angle: Shows the matrix solution and how a Gaussian prior produces Ridge-style regularization.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-normal-equation
+      - knowledge-aml-l04-ridge
+      depth: derivation
+      scope: optional
+      locator: Chapter 9 selected sections
+    - unit_id: unit-aml-l06
+      title: MML continuous optimization
+      format: book
+      angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-convexity
+      - knowledge-aml-l06-optimizers
+      depth: derivation
+      scope: optional
+      locator: Chapter 7
+    - unit_id: unit-aml-l09
+      title: MML chain rule and matrix calculus
+      format: book
+      angle: A targeted mathematical safety net for understanding why layer-wise backpropagation rules are correct.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: derivation
+      scope: complementary
+      locator: §5.6
+  - source_id: source-cs229-notes
+    role: derivation
+    why: Concise derivations for regression/classification/optimization, the only selected kernels-without-SVM
+      chapter for L07, and neural-network fundamentals.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: CS229 bias-variance and model selection
+      format: documentation
+      angle: No k-NN algorithm coverage, but a concise Bias²+Variance+noise derivation and cross-validation framework
+        that transfers directly.
+      covers:
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: derivation
+      scope: optional
+      locator: §8.1 and §9.3
+    - unit_id: unit-aml-l03
+      title: CS229 LMS and normal-equation notes
+      format: documentation
+      angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian MLE in
+        lecture-compatible notation.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-probabilistic
+      depth: derivation
+      scope: complementary
+      locator: §§1.1–1.3
+    - unit_id: unit-aml-l04
+      title: CS229 feature maps and regularization
+      format: documentation
+      angle: Connects polynomial basis expansion to general feature maps and gives a clean penalty/weight-decay
+        derivation.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: derivation
+      scope: complementary
+      locator: §§5.1–5.2 and §9.1
+    - unit_id: unit-aml-l05
+      title: CS229 logistic and GLM derivations
+      format: documentation
+      angle: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli outputs imply a sigmoid.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      - knowledge-aml-l05-gradient
+      depth: derivation
+      scope: complementary
+      locator: §2.1 and §3.2.2; optional §2.3 Newton
+    - unit_id: unit-aml-l06
+      title: CS229 gradient-descent derivation
+      format: documentation
+      angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
+        extensions.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-convexity
+      depth: derivation
+      scope: complementary
+      locator: §1.1 and optimization selections
+    - unit_id: unit-aml-l07
+      title: CS229 kernels without an SVM dependency
+      format: documentation
+      angle: The only selected written route that develops feature maps, kernelized LMS/perceptron thinking, and
+        valid kernels without making SVM the topic.
+      covers:
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: derivation
+      scope: complementary
+      locator: Chapter 5, §§5.1–5.4
+    - unit_id: unit-aml-l08
+      title: CS229 neural-network fundamentals
+      format: documentation
+      angle: Builds from a neuron to multilayer ReLU networks and vectorized forward propagation in compact notation.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: derivation
+      scope: complementary
+      locator: §§7.1–7.2 and §7.4
+    - unit_id: unit-aml-l09
+      title: CS229 backprop, regularization, and double descent
+      format: documentation
+      angle: A compact written derivation close to the four layer rules, plus weight decay and a second strong
+        double-descent treatment.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-stopping
+      depth: derivation
+      scope: complementary
+      locator: §7.3, §8.2, and §9.1
+    - unit_id: unit-aml-l10
+      title: CS229 convolutional-network overview
+      format: documentation
+      angle: A broad neural-network reference only; use CS231n or Murphy for exact convolution arithmetic and
+        architecture depth.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-network
+      depth: orientation
+      scope: optional
+      locator: CNN overview selections
+  - source_id: source-cs229-2022-videos
+    role: optional-depth
+    why: Topic-matched lecture spine only; numbering is verified by topic and the course is never watched linearly.
+    priority: 13
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: CS229 model selection and bias-variance lecture
+      format: video
+      angle: A full university-lecture alternative for model complexity and validation; it does not teach the
+        k-NN mechanics themselves.
+      covers:
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: advanced-reference
+      scope: optional
+      locator: Bias-variance and model-selection lecture
+    - unit_id: unit-aml-l03
+      title: CS229 linear-regression lecture
+      format: video
+      angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-probabilistic
+      depth: derivation
+      scope: optional
+      locator: Lecture 2 — Linear Regression and Gradient Descent
+    - unit_id: unit-aml-l04
+      title: CS229 feature maps and regularization lectures
+      format: video
+      angle: University-lecture depth on basis functions, model complexity, and regularization; select segments
+        rather than watching the course linearly.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: advanced-reference
+      scope: optional
+      locator: Feature-map/model-selection segments
+    - unit_id: unit-aml-l05
+      title: CS229 logistic-regression lecture
+      format: video
+      angle: A rigorous lecture alternative for sigmoid classification, likelihood, and the logistic gradient.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-gradient
+      depth: derivation
+      scope: optional
+      locator: Lecture 3 — Logistic Regression
+    - unit_id: unit-aml-l06
+      title: CS229 optimization segments
+      format: video
+      angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-convexity
+      depth: advanced-reference
+      scope: optional
+      locator: Gradient-descent and optimization segments
+    - unit_id: unit-aml-l07
+      title: CS229 kernel lecture selections
+      format: video
+      angle: Watch only the feature-map/kernel construction; skip the SVM half because maximum margin is absent
+        from AML L07.
+      covers:
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: advanced-reference
+      scope: optional
+      locator: Lecture 7 — kernel portions only
+    - unit_id: unit-aml-l08
+      title: CS229 neural-networks lecture I
+      format: video
+      angle: A university-level alternative for network construction, activations, and forward propagation.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: advanced-reference
+      scope: optional
+      locator: Lecture 8 — Neural Networks
+    - unit_id: unit-aml-l09
+      title: CS229 neural-networks lecture II
+      format: video
+      angle: A deeper alternative for backpropagation, regularization, and training mechanics.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: advanced-reference
+      scope: optional
+      locator: Lecture 9 — Neural Networks
+    - unit_id: unit-aml-l10
+      title: CS229 CNN segments
+      format: video
+      angle: Broad deep-learning context only; use the course deck, EECS 498, or CS231n for detailed CNN arithmetic.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-network
+      depth: orientation
+      scope: optional
+      locator: CNN overview segments
+  - source_id: source-mit-6036
+    role: practice
+    why: Auto-graded/structured ML units for perceptron, regression, classification, model selection, and neural-network
+      fundamentals.
+    priority: 14
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: MIT 6.036 introduction and representations
+      format: course
+      angle: A structured independent course entry with representations, task families, overfitting, and generalization
+        checks.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-data
+      - knowledge-aml-l01-generalization
+      depth: course-aligned
+      scope: complementary
+      locator: Introduction and representations units
+    - unit_id: unit-aml-l02
+      title: MIT 6.036 nearest-neighbour and model-selection practice
+      format: course
+      angle: Structured exercises around similarity, validation, and generalization; useful when passive reading
+        is not enough.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: practice
+      scope: complementary
+      locator: Nearest-neighbour/model-selection units
+    - unit_id: unit-aml-l03
+      title: MIT 6.036 regression unit
+      format: course
+      angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution reasoning.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      depth: practice
+      scope: complementary
+      locator: Regression units
+    - unit_id: unit-aml-l04
+      title: MIT 6.036 features and regularization unit
+      format: course
+      angle: Structured exercises for polynomial feature transformations, overfitting, and model selection.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      depth: practice
+      scope: complementary
+      locator: Features and regularization units
+    - unit_id: unit-aml-l05
+      title: MIT 6.036 classification unit
+      format: course
+      angle: Practice-oriented binary-classification and logistic-model work with immediate feedback.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-cross-entropy
+      depth: practice
+      scope: complementary
+      locator: Linear classification units
+    - unit_id: unit-aml-l06
+      title: MIT 6.036 optimization exercises
+      format: course
+      angle: Structured gradient-update and learning-rate practice rather than another long theoretical explanation.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      depth: practice
+      scope: complementary
+      locator: Optimization units
+    - unit_id: unit-aml-l07
+      title: MIT 6.036 perceptron and feature-transform units
+      format: course
+      angle: Auto-graded perceptron, separability, and feature-mapping work closely aligned with written-exam
+        mechanics.
+      covers:
+      - knowledge-aml-l07-linear-geometry
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-xor
+      - knowledge-aml-l07-kernels
+      depth: practice
+      scope: complementary
+      locator: Perceptron and feature-transform units
+    - unit_id: unit-aml-l08
+      title: MIT 6.036 neural-network fundamentals
+      format: course
+      angle: Structured forward-pass, activation, and architecture exercises with feedback.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: practice
+      scope: complementary
+      locator: Neural-network fundamentals units
+    - unit_id: unit-aml-l09
+      title: MIT 6.036 neural-network training exercises
+      format: course
+      angle: Practice for gradients and network training at an introductory level; use deeper sources for the
+        full computation-graph derivation.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: practice
+      scope: complementary
+      locator: Neural-network training units
+  - source_id: source-eecs498
+    role: optional-depth
+    why: Optional university-level depth for the current L08-L10 neural-network and CNN arc. Its RNN lecture is
+      outside the 2026 AML scope and is not routed to L11.
+    priority: 15
+    unit_routes:
+    - unit_id: unit-aml-l06
+      title: EECS 498 Lecture 4 — Optimization
+      format: video
+      angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
+        almost one-to-one with the L06 optimizer outlook.
+      covers:
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-optimizers
+      - knowledge-aml-l06-newton
+      depth: advanced-reference
+      scope: optional
+      locator: Lecture 4 — Optimization
+    - unit_id: unit-aml-l08
+      title: EECS 498 Lecture 5 — Neural Networks
+      format: video
+      angle: A deeper computer-vision-course explanation of fully connected networks, activations, forward passes,
+        and design choices.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: advanced-reference
+      scope: optional
+      locator: Lecture 5 — Neural Networks
+    - unit_id: unit-aml-l09
+      title: EECS 498 Lecture 6 — Backpropagation
+      format: video
+      angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and adding
+        worked gradient traces.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: derivation
+      scope: complementary
+      locator: Lecture 6 — Backpropagation
+    - unit_id: unit-aml-l10
+      title: EECS 498 Lectures 7–8 — CNNs and architectures
+      format: video
+      angle: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet design reasoning; batch-normalization
+        segments exceed AML scope.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: derivation
+      scope: complementary
+      locator: Lectures 7–8
+  - source_id: source-cs231n-notes
+    role: reference
+    why: Written classification/optimization/ConvNet notes; the CNN notes are an especially close L10 complement.
+    priority: 16
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: CS231n Image Classification notes
+      format: website
+      angle: A concrete image-classification walkthrough of k-NN, validation sets, and k-fold cross-validation
+        that mirrors the local exercise.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-validation
+      depth: course-aligned
+      scope: complementary
+      locator: 'Image Classification: k-NN and validation'
+      url: https://cs231n.github.io/classification/
+    - unit_id: unit-aml-l06
+      title: CS231n Optimization notes
+      format: website
+      angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization diagnostics.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      - knowledge-aml-l06-rate-scaling
+      depth: intuition
+      scope: complementary
+      locator: 'Optimization: Stochastic Gradient Descent'
+      url: https://cs231n.github.io/optimization-1/
+    - unit_id: unit-aml-l10
+      title: CS231n Convolutional Networks notes
+      format: website
+      angle: The standard written CNN reference for output shapes, channels, parameter counts, pooling, receptive
+        fields, and architecture patterns.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      depth: derivation
+      scope: complementary
+      locator: Convolutional Networks
+      url: https://cs231n.github.io/convolutional-networks/
+  - source_id: source-cs231n-2017-videos
+    role: optional-depth
+    why: Original CNN lecture alternative; use only the convolution/architecture lectures, not the full course.
+    priority: 17
+    unit_routes:
+    - unit_id: unit-aml-l10
+      title: CS231n 2017 convolution and architecture lectures
+      format: video
+      angle: The original full-lecture alternative for convolutional layers and classic architectures; use selected
+        CNN lectures rather than the entire playlist.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: advanced-reference
+      scope: optional
+      locator: CNN and architecture lectures
+  - source_id: source-statquest
+    role: intuition
+    why: Short explainers for metrics, neurons, gradient descent, backpropagation, and CNN intuition.
+    priority: 18
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: StatQuest bias-variance and cross-validation videos
+      format: video
+      angle: Short visual explainers for overfitting, the bias-variance tradeoff, and validation when the formal
+        texts feel abstract.
+      covers:
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: intuition
+      scope: complementary
+      locator: Bias and Variance; Cross Validation
+    - unit_id: unit-aml-l03
+      title: StatQuest linear regression and least squares
+      format: video
+      angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than the lecture
+        derivation.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      depth: intuition
+      scope: complementary
+      locator: Linear Regression; Least Squares; R-squared
+    - unit_id: unit-aml-l04
+      title: StatQuest Ridge and Lasso trilogy
+      format: video
+      angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their geometric
+        difference.
+      covers:
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      - knowledge-aml-l04-overfitting
+      depth: intuition
+      scope: complementary
+      locator: Ridge Regression; Lasso Regression; Elastic Net
+    - unit_id: unit-aml-l05
+      title: StatQuest logistic regression and MLE videos
+      format: video
+      angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli labels
+        before the cross-entropy derivation.
+      covers:
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      depth: intuition
+      scope: complementary
+      locator: Logistic Regression; Maximum Likelihood
+    - unit_id: unit-aml-l06
+      title: StatQuest gradient descent and SGD
+      format: video
+      angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      depth: intuition
+      scope: complementary
+      locator: Gradient Descent; Stochastic Gradient Descent
+    - unit_id: unit-aml-l07
+      title: StatQuest Kernel Trick
+      format: video
+      angle: A visual explanation of implicit feature mappings and nonlinear separation; use the deck/CS229 for
+        the exact dual computation.
+      covers:
+      - knowledge-aml-l07-xor
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: intuition
+      scope: complementary
+      locator: The Kernel Trick
+    - unit_id: unit-aml-l08
+      title: StatQuest Neural Networks Part 1
+      format: video
+      angle: A short first exposure to neurons, layers, weighted sums, activations, and forward prediction.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: intuition
+      scope: complementary
+      locator: Neural Networks Part 1
+      url: https://www.youtube.com/watch?v=CqOfi41LfDw
+    - unit_id: unit-aml-l09
+      title: StatQuest Backpropagation Main Ideas
+      format: video
+      angle: A visual conceptual pass over backward credit assignment before or after the algebraic layer rules.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: intuition
+      scope: complementary
+      locator: Backpropagation Main Ideas
+      url: https://www.youtube.com/watch?v=IN2XmBhILt4
+    - unit_id: unit-aml-l10
+      title: StatQuest convolutional-network intuition
+      format: video
+      angle: Short visual intuition for filters, feature maps, and CNN structure; not a substitute for hand shape
+        arithmetic.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-network
+      depth: intuition
+      scope: complementary
+      locator: CNN explainer selections
+  - source_id: source-3b1b-neural-networks
+    role: first-exposure
+    why: Best four-video visual bridge into L08–L09; use
+    priority: 4
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: 3Blue1Brown — What is a neural network?
+      format: video
+      angle: A visual preview that makes the later neural-network milestones concrete; it is not a substitute
+        for the L01 history or formulation sections.
+      covers:
+      - knowledge-aml-l01-history
+      - knowledge-aml-l01-data
+      depth: intuition
+      scope: optional
+      locator: Video 1
+      url: https://www.youtube.com/watch?v=aircAruvnKk
+    - unit_id: unit-aml-l08
+      title: 3Blue1Brown neural-networks videos 1–2
+      format: video
+      angle: The best visual first exposure to network structure, weighted activations, and gradient-descent learning
+        before formal shapes and output heads.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: intuition
+      scope: complementary
+      locator: Videos 1–2
+    - unit_id: unit-aml-l09
+      title: 3Blue1Brown neural-networks videos 3–4
+      format: video
+      angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing the exact
+        matrix rules.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-gradient-health
+      depth: intuition
+      scope: complementary
+      locator: Videos 3–4
+  - source_id: source-3b1b-linear-algebra
+    role: intuition
+    why: Targeted visual repair for vector, matrix, linear-map, and basis gaps identified by the local AML linear-algebra
+      primer; never watched linearly as part of L01.
+    priority: 9
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Essence of Linear Algebra — targeted prerequisite repair
+      format: video
+      angle: 'Use only the chapters matching primer gaps: vectors, linear combinations, matrix transformations,
+        multiplication, and dot products.'
+      covers:
+      - knowledge-aml-l01-prerequisites
+      - knowledge-aml-l01-data
+      depth: intuition
+      scope: prerequisite
+      locator: Targeted playlist chapters only
+    - unit_id: unit-aml-l03
+      title: Essence of Linear Algebra — projections and products
+      format: video
+      angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
+        and the normal equation.
+      covers:
+      - knowledge-aml-l03-linear-algebra
+      - knowledge-aml-l03-vectorization
+      - knowledge-aml-l03-solution
+      depth: intuition
+      scope: complementary
+      locator: Dot products, matrix multiplication, projections
+    - unit_id: unit-aml-l06
+      title: Essence of Linear Algebra — gradient geometry support
+      format: video
+      angle: Targeted vector/linear-map intuition for contours and multidimensional update directions; use only
+        if the gradient picture is unclear.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-rate-scaling
+      depth: intuition
+      scope: optional
+      locator: Vectors, linear maps, and dot-product chapters
+    - unit_id: unit-aml-l07
+      title: Essence of Linear Algebra — feature-space geometry
+      format: video
+      angle: A visual repair source for dot products, transformations, and basis changes underlying dual prediction
+        and feature maps.
+      covers:
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-kernels
+      depth: intuition
+      scope: optional
+      locator: Dot products and change-of-basis chapters
+  - source_id: source-karpathy-micrograd
+    role: implementation
+    why: Optional code-level spelling-out of backpropagation after the L09 analytical pass.
+    priority: 19
+    unit_routes:
+    - unit_id: unit-aml-l09
+      title: Karpathy — micrograd from scratch
+      format: video
+      angle: Builds scalar computation graphs and backward propagation in code, making autograd internals explicit
+        after the analytical derivation.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-autograd
+      depth: implementation
+      scope: optional
+      locator: Complete video
+      url: https://www.youtube.com/watch?v=VMj-3S1tku0
+  - source_id: source-rohrer-e2eml
+    role: intuition
+    why: Visual ML explanations retained for their current routed topics. The RNN/LSTM chapter is outside the
+      2026 AML L11 scope.
+    priority: 20
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Rohrer model workflow and data splitting
+      format: website
+      angle: Calm long-form intuition for choosing a loss, splitting data, and seeing ML as an end-to-end workflow.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-generalization
+      depth: intuition
+      scope: complementary
+      locator: Chapters 3–4
+    - unit_id: unit-aml-l08
+      title: Rohrer fully connected networks and softmax
+      format: website
+      angle: Visual explanations of multilayer networks and softmax as differentiable argmax, especially useful
+        for output-head intuition.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-softmax
+      depth: intuition
+      scope: complementary
+      locator: Chapters 17 and 19
+    - unit_id: unit-aml-l09
+      title: Rohrer backpropagation and regularization
+      format: website
+      angle: A calm visual second explanation for reverse learning signals and regularization, without the density
+        of a textbook derivation.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: intuition
+      scope: complementary
+      locator: Chapters 10 and 18
+    - unit_id: unit-aml-l10
+      title: Rohrer convolution and CNN chapters
+      format: website
+      angle: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN structure and a CIFAR-10 case
+        study.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      depth: intuition
+      scope: complementary
+      locator: Chapters 14, 22–23, and 31
+  - source_id: source-geron-handson
+    role: implementation
+    why: Implementation companion for current L03-L10 topics. Recurrent-network chapters remain globally available
+      but are outside the 2026 AML L11 scope.
+    priority: 21
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Géron end-to-end ML project overview
+      format: book
+      angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration; useful
+        for seeing the introductory vocabulary in practice.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-data
+      - knowledge-aml-l01-generalization
+      depth: implementation
+      scope: optional
+      locator: Chapter 2 selected workflow sections
+    - unit_id: unit-aml-l03
+      title: Géron linear regression implementations
+      format: book
+      angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A solutions.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      depth: implementation
+      scope: complementary
+      locator: Chapter 4 linear-regression sections and exercises
+    - unit_id: unit-aml-l04
+      title: Géron polynomial regression and regularization
+      format: book
+      angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso, and Elastic
+        Net.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: implementation
+      scope: complementary
+      locator: Chapter 4 polynomial and regularized-regression sections
+    - unit_id: unit-aml-l05
+      title: Géron logistic and softmax regression
+      format: book
+      angle: Implementation-focused binary and multiclass logistic models, decision boundaries, and probability
+        outputs.
+      covers:
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-cross-entropy
+      depth: implementation
+      scope: complementary
+      locator: Chapter 4 logistic/softmax sections
+    - unit_id: unit-aml-l06
+      title: Géron batch, stochastic, and mini-batch GD code
+      format: book
+      angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants differ
+        in practice.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      depth: implementation
+      scope: complementary
+      locator: Chapter 4 gradient-descent sections
+    - unit_id: unit-aml-l08
+      title: Géron feedforward-network implementation
+      format: book
+      angle: Applied Keras/PyTorch-style construction of dense networks, activations, output heads, and multiclass
+        prediction.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      depth: implementation
+      scope: optional
+      locator: Artificial-neural-network chapters, dense-network selections
+    - unit_id: unit-aml-l09
+      title: Géron training deep neural networks
+      format: book
+      angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training diagnostics;
+        use after the hand derivation.
+      covers:
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-stopping
+      - knowledge-aml-l09-gradient-health
+      - knowledge-aml-l09-autograd
+      depth: implementation
+      scope: optional
+      locator: Training-deep-networks chapter selections
+    - unit_id: unit-aml-l10
+      title: Géron convolutional-network implementation
+      format: book
+      angle: Runnable CNN construction and training that connects filter/shape formulas to framework layers.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      depth: implementation
+      scope: optional
+      locator: CNN chapter selections
+    - unit_id: unit-aml-l01
+      title: Géron 3rd ed. Ch 10 — from biological to artificial neurons
+      format: book
+      angle: Retells the deck's landmark chain — perceptron, the XOR objection, backpropagation, the winters —
+        as one causal story, which is what a concept map is for; not a chronology to memorize.
+      covers:
+      - knowledge-aml-l01-history
+      depth: intuition
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed., Oct 2022) Ch 10 'From Biological to Artificial Neurons' pdf pp. 380–389,
+        'The Perceptron' pdf p. 384
+    - unit_id: unit-aml-l06
+      title: Géron 3rd ed. Ch 11 — the same optimizers, as code you can run
+      format: book
+      angle: Each optimizer the deck names appears as a two-line Keras call next to its update rule, so the comparison
+        becomes an experiment rather than a table.
+      covers:
+      - knowledge-aml-l06-optimizers
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum p. 486, Nesterov
+        p. 487, AdaGrad p. 489, RMSProp p. 490, Adam p. 491)
+    - unit_id: unit-aml-l08
+      title: Géron 3rd ed. Ch 3 — the confusion matrix computed on real predictions
+      format: book
+      angle: Runs the exact metric chain of the deck's last slides on a real classifier, including the precision/recall
+        trade-off and the ROC curve the lecture only defines.
+      covers:
+      - knowledge-aml-l08-metrics
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 3 — confusion matrix pdf p. 164, precision and recall pdf p. 167,
+        the ROC curve pdf p. 173
+    - unit_id: unit-aml-l10
+      title: Géron 3rd ed. Ch 14 — why not simply flatten the image
+      format: book
+      angle: Answers the deck's opening question from the visual-cortex analogy and then in parameter counts,
+        which is the argument the motivation slide compresses to one line.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      depth: intuition
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
+        Layers' pdf p. 621
+    - unit_id: unit-aml-l10
+      title: Géron 3rd ed. Ch 14 exercises — the motivation asked back
+      format: book
+      angle: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is a three-layer 3×3 stride-2
+        'same' shape and parameter count; the only local drill that tests the motivation node rather than the
+        arithmetic alone.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-shapes
+      depth: practice
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN, Q2 three
+        3×3 stride-2 'same' convolutional layers)
+    - unit_id: unit-aml-l11
+      title: Géron 3rd ed. Ch 16 — tokens and the vocabulary, in code
+      format: book
+      angle: 'Builds the token vocabulary the deck assumes: text to ids to sequences, with the length and vocabulary
+        choices made explicit. Character-level here; subword tokenizers are named in the footnotes, not taught.'
+      covers:
+      - knowledge-aml-l11-tokenization
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 16 pdf pp. 750–762 (TextVectorization and the character vocabulary)
+    - unit_id: unit-aml-l11
+      title: Géron 3rd ed. Ch 16 — embeddings, static then contextual
+      format: book
+      angle: Shows the lookup table and then what changes when representations are produced by a pretrained model
+        instead — the deck's static-versus-contextual distinction made executable.
+      covers:
+      - knowledge-aml-l11-embeddings
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 16 'Reusing Pretrained Embeddings and Language Models' pdf pp. 763–769
+    - unit_id: unit-aml-l11
+      title: Géron 3rd ed. Ch 16 — attention, then the original Transformer
+      format: book
+      angle: Walks the same path as the lecture and then writes a positional-encoding layer from scratch, including
+        the sine/cosine equation the deck shows without deriving.
+      covers:
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-block
+      - knowledge-aml-l11-position
+      depth: implementation
+      scope: complementary
+      locator: 'geron-copy2.pdf (3rd ed.) Ch 16 ''Attention Mechanisms'' pdf p. 772, ''Attention Is All You Need:
+        The Original Transformer Architecture'' pdf p. 776, ''Positional encodings'' pdf pp. 779–780 (Equation
+        16-2)'
+    - unit_id: unit-aml-l11
+      title: Géron 3rd ed. Ch 16 — multi-head attention and masking
+      format: book
+      angle: Q/K/V projections and heads as shapes in code, with the masked decoder attention that is the deck's
+        bonus causal-masking slide.
+      covers:
+      - knowledge-aml-l11-qkv
+      - knowledge-aml-l11-parallelization
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 16 'Multi-head attention' pdf pp. 781–785 (masked attention pdf p.
+        784)
+    - unit_id: unit-aml-l11
+      title: Géron 3rd ed. Ch 16 exercises 5 and 6
+      format: book
+      angle: 'Two closed-book retrieval items on scope: what an attention mechanism is and how it helps, and which
+        layer of the transformer matters most and why. Q8–Q9 are RNN coding tasks and are out of the 2026 scope.'
+      covers:
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-block
+      depth: practice
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed.) Ch 16 Exercises pdf pp. 794–795, questions 5 and 6
+    - unit_id: unit-aml-exam-prep
+      title: Géron 3rd ed. — the executable half of both repair clusters
+      format: book
+      angle: 'Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN motivation,
+        attention. The 3rd-edition file is the complete one.'
+      covers:
+      - knowledge-aml-exam-classical
+      - knowledge-aml-exam-neural
+      depth: implementation
+      scope: complementary
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176, Ch 11 optimizers pdf pp. 485–494,
+        Ch 14 CNNs pdf pp. 620–694, Ch 16 attention pdf pp. 772–795
+  - source_id: source-caltech-lfd
+    role: practice
+    why: Selected bias/variance, regression, and learning-theory homework; neural-network gaps are better served
+      elsewhere.
+    priority: 22
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Caltech Learning From Data orientation problems
+      format: course
+      angle: Solved learning-theory problems that sharpen hypotheses, generalization, and the distinction between
+        fitting and learning.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-generalization
+      depth: practice
+      scope: optional
+      locator: Introductory homework selections
+    - unit_id: unit-aml-l02
+      title: Caltech bias-variance and validation problems
+      format: exercise
+      angle: Solution-backed exam-style questions for overfitting, validation, and generalization; skip SVM sets.
+      covers:
+      - knowledge-aml-l02-bias-variance
+      - knowledge-aml-l02-validation
+      depth: practice
+      scope: optional
+      locator: HW4 and HW6 selected problems
+    - unit_id: unit-aml-l03
+      title: Caltech HW2 — linear regression
+      format: exercise
+      angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
+        mechanics.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      depth: practice
+      scope: complementary
+      locator: Homework 2 and solution key
+    - unit_id: unit-aml-l04
+      title: Caltech overfitting and regularization problems
+      format: exercise
+      angle: Solved model-complexity, validation, and regularization questions that add pressure-tested reasoning
+        beyond implementation.
+      covers:
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: practice
+      scope: optional
+      locator: HW4 and HW6 selected problems
+  - source_id: source-ng-coursera
+    role: intuition
+    why: Gentle regression/logistic/GD/kernel explanations; not selected for the L08–L11 neural arc.
+    priority: 23
+    unit_routes:
+    - unit_id: unit-aml-l03
+      title: Ng linear regression with one and multiple variables
+      format: course
+      angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the normal-equation
+        bridge.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      depth: intuition
+      scope: complementary
+      locator: Regression lessons in Weeks 1–2
+    - unit_id: unit-aml-l04
+      title: Ng features, polynomial regression, and regularization
+      format: course
+      angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization at
+        exactly the right introductory level.
+      covers:
+      - knowledge-aml-l04-basis
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: intuition
+      scope: complementary
+      locator: Features/Polynomial Regression and Regularization lessons
+    - unit_id: unit-aml-l05
+      title: Ng logistic regression and regularization
+      format: course
+      angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
+        regression.
+      covers:
+      - knowledge-aml-l05-classification
+      - knowledge-aml-l05-boundary
+      - knowledge-aml-l05-sigmoid
+      - knowledge-aml-l05-cross-entropy
+      depth: intuition
+      scope: complementary
+      locator: Logistic Regression lessons
+    - unit_id: unit-aml-l06
+      title: Ng gradient descent in practice
+      format: course
+      angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely
+        mirror the AML slides.
+      covers:
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-rate-scaling
+      - knowledge-aml-l06-stochastic
+      depth: intuition
+      scope: complementary
+      locator: Gradient Descent in Practice I–II
+    - unit_id: unit-aml-l07
+      title: Ng Kernels I–II
+      format: course
+      angle: The landmark/similarity presentation is the closest match to the RBF portion of the AML deck; ignore
+        SVM objectives and margins.
+      covers:
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: intuition
+      scope: complementary
+      locator: Kernels I and II
+  - source_id: source-cs4780-homeworks
+    role: practice
+    why: 'Complete local 2017/2018 solution-backed bank: HW1 k-NN, HW2 perceptron, HW3 probability/MLE, HW4 logistic,
+      HW6 regression/GD/ridge, HW7 kernels, HW8 trees/boosting, HW9 neural networks/CNN/ReLU.'
+    priority: 6
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: Cornell CS4780 HW1 — k-NN
+      format: exercise
+      angle: Local solution-backed neighbour-search, distance, scaling, and generalization problems.
+      covers:
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      - knowledge-aml-l02-dimensionality
+      - knowledge-aml-l02-validation
+      depth: practice
+      scope: complementary
+      locator: 2017/2018 HW1 selected problems and solutions
+    - unit_id: unit-aml-l03
+      title: Cornell CS4780 HW6 — regression selections
+      format: exercise
+      angle: Local solved linear-regression and gradient questions for checking derivations and implementation
+        logic.
+      covers:
+      - knowledge-aml-l03-loss
+      - knowledge-aml-l03-solution
+      - knowledge-aml-l03-vectorization
+      depth: practice
+      scope: complementary
+      locator: 2017/2018 HW6 regression problems and solutions
+    - unit_id: unit-aml-l04
+      title: Cornell CS4780 HW6 — Ridge and regression
+      format: exercise
+      angle: Solution-backed multivariate regression, gradient, and Ridge problems; select only lecture-aligned
+        parts.
+      covers:
+      - knowledge-aml-l04-multivariate
+      - knowledge-aml-l04-normal-equation
+      - knowledge-aml-l04-ridge
+      depth: practice
+      scope: complementary
+      locator: 2017/2018 HW6 selected problems and solutions
+    - unit_id: unit-aml-l05
+      title: Cornell CS4780 HW4 — logistic likelihood
+      format: exercise
+      angle: The local gradient-of-logistic-log-likelihood problem is an exact derivation drill for L05.
+      covers:
+      - knowledge-aml-l05-likelihood
+      - knowledge-aml-l05-cross-entropy
+      - knowledge-aml-l05-gradient
+      depth: practice
+      scope: complementary
+      locator: 2018 Fall HW4 Problem 3 and solutions
+    - unit_id: unit-aml-l06
+      title: Cornell CS4780 HW6 — gradient descent
+      format: exercise
+      angle: Local solution-backed update, convergence, and optimization questions spanning regression and Ridge.
+      covers:
+      - knowledge-aml-l06-gradient
+      - knowledge-aml-l06-batch-gd
+      - knowledge-aml-l06-stochastic
+      depth: practice
+      scope: complementary
+      locator: 2017/2018 HW6 gradient-descent problems and solutions
+    - unit_id: unit-aml-l07
+      title: Cornell CS4780 HW2/HW7 — perceptron and kernels
+      format: exercise
+      angle: Local solved perceptron updates and kernel-computation questions; exclude SVM-only problems.
+      covers:
+      - knowledge-aml-l07-perceptron
+      - knowledge-aml-l07-dual
+      - knowledge-aml-l07-kernels
+      - knowledge-aml-l07-rbf
+      depth: practice
+      scope: complementary
+      locator: HW2 perceptron and HW7 kernel selections with solutions
+    - unit_id: unit-aml-l08
+      title: Cornell CS4780 HW9 — forward/ReLU tasks
+      format: exercise
+      angle: Local solution-backed forward-pass, activation, and neural-network questions.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      depth: practice
+      scope: complementary
+      locator: 2018 Spring/Fall HW9 selected tasks and solutions
+    - unit_id: unit-aml-l09
+      title: Cornell CS4780 HW9 — neural-network training
+      format: exercise
+      angle: Local solution-backed network-gradient and ReLU training problems for testing the backward mechanics.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: practice
+      scope: complementary
+      locator: 2018 Spring/Fall HW9 selected tasks and solutions
+    - unit_id: unit-aml-l10
+      title: Cornell CS4780 HW9 — CNN tasks
+      format: exercise
+      angle: Local solution-backed convolutional-network and shape questions; the only registered external solved
+        CNN bank in the AML shelf.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-network
+      depth: practice
+      scope: complementary
+      locator: 2018 Spring/Fall HW9 CNN tasks and solutions
+  - source_id: source-mit-6034-quizzes
+    role: practice
+    why: Solution-backed tracing questions for perceptrons, neural networks, and related ML mechanics.
+    priority: 24
+    unit_routes:
+    - unit_id: unit-aml-l07
+      title: MIT 6.034 perceptron tracing questions
+      format: exercise
+      angle: Short solution-backed written traces for mistake-driven linear classifiers; use only the relevant
+        quiz parts.
+      covers:
+      - knowledge-aml-l07-linear-geometry
+      - knowledge-aml-l07-perceptron
+      depth: practice
+      scope: optional
+      locator: Perceptron quiz selections
+    - unit_id: unit-aml-l08
+      title: MIT 6.034 neural-network tracing questions
+      format: exercise
+      angle: Written-exam-style forward calculations and activation traces with solutions.
+      covers:
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: practice
+      scope: complementary
+      locator: Neural-network quiz selections
+    - unit_id: unit-aml-l09
+      title: MIT 6.034 network learning questions
+      format: exercise
+      angle: Selected solution-backed neural-network mechanics questions; use as a short trace gate rather than
+        a source of theory.
+      covers:
+      - knowledge-aml-l09-backprop
+      depth: practice
+      scope: optional
+      locator: Neural-network learning quiz selections
+  - source_id: source-pytorch-tutorials
+    role: implementation
+    why: Official autograd and CNN implementation reference; required only for connecting L09/L10 formulas to
+      framework behavior.
+    priority: 25
+    unit_routes:
+    - unit_id: unit-aml-l09
+      title: Official PyTorch autograd tutorial
+      format: documentation
+      angle: The authoritative executable connection between computation graphs, requires_grad, backward, gradient
+        accumulation, zeroing, and no_grad.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-autograd
+      depth: implementation
+      scope: complementary
+      locator: Autograd tutorial
+      url: https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
+    - unit_id: unit-aml-l10
+      title: Official PyTorch CIFAR-10 CNN tutorial
+      format: documentation
+      angle: A small complete CNN that turns convolution/pooling/shape concepts into framework layers and a training
+        loop.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      depth: implementation
+      scope: optional
+      locator: Training a Classifier tutorial
+      url: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+  - source_id: source-kelleher-fmlpda
+    role: reference
+    why: Shared local ML book from the AML shelf; useful for introductory framing and a second neural-network
+      explanation.
+    priority: 26
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Kelleher et al. — predictive-analytics framing
+      format: book
+      angle: An introductory, worked-example view of learning problems and the families of predictive models;
+        useful when the lecture overview feels too compressed.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-data
+      - knowledge-aml-l01-generalization
+      depth: orientation
+      scope: complementary
+      locator: Introductory chapters
+      vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+    - unit_id: unit-aml-l08
+      title: Kelleher et al. Ch 7 — neural networks as error-based learning
+      format: book
+      angle: A gentle bridge from linear prediction to neurons, layered models, activations, and error surfaces
+        using worked toy examples.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      depth: intuition
+      scope: complementary
+      locator: Ch 7 Error-based Learning
+      vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+    - unit_id: unit-aml-l09
+      title: Kelleher et al. Ch 7 — learning rates and weight decay
+      format: book
+      angle: An accessible explanation of error surfaces, gradient-based weight updates, and weight decay; lighter
+        than the lecture derivation.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      depth: intuition
+      scope: complementary
+      locator: Ch 7 Error-based Learning
+      vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - source_id: source-domingos-useful-things
+    role: optional-depth
+    why: Concise framing of overfitting, generalization, data, representation, and inductive bias.
+    priority: 27
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Domingos — high-level map of machine learning
+      format: paper
+      angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
+        between fitting and learning.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-data
+      - knowledge-aml-l01-generalization
+      depth: orientation
+      scope: optional
+      locator: Entire essay
+      url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+    - unit_id: unit-aml-l02
+      title: Domingos — dimensionality and inductive-bias perspective
+      format: paper
+      angle: Explains why similarity deteriorates in high dimensions, why features matter, and why every learner
+        carries assumptions; conceptual rather than computational.
+      covers:
+      - knowledge-aml-l02-dimensionality
+      - knowledge-aml-l02-bias-variance
+      depth: intuition
+      scope: optional
+      locator: Sections on dimensionality, representation, and generalization
+      url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+    - unit_id: unit-aml-l03
+      title: Domingos — objective-versus-generalization perspective
+      format: paper
+      angle: Places loss minimization inside the larger learning problem and warns that optimizing training error
+        is not the same as obtaining a useful model.
+      covers:
+      - knowledge-aml-l03-problem
+      - knowledge-aml-l03-loss
+      depth: orientation
+      scope: optional
+      locator: Sections on generalization and overfitting
+      url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+    - unit_id: unit-aml-l04
+      title: Domingos — overfitting and model-complexity perspective
+      format: paper
+      angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering
+        to complement the Ridge/Lasso mathematics.
+      covers:
+      - knowledge-aml-l04-overfitting
+      - knowledge-aml-l04-ridge
+      - knowledge-aml-l04-lasso
+      depth: intuition
+      scope: optional
+      locator: Sections on overfitting and feature engineering
+      url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+  - source_id: source-sad-ss26-lectures
+    role: reference
+    why: SaD L11 supplies workflow/metrics and SaD L15 is the deliberate bridge into AML L08–L09.
+    priority: 7
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: SaD L11 — data-science workflow and evaluation bridge
+      format: course-material
+      angle: The neighbouring HU course supplies the practical train/test, loss, metrics, pipeline, inductive-bias,
+        and bias-variance frame assumed by AML.
+      covers:
+      - knowledge-aml-l01-formulation
+      - knowledge-aml-l01-generalization
+      depth: course-aligned
+      scope: complementary
+      locator: lecture-slides/L11 — Data science intro (especially slides 23–38)
+    - unit_id: unit-aml-l08
+      title: SaD L15 — perceptron-to-MLP bridge
+      format: course-material
+      angle: Shows a perceptron as a one-neuron network, connects multivariate linear regression to a one-layer
+        ANN, and introduces MLPs, softmax, and parameter counting.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      depth: course-aligned
+      scope: complementary
+      locator: lecture-slides/L15 — Neural networks
+    - unit_id: unit-aml-l09
+      title: SaD L15 — backpropagation preview
+      format: course-material
+      angle: A compact same-degree-course preview of backward learning; read before AML L09 when the full computation-graph
+        derivation feels abrupt.
+      covers:
+      - knowledge-aml-l09-chain-rule
+      - knowledge-aml-l09-backprop
+      depth: orientation
+      scope: complementary
+      locator: lecture-slides/L15 — backpropagation overview
+  - source_id: source-goodfellow-dl
+    role: optional-depth
+    why: Free deep-learning depth reference for the current L08-L10 arc. Sequence-model chapters are not routed
+      into the 2026 Transformer lecture.
+    priority: 28
+    unit_routes:
+    - unit_id: unit-aml-l08
+      title: Deep Learning book Ch 6 — feedforward networks
+      format: book
+      angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+        units, and architecture design; deeper than the lecture.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      depth: advanced-reference
+      scope: optional
+      locator: Ch 6 Deep Feedforward Networks
+      url: https://www.deeplearningbook.org/contents/mlp.html
+    - unit_id: unit-aml-l09
+      title: Deep Learning book Ch 7–8 — regularization and optimization
+      format: book
+      angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
+        consult by concept rather than reading linearly.
+      covers:
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-stopping
+      - knowledge-aml-l09-gradient-health
+      depth: advanced-reference
+      scope: optional
+      locator: Ch 7 Regularization and Ch 8 Optimization
+      url: https://www.deeplearningbook.org/
+    - unit_id: unit-aml-l10
+      title: Deep Learning book Ch 9 — convolutional networks
+      format: book
+      angle: The canonical conceptual treatment of convolution, sparse interactions, parameter sharing, equivariance,
+        pooling, and CNN variants.
+      covers:
+      - knowledge-aml-l10-motivation
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      depth: advanced-reference
+      scope: optional
+      locator: Ch 9 Convolutional Networks
+      url: https://www.deeplearningbook.org/contents/convnets.html
+  - source_id: source-d2l
+    role: optional-depth
+    why: Executable neural-network, CNN and attention reference for current L08–L11. Its RNN chapters (Ch 10)
+      stay outside the 2026 scope, but Chapter 11 is the attention/transformer chapter and is the only practice-depth
+      Transformer material on the menu.
+    priority: 29
+    unit_routes:
+    - unit_id: unit-aml-l08
+      title: D2L Chapters 5–6 — executable MLPs
+      format: website
+      angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations,
+        output shapes, activations, and softmax classifiers.
+      covers:
+      - knowledge-aml-l08-xor-stacking
+      - knowledge-aml-l08-forward
+      - knowledge-aml-l08-activations
+      - knowledge-aml-l08-output
+      - knowledge-aml-l08-softmax
+      depth: implementation
+      scope: optional
+      locator: Chapters 5–6
+      url: https://d2l.ai/
+    - unit_id: unit-aml-l09
+      title: D2L — automatic differentiation and network training
+      format: website
+      angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
+        updates, regularization, and dropout.
+      covers:
+      - knowledge-aml-l09-graph
+      - knowledge-aml-l09-backprop
+      - knowledge-aml-l09-regularization
+      - knowledge-aml-l09-autograd
+      depth: implementation
+      scope: optional
+      locator: Automatic differentiation, MLP training, weight decay, and dropout sections
+      url: https://d2l.ai/
+    - unit_id: unit-aml-l10
+      title: D2L Chapters 7–8 — executable CNNs
+      format: website
+      angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best for
+        connecting tensor shapes to code.
+      covers:
+      - knowledge-aml-l10-convolution
+      - knowledge-aml-l10-shapes
+      - knowledge-aml-l10-pooling
+      - knowledge-aml-l10-network
+      - knowledge-aml-l10-architectures
+      depth: implementation
+      scope: optional
+      locator: Chapters 7–8
+      url: https://d2l.ai/
+    - unit_id: unit-aml-l11
+      title: D2L Chapter 11 — attention and transformers, with exercises
+      format: website
+      angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
+        scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
+        each section ending in Exercises.'
+      covers:
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-qkv
+      - knowledge-aml-l11-position
+      - knowledge-aml-l11-block
+      - knowledge-aml-l11-training
+      depth: practice
+      scope: optional
+      locator: 11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention; 11.6
+        Self-Attention and Positional Encoding; 11.7 The Transformer Architecture — each with an Exercises subsection.
+        11.4 Bahdanau attention is RNN-era and 11.8–11.9 (vision, large-scale pretraining) are outside the 2026
+        scope. Verified 2026-08-22.
+      url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+    - unit_id: unit-aml-exam-prep
+      title: D2L Chapter 11 exercises — the L11 practice the course never issued
+      format: website
+      angle: Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section exercises
+        to convert the operator-drafted L11 bank into worked evidence.
+      covers:
+      - knowledge-aml-exam-neural
+      - knowledge-aml-exam-error-control
+      depth: practice
+      scope: optional
+      locator: Chapter 11 sections 11.1, 11.3, 11.5, 11.6 and 11.7 with their Exercises subsections. Verified
+        2026-08-22.
+      url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+  - source_id: source-sutton-barto-rl
+    role: reference
+    why: Present on the shared AML shelf but reinforcement learning is outside the locally posted L01–L10 scope.
+    priority: 98
+    unit_routes: []
+  - source_id: source-zacharski-data-mining
+    role: reference
+    why: Present on the shared AML shelf; selected only as an optional k-NN/data-mining alternative, not for the
+      missing neural plans.
+    priority: 97
+    unit_routes:
+    - unit_id: unit-aml-l02
+      title: A Programmer's Guide to Data Mining — nearest-neighbour alternative
+      format: book
+      angle: A practical, beginner-friendly similarity and recommendation perspective with worked examples; useful
+        as an alternate intuition source, not as scope authority.
+      covers:
+      - knowledge-aml-l02-representation
+      - knowledge-aml-l02-algorithm
+      - knowledge-aml-l02-distance
+      depth: intuition
+      scope: optional
+      locator: Similarity and nearest-neighbour sections
+      url: http://guidetodatamining.com/
+  - source_id: source-jurafsky-slp3
+    role: derivation
+    why: The current L11 deck's own named further reading; Chapter 8 follows the lecture's Transformer notation
+      and supplies the closest compatible derivation fallback.
+    priority: 8
+    unit_routes:
+    - unit_id: unit-aml-l11
+      title: Jurafsky & Martin Chapter 8 — Transformers
+      format: book
+      angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
+        equations without switching model family or notation.
+      covers:
+      - knowledge-aml-l11-tokenization
+      - knowledge-aml-l11-embeddings
+      - knowledge-aml-l11-attention
+      - knowledge-aml-l11-qkv
+      - knowledge-aml-l11-position
+      - knowledge-aml-l11-block
+      - knowledge-aml-l11-training
+      depth: derivation
+      scope: complementary
+      locator: Chapter 8 — Transformers (January 6, 2026 draft)
+      url: https://web.stanford.edu/~jurafsky/slp3/
+    - unit_id: unit-aml-exam-prep
+      title: Jurafsky Chapter 8 — conditional L11 repair
+      format: book
+      angle: A bounded fallback inside the exam path when the current deck, exercise bank and mock leave an attention
+        or Transformer-block derivation gap; it is never assigned as a parallel course.
+      covers:
+      - knowledge-aml-exam-neural
+      - knowledge-aml-exam-error-control
+      depth: derivation
+      scope: complementary
+      locator: Chapter 8 — Transformers (January 6, 2026 draft)
+      url: https://web.stanford.edu/~jurafsky/slp3/
+  - source_id: source-lineare-algebra-archive
+    role: practice
+    why: The L01 primer is a 36-page diagnostic with no drill behind it. This archive is the only registered material
+      that can actually test the prerequisite it diagnoses; it is a gap-filler for a failed primer check, never
+      a course text.
+    priority: 30
+    unit_routes:
+    - unit_id: unit-aml-l01
+      title: Solved Lineare-Algebra Übungen and Klausuren
+      format: exercise
+      angle: Solution-backed vector, matrix, product and shape drills for whichever primer item came back red;
+        German, and unrelated to AML scope beyond the prerequisite check.
+      covers:
+      - knowledge-aml-l01-prerequisites
+      depth: practice
+      scope: prerequisite
+      locator: LA/Übungen mit lösungen.pdf; LA/Übungsblatt mit lösungen.pdf; LA/Klausur31-07-23-Losungen 2.pdf;
+        LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf
+units:
+- unit:
+    id: unit-aml-exam-prep
+    type: unit
+    module_id: module-hu-aml
+    kind: exam-block
+    title: AML exam preparation — calibration, repair and mixed mocks
+    order: 90
+    scope: 'Auxiliary execution lane for the 2026 second sitting. It synthesizes but does not replace L01–L11:
+      cold calibration controls repair depth, late lectures are worked in dependency order, and readiness evidence
+      comes from closed-book calculations and two mixed 120-minute rehearsals until a current second-sitting notice
+      confirms a different duration.'
+    status: active
+    knowledge_map:
+      summary: The execution lane moves from scope calibration through evidence-routed classical and neural repair,
+        then into cross-lecture retrieval, timed transfer, error correction and final logistics.
+      nodes:
+      - id: knowledge-aml-exam-scope
+        title: Current L01–L11 scope and format
+        summary: The current decks and Übung 10 Themen list define eleven eligible topics; first-sitting rules
+          are the rehearsal baseline until a second-sitting notice supersedes them.
+      - id: knowledge-aml-exam-calibration
+        title: Cold diagnostic and error ledger
+        summary: Representative closed-book work classifies each topic as full-pass, repair-only or cold-skip
+          and records definition, method-choice, derivation, arithmetic/shape, interpretation and time errors.
+        builds_on:
+        - knowledge-aml-exam-scope
+      - id: knowledge-aml-exam-classical
+        title: 'Classical ML transfer: L02–L07'
+        summary: Similarity, regression, regularization, logistic likelihood, optimizers, perceptrons and kernels
+          are repaired through calculations, derivations and per-lecture mocks.
+        builds_on:
+        - knowledge-aml-exam-calibration
+      - id: knowledge-aml-exam-neural
+        title: 'Neural and Transformer transfer: L08–L11'
+        summary: Forward propagation precedes backpropagation, which precedes CNNs and Transformers; learner-worked
+          calculations convert operator-drafted artifacts into evidence.
+        builds_on:
+        - knowledge-aml-exam-classical
+      - id: knowledge-aml-exam-integration
+        title: Cross-lecture retrieval and mixed timing
+        summary: Models are compared by hypothesis, objective, optimizer, validation and failure mode, then combined
+          under the full paper's switching and time pressure.
+        builds_on:
+        - knowledge-aml-exam-classical
+        - knowledge-aml-exam-neural
+      - id: knowledge-aml-exam-error-control
+        title: Mock-driven repair and A4 compression
+        summary: Lost points choose the smallest repair, repeated errors choose A4-sheet content, and delayed
+          cold retests—not rereading—supply the evidence.
+        builds_on:
+        - knowledge-aml-exam-integration
+      - id: knowledge-aml-exam-logistics
+        title: Registration, permitted materials and exam-day execution
+        summary: Registration, current duration, room, identification, permitted aids, arrival and the final taper
+          are explicit gates rather than assumptions.
+        builds_on:
+        - knowledge-aml-exam-scope
+    scope_sources:
+    - source_id: source-aml-ss26-lectures
+      authority: slides
+      locator: lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf
+    - source_id: source-aml-ss26-lectures
+      authority: brief
+      locator: exercise-slides/Übung 10.pdf slides 2–3 — first-sitting rules and L01–L11 Themen list
+    source_selections:
+    - source_id: source-aml-ss26-lectures
+      locator: exercise-slides/Übung 02-11.pdf and bonus-exercises/zusatz-blatt01-04.pdf; exercise-slides/Übung
+        10.pdf, slides 2–3; lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf
+      purpose: Scope, notation, course-native practice and exam-format baseline for every execution stage.
+      stage_ids:
+      - stage-aml-calibration
+      - stage-aml-foundations-repair
+      - stage-aml-linear-optimization-repair
+      - stage-aml-neural-transformer-loop
+      - stage-aml-integration-sheet
+      - stage-aml-mock-one
+      - stage-aml-mock-one-repair
+      - stage-aml-mock-two
+      - stage-aml-final-repair
+      - stage-aml-taper
+    - source_id: source-d2l
+      locator: Chapter 11 sections 11.1, 11.3, 11.5, 11.6 and 11.7 with their Exercises subsections. Verified
+        2026-08-22.
+      purpose: Chapter 11 carries a worked exercise set behind every L11 node and stands in for the lecturer-worked
+        Transformer sheet that the course never issued.
+      stage_ids:
+      - stage-aml-neural-transformer-loop
+      - stage-aml-mock-one-repair
+      - stage-aml-final-repair
+    - source_id: source-geron-handson
+      locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176, Ch 11 optimizers pdf pp. 485–494,
+        Ch 14 CNNs pdf pp. 620–694, Ch 16 attention pdf pp. 772–795
+      purpose: 'The executable counterpart, from the complete 3rd-edition file: Ch 3 metrics, Ch 11 optimizers,
+        Ch 14 CNN motivation and exercises, Ch 16 attention and its exercises 5–6.'
+      stage_ids:
+      - stage-aml-foundations-repair
+      - stage-aml-linear-optimization-repair
+      - stage-aml-neural-transformer-loop
+    - source_id: source-jurafsky-slp3
+      locator: Chapter 8 — Transformers (January 6, 2026 draft)
+      purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use only
+        if the current deck, bank and mock leave an attention or block gap.
+      stage_ids:
+      - stage-aml-neural-transformer-loop
+      - stage-aml-mock-one-repair
+      - stage-aml-final-repair
+    - source_id: source-murphy-pml1
+      locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
+        solution manual §10.1 and §13.1
+      purpose: 'Section-addressed derivation bank for a diagnosed miss: Ch 8 for convexity, Newton and the adaptive
+        optimizers, §15.4–15.5 for attention and the Transformer block.'
+      stage_ids:
+      - stage-aml-foundations-repair
+      - stage-aml-linear-optimization-repair
+      - stage-aml-neural-transformer-loop
+    current_study_map: study-map-aml-exam-prep
+    artifacts:
+      other:
+      - note-aml-sad-master-wiring
+      - note-aml-book-crosswalk
+    workspace_ids:
+    - workspace-aml-exam-prep
+  study_map:
+    id: study-map-aml-exam-prep
+    type: study-map
+    unit_id: unit-aml-exam-prep
+    status: active
+    current_stage: stage-aml-calibration
+    source_plan:
+      path: work/active/workspace-aml-exam-prep/outputs/AML-exam-execution-plan-2026-08-19.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-aml-calibration
+      title: AML.0 — cold L01–L11 calibration (19–22 August)
+      status: active
+      objective: Before further reading, run a 120-minute closed-book diagnostic across all eleven announced topics
+        and turn the result into an error ledger that decides full-pass, repair-only or cold-skip treatment for
+        every later cluster.
+      done_when:
+      - Recall the L01 problem-formulation vocabulary for ten minutes, then attempt at least one representative
+        unseen item from every L02–L11 mock without opening an answer key.
+      - Classify every miss as definition, model-or-method choice, derivation, arithmetic-or-shape, interpretation,
+        or time.
+      - Mark L02–L04, L05–L07 and each of L08–L11 full-pass, repair-only or cold-skip from recorded evidence;
+        a clean gate permits a recorded skip but is not called mastery.
+      - Record the baseline score and the slowest three question types, then choose the first repair cluster.
+      exam_critical: true
+      concepts:
+      - concept-logistic-regression
+      - concept-gradient-descent
+      - concept-perceptron
+      - concept-neural-network
+      - concept-backpropagation
+      - concept-convolutional-networks
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Übung 10 slides 2–3 — first-sitting rules and the L01–L11 Themen list
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 10.pdf, slides 2–3
+        scope_triage: required-now
+      - kind: practise
+        label: Representative unseen items from the ten per-lecture mocks
+        locator: note-aml-l02-mock-exam through note-aml-l11-mock-exam; unopened questions only
+        scope_triage: required-now
+      - kind: practise
+        label: Current Übung and Bonusblatt items, for topics the mocks under-sample
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 02–11.pdf and Bonusblatt 01–04; no Transformer Übung exists
+        scope_triage: helpful-now
+      - kind: read
+        label: Linear-algebra primer as the prerequisite check
+        locator: Primer_Linear_Algebra.pdf (36 pp.); if it comes back red the unit-aml-l01 menu now carries solved
+          LA Übungen and Klausuren under source-lineare-algebra-archive
+        scope_triage: helpful-now
+        source_id: source-aml-ss26-lectures
+      - kind: reference
+        label: Current decks for exact notation only, after a failed retrieval
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 01–11; open the exact slide, not the deck
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-calibration/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-foundations-repair
+      title: AML.1 — L02–L04 foundations repair (23–29 August)
+      status: pending
+      objective: Repair only the diagnosed k-NN, regression, vectorization, basis-expansion and regularization
+        gaps; skip clean topics with the calibration evidence attached.
+      done_when:
+      - For every failed L02–L04 node, reproduce the relevant deck calculation or derivation and complete the
+        matching exercise-bank items without notes.
+      - Sit the 75-minute lecture mock for each cluster marked full-pass; use a shortened cold retest for repair-only
+        clusters and record any justified skip.
+      - Explain the model, objective, fitted parameters, validation choice and main failure mode for k-NN, linear
+        regression, polynomial regression, Ridge and Lasso.
+      - Move recurring formulas or decision rules—not whole explanations—to the A4-sheet ledger.
+      exam_critical: true
+      concepts:
+      - concept-gradient-descent
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Current L02–L04 decks — k-NN, linear and non-linear regression
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 02-nearest-neighbor.pdf; VL 03-linear-regression.pdf; VL 04-non-linear-regression.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: L02 artifact set — reference, exercise bank, mock
+        locator: note-aml-l02-knn-bias-variance; note-aml-l02-exercise-bank; note-aml-l02-mock-exam
+        scope_triage: required-now
+      - kind: practise
+        label: L03–L04 artifact sets — reference, exercise bank, mock
+        locator: note-aml-l03-linear-regression / exercise-bank / mock-exam; note-aml-l04-nonlinear-regression
+          / exercise-bank / mock-exam
+        scope_triage: required-now
+      - kind: practise
+        label: Current Übung 02–07 — the lecturer's own worked regression practice
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 02–07.pdf and the matching Bonusblätter
+        scope_triage: required-now
+      - kind: reference
+        label: Murphy §11.2.2 — least squares as a negative log-likelihood, for the L03 bridge
+        source_id: source-murphy-pml1
+        locator: §11.2.2 p. 372 (the objective introduced as the NLL); §11.2.4 goodness of fit p. 380; solution
+          manual §11.3 works the partial derivative of the RSS
+        scope_triage: helpful-now
+      - kind: practise
+        label: Géron 3rd ed. Ch 4 — the normal equation and gradient descent side by side
+        source_id: source-geron-handson
+        locator: geron-copy2.pdf (3rd ed.) Ch 4 'Training Models'; the L02–L04 lecture menus carry the section-exact
+          routes
+        scope_triage: helpful-now
+      - kind: reference
+        label: Current decks for exact notation only, after a failed retrieval
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 01–11; open the exact slide, not the deck
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-foundations-repair/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-linear-optimization-repair
+      title: AML.2 — L05–L07 classification and optimization (30 August–5 September)
+      status: pending
+      objective: Make the logistic-loss derivation, optimizer mechanics, perceptron updates and kernel calculations
+        executable on paper before entering the neural-network arc.
+      done_when:
+      - Derive binary cross-entropy from Bernoulli likelihood and write the vectorized logistic gradient from
+        memory.
+      - Trace batch, stochastic or mini-batch updates and explain learning-rate, scaling, convexity, Adam and
+        Newton tradeoffs at the lecture's depth.
+      - Run primal and dual perceptron updates, compute a Gram/kernel value and explain XOR, RBF bandwidth and
+        one-vs-rest without importing SVM concepts.
+      - Complete the evidence-routed banks and mocks for L05–L07, then update the error ledger and A4-sheet ledger.
+      exam_critical: true
+      concepts:
+      - concept-logistic-regression
+      - concept-cross-entropy
+      - concept-gradient-descent
+      - concept-perceptron
+      - concept-kernel-trick
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Current L05–L07 decks — logistic regression, gradient descent, linear classifiers
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 05-logistic-regression.pdf through VL 07-linear-classifiers.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: L05–L07 artifact sets — references, exercise banks, mocks
+        locator: note-aml-l05-*; note-aml-l06-*; note-aml-l07-* (references, exercise banks and mock exams only)
+        scope_triage: required-now
+      - kind: practise
+        label: Übung 08 — the lecturer's worked bridge from kernel perceptrons into MLPs
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 08.pdf (48 pp.; dual-perceptron pages worked in full)
+        scope_triage: required-now
+      - kind: reference
+        label: Murphy Ch 8 — convexity, Newton and the adaptive optimizers derived
+        source_id: source-murphy-pml1
+        locator: §8.1.3 pp. 277–281 (convexity, Hessian test); §8.3 pp. 289–291 (Newton, BFGS); §8.4.6 pp. 298–301
+          (AdaGrad, RMSProp, Adam); solution manual §10.1 works the gradient and Hessian in full
+        scope_triage: helpful-now
+      - kind: practise
+        label: Géron 3rd ed. Ch 11 — every optimizer the L06 deck names, as a runnable call
+        source_id: source-geron-handson
+        locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum 486, Nesterov 487,
+          AdaGrad 489, RMSProp 490, Adam 491)
+        scope_triage: helpful-now
+      - kind: reference
+        label: Current decks for exact notation only, after a failed retrieval
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 01–11; open the exact slide, not the deck
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-linear-optimization-repair/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-neural-transformer-loop
+      title: AML.3 — L08→L09→L10→L11 full loop (6–13 September)
+      status: pending
+      objective: 'Work the unverified late-course arc in strict dependency order: forward pass, backpropagation,
+        CNNs, then Transformers. The operator-drafted notes become evidence only through learner calculations
+        and closed-book mocks.'
+      done_when:
+      - 'L08: compute a complete forward pass with shapes and parameter counts, choose correct output heads, and
+        calculate binary and multiclass metrics.'
+      - 'L09: backpropagate through the shared example, explain regularization and gradient pathologies, and verify
+        one hand gradient against the deck''s PyTorch/autograd example.'
+      - 'L10: compute convolution outputs, padding/stride/channel shapes and parameter counts, then distinguish
+        the course-level contribution of LeNet, AlexNet, GoogLeNet and ResNet.'
+      - 'L11: compute simplified and Q/K/V attention, trace the Transformer block, connect language-model cross-entropy
+        to L05, and treat slides 73–81 as learn-anyway safety material.'
+      - For each lecture, work the exercise bank and sit the 75-minute mock closed-book; use the unit material
+        menu only for misses and record any source choice before use.
+      exam_critical: true
+      concepts:
+      - concept-neural-network
+      - concept-softmax
+      - concept-backpropagation
+      - concept-convolutional-networks
+      - concept-residual-connection
+      - concept-attention
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Current L08–L11 decks — forward pass, backpropagation, CNNs, Transformers
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 08-feedforward-neural-network.pdf through VL 11-transformers.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: L08–L11 artifact sets — references, exercise banks, mocks
+        locator: note-aml-l08-* through note-aml-l11-* (references, exercise banks and mock exams only)
+        scope_triage: required-now
+      - kind: practise
+        label: Übung 09–11 — worked forward passes, backprop and CNN arithmetic
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 09.pdf (feedforward), Übung 10.pdf (computation graphs and autodiff), Übung
+          11.pdf (CNN calculations). There is no Transformer Übung.
+        scope_triage: required-now
+      - kind: practise
+        label: D2L Ch 11 — the per-section Transformer exercises the course never issued
+        source_id: source-d2l
+        locator: 11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention;
+          11.6 Self-Attention and Positional Encoding; 11.7 The Transformer Architecture — each ends in an Exercises
+          subsection. Verified 2026-08-22.
+        url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+        scope_triage: helpful-now
+      - kind: practise
+        label: Géron 3rd ed. Ch 14 and Ch 16 — CNN motivation and a Transformer built in code
+        source_id: source-geron-handson
+        locator: geron-copy2.pdf (3rd ed.) Ch 14 visual cortex pdf p. 620 and exercises p. 694; Ch 16 attention
+          pdf p. 772, original Transformer p. 776, positional encodings pp. 779–780, multi-head and masking pp.
+          781–785, exercises 5–6 pp. 794–795
+        scope_triage: helpful-now
+      - kind: reference
+        label: Murphy §15.4–15.5 — attention as a soft dictionary lookup, then the block assembled
+        source_id: source-murphy-pml1
+        locator: §15.4 pp. 518–525 (soft dictionary lookup p. 519, parametric attention p. 521); §15.5 pp. 526–532
+          (self-attention p. 526, multi-head p. 527, positional encoding p. 528, assembled block p. 529); solution
+          manual §13.1 backpropagates a 1-layer MLP
+        scope_triage: helpful-now
+      - kind: reference
+        label: Jurafsky & Martin Ch 8 — the deck's own named further reading, same notation
+        source_id: source-jurafsky-slp3
+        locator: Chapter 8 — Transformers
+        url: https://web.stanford.edu/~jurafsky/slp3/
+        scope_triage: helpful-now
+      - kind: reference
+        label: 'L11 slides 73–81 ''BONUS: Parallelizing'' — scope-ambiguous, treated as learn-anyway'
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 11-transformers.pdf slides 73–81 (scaled matrix attention and causal masking);
+          labelled Bonus by the lecturer and unresolved since 2026-08-19
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-neural-transformer-loop/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-integration-sheet
+      title: AML.4 — full-course integration and A4 sheet v1 (14–16 September)
+      status: pending
+      objective: Compress L01–L11 into a retrieval map and a usable handwritten sheet, emphasizing decisions and
+        recurring errors rather than transcribing the references.
+      done_when:
+      - Produce one page linking model → hypothesis → loss → optimizer/solution → validation → characteristic
+        failure for every L02–L11 model family.
+      - 'Complete two cross-lecture chains from memory: likelihood→cross-entropy→gradient descent→backpropagation
+        and perceptron/XOR→MLP→CNN→Transformer.'
+      - Write A4 sheet version 1 by hand on both sides using only formulas, shape rules, decision checks and errors
+        that were actually needed.
+      - Run a 45-minute mixed retrieval test and revise only items that were missing or too slow.
+      exam_critical: true
+      concepts:
+      - concept-cross-entropy
+      - concept-gradient-descent
+      - concept-backpropagation
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: AML × SaD master wiring and the AML book crosswalk
+        locator: note-aml-sad-master-wiring; note-aml-book-crosswalk
+        scope_triage: required-now
+      - kind: practise
+        label: Every per-lecture reference note, read only for its decision lines
+        locator: note-aml-l02-* through note-aml-l11-* references; take formulas, shape rules and failure modes,
+          not explanations
+        scope_triage: required-now
+      - kind: read
+        label: Current decks for exact notation checks only
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 01–11; the exact slide, only after a failed retrieval
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-integration-sheet/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-mock-one
+      title: AML.5 — mixed mock 1 (17 September)
+      status: pending
+      objective: 'Sit the first full-course paper under confirmed first-sitting conditions: 120 minutes, closed
+        book except the handwritten A4 sheet, with all eleven topics eligible.'
+      done_when:
+      - Assemble the paper only from still-unseen per-lecture mock questions and current exercise tasks, with
+        representation across L01–L11 and both calculation and explanation items.
+      - Work for 120 minutes unless a current second-sitting notice has confirmed a different duration; do not
+        extend the clock while solving.
+      - Self-grade after the sitting, record raw points by lecture and error class, and identify the three highest-yield
+        repairs.
+      - Photograph or attach the answer script and A4 sheet before changing either.
+      exam_critical: true
+      concepts:
+      - concept-logistic-regression
+      - concept-gradient-descent
+      - concept-backpropagation
+      - concept-convolutional-networks
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: practise
+        label: Unseen mixed items from the L02–L11 mocks and current exercises
+        locator: per-lecture mocks plus Übung/Bonusblatt tasks not used in calibration; keep answer keys closed
+        scope_triage: required-now
+      - kind: read
+        label: Confirmed first-sitting rules — 120 minutes, closed book except the A4 sheet
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 10.pdf slide 2
+        scope_triage: required-now
+      - kind: read
+        label: Current decks — sealed during the sitting, opened only at self-grading
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 01–11
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-mock-one-repair
+      title: AML.6 — mock 1 repair (18–21 September)
+      status: pending
+      objective: Repair only errors that cost points or time in mock 1, then retest them cold; no new broad reading
+        is allowed.
+      done_when:
+      - For each lost point, write the smallest corrective rule and link it to one exact lecture node.
+      - Rework every missed calculation from a blank page and complete one fresh isomorphic item.
+      - Retest the three highest-yield repairs at least one day later without notes.
+      - Produce A4 sheet version 2 from repeated errors only and record any topic still below the chosen safety
+        margin.
+      exam_critical: true
+      concepts:
+      - concept-gradient-descent
+      - concept-backpropagation
+      - concept-attention
+      scope_triage: required-now
+      resources:
+      - kind: reference
+        label: Mock 1 answer script, score breakdown and error ledger
+        locator: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+        scope_triage: required-now
+        vault_path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+      - kind: practise
+        label: Fresh isomorphic items for each missed calculation
+        source_id: source-aml-ss26-lectures
+        locator: unused Übung/Bonusblatt tasks matched to the exact failed node
+        scope_triage: required-now
+      - kind: practise
+        label: D2L Ch 11 exercises — only if the loss was an attention or block item
+        source_id: source-d2l
+        locator: 11.1, 11.3, 11.5, 11.6 or 11.7 Exercises, matched to the failed node
+        url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+        scope_triage: helpful-now
+      - kind: reference
+        label: Jurafsky Ch 8 — only if the L11 equations themselves were the miss
+        source_id: source-jurafsky-slp3
+        locator: Chapter 8 — Transformers
+        url: https://web.stanford.edu/~jurafsky/slp3/
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one-repair/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-mock-two
+      title: AML.7 — mixed mock 2 (22–23 September)
+      status: pending
+      objective: Run a second independent full-course paper to test whether mock-1 repairs transfer under time
+        pressure and whether the A4 sheet is actually usable.
+      done_when:
+      - Use a fresh mix of unseen questions across L01–L11 and the same 120-minute baseline unless the second-sitting
+        duration has been officially clarified.
+      - Finish with at least ten minutes reserved for shape/sign/unit checks and unanswered-item triage.
+      - Score by lecture and error class, compare directly with mock 1, and require that no red topic is hidden
+        by a strong aggregate score.
+      - Freeze A4 sheet version 3 except for corrections discovered during grading.
+      exam_critical: true
+      concepts:
+      - concept-logistic-regression
+      - concept-kernel-trick
+      - concept-neural-network
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: practise
+        label: A second unseen mixed paper
+        locator: unused per-lecture mock and course-exercise items; no question repeated from mock 1
+        scope_triage: required-now
+      - kind: read
+        label: Sitting conditions — the same 120-minute baseline unless a notice supersedes it
+        source_id: source-aml-ss26-lectures
+        locator: exercise-slides/Übung 10.pdf slide 2, plus any later current second-sitting notice
+        scope_triage: required-now
+      - kind: reference
+        label: A4 sheet version 2 and the mock 1 error ledger, as the comparison baseline
+        locator: stage-aml-mock-one-repair outputs
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-final-repair
+      title: AML.8 — final repair and dress rehearsal (24–27 September)
+      status: pending
+      objective: Close only the residual red topics, rehearse the opening and time-allocation strategy, and stop
+        expanding the source set.
+      done_when:
+      - Every remaining red topic has one cold successful retest or is explicitly accepted as residual risk.
+      - Run a 60-minute dress rehearsal covering the first-page scan, point triage, one derivation, one numerical
+        trace, one shape problem and final checking.
+      - Finalize the handwritten A4 sheet and verify it can be navigated within seconds under pressure.
+      - Confirm exam route, room, ID, CampusCard, calculator, pens and optional ruler; verify whether a second-sitting
+        notice changed the duration or allowed materials.
+      exam_critical: true
+      concepts:
+      - concept-gradient-descent
+      - concept-backpropagation
+      - concept-convolutional-networks
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: reference
+        label: Both mock score breakdowns and the final error ledger
+        locator: stage-aml-mock-one and stage-aml-mock-two working notes
+        scope_triage: required-now
+      - kind: read
+        label: Current exam logistics — duration, room, permitted aids
+        source_id: source-aml-ss26-lectures
+        locator: owning module record plus exercise-slides/Übung 10.pdf slide 2 baseline and any later current
+          second-sitting notice; do not copy administrative facts into the study map
+        scope_triage: required-now
+      - kind: practise
+        label: One fresh item per remaining red topic, for the cold retest
+        source_id: source-aml-ss26-lectures
+        locator: unused Übung/Bonusblatt and per-lecture mock items
+        scope_triage: required-now
+      - kind: practise
+        label: D2L Ch 11 exercises — only for a red Transformer topic, one section at most
+        source_id: source-d2l
+        locator: 11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention;
+          11.6 Self-Attention and Positional Encoding; 11.7 The Transformer Architecture — each ends in an Exercises
+          subsection. Verified 2026-08-22.
+        url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+        scope_triage: reference-only
+      - kind: reference
+        label: Jurafsky & Martin Ch 8 — the deck's own named further reading, same notation
+        source_id: source-jurafsky-slp3
+        locator: Chapter 8 — Transformers
+        url: https://web.stanford.edu/~jurafsky/slp3/
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-final-repair/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-aml-taper
+      title: AML.9 — taper (28–29 September)
+      status: pending
+      objective: Protect recall and sleep in the final forty-eight hours; use only the A4 sheet, error ledger
+        and short retrieval, with no new sources or full mock.
+      done_when:
+      - Complete one 30-minute formula/shape/decision retrieval pass and stop when the planned time ends.
+      - Read only the final error ledger and A4 sheet; do not reopen full references or add optional topics.
+      - Pack the required documents and materials and confirm the current start time and room from the owning
+        module record.
+      - Set the next morning's departure and sleep plan.
+      exam_critical: true
+      concepts:
+      - concept-gradient-descent
+      - concept-backpropagation
+      - concept-transformer
+      scope_triage: required-now
+      resources:
+      - kind: reference
+        label: Final A4 sheet and error ledger — the only materials open in the last 48 hours
+        locator: stage-aml-final-repair outputs
+        scope_triage: required-now
+      - kind: read
+        label: Exam-day facts from the owning module record
+        source_id: source-aml-ss26-lectures
+        locator: the owning module record plus Übung 10 slide 2; no new source is opened at this stage
+        scope_triage: required-now
+      working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-taper/notes.md
+      attachments: []
+      source_feedback: []
+workspace_updates:
+- id: workspace-aml-exam-prep
+  sources:
+  - source-3b1b-linear-algebra
+  - source-3b1b-neural-networks
+  - source-aml-ss26-lectures
+  - source-caltech-lfd
+  - source-cs229-2022-videos
+  - source-cs229-notes
+  - source-cs231n-2017-videos
+  - source-cs231n-notes
+  - source-cs4780-homeworks
+  - source-csc411-notes
+  - source-d2l
+  - source-domingos-useful-things
+  - source-eecs498
+  - source-esl
+  - source-geron-handson
+  - source-goodfellow-dl
+  - source-islp
+  - source-jurafsky-slp3
+  - source-karpathy-micrograd
+  - source-kelleher-fmlpda
+  - source-kroese-dsml
+  - source-lineare-algebra-archive
+  - source-mit-6034-quizzes
+  - source-mit-6036
+  - source-mml
+  - source-murphy-pml1
+  - source-ng-coursera
+  - source-pytorch-tutorials
+  - source-rohrer-e2eml
+  - source-sad-ss26-lectures
+  - source-statquest
+  - source-sutton-barto-rl
+  - source-zacharski-data-mining
+  unit_ids:
+  - unit-aml-l01
+  - unit-aml-l02
+  - unit-aml-l03
+  - unit-aml-l04
+  - unit-aml-l05
+  - unit-aml-l06
+  - unit-aml-l07
+  - unit-aml-l08
+  - unit-aml-l09
+  - unit-aml-l10
+  - unit-aml-l11
+  - unit-aml-exam-prep
+  sections: {}

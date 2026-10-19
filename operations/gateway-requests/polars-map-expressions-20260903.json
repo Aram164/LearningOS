@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-expressions-20260903",
+  "idempotency_key": "polars-map-expressions-20260903",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:09c610d040d2a8788467676dbc67005572cb521e117e35abba7f6a1e52d74ee3",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 12,
+    "study-map-job-polars-expressions": 11
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-expressions-study-map.yaml",
+    "file_sha256": "sha256:e8d3b83943b5cd85b32bf5bdea7e4540182b029d050bf0600807fedab4f06946",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:c31a0090e7d8b20aa6e8c53851d87a0d308eb2f45b23d7dfbf49f59112a5c83a"
+  }
+}

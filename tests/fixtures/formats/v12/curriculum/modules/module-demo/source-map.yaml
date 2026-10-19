@@ -1,0 +1,50 @@
+type: module-source-map
+module_id: module-demo
+sources:
+- source_id: source-demo-book
+  role: spine
+  why: Scoped demo reading.
+  priority: 0
+  unit_routes:
+  - unit_id: unit-demo-l01
+    title: Demo book — expected-value derivation
+    format: book
+    angle: Derives the probability-weighted sum and works one discrete example.
+    angle_detail: The deck states E[X] and moves on; this derives it from the definition and then
+      works a discrete example to the digit, so the formula can be rebuilt rather than recalled.
+    covers:
+    - knowledge-demo-random-variable
+    - knowledge-demo-expectation
+    depth: derivation
+    scope: current
+    locator: §1 Erwartungswert
+  - unit_id: unit-demo-l01
+    title: Demo past paper
+    format: exam
+    angle: Spent once under timed conditions; not a problem set.
+    angle_detail: A past paper is the only artifact that measures speed as well as knowledge, so it
+      is worth more unopened than as extra practice.
+    covers:
+    - knowledge-demo-expectation
+    depth: practice
+    scope: complementary
+    locator: Klausur 2024, Aufgabe 3
+  - unit_id: unit-demo-l01
+    title: Demo model solutions
+    format: solutions
+    angle: Read as writing samples rather than solved.
+    covers:
+    - knowledge-demo-expectation
+    depth: practice
+    scope: complementary
+    locator: Musterlösung §1
+  - unit_id: unit-demo-l01
+    title: Demo unevaluated source
+    format: book
+    angle: Routed here but never assessed — no angle can be stated honestly. Visibility
+      debt, repaid on use (WORKFLOWS §6a). Frozen at v6 to exercise the new enums.
+    covers:
+    - knowledge-demo-expectation
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use

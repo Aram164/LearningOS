@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260921-012228-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-21T01:22:28+02:00'
+snapshot_before: sha256:aa15bd9b03056680d7f6a4e4d7eb8b9159d4918b30717101eac09c4febb7fd2b
+snapshot_after: sha256:120d110cc594c88377b703b65ed793cf315abbeef55f58566c6264d406537681
+expected_revisions:
+  note-06-random-variables-pp015-023: 0
+artifact_revisions:
+  note-06-random-variables-pp015-023:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-06-random-variables-pp015-023.md
+  sha256_before: null
+  sha256_after: 7cb03d83682d6e633af52efda194e0fce293183aeb603fe15a182b42674a1df6
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-summaries-migrate-note-06-random-variables-pp015-023
+  idempotency_key: summaries-migrate-note-06-random-variables-pp015-023
+  intent_sha256: sha256:b6f4f56c0ec2cd4ec6eb559b3e464f919da9f9b27878d561b8f7d14507320d77
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:b6f4f56c0ec2cd4ec6eb559b3e464f919da9f9b27878d561b8f7d14507320d77

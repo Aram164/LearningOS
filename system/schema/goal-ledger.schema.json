@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/goal-ledger.schema.json",
+  "title": "Goal decision ledger",
+  "x-governs": "artifact",
+  "description": "Aram's explicit decisions on proposed goals (reject/defer/close), read back as scan dedup input. Operational state, not a canonical record: a missing ledger means no decisions yet.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "type",
+    "decisions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "type": {
+      "const": "goal-ledger"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "state"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "state": {
+            "enum": [
+              "rejected",
+              "deferred",
+              "closed",
+              "authorized"
+            ]
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "revisit_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "audits": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "authorization"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "authorization": {
+            "$ref": "#/$defs/authorization"
+          },
+          "result": {
+            "$ref": "#/$defs/result"
+          },
+          "authorization_reviewed_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "result_reviewed_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "authorization_intent_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "result_intent_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "pair": {
+      "type": "object",
+      "required": [
+        "claim_id",
+        "basis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "pattern": "^covers:\\S+$"
+        },
+        "basis": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "required": [
+        "pool",
+        "pool_sha256",
+        "seed",
+        "algorithm",
+        "sample"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pool": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          },
+          "uniqueItems": true,
+          "minItems": 30
+        },
+        "pool_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "seed": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "algorithm": {
+          "const": "python-mt19937-shuffle-v1"
+        },
+        "sample": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          },
+          "uniqueItems": true,
+          "minItems": 30,
+          "maxItems": 30
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "required": [
+        "sample",
+        "defects",
+        "reviewer",
+        "report_path",
+        "report_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sample": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          },
+          "uniqueItems": true,
+          "minItems": 30,
+          "maxItems": 30
+        },
+        "defects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pair"
+          },
+          "uniqueItems": true
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "report_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "report_sha256": {
+          "type": "string",
+          "pattern": "^(sha256:)?[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

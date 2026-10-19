@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/inbox.resolve.schema.json",
+  "title": "payload for capability inbox.resolve",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "drop_sha256",
+    "name",
+    "routed_to"
+  ],
+  "properties": {
+    "drop_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact drop read: inbox-read's content_sha256 for a file, its drop_sha256 for a folder"
+    },
+    "name": {
+      "type": "string",
+      "description": "drop name relative to work/inbox/ (list names with inbox-list); one drop, or one file inside a drop folder"
+    },
+    "routed_to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "where the drop went (note id, workspace path, source id, receipt id, …); repeatable, at least one required, recorded on the receipt"
+    }
+  }
+}

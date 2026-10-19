@@ -1,0 +1,293 @@
+operation: masters-planning.comparison.publish
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: publish-after-catalog
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: masters-planning.catalog.update
+        request:
+          record:
+            schema_version: 1
+            id: master-planning-catalog
+            type: master-planning-catalog
+            revision: 0
+            updated_at: "2026-10-01T09:00:00+02:00"
+            candidate_modules:
+              - id: candidate-module-scenario-ml
+                title: Scenario ML module
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                source_ids: [candidate-source-scenario-book]
+                unresolved_references: []
+            candidate_sources:
+              - id: candidate-source-scenario-book
+                title: Scenario Book
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                type: book
+            comparison_ids: []
+        artifact_ids: [master-planning-catalog]
+      - transport: gateway
+        request:
+          candidate_module_id: candidate-module-scenario-ml
+          record:
+            schema_version: 1
+            id: candidate-comparison-scenario
+            type: candidate-source-comparison
+            candidate_module_id: candidate-module-scenario-ml
+            status: approved
+            basis: {catalog_revision: 0, candidate_set_checksum: "sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356", policy: tiered-v1, request_id: scenario-request, delivery_id: scenario-delivery}
+            source_assessments:
+              - candidate_source_id: candidate-source-scenario-book
+                role: selected
+                review_status: deep-reviewed
+                concept_ids: [concept-expected-value]
+                contribution: Covers the derivation end to end.
+                assumptions: Finite discrete outcomes.
+                notation: Standard expectation notation.
+                exercise_value: Worked examples included.
+                best_for: First reading.
+                limitations: No measure theory.
+                evidence: [{locator: "chapter 1", checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]
+            comparisons: []
+        artifact_ids: [candidate-module-scenario-ml, candidate-comparison-scenario]
+  - id: no-catalog
+    kind: refusal
+    transport: gateway
+    request:
+      candidate_module_id: candidate-module-scenario-ml
+      record:
+        schema_version: 1
+        id: candidate-comparison-scenario
+        type: candidate-source-comparison
+        candidate_module_id: candidate-module-scenario-ml
+        status: approved
+        basis: {catalog_revision: 0, candidate_set_checksum: "sha256:0000000000000000000000000000000000000000000000000000000000000000", policy: tiered-v1, request_id: scenario-request, delivery_id: scenario-delivery}
+        source_assessments:
+          - candidate_source_id: candidate-source-scenario-book
+            role: selected
+            review_status: deep-reviewed
+            concept_ids: [concept-expected-value]
+            contribution: Covers the derivation end to end.
+            assumptions: Finite discrete outcomes.
+            notation: Standard expectation notation.
+            exercise_value: Worked examples included.
+            best_for: First reading.
+            limitations: No measure theory.
+            evidence: [{locator: "chapter 1", checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]
+        comparisons: []
+    artifact_ids: []
+    expect: {site: null}
+  - id: candidate-mismatch
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: masters-planning.catalog.update
+        request:
+          record:
+            schema_version: 1
+            id: master-planning-catalog
+            type: master-planning-catalog
+            revision: 0
+            updated_at: "2026-10-01T09:00:00+02:00"
+            candidate_modules:
+              - id: candidate-module-scenario-ml
+                title: Scenario ML module
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                source_ids: [candidate-source-scenario-book]
+                unresolved_references: []
+            candidate_sources:
+              - id: candidate-source-scenario-book
+                title: Scenario Book
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                type: book
+            comparison_ids: []
+        artifact_ids: [master-planning-catalog]
+      - transport: gateway
+        request:
+          candidate_module_id: candidate-module-other
+          record:
+            schema_version: 1
+            id: candidate-comparison-scenario
+            type: candidate-source-comparison
+            candidate_module_id: candidate-module-scenario-ml
+            status: approved
+            basis: {catalog_revision: 0, candidate_set_checksum: "sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356", policy: tiered-v1, request_id: scenario-request, delivery_id: scenario-delivery}
+            source_assessments:
+              - candidate_source_id: candidate-source-scenario-book
+                role: selected
+                review_status: deep-reviewed
+                concept_ids: [concept-expected-value]
+                contribution: Covers the derivation end to end.
+                assumptions: Finite discrete outcomes.
+                notation: Standard expectation notation.
+                exercise_value: Worked examples included.
+                best_for: First reading.
+                limitations: No measure theory.
+                evidence: [{locator: "chapter 1", checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]
+            comparisons: []
+        artifact_ids: []
+  - id: direct-cli-refused
+    kind: sequence
+    expect: {site: masters-planning.comparison.publish.approval-required}
+    steps:
+      - transport: gateway
+        operation: masters-planning.catalog.update
+        request:
+          record:
+            schema_version: 1
+            id: master-planning-catalog
+            type: master-planning-catalog
+            revision: 0
+            updated_at: "2026-10-01T09:00:00+02:00"
+            candidate_modules:
+              - id: candidate-module-scenario-ml
+                title: Scenario ML module
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                source_ids: [candidate-source-scenario-book]
+                unresolved_references: []
+            candidate_sources:
+              - id: candidate-source-scenario-book
+                title: Scenario Book
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                type: book
+            comparison_ids: []
+        artifact_ids: [master-planning-catalog]
+      - transport: cli
+        argv: [masters-planning-comparison-publish, candidate-module-scenario-ml, --record, '{"schema_version": 1, "id": "candidate-comparison-scenario", "type": "candidate-source-comparison", "candidate_module_id": "candidate-module-scenario-ml", "status": "approved", "basis": {"catalog_revision": 0, "candidate_set_checksum": "sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356", "policy": "tiered-v1", "request_id": "scenario-request", "delivery_id": "scenario-delivery"}, "source_assessments": [{"candidate_source_id": "candidate-source-scenario-book", "role": "selected", "review_status": "deep-reviewed", "concept_ids": ["concept-expected-value"], "contribution": "Covers the derivation end to end.", "assumptions": "Finite discrete outcomes.", "notation": "Standard expectation notation.", "exercise_value": "Worked examples included.", "best_for": "First reading.", "limitations": "No measure theory.", "evidence": [{"locator": "chapter 1", "checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]}], "comparisons": []}']
+  - id: direct-cli-no-gateway
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: masters-planning.catalog.update
+        request:
+          record:
+            schema_version: 1
+            id: master-planning-catalog
+            type: master-planning-catalog
+            revision: 0
+            updated_at: "2026-10-01T09:00:00+02:00"
+            candidate_modules:
+              - id: candidate-module-scenario-ml
+                title: Scenario ML module
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                source_ids: [candidate-source-scenario-book]
+                unresolved_references: []
+            candidate_sources:
+              - id: candidate-source-scenario-book
+                title: Scenario Book
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                type: book
+            comparison_ids: []
+        artifact_ids: [master-planning-catalog]
+      - transport: cli
+        argv: [masters-planning-comparison-publish, candidate-module-scenario-ml, --approve, --record, '{"schema_version": 1, "id": "candidate-comparison-scenario", "type": "candidate-source-comparison", "candidate_module_id": "candidate-module-scenario-ml", "status": "approved", "basis": {"catalog_revision": 0, "candidate_set_checksum": "sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356", "policy": "tiered-v1", "request_id": "scenario-request", "delivery_id": "scenario-delivery"}, "source_assessments": [{"candidate_source_id": "candidate-source-scenario-book", "role": "selected", "review_status": "deep-reviewed", "concept_ids": ["concept-expected-value"], "contribution": "Covers the derivation end to end.", "assumptions": "Finite discrete outcomes.", "notation": "Standard expectation notation.", "exercise_value": "Worked examples included.", "best_for": "First reading.", "limitations": "No measure theory.", "evidence": [{"locator": "chapter 1", "checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]}], "comparisons": []}']
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: masters-planning.catalog.update
+        request:
+          record:
+            schema_version: 1
+            id: master-planning-catalog
+            type: master-planning-catalog
+            revision: 0
+            updated_at: "2026-10-01T09:00:00+02:00"
+            candidate_modules:
+              - id: candidate-module-scenario-ml
+                title: Scenario ML module
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                source_ids: [candidate-source-scenario-book]
+                unresolved_references: []
+            candidate_sources:
+              - id: candidate-source-scenario-book
+                title: Scenario Book
+                planning_state: selected
+                privacy_class: academic-only
+                provenance: [scenario]
+                fact_state: {status: unverified, as_of: "2026-09-23", evidence: [scenario]}
+                type: book
+            comparison_ids: []
+        artifact_ids: [master-planning-catalog]
+      - transport: gateway
+        request:
+          candidate_module_id: candidate-module-scenario-ml
+          record:
+            schema_version: 1
+            id: candidate-comparison-scenario
+            type: candidate-source-comparison
+            candidate_module_id: candidate-module-scenario-ml
+            status: approved
+            basis: {catalog_revision: 0, candidate_set_checksum: "sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356", policy: tiered-v1, request_id: scenario-request, delivery_id: scenario-delivery}
+            source_assessments:
+              - candidate_source_id: candidate-source-scenario-book
+                role: selected
+                review_status: deep-reviewed
+                concept_ids: [concept-expected-value]
+                contribution: Covers the derivation end to end.
+                assumptions: Finite discrete outcomes.
+                notation: Standard expectation notation.
+                exercise_value: Worked examples included.
+                best_for: First reading.
+                limitations: No measure theory.
+                evidence: [{locator: "chapter 1", checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]
+            comparisons: []
+        artifact_ids: [candidate-module-scenario-ml, candidate-comparison-scenario]
+      - transport: gateway
+        same_envelope_as: 1
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request:
+      candidate_module_id: candidate-module-scenario-ml
+      record:
+        schema_version: 1
+        id: candidate-comparison-scenario
+        type: candidate-source-comparison
+        candidate_module_id: candidate-module-scenario-ml
+        status: approved
+        basis: {catalog_revision: 0, candidate_set_checksum: "sha256:0000000000000000000000000000000000000000000000000000000000000000", policy: tiered-v1, request_id: scenario-request, delivery_id: scenario-delivery}
+        source_assessments:
+          - candidate_source_id: candidate-source-scenario-book
+            role: selected
+            review_status: deep-reviewed
+            concept_ids: [concept-expected-value]
+            contribution: Covers the derivation end to end.
+            assumptions: Finite discrete outcomes.
+            notation: Standard expectation notation.
+            exercise_value: Worked examples included.
+            best_for: First reading.
+            limitations: No measure theory.
+            evidence: [{locator: "chapter 1", checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}]
+        comparisons: []
+    artifact_ids: [candidate-module-scenario-ml, candidate-comparison-scenario]
+    expect: {site: null}

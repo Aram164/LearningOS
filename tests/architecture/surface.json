@@ -1,0 +1,9426 @@
+{
+ "catalog": {
+  "commands": {
+   "ability.candidate.append": {
+    "admission": "direct-user-gesture",
+    "cli_command": "ability-candidate-append",
+    "handler": "ability_candidate_append",
+    "writes": [
+     "knowledge/ability-candidates.jsonl"
+    ]
+   },
+   "ai-action.delivery.apply": {
+    "admission": null,
+    "cli_command": "ai-action-apply-delivery",
+    "handler": "ai_action_apply_delivery",
+    "writes": [
+     "operations/ai-actions/requests/**"
+    ]
+   },
+   "atlas.question.save": {
+    "admission": "direct-user-gesture",
+    "cli_command": "atlas-question-save",
+    "handler": "atlas_question_save",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "capture.create": {
+    "admission": "direct-user-gesture",
+    "cli_command": "capture",
+    "handler": "capture",
+    "writes": [
+     "work/inbox/**"
+    ]
+   },
+   "collection.entry.revise": {
+    "admission": null,
+    "cli_command": "collection-entry-revise",
+    "handler": "collection_entry_revise",
+    "writes": [
+     "sources/collections/**"
+    ]
+   },
+   "concept.relations.change": {
+    "admission": "direct-user-gesture",
+    "cli_command": "concept-relations-change",
+    "handler": "concept_relations_change",
+    "writes": [
+     "knowledge/concept-relations.yaml",
+     "knowledge/concept-relations/**"
+    ]
+   },
+   "coordination.section.revise": {
+    "admission": null,
+    "cli_command": "coordination-section-revise",
+    "handler": "coordination_section_revise",
+    "writes": [
+     "work/COORDINATION.md"
+    ]
+   },
+   "detour.create": {
+    "admission": "direct-user-gesture",
+    "cli_command": "detour-create",
+    "handler": "detour_create",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "detour.resolve": {
+    "admission": "direct-user-gesture",
+    "cli_command": "detour-resolve",
+    "handler": "detour_resolve",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "garden.seed.create": {
+    "admission": "direct-user-gesture",
+    "cli_command": "garden-seed-create",
+    "handler": "garden_seed_create",
+    "writes": [
+     "knowledge/garden/**"
+    ]
+   },
+   "inbox.resolve": {
+    "admission": null,
+    "cli_command": "inbox-resolve",
+    "handler": "inbox_resolve",
+    "writes": [
+     "work/inbox/**",
+     "archive/inbox/**"
+    ]
+   },
+   "learner.ability-observation.append": {
+    "admission": "direct-user-gesture",
+    "cli_command": "ability-observation-append",
+    "handler": "ability_observation_append",
+    "writes": [
+     "work/active/*/ability-observations.jsonl"
+    ]
+   },
+   "learner.observation.append": {
+    "admission": "direct-user-gesture",
+    "cli_command": "observation-append",
+    "handler": "observation_append",
+    "writes": [
+     "work/active/*/observations.jsonl"
+    ]
+   },
+   "learner.stage-result.append": {
+    "admission": null,
+    "cli_command": "stage-result",
+    "handler": "stage_result",
+    "writes": [
+     "work/active/*/stage-results.jsonl"
+    ]
+   },
+   "legacy.archive.lock.publish": {
+    "admission": null,
+    "cli_command": "legacy-archive-lock-publish",
+    "handler": "legacy_archive_lock_publish",
+    "writes": [
+     "operations/legacy/archive-lock.yaml"
+    ]
+   },
+   "lineage.restamp": {
+    "admission": null,
+    "cli_command": "lineage-restamp",
+    "handler": "lineage_restamp",
+    "writes": [
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "masters-planning.catalog.update": {
+    "admission": null,
+    "cli_command": "masters-planning-catalog-update",
+    "handler": "masters_planning_catalog_update",
+    "writes": [
+     "curriculum/quarantine/masters-planning/catalog.yaml"
+    ]
+   },
+   "masters-planning.comparison.publish": {
+    "admission": null,
+    "cli_command": "masters-planning-comparison-publish",
+    "handler": "masters_planning_comparison_publish",
+    "writes": [
+     "curriculum/quarantine/masters-planning/comparisons/**"
+    ]
+   },
+   "module.attempt.record": {
+    "admission": null,
+    "cli_command": "module-attempt",
+    "handler": "module_attempt",
+    "writes": [
+     "curriculum/modules/*/module.yaml"
+    ]
+   },
+   "module.materials.compact": {
+    "admission": null,
+    "cli_command": "module-materials-compact",
+    "handler": "module_materials_compact",
+    "writes": [
+     "curriculum/modules/*/source-map.yaml",
+     "curriculum/modules/*/units/*/study-map.yaml"
+    ]
+   },
+   "module.plan.import": {
+    "admission": null,
+    "cli_command": "module-plan-import",
+    "handler": "module_plan_import",
+    "writes": [
+     "curriculum/modules/**",
+     "work/active/**",
+     "sources/sources.yaml",
+     "sources/registry/**",
+     "curriculum/quarantine/masters-planning/catalog.yaml",
+     "curriculum/quarantine/masters-planning/promotions/**",
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "module.sitting.update": {
+    "admission": null,
+    "cli_command": "module-sitting",
+    "handler": "module_sitting",
+    "writes": [
+     "curriculum/modules/*/module.yaml"
+    ]
+   },
+   "note.analysis.save": {
+    "admission": null,
+    "cli_command": "note-analysis-save",
+    "handler": "note_analysis_save",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "note.analysis.save_batch": {
+    "admission": null,
+    "cli_command": "note-analysis-save-batch",
+    "handler": "note_analysis_save_batch",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "note.create": {
+    "admission": null,
+    "cli_command": "note-create",
+    "handler": "note_create",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "note.evidence.add": {
+    "admission": null,
+    "cli_command": "note-evidence",
+    "handler": "note_evidence",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "note.revise": {
+    "admission": null,
+    "cli_command": "note-revise",
+    "handler": "note_revise",
+    "writes": [
+     "knowledge/notes/**"
+    ]
+   },
+   "path.attachment.add": {
+    "admission": null,
+    "cli_command": "path-attach",
+    "handler": "path_attach",
+    "writes": [
+     "work/active/**"
+    ]
+   },
+   "path.note.write": {
+    "admission": null,
+    "cli_command": "path-note",
+    "handler": "path_note",
+    "writes": [
+     "work/active/**"
+    ]
+   },
+   "path.progress.update": {
+    "admission": null,
+    "cli_command": "path-progress",
+    "handler": "path_progress",
+    "writes": [
+     "work/active/**"
+    ]
+   },
+   "project.create": {
+    "admission": null,
+    "cli_command": "project-create",
+    "handler": "project_create",
+    "writes": [
+     "projects/registry/*"
+    ]
+   },
+   "project.update": {
+    "admission": null,
+    "cli_command": "project-update",
+    "handler": "project_update",
+    "writes": [
+     "projects/registry/*"
+    ]
+   },
+   "review.apply": {
+    "admission": "direct-user-gesture",
+    "cli_command": "shelving-apply",
+    "handler": "shelving_apply",
+    "writes": [
+     "knowledge/notes/**",
+     "knowledge/garden/**",
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "review.prepare": {
+    "admission": "direct-user-gesture",
+    "cli_command": "shelving-prepare",
+    "handler": "shelving_prepare",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "route.patch": {
+    "admission": null,
+    "cli_command": "route-patch",
+    "handler": "route_patch",
+    "writes": [
+     "curriculum/modules/*/source-map.yaml",
+     "curriculum/modules/*/units/*/unit.yaml",
+     "curriculum/modules/*/units/*/study-map.yaml",
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "source.feedback.record": {
+    "admission": "direct-user-gesture",
+    "cli_command": "source-feedback",
+    "handler": "source_feedback",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "source.intake.record": {
+    "admission": null,
+    "cli_command": "source-intake",
+    "handler": "source_intake_record",
+    "writes": [
+     "sources/sources.yaml",
+     "sources/registry/**"
+    ]
+   },
+   "source.record.revise": {
+    "admission": null,
+    "cli_command": "source-revise",
+    "handler": "source_record_revise",
+    "writes": [
+     "sources/sources.yaml",
+     "sources/registry/**",
+     "curriculum/modules/**/units/**/material-synthesis.yaml",
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "stage.attachment.add": {
+    "admission": "direct-user-gesture",
+    "cli_command": "stage-attach",
+    "handler": "stage_attach",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "stage.note.write": {
+    "admission": null,
+    "cli_command": "stage-note",
+    "handler": "stage_note",
+    "writes": [
+     "curriculum/modules/**/units/**/stages/**"
+    ]
+   },
+   "stage.progress.update": {
+    "admission": "direct-user-gesture",
+    "cli_command": "stage-progress",
+    "handler": "stage_progress",
+    "writes": [
+     "curriculum/modules/**/units/**",
+     "curriculum/resume.yaml"
+    ]
+   },
+   "unit.map.import": {
+    "admission": "direct-user-gesture",
+    "cli_command": "unit-map-import",
+    "handler": "unit_map_import",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "unit.material-synthesis.publish": {
+    "admission": null,
+    "cli_command": "unit-material-synthesis-publish",
+    "handler": "unit_material_synthesis_publish",
+    "writes": [
+     "curriculum/modules/**/units/**/material-synthesis.yaml",
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "unit.note.append": {
+    "admission": "direct-user-gesture",
+    "cli_command": "unit-note",
+    "handler": "unit_note",
+    "writes": [
+     "curriculum/modules/**/units/**"
+    ]
+   },
+   "unit.plan.revise": {
+    "admission": null,
+    "cli_command": "unit-plan-revise",
+    "handler": "unit_plan_revise",
+    "writes": [
+     "curriculum/modules/**",
+     "work/active/**",
+     "sources/sources.yaml",
+     "sources/registry/**",
+     "operations/transactions/lineage.yaml"
+    ]
+   },
+   "unit.source-selection.set": {
+    "admission": "direct-user-gesture",
+    "cli_command": "unit-source-selection",
+    "handler": "unit_source_selection",
+    "writes": [
+     "curriculum/modules/**/units/**/unit.yaml"
+    ]
+   },
+   "workspace.next-action.update": {
+    "admission": null,
+    "cli_command": "workspace-next-action",
+    "handler": "workspace_next_action",
+    "writes": [
+     "work/active/**"
+    ]
+   }
+  },
+  "domain_capabilities": [
+   "garden.add-transcription",
+   "garden.update",
+   "relationship.create",
+   "unit.material-synthesis.publish"
+  ],
+  "internal_commands": [
+   "goal.decision.record"
+  ],
+  "queries": {
+   "ability.context": {
+    "cli_command": "ability-context",
+    "handler": "ability_context"
+   },
+   "atlas.context": {
+    "cli_command": null,
+    "handler": "atlas_context"
+   },
+   "backup.manifest": {
+    "cli_command": null,
+    "handler": "backup_manifest"
+   },
+   "health.report": {
+    "cli_command": null,
+    "handler": "health_report"
+   },
+   "inbox.content": {
+    "cli_command": null,
+    "handler": "inbox_read"
+   },
+   "inbox.list": {
+    "cli_command": null,
+    "handler": "inbox_list"
+   },
+   "legacy.archive.inspect": {
+    "cli_command": null,
+    "handler": "legacy_archive_inspect"
+   },
+   "legacy.archive.status": {
+    "cli_command": null,
+    "handler": "legacy_archive_status"
+   },
+   "masters-planning.dashboard": {
+    "cli_command": null,
+    "handler": "masters_planning_dashboard"
+   },
+   "material.context": {
+    "cli_command": "material-context",
+    "handler": "material_context"
+   },
+   "material.span": {
+    "cli_command": "material-span",
+    "handler": "material_span"
+   },
+   "note.content": {
+    "cli_command": null,
+    "handler": "note_read"
+   },
+   "note.search": {
+    "cli_command": null,
+    "handler": "search"
+   },
+   "operator.bootstrap": {
+    "cli_command": null,
+    "handler": "bootstrap"
+   },
+   "plan.edit-context": {
+    "cli_command": null,
+    "handler": "plan_edit_context"
+   },
+   "plan.template": {
+    "cli_command": null,
+    "handler": "plan_template"
+   },
+   "project.inspect": {
+    "cli_command": null,
+    "handler": "inspect"
+   },
+   "project.list": {
+    "cli_command": null,
+    "handler": "project_list"
+   },
+   "runtime.session": {
+    "cli_command": null,
+    "handler": "runtime_session"
+   }
+  }
+ },
+ "cli": {
+  "__root__": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "lock_timeout",
+    "metavar": "SECONDS",
+    "nargs": null,
+    "option_strings": [
+     "--lock-timeout"
+    ],
+    "required": false,
+    "type": "float"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--root"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ability-candidate-append": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "carries",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--carries"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "changes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--changes"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "from_ability",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--from-ability"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "connection",
+     "equivalence",
+     "extension"
+    ],
+    "default_repr": "None",
+    "dest": "kind",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--kind"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "source_ref",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--source-ref"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "to_ability",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--to-ability"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "ability-context": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "ability_id",
+    "metavar": null,
+    "nargs": "?",
+    "option_strings": [],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "brief",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--brief"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "12",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": [
+     "evidence"
+    ],
+    "default_repr": "None",
+    "dest": "section",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--section"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ability-observation-append": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "ability",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--ability"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "activity",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--activity"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "assistance",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--assistance"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "claim",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--claim"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition_not_met",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition-not-met"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "confirmation_ref",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--confirmation-ref"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "evidence_tag",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--evidence-tag"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "abandoned",
+     "correct",
+     "incorrect",
+     "partial"
+    ],
+    "default_repr": "None",
+    "dest": "result",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--result"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "supersedes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--supersedes"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "work_ref",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--work-ref"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--workspace"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "ai-action-append-slices": [
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "concept_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--concept-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "end",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--end"
+    ],
+    "required": true,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "kind",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--kind"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "material_uri",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--material-uri"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "reason",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--reason"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "request_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--request-id"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "route_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--route-id"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "start",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--start"
+    ],
+    "required": true,
+    "type": "int"
+   }
+  ],
+  "ai-action-apply-delivery": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "delivery_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "artifact_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--artifact-sha256"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "delivery_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--delivery-sha256"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ai-action-import-delivery": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "path",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ai-action-list": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ai-action-prepare": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "action_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--action-id"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "'manual-bundle'",
+    "dest": "provider",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--provider"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "request_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--request-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "target_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--target-id"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "target_kind",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--target-kind"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "ai-action-status": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "request_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "ai-action-validate-delivery": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "delivery_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "atlas-context": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "concept_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "atlas-question-save": [
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "question",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--question"
+    ],
+    "required": true,
+    "type": "json_object"
+   }
+  ],
+  "backup-manifest": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "materials_root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--materials-root"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "out",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "stdout",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--stdout"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "ui_root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--ui-root"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "backup-verify": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "checksums_only",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--checksums-only"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "manifest",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--manifest"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "restored_core",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--restored-core"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "restored_materials",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--restored-materials"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "restored_ui",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--restored-ui"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "bootstrap": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "brief",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--brief"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "compact",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--compact"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "20",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   }
+  ],
+  "capabilities": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "name",
+    "metavar": null,
+    "nargs": "?",
+    "option_strings": [],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "compact",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--compact"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "capability": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "name",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "payload_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--payload-file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replay_only",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replay-only"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "capture": [
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "title",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--title"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "collection-entry-revise": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_diff_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-diff-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "concept-relations-change": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "change",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--change"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "coordination-section-revise": [
+   {
+    "action": "store",
+    "choices": [
+     "Commitments",
+     "Deferrals",
+     "Dependencies",
+     "Priorities"
+    ],
+    "default_repr": "None",
+    "dest": "section",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_content_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-content-sha256"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "detour-create": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "deferred",
+     "helpful-now",
+     "reference-only",
+     "required-now"
+    ],
+    "default_repr": "None",
+    "dest": "classification",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--classification"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "title",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--title"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "detour-resolve": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "detour_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "resolution",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--resolution"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "dossier": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "garden-seed-create": [
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "title",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--title"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "generate": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "goal": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "goal_id",
+    "metavar": null,
+    "nargs": "+",
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "audit_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--audit-file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "authorize",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--authorize"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "close",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--close"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "defer",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--defer"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--note"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "reject",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--reject"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "reviewed_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--reviewed-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "revisit_on",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--revisit-on"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "session_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--session-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "health-report": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "inbox-list": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "inbox-read": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "name",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "8000",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   }
+  ],
+  "inbox-resolve": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "name",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "drop_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--drop-sha256"
+    ],
+    "required": true,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "routed_to",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--routed-to"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "inspect": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "more_ids",
+    "metavar": null,
+    "nargs": "*",
+    "option_strings": [],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "intelligence-scan": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "brief",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--brief"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "30",
+    "dest": "days",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--days"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "feed",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--feed"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "legacy-archive-inspect": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "allowlist",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--allowlist"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "archive_root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--archive-root"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "legacy-archive-lock-publish": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "legacy-archive-status": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "lineage-restamp": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "claim_ids",
+    "metavar": "CLAIM_ID",
+    "nargs": "+",
+    "option_strings": [
+     "--claim-ids"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "claims_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--claims-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "review_report",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--review-report"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "masters-planning-catalog-update": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "masters-planning-comparison-publish": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "candidate_module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "masters-planning-dashboard": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "confirm_masters_planning",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--confirm-masters-planning"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "material-context": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "''",
+    "dest": "query",
+    "metavar": null,
+    "nargs": "?",
+    "option_strings": [],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "concept",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--concept"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_observations",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-observations"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "include_anchors",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--include-anchors"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "include_related",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--include-related"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "5",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "material",
+    "metavar": "REF",
+    "nargs": null,
+    "option_strings": [
+     "--material"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "purpose",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--purpose"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--unit"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "material-span": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "route_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "extract",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--extract"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "resource_index",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--resource-index"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--stage"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "module-attempt": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "date",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--date"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "grade",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--grade"
+    ],
+    "required": false,
+    "type": "float"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "notes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--notes"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "failed",
+     "passed",
+     "registered",
+     "sat",
+     "withdrawn"
+    ],
+    "default_repr": "None",
+    "dest": "result",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--result"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     1,
+     2,
+     3
+    ],
+    "default_repr": "None",
+    "dest": "termin",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--termin"
+    ],
+    "required": true,
+    "type": "int"
+   }
+  ],
+  "module-list": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "program_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--program-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--status"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "module-materials-compact": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "plan_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--plan-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   }
+  ],
+  "module-plan-import": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "apply_reviewed_sha256",
+    "metavar": "SHA256",
+    "nargs": null,
+    "option_strings": [
+     "--apply-reviewed-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "package_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--package-sha256"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "promotion",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--promotion"
+    ],
+    "required": false,
+    "type": "json_object"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "review_report",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--review-report"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "staged_basis",
+    "metavar": "UNIT_ID",
+    "nargs": null,
+    "option_strings": [
+     "--staged-basis"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "module-sitting": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     1,
+     2,
+     3
+    ],
+    "default_repr": "None",
+    "dest": "termin",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--termin"
+    ],
+    "required": true,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "withdrawal_deadline",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--withdrawal-deadline"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "note-analysis-prepare": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "drafts",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--drafts"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "out",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--out"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "note-analysis-save": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "analysis",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--analysis"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "body_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--body-file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "body_file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--body-file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "note-analysis-save-batch": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "bundle",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--bundle"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "note-create": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "body_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--body-file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "body_file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--body-file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--note"
+    ],
+    "required": true,
+    "type": "json_object"
+   }
+  ],
+  "note-evidence": [
+   {
+    "action": "store",
+    "choices": [
+     "derivation",
+     "exam",
+     "exercise",
+     "explanation",
+     "external",
+     "implementation"
+    ],
+    "default_repr": "None",
+    "dest": "evidence_type",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "ref",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "note-read": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "8000",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   }
+  ],
+  "note-revise": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "observation-append": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "activity",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--activity"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "assistance",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--assistance"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition_not_met",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition-not-met"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "context",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--context"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "requirement",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--requirement"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "abandoned",
+     "correct",
+     "incorrect",
+     "partial"
+    ],
+    "default_repr": "None",
+    "dest": "result",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--result"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "supersedes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--supersedes"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "tags",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--tags"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--workspace"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "observe": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "requirement",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "activity",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--activity"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "assistance",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--assistance"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition_not_met",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition-not-met"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--note"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "abandoned",
+     "correct",
+     "incorrect",
+     "partial"
+    ],
+    "default_repr": "None",
+    "dest": "result",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--result"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "supersedes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--supersedes"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "tags",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--tags"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--workspace"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "operations": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "20",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "request_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--request-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "path-attach": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "path_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "label",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--label"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "path-note": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "path_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replace",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replace"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "path-progress": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "path_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "active",
+     "complete",
+     "skipped"
+    ],
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "plan-edit-context": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "audit",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--audit"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "brief",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--brief"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "include_neighbors",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--include-neighbors"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "include_related",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--include-related"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "route_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--route-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "route_ids",
+    "metavar": "ROUTE_ID",
+    "nargs": "+",
+    "option_strings": [
+     "--route-ids"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--stage-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "plan-template": [
+   {
+    "action": "store",
+    "choices": [
+     "curriculum"
+    ],
+    "default_repr": "None",
+    "dest": "profile",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--module-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "title",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--title"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--unit-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "program-list": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "project-create": [
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "project",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--project"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "project-list": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--status"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "project-update": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "project_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "project",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--project"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "related": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "resume": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "study",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--study"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit",
+    "metavar": "UNIT_ID",
+    "nargs": null,
+    "option_strings": [
+     "--unit"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "route-patch": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "route_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "changes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--changes"
+    ],
+    "required": true,
+    "type": "json_object"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "claim_evidence",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--claim-evidence"
+    ],
+    "required": false,
+    "type": "json_object"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "runtime-session": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "'{}'",
+    "dest": "context_json",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--context-json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "event",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--event"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "previous_json",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--previous-json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "requirement",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--requirement"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "search": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "query",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "content",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--content"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "50",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "page",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--page"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "type",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--type"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "semantic": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "predicate",
+    "metavar": null,
+    "nargs": "?",
+    "option_strings": [],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "input",
+    "metavar": "k=v",
+    "nargs": null,
+    "option_strings": [
+     "--input"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "list",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--list"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "recipe",
+    "metavar": "CLASS",
+    "nargs": null,
+    "option_strings": [
+     "--recipe"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "session-end": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "channel",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--channel"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "close",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--close"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "commit_message",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--commit-message"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "include_stale",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--include-stale"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "push",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--push"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "session_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--session-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "shelving-apply": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "selected",
+    "metavar": null,
+    "nargs": "+",
+    "option_strings": [
+     "--selected"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "shelving-prepare": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "items_file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--items-file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "items_file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--items-file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "summary",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--summary"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "source-feedback": [
+   {
+    "action": "store",
+    "choices": [
+     "helpful",
+     "skipped",
+     "too-advanced",
+     "useful-for-derivation",
+     "useful-for-review",
+     "wrong-perspective"
+    ],
+    "default_repr": "None",
+    "dest": "feedback",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "source_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--note"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "resource_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--resource-id"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "source-intake": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_diff_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-diff-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "source-revise": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_diff_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-diff-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "stage-attach": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "label",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--label"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "stage-note": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replace",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replace"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "stage-progress": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "active",
+     "complete",
+     "paused",
+     "revisit",
+     "skipped"
+    ],
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "progress_next",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--progress-next"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "progress_summary",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--progress-summary"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "stage-result": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "activity",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--activity"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "assistance",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--assistance"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "condition",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--condition"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "note",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--note"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "abandoned",
+     "correct",
+     "incorrect",
+     "partial"
+    ],
+    "default_repr": "None",
+    "dest": "result",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--result"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "stage",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--stage"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "supersedes",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--supersedes"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--unit"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--workspace"
+    ],
+    "required": true,
+    "type": null
+   }
+  ],
+  "status": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "no_validate",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--no-validate"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "unit-list": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "compact",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--compact"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "component_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--component-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "20",
+    "dest": "limit",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--limit"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "module_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--module-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "0",
+    "dest": "offset",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--offset"
+    ],
+    "required": false,
+    "type": "int"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "status",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--status"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "unit-map-import": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "intentional_reorder",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--intentional-reorder"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "intentional_state_reset",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--intentional-state-reset"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "replace",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--replace"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "retire_reason",
+    "metavar": "REASON",
+    "nargs": null,
+    "option_strings": [
+     "--retire-reason"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "retire_stage",
+    "metavar": "STAGE_ID",
+    "nargs": null,
+    "option_strings": [
+     "--retire-stage"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "unit-material-synthesis-publish": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "approve",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--approve"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   }
+  ],
+  "unit-note": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "attachment",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--attachment"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "attachment_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--attachment-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "stage_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--stage-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "text",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--text"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "title",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--title"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "unit-plan-revise": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "apply_reviewed_sha256",
+    "metavar": "SHA256",
+    "nargs": null,
+    "option_strings": [
+     "--apply-reviewed-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "record",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--record"
+    ],
+    "required": false,
+    "type": "json_object"
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "report_out",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--report-out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "review_report",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--review-report"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "staged_basis",
+    "metavar": "UNIT_ID",
+    "nargs": null,
+    "option_strings": [
+     "--staged-basis"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "unit-source-selection": [
+   {
+    "action": "store",
+    "choices": [
+     "remove",
+     "select"
+    ],
+    "default_repr": "None",
+    "dest": "action",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "locator",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "source_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "unit_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "purpose",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--purpose"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "validate": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "online",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--online"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "workspace-next-action": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "workspace_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "next_action",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--next-action"
+    ],
+    "required": true,
+    "type": null
+   }
+  ]
+ },
+ "opcontext": {
+  "channel": "field: str",
+  "gateway": "field: GatewayRequestContext | None",
+  "invocation": "field: str",
+  "operation": "field: str",
+  "repo": "method: (self) -> 'Repo'",
+  "require_snapshot": "method: (self, expected: 'str | None') -> 'None'",
+  "root": "field: Path",
+  "snapshot_id": "method: (self) -> 'str'"
+ },
+ "request_schemas": {
+  "ability.candidate.append.schema.json": "c64cf4f0fdbfaba706b55487d1cc26d47ec76fe4086b09213e6d1849bf36ddba",
+  "ability.context.schema.json": "6f49e5a53878ac23a467e074412a40fa8f475ca388d386b483793754d2c14fb6",
+  "ai-action.append-slices.schema.json": "84efed13c9d2e41bd53b25de7d0c72c7a035e94dedfb59667386c188426cb0c5",
+  "ai-action.delivery.apply.schema.json": "47a8e09bd766ca37cc1fe07727bc58839265ad97c8902ca1ee49ce3936c5c2e2",
+  "ai-action.delivery.import.schema.json": "926bea2b93f2cdc4fa2d28768da9d7929422ea0fbf9a39b524b9670255e18565",
+  "ai-action.delivery.validate.schema.json": "ea6fc0fbe53f5d8fccc4c6a668d46638e9b83ba4ddd193f650e6e70eb20795a6",
+  "ai-action.list.schema.json": "437deb2672d1b197430a84df0a4c6f271465bb2cf0c82be13c21fbfb1fe64560",
+  "ai-action.prepare.schema.json": "a1e26f8561bb1e6e31638e00747ab6d55da98b4b37d686a06d8a9ed36e4d134b",
+  "ai-action.status.schema.json": "d565688b9d17bb9edae8ccbd33b2ed861888b11d58620e50714fcdecf4badc7a",
+  "atlas.context.schema.json": "42b246c8802a6b368c2f85227a9e421429bcc3baaac8163dea8f4d32b5d42c0a",
+  "atlas.question.save.schema.json": "745f0ed33c7e8750bfdd11b81546ecf584138b4f9ba5b7ff3411d03f581d6239",
+  "backup.manifest.schema.json": "b87b6cc870dd902051b08848ca5fdefcf4a6a3cbf9fd1f34546ec8d52b2746f6",
+  "backup.verify.schema.json": "15e2ded47137de8145490c2999a68a7419d0f980942972685b848fde6d718a72",
+  "capabilities.read.schema.json": "2f5954b260d02f93171aec8dbddfdb0521a352a0cea7519e06050048a0c78bde",
+  "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
+  "cli.capability.schema.json": "4880b312714e424cd0166679ed729b457a2f79b34eb5c61d066369aec9979e49",
+  "collection.entry.revise.schema.json": "e0fe8fdd6fbf6b21e798ba764165535779d86660523d6b8d345e447061a0c846",
+  "concept.relations.change.schema.json": "00397570f92919dafd35d69f3201edb6352b323a91fb40249648eb4b2023ff13",
+  "coordination.section.revise.schema.json": "30f747a4b6f117f2c189d3bdfa45860a7377b0272512781165d448b6ac6e3acd",
+  "detour.create.schema.json": "ec048f6b22268fe62202f33bfe2cfdedd40f87b6941a9da23c595a630ecc8138",
+  "detour.resolve.schema.json": "b542ecf3965f7231ee01e8c2d1810a8aaaa5265c70fc99291d9865b192210fd5",
+  "dossier.read.schema.json": "717b9d631fe689b747698ea6d9cb6eb67bf85beb6fa915d131141a00a34db0d5",
+  "garden.seed.create.schema.json": "56ac1bac97ea847e27b591aa21ab802126ba482f2f403bf42c0d1c895d428238",
+  "goal.decide.schema.json": "153d5ec6ea2358ec84af5df7cb2469c0fd7445bc4c62492f773fb753ee5df3f0",
+  "health.report.schema.json": "eeb16526fc97b6560c2f32bd3fabce12b1b0a7e1e762c1a7f4b6b60e392b259e",
+  "inbox.content.schema.json": "b956e7822531c67d13d4143b2c50cce2ff22e0e86bbbab5f63af18aaf4f998f4",
+  "inbox.list.schema.json": "e7c01475bec27d2a5cd1e957a41b899a218c79ecb0e7099bb26c1f191ec8f55d",
+  "inbox.resolve.schema.json": "1ffa96d3077615e4ec86e4c942af946fb65f454dd903b16dc2a7a58c61855097",
+  "intelligence.scan.schema.json": "a86e0aeaee6f8219e0271f085f7349cd20084e8635ffaaaef694a8bf1f04a196",
+  "learner.ability-observation.append.schema.json": "f716a721bbc6e780ea21e535b19748b45b9ba165c8cadfb64115480bcf02eba1",
+  "learner.observation.append.schema.json": "99eeaee15866beeb246139c36549e614239b43934cc2050d9033294740c63ca8",
+  "learner.observe.schema.json": "7974093e87e62642f2b3999ee3be1d1762daa03d0248806f0c475f0b478ed9f2",
+  "learner.stage-result.append.schema.json": "defd35bb458142b093c68e2685f3cff748b890270380cc108094ea289f4c8693",
+  "legacy.archive.inspect.schema.json": "157ae50dfae4d70d6a334db79593d4e4c675cef709f102638568af85b05755e8",
+  "legacy.archive.lock.publish.schema.json": "c260608e5c2c93a0081d7338a9b761d872e4fb007a4ea4fcaaee25208dd75a8b",
+  "legacy.archive.status.schema.json": "5fccbc4aa4b2d1ccc15cb19a7bb004804a47c9395c0fb85cf595ac9efbcbb3a3",
+  "lineage.restamp.schema.json": "7b1ad7a236674074f6543bfc71e0091abcfc79db5d4fe4ff09e5ca05291c28cc",
+  "masters-planning.catalog.update.schema.json": "ba9aabed3b802b3d6f4bc99f5df9d08443f2bec3e5a4c59b613a6809e2991a13",
+  "masters-planning.comparison.publish.schema.json": "f5829d2b7e99a965092bc41b6028e483a88aa108a002250321de4efbc78c6358",
+  "masters-planning.dashboard.schema.json": "12d94e731b549690282ab6baec772a0409fb9badb7aabe7b167967d3f484c35f",
+  "material.context.schema.json": "bd0d7e1155045d0b225dceea79cf75ffc65757333620699a5875789ab951cd3a",
+  "material.span.schema.json": "15d21bba4426afe334cbd26a5337e60625137beb518e743d044f0960101c6ecd",
+  "module.attempt.record.schema.json": "def44a95750a94e5fa986aa5eda0922daccf56be5e41651b6cbc29d0a1af0c56",
+  "module.list.schema.json": "e0bdb5628bffe00d0d37b004de890566a5faf8616aae657fd0421631731fddd8",
+  "module.materials.compact.schema.json": "1bdd0efeb2eed2eae79448ddd0e2f2ae5d763dd7469b08980b16ad5527dd61be",
+  "module.plan.import.schema.json": "19fea12cc4989f43d8ace4d82bb778e41aa87452b98e2eaa2777f70ba322f9e6",
+  "module.sitting.update.schema.json": "853ee3c8cb75a6c3de8a83f65ee306495f105b242ac2d3118e6ca56428e05076",
+  "note.analysis.prepare.schema.json": "c0bba25db6730422ce1c9bf7fc5e30ae272b397dbc1c3dff0e231166437feb4e",
+  "note.analysis.save.schema.json": "4a4242ac01aaa407dcba358910b72f80dae8bd9aa76f2bc0e649f99a4cc96f81",
+  "note.analysis.save_batch.schema.json": "4332e7bfe2be823efd5c0b757f13304e1ef46524da1c8cd2f8bd611d8264f2e1",
+  "note.content.schema.json": "9bc9d43f182d575d7d1810c4c9cddb70238ae0b592cb5f2f6519647271bd0337",
+  "note.create.schema.json": "1286d6e9becf1f27db94b48fec7b862f938b03994b6e6b24e31edf6dd9bc08e2",
+  "note.evidence.add.schema.json": "09aa203dcdac2e48009d35775efbfa8fbd1445bdabc57335d870f8919add5c90",
+  "note.revise.schema.json": "f4c7030b241b464c82702801ce00f54000c5d51dc1781c131c3582c57d62e2e7",
+  "note.search.schema.json": "6759422fa9493501961f528a1b996d819505655903e1ee79c229ba8b51de16b5",
+  "operations.read.schema.json": "0860328c5ba0012f63e0572a160b623a11e4bbabd1e2bbaaa2ccde8e18c3483f",
+  "operator.bootstrap.schema.json": "2f858fc476164b3ff56eb95ea2fff5bb9bf8f03c7986aa1289af112858bb7e27",
+  "path.attachment.add.schema.json": "bd0b88c9af93b5529f83dd8ddc74a1f580b33d8de4bd229668c0c131aef6caf9",
+  "path.note.write.schema.json": "0028a6bc3097dda853326d9f92ff2f4c4921adb109959372d218a6b85e311308",
+  "path.progress.update.schema.json": "e3b41826488d41dfadec61a037847a915583404ca4d7487bdf507bc36d19821b",
+  "plan.edit-context.schema.json": "42e249f897c5b3cf2fad884c2260f5c37ba207e352079e6910321fc7fd020602",
+  "plan.template.schema.json": "1c532b6ed114dbfd914a206019055da000eaf2d356d299fa28146d0c1dba5bf7",
+  "program.list.schema.json": "1c6989676b267ba1c4b5d70c58c5099a4a2af841211d8e01af6574c59c80b365",
+  "project.create.schema.json": "5c997ab044e343104516dec512e8f385fc943c2b5a40cd415903e322a7fc25d3",
+  "project.inspect.schema.json": "e402d151940ad6ef46140bf7f6367bb78b804dde9f03cb77d46ce8711002314b",
+  "project.list.schema.json": "21515ab76275ae9c009f014e72b2ed5ebc4546467b8ae65e839b01a1d9011c04",
+  "project.update.schema.json": "80bb64f356b256f86abb9d4e29a189025af70b9e71b4e70332c571c41db85956",
+  "projection.generate.schema.json": "b2fc48a34025bf4306eca85ccafe93e81692a9b865b354d150c5c8cb776d08ce",
+  "related.read.schema.json": "bed0d80d693eaa35143226b0da7849f1c0e2620fdb17216e86842b06c0ce994e",
+  "repository.validate.schema.json": "ae2e47618d9bd5229f6bedeb2a6b45db14b15fb8e71fe117e7ac8f94278f03bd",
+  "resume.read.schema.json": "873cd342a30c7e35416eb7f62688de7a3c2df3e5848b000aa100a2cbfb97460e",
+  "review.apply.schema.json": "756fa765f842b035c3818fe32f0132d7a1a7bf7708ed48459576046188cd61b1",
+  "review.prepare.schema.json": "2981bf0a3879aeda9253b905b637abcc3b2fab631459e6d50ebdb8f538290fa4",
+  "route.patch.schema.json": "04cf04b1b48c8132f8a61b63be2cd65c7338844438f4ef118d50e39131c4a19d",
+  "runtime.session.schema.json": "3591ad91b76913f0160fbb054d24dc60f2d03e246b37c3a62b1cf55b2545af1f",
+  "semantic.query.schema.json": "abd9beff1af58fe29e81fe58e7c7efb34ba3c8f42b72fe9c63991926e7a73034",
+  "session.end.schema.json": "41356cfd7cc9b603c45f68e93483c6f5e3a6acea05d9065003e163c8f6f94077",
+  "source.feedback.record.schema.json": "112347c021903070830dc1f78bc723ce4ddc643d2dc14acd2817fee98837eb08",
+  "source.intake.record.schema.json": "0c68bc91ab2efee8a4e3fbe1faf4b64c42fa927d1e4cea5f35fd25f687e03fc0",
+  "source.record.revise.schema.json": "7132ed2287f0289eaa7d5ad956e60db1ac255f08460fa4cd42477a3ee330877b",
+  "stage.attachment.add.schema.json": "28246abedd3841ddc70899cc1742e698f95a5318a9cbbf39245f4b218eec3419",
+  "stage.note.write.schema.json": "83f18cb5fb35af4a4674021a33f343d013b0252f00deaad8874415ae9beeb0fc",
+  "stage.progress.update.schema.json": "50f7d840666f6c5db501fe23c239bf7ce20d7883e0b9d2888bbb44b954c61c2f",
+  "status.read.schema.json": "3583d0fb76db5a39f2c7818a9844eb5b8ac1471ad409788db38fb4e6590d3ff2",
+  "unit.list.schema.json": "28ed9af83321e0b9e995e9964b7bafeb83dd173fd54dac9b6cbfee6268745478",
+  "unit.map.import.schema.json": "3420133d42337c0de70c49e5a0a67fe94623b1ae214fd050147d9adaf1a9a697",
+  "unit.material-synthesis.publish.schema.json": "7a48b189959f817278122775987799e65751f6f39b120351d1017000ab01a247",
+  "unit.note.append.schema.json": "2af772166fcb0b33744c84b4e24cbb5890115dcfa89a7f0c10f868d54034fc52",
+  "unit.plan.revise.schema.json": "06f46ccf33939298865a5917b7d7f6c612bfce4d84e02a3d1537f0cd13a1f2ad",
+  "unit.source-selection.set.schema.json": "8f7b570768812eccb25f689ae94affeb15bfbd3eda738da19fba4a14841fefff",
+  "workspace.next-action.update.schema.json": "ddc71f623d2b720cd66c6b7bb9d0279c65a1f9c6af27591dcf40b0c4e662dbde"
+ },
+ "tools": {
+  "seal_envelope.py": [
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "'operator-approval'",
+    "dest": "approval_kind",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--approval-kind"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "capability",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--capability"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "'operator'",
+    "dest": "channel",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--channel"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "check_out",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--check-out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": [
+     "auto"
+    ],
+    "default_repr": "None",
+    "dest": "guards",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--guards"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "guards_from",
+    "metavar": "PATH",
+    "nargs": null,
+    "option_strings": [
+     "--guards-from"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "key",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--key"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "out",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--out"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "payload",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--payload"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "request_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--request-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--root"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "session_id",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--session-id"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--snapshot"
+    ],
+    "required": false,
+    "type": null
+   }
+  ]
+ }
+}

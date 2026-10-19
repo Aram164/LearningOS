@@ -1,0 +1,17 @@
+{
+  "capture_output": "captured world from /Users/aramaljanadi/Desktop/semestercontext/LearningOS/repository to /Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/world",
+  "core": "074f4717e14527798752de84b3c9c4e88348b658",
+  "core_status": "",
+  "independent_inventory_sha256": "ab62390ec57f0f810b56ccd2109bb1fa6d53c7c31cedc577c758b42e44b4fe1b",
+  "inventory_entries": 2188,
+  "mypy": "mypy 2.4.0 (compiled: yes)",
+  "node": "v26.6.0",
+  "npm": "11.18.0",
+  "outer_dirty_inventory_sha256": "b85ef1847416d7b0f65e91bd949e46213f6d0e3e5c5e24779d4046168ffc070e",
+  "platform": "Darwin Mac.fritz.box 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:05:48 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T6041 arm64",
+  "python": "Python 3.14.4",
+  "quiescence": "No LearningOS/Obsidian/Muse/test writer found by process inspection before capture",
+  "source_unchanged_during_capture": true,
+  "ui": "a88b1188ad54439b4df32813904de182c06a105c",
+  "ui_status": ""
+}

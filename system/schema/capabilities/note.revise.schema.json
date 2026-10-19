@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/note.revise.schema.json",
+  "title": "payload for capability note.revise",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "note_id"
+  ],
+  "properties": {
+    "file": {
+      "type": "string",
+      "description": "reviewed full replacement note file (bytes bound by --file-sha256)"
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact replacement-note bytes approved for revision"
+    },
+    "note_id": {
+      "type": "string",
+      "description": "Id of the note to replace."
+    }
+  },
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
+  }
+}

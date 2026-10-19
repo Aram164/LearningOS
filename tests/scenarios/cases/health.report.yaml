@@ -1,0 +1,73 @@
+operation: health.report
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: report-fresh
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  expect:
+    site: null
+- id: report-stale-neglect
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  observations:
+    now: '2026-11-15T09:00:00+02:00'
+    git:
+      head: null
+      head_time: null
+      dates: {}
+      timestamps:
+        work/active/workspace-demo: '1785567600'
+        work/active/workspace-second: '1785567600'
+  expect:
+    site: null
+- id: report-stale-inbox
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  fixture_mtime: '2026-09-01T09:00:00+02:00'
+  expect:
+    site: null
+- id: cli-report-fresh
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  expect:
+    site: null
+- id: cli-report-stale-neglect
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  observations:
+    now: '2026-11-15T09:00:00+02:00'
+    git:
+      head: null
+      head_time: null
+      dates: {}
+      timestamps:
+        work/active/workspace-demo: '1785567600'
+        work/active/workspace-second: '1785567600'
+  expect:
+    site: null
+- id: cli-report-stale-inbox
+  kind: success
+  transport: cli
+  argv:
+  - health-report
+  fixture_mtime: '2026-09-01T09:00:00+02:00'
+  expect:
+    site: null
+untriggered: []

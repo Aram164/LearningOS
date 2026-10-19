@@ -1,0 +1,757 @@
+id: study-map-m2-sad-l13
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l13
+status: not-started
+current_stage: stage-sad-l13-neighbors
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l13-neighbors
+  number: 1
+  title: 1-NN and k-NN as lazy learners
+  status: pending
+  objective: Neighbor methods store the training data and defer computation until prediction; k controls
+    the local smoothness and bias-variance tradeoff.
+  done_when:
+  - 'Reproduce without notes: Neighbor methods store the training data and defer computation until prediction;
+    k controls the local smoothness and bias-variance tradeoff.'
+  - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 4-11
+    angle: The current lecture's focused reading for 1-nn and k-nn as lazy learners.
+    angle_detail: Read physical PDF pages 4-11 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage '1-NN
+        and k-NN as lazy learners'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:565945b161a086b00e8fbc102cf707f172dac5bee0b061de93b4eb47d017cfc4
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-64afd8476744172ae2a50ebd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-64afd8476744172ae2a50ebd
+  - material_ref:
+      route_id: route-96611a9728939c38b2bfef1f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-96611a9728939c38b2bfef1f
+  - material_ref:
+      route_id: route-147346e35bd5be019bdccd69
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-147346e35bd5be019bdccd69
+  - material_ref:
+      route_id: route-63f597ce7e7321c8ee2355d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-63f597ce7e7321c8ee2355d3
+  - material_ref:
+      route_id: route-d9fc8caf218fc1915ae30149
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-d9fc8caf218fc1915ae30149
+  - material_ref:
+      route_id: route-b4b753b2641048dcc267ddc9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-b4b753b2641048dcc267ddc9
+  - material_ref:
+      route_id: route-eee4f9463982afe90b504b65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-eee4f9463982afe90b504b65
+  - material_ref:
+      route_id: route-2323018660a94b94e5a0453b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2323018660a94b94e5a0453b
+  - material_ref:
+      route_id: route-c3f8a132a0b3033a3af33c8d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-c3f8a132a0b3033a3af33c8d
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-neighbors/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-aggregation
+  number: 2
+  title: Classification, regression, voting, and weighting
+  status: pending
+  objective: Nominal labels use majority or weighted voting, numeric targets use local averages, and ties,
+    imbalance, and distance weighting alter the decision.
+  done_when:
+  - 'Reproduce without notes: Nominal labels use majority or weighted voting, numeric targets use local
+    averages, and ties, imbalance, and distance weighting alter the decision.'
+  - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-k-nearest-neighbors
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 12-13
+    angle: The current lecture's focused reading for classification, regression, voting, and weighting.
+    angle_detail: Read physical PDF pages 12-13 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Classification,
+        regression, voting, and weighting'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:464e788115bd2af49aa9e10cf0db153643240e40ecb13a8b4643106932b8a806
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-64afd8476744172ae2a50ebd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-64afd8476744172ae2a50ebd
+  - material_ref:
+      route_id: route-96611a9728939c38b2bfef1f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-96611a9728939c38b2bfef1f
+  - material_ref:
+      route_id: route-147346e35bd5be019bdccd69
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-147346e35bd5be019bdccd69
+  - material_ref:
+      route_id: route-d9fc8caf218fc1915ae30149
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-d9fc8caf218fc1915ae30149
+  - material_ref:
+      route_id: route-b4b753b2641048dcc267ddc9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-b4b753b2641048dcc267ddc9
+  - material_ref:
+      route_id: route-eee4f9463982afe90b504b65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-eee4f9463982afe90b504b65
+  - material_ref:
+      route_id: route-2323018660a94b94e5a0453b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-2323018660a94b94e5a0453b
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-aggregation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-metrics
+  number: 3
+  title: Similarities, distances, and metric axioms
+  status: pending
+  objective: Non-negativity, identity, symmetry, and triangle inequality define a metric; not every useful
+    similarity is a metric, which affects algorithms and indexes.
+  done_when:
+  - 'Reproduce without notes: Non-negativity, identity, symmetry, and triangle inequality define a metric;
+    not every useful similarity is a metric, which affects algorithms and indexes.'
+  - Work UE7, slides 32-75 — similarity, distance and clustering bridge, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 15-18,31
+    angle: Check metric axioms rather than assuming every similarity is a metric.
+    angle_detail: 'Read physical PDF pages 15-18,31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. Source correction: the blanket claim on PDF p. 31 that all discussed distances are
+      metrics is too broad. Cosine similarity is not a distance; even 1-cosine violates the triangle inequality
+      for unit vectors at angles 0, 60 and 120 degrees (1.5 > 0.5+0.5).'
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Similarities,
+        distances, and metric axioms'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:39163b2d0645beb2fec2a5fd6fbc793b6208c3e806c88a0827c05b1fe7917a78
+  - material_ref:
+      route_id: route-1e7d9a0c555b0ed171aa83c3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-1e7d9a0c555b0ed171aa83c3
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-64afd8476744172ae2a50ebd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-64afd8476744172ae2a50ebd
+  - material_ref:
+      route_id: route-96611a9728939c38b2bfef1f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-96611a9728939c38b2bfef1f
+  - material_ref:
+      route_id: route-147346e35bd5be019bdccd69
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-147346e35bd5be019bdccd69
+  - material_ref:
+      route_id: route-63f597ce7e7321c8ee2355d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-63f597ce7e7321c8ee2355d3
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-metrics/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-minkowski
+  number: 4
+  title: Minkowski distances and feature scaling
+  status: pending
+  objective: Manhattan and Euclidean distance are Lp cases; units and high-dimensional irrelevant features
+    can dominate neighborhoods unless representation and normalization are chosen deliberately.
+  done_when:
+  - 'Reproduce without notes: Manhattan and Euclidean distance are Lp cases; units and high-dimensional
+    irrelevant features can dominate neighborhoods unless representation and normalization are chosen
+    deliberately.'
+  - Work UE7, slides 32-75 — similarity, distance and clustering bridge, then the remaining 2, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-feature-scaling
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 15,19
+    angle: The current lecture's focused reading for minkowski distances and feature scaling.
+    angle_detail: Read physical PDF pages 15,19 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Minkowski
+        distances and feature scaling'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:e7afde42b4f784ab6904c98b150507cc04f99ae56cdeafebfb49ca9dcb0480cb
+  - material_ref:
+      route_id: route-1e7d9a0c555b0ed171aa83c3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-1e7d9a0c555b0ed171aa83c3
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-64afd8476744172ae2a50ebd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-64afd8476744172ae2a50ebd
+  - material_ref:
+      route_id: route-96611a9728939c38b2bfef1f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-96611a9728939c38b2bfef1f
+  - material_ref:
+      route_id: route-63f597ce7e7321c8ee2355d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-63f597ce7e7321c8ee2355d3
+  - material_ref:
+      route_id: route-d9fc8caf218fc1915ae30149
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-d9fc8caf218fc1915ae30149
+  - material_ref:
+      route_id: route-b4b753b2641048dcc267ddc9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-b4b753b2641048dcc267ddc9
+  - material_ref:
+      route_id: route-eee4f9463982afe90b504b65
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-eee4f9463982afe90b504b65
+  - material_ref:
+      route_id: route-645e5c9462a78bdb854b2949
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-645e5c9462a78bdb854b2949
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-minkowski/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-special-measures
+  number: 5
+  title: Cosine, Jaccard, and Mahalanobis measures
+  status: pending
+  objective: Directional, set-valued, and covariance-aware data require different measures; each encodes
+    a distinct invariance and assumption about what “similar” should mean.
+  done_when:
+  - 'Reproduce without notes: Directional, set-valued, and covariance-aware data require different measures;
+    each encodes a distinct invariance and assumption about what “similar” should mean.'
+  - Work UE7, slides 32-75 — similarity, distance and clustering bridge, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 16-18,20-21
+    angle: The current lecture's focused reading for cosine, jaccard, and mahalanobis measures.
+    angle_detail: Read physical PDF pages 16-18,20-21 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Cosine,
+        Jaccard, and Mahalanobis measures'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:290b2f680c72ab8faa96a89d966b4a2dc75966cd2038a047564c07819a059827
+  - material_ref:
+      route_id: route-1e7d9a0c555b0ed171aa83c3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: required-now
+    route_id: route-1e7d9a0c555b0ed171aa83c3
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-64afd8476744172ae2a50ebd
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-64afd8476744172ae2a50ebd
+  - material_ref:
+      route_id: route-645e5c9462a78bdb854b2949
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-645e5c9462a78bdb854b2949
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-special-measures/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-exact-indexing
+  number: 6
+  title: Exact similarity-search indexes
+  status: pending
+  objective: kd-trees, k-means-style partitions, and metric trees prune search using geometric or metric
+    structure, but effectiveness degrades with dimension and data geometry.
+  done_when:
+  - 'Reproduce without notes: kd-trees, k-means-style partitions, and metric trees prune search using
+    geometric or metric structure, but effectiveness degrades with dimension and data geometry.'
+  exam_critical: true
+  concepts:
+  - concept-k-nearest-neighbors
+  - concept-similarity-search
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 23-31
+    angle: The current lecture's focused reading for exact similarity-search indexes.
+    angle_detail: Read physical PDF pages 23-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Exact
+        similarity-search indexes'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:46c3397eebb65edf1241625871f5a0c9c0f59fd9c5eae5108783e6499c2aef95
+  - material_ref:
+      route_id: route-29f9b98724b103877b374b0c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+  - material_ref:
+      route_id: route-147346e35bd5be019bdccd69
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-147346e35bd5be019bdccd69
+  - material_ref:
+      route_id: route-c3f8a132a0b3033a3af33c8d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-c3f8a132a0b3033a3af33c8d
+  - id: resource-kelleher-l13-indexing
+    route_id: route-64afd8476744172ae2a50ebd
+    kind: read
+    label: Kelleher §5.4.2
+    source_id: source-kelleher-fmlpda
+    locator: §5.4.2, PDF pp. 234-241
+    angle: Construct and search a kd-tree.
+    angle_detail: Follow splitting, descent, backtracking and pruning; compare the search with brute-force
+      distances.
+    scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 5 — similarity-based learning' against the stage
+        'Exact similarity-search indexes'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8a651dd51bd191a1071e38cebeea015f8cb01bb5a4a05e1a2e81a6da59444c3e
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-lsh
+  number: 7
+  title: Approximate search and locality-sensitive hashing
+  status: pending
+  objective: LSH trades guaranteed exact neighbors for sublinear candidate retrieval by making collision
+    probability track similarity.
+  done_when:
+  - 'Reproduce without notes: LSH trades guaranteed exact neighbors for sublinear candidate retrieval
+    by making collision probability track similarity.'
+  exam_critical: true
+  concepts:
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 24,30
+    angle: A short course sketch of LSH, not a full hashing construction.
+    angle_detail: Read physical PDF pages 24,30 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. PDF p. 30 motivates collisions for similar points and multiple hash functions. It
+      does not derive a sublinear complexity bound.
+    scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Approximate
+        search and locality-sensitive hashing'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:a36bc0cc06e45298fe7d15b9d57da42049992b94e64276cae809ea0c51ec68a1
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md
+  attachments: []
+  source_feedback: []

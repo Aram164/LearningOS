@@ -1,0 +1,181 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"bootstrap-brief\",\"session_identity\":{\"session_id\":\"channel:operator\",\"source\":\"channel\",\"how_to_set\":\"name it before the first write — export LOS_SESSION_ID=<id> when the shell persists, or seal session_id in each write envelope (.venv/bin/python tools/seal_envelope.py --session-id <id>); without either, writes share this channel's ledger\"},\"resume_pointer\":{\"module_id\":\"module-demo\",\"stage_id\":\"stage-demo\",\"study_map_id\":\"study-map-demo-l01\",\"type\":\"resume-pointer\",\"unit_id\":\"unit-demo-l01\",\"updated\":\"2026-09-20\"},\"pointer_state\":\"confirmed\",\"pointer_state_note\":\"confirmed = where study stopped, not a recommendation\",\"recorded_options\":[{\"workspace_id\":\"workspace-demo\",\"next_action\":\"Do the demo thing.\",\"source\":\"work/active/workspace-demo/CONTEXT.md\"},{\"workspace_id\":\"workspace-second\",\"next_action\":\"Do the second thing.\",\"source\":\"work/active/workspace-second/CONTEXT.md\"}],\"recorded_options_note\":\"workspace next actions are recorded options, not current priorities; compare with current dates and state\",\"counts\":{\"ai_action_requests\":1,\"collections\":1,\"concepts\":2,\"garden_entries\":1,\"inbox_items\":2,\"learning_paths\":1,\"learning_paths_active\":1,\"modules\":1,\"notes\":2,\"notes_reviewed\":0,\"notes_with_evidence\":0,\"programs\":1,\"projects\":1,\"relations\":1,\"source_feedback_records\":0,\"sources\":1,\"sources_with_topics\":0,\"stages\":2,\"stages_complete\":0,\"study_maps\":1,\"thematic_groups\":0,\"topic_packs\":0,\"topics\":0,\"units\":2,\"units_needing_map\":1,\"workspaces_active\":2,\"workspaces_archived\":0},\"owed_study_maps\":[\"unit-demo-l02\"],\"active_study_maps\":[{\"id\":\"study-map-demo-l01\",\"unit_id\":\"unit-demo-l01\",\"status\":\"active\",\"current_stage\":\"stage-demo\"}],\"academic_deadlines\":[{\"end_date\":\"2000-01-01\",\"kind\":\"exam\",\"label\":\"Elapsed sitting with no attempt\",\"module_id\":\"module-demo\",\"notes\":null,\"registration_state\":\"unrecorded\",\"start_date\":\"2000-01-01\",\"termin\":3,\"time\":null,\"title\":\"Demo Module\"},{\"end_date\":\"2026-10-09\",\"kind\":\"exam\",\"label\":\"2. Termin\",\"module_id\":\"module-demo\",\"notes\":null,\"registration_state\":\"registered\",\"start_date\":\"2026-10-09\",\"termin\":2,\"time\":\"13:00-16:00\",\"title\":\"Demo Module\"}],\"deadline_count\":2,\"domain_atlas\":[{\"domain\":\"mathematics\",\"notes\":2,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"machine-learning\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"systems\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"data-systems\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"algorithms\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"programming\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"cross-domain\",\"notes\":0,\"crosswalks\":0,\"shelves\":1,\"entries\":1}],\"expand\":{\"full_compact\":\"bootstrap --compact --expected-snapshot SNAP1\",\"continuation\":\"bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT\",\"resume\":\"resume --json\",\"inspect\":\"inspect ID\",\"coordination\":\"inspect coordination\",\"intelligence_scan\":\"intelligence-scan --brief --json\",\"note_read\":\"note-read NOTE_ID\",\"inbox_list\":\"inbox-list\",\"inbox_read\":\"inbox-read NAME\",\"content_search\":\"search QUERY --type note --content\",\"material_context\":\"material-context QUERY\",\"ability_context\":\"ability-context --expected-snapshot SNAP1\",\"material_span\":\"material-span UNIT_ID ROUTE_ID\",\"capability_detail\":\"capabilities NAME --json\",\"plan_brief\":[\"plan-edit-context unit-demo-l02 --brief --expected-snapshot SNAP1\"]}}\n",
+  "stdout_json": {
+    "academic_deadlines": [
+      {
+        "end_date": "2000-01-01",
+        "kind": "exam",
+        "label": "Elapsed sitting with no attempt",
+        "module_id": "module-demo",
+        "notes": null,
+        "registration_state": "unrecorded",
+        "start_date": "2000-01-01",
+        "termin": 3,
+        "time": null,
+        "title": "Demo Module"
+      },
+      {
+        "end_date": "2026-10-09",
+        "kind": "exam",
+        "label": "2. Termin",
+        "module_id": "module-demo",
+        "notes": null,
+        "registration_state": "registered",
+        "start_date": "2026-10-09",
+        "termin": 2,
+        "time": "13:00-16:00",
+        "title": "Demo Module"
+      }
+    ],
+    "active_study_maps": [
+      {
+        "current_stage": "stage-demo",
+        "id": "study-map-demo-l01",
+        "status": "active",
+        "unit_id": "unit-demo-l01"
+      }
+    ],
+    "contract": "bootstrap-brief",
+    "counts": {
+      "ai_action_requests": 1,
+      "collections": 1,
+      "concepts": 2,
+      "garden_entries": 1,
+      "inbox_items": 2,
+      "learning_paths": 1,
+      "learning_paths_active": 1,
+      "modules": 1,
+      "notes": 2,
+      "notes_reviewed": 0,
+      "notes_with_evidence": 0,
+      "programs": 1,
+      "projects": 1,
+      "relations": 1,
+      "source_feedback_records": 0,
+      "sources": 1,
+      "sources_with_topics": 0,
+      "stages": 2,
+      "stages_complete": 0,
+      "study_maps": 1,
+      "thematic_groups": 0,
+      "topic_packs": 0,
+      "topics": 0,
+      "units": 2,
+      "units_needing_map": 1,
+      "workspaces_active": 2,
+      "workspaces_archived": 0
+    },
+    "deadline_count": 2,
+    "domain_atlas": [
+      {
+        "crosswalks": 0,
+        "domain": "mathematics",
+        "entries": 0,
+        "notes": 2,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "machine-learning",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "systems",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "data-systems",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "algorithms",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "programming",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "cross-domain",
+        "entries": 1,
+        "notes": 0,
+        "shelves": 1
+      }
+    ],
+    "expand": {
+      "ability_context": "ability-context --expected-snapshot SNAP1",
+      "capability_detail": "capabilities NAME --json",
+      "content_search": "search QUERY --type note --content",
+      "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT",
+      "coordination": "inspect coordination",
+      "full_compact": "bootstrap --compact --expected-snapshot SNAP1",
+      "inbox_list": "inbox-list",
+      "inbox_read": "inbox-read NAME",
+      "inspect": "inspect ID",
+      "intelligence_scan": "intelligence-scan --brief --json",
+      "material_context": "material-context QUERY",
+      "material_span": "material-span UNIT_ID ROUTE_ID",
+      "note_read": "note-read NOTE_ID",
+      "plan_brief": [
+        "plan-edit-context unit-demo-l02 --brief --expected-snapshot SNAP1"
+      ],
+      "resume": "resume --json"
+    },
+    "owed_study_maps": [
+      "unit-demo-l02"
+    ],
+    "pointer_state": "confirmed",
+    "pointer_state_note": "confirmed = where study stopped, not a recommendation",
+    "recorded_options": [
+      {
+        "next_action": "Do the demo thing.",
+        "source": "work/active/workspace-demo/CONTEXT.md",
+        "workspace_id": "workspace-demo"
+      },
+      {
+        "next_action": "Do the second thing.",
+        "source": "work/active/workspace-second/CONTEXT.md",
+        "workspace_id": "workspace-second"
+      }
+    ],
+    "recorded_options_note": "workspace next actions are recorded options, not current priorities; compare with current dates and state",
+    "resume_pointer": {
+      "module_id": "module-demo",
+      "stage_id": "stage-demo",
+      "study_map_id": "study-map-demo-l01",
+      "type": "resume-pointer",
+      "unit_id": "unit-demo-l01",
+      "updated": "2026-09-20"
+    },
+    "schema_version": 1,
+    "session_identity": {
+      "how_to_set": "name it before the first write — export LOS_SESSION_ID=<id> when the shell persists, or seal session_id in each write envelope (.venv/bin/python tools/seal_envelope.py --session-id <id>); without either, writes share this channel's ledger",
+      "session_id": "channel:operator",
+      "source": "channel"
+    },
+    "snapshot_id": "SNAP1"
+  }
+}

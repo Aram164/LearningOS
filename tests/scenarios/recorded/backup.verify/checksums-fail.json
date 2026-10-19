@@ -1,0 +1,22 @@
+{
+  "canonical_changed": {},
+  "exit": 1,
+  "idempotency_changed": {},
+  "outcome": "diagnostic-failure",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\":false,\"checked\":1,\"issues\":[{\"root\":\"core\",\"path\":\"work/inbox/note-drop.md\",\"issue\":\"missing\"}]}\n",
+  "stdout_json": {
+    "checked": 1,
+    "issues": [
+      {
+        "issue": "missing",
+        "path": "work/inbox/note-drop.md",
+        "root": "core"
+      }
+    ],
+    "ok": false
+  }
+}

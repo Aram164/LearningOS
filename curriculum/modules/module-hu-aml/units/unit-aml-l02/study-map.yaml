@@ -1,0 +1,788 @@
+id: study-map-aml-l02
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l02
+status: not-started
+current_stage: stage-aml-l02-representation
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l02-representation
+  number: 1
+  title: Embeddings and neighbourhoods
+  status: pending
+  objective: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature
+    space.
+  done_when:
+  - 'Reproduce without notes: Objects become feature vectors; similarity becomes geometric proximity in
+    a chosen feature space.'
+  - Work Übung 02 — k-NN search with vector embeddings, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-embedding
+  - concept-k-nearest-neighbors
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60bc74e346dcfde204afeba3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-142725fc373154de7ce46773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-representation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l02-algorithm
+  number: 2
+  title: 1-NN and k-NN prediction
+  status: pending
+  objective: Lazy training, nearest-neighbour search, majority voting for classification, averaging for
+    regression, computational cost, and memory cost.
+  done_when:
+  - 'Reproduce without notes: Lazy training, nearest-neighbour search, majority voting for classification,
+    averaging for regression, computational cost, and memory cost.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-k-nearest-neighbors
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60bc74e346dcfde204afeba3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-395dcc13f28ee6b07d06b1f9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e9dd11cd5622eb22c86608fa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-70fa847b6d98c5b1c15f1b67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-27f0b891c4075763371fc04b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f57ab8d5f480edd3bc6cf623
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-83427e17512bd5e78ca4603e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7414f700392cabbc7991a6c6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-be209f0a3a6bc848da75f184
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-214b495f9a3e48dae5e1dbb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-81dff42f60e8103db3e3ad5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5ac48498f4543c18b5da06f0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2bae8945210ddd977b807773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-142725fc373154de7ce46773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3a36b5ae315596b763266d41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-algorithm/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l02-distance
+  number: 3
+  title: Distance functions and scaling
+  status: pending
+  objective: Lp distances, metric properties, feature scales, irrelevant features, and how the geometry
+    determines which examples count as neighbours.
+  done_when:
+  - 'Reproduce without notes: Lp distances, metric properties, feature scales, irrelevant features, and
+    how the geometry determines which examples count as neighbours.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  - concept-feature-scaling
+  - concept-k-nearest-neighbors
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60bc74e346dcfde204afeba3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-395dcc13f28ee6b07d06b1f9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-be209f0a3a6bc848da75f184
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2bae8945210ddd977b807773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-142725fc373154de7ce46773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-distance/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l02-dimensionality
+  number: 4
+  title: Curse of dimensionality
+  status: pending
+  objective: Why distances become less informative and data requirements grow rapidly in high-dimensional
+    spaces.
+  done_when:
+  - 'Reproduce without notes: Why distances become less informative and data requirements grow rapidly
+    in high-dimensional spaces.'
+  - Work Cornell CS4780 HW1 — k-NN, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-curse-of-dimensionality
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-f57ab8d5f480edd3bc6cf623
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-83427e17512bd5e78ca4603e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7414f700392cabbc7991a6c6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2bae8945210ddd977b807773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9883ca2e6f49727d8b450912
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-dimensionality/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l02-bias-variance
+  number: 5
+  title: Bias, variance, and generalization
+  status: pending
+  objective: Small k as flexible/high-variance behaviour, large k as smoother/high-bias behaviour, and
+    the difference between training and test error.
+  done_when:
+  - 'Reproduce without notes: Small k as flexible/high-variance behaviour, large k as smoother/high-bias
+    behaviour, and the difference between training and test error.'
+  - Work Caltech bias-variance and validation problems, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e9dd11cd5622eb22c86608fa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-9654e119999a435926afd588
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-70fa847b6d98c5b1c15f1b67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0086c6cff5d3c462f714408f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-0e95ad858b8e59f63b8fe519
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7414f700392cabbc7991a6c6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-eadacb35cc80b4a95220b6e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5c51f7ed4e9690588deaf895
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-81dff42f60e8103db3e3ad5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-915c93d25a66f4419e11754e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-362b29768644f5e75fbf0465
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9883ca2e6f49727d8b450912
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-aab9be86f4a7676fd61bd0b9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2f201ae07d48f6d7367bf0ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-8b20239775b58d8bcb22a9b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3a36b5ae315596b763266d41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-bias-variance/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l02-validation
+  number: 6
+  title: Cross-validation and choosing k
+  status: pending
+  objective: Validation folds, hyperparameter selection, leakage avoidance, and reliable comparison of
+    distance/scaling/k choices.
+  done_when:
+  - 'Reproduce without notes: Validation folds, hyperparameter selection, leakage avoidance, and reliable
+    comparison of distance/scaling/k choices.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 4, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-cross-validation
+  scope_triage: required-now
+  resources:
+  - material_ref:
+      route_id: route-f9b5997cc6cbea9906b40de7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-60bc74e346dcfde204afeba3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
+    scope_triage: required-now
+  - material_ref:
+      route_id: route-e9dd11cd5622eb22c86608fa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-7721480f8976c20d5fa0b4eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-7e3161b4c0b53524a0ce4dfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-214b495f9a3e48dae5e1dbb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-eadacb35cc80b4a95220b6e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5c51f7ed4e9690588deaf895
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-81dff42f60e8103db3e3ad5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-5ac48498f4543c18b5da06f0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-915c93d25a66f4419e11754e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-362b29768644f5e75fbf0465
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2bae8945210ddd977b807773
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-aab9be86f4a7676fd61bd0b9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-2f201ae07d48f6d7367bf0ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-8b20239775b58d8bcb22a9b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-validation/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,76 @@
+schema_version: 2
+id: transaction-20260923-233258-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-09-23T23:32:58+02:00'
+snapshot_before: sha256:0cdd8412c8d340aff263c8d0e34fcfed38a7f02fa1bea06d7b0452e5abd6d7df
+snapshot_after: sha256:906bb86a5456427eed821e5682895441985ffb3c81522b92f3c749ff74012c3b
+expected_revisions:
+  source-pydata-handbook: 0
+  source-rohrer-e2eml: 0
+  source-sad-klausuren-extern: 0
+  source-sklearn-user-guide: 0
+  source-stat110: 0
+  source-sutton-barto-rl: 0
+  source-toussaint-optimization-script: 0
+  source-tu-python-ml-course: 0
+artifact_revisions:
+  source-pydata-handbook:
+    before: 0
+    after: 1
+  source-rohrer-e2eml:
+    before: 0
+    after: 1
+  source-sad-klausuren-extern:
+    before: 0
+    after: 1
+  source-sklearn-user-guide:
+    before: 0
+    after: 1
+  source-stat110:
+    before: 0
+    after: 1
+  source-sutton-barto-rl:
+    before: 0
+    after: 1
+  source-toussaint-optimization-script:
+    before: 0
+    after: 1
+  source-tu-python-ml-course:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: c137e18c57809970afbf3c55aa69a38656549f36cb3ce5c86a1f9f213522d6c9
+  sha256_after: b93cad7cd8a94d548ce3bd3a3e9347e8e0c879ac7f9d58c075c34d43e5c9fbae
+  created: false
+- path: sources/registry/mathematics.yaml
+  sha256_before: dcb60702e3345adc1238c010fb749e6b7442b31f6d0b6822092246af009ead5f
+  sha256_after: d0fe63c81db0f84e5e9aef4ca3e4caac85a69231de3df0ae719cdea112f09b87
+  created: false
+- path: sources/registry/optimization.yaml
+  sha256_before: 51a08162f0da5bf4846a05c31f0f2dd42f0b0b2ebe08342664326fc465c2a6b4
+  sha256_after: c37e74d735ee401ba3c11f092bf693aa29bac9bc6e39670c5721cc84cb7ceada
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: 77bec79111702cfaeecf79f8d46f553e633e07140962c8a2089b95164a4ea219
+  sha256_after: 28c227d871e815b0c69a31f7f474aac7c8431c70a9c999f75e339f09c6968113
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-step8-intake-batch3-20260923
+  idempotency_key: step8-intake-batch3-20260923
+  intent_sha256: sha256:f01ab8327e1c44ea2f6adecf7502ec425e8945bc9e33f4c3f33c4da9f4448aed
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:f01ab8327e1c44ea2f6adecf7502ec425e8945bc9e33f4c3f33c4da9f4448aed

@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "content": "# Evil\n\nOutside the allowed roots.",
+      "destination": "curriculum/evil.md",
+      "id": "proposal-evil",
+      "kind": "garden",
+      "rationale": "Escapes.",
+      "title": "Evil"
+    }
+  ]
+}

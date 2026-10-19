@@ -1,0 +1,108 @@
+# csc411.pdf — no PDF outline; printed contents scan (numbers below are PRINTED pages, resolve with --verify)
+[pdf p2] 1.1 Types of Machine Learning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 1.2 A simple problem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 2.1 The 1D case . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 2.2 Multidimensional inputs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 2.3 Multidimensional outputs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 3.1 Basis function regression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+[pdf p2] 3.2 Overfitting and Regularization . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+[pdf p2] 3.3 Artificial Neural Networks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+[pdf p2] 3.4 K-Nearest Neighbors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+[pdf p2] 4.1 Optimizing a quadratic . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+[pdf p2] 5.1 Classical logic . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 5.2 Basic definitions and rules . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 5.3 Discrete random variables . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 5.4 Binomial and Multinomial distributions . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 5.5 Mathematical expectation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 6.1 Mathematical expectation, mean, and variance . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 6.2 Uniform distributions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 6.3 Gaussian distributions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 6.3.1 Diagonalization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 6.3.2 Conditional Gaussian distribution . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 7.1 Learning a binomial distribution . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 7.2 Bayes’ Rule . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 7.3 Parameter estimation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 7.3.1 MAP, ML, and Bayes’ Estimates . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p2] 7.4 Learning Gaussians . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.1 Class Conditionals . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.2 Logistic Regression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.3 Artificial Neural Networks . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.4 K-Nearest Neighbors Classification . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.5 Generative vs. Discriminative models . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.6 Classification by LS Regression . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.7 Naı̈ve Bayes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.7.1 Discrete Input Features . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 8.7.2 Learning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 9.1 Finite differences . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+[pdf p3] 10 Cross Validation
+[pdf p3] 10.1 Cross-Validation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 56
+[pdf p3] 11 Bayesian Methods
+[pdf p3] 11.1 Bayesian Regression . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 11.2 Hyperparameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 11.3 Bayesian Model Selection . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 12 Monte Carlo Methods
+[pdf p3] 12.1 Sampling Gaussians . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 12.2 Importance Sampling . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 12.3 Markov Chain Monte Carlo (MCMC) . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13 Principal Components Analysis
+[pdf p3] 13.1 The model and learning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13.2 Reconstruction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13.3 Properties of PCA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13.4 Whitening . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13.5 Modeling . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 13.6 Probabilistic PCA . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 14 Lagrange Multipliers
+[pdf p3] 14.1 Examples . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 14.2 Least-Squares PCA in one-dimension . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 14.3 Multiple constraints . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p3] 14.4 Inequality constraints . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+[pdf p4] 15 Clustering
+[pdf p4] 15.1 K-means Clustering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92
+[pdf p4] 15.2 K-medoids Clustering . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 94
+[pdf p4] 15.3 Mixtures of Gaussians . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 95
+[pdf p4] 15.3.1 Learning . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 96
+[pdf p4] 15.3.2 Numerical issues . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 97
+[pdf p4] 15.3.3 The Free Energy . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 98
+[pdf p4] 15.3.4 Proofs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 99
+[pdf p4] 15.3.5 Relation to K-means . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 101
+[pdf p4] 15.3.6 Degeneracy . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 101
+[pdf p4] 15.4 Determining the number of clusters . . . . . . . . . . . . . . . . . . . . . . . . . 101
+[pdf p4] 16 Hidden Markov Models
+[pdf p4] 16.1 Markov Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 103
+[pdf p4] 16.2 Hidden Markov Models . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 104
+[pdf p4] 16.3 Viterbi Algorithm . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 106
+[pdf p4] 16.4 The Forward-Backward Algorithm . . . . . . . . . . . . . . . . . . . . . . . . . . 107
+[pdf p4] 16.5 EM: The Baum-Welch Algorithm . . . . . . . . . . . . . . . . . . . . . . . . . . 110
+[pdf p4] 16.5.1 Numerical issues: renormalization . . . . . . . . . . . . . . . . . . . . . . 110
+[pdf p4] 16.5.2 Free Energy . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 112
+[pdf p4] 16.6 Most likely state sequences . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 114
+[pdf p4] 17 Support Vector Machines
+[pdf p4] 17.1 Maximizing the margin . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 115
+[pdf p4] 17.2 Slack Variables for Non-Separable Datasets . . . . . . . . . . . . . . . . . . . . . 117
+[pdf p4] 17.3 Loss Functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 118
+[pdf p4] 17.4 The Lagrangian and the Kernel Trick . . . . . . . . . . . . . . . . . . . . . . . . . 120
+[pdf p4] 17.5 Choosing parameters . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 121
+[pdf p4] 17.6 Software . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 122
+[pdf p4] 18 AdaBoost
+[pdf p4] 18.1 Decision stumps . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
+[pdf p4] 18.2 Why does it work? . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 126
+[pdf p4] 18.3 Early stopping . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 128
+[pdf p6] 1 Introduction to Machine Learning
+[pdf p6] 1. The Artifical Intelligence View. Learning is central to human knowledge and intelligence,
+[pdf p6] 2. The Software Engineering View. Machine learning allows us to program computers by
+[pdf p6] 3. The Stats View. Machine learning is the marriage of computer science and statistics: computational techniques are applied to statistical problems. Machine learning has been applied
+[pdf p6] 1. Training: A model is learned from a collection of training data.
+[pdf p6] 2. Application: The model is used to make decisions about some new test data.
+[pdf p7] 1.1 Types of Machine Learning
+[pdf p7] 1. Supervised Learning, in which the training data is labeled with the correct answers, e.g.,
+[pdf p7] 2. Unsupervised learning, in which we are given a collection of unlabeled data, which we wish
+[pdf p7] 3. Reinforcement learning, in which an agent (e.g., a robot or controller) seeks to learn the
+[pdf p7] 1. Semi-supervised learning, in which only a subset of the training data is labeled
+[pdf p7] 2. Time-series forecasting, such as in financial markets
+[pdf p7] 3. Anomaly detection such as used for fault-detection in factories and in surveillance
+[pdf p7] 4. Active learning, in which obtaining data is expensive, and so an algorithm must determine
+[pdf p7] 1.2 A simple problem
+[pdf p7] 1. How do we parameterize the model we fit? For the example in Figure 1, how do we parameterize the curve; should we try to explain the data with a linear function, a quadratic, or a
+[pdf p7] 2. What criteria (e.g., objective function) do we use to judge the quality of the fit? For example,
+[pdf p8] 3. Some types of models and some model parameters can be very expensive to optimize well.
+[pdf p8] 4. Ideally we want to find a model that will provide useful predictions in future situations. That

@@ -1,0 +1,51 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"id\":\"concept-expected-value\",\"type\":\"concept\",\"title\":\"Expected value\",\"path\":\"knowledge/concepts.yaml\",\"via\":[\"concepts\",\"inverse:concept_to_notes\"]},{\"id\":\"source-demo-book\",\"type\":\"source\",\"title\":\"Demo Book\",\"path\":\"sources/sources.yaml\",\"via\":[\"inverse:source_to_notes\",\"sources\"]},{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"via\":[\"inverse:workspace_to_notes\"]},{\"id\":\"workspace-second\",\"type\":\"workspace\",\"title\":\"Second workspace\",\"path\":\"work/active/workspace-second/CONTEXT.md\",\"via\":[\"inverse:workspace_to_notes\"]}]\n",
+  "stdout_json": [
+    {
+      "id": "concept-expected-value",
+      "path": "knowledge/concepts.yaml",
+      "title": "Expected value",
+      "type": "concept",
+      "via": [
+        "concepts",
+        "inverse:concept_to_notes"
+      ]
+    },
+    {
+      "id": "source-demo-book",
+      "path": "sources/sources.yaml",
+      "title": "Demo Book",
+      "type": "source",
+      "via": [
+        "inverse:source_to_notes",
+        "sources"
+      ]
+    },
+    {
+      "id": "workspace-demo",
+      "path": "work/active/workspace-demo/CONTEXT.md",
+      "title": "Demo workspace",
+      "type": "workspace",
+      "via": [
+        "inverse:workspace_to_notes"
+      ]
+    },
+    {
+      "id": "workspace-second",
+      "path": "work/active/workspace-second/CONTEXT.md",
+      "title": "Second workspace",
+      "type": "workspace",
+      "via": [
+        "inverse:workspace_to_notes"
+      ]
+    }
+  ]
+}

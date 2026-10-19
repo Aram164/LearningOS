@@ -1,0 +1,42 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{\"operator.bootstrap\":{\"handler\":\"bootstrap\",\"result\":\"bootstrap\",\"invariants\":[\"compact mode returns bounded summary pages with snapshot-bound continuation\",\"brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands\",\"full material routes remain available through inspect; no source or angle is removed\"]}},\"commands\":{},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\"}\n",
+  "stdout_json": {
+    "capability_contract_version": 2,
+    "cli_protocol": 6,
+    "commands": {},
+    "contract_version": 2,
+    "gateway": "tools/los.py",
+    "operator_contract": "system/OPERATOR.md",
+    "projection": "generated/manifest.json",
+    "queries": {
+      "operator.bootstrap": {
+        "handler": "bootstrap",
+        "invariants": [
+          "compact mode returns bounded summary pages with snapshot-bound continuation",
+          "brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands",
+          "full material routes remain available through inspect; no source or angle is removed"
+        ],
+        "result": "bootstrap"
+      }
+    },
+    "root": "<ROOT>",
+    "rules": {
+      "ai_actions_are_provider_independent": true,
+      "artifact_revision_conflicts_fail_closed": true,
+      "bounded_ai_actions_use_exact_context": true,
+      "canonical_writes_are_transactional": true,
+      "module_plan_preflight_required": true,
+      "ordinary_interfaces_read_projection_only": true,
+      "shelving_requires_explicit_approval": true,
+      "successful_writes_have_receipts": true
+    }
+  }
+}

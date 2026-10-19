@@ -1,0 +1,67 @@
+# Doc/code mismatches found by procedure transcripts (SPEC §7.5, PLAN D11).
+#
+# Each entry records a transcript step where the code disagrees with the doc.
+# Fixes land in a later session whose kickoff quotes the decision; this
+# session changes no behaviour. `decision` is filled by the conductor from
+# Aram's decision.
+- id: M-01
+  doc: system/WORKFLOWS.md
+  heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)"
+  step: "bare stage-result refusal (record-evidence transcript)"
+  documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
+  observed: "exit 2, stderr `los: stage results require GatewayEnvelopeV2; direct CLI application is disabled`"
+  proposed_fix: code
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc clarification; retain action-specific refusal wording, exit 2 and the envelope requirement."
+- id: M-02
+  doc: system/WORKFLOWS.md
+  heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)"
+  step: "bare inbox-resolve refusal (build-write-envelope transcript)"
+  documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
+  observed: "exit 2, stderr `los: inbox resolve requires GatewayEnvelopeV2; direct CLI application is disabled`"
+  proposed_fix: code
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: same doc clarification as M-01; retain action-specific refusal wording and exit 2."
+- id: M-03
+  doc: system/OPERATOR.md
+  heading: "## Unit workflow"
+  step: "remove the l01 choice wired into the study path (unit-workflow transcript)"
+  documented: "Removing a choice already wired into a study path is refused."
+  observed: "exit 0, ok:true selected:false; the guard fires only on recorded stage_ids, which no capability populates"
+  proposed_fix: code
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: code repair; derive use from the current study map, matching stable route ID or exact legacy source and locator. Refuse without canonical writes; keep unused-choice removal."
+- id: M-04
+  doc: system/WORKFLOWS.md
+  heading: "## 12. Generate indexes and reports"
+  step: "validation report among generate products (generate-indexes-reports transcript)"
+  documented: "validation report."
+  observed: "exit 0, manifest only; validation-report.md absent until a validation run writes it"
+  proposed_fix: code
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc clarification; validation owns the validation report. Preserve the generation and validation command split."
+- id: M-05
+  doc: system/WORKFLOWS.md
+  heading: "## 11. Complete and archive a workspace"
+  step: "archive move of the path-owning workspace (mismatch-archive-probe)"
+  documented: "move to archive/workspaces/<year>/<workspace-id>/ unchanged."
+  observed: "exit 1, E PATH-NOTE-OWNER on the unchanged move; repaired pointer fails schema ^work/active/.+\\.md$"
+  proposed_fix: code
+  decision: "2026-10-10 Codex, decision authority delegated by Aram in this review: doc correction; complete path-owning workspaces in place. Path-free archival needs a separately reviewed migration. Defer an archive capability and data-format expansion rather than weakening ownership guards."
+- id: M-09
+  doc: system/WORKFLOWS.md
+  heading: '## 1. Start a workspace'
+  step: workspace template with unspecified deadline
+  documented: The shown workspace skeleton is valid when no non-exam deadline is supplied.
+  observed: 'deadline: parses as null; validator refuses SCHEMA None is not of type
+    string.'
+  proposed_fix: doc
+  decision: '2026-10-12 Codex conductor, authority delegated through the next-session
+    brief: omit an unspecified deadline; document correction in Phase 5.2. Phase 4
+    journey pins observed refusal, not a schema expansion.'
+- id: M-10
+  doc: system/WORKFLOWS.md
+  heading: '## 20. Carry work across semesters'
+  step: successor workspace supersedes frontmatter
+  documented: Record workspace predecessor lineage with supersedes on the successor.
+  observed: workspace.schema.json refuses supersedes as an additional property.
+  proposed_fix: doc
+  decision: '2026-10-12 Codex conductor, authority delegated through the next-session
+    brief: link the predecessor in the successor body, without a new workspace field;
+    document correction in Phase 5.2. Journey keeps observed refusal.'

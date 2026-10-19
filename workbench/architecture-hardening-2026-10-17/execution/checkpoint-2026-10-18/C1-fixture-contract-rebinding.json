@@ -1,0 +1,29 @@
+{
+  "fresh_snapshot": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
+  "direct_guard_rebindings": [
+    "tests/scenarios/cases/note.search.yaml",
+    "tests/scenarios/cases/operator.bootstrap.yaml",
+    "tests/scenarios/cases/runtime.session.yaml",
+    "tests/scenarios/cases/module.plan.import.yaml",
+    "tests/scenarios/cases/material.context.yaml",
+    "tests/scenarios/cases/ai-action.prepare.yaml",
+    "tests/scenarios/cases/note.content.yaml",
+    "tests/scenarios/files/ai-action.delivery.apply/exact-replay/delivery/delivery.yaml",
+    "tests/scenarios/files/ai-action.delivery.apply/sha-mismatch/delivery/delivery.yaml",
+    "tests/scenarios/files/ai-action.delivery.apply/apply-garden-shelve/delivery/delivery.yaml",
+    "tests/scenarios/files/ai-action.delivery.import/import-duplicate/delivery/delivery.yaml",
+    "tests/scenarios/files/ai-action.delivery.import/import-ok/delivery/delivery.yaml",
+    "tests/scenarios/files/ai-action.delivery.validate/validate-ok/delivery/delivery.yaml",
+    "tests/scenarios/files/cli.capability/dispatch-success/valid-capture.json",
+    "tests/scenarios/files/cli.capability/invalid-payload/invalid-payload.json",
+    "tests/scenarios/files/cli.capability/idempotency-conflict/first.json",
+    "tests/scenarios/files/cli.capability/dispatched-refusal/refused-stage.json",
+    "tests/scenarios/files/cli.capability/approve-in-payload/approve-payload.json",
+    "tests/scenarios/files/cli.capability/exact-replay/valid-capture.json"
+  ],
+  "dependent_file_hash_rebindings": [
+    "tests/scenarios/cases/ai-action.delivery.apply.yaml"
+  ],
+  "old_negative_zero_digests_preserved": true,
+  "before_root": "/Users/aramaljanadi/Desktop/semestercontext/LearningOS/workbench/architecture-hardening-2026-10-17/execution/before-c1-contract-rebind"
+}

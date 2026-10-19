@@ -1,0 +1,3 @@
+# Compatibility entrypoint for environments that still install a requirements
+# file. Dependency names and constraints live only in pyproject.toml.
+-e .[dev]

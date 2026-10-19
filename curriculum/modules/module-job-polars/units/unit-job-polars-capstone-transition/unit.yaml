@@ -1,0 +1,51 @@
+id: unit-job-polars-capstone-transition
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 10 - Capstone and controlled version transition
+order: 10
+scope: Implement one mirrored backend operation end to end, prove its contract with adversarial and generated
+  tests, and keep future Polars-version assessment isolated from today's production baseline.
+status: ready
+knowledge_map:
+  summary: Implement one mirrored backend operation end to end, prove its contract with adversarial and
+    generated tests, and keep future Polars-version assessment isolated from today's production baseline.
+  nodes:
+  - id: knowledge-polars-capstone
+    title: Mirrored-operation capstone
+    summary: Specify and implement one bounded physical operator from pandas contract to Polars kernel.
+    concept_ids:
+    - concept-logical-ir
+    - concept-dispatch
+    - concept-dataframe-semantics
+  - id: knowledge-polars-property-stress
+    title: Property stress
+    summary: Search the semantic boundary and retain minimized regressions.
+    concept_ids:
+    - concept-logical-ir
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-capstone
+  - id: knowledge-polars-version-transition
+    title: Controlled version transition
+    summary: Compare a candidate Polars release without mutating the locked contract.
+    concept_ids:
+    - concept-logical-ir
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-property-stress
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-python-cheatsheets
+  authority: reference
+- source_id: source-python-depth-drills
+  authority: reference
+- source_id: source-stratum-paper
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-capstone-transition
+artifacts: {}
+workspace_ids: []

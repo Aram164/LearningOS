@@ -1,0 +1,91 @@
+operation: backup.manifest
+fixture: rich_world
+observations:
+  now: '2026-10-01T09:00:00+02:00'
+  git:
+    head: null
+    head_time: null
+    dates: {}
+    timestamps: {}
+cases:
+- id: manifest-stdout
+  kind: success
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  - --stdout
+  expect:
+    site: null
+- id: default-silent
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  expect:
+    site: null
+- id: manifest-in-root
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  - --out
+  - <ROOT>/manifest.json
+  expect:
+    site: null
+- id: ui-unavailable
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - no-such-ui
+  - --stdout
+  expect:
+    site: null
+- id: cli-manifest-stdout
+  kind: success
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  - --stdout
+  expect:
+    site: null
+- id: cli-default-silent
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  expect:
+    site: null
+- id: cli-manifest-in-root
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - <CASEDATA>/uiroot
+  - --out
+  - <ROOT>/manifest.json
+  expect:
+    site: null
+- id: cli-ui-unavailable
+  kind: refusal
+  transport: cli
+  argv:
+  - backup-manifest
+  - --ui-root
+  - no-such-ui
+  - --stdout
+  expect:
+    site: null
+untriggered: []

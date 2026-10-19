@@ -1,0 +1,77 @@
+id: module-hu-amls
+institution: TU Berlin
+title: Architecture of ML Systems (AMLS)
+semester: sose-2026
+status: dropped
+examination:
+  type: klausur
+  sittings:
+  - termin: 1
+    date: '2026-07-23'
+    time: '16:00'
+    label: Course-run sitting 1
+  - termin: 2
+    date: '2026-08-06'
+    time: '16:00'
+    label: Course-run sitting 2
+  - termin: 3
+    date: '2026-08-27'
+    time: '16:00'
+    label: Course-run sitting 3 (last)
+  notes: 'Written exam, 100% of the grade; the team project (submitted 2026-07-15) is a prerequisite and
+    adds up to 5 bonus points (course page, verified 2026-07-02). The sittings are course-run (confirmed
+    by Aram 2026-07-25) — NOT on the central HU Informatik Prüfungsplan, because this is a TU Berlin course
+    (Fak. IV EECS, Boehm/BIFOLD). Exam Anmeldung runs on the TU side: Aram sits it as a HU Nebenhörer
+    — Nebenhörerschaft at the TU Studierendensekretariat (nebenhoerer@studsek.tu-berlin.de) + exam registration
+    via TU MOSES/MTS, to confirm with the AMLS chair — then recognised back at HU. No dated Anmeldung
+    window exists to record. NOTE: taken as Bachelor-UEWP — LP-gesperrt im Master (Doppelanrechnungsverbot);
+    knowledge fully reusable (module card, Masters-Planning). The three sittings above are
+    retained as the historical course-run schedule; the module was dropped from this run
+    without any of them being sat (see the `drop` record).'
+attempts: []
+drop:
+  date: '2026-08-15'
+  attempt_made: false
+  semester: sose-2026
+  stated_by: Aram
+  reversible: false
+  intent: retake-later
+  notes: 'Aram, 2026-08-15: "AMLS can be dropped, there was no attempt." No sitting was taken
+    and no exam registration was ever completed — the course-run formality (TU Nebenhörerschaft
+    + MOSES/MTS) recorded in examination.notes was never carried out. The earlier attempts entry
+    (termin 3, 2026-08-27, result: registered) was REMOVED as factually wrong rather than amended
+    to `withdrawn`: the slot was a chosen intent, never a registration, so there was nothing to
+    withdraw from. reversible: false because slot 3 was the LAST sitting of this course run —
+    resuming means the next run, not a later Termin. The preparation plan is preserved intact in
+    work/active/workspace-amls-exam-prep (blocked) with its 14 units and 14 study maps paused;
+    nothing was deleted. Open: whether the lost Bachelor-UEWP LP need covering from elsewhere in
+    program-bachelors.'
+type: module
+kind: academic
+area_id: program-bachelors
+thematic_group_ids:
+  # ML Systems is the primary identity — the group's own description ("training
+  # and serving at scale, ML compilation, performance and parallelism, and data
+  # management for ML") is the AMLS syllabus. It was missing here because the
+  # module predates the group's creation in ADR-007; added 2026-08-08.
+  # Open question for Aram: machine-learning is arguably now redundant under
+  # ml-systems — left in place rather than removed unreviewed.
+  - thematic-group-ml-systems
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
+source_map: source-map.yaml
+unit_order:
+- unit-amls-l03
+- unit-amls-l04
+- unit-amls-l05
+- unit-amls-l08
+- unit-amls-l09
+- unit-amls-l06
+- unit-amls-l07
+- unit-amls-l10
+- unit-amls-l11
+- unit-amls-l12
+- unit-amls-l13
+- unit-amls-l01
+- unit-amls-l02
+- unit-amls-theory

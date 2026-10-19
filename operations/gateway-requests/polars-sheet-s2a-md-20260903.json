@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s2a-md-20260903",
+  "idempotency_key": "polars-sheet-s2a-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:272b0cf15bb4f3911fdb6cbf7fed958c281a95863711cbb387337c139b57240c",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 1,
+    "study-map-job-polars-expressions": 0
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-05-expressions-and-column-creation",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s2a-exercises.md",
+    "label": "Exercise sheet - contexts, sibling visibility, expression trees",
+    "file_sha256": "sha256:674dff776a83b7c4d9df1fc988446d50cad9804e4e2febd950209cad07866d3d"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:48c59db0b20f2eb6f7fc09568d62100dfff6971bc19a625a1a9db2c0a818c22e"
+  }
+}

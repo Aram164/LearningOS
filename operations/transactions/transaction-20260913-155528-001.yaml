@@ -1,0 +1,61 @@
+schema_version: 2
+id: transaction-20260913-155528-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-13T15:55:28+02:00'
+snapshot_before: sha256:c95c2b4ca90818855a6049b029a9db3943e0e0d6f770273b1e9e6e8e9bdd6385
+snapshot_after: sha256:77da4ecb9ef762ed7a6027b1f2ef8075ec87cec440b5a7adc0312cfa2f5b5eca
+expected_revisions:
+  module-hu-m2-statistik-analysis: 45
+  unit-m2-sad-l08: 21
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 45
+    after: 46
+  unit-m2-sad-l08:
+    before: 21
+    after: 22
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 42fb219b1105b23e0e09b9021b8de3ef3011deab494f121e28a5d9a5674489bf
+  sha256_after: 8a43dd799ebca53113487a68baf93db7fc6f95dceb6f4dda94173abbd0b1cbf6
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml
+  sha256_before: 554c20e53fa1443a182144c697583717a95b3a4ec23e9b6a8cb3548f18385c27
+  sha256_after: 62421549288242df321b470459a4938e396416f86f445c15bd27ad218feb2f9e
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/unit.yaml
+  sha256_before: 051b5f8c281da34d9b2781d49e6c3c958f73ac37def37a23bdcdca610ded3702
+  sha256_after: 051b5f8c281da34d9b2781d49e6c3c958f73ac37def37a23bdcdca610ded3702
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: 10d1cd5200fec397c0d87d5b09516d40bdd2f3da8ea1bad7c809ba24574006ea
+  sha256_after: ca44aff79e3ef7d65d2f2ef38d859cd6f6d0acd4f3836500a1c1f8d101f18759
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
+  idempotency_key: repair-clt-652f4642affe40a5a3fe42e7238f7766
+  intent_sha256: sha256:f8352055367c79c7fff719b580f2a91df24f7b301fe249d2e0fa8f6d97107139
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:f8352055367c79c7fff719b580f2a91df24f7b301fe249d2e0fa8f6d97107139

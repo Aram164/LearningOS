@@ -1,0 +1,99 @@
+operation: lineage.restamp
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: check-all
+    kind: success
+    transport: gateway
+    request: {check: true}
+    artifact_ids: []
+    a5_base: true
+    expect: {site: null}
+  - id: check-all-cli
+    kind: success
+    transport: cli
+    argv: [lineage-restamp, --check]
+    expect: {site: null}
+  - id: apply-success
+    kind: success
+    transport: gateway
+    request: {claim_ids: [covers:route-b2f1f80014860a929a3af0bc], claims_sha256: "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"}
+    artifact_ids: [file:operations/transactions/lineage.yaml]
+    expect: {site: null}
+  - id: missing-claim-ids
+    kind: refusal
+    transport: gateway
+    request: {}
+    artifact_ids: []
+    expect: {site: lineage.restamp.needs-claim-ids}
+  - id: unknown-claims
+    kind: refusal
+    transport: gateway
+    request: {claim_ids: [claim-nope], claims_sha256: "sha256:b9c4dc35ade42dd2151b0014ae731400f69fcbdbde94f0b2b791a35df5c92f69"}
+    artifact_ids: []
+    expect: {site: lineage.restamp.unverified-claims}
+  - id: claims-sha-mismatch
+    kind: refusal
+    transport: gateway
+    request: {claim_ids: [claim-nope], claims_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: lineage.restamp.unverified-claims}
+  - id: check-and-report
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --check, --review-report, report.json]
+    expect: {site: lineage.restamp.check-and-review}
+  - id: reviewed-needs-ids
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json]
+    expect: {site: lineage.restamp.reviewed-needs-ids}
+  - id: duplicate-claim-ids
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json, --claim-ids, claim-a, claim-a, --claims-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: lineage.restamp.reviewed-sha-invalid}
+  - id: reviewed-sha-mismatch
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json, --claim-ids, claim-a, --claims-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: lineage.restamp.reviewed-sha-mismatch}
+  - id: direct-cli-apply-refused
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --claim-ids, covers:route-b2f1f80014860a929a3af0bc, --claims-sha256, "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"]
+    expect: {site: lineage.restamp.direct-apply-disabled}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {claim_ids: [covers:route-b2f1f80014860a929a3af0bc], claims_sha256: "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"}
+        artifact_ids: [file:operations/transactions/lineage.yaml]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: a9-reviewed-report-invalid
+    kind: refusal
+    transport: cli
+    argv:
+    - lineage-restamp
+    - --claim-ids
+    - claim-a
+    - --claims-sha256
+    - sha256:e180dadf21c05e34fd33245af4f4aebe782e74d126730618436a0a232f8b315c
+    - --review-report
+    - <CASEDATA>/report.json
+    expect:
+      site: lineage.restamp.reviewed-report-invalid
+untriggered:
+  - {"site": "lineage.restamp.analysis-failed", "reason": "os-error-only", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.restamp-failed", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.bad-expected-revision", "reason": "fixture-inexpressible", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.reviewed-bytes-changed", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}
+  - {"site": "lineage.restamp.reviewed-needs-report", "reason": "guarded-before-handler", "proof": "_prove_phase4_plan_backstop"}

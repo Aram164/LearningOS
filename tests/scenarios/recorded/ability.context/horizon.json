@@ -1,0 +1,83 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"ability-context-v1\",\"abilities\":[{\"id\":\"ability-demo-derive\",\"title\":\"Derive expected value\",\"state\":\"supported\",\"lifecycle\":\"active\",\"reasons\":[\"current confirmed worked attempt\"],\"reason_codes\":[\"current-confirmed-attempt\"],\"concept_ids\":[\"concept-expected-value\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[{\"id\":\"ability-observation-1\",\"result\":\"correct\",\"work_ref\":\"conversation://fixture/work-1\"}],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0},{\"id\":\"ability-demo-variance\",\"title\":\"Derive variance\",\"state\":\"uncertain\",\"lifecycle\":\"active\",\"reasons\":[\"no current confirmed work under the stated conditions\"],\"reason_codes\":[\"no-current-work\"],\"concept_ids\":[\"concept-variance\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0}],\"total\":2,\"offset\":0,\"returned\":2,\"next_offset\":null,\"has_more\":false,\"bridges\":[],\"candidate_connections\":[],\"candidate_connection_count\":0,\"truncated\":false,\"expand\":\"ability-context ABILITY_ID\",\"expansions\":{\"next\":null}}\n",
+  "stdout_json": {
+    "abilities": [
+      {
+        "concept_ids": [
+          "concept-expected-value"
+        ],
+        "evidence": [
+          {
+            "id": "ability-observation-1",
+            "result": "correct",
+            "work_ref": "conversation://fixture/work-1"
+          }
+        ],
+        "id": "ability-demo-derive",
+        "lifecycle": "active",
+        "module_ids": [
+          "module-demo"
+        ],
+        "off_page_bridge_count": 0,
+        "off_page_candidate_count": 0,
+        "preparation_routes": [],
+        "reason_codes": [
+          "current-confirmed-attempt"
+        ],
+        "reasons": [
+          "current confirmed worked attempt"
+        ],
+        "state": "supported",
+        "title": "Derive expected value",
+        "transfer": []
+      },
+      {
+        "concept_ids": [
+          "concept-variance"
+        ],
+        "evidence": [],
+        "id": "ability-demo-variance",
+        "lifecycle": "active",
+        "module_ids": [
+          "module-demo"
+        ],
+        "off_page_bridge_count": 0,
+        "off_page_candidate_count": 0,
+        "preparation_routes": [],
+        "reason_codes": [
+          "no-current-work"
+        ],
+        "reasons": [
+          "no current confirmed work under the stated conditions"
+        ],
+        "state": "uncertain",
+        "title": "Derive variance",
+        "transfer": []
+      }
+    ],
+    "bridges": [],
+    "candidate_connection_count": 0,
+    "candidate_connections": [],
+    "contract": "ability-context-v1",
+    "expand": "ability-context ABILITY_ID",
+    "expansions": {
+      "next": null
+    },
+    "has_more": false,
+    "next_offset": null,
+    "offset": 0,
+    "returned": 2,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "total": 2,
+    "truncated": false
+  }
+}

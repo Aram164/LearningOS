@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.materials.compact.schema.json",
+  "title": "payload for capability module.materials.compact",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "return the compaction plan, affected files and exact expected revisions without writing"
+    },
+    "module_id": {
+      "type": "string",
+      "description": "module whose study maps to compact; unknown ids refuse"
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "sha256 of the exact reviewed compaction plan from --check; required to apply"
+    }
+  }
+}

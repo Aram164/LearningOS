@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Assert the newest transaction receipt's capability (SPEC §7.1, PLAN D11).
+
+Usage: los-assert-receipt --last --capability NAME. Silent on success.
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import sys
+from pathlib import Path
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="los-assert-receipt")
+    parser.add_argument("--last", action="store_true", required=True)
+    parser.add_argument("--capability", required=True)
+    args = parser.parse_args(argv)
+    root = os.environ.get("LOS_FX")
+    if not root:
+        print("los-assert-receipt: LOS_FX is not set", file=sys.stderr)
+        return 2
+    import yaml
+
+    receipts = sorted(
+        Path(root, "operations", "transactions").glob("transaction-*.yaml"),
+        key=lambda path: path.stat().st_mtime)
+    if not receipts:
+        print("los-assert-receipt: no transaction receipt under"
+              f" {root}/operations/transactions/", file=sys.stderr)
+        return 1
+    newest = receipts[-1]
+    actual = yaml.safe_load(newest.read_text(encoding="utf-8")).get("capability")
+    if actual != args.capability:
+        print(f"los-assert-receipt: {newest.name}: capability {actual!r},"
+              f" want {args.capability!r}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

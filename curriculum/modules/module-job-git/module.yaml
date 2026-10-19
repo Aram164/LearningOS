@@ -1,0 +1,9 @@
+id: module-job-git
+type: module
+kind: skill
+area_id: program-job
+title: Git
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-job-git-fluency
