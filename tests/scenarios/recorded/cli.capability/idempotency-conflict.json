@@ -17,7 +17,7 @@
             "KEY2": {
               "capability": "capture.create",
               "channel": "operator",
-              "intent_sha256": "sha256:f712877c8b0bce700607b6fd493ca0d9e9fa3a1672823a8c6b862e87da7fcea5",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -67,11 +67,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:f712877c8b0bce700607b6fd493ca0d9e9fa3a1672823a8c6b862e87da7fcea5"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:f712877c8b0bce700607b6fd493ca0d9e9fa3a1672823a8c6b862e87da7fcea5",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -113,19 +113,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3a8e344cefc23c320b6075b4a9847de7570206b0c182f3487ee4e306707a0dd6",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "395ab6e8c252eb9374cf2a22cf143f420ef83719342899b5d9a99c44618c638a",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6eee91fa555498b7f9dcdac250daf179190c65131005622319ec96926557975e",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-scenario-capture-opening-the-idempoten.md": {
@@ -191,19 +191,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3a8e344cefc23c320b6075b4a9847de7570206b0c182f3487ee4e306707a0dd6",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "395ab6e8c252eb9374cf2a22cf143f420ef83719342899b5d9a99c44618c638a",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6eee91fa555498b7f9dcdac250daf179190c65131005622319ec96926557975e",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-scenario-capture-opening-the-idempoten.md": {
@@ -225,19 +225,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "3a8e344cefc23c320b6075b4a9847de7570206b0c182f3487ee4e306707a0dd6",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "395ab6e8c252eb9374cf2a22cf143f420ef83719342899b5d9a99c44618c638a",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6eee91fa555498b7f9dcdac250daf179190c65131005622319ec96926557975e",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-scenario-capture-opening-the-idempoten.md": {

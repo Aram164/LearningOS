@@ -95,7 +95,7 @@ supersedes added
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-1 error(s), 10 warning(s) — FAIL
+1 error(s), 14 warning(s) — FAIL
 [1]
 ```
 
@@ -115,7 +115,7 @@ Successor of workspace-second.
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Split: move the relevant scratch and note it in each
@@ -133,7 +133,7 @@ Split on 2026-10-12: scratch received from workspace-demo.
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Record the cross-effort dependency in coordination

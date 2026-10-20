@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "capture.create",
           "channel": "operator",
-          "intent_sha256": "sha256:ec7dc12758f203e16e1a36f8cc5b7655c667731479de70691d470e7033e19cfa",
+          "intent_sha256": "INTENT1",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,11 +59,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:ec7dc12758f203e16e1a36f8cc5b7655c667731479de70691d470e7033e19cfa"
+          "subject_sha256": "INTENT1"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:ec7dc12758f203e16e1a36f8cc5b7655c667731479de70691d470e7033e19cfa",
+        "intent_sha256": "INTENT1",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -105,19 +105,19 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "ae64353d67c2486c69507ae887fc68e2ae640a93dfd1d64ddd6a40837844698e",
+          "sha256": "LEDGER1",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "a256e1c66ea1a48bc60f705691859457f305ea66c3181f2d823c33711a3252da",
+          "sha256": "LEDGER2",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "65b79cacd9bb077ea553d699b4f33f05c446294ca91ffbb58e85a3fb105ff32c",
+          "sha256": "LEDGER3",
           "state": "file"
         },
         "work/inbox/20261001-090000-a-scenario-capture-for-the-gateway-admis.md": {

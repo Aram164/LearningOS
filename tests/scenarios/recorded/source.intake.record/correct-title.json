@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "source.intake.record",
           "channel": "operator",
-          "intent_sha256": "sha256:bb7b64cea08f48a6c84e8e7e2544f15e7282c64b1dc6b725aae721c720d9115d",
+          "intent_sha256": "INTENT1",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -60,11 +60,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:bb7b64cea08f48a6c84e8e7e2544f15e7282c64b1dc6b725aae721c720d9115d"
+          "subject_sha256": "INTENT1"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:bb7b64cea08f48a6c84e8e7e2544f15e7282c64b1dc6b725aae721c720d9115d",
+        "intent_sha256": "INTENT1",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -106,19 +106,19 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "b1a5556adf4c43ee4aa880ffbaf386ddcb0bf06437ade81b6446b355531b874d",
+          "sha256": "LEDGER1",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "d97bcd0965ea504d5113cbfe8c45e0fd01baca4a0630539ea7aded54dd10d16e",
+          "sha256": "LEDGER2",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "ba7a85d7908e32198f4e420202ce4a3b628e22de82307524fd105927d706dd7b",
+          "sha256": "LEDGER3",
           "state": "file"
         },
         "sources/sources.yaml": {

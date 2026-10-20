@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "inbox.resolve",
               "channel": "operator",
-              "intent_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -72,11 +72,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:699b112b7072424a1efa329fd3b301e642a7dc7870b863d0b78f653be53ecd11",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -131,19 +131,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/note-drop.md": {
@@ -216,19 +216,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/note-drop.md": {
@@ -255,19 +255,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ddbaf656fc4983bf5db2eb9d48c8d78bc4526a0bf49319da4422d91640155163",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "03351c3f563bf8869c7e113b57de0a5cb3085ae411d04523095fc7d76ca6c8a5",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d0e1aa1b6924e2172a6609f6bed493dbb2b0ad625f7dd6b44d2a1be6ad2e965a",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/note-drop.md": {

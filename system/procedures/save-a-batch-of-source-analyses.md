@@ -430,5 +430,5 @@ unchanged
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 9 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```

@@ -477,12 +477,134 @@ class ChecksPlanRigor:
                 where,
             )
 
+    def _module_scope_index(self) -> dict[str, dict]:
+        """Per module, the routes that module's own source map declares.
+
+        A stage may teach only what its module adopted, so a resource is
+        checked against the owning module's map, never against every route in
+        the repository: a route another module declared is not this module's
+        scope, and `references.py` already reports the ownership errors.
+        """
+        index: dict[str, dict] = {}
+        for module_id, source_map in self.repo.module_source_maps.items():
+            ids: set[str] = set()
+            pairs: set[tuple[str, str]] = set()
+            for entry in source_map.get("sources", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                source_id = str(entry.get("source_id") or "")
+                for route in entry.get("unit_routes", []) or []:
+                    if not isinstance(route, dict):
+                        continue
+                    projected = route_with_identity(module_id, source_id, route)
+                    route_id = projected.get("id")
+                    if isinstance(route_id, str):
+                        ids.add(route_id)
+                    pairs.add((source_id, str(route.get("locator") or "")))
+            index[module_id] = {"ids": ids, "pairs": pairs}
+        return index
+
+    def _authored_route_bindings(self, study_map) -> dict[tuple[str, int], str]:
+        """The route id an authored resource names, by (stage id, index).
+
+        The loaded study map is *expanded*: `material_ref` is popped and its
+        inherited fields are copied onto the resource
+        (`domain/material_refs.expand_map`), so a compact row's route binding
+        survives only in the authored bytes. The correspondence is by stage id
+        and resource index — the same one `domain.material_refs.preserve_map_refs`
+        uses — because expansion replaces a resource in place and never
+        reorders or drops one.
+
+        Only the `material_ref` spelling is collected here. A top-level
+        `route_id` survives expansion unchanged, and `references.py` already
+        checks it.
+        """
+        bindings: dict[tuple[str, int], str] = {}
+        authored = study_map.authored_data
+        if not isinstance(authored, dict):
+            return bindings
+        for stage in authored.get("stages", []) or []:
+            if not isinstance(stage, dict):
+                continue
+            stage_id = str(stage.get("id") or "")
+            for index, resource in enumerate(stage.get("resources", []) or []):
+                if not isinstance(resource, dict):
+                    continue
+                if isinstance(resource.get("route_id"), str) and resource["route_id"]:
+                    # Spelled at the top level as well: the expanded resource
+                    # carries it, and `references.py` owns that verdict.
+                    continue
+                ref = resource.get("material_ref")
+                route_id = ref.get("route_id") if isinstance(ref, dict) else None
+                if isinstance(route_id, str) and route_id:
+                    bindings[(stage_id, index)] = route_id
+        return bindings
+
+    def _check_row_scope(self, smid: str, stage: dict, resource: dict,
+                         scope: dict, where: str,
+                         material_route_id: str | None = None) -> None:
+        """A stage resource must resolve to something the module adopted.
+
+        A resource that names a route is bound, and the unknown-route and
+        wrong-owner errors belong to `references.py`. A resource without a
+        route has to name its material the way the module's map declares it:
+        the same source at the same locator. A resource that does not is
+        teaching material the module never adopted.
+
+        A `reference` row is a pointer, and pointing outside the module's map
+        is what it is for. `kind` is the row's meaning rather than a triage
+        flag, so the exemption rests on it and not on `scope_triage` — a
+        triage flag is one the writer of the row also sets.
+        """
+        if resource.get("kind") == "reference":
+            return
+        route_id = resource.get("route_id")
+        if isinstance(route_id, str) and route_id:
+            # `references.py` reports an unknown route (REF-ROUTE) and a
+            # route owned by another unit (RESOURCE-ROUTE-OWNER) as errors.
+            # The scope rule does not report the same thing twice.
+            return
+        if material_route_id is not None:
+            if material_route_id in scope["ids"]:
+                return
+            self.warn(
+                "RESOURCE-SCOPE-UNBOUND",
+                f"study map '{smid}' stage '{stage.get('id')}' teaches route "
+                f"'{material_route_id}' — the module's source map declares no "
+                f"such route; adopt the material in the module's map, or bind "
+                f"the resource to a route the map declares",
+                where,
+            )
+            return
+        source_id = resource.get("source_id")
+        locator = str(resource.get("locator") or "")
+        if isinstance(source_id, str) and (source_id, locator) in scope["pairs"]:
+            return
+        self.warn(
+            "RESOURCE-SCOPE-UNBOUND",
+            f"study map '{smid}' stage '{stage.get('id')}' teaches "
+            f"{source_id or 'material without a source'} at '{locator[:60]}' — "
+            f"the module's source map declares no route for it; adopt the "
+            f"material in the module's map, or bind the resource to a route "
+            f"the map declares",
+            where,
+        )
+
     def _check_stage_resource_rigor(self) -> None:
         r = self.repo
         routes = self._routes_by_id()
+        scope = self._module_scope_index()
         for smid, study_map in r.study_maps.items():
             where = self._rel(study_map.path)
             unit = r.units.get(study_map.unit_id)
+            module_id = str(unit.data.get("module_id") or "") if unit is not None else ""
+            module = r.modules.get(module_id) if module_id else None
+            # Archived modules keep their source maps as history, not as an
+            # active learning surface, so their stages are not scope-checked.
+            scope_for = None
+            if module_id and not (module and module.get("status") == "archived"):
+                scope_for = scope.get(module_id)
+            authored_routes = self._authored_route_bindings(study_map)
             unit_nodes: set[str] | None = None
             if unit is not None and isinstance(unit.data.get("knowledge_map"), dict):
                 # Units without a knowledge map (roadmaps, fluency drills)
@@ -498,10 +620,16 @@ class ChecksPlanRigor:
                 if not isinstance(stage, dict):
                     continue
                 node_id = self._stage_node_id(smid, stage, unit_nodes, where)
-                for resource in stage.get("resources", []) or []:
+                stage_id = str(stage.get("id") or "")
+                for index, resource in enumerate(stage.get("resources", []) or []):
                     if not isinstance(resource, dict):
                         continue
                     self._check_row_angle(smid, stage, resource, routes, where)
+                    if scope_for is not None:
+                        self._check_row_scope(
+                            smid, stage, resource, scope_for, where,
+                            material_route_id=authored_routes.get((stage_id, index)),
+                        )
                     if node_id is not None:
                         self._check_row_node(smid, stage, node_id, resource, routes, where)
                     locator = str(resource.get("locator") or "")

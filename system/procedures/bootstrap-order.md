@@ -181,7 +181,8 @@ Demo Module · Expected value · stage-demo
     Workspace workspace-demo: Do the demo thing.
       source: work/active/workspace-demo/CONTEXT.md#Next-Action
 
-  Requirement  knowledge-demo-expectation
+  Requirement  req-demo-l01-demo
+               concept: knowledge-demo-expectation
                capability: {"kind": "explain", "operands": ["expectation"]}
                under: unfamiliar-example
                evidence: explain-reason
@@ -223,5 +224,5 @@ $ $H/los-assert-file CLAUDE.md --absent
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```

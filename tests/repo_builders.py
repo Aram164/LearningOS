@@ -12,11 +12,14 @@ second suite needed the same fixtures.
 
 from __future__ import annotations
 
+import datetime
 import hashlib
 import shutil
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 
@@ -27,6 +30,23 @@ from learning_os.store.loader import load_repo, parse_frontmatter
 from learning_os.store.warning_baseline import write_baseline
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
+
+#: The demo curriculum's measured warning signatures.
+#:
+#: The scope rule reports a stage resource the owning module's source map
+#: does not declare at route level, and the demo module declares the demo
+#: book at unit level. A synthetic repository adopts what it contains, the
+#: same act the real repository performs over its own measured content
+#: debt; without it every plan gate in every fixture would read the
+#: fixture's own content as a regression it introduced.
+DEMO_WARNING_SIGNATURES: Counter = Counter({
+    ("RESOURCE-SCOPE-UNBOUND",
+     "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 3,
+})
+
+#: The date the fixture's baselines record. Fixed so the synthetic tree is
+#: byte-identical from one run to the next.
+FIXTURE_BASELINE_DATE = datetime.date(2026, 9, 20)
 
 
 def run_los(root: Path, *args: str, stdin: str | None = None):
@@ -213,6 +233,13 @@ def add_curriculum(root: Path) -> None:
                  "unit_ids": ["unit-demo-l01"]})
     ws_path.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() +
                        "\n---\n\n" + body.lstrip(), encoding="utf-8")
+    # The demo curriculum brings its own measured warnings with it, and a
+    # plan gate compares against the baseline rather than against nothing:
+    # a fixture's own content is not a regression the plan introduced.
+    with patch("learning_os.store.warning_baseline.observations.today",
+               return_value=FIXTURE_BASELINE_DATE):
+        write_baseline(root, DEMO_WARNING_SIGNATURES,
+                       "Pre-existing warnings in this synthetic fixture")
 
 
 def _add_material_overview(root: Path, *, covers=None, builds_on=None) -> None:
