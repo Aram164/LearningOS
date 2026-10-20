@@ -425,6 +425,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.channel not in GATEWAY_CHANNELS:
         print(f"seal_envelope: unknown channel {args.channel!r}", file=sys.stderr)
         return 2
+    if args.channel == "ui":
+        # The `ui` channel is the app's own expression of "a human pressed a
+        # button", and admission admits a direct-user-gesture only from it
+        # (learning_os.app.admission.gesture_allowed). The app builds its
+        # envelopes in process, so nothing here is what the app uses; sealing
+        # one from the command line would let a shell claim the app's
+        # provenance. The channel stays in GATEWAY_CHANNELS for the app.
+        print("seal_envelope: the 'ui' channel is the application's own "
+              "provenance; the CLI cannot claim it", file=sys.stderr)
+        return 2
     sealed_session = args.session_id.strip() if args.session_id else None
     if args.session_id is not None and not sealed_session:
         print("seal_envelope: --session-id must name a session, not blank text",

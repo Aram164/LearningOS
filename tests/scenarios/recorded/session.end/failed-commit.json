@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "capture.create",
               "channel": "operator",
-              "intent_sha256": "sha256:7f500672b40a6adea61089ab08e442fbf91700d428f69c3a36987dff4ec800b3",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:7f500672b40a6adea61089ab08e442fbf91700d428f69c3a36987dff4ec800b3"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:7f500672b40a6adea61089ab08e442fbf91700d428f69c3a36987dff4ec800b3",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d6a58bc345ff25efe70760819612aa2d2995920012e5d836f98e3f47cdbeac67",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9e5823ac3e8032994775496a748a6fd1163f88e15e7cf8f4c8863b1fe9699f42",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2d151110362ab08cd5d1d05aad93383829173e898e21a9dec2f935c59997a00b",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
@@ -185,19 +185,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d6a58bc345ff25efe70760819612aa2d2995920012e5d836f98e3f47cdbeac67",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9e5823ac3e8032994775496a748a6fd1163f88e15e7cf8f4c8863b1fe9699f42",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2d151110362ab08cd5d1d05aad93383829173e898e21a9dec2f935c59997a00b",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
@@ -219,19 +219,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d6a58bc345ff25efe70760819612aa2d2995920012e5d836f98e3f47cdbeac67",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9e5823ac3e8032994775496a748a6fd1163f88e15e7cf8f4c8863b1fe9699f42",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "2d151110362ab08cd5d1d05aad93383829173e898e21a9dec2f935c59997a00b",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {

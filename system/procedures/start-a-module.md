@@ -125,7 +125,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:58186326be6e399bedad1cabe20b2730731e197bbb2e5920edeaee971b5c5f7c",
+  "snapshot_after": "sha256:bdcce919a4a00a9c53120887aa1d54522018b9475bbc0a21a858325d3a579e60",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -134,7 +134,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:58186326be6e399bedad1cabe20b2730731e197bbb2e5920edeaee971b5c5f7c",
+    "snapshot_after": "sha256:bdcce919a4a00a9c53120887aa1d54522018b9475bbc0a21a858325d3a579e60",
     "replayed": false
   },
   "error": null
@@ -162,5 +162,5 @@ wrote generated/study-plans.md
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/validate.py --root "$LOS_FX" --compact | grep -o "[0-9]* error(s), [0-9]* warning(s) — OK"
-0 error(s), 9 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```

@@ -67,6 +67,11 @@ INITIAL_WARNING_SIGNATURES: Counter = Counter({
      "curriculum/modules/module-demo/source-map.yaml"): 2,
     ("STAGE-NODE-UNLINKED",
      "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 1,
+    # The scope rule reports stage resources the module's source map does
+    # not declare at route level: the three demo-stage rows plus the
+    # pending stage's own row.
+    ("RESOURCE-SCOPE-UNBOUND",
+     "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 4,
 })
 
 #: Amendment (ag) item 1: the fixture coverage-audit evidence, filed under

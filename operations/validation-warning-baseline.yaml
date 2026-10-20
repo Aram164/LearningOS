@@ -12,7 +12,7 @@
 # and differ between one checkout and the next; dynamic-advisory warnings
 # (WS-NEGLECT, INBOX-STALE) are clock-derived and can appear with no authored
 # edit. Both stay visible in normal validation output; neither is exempt by
-# prefix or heuristic, only by exact code (learning_os.rules.common).
+# prefix or heuristic, only by exact code (learning_os.domain.validation).
 #
 # These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
 # them here defers them; it does not close the point.
@@ -22,8 +22,123 @@
 #   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
 #   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-10-02'
-note: 'Ratchet after repairs; refs #79'
-total: 0
-distinct_signatures: 0
-signatures: []
+recorded: '2026-10-20'
+note: 'F-01: a stage resource must resolve to material its module''s source map declares
+  (RESOURCE-SCOPE-UNBOUND); measured content debt, warning not error'
+total: 1462
+distinct_signatures: 38
+signatures:
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  count: 31
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l01/study-map.yaml
+  count: 5
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l02/study-map.yaml
+  count: 8
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l03/study-map.yaml
+  count: 10
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l04/study-map.yaml
+  count: 9
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l05/study-map.yaml
+  count: 10
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l06/study-map.yaml
+  count: 12
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l07/study-map.yaml
+  count: 11
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l08/study-map.yaml
+  count: 11
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l09/study-map.yaml
+  count: 9
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l10/study-map.yaml
+  count: 10
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l11/study-map.yaml
+  count: 13
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l12/study-map.yaml
+  count: 10
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-l13/study-map.yaml
+  count: 10
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-amls/units/unit-amls-theory/study-map.yaml
+  count: 7
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/study-map.yaml
+  count: 86
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/study-map.yaml
+  count: 69
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/study-map.yaml
+  count: 129
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/study-map.yaml
+  count: 127
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/study-map.yaml
+  count: 61
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  count: 9
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
+  count: 183
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
+  count: 168
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
+  count: 29
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  count: 11
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
+  count: 18
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  count: 23
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
+  count: 24
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  count: 22
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
+  count: 20
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  count: 16
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
+  count: 19
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
+  count: 30
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
+  count: 67
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
+  count: 65
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-skill-python/units/unit-python-depth-drills/study-map.yaml
+  count: 19
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/study-map.yaml
+  count: 87
+- code: RESOURCE-SCOPE-UNBOUND
+  path: curriculum/modules/module-skill-python/units/unit-python-oop-scope/study-map.yaml
+  count: 14

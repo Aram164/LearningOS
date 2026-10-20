@@ -530,6 +530,12 @@ stage. An explicit `--close` deletes only its own session's ledger.
 
 Execution boundary: [declared fixture limitation](procedures/INDEX.yaml).
 
+**Stop and ask first.** This workflow has no executable transcript, and its
+scope authority — the slides as taught — does not exist in a checkout. Do not
+scope a lecture from textbook chapter titles, keyword matches, or a source the
+module never adopted; report what is missing and ask (OPERATOR.md boundary 18).
+The steps below describe the work for someone who has the materials in hand.
+
 The unit is the module-owned study object between module and stage. For
 university lectures, **slides as taught are the scope authority**: never scope
 from textbook chapter titles or keyword matches. A topic, milestone,

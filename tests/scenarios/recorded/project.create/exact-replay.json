@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "project.create",
               "channel": "operator",
-              "intent_sha256": "sha256:2e954fec6eda15fff406f18eb900b13a7c1bd56918a80beca908199f878ad75f",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:2e954fec6eda15fff406f18eb900b13a7c1bd56918a80beca908199f878ad75f"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:2e954fec6eda15fff406f18eb900b13a7c1bd56918a80beca908199f878ad75f",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "973ef5c2d384fd2154c7b87330fbb6b1697bc20bf2b8d59fcc89fa46c2e7165e",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "28fe11415b439d00acaa7c7fdb3f439e4e0fad62ade81e522c31c431a54a11d6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-scenario-new.yaml": {
@@ -181,19 +181,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "973ef5c2d384fd2154c7b87330fbb6b1697bc20bf2b8d59fcc89fa46c2e7165e",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "28fe11415b439d00acaa7c7fdb3f439e4e0fad62ade81e522c31c431a54a11d6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-scenario-new.yaml": {
@@ -215,19 +215,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "973ef5c2d384fd2154c7b87330fbb6b1697bc20bf2b8d59fcc89fa46c2e7165e",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "28fe11415b439d00acaa7c7fdb3f439e4e0fad62ade81e522c31c431a54a11d6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-scenario-new.yaml": {

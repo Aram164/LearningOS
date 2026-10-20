@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import datetime as dt
+import hashlib
 import json
 import subprocess
 import sys
@@ -122,6 +123,16 @@ def _promotion_package(root: Path) -> dict:
         "## Completeness\n\nReviewed.\n",
         encoding="utf-8",
     )
+    evidence_url = "https://example.edu/official/module-future-demo"
+    verification = (
+        root / "work/active/workspace-future-demo/outputs/future-demo-verification.md"
+    )
+    verification.write_text(
+        "# Verification\n\n"
+        f"Checked {evidence_url} on {NOW.date().isoformat()}: the official "
+        "listing names the module and its adopted source.\n",
+        encoding="utf-8",
+    )
     return {
         "schema_version": 1,
         "id": "master-promotion-future-demo",
@@ -136,9 +147,19 @@ def _promotion_package(root: Path) -> dict:
             "as_of": NOW.date().isoformat(),
             "evidence": [{
                 "authority": "official-academic",
-                "url": "https://example.edu/official/module-future-demo",
+                "url": evidence_url,
                 "claim": "The module and adopted source remain current.",
                 "verified_on": NOW.date().isoformat(),
+                "verifier": {
+                    "review_id": "master-review-future-demo",
+                    "artifact": (
+                        "work/active/workspace-future-demo/outputs/"
+                        "future-demo-verification.md"
+                    ),
+                    "artifact_sha256": "sha256:" + hashlib.sha256(
+                        verification.read_bytes()
+                    ).hexdigest(),
+                },
             }],
         },
         "adopted_sources": [{
@@ -424,6 +445,93 @@ def test_promotion_refuses_stale_verification_and_unresolved_mapping(mini_repo):
 def _setup_fresh_again(root: Path) -> tuple[dict, bytes]:
     write_yaml(root / "curriculum/quarantine/masters-planning/catalog.yaml", _catalog())
     return _promotion_package(root), b"synthetic-approved-comparison\n"
+
+
+def test_promotion_refuses_evidence_without_a_content_bound_verifier(mini_repo):
+    """"official-academic" is a claim about the world. A package that only
+    asserts it has no shape a write can check: the canvas promoted a module
+    whose evidence pointed at a host that does not exist, while every other
+    gate on that path was real."""
+    package, _comparison = _setup(mini_repo)
+    del package["verification"]["evidence"][0]["verifier"]
+    with pytest.raises(MastersPlanningError, match="verifier"):
+        prepare_master_promotion(mini_repo, package, now=NOW)
+
+
+def test_promotion_refuses_a_verifier_whose_artifact_is_absent(mini_repo):
+    package, _comparison = _setup(mini_repo)
+    package["verification"]["evidence"][0]["verifier"]["artifact"] = (
+        "work/active/workspace-future-demo/outputs/never-written.md"
+    )
+    with pytest.raises(MastersPlanningError, match="verifier.artifact"):
+        prepare_master_promotion(mini_repo, package, now=NOW)
+
+
+def test_promotion_refuses_a_verifier_whose_digest_does_not_match(mini_repo):
+    """The digest is what binds the document: without it the artifact could
+    be rewritten after the promotion without invalidating anything."""
+    package, _comparison = _setup(mini_repo)
+    package["verification"]["evidence"][0]["verifier"]["artifact_sha256"] = (
+        "sha256:" + "0" * 64
+    )
+    with pytest.raises(MastersPlanningError, match="does not match"):
+        prepare_master_promotion(mini_repo, package, now=NOW)
+
+
+def test_promotion_refuses_a_verifier_artifact_that_omits_the_url(mini_repo):
+    """The document has to be about the claim it is cited for."""
+    package, _comparison = _setup(mini_repo)
+    artifact = mini_repo / package["verification"]["evidence"][0]["verifier"][
+        "artifact"]
+    artifact.write_text("# Verification\n\nChecked something else.\n",
+                        encoding="utf-8")
+    package["verification"]["evidence"][0]["verifier"]["artifact_sha256"] = (
+        "sha256:" + hashlib.sha256(artifact.read_bytes()).hexdigest()
+    )
+    with pytest.raises(MastersPlanningError, match="does not mention the evidence URL"):
+        prepare_master_promotion(mini_repo, package, now=NOW)
+
+
+def test_promotion_records_the_content_bound_verifier_in_its_provenance(mini_repo):
+    """The applied record keeps the claim verbatim, and now also the
+    artefact it rests on and that artefact's digest."""
+    package, _comparison = _setup(mini_repo)
+    plan = prepare_master_promotion(mini_repo, package, now=NOW)
+    verifier = plan.provenance["verification"]["evidence"][0]["verifier"]
+    assert verifier["review_id"] == "master-review-future-demo"
+    assert verifier["artifact_sha256"].startswith("sha256:")
+    assert plan.provenance["verification"]["evidence"][0]["url"] == (
+        "https://example.edu/official/module-future-demo")
+
+
+def test_the_verifier_attests_attribution_not_the_claim(mini_repo):
+    """What F-05 guarantees, stated as an executable boundary.
+
+    It guarantees that the claim is *traceable*: the document exists inside
+    the repository's own boundaries, its bytes match the digest the
+    promotion recorded, and it names the evidence URL. It does not
+    establish that the document substantiates the package's claim, and it
+    does not resolve the URL against the world — a document whose only
+    content is the URL satisfies the check.
+
+    This test pins that boundary on purpose. A verifier that also demanded
+    the claim's substance would be a stronger guarantee and a different
+    evidence framework; it should be a deliberate change, not a drift.
+    """
+    package, _comparison = _setup(mini_repo)
+    evidence = package["verification"]["evidence"][0]
+    artifact = mini_repo / evidence["verifier"]["artifact"]
+    artifact.write_text(evidence["url"] + "\n", encoding="utf-8")
+    evidence["verifier"]["artifact_sha256"] = (
+        "sha256:" + hashlib.sha256(artifact.read_bytes()).hexdigest())
+
+    plan = prepare_master_promotion(mini_repo, package, now=NOW)
+
+    # The promotion is accepted: attribution is what the gate requires.
+    assert plan.provenance["status"] == "promoted"
+    assert plan.provenance["verification"]["evidence"][0]["claim"]
+    # And the record still says what it says, verbatim.
+    assert plan.provenance["verification"]["evidence"][0]["url"] == evidence["url"]
 
 
 def test_promotion_rejects_intermediate_symlink_into_quarantine(

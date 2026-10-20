@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "learner.stage-result.append",
               "channel": "operator",
-              "intent_sha256": "sha256:d888e13d2789c46faafc9a2c845bdfa690c03d3d83dda3daa72a72e4f049b614",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:d888e13d2789c46faafc9a2c845bdfa690c03d3d83dda3daa72a72e4f049b614"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:d888e13d2789c46faafc9a2c845bdfa690c03d3d83dda3daa72a72e4f049b614",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "748dcd0bc744a3a301ebeda205da22504967a0cd92eec719287a9126df06e589",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6c84fac7e5b7dce5998124be8cf293be13638802b7c63c06d06d808f21374c03",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0fe504b78fa88e29c45a1eaaec90f6b813e9dca6ab23c073231a4d51a88d22f0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/stage-results.jsonl": {
@@ -185,19 +185,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "748dcd0bc744a3a301ebeda205da22504967a0cd92eec719287a9126df06e589",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6c84fac7e5b7dce5998124be8cf293be13638802b7c63c06d06d808f21374c03",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0fe504b78fa88e29c45a1eaaec90f6b813e9dca6ab23c073231a4d51a88d22f0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/stage-results.jsonl": {
@@ -219,19 +219,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "748dcd0bc744a3a301ebeda205da22504967a0cd92eec719287a9126df06e589",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6c84fac7e5b7dce5998124be8cf293be13638802b7c63c06d06d808f21374c03",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0fe504b78fa88e29c45a1eaaec90f6b813e9dca6ab23c073231a4d51a88d22f0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/stage-results.jsonl": {

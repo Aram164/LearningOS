@@ -74,7 +74,7 @@ decided correction (M-09) is to omit the line.
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-1 error(s), 10 warning(s) — FAIL
+1 error(s), 14 warning(s) — FAIL
 [1]
 ```
 
@@ -131,7 +131,7 @@ $ cat > work/active/workspace-probe/CONTEXT.md <<'EOF'
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Eight active workspaces trip the warning
@@ -166,7 +166,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:e7b08c32190ee58ca4a1f43539cdeb09c61070fbbe4c34b477fffb956e939563",
+  "snapshot_after": "sha256:1be2575425011239e39a263a2660d14b84bb177441e3cd00cb8262a16dfca0d5",
   "result": {
     "ok": true,
     "workspace_id": "workspace-probe",
@@ -176,7 +176,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
     "artifact_revisions": {
       "workspace-probe": 1
     },
-    "snapshot_after": "sha256:e7b08c32190ee58ca4a1f43539cdeb09c61070fbbe4c34b477fffb956e939563",
+    "snapshot_after": "sha256:1be2575425011239e39a263a2660d14b84bb177441e3cd00cb8262a16dfca0d5",
     "replayed": false
   },
   "error": null

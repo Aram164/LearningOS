@@ -87,7 +87,7 @@ system/OPERATOR.md
 
 ```scrut
 $ los bootstrap --brief | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["snapshot_id"]); print(d["session_identity"]["session_id"], d["session_identity"]["source"]); print(d["pointer_state"], d["resume_pointer"]["unit_id"], d["resume_pointer"]["stage_id"]); print(d["counts"]["notes"], d["counts"]["concepts"], d["counts"]["sources"], d["counts"]["workspaces_active"])'
-bootstrap-brief sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+bootstrap-brief sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4
 channel:operator channel
 confirmed unit-demo-l01 stage-demo
 2 2 1 2
@@ -110,7 +110,7 @@ cross-domain 0 0 1
 
 ```scrut
 $ los bootstrap --compact | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["snapshot_id"]); print(d["collections"]["units"]["total"], d["collections"]["study_maps"]["total"]); print(d["resume_pointer"]["unit_id"], d["counts"]["units_needing_map"])'
-bootstrap-summary sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+bootstrap-summary sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4
 2 1
 unit-demo-l01 1
 ```
@@ -137,14 +137,14 @@ one stage only — universe questions (e.g. no source covers X) need the full un
 
 ```scrut
 $ los unit-list --compact
-{"schema_version":1,"snapshot_id":"sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5","contract":"unit-list-summary","filters":{},"items":[{"id":"unit-demo-l01","title":"Expected value","status":"active","module_id":"module-demo","order":1,"current_study_map":"study-map-demo-l01","needs_study_map":false},{"id":"unit-demo-l02","title":"Variance","status":"active","module_id":"module-demo","order":2,"needs_study_map":true}],"total":2,"next_offset":null,"detail":"inspect UNIT_ID"}
+{"schema_version":1,"snapshot_id":"sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4","contract":"unit-list-summary","filters":{},"items":[{"id":"unit-demo-l01","title":"Expected value","status":"active","module_id":"module-demo","order":1,"current_study_map":"study-map-demo-l01","needs_study_map":false},{"id":"unit-demo-l02","title":"Variance","status":"active","module_id":"module-demo","order":2,"needs_study_map":true}],"total":2,"next_offset":null,"detail":"inspect UNIT_ID"}
 ```
 
 ## Batch known record ids in one inspect call
 
 ```scrut
 $ los inspect note-demo concept-expected-value
-{"schema_version":1,"snapshot_id":"sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
+{"schema_version":1,"snapshot_id":"sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
 ```
 
 ## Resolve the id through its alias
@@ -165,7 +165,7 @@ $ los related concept-expected-value
 
 ```scrut
 $ los note-read note-demo
-{"schema_version":1,"snapshot_id":"sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5","contract":"note-content","note_id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","content_sha256":"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276","offset":0,"offset_unit":"unicode_characters","total_characters":162,"start_line":1,"content":"---\nid: note-demo\ntype: note\ntitle: Demo note\ncreated: 2026-07-16\nrole: synthesis\nconcepts: [concept-expected-value]\nsources: [source-demo-book]\n---\n\nBody prose.\n","next_offset":null}
+{"schema_version":1,"snapshot_id":"sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4","contract":"note-content","note_id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","content_sha256":"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276","offset":0,"offset_unit":"unicode_characters","total_characters":162,"start_line":1,"content":"---\nid: note-demo\ntype: note\ntitle: Demo note\ncreated: 2026-07-16\nrole: synthesis\nconcepts: [concept-expected-value]\nsources: [source-demo-book]\n---\n\nBody prose.\n","next_offset":null}
 ```
 
 ## Return to interrupted study without re-deriving it
@@ -181,7 +181,8 @@ Demo Module · Expected value · stage-demo
     Workspace workspace-demo: Do the demo thing.
       source: work/active/workspace-demo/CONTEXT.md#Next-Action
 
-  Requirement  knowledge-demo-expectation
+  Requirement  req-demo-l01-demo
+               concept: knowledge-demo-expectation
                capability: {"kind": "explain", "operands": ["expectation"]}
                under: unfamiliar-example
                evidence: explain-reason
@@ -223,5 +224,5 @@ $ $H/los-assert-file CLAUDE.md --absent
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```

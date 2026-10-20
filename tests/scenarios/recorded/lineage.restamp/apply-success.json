@@ -7,7 +7,7 @@
         "KEY2": {
           "capability": "lineage.restamp",
           "channel": "operator",
-          "intent_sha256": "sha256:174199fb79dc340529a83cdfb2dac87fa1245793146de3a2b4481b4c3acbb6d8",
+          "intent_sha256": "INTENT1",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,11 +59,11 @@
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:174199fb79dc340529a83cdfb2dac87fa1245793146de3a2b4481b4c3acbb6d8"
+          "subject_sha256": "INTENT1"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:174199fb79dc340529a83cdfb2dac87fa1245793146de3a2b4481b4c3acbb6d8",
+        "intent_sha256": "INTENT1",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -105,25 +105,25 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "34fc8b99df08021855cc3661d2dfc99281614324aabc6c7e91eb25a797c9cfe4",
+          "sha256": "LEDGER2",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "a231311c2fafc33933af0e7e2a56699184703143b05b67420d106953d7d408ce",
+          "sha256": "LEDGER3",
           "state": "file"
         },
         "operations/transactions/lineage.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "42d1ebded642ac5f03bdd775271e3d8022ecc2e126fbd3df9d0138f13db1bdc1",
+          "sha256": "LEDGER1",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "b804bcf545cec0907561a3d5f3263fb9a4e4784c767a78ed3b598ffc767fb0e9",
+          "sha256": "LEDGER4",
           "state": "file"
         }
       },

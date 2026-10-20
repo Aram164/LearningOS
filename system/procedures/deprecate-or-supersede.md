@@ -51,7 +51,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:4c1ecebc2eb773924098580a5e43467ead96feef3753b2046e9bea18e988cbfa",
+  "snapshot_after": "sha256:3a2495c75bfe2a63a641576710f63c1ca1efef82f4168418c3acf0fc67813426",
   "result": {
     "ok": true,
     "note_id": "note-worked-variance-v2",
@@ -65,7 +65,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
       "note-demo": 1,
       "note-worked-variance-v2": 1
     },
-    "snapshot_after": "sha256:4c1ecebc2eb773924098580a5e43467ead96feef3753b2046e9bea18e988cbfa",
+    "snapshot_after": "sha256:3a2495c75bfe2a63a641576710f63c1ca1efef82f4168418c3acf0fc67813426",
     "replayed": false
   },
   "error": null
@@ -117,7 +117,7 @@ deprecated concept-variance
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Rebuild the generated outputs

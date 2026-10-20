@@ -72,7 +72,7 @@ seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3
 ## The sealed envelope's sha256, before submission
 
 ```scrut
-$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 f9272e5258a135b9eb968c1fc07bb7c2367c9a52565e1c164281ec76f51779aa
+$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 92ca7961afb56ef8de2755029b4c9a01146598c9e7e91343cca37fcf38eaf963
 ```
 
 ## Step 1: submit the stage-progress envelope
@@ -88,7 +88,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:557c5a2bb512bc02ddd9ce1cdd8aeda9d8074e41b64d3ddfe1a671a288191a07",
+  "snapshot_after": "sha256:239fba23e542c2e5c8e2a92dcafdf637e63b51f8d36ae3932d9aa5471810958b",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -108,7 +108,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:557c5a2bb512bc02ddd9ce1cdd8aeda9d8074e41b64d3ddfe1a671a288191a07",
+    "snapshot_after": "sha256:239fba23e542c2e5c8e2a92dcafdf637e63b51f8d36ae3932d9aa5471810958b",
     "replayed": false
   },
   "error": null
@@ -147,8 +147,8 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5",
-      "actual": "sha256:557c5a2bb512bc02ddd9ce1cdd8aeda9d8074e41b64d3ddfe1a671a288191a07"
+      "expected": "sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4",
+      "actual": "sha256:239fba23e542c2e5c8e2a92dcafdf637e63b51f8d36ae3932d9aa5471810958b"
     }
   }
 }
@@ -168,7 +168,7 @@ confirmation. To end the ownership window without committing, rerun with
 
 ```scrut
 $ los session-end
-{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":false}
+{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":false}
 ```
 
 ## Step 3 rerun: the review shows the same list
@@ -178,14 +178,14 @@ same list.
 
 ```scrut
 $ los session-end
-{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":false}
+{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":false,"pushed":false,"validation":"0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":false}
 ```
 
 ## Step 4: commit the session
 
 ```scrut
 $ los session-end --commit-message "end-a-session transcript commit"
-{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":true,"pushed":false,"validation":"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":true}
+{"ok":true,"touched":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml","curriculum/resume.yaml","operations/transactions/idempotency.yaml","operations/transactions/revisions.yaml","operations/transactions/transaction-20261001-090000-001.yaml"],"owned_changes":[" M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"," M curriculum/resume.yaml"," M operations/transactions/revisions.yaml","?? operations/transactions/idempotency.yaml","?? operations/transactions/transaction-20261001-090000-001.yaml"],"unrelated_changes":["?? operations/diagnostics/traces.jsonl"],"committed":true,"pushed":false,"validation":"0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md","ownership_conflicts":[],"session_id":"channel:operator","client":null,"stale_paths":[],"stale_hours":24,"other_sessions":{},"session_closed":true}
 ```
 
 ## Step 5: the commit exists

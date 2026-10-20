@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 54
-schema_fingerprint: sha256:a21cb0c25c24c70ae4637552600e53b61a0e31a7fc4035cb0e89681b7e31646d
+contract_version: 56
+schema_fingerprint: sha256:ae98924f723f19f6fefe2426be18e6f5938bc14aa0a747b0aaf843454e2ce026
 record_schemas: 36
 history:
 - version: 1
@@ -400,5 +400,17 @@ history:
 - version: 54
   adopted: '2026-10-08'
   note: 'PLAN D3: typed optional error details (reason, suggestions, remedy)'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 55
+  adopted: '2026-10-20'
+  note: 'master-planning-promotion: verification.evidence[] must name a content-bound
+    verification artifact'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 56
+  adopted: '2026-10-20'
+  note: 'master-planning-promotion: the verifier description states what it guarantees
+    (attribution, not truth)'
   migration: null
   fixture: tests/fixtures/formats/v46/

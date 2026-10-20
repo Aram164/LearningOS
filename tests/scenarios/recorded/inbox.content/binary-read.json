@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "capture.create",
               "channel": "operator",
-              "intent_sha256": "sha256:e17ed369413cf64c2a72bc80c41729ec17edac9d8d811ee780440ff7b81e4447",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:e17ed369413cf64c2a72bc80c41729ec17edac9d8d811ee780440ff7b81e4447"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:e17ed369413cf64c2a72bc80c41729ec17edac9d8d811ee780440ff7b81e4447",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e626d025e23291038ba30d373c986e9f862f99adb3e37f9164100675ab1f9584",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8fb2c33373b0ae01faa8ccc92b22102c74113f02057f3334d876d2282a80e40f",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "bcd9869dae8ee8a4e29fe6c08b3db0d06e57ea670e2f60db3c6388d0c1afbfbd",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/blob.bin": {
@@ -184,19 +184,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e626d025e23291038ba30d373c986e9f862f99adb3e37f9164100675ab1f9584",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8fb2c33373b0ae01faa8ccc92b22102c74113f02057f3334d876d2282a80e40f",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "bcd9869dae8ee8a4e29fe6c08b3db0d06e57ea670e2f60db3c6388d0c1afbfbd",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/blob.bin": {
@@ -218,19 +218,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "e626d025e23291038ba30d373c986e9f862f99adb3e37f9164100675ab1f9584",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8fb2c33373b0ae01faa8ccc92b22102c74113f02057f3334d876d2282a80e40f",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "bcd9869dae8ee8a4e29fe6c08b3db0d06e57ea670e2f60db3c6388d0c1afbfbd",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/blob.bin": {

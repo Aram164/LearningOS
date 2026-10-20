@@ -771,8 +771,10 @@ def _render(dossier, requirement, observations, open_items, sittings,
         lines.append("")
     if isinstance(requirement, dict):
         capability = requirement.get("capability", {})
+        requirement_id = str(requirement.get("id", ""))
         concept = str(requirement.get("concept", ""))
-        lines.append(f"  Requirement  {concept}")
+        lines.append(f"  Requirement  {requirement_id}")
+        lines.append(f"               concept: {concept}")
         lines.append(f"               capability: {json.dumps(capability, sort_keys=True)}")
         lines.append(f"               under: {', '.join(requirement.get('conditions', [])) or '—'}")
         lines.append(f"               evidence: {', '.join(requirement.get('evidence_spec', [])) or '—'}")

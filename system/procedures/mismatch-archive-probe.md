@@ -54,7 +54,7 @@ captured 1
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-1 error(s), 10 warning(s) — FAIL
+1 error(s), 14 warning(s) — FAIL
 [1]
 ```
 
@@ -95,7 +95,7 @@ captured 1
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-1 error(s), 10 warning(s) — FAIL
+1 error(s), 14 warning(s) — FAIL
 [1]
 ```
 

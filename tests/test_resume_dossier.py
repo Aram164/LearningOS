@@ -377,6 +377,25 @@ def test_resume_renders_the_pointer_stage(
     assert not list((mini_repo / "generated/dossiers").glob("*-resume-*.json"))
 
 
+def test_the_requirement_line_names_the_id_the_write_path_accepts(mini_repo: Path):
+    """The screen labelled a value "Requirement" and the write path wanted
+    a different key, so a reader who copied the label's value was refused
+    by `los observe`. The label carries the id; the concept has its own line.
+    """
+    root = _runtime_repo(mini_repo)
+    proc = run_los(root, "resume")
+    assert proc.returncode == 0, proc.stderr
+    lines = [line.strip() for line in proc.stdout.splitlines()]
+    requirement = next(line for line in lines if line.startswith("Requirement "))
+    assert requirement.split() == ["Requirement", "req-demo-l01-demo"]
+    assert any(line.startswith("concept:")
+               and "concept-expected-value" in line for line in lines)
+    # The value the screen prints is the value the write path accepts.
+    observed = run_los(root, "observe", "req-demo-l01-demo",
+                       "--activity", "exercise", "--result", "partial")
+    assert observed.returncode == 0, observed.stderr
+
+
 def test_resume_shows_dated_recorded_aim_and_owning_workspace(mini_repo: Path):
     root = _runtime_repo(mini_repo)
     coordination = root / "work/COORDINATION.md"

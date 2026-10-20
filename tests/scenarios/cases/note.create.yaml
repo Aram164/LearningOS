@@ -111,6 +111,12 @@ cases:
     request: {note: {id: note-scenario-create-16, title: "Binary body", path: "knowledge/notes/mathematics/note-scenario-create-16.md"}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0"}
     artifact_ids: []
     expect: {site: note.create.body-not-utf8}
+  - id: body-with-frontmatter
+    kind: refusal
+    transport: gateway
+    request: {note: {id: note-scenario-create-25, title: "Body with its own frontmatter", path: "knowledge/notes/mathematics/note-scenario-create-25.md"}, body_file: "<CASEDATA>/body.bin", body_file_sha256: "sha256:e0ebed8143d8c3c8df5910e59018a4aa5f62365a17e92cadd2535e7ce78f3d65"}
+    artifact_ids: []
+    expect: {site: note.create.body-has-frontmatter}
   - id: bad-body-file
     kind: refusal
     transport: gateway

@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: expected snapshot sha256:0000000000000000000000000000000000000000000000000000000000000000, current snapshot is sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5\n",
+  "stderr": "los: expected snapshot sha256:0000000000000000000000000000000000000000000000000000000000000000, current snapshot is sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4\n",
   "stdout": "",
   "stdout_json": null
 }

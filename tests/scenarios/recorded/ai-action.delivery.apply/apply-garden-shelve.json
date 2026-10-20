@@ -125,7 +125,7 @@
             "KEY3": {
               "capability": "ai-action.delivery.apply",
               "channel": "operator",
-              "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY2",
               "revisions": {
@@ -205,7 +205,7 @@
               "artifact_sha256": {
                 "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
               },
-              "delivery_sha256": "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11"
+              "delivery_sha256": "sha256:97c351c91fd0a5b83e8463865ac5a105b9ede6d567f39baa05f2708a7cb586eb"
             },
             "created_ids": [
               "transcription-garden-note-seed",
@@ -230,11 +230,11 @@
           "request": {
             "approval": {
               "kind": "approved-delivery",
-              "subject_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY3",
-            "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY2"
           },
           "schema_version": 2,
@@ -264,8 +264,8 @@
             {
               "created": false,
               "path": "operations/ai-actions/requests/KEY1/request.yaml",
-              "sha256_after": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
-              "sha256_before": "f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5"
+              "sha256_after": "8f27ad1bb093878552ff45d78305558119f58e4b19756b149c7f007cbb973277",
+              "sha256_before": "6d72844d6b398c0763769eb837345e911d3583db8cfd67e21a035be52d94f7d3"
             }
           ]
         }
@@ -302,25 +302,25 @@
             "operations/ai-actions/garden-state/garden-note-seed.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/ai-actions/relationships.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "a4dbd331174cd01531f3719349aa3a784ea7eff063e7e2b3d6bb318d3a39f254",
+              "sha256": "LEDGER4",
               "state": "file"
             }
           },
@@ -333,7 +333,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5\",\n          \"sha256_after\": \"269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:9d975f3523832935e3578c0f86012cb05d4b80252a3cfcfc7e56f63f18f71b23\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"LEDGER1\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"LEDGER2\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"6d72844d6b398c0763769eb837345e911d3583db8cfd67e21a035be52d94f7d3\",\n          \"sha256_after\": \"LEDGER3\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:97c351c91fd0a5b83e8463865ac5a105b9ede6d567f39baa05f2708a7cb586eb\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:9d975f3523832935e3578c0f86012cb05d4b80252a3cfcfc7e56f63f18f71b23\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"INTENT1\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"INTENT1\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ai-action.delivery.apply",
         "error": null,
@@ -408,7 +408,7 @@
                 "artifact_sha256": {
                   "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
                 },
-                "delivery_sha256": "sha256:11ab79a63198940db20b349970713d8c2749c51034b4ecad018e94d317b7db11"
+                "delivery_sha256": "sha256:97c351c91fd0a5b83e8463865ac5a105b9ede6d567f39baa05f2708a7cb586eb"
               },
               "created_ids": [
                 "transcription-garden-note-seed",
@@ -435,11 +435,11 @@
             "request": {
               "approval": {
                 "kind": "approved-delivery",
-                "subject_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf"
+                "subject_sha256": "INTENT1"
               },
               "channel": "operator",
               "idempotency_key": "KEY3",
-              "intent_sha256": "sha256:5de909d2e1eb2be5c8b3e114e32188f5751d4eaf0778b705ae8dabd5d431e8bf",
+              "intent_sha256": "INTENT1",
               "request_id": "KEY2"
             },
             "revision_updates": {
@@ -475,8 +475,8 @@
               {
                 "created": false,
                 "path": "operations/ai-actions/requests/KEY1/request.yaml",
-                "sha256_after": "269735c060519628a371bc7f70ff7a88cebf29b5e5cbaffe8a47108eddc03f2b",
-                "sha256_before": "f2124755782b1ccd84825d142a61916a6139b4a89d6560edd79be4bc506d64c5"
+                "sha256_after": "8f27ad1bb093878552ff45d78305558119f58e4b19756b149c7f007cbb973277",
+                "sha256_before": "6d72844d6b398c0763769eb837345e911d3583db8cfd67e21a035be52d94f7d3"
               }
             ]
           },

@@ -348,12 +348,21 @@ def _precheck_note(note: object, body: bytes) -> dict:
             site="note.create.empty-body",
         )
     try:
-        body.decode("utf-8")
+        text = body.decode("utf-8")
     except UnicodeDecodeError:
         raise WriteRefused(
             "note body is not valid UTF-8",
             site="note.create.body-not-utf8",
         ) from None
+    if FRONTMATTER_RE.match(text):
+        # The handler writes the note's frontmatter from the note's own
+        # fields. A body that carries its own would produce two frontmatter
+        # blocks, and the published summary would be the second block's YAML.
+        raise WriteRefused(
+            "note body carries its own frontmatter; the writer owns the "
+            "frontmatter — strip it and send the body only",
+            site="note.create.body-has-frontmatter",
+        )
     role = note.get("role", "synthesis")
     if not isinstance(role, str):
         raise WriteRefused(

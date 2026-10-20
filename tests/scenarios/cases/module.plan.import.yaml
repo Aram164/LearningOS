@@ -457,7 +457,7 @@ cases:
   - --file
   - <CASEDATA>/package.yaml
   - --expected-snapshot
-  - sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+  - sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4
   expect:
     site: module.plan.import.lineage-preflight-failed
 - id: import-hits-warning-gate

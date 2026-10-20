@@ -15,6 +15,7 @@ from pathlib import Path
 
 from gateway_helpers import approved_v2_call
 
+from learning_os.derive.validation import validate
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES
 from learning_os.store.loader import load_repo, parse_frontmatter
 
@@ -156,6 +157,42 @@ def test_unknown_note_is_refused_without_writing(mini_repo):
     assert proc.returncode == 2
     assert "note not found" in proc.stderr
     assert _note(mini_repo).read_text(encoding="utf-8") == before
+
+
+def test_a_material_fragment_resolves_in_the_validator_too(mini_repo):
+    """A page fragment is a page selector, not part of the path.
+
+    The write path accepts `material://…#page=2` and the Obsidian UI opens
+    the file it names, so the validator has to resolve the same file. When
+    the two disagreed, a write the system accepted left a warning behind
+    that broke the acceptance gate OPERATOR.md makes mandatory.
+    """
+    repo = load_repo(mini_repo)
+    material = repo.materials_root / "source-demo-book" / "lecture-01.pdf"
+    material.parent.mkdir(parents=True, exist_ok=True)
+    material.write_text("synthetic lecture", encoding="utf-8")
+    ref = "material://source-demo-book/lecture-01.pdf#page=2"
+
+    proc = _record_evidence(mini_repo, "derivation", ref, key="note-evidence-frag-001")
+    assert proc.returncode == 0, proc.stderr
+    assert _meta(mini_repo)["evidence"] == [{"type": "derivation", "ref": ref}]
+
+    issues = validate(load_repo(mini_repo))
+    material_warnings = [
+        issue for issue in issues
+        if issue.code == "URI-MATERIAL" and ref in str(issue)
+    ]
+    assert material_warnings == [], (
+        "the write was accepted, so the validator must resolve the same file")
+
+
+def test_a_material_ref_to_a_missing_file_is_still_reported(mini_repo):
+    """Stripping the fragment must not turn a missing file into a found one."""
+    ref = "material://source-demo-book/absent.pdf#page=2"
+    proc = _record_evidence(mini_repo, "derivation", ref, key="note-evidence-miss-001")
+    assert proc.returncode == 0, proc.stderr
+    issues = validate(load_repo(mini_repo))
+    assert any(issue.code == "URI-MATERIAL" and ref in str(issue) for issue in issues)
 
 
 def test_unknown_evidence_type_is_rejected_by_the_parser(mini_repo):

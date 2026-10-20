@@ -29,10 +29,21 @@ class ClassifiedLink:
 
 
 def parse_reference_uri(value: str) -> ParsedReference | None:
-    """Split one declared reference URI without consulting repository state."""
+    """Split one declared reference URI without consulting repository state.
+
+    A fragment is not part of the path it qualifies (RFC 3986), and this
+    repository uses it as a page selector: ``material://book/lecture.pdf#page=2``
+    names the file ``book/lecture.pdf`` and the page to open inside it. The
+    write path accepts that spelling and the Obsidian UI resolves it the same
+    way (``resource-target.ts`` splits the path on ``[?#]``), so the validator
+    has to resolve the same file — a validator that kept the fragment would
+    warn about a file that is there, and a write the system accepted would
+    leave a warning behind that breaks the acceptance gate.
+    """
     for prefix in EVIDENCE_SCHEMES:
         if value.startswith(prefix):
-            return ParsedReference(prefix.removesuffix("://"), value[len(prefix):])
+            target = value[len(prefix):].split("#", 1)[0]
+            return ParsedReference(prefix.removesuffix("://"), target)
     return None
 
 

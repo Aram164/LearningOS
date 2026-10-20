@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "coordination.section.revise",
               "channel": "operator",
-              "intent_sha256": "sha256:f43c830e7693ebd552739989bc669e14da2294b1b34625fae04fd44caf0b175a",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:f43c830e7693ebd552739989bc669e14da2294b1b34625fae04fd44caf0b175a"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:f43c830e7693ebd552739989bc669e14da2294b1b34625fae04fd44caf0b175a",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8b5884e7eb6be876b42cd8667f7a7a32bcc1d47ab5b8af30c6febd536e4a02e4",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "07ec6708d587d5b2d6114fa2b47ebdac41b35805e5f1ebef09cb9c84548d9d41",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0cc9624174019e10f00a077d58f55d992211edc415ecd42299b4b2035da29149",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/COORDINATION.md": {
@@ -181,19 +181,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8b5884e7eb6be876b42cd8667f7a7a32bcc1d47ab5b8af30c6febd536e4a02e4",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "07ec6708d587d5b2d6114fa2b47ebdac41b35805e5f1ebef09cb9c84548d9d41",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0cc9624174019e10f00a077d58f55d992211edc415ecd42299b4b2035da29149",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/COORDINATION.md": {
@@ -215,19 +215,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8b5884e7eb6be876b42cd8667f7a7a32bcc1d47ab5b8af30c6febd536e4a02e4",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "07ec6708d587d5b2d6114fa2b47ebdac41b35805e5f1ebef09cb9c84548d9d41",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "0cc9624174019e10f00a077d58f55d992211edc415ecd42299b4b2035da29149",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/COORDINATION.md": {

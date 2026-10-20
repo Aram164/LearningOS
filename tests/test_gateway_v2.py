@@ -1595,6 +1595,40 @@ def test_seal_envelope_helper_produces_submittable_capture(repo_root, mini_repo,
     assert json.loads(applied.stdout)["ok"] is True
 
 
+def test_seal_envelope_cannot_mint_the_apps_own_provenance(repo_root, mini_repo,
+                                                           tmp_path):
+    """The `ui` channel is the app's own expression of "a human pressed a
+    button", and admission admits a direct-user-gesture only from it. The
+    app builds its envelopes in process, so a shell that could seal one
+    could claim the app's provenance."""
+    refused = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "x"}', "--key", "seal-ui-001",
+         "--channel", "ui", "--out", str(tmp_path / "sealed-ui.json")],
+        capture_output=True, text=True)
+    assert refused.returncode == 2
+    assert "the 'ui' channel is the application's own provenance" in refused.stderr
+    assert not (tmp_path / "sealed-ui.json").exists()
+
+
+def test_seal_envelope_still_seals_on_the_operator_channel(repo_root, mini_repo,
+                                                           tmp_path):
+    """The operator path is how Aram revises plans from the CLI. It must
+    keep working; the defect was that scope was unbound, not that the
+    path exists."""
+    out = tmp_path / "sealed-operator.json"
+    sealed = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "x"}', "--key", "seal-operator-001",
+         "--channel", "operator", "--out", str(out)],
+        capture_output=True, text=True)
+    assert sealed.returncode == 0, sealed.stderr
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["channel"] == "operator"
+
+
 def test_seal_envelope_helper_refuses_out_inside_repo(repo_root, mini_repo,
                                                       tmp_path):
     refused = subprocess.run(
