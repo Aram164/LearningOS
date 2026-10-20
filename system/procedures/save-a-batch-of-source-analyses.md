@@ -118,7 +118,7 @@ $ cat > "$TMPDIR/batch1.json" <<EOF
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch1.json" --out "$TMPDIR/stage1" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["note_path"], n["predicted_new"], n["frozen_input_sha256"]) for n in d["notes"]]'
 True
-sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36
 {"note-batch-alpha": 0, "note-batch-beta": 0}
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md True aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md True 472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
@@ -143,7 +143,7 @@ Alpha analysis of the inspected page.
 
 ```scrut
 $ cat "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["capability"], d["channel"], d["expected_snapshot"]); [print(n["analysis"]["id"], n["analysis"]["path"], n["body_file_sha256"]) for n in d["payload"]["bundle"]["notes"]]'
-note.analysis.save_batch operator sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+note.analysis.save_batch operator sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md sha256:aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md sha256:472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
 ```
@@ -167,7 +167,7 @@ $ cat > "$TMPDIR/batch2.json" <<EOF
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
 True
-sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5
+sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36
 {"note-batch-gamma": 0}
 note-batch-gamma True
 ```
@@ -199,11 +199,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelop
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:5e457d32ed80a9b7ca7eb3761b528e0867632c712fdf89f7ea526e47f25c0d68",
+    "snapshot_after": "sha256:3ad9e81d3ccaa5e31e6f2c501186a47f55dd1aa43557e9783e8b52ef5f01d41d",
     "transaction_id": "transaction-20261001-090000-001"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:5e457d32ed80a9b7ca7eb3761b528e0867632c712fdf89f7ea526e47f25c0d68",
+  "snapshot_after": "sha256:3ad9e81d3ccaa5e31e6f2c501186a47f55dd1aa43557e9783e8b52ef5f01d41d",
   "transaction_id": "transaction-20261001-090000-001"
 }
 ```
@@ -255,8 +255,8 @@ $ (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMP
   "error": {
     "code": "STALE_SNAPSHOT",
     "details": {
-      "actual": "sha256:5e457d32ed80a9b7ca7eb3761b528e0867632c712fdf89f7ea526e47f25c0d68",
-      "expected": "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5"
+      "actual": "sha256:3ad9e81d3ccaa5e31e6f2c501186a47f55dd1aa43557e9783e8b52ef5f01d41d",
+      "expected": "sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36"
     },
     "message": "canonical state changed since this request was approved",
     "retryable": true
@@ -284,7 +284,7 @@ unchanged
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2b" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
 True
-sha256:5e457d32ed80a9b7ca7eb3761b528e0867632c712fdf89f7ea526e47f25c0d68
+sha256:3ad9e81d3ccaa5e31e6f2c501186a47f55dd1aa43557e9783e8b52ef5f01d41d
 note-batch-gamma True
 ```
 
@@ -312,11 +312,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2b/envelo
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:bccf0fcfe5e44a2e9d609dd516cf433854622d44a2ceacfd55cc88ff0d3b927d",
+    "snapshot_after": "sha256:236b4e593b7e64146d1be826d3346982d4df65203c8e1c9122955518ea048e73",
     "transaction_id": "transaction-20261001-090000-002"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:bccf0fcfe5e44a2e9d609dd516cf433854622d44a2ceacfd55cc88ff0d3b927d",
+  "snapshot_after": "sha256:236b4e593b7e64146d1be826d3346982d4df65203c8e1c9122955518ea048e73",
   "transaction_id": "transaction-20261001-090000-002"
 }
 ```

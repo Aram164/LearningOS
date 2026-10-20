@@ -58,7 +58,7 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["authority", "url", "claim", "verified_on"],
+            "required": ["authority", "url", "claim", "verified_on", "verifier"],
             "properties": {
               "authority": {"const": "official-academic"},
               "url": {
@@ -67,9 +67,29 @@
                 "pattern": "^https://"
               },
               "claim": {"type": "string", "minLength": 1},
-              "verified_on": {"type": "string", "format": "date"}
+              "verified_on": {"type": "string", "format": "date"},
+              "verifier": {"$ref": "#/$defs/verifier"}
             }
           }
+        }
+      }
+    },
+    "verifier": {
+      "description": "The named review that checked the evidence, and the local document that records it. The document is content-bound by its digest, so it cannot be edited afterwards without invalidating the promotion that cites it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_id", "artifact", "artifact_sha256"],
+      "properties": {
+        "review_id": {"type": "string", "minLength": 1},
+        "artifact": {
+          "description": "A repository-relative path to the verification document.",
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_sha256": {
+          "description": "The sha256 of the artifact's bytes, as sha256:<64 hex>.",
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
         }
       }
     },

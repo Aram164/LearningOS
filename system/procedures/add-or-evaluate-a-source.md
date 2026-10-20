@@ -142,7 +142,7 @@ $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3315d92e2de7dcd2b41fb67e306117cecf994149ea4b9c0f306f843e2c0e4698",
+  "snapshot_after": "sha256:91b4571561a45d6f5e8539a29e34364579d746ab7f5e74317bb962eee8b59462",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-001",
@@ -150,7 +150,7 @@ $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
     "artifact_revisions": {
       "source-scenario-bare": 1
     },
-    "snapshot_after": "sha256:3315d92e2de7dcd2b41fb67e306117cecf994149ea4b9c0f306f843e2c0e4698",
+    "snapshot_after": "sha256:91b4571561a45d6f5e8539a29e34364579d746ab7f5e74317bb962eee8b59462",
     "replayed": false
   },
   "error": null
@@ -307,7 +307,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:6c692f69d0404d55717355da302f4f18d734f03b208771edcffeaad25786afc7",
+  "snapshot_after": "sha256:2c792491775e75594398eec2389a67031926fbed504f7f0084f7cf962dfa42a3",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-002",
@@ -315,7 +315,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
     "artifact_revisions": {
       "source-scenario-bare": 2
     },
-    "snapshot_after": "sha256:6c692f69d0404d55717355da302f4f18d734f03b208771edcffeaad25786afc7",
+    "snapshot_after": "sha256:2c792491775e75594398eec2389a67031926fbed504f7f0084f7cf962dfa42a3",
     "replayed": false
   },
   "error": null
@@ -351,7 +351,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:b8f6af01ef5518d7c28733dbc2609c252cd5769ea833471e0b4a27044904b00d",
+  "snapshot_after": "sha256:717ae6cc9c5772a058d5c03186fe82ffb3b5460f6eeeaf56d60d0690cc178f5e",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-003",
@@ -359,7 +359,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
     "artifact_revisions": {
       "source-scenario-bare": 3
     },
-    "snapshot_after": "sha256:b8f6af01ef5518d7c28733dbc2609c252cd5769ea833471e0b4a27044904b00d",
+    "snapshot_after": "sha256:717ae6cc9c5772a058d5c03186fe82ffb3b5460f6eeeaf56d60d0690cc178f5e",
     "replayed": false
   },
   "error": null
@@ -414,7 +414,7 @@ $ los capability collection.entry.revise --payload-file "$TMPDIR/s06-entry.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:828560966423887e65ea8bd67d09d35cbfd04c9209c4d645fb565ceabe93e5e8",
+  "snapshot_after": "sha256:d206342cc616291287f2779716a86cef0e94e883534e83dd6d144c72f3cae14f",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-004",
@@ -422,7 +422,7 @@ $ los capability collection.entry.revise --payload-file "$TMPDIR/s06-entry.json"
     "artifact_revisions": {
       "collection:probe-essays": 1
     },
-    "snapshot_after": "sha256:828560966423887e65ea8bd67d09d35cbfd04c9209c4d645fb565ceabe93e5e8",
+    "snapshot_after": "sha256:d206342cc616291287f2779716a86cef0e94e883534e83dd6d144c72f3cae14f",
     "replayed": false
   },
   "error": null

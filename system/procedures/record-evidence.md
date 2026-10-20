@@ -26,7 +26,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"sha256:148c99537f111b6e25995446e4cbb04033727923aa19bd9b3d7228f671a725f9","replayed":false}
+{"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"sha256:023c03154741fd96c7ddf0ddadd61b75b5442e2086c57e22f8818295816bb820","replayed":false}
 ```
 
 ## The newest receipt names the capability
@@ -89,7 +89,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:e2abb9d1dddff1888e963c26d19d10418b0695a042df48744089e72f3d667a14",
+  "snapshot_after": "sha256:1aacbb7041e2d70099d0e15b5aa8aae63533a2440a5a3dedb33b1e67ea1581c1",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +102,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:e2abb9d1dddff1888e963c26d19d10418b0695a042df48744089e72f3d667a14",
+    "snapshot_after": "sha256:1aacbb7041e2d70099d0e15b5aa8aae63533a2440a5a3dedb33b1e67ea1581c1",
     "replayed": false
   },
   "error": null

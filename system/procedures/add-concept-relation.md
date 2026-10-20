@@ -55,7 +55,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:ad2e953300fac8038590dfc59431e1d150b4ea0a2fda4acbf8a34821412ad163",
+  "snapshot_after": "sha256:7f68dea1c1748ea41df1d729308328b8aff64b8cdc37297be6d5b16123008a30",
   "result": {
     "ok": true,
     "operation_count": 1,
@@ -64,7 +64,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
     "artifact_revisions": {
       "registry-concept-relations": 1
     },
-    "snapshot_after": "sha256:ad2e953300fac8038590dfc59431e1d150b4ea0a2fda4acbf8a34821412ad163",
+    "snapshot_after": "sha256:7f68dea1c1748ea41df1d729308328b8aff64b8cdc37297be6d5b16123008a30",
     "replayed": false
   },
   "error": null

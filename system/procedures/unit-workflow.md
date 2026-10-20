@@ -56,7 +56,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:1058b40994ebcf3ecd15a552f45da97c6a65ff8d112e5ef402d29c7a8ac44b75",
+  "snapshot_after": "sha256:0d8d9b6bd837da2a20373a6fc6692a244d36900c0aa128b08814abe4d9498530",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -68,7 +68,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
     "artifact_revisions": {
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:1058b40994ebcf3ecd15a552f45da97c6a65ff8d112e5ef402d29c7a8ac44b75",
+    "snapshot_after": "sha256:0d8d9b6bd837da2a20373a6fc6692a244d36900c0aa128b08814abe4d9498530",
     "replayed": false
   },
   "error": null
@@ -107,7 +107,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:2285d95f09dd05f4a2dc02e34a0cacfb1077825be77aadb2ae255c0258a0c3fc",
+  "snapshot_after": "sha256:93f85c24ad7ee3059697c44a1c94981f48658de12a28f9e291426b5a6bc199d7",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -119,7 +119,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
     "artifact_revisions": {
       "unit-demo-l02": 2
     },
-    "snapshot_after": "sha256:2285d95f09dd05f4a2dc02e34a0cacfb1077825be77aadb2ae255c0258a0c3fc",
+    "snapshot_after": "sha256:93f85c24ad7ee3059697c44a1c94981f48658de12a28f9e291426b5a6bc199d7",
     "replayed": false
   },
   "error": null

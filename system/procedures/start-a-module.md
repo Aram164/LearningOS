@@ -125,7 +125,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:58186326be6e399bedad1cabe20b2730731e197bbb2e5920edeaee971b5c5f7c",
+  "snapshot_after": "sha256:8a0142ab0bfae02b38ef152302adc8073fd8a3f4c7bd0da3a21b6df54cb85ee8",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -134,7 +134,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:58186326be6e399bedad1cabe20b2730731e197bbb2e5920edeaee971b5c5f7c",
+    "snapshot_after": "sha256:8a0142ab0bfae02b38ef152302adc8073fd8a3f4c7bd0da3a21b6df54cb85ee8",
     "replayed": false
   },
   "error": null

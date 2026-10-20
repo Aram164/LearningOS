@@ -31,7 +31,7 @@ cases:
   - id: page-one
     kind: success
     transport: cli
-    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5", --expected-observations, "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6"]
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36", --expected-observations, "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6"]
     expect: {site: null}
   - id: empty-need
     kind: refusal
@@ -76,7 +76,7 @@ cases:
   - id: observations-mismatch
     kind: refusal
     transport: cli
-    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:08fdd4d86bb9d12fbb4b804df720b02a980031c30cb9f7007c9b425b46ef43c5", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    argv: [material-context, derivation, --limit, 1, --offset, 1, --expected-snapshot, "sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36", --expected-observations, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: material.context.stale-snapshot}
   - id: stale-snapshot
     kind: refusal

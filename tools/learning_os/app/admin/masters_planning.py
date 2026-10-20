@@ -194,6 +194,67 @@ def _safe_academic_reference(root: Path, value: Any, *, label: str) -> Path:
     return resolved
 
 
+def _require_content_bound_verifier(
+    root: Path,
+    evidence: dict[str, Any],
+    *,
+    label: str,
+    url: str,
+) -> None:
+    """The evidence must name a local, content-bound verification artifact.
+
+    "official-academic" is a claim about the world, and a package that only
+    asserts it has no shape a write can check: the canvas promoted a module
+    whose evidence pointed at a host that does not exist, while every other
+    gate on that path was real. The write path is offline-first — the
+    thirty-day rule is a date check, and ``los validate --online`` is a
+    separate, explicitly online audit — so what a canonical write can
+    require is that the claim is *attributable*: a named review, and a local
+    document whose bytes are bound by a digest and which says what was
+    checked. The document cannot be edited afterwards without invalidating
+    the digest the promotion recorded.
+
+    This does not make the external fact true. It makes the claim name the
+    artefact it rests on, so a reviewer can read what was checked and the
+    record cannot be quietly re-pointed afterwards.
+    """
+    verifier = evidence.get("verifier")
+    if not isinstance(verifier, dict):
+        raise MastersPlanningError(
+            f"{label}.verifier must name the review that checked the evidence"
+        )
+    review_id = verifier.get("review_id")
+    if not isinstance(review_id, str) or not review_id.strip():
+        raise MastersPlanningError(f"{label}.verifier.review_id must name a review")
+    resolved = _safe_academic_reference(
+        root,
+        verifier.get("artifact"),
+        label=f"{label}.verifier.artifact",
+    )
+    digest = verifier.get("artifact_sha256")
+    if not isinstance(digest, str) or not digest.startswith("sha256:"):
+        raise MastersPlanningError(
+            f"{label}.verifier.artifact_sha256 must be the artifact's digest"
+        )
+    try:
+        observed = "sha256:" + hashlib.sha256(resolved.read_bytes()).hexdigest()
+    except OSError as exc:
+        raise MastersPlanningError(
+            f"{label}.verifier.artifact cannot be read: {exc}"
+        ) from None
+    if observed != digest:
+        raise MastersPlanningError(
+            f"{label}.verifier.artifact_sha256 does not match the artifact's "
+            f"bytes (recorded {digest}, found {observed})"
+        )
+    text = resolved.read_text(encoding="utf-8", errors="replace")
+    if url not in text:
+        raise MastersPlanningError(
+            f"{label}.verifier.artifact does not mention the evidence URL "
+            f"'{url}'"
+        )
+
+
 def _source_ids_in(value: Any) -> set[str]:
     """Collect canonical source references from one sanitized module plan."""
 
@@ -415,6 +476,12 @@ def prepare_master_promotion(
             raise MastersPlanningError(
                 f"verification.evidence[{index}].verified_on predates verification.as_of"
             )
+        _require_content_bound_verifier(
+            root,
+            evidence,
+            label=f"verification.evidence[{index}]",
+            url=str(evidence["url"]),
+        )
 
     catalog = load_master_catalog(root)
     if catalog is None:
