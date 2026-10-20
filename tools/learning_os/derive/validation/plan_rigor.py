@@ -478,7 +478,7 @@ class ChecksPlanRigor:
             )
 
     def _module_scope_index(self) -> dict[str, dict]:
-        """Per module, the routes that module's own source map declares.
+        """Per module, declared sources and routes with their unit owners.
 
         A stage may teach only what its module adopted, so a resource is
         checked against the owning module's map, never against every route in
@@ -487,21 +487,24 @@ class ChecksPlanRigor:
         """
         index: dict[str, dict] = {}
         for module_id, source_map in self.repo.module_source_maps.items():
-            ids: set[str] = set()
-            pairs: set[tuple[str, str]] = set()
+            ids: dict[str, str] = {}
+            pairs: set[tuple[str, str, str]] = set()
+            sources: set[str] = set()
             for entry in source_map.get("sources", []) or []:
                 if not isinstance(entry, dict):
                     continue
                 source_id = str(entry.get("source_id") or "")
+                sources.add(source_id)
                 for route in entry.get("unit_routes", []) or []:
                     if not isinstance(route, dict):
                         continue
                     projected = route_with_identity(module_id, source_id, route)
                     route_id = projected.get("id")
+                    unit_id = str(route.get("unit_id") or "")
                     if isinstance(route_id, str):
-                        ids.add(route_id)
-                    pairs.add((source_id, str(route.get("locator") or "")))
-            index[module_id] = {"ids": ids, "pairs": pairs}
+                        ids[route_id] = unit_id
+                    pairs.add((unit_id, source_id, str(route.get("locator") or "")))
+            index[module_id] = {"ids": ids, "pairs": pairs, "sources": sources}
         return index
 
     def _authored_route_bindings(self, study_map) -> dict[tuple[str, int], str]:
@@ -541,15 +544,16 @@ class ChecksPlanRigor:
         return bindings
 
     def _check_row_scope(self, smid: str, stage: dict, resource: dict,
-                         scope: dict, where: str,
+                         scope: dict, where: str, *, unit_id: str,
+                         disposed_sources: set[str],
                          material_route_id: str | None = None) -> None:
         """A stage resource must resolve to something the module adopted.
 
         A resource that names a route is bound, and the unknown-route and
         wrong-owner errors belong to `references.py`. A resource without a
-        route has to name its material the way the module's map declares it:
-        the same source at the same locator. A resource that does not is
-        teaching material the module never adopted.
+        route has to match a route declared for its own unit: the same source
+        at the same locator. Module adoption, unit disposition and a matching
+        route are distinct facts, so the diagnostic names what is missing.
 
         A `reference` row is a pointer, and pointing outside the module's map
         is what it is for. `kind` is the row's meaning rather than a triage
@@ -565,28 +569,49 @@ class ChecksPlanRigor:
             # The scope rule does not report the same thing twice.
             return
         if material_route_id is not None:
-            if material_route_id in scope["ids"]:
+            if scope["ids"].get(material_route_id) == unit_id:
                 return
             self.warn(
                 "RESOURCE-SCOPE-UNBOUND",
                 f"study map '{smid}' stage '{stage.get('id')}' teaches route "
                 f"'{material_route_id}' — the module's source map declares no "
-                f"such route; adopt the material in the module's map, or bind "
-                f"the resource to a route the map declares",
+                f"such route for unit '{unit_id}'; bind the resource to a "
+                f"route declared for this unit",
                 where,
             )
             return
         source_id = resource.get("source_id")
         locator = str(resource.get("locator") or "")
-        if isinstance(source_id, str) and (source_id, locator) in scope["pairs"]:
+        if isinstance(source_id, str) and (unit_id, source_id, locator) in scope["pairs"]:
             return
+        if not source_id:
+            reason = (
+                "no source_id is named, so module adoption cannot be checked; "
+                "name the source and bind the resource to a route for this unit"
+            )
+        elif source_id not in scope["sources"]:
+            reason = (
+                "the module's source map does not declare this source; adopt "
+                "the source in that map and declare a route for this unit"
+            )
+        elif source_id not in disposed_sources:
+            reason = (
+                "the module declares this source, but this unit has no recorded "
+                "source disposition and no matching route; record it as selected, "
+                "reference-only, or deferred with a reason, and bind this teaching "
+                "resource to a route for this unit"
+            )
+        else:
+            reason = (
+                "the unit's source disposition is recorded, but no route for "
+                "this unit matches this source and locator; bind the resource "
+                "to a declared route or review the missing route"
+            )
         self.warn(
             "RESOURCE-SCOPE-UNBOUND",
             f"study map '{smid}' stage '{stage.get('id')}' teaches "
             f"{source_id or 'material without a source'} at '{locator[:60]}' — "
-            f"the module's source map declares no route for it; adopt the "
-            f"material in the module's map, or bind the resource to a route "
-            f"the map declares",
+            f"{reason}",
             where,
         )
 
@@ -598,6 +623,12 @@ class ChecksPlanRigor:
             where = self._rel(study_map.path)
             unit = r.units.get(study_map.unit_id)
             module_id = str(unit.data.get("module_id") or "") if unit is not None else ""
+            disposed_sources = {
+                row.get("source_id")
+                for field in ("source_selections", "scope_sources")
+                for row in (unit.data.get(field, []) or [])
+                if isinstance(row, dict) and isinstance(row.get("source_id"), str)
+            } if unit is not None else set()
             module = r.modules.get(module_id) if module_id else None
             # Archived modules keep their source maps as history, not as an
             # active learning surface, so their stages are not scope-checked.
@@ -628,6 +659,7 @@ class ChecksPlanRigor:
                     if scope_for is not None:
                         self._check_row_scope(
                             smid, stage, resource, scope_for, where,
+                            unit_id=study_map.unit_id, disposed_sources=disposed_sources,
                             material_route_id=authored_routes.get((stage_id, index)),
                         )
                     if node_id is not None:
