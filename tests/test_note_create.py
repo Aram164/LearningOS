@@ -15,6 +15,7 @@ import subprocess
 import sys
 from datetime import date
 
+import pytest
 from gateway_helpers import LOS, approved_v2_cli, file_sha256
 
 from learning_os.store.loader import load_repo
@@ -205,3 +206,39 @@ def test_empty_and_non_utf8_bodies_refuse(mini_repo):
     binary = _save(mini_repo, b"\xff\xfe not utf-8", "binary-body")
     assert binary.returncode != 0
     assert not (mini_repo / NOTE_PATH).exists()
+
+
+def test_a_body_carrying_its_own_frontmatter_refuses_by_name(mini_repo):
+    """The handler writes the note's frontmatter from the note's own fields.
+    A body that carries its own produces two frontmatter blocks, and the
+    published summary becomes the second block's YAML — with zero errors."""
+    body = b"---\nid: note-f1-duplicate\ntype: note\n---\n\n# Body\n"
+    refused = _save(mini_repo, body, "body-frontmatter")
+    assert refused.returncode != 0
+    message = refused.stdout + refused.stderr
+    assert "note body carries its own frontmatter" in message
+    assert "strip it and send the body only" in message
+    assert not (mini_repo / NOTE_PATH).exists()
+
+
+def test_the_frontmatter_refusal_names_its_own_site():
+    """The refusal is attributable: the site says which check refused."""
+    from learning_os.app.handlers.notes import _precheck_note
+    from learning_os.domain.failures import WriteRefused
+
+    with pytest.raises(WriteRefused) as refused:
+        _precheck_note(
+            {"id": "note-create-demo", "title": "Demo synthesis"},
+            b"---\nid: note-f1-duplicate\n---\n\n# Body\n",
+        )
+    assert refused.value.site == "note.create.body-has-frontmatter"
+    assert "frontmatter" in str(refused.value)
+
+
+def test_a_body_without_frontmatter_still_writes(mini_repo):
+    written = _save(mini_repo, b"# Triangulation memo\n\nOne claim, two sources.\n",
+                    "body-plain")
+    assert written.returncode == 0, written.stdout + written.stderr
+    text = _note_bytes(mini_repo).decode("utf-8")
+    assert text.count("---") == 2, "exactly one frontmatter block"
+    assert "Triangulation memo" in text
