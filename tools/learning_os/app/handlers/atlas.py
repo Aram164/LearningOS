@@ -67,9 +67,6 @@ def _registries(root: Path) -> dict[Path, dict]:
     return records
 
 
-def _on_commit_refused(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
-    return list(errors[:12])
 
 
 @register("ability.context", kind="porcelain")

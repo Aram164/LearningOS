@@ -54,9 +54,6 @@ def _validate_ledger(root, data: dict) -> list[str]:
     return [f"goal ledger: {error.message}" for error in errors]
 
 
-def _goal_on_commit_refused(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
-    return list(errors[:12])
 
 
 def _render_goal_check(record: dict, payload: dict) -> dict:

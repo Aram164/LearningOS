@@ -9,7 +9,6 @@ from pathlib import Path
 
 from learning_os.app.claim_admission import lineage_artifacts
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import dumps_indented
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import input_record as _input_record
@@ -108,11 +107,6 @@ def unit_material_synthesis_publish(ctx: OpContext, req: dict) -> Result:
     def finish_unit_material_synthesis_publish(confirmation):
         return {"ok": True, **confirmation}
 
-    def refused_stdout_unit_material_synthesis_publish(errors):
-        return dumps_indented({
-            "ok": False,
-            **({"errors": [str(error) for error in errors]} if errors else {}),
-        })
 
     return Result(
         ResponsePayload({"ok": True}, finish_unit_material_synthesis_publish({}), confirmation='merge'),
@@ -185,8 +179,6 @@ def _ledger_guards(root: Path) -> tuple[list[str], dict[str, int]]:
                        for artifact in artifacts}
 
 
-def _lineage_restamp_commit_lines(commit_errors: list) -> list[str]:
-    return ["los: lineage re-stamp failed", *commit_errors[:12]]
 
 
 @register("lineage.restamp", kind="command")

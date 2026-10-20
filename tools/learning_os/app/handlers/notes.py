@@ -38,11 +38,6 @@ from learning_os.store.loading import load_garden, load_notes
 from learning_os.store.transactions import parse_expected_revisions
 
 
-def _on_commit_refused_evidence(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the header plus the engine issues, verbatim."""
-    return ["los: evidence rejected by validation", *errors[:12]]
-
-
 def _render_frontmatter(meta: dict, body: str) -> str:
     """Frontmatter plus body, the commands.support formula.
 
@@ -138,9 +133,6 @@ def note_evidence(ctx: OpContext, req: dict) -> Result:
     )
 
 
-def _on_commit_refused_revise(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the header plus the engine issues, verbatim."""
-    return ["los: note revision rejected by validation", *errors[:12]]
 
 
 @register("note.revise", kind="command")

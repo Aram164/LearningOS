@@ -24,9 +24,6 @@ from learning_os.app.backup_manifest import (
     verify_restored_system,
 )
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import (
-    dumps_indented,
-)
 from learning_os.app.gateway import read_structured_file as _read_structured_file
 from learning_os.app.projection import fresh_manifest as _fresh_manifest
 from learning_os.app.projection import fresh_manifest_and_repo as _fresh_manifest_and_repo
@@ -377,10 +374,6 @@ def inspect(ctx: OpContext, req: dict) -> Result:
 # instead of calling _write_transaction itself.
 
 
-def _project_commit_refused(errors: list) -> list[str]:
-    """The exact commit-refusal line: the engine issues as one JSON object."""
-    return [json.dumps({"errors": [str(issue) for issue in errors]},
-                       ensure_ascii=False)]
 
 
 def _project_record(req: dict) -> dict:
@@ -1020,12 +1013,6 @@ def operations(ctx: OpContext, req: dict) -> Result:
 # legacy handlers did (SPEC (bd)).
 
 
-def _publish_refused_stdout(errors: list) -> str:
-    """The exact publish refusal print: ok false plus the engine issues."""
-    return dumps_indented({
-        "ok": False,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    })
 
 
 @register("legacy.archive.lock.publish", kind="command")

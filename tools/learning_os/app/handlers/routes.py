@@ -23,7 +23,6 @@ from learning_os.app.claim_admission import (
     render_claim_lineage,
 )
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import dumps_compact
 from learning_os.app.handlers._shared import guard_rows as _guard_rows
 from learning_os.app.handlers._shared import map_for_unit as _map_for_unit
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
@@ -366,9 +365,6 @@ def _execute_material_plan(ctx: OpContext, req: dict, capability: str,
     def finish(confirmation):
         return {**result, "ok": True, **confirmation}
 
-    def refused_stdout(errors):
-        return dumps_compact({**result, "ok": False,
-                            **({"errors": list(map(str, errors))} if errors else {})})
 
     return Result(
         ResponsePayload(result, finish({}), confirmation='merge'),

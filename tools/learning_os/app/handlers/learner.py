@@ -373,9 +373,6 @@ def path_note(ctx: OpContext, req: dict) -> Result:
     )
 
 
-def _on_path_progress_refused(errors: list) -> list[str]:
-    """The exact path-progress commit-refusal lines: the prefix plus the first twelve engine issues, verbatim."""
-    return ["los: path update rejected by validation", *errors[:12]]
 
 
 @register("path.progress.update", kind="command")
@@ -425,9 +422,6 @@ def path_progress(ctx: OpContext, req: dict) -> Result:
     )
 
 
-def _on_path_attach_refused(errors: list) -> list[str]:
-    """The exact path-attach commit-refusal lines: the prefix plus the first twelve engine issues, verbatim."""
-    return ["los: attachment rejected by validation", *errors[:12]]
 
 
 @register("path.attachment.add", kind="command")
