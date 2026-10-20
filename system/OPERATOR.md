@@ -64,6 +64,7 @@ always names its file. Fix the defect; do not route around the guard.
 | Changes awaiting a decision | `intelligence-scan --brief --json` | [Read the decision queue](procedures/start-here.md#read-what-wants-a-decision) |
 | Ability evidence | `ability-context` horizon, then a known ability | [Read a bounded ability](procedures/start-here.md#read-one-ability-through-the-bounded-horizon) |
 | Governance question | `semantic --list`, then `semantic PREDICATE --input k=v` | [Ask the semantic surface](procedures/start-here.md#ask-a-governance-question-through-the-semantic-surface) |
+| Process a lecture (23), turn the semester (24), promote a Master's module (27) | none — stop and ask | none: these three have no executable transcript, and the scope authority they need does not exist in a checkout (boundary 18) |
 
 ## Product hierarchy
 
@@ -155,6 +156,15 @@ Skills and projects use modules and units without false academic metadata.
     or "improving" it as a side effect of unrelated work — requires Aram to say
     so in that session. Appending a point verbatim and adding measured evidence
     to an open one are always allowed; closing one is his alone.
+18. Workflows 23 (process a lecture), 24 (turn the semester) and 27 (promote a
+    future Master's module) have **no executable transcript**, and the scope
+    authority each one needs does not exist in a checkout: the slides as
+    taught, a real term boundary with human judgments, a program that has
+    actually begun. When a task reaches one of them, stop and ask. Do not scope
+    a lecture from textbook chapter titles, keyword matches, or a source the
+    module never adopted, and do not stand in for the human judgment the
+    workflow requires. The gap is declared, not hidden — the procedure index
+    reads "Untranscribable" for exactly these three.
 
 ## Procedures
 
