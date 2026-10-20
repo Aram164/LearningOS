@@ -23,7 +23,30 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2] / "repository"
+import yaml
+
+
+def core_root() -> Path:
+    """The Core checkout this script measures.
+
+    The script lives in the fixing workbench, beside the Core checkout, and
+    is published inside a Core checkout under ``workbench/``. So the root is
+    found, not assumed: the nearest ancestor that *is* a Core checkout, or
+    else the nearest ancestor with a Core checkout named ``repository``
+    beside it.
+    """
+    here = Path(__file__).resolve()
+    for candidate in here.parents:
+        if (candidate / "system" / "OPERATOR.md").is_file():
+            return candidate
+    for candidate in here.parents:
+        sibling = candidate / "repository"
+        if (sibling / "system" / "OPERATOR.md").is_file():
+            return sibling
+    raise SystemExit("no Core checkout found above this script")
+
+
+ROOT = core_root()
 sys.path.insert(0, str(ROOT / "tools"))
 
 from learning_os.store.contracts.gateway import intent_sha256  # noqa: E402
@@ -45,21 +68,15 @@ def main() -> int:
     problems: list[str] = []
 
     for case_path in sorted(CASES.glob("*.yaml")):
-        text = case_path.read_text(encoding="utf-8")
+        document = yaml.safe_load(case_path.read_text(encoding="utf-8"))
         # Every case names its own casedata directory: <operation>/<case-id>.
-        for case_id in re.findall(r"^\s*- id: (\S+)", text, re.MULTILINE):
+        for case in document.get("cases", []):
+            case_id = case["id"]
             casedata = FILES / case_path.stem / case_id
             if not casedata.is_dir():
                 continue
             for delivery in casedata.glob("**/delivery.yaml"):
-                pinned = _pin_for(text, delivery)
-                if pinned is None or pinned in DELIBERATELY_WRONG:
-                    continue
-                actual = sha256_file(delivery)
-                if actual != pinned:
-                    problems.append(
-                        f"{case_path.name} [{case_id}]: pins {pinned}\n"
-                        f"    {delivery.relative_to(ROOT)} is {actual}")
+                problems.extend(_delivery_problems(case, delivery))
 
     for envelope_path in sorted(FILES.glob("**/*.json")):
         try:
@@ -100,11 +117,41 @@ def main() -> int:
     return 0 if not problems else 1
 
 
-def _pin_for(case_text: str, delivery: Path) -> str | None:
-    """The digest the case file pins for this delivery record, if any."""
-    for match in re.finditer(r'delivery_sha256: "?(sha256:[0-9a-f]{64})"?', case_text):
-        return match.group(1)
-    return None
+def _requests(value):
+    """Visit each request in this case, including sequence steps."""
+    if isinstance(value, dict):
+        if "delivery_sha256" in value:
+            yield value
+        for child in value.values():
+            yield from _requests(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _requests(child)
+
+
+def _delivery_problems(case: dict, delivery: Path) -> list[str]:
+    """Compare each current case's pins with its own delivery and artifacts."""
+    document = yaml.safe_load(delivery.read_text(encoding="utf-8"))
+    problems = []
+    for request in _requests(case):
+        if request.get("delivery_id") != document.get("id"):
+            continue
+        pinned = request.get("delivery_sha256")
+        if pinned not in DELIBERATELY_WRONG and pinned != sha256_file(delivery):
+            problems.append(
+                f"{case['id']}: {delivery} pins {pinned}, "
+                f"found {sha256_file(delivery)}")
+        for name, digest in request.get("artifact_sha256", {}).items():
+            if digest in DELIBERATELY_WRONG:
+                continue
+            artifact = delivery.parent / name
+            if not artifact.is_file():
+                problems.append(f"{case['id']}: pinned artifact is absent: {artifact}")
+            elif digest != sha256_file(artifact):
+                problems.append(
+                    f"{case['id']}: {artifact} pins {digest}, "
+                    f"found {sha256_file(artifact)}")
+    return problems
 
 
 if __name__ == "__main__":

@@ -21,9 +21,31 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2] / "repository"
+
+def core_root() -> Path:
+    """The Core checkout this script measures.
+
+    The script lives in the fixing workbench, beside the Core checkout, and
+    is published inside a Core checkout under ``workbench/``. So the root is
+    found, not assumed: the nearest ancestor that *is* a Core checkout, or
+    else the nearest ancestor with a Core checkout named ``repository``
+    beside it.
+    """
+    here = Path(__file__).resolve()
+    for candidate in here.parents:
+        if (candidate / "system" / "OPERATOR.md").is_file():
+            return candidate
+    for candidate in here.parents:
+        sibling = candidate / "repository"
+        if (sibling / "system" / "OPERATOR.md").is_file():
+            return sibling
+    raise SystemExit("no Core checkout found above this script")
+
+
+ROOT = core_root()
 sys.path.insert(0, str(ROOT / "tools"))
 
+from learning_os.derive.validation.plan_rigor import ChecksPlanRigor  # noqa: E402
 from learning_os.domain.route_identity import route_with_identity  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
 
@@ -50,6 +72,7 @@ def main() -> int:
 
     buckets: collections.Counter = collections.Counter()
     examples: list[dict] = []
+    compact_bindings_skipped = 0
     for smid, study_map in repo.study_maps.items():
         unit = repo.units.get(study_map.unit_id)
         module_id = str(unit.data.get("module_id") or "") if unit is not None else ""
@@ -58,16 +81,20 @@ def main() -> int:
         module = repo.modules.get(module_id)
         if module and module.get("status") == "archived":
             continue
+        authored_routes = ChecksPlanRigor()._authored_route_bindings(study_map)
         for stage in study_map.data.get("stages", []) or []:
             if not isinstance(stage, dict):
                 continue
-            for resource in stage.get("resources", []) or []:
+            for index, resource in enumerate(stage.get("resources", []) or []):
                 if not isinstance(resource, dict):
                     continue
                 if resource.get("kind") == "reference":
                     continue
                 if isinstance(resource.get("route_id"), str) and resource["route_id"]:
                     continue  # bound: references.py owns the ownership error
+                if (str(stage.get("id") or ""), index) in authored_routes:
+                    compact_bindings_skipped += 1
+                    continue  # compact route bindings resolve before the fallback
                 source_id = resource.get("source_id")
                 locator = str(resource.get("locator") or "")
                 if not isinstance(source_id, str):
@@ -92,6 +119,7 @@ def main() -> int:
 
     print(json.dumps({
         "buckets": dict(buckets),
+        "compact_route_bindings_skipped": compact_bindings_skipped,
         "examples": examples,
     }, indent=2, default=str))
     return 0
