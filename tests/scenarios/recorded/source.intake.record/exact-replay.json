@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "source.intake.record",
               "channel": "operator",
-              "intent_sha256": "sha256:17190b14df56a69fd8cd6c9d38cfb5f8089fb39e2ed095cf8c857340b7f4a65b",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -63,11 +63,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:17190b14df56a69fd8cd6c9d38cfb5f8089fb39e2ed095cf8c857340b7f4a65b"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:17190b14df56a69fd8cd6c9d38cfb5f8089fb39e2ed095cf8c857340b7f4a65b",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -109,19 +109,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "21c7ca1a6a263fe4afc40b54de6a2c07c529831fbcd095417a1caa38a9d65014",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d26f03b27075a8c3c2956f0c8510fa8239bc3895c9a7f1e735cdd19db90035a6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "26afcbc7ce11ad93d73112a580e769f6cbba85f3e4da43d0be147956b368b449",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/sources.yaml": {
@@ -181,19 +181,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "21c7ca1a6a263fe4afc40b54de6a2c07c529831fbcd095417a1caa38a9d65014",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d26f03b27075a8c3c2956f0c8510fa8239bc3895c9a7f1e735cdd19db90035a6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "26afcbc7ce11ad93d73112a580e769f6cbba85f3e4da43d0be147956b368b449",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/sources.yaml": {
@@ -215,19 +215,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "21c7ca1a6a263fe4afc40b54de6a2c07c529831fbcd095417a1caa38a9d65014",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "d26f03b27075a8c3c2956f0c8510fa8239bc3895c9a7f1e735cdd19db90035a6",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "26afcbc7ce11ad93d73112a580e769f6cbba85f3e4da43d0be147956b368b449",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/sources.yaml": {

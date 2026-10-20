@@ -26,7 +26,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\"ok\":true,\"touched\":[],\"owned_changes\":[],\"unrelated_changes\":[],\"committed\":false,\"pushed\":false,\"validation\":\"0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md\",\"ownership_conflicts\":[],\"session_id\":\"channel:operator\",\"client\":null,\"stale_paths\":[],\"stale_hours\":24,\"other_sessions\":{},\"session_closed\":false}\n",
+      "stdout": "{\"ok\":true,\"touched\":[],\"owned_changes\":[],\"unrelated_changes\":[],\"committed\":false,\"pushed\":false,\"validation\":\"0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md\",\"ownership_conflicts\":[],\"session_id\":\"channel:operator\",\"client\":null,\"stale_paths\":[],\"stale_hours\":24,\"other_sessions\":{},\"session_closed\":false}\n",
       "stdout_json": {
         "client": null,
         "committed": false,
@@ -41,7 +41,7 @@
         "stale_paths": [],
         "touched": [],
         "unrelated_changes": [],
-        "validation": "0 error(s), 9 warning(s) — OK; warning list: generated/reports/validation-report.md"
+        "validation": "0 error(s), 13 warning(s) — OK; warning list: generated/reports/validation-report.md"
       },
       "step": 0,
       "transport": "cli"
@@ -57,7 +57,7 @@
             "KEY2": {
               "capability": "capture.create",
               "channel": "operator",
-              "intent_sha256": "sha256:e570495649e6eaa531e6327a55e968d393a11d09c1618785ef8a15429ad7bb8b",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -108,11 +108,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:e570495649e6eaa531e6327a55e968d393a11d09c1618785ef8a15429ad7bb8b"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:e570495649e6eaa531e6327a55e968d393a11d09c1618785ef8a15429ad7bb8b",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -154,19 +154,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cfb1374bdec9abf682c7eb8c8b71c0db60324ba95ced91c4feb2b4dfc40dbec8",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ae832d28093aa490b763e2c76f9cfc967e642f2e28266f33ce8e6ff206fd4d7b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7f6e13e1eab39f2ad14d6aab09624854717161a1c5d89cedf83ded2fef29f7b6",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
@@ -245,19 +245,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cfb1374bdec9abf682c7eb8c8b71c0db60324ba95ced91c4feb2b4dfc40dbec8",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ae832d28093aa490b763e2c76f9cfc967e642f2e28266f33ce8e6ff206fd4d7b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7f6e13e1eab39f2ad14d6aab09624854717161a1c5d89cedf83ded2fef29f7b6",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
@@ -282,19 +282,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "cfb1374bdec9abf682c7eb8c8b71c0db60324ba95ced91c4feb2b4dfc40dbec8",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ae832d28093aa490b763e2c76f9cfc967e642f2e28266f33ce8e6ff206fd4d7b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7f6e13e1eab39f2ad14d6aab09624854717161a1c5d89cedf83ded2fef29f7b6",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {

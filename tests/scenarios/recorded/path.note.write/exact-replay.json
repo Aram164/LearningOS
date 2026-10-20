@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "path.note.write",
               "channel": "operator",
-              "intent_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:bb6002e99aad85cb3fa1228d8cf9fdce0bb77548b38f3dfe734535c1c42a71ce",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "89287884cbf3612bb8d081c47b06276834262b430607620d3271ca9a9097ce72",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5376486d50500f5d75d12302f50d2ece9b892a145da4d607e5e387ae93d55095",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dc8343a81066dddd939f2346495ab4cb73d711614f511501092fd5061f113817",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/paths/stage-demo-path-notes.md": {
@@ -183,19 +183,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "89287884cbf3612bb8d081c47b06276834262b430607620d3271ca9a9097ce72",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5376486d50500f5d75d12302f50d2ece9b892a145da4d607e5e387ae93d55095",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dc8343a81066dddd939f2346495ab4cb73d711614f511501092fd5061f113817",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/paths/stage-demo-path-notes.md": {
@@ -217,19 +217,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "89287884cbf3612bb8d081c47b06276834262b430607620d3271ca9a9097ce72",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "5376486d50500f5d75d12302f50d2ece9b892a145da4d607e5e387ae93d55095",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dc8343a81066dddd939f2346495ab4cb73d711614f511501092fd5061f113817",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "work/active/workspace-demo/paths/stage-demo-path-notes.md": {

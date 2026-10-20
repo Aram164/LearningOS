@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "project.update",
               "channel": "operator",
-              "intent_sha256": "sha256:675da3a54e4877987951b4b23427f43149a8b1b41206d4a69520a32eef37ab52",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:675da3a54e4877987951b4b23427f43149a8b1b41206d4a69520a32eef37ab52"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:675da3a54e4877987951b4b23427f43149a8b1b41206d4a69520a32eef37ab52",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99af0175af31d6c9c238bbfe4c41338e91b701835b66da090c5c49531c5e2c1c",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1b712980af08ddf1e31a59b614a2a28c547b83d667fbc5eed5854d4fca50a81b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6187a9dab9ad7ab04d1f779bfcb1c48e9c3f5d510579f8606af86fb0ee840285",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-demo.yaml": {
@@ -181,19 +181,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99af0175af31d6c9c238bbfe4c41338e91b701835b66da090c5c49531c5e2c1c",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1b712980af08ddf1e31a59b614a2a28c547b83d667fbc5eed5854d4fca50a81b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6187a9dab9ad7ab04d1f779bfcb1c48e9c3f5d510579f8606af86fb0ee840285",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-demo.yaml": {
@@ -215,19 +215,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "99af0175af31d6c9c238bbfe4c41338e91b701835b66da090c5c49531c5e2c1c",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "1b712980af08ddf1e31a59b614a2a28c547b83d667fbc5eed5854d4fca50a81b",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6187a9dab9ad7ab04d1f779bfcb1c48e9c3f5d510579f8606af86fb0ee840285",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "projects/registry/project-demo.yaml": {

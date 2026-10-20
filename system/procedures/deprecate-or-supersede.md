@@ -117,7 +117,7 @@ deprecated concept-variance
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Rebuild the generated outputs

@@ -388,7 +388,7 @@ $ cat > sources/collections/probe-essays.yaml <<'EOF'
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Revise one entry why through its gateway

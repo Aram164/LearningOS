@@ -74,7 +74,7 @@ decided correction (M-09) is to omit the line.
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-1 error(s), 10 warning(s) — FAIL
+1 error(s), 14 warning(s) — FAIL
 [1]
 ```
 
@@ -131,7 +131,7 @@ $ cat > work/active/workspace-probe/CONTEXT.md <<'EOF'
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```
 
 ## Eight active workspaces trip the warning

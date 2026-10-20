@@ -181,5 +181,5 @@ $ $H/los-assert-file generated/reports/health.md --absent
 
 ```scrut
 $ los validate | tail -n 1
-0 error(s), 10 warning(s) — OK
+0 error(s), 14 warning(s) — OK
 ```

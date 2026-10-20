@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "collection.entry.revise",
               "channel": "operator",
-              "intent_sha256": "sha256:804135c1bd70b72e81d640298c6cdaf8e19726dd8891906b4972f03f32260823",
+              "intent_sha256": "INTENT1",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -62,11 +62,11 @@
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:804135c1bd70b72e81d640298c6cdaf8e19726dd8891906b4972f03f32260823"
+              "subject_sha256": "INTENT1"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:804135c1bd70b72e81d640298c6cdaf8e19726dd8891906b4972f03f32260823",
+            "intent_sha256": "INTENT1",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -108,19 +108,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ac80890747f3d380c1430f5b01300043cfd5f69580620ec865a0333777594bfe",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "f84e9b448d53fdccca41dae8cd5ff3e647e81bfb5e0fd77e81fb17bfec7c903d",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "56f16a836a88bb2af7fc5a0370f8f8a5d44b71aa818ee7ac7376f571f7d5aad0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/collections/shelf.yaml": {
@@ -180,19 +180,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ac80890747f3d380c1430f5b01300043cfd5f69580620ec865a0333777594bfe",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "f84e9b448d53fdccca41dae8cd5ff3e647e81bfb5e0fd77e81fb17bfec7c903d",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "56f16a836a88bb2af7fc5a0370f8f8a5d44b71aa818ee7ac7376f571f7d5aad0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/collections/shelf.yaml": {
@@ -214,19 +214,19 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "ac80890747f3d380c1430f5b01300043cfd5f69580620ec865a0333777594bfe",
+              "sha256": "LEDGER1",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "f84e9b448d53fdccca41dae8cd5ff3e647e81bfb5e0fd77e81fb17bfec7c903d",
+              "sha256": "LEDGER2",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "56f16a836a88bb2af7fc5a0370f8f8a5d44b71aa818ee7ac7376f571f7d5aad0",
+              "sha256": "LEDGER3",
               "state": "file"
             },
             "sources/collections/shelf.yaml": {

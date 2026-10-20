@@ -162,5 +162,5 @@ wrote generated/study-plans.md
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $LOS_REPO/tools/validate.py --root "$LOS_FX" --compact | grep -o "[0-9]* error(s), [0-9]* warning(s) — OK"
-0 error(s), 9 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```
