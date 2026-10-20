@@ -29,19 +29,10 @@ _PLACEHOLDER_DIGEST = "sha256:" + "0" * 64
 _DIGEST_RE = re.compile(r"sha256:[a-f0-9]{64}")
 
 
-def _refused_first_twelve(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
-    return list(errors[:12])
 
 
-def _refused_all(errors: list) -> list[str]:
-    """The exact commit-refusal lines: every engine issue, verbatim."""
-    return list(errors)
 
 
-def _refused_next_action(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the rejection header plus the first twelve engine issues, verbatim."""
-    return ["los: next-action update rejected by validation", *errors[:12]]
 
 
 @register("module.attempt.record", kind="command")

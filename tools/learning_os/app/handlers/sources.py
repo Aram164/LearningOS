@@ -15,7 +15,6 @@ import yaml
 
 from learning_os.app.claim_admission import lineage_artifacts
 from learning_os.app.context import OpContext
-from learning_os.app.encoders import dumps_indented
 from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
@@ -301,11 +300,6 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
     def finish_collection_entry_revise(confirmation):
         return {"ok": True, **confirmation}
 
-    def refused_stdout_collection_entry_revise(errors):
-        return dumps_indented({
-            "ok": False,
-            **({"errors": [str(error) for error in errors]} if errors else {}),
-        })
 
     return Result(
         ResponsePayload({"ok": True}, finish_collection_entry_revise({}), confirmation='merge'),
@@ -773,11 +767,6 @@ def source_intake_record(ctx: OpContext, req: dict) -> Result:
     def finish_source_intake_record(confirmation):
         return {"ok": True, **confirmation}
 
-    def refused_stdout_source_intake_record(errors):
-        return dumps_indented({
-            "ok": False,
-            **({"errors": [str(error) for error in errors]} if errors else {}),
-        })
 
     return Result(
         ResponsePayload({"ok": True}, finish_source_intake_record({}), confirmation='merge'),
@@ -1401,11 +1390,6 @@ def source_record_revise(ctx: OpContext, req: dict) -> Result:
     def finish_source_record_revise(confirmation):
         return {"ok": True, **confirmation}
 
-    def refused_stdout_source_record_revise(errors):
-        return dumps_indented({
-            "ok": False,
-            **({"errors": [str(error) for error in errors]} if errors else {}),
-        })
 
     return Result(
         ResponsePayload({"ok": True}, finish_source_record_revise({}), confirmation='merge'),

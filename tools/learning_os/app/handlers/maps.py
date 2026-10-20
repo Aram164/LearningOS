@@ -277,10 +277,6 @@ def _plan_map_replacement(
     return merged, diff, problems
 
 
-def _on_commit_refused_unit_map_import(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the header plus twelve issues."""
-    return ["los: study map import rejected by validation",
-            *(str(issue) for issue in errors[:12])]
 
 
 @register("unit.map.import", kind="command")

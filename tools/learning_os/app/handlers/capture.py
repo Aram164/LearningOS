@@ -40,9 +40,6 @@ def _human_capture(payload: dict) -> str:
     )
 
 
-def _on_commit_refused(errors: list) -> list[str]:
-    """The exact commit-refusal lines: the first twelve engine issues, verbatim."""
-    return list(errors[:12])
 
 
 def _human_garden_seed(payload: dict) -> str:
@@ -488,10 +485,6 @@ def shelving_prepare(ctx: OpContext, req: dict) -> Result:
     )
 
 
-def _on_commit_refused_apply(errors: list) -> list[str]:
-    """The exact apply refusal lines: the rollback note plus the first twelve engine issues."""
-    return ["los: approved shelving changes failed validation and were rolled back",
-            *errors[:12]]
 
 
 def _approved_destination(root: Path, item: dict) -> Path | None:
