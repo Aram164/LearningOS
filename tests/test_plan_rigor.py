@@ -191,10 +191,13 @@ class _ScopeChecker(ChecksPlanRigor):
     expanded — the authored bytes a compact row was written in.
     """
 
-    def __init__(self, source_map, *, resources, authored=None, modules=None):
+    def __init__(self, source_map, *, resources, authored=None, modules=None,
+                 unit_data=None):
         self.repo = SimpleNamespace(
             root=Path("/nonexistent-scope-checker"),
-            units={"unit-demo": SimpleNamespace(data={"module_id": "module-demo"})},
+            units={"unit-demo": SimpleNamespace(data={
+                "module_id": "module-demo", **(unit_data or {}),
+            })},
             study_maps={"sm": SimpleNamespace(
                 path="study-map.yaml",
                 unit_id="unit-demo",
@@ -296,6 +299,72 @@ def test_a_resource_matching_a_module_route_by_source_and_locator_is_not_reporte
     )
     checker.check_plan_rigor()
     assert checker.warnings == []
+
+
+def test_spelling_a_sibling_units_material_does_not_bypass_route_ownership():
+    sibling_route = {**_demo_route(), "unit_id": "unit-sibling"}
+    checker = _ScopeChecker(
+        _demo_source_map(sibling_route),
+        resources=[{
+            "kind": "read", "source_id": "source-demo-book",
+            "locator": sibling_route["locator"],
+        }],
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+
+
+def test_shared_material_still_resolves_when_the_owning_unit_declares_it():
+    own = _demo_route()
+    sibling = {**own, "unit_id": "unit-sibling"}
+    checker = _ScopeChecker(
+        _demo_source_map(own, sibling),
+        resources=[{
+            "kind": "read", "source_id": "source-demo-book",
+            "locator": own["locator"],
+        }],
+    )
+    checker.check_plan_rigor()
+    assert checker.warnings == []
+
+
+@pytest.mark.parametrize("field", ["source_selections", "scope_sources"])
+def test_scope_message_preserves_the_units_recorded_disposition(field):
+    checker = _ScopeChecker(
+        _demo_source_map("unit-demo"),
+        resources=[{
+            "kind": "read", "source_id": "source-demo-book", "locator": "§9",
+        }],
+        unit_data={field: [{"source_id": "source-demo-book"}]},
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-SCOPE-UNBOUND"]
+    assert "source disposition is recorded" in checker.warnings[0][1]
+    assert "no route for this unit" in checker.warnings[0][1]
+
+
+def test_scope_message_distinguishes_module_adoption_from_unit_disposition():
+    checker = _ScopeChecker(
+        _demo_source_map("unit-demo"),
+        resources=[{
+            "kind": "read", "source_id": "source-demo-book", "locator": "§9",
+        }],
+    )
+    checker.check_plan_rigor()
+    message = checker.warnings[0][1]
+    assert "module declares this source" in message
+    assert "unit has no recorded source disposition" in message
+    assert "adopt the source" not in message
+
+
+def test_scope_message_does_not_claim_an_unnamed_source_was_not_adopted():
+    checker = _ScopeChecker(
+        _demo_source_map(),
+        resources=[{"kind": "exercise", "locator": "attachments/own-work.md"}],
+    )
+    checker.check_plan_rigor()
+    assert "no source_id is named" in checker.warnings[0][1]
+    assert "module adoption cannot be checked" in checker.warnings[0][1]
 
 
 def test_a_reference_row_may_point_outside_the_module_map():
