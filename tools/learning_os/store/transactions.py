@@ -67,6 +67,7 @@ from learning_os.store.diagnostics import conventions as diag_conventions
 from learning_os.store.diagnostics import tracer as diag_tracer
 from learning_os.store.diagnostics.store import bind_store as _bind_diag_store
 from learning_os.store.evidence import default_authority_root as _default_authority_root
+from learning_os.store.evidence import dump_idempotency_entries as _dump_idempotency_entries
 from learning_os.store.evidence import idempotency_ledger_path as _idempotency_ledger_path
 from learning_os.store.evidence import load_idempotency_entries as _load_idempotency_entries
 from learning_os.store.evidence import replay_for_request
@@ -136,19 +137,6 @@ def parse_expected_revisions(values: Sequence[str] | None) -> dict[str, int]:
 
 def _sha256_bytes(value: bytes | None) -> str | None:
     return hashlib.sha256(value).hexdigest() if value is not None else None
-
-
-def _dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
-    return yaml.safe_dump(
-        {
-            "schema_version": 1,
-            "type": "transaction-idempotency-ledger",
-            "entries": {key: dict(entries[key]) for key in sorted(entries)},
-        },
-        sort_keys=False,
-        allow_unicode=True,
-        width=100,
-    )
 
 
 def _safe_relative(root: Path, path: Path) -> str:
