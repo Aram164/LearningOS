@@ -1,0 +1,184 @@
+# T07 — The UI consuming a canvas world
+
+**4/4 passed.**
+
+## PASS — u1-synthetic-note-in-the-projection
+
+*Intent:* Build a synthetic world and file a synthetic durable note in it.
+
+**write_exit**
+
+```
+0
+```
+
+**generate_exit**
+
+```
+0
+```
+
+**note_in_projection**
+
+```
+true
+```
+
+**projection_keys**
+
+```
+[
+ "atlas_question",
+ "attachments",
+ "authorship",
+ "concepts",
+ "contexts",
+ "domain",
+ "evidence",
+ "id",
+ "material_analysis",
+ "path",
+ "reviewed",
+ "role",
+ "semantic_review",
+ "sources",
+ "state",
+ "summary",
+ "supersedes",
+ "title",
+ "transcription",
+ "type"
+]
+```
+
+**has_body_key**
+
+```
+false
+```
+
+**summary**
+
+```
+The opening paragraph, which the projection summarises.
+```
+
+## PASS — u2-the-ui-consumes-the-canvas-world
+
+*Intent:* Run the UI's own projection pass against the canvas world.
+
+**exit_code**
+
+```
+0
+```
+
+**output_tail**
+
+```
+library-finder: MaterialTree OK — collation, hidden names and containment
+library-finder: core projection OK — 1 sources, all reachable across 8 folders
+library-finder: fixture OK — 3 sources across 17 folders
+```
+
+**consumed_canvas_world**
+
+```
+true
+```
+
+**note**
+
+```
+the UI's own library-finder passed over the canvas world's projection; the real checkout's projection was restored afterwards
+```
+
+## PASS — u3-what-the-ui-can-reach-of-the-note
+
+*Intent:* Measure what a UI-only consumer can see of the synthetic note.
+
+**note_body_chars**
+
+```
+494
+```
+
+**summary_chars**
+
+```
+55
+```
+
+**share_reachable**
+
+```
+0.111
+```
+
+**body_string_present_in_projection**
+
+```
+false
+```
+
+**summary_present_in_projection**
+
+```
+true
+```
+
+**ui_rendered_note_facts**
+
+```
+[
+ "Authorship",
+ "Lifecycle",
+ "Semantic review",
+ "Recorded sources",
+ "material_analysis",
+ "Recorded evidence"
+]
+```
+
+**note**
+
+```
+the projection carries the note's identity, summary and provenance; the prose itself is not in it, so a UI-only consumer cannot read what the librarian wrote
+```
+
+## PASS — u4-the-ui-suite
+
+*Intent:* Run the UI's own test suite in the clone.
+
+**exit_code**
+
+```
+0
+```
+
+**highlights**
+
+```
+[
+ "library-finder: core projection OK \u2014 260 sources, all reachable across 170 folders",
+ "library-finder: fixture OK \u2014 3 sources across 17 folders",
+ "Abilities model OK: 23 groups (contracts, plane, claims, Review queue, drafts).",
+ "Independent Atlas presentation review OK: 180 DAGs, fold claims/anchors/reopening, hidden edges, 12 large fits and 100 anchored zooms.",
+ "Ability query contract mirror OK: same shape, drift, absence and malformed schema",
+ "122 direct module tests passed",
+ "all tests passed",
+ "38 live-app-check tests passed",
+ "\u2714 UI CI policy (0.822166ms)",
+ "\u2714 locale policy detects comparisons, multiline calls and case conversion (2.9185ms)",
+ "\u2714 source code uses shared locale helpers (101.265291ms)",
+ "Sorting OK",
+ "build-fingerprint: all assertions passed (A-G verified in disposable workspace)",
+ "Response differential OK: 12750 cases, 13 endpoints; 47 malformed values rejected by producer shape"
+]
+```
+
+**note**
+
+```
+the UI's own suite, run in the isolated clone with node_modules present
+```

@@ -1,0 +1,91 @@
+01ea1950d04f332222a7bb39cede6bba923c532582437f3a7cd00f680a9a04c2  los-canvas/EVIDENCE.md
+08c66089af4a8906ef2888fe5ebf94e93e75147302a4a9f82605372b44bc1da2  los-canvas/after-fix/T01 — Operator entry points.json
+95f0d39e8c226fcc1c7a5f5b6b38f4a1f57bedc81c6a11734d7b896c8f49382c  los-canvas/after-fix/T01 — Operator entry points.md
+5759b30b7180c334ea9c1fa27c07672fe0aab564b274ba501aca00b97bff71e7  los-canvas/after-fix/T02 — The operator's filing journey.json
+2830eb63fd4e3a102a5a89d61e1d0044c6d530aa8c997c7a4bae7eda212c05d9  los-canvas/after-fix/T02 — The operator's filing journey.md
+fbea6b9cdb4fe4e0c4124d04d5a992c62f786734b8c7dc743d9174c20946de4e  los-canvas/after-fix/T03 — Adversarial probes.json
+7f1ac0912ed47375cf60fd669a91f07c80c1c5b774a8b02786c12109c87dac0e  los-canvas/after-fix/T03 — Adversarial probes.md
+3c8b916e3c27dab8575d809a33fdffd5c145285d9d055efbc3d18d6a6f46b187  los-canvas/after-fix/T04 — The consumption seam.json
+b92124d24e6ea93c4558008d0674f612b7b444ecadf993b583c3fd8f76164f18  los-canvas/after-fix/T04 — The consumption seam.md
+9891d0ca3bab600211af7c115f586297553e8daa619622282a55d67268953a8a  los-canvas/after-fix/T05 — Workflow 27: the Master's promotion.json
+1a6c06d6e3dd81bf6ca09a49e8999cb609b06f6440c49c9177994d7ecf618ab7  los-canvas/after-fix/T05 — Workflow 27: the Master's promotion.md
+613e1fbf00b9c77427fff70200e4afdf2d18936d8ef5b2a4134bdb7219514df0  los-canvas/after-fix/T06 — Workflow 24: turning the semester.json
+9c09d36e1d7973000c4178005c9e53a09b3948e4d132e216faeb1cc702bf5be4  los-canvas/after-fix/T06 — Workflow 24: turning the semester.md
+5339ed03b722a405ef5a863d7813722f0272758ffd9a764467adeb327e9ecbd0  los-canvas/after-fix/T07 — The UI consuming a canvas world.json
+d0910ae612d08e5ee3b9d5557b8ff00f44629dce9347b568d13b846d27b5f1e8  los-canvas/after-fix/T07 — The UI consuming a canvas world.md
+434edae21e201404a89425a17d7cd7037712478fe9804fae30274611523bc2e3  los-canvas/after-fix/canvas-run.txt
+33488850f326c85ecb36f22699ac873089aea4ae83b8c74e7c83258874ba0054  los-canvas/canvas/README.md
+c7fbabfc05b7c38a501d0428487cb61498f19ce6f540f306339c475d1be79198  los-canvas/canvas/bootstrap.sh
+7de94a9a73ae7e9af649a58085bc79b40ba5d8b5f0cfe85fe6c8bcad41d6288f  los-canvas/canvas/lib/canvaslib.py
+9920cfb891c283f3a9249c04725072ff3ec57bef4a76f87c275813ba8f5910be  los-canvas/canvas/lib/runner.py
+e4c325c3b2e982a65782057dee5428dbcd6ca4d8ff15f4a5586f3dc566ba4f8e  los-canvas/canvas/probes/README.md
+0f30cc099bed80f92454fc685f76d294c594e3ea704e6e0c365607856f9c060d  los-canvas/canvas/probes/probe_channel.py
+dac74b0fe9c4d55a532b95a300dba79d6e2c07411dddd732ad9f3e2c48eda7c0  los-canvas/canvas/probes/probe_codex_msg.py
+853c973a7d9d5cc94994b43c51bbfa62deffa1c831fb7eecf045b6ce9b961795  los-canvas/canvas/probes/probe_e1.py
+ff7e59fb60d7ec4ec8e45ee926c386c1b32e2a94d9d621077a156a5336579d63  los-canvas/canvas/probes/probe_e1b.py
+ebd658dbda1607322187f1d716c46247ae0be8131cb7758baef4f98a7a796ca8  los-canvas/canvas/probes/probe_e1c.py
+56e27efb8010955316dbfc7a3c554660f07dcd7d6ecf61f93f85b0c2b0c11a36  los-canvas/canvas/probes/probe_e1d.py
+b752086d04eac14a3b511b76cfac3339a30fc5d0f96518443ff49f985e507899  los-canvas/canvas/probes/probe_e1e.py
+884815d1a2d4cfd56666585e2c6a90efedc63a4f048dcb698ff4a3480601a763  los-canvas/canvas/probes/probe_e1f.py
+0c6c807a094204a7b59990cee3b00e4c0dad04d55799d290b931b9c6b8f84513  los-canvas/canvas/probes/probe_e1g.py
+fb8f382dea275e43c6c6f71b3ad4d27920dd9151f0fca50d4cb33a02638eeee3  los-canvas/canvas/probes/probe_e1h.py
+5de4318725fa67e527b1624e1c5d0b7d8ed5afc5d80bd14bf6bb239df37578be  los-canvas/canvas/probes/probe_e1i.py
+18c356302f16da656ddbf472a79c49558cd7ba50d107d7537dbc5868de2b6a45  los-canvas/canvas/probes/probe_scope_fixing.py
+1a8bc86a8f37d4c922597af6353fec6f577c67b907de639826a7663be791f718  los-canvas/canvas/probes/probe_scope_gap.py
+0da1a9b03d4c50ecf2bbd0c58e23b2dffffe32099e4567c11266dfd1a5767be6  los-canvas/canvas/run-all.sh
+eb464705ca0dc37347b4fc5d9cb368aa1da6b010bae29fc7f314b37d8e8d3269  los-canvas/canvas/t01_entry_points.py
+cf04556b8866eba770420d5947945c74dfd961f94a91db0e808e31a7356a4264  los-canvas/canvas/t02_filing_journey.py
+12465e400d4c86574c03bb62fcd812e8c16666cb4b2566bb04592a839123d68c  los-canvas/canvas/t03_adversarial.py
+e660a94b2c174b6adb78e936a4ccfeb9de6f7c4f45771e9fd1f8d9f13244dd1b  los-canvas/canvas/t04_consumption_seam.py
+c5f6e6d39c8229883c91eb543f0694d1fb77a82e90265c2352e49f817bcdb751  los-canvas/canvas/t05_masters_promotion.py
+7907ab1d6661838a72a9b5b890b95b59d7d9fe6d9c79e99f25a2a808b51e4b6c  los-canvas/canvas/t06_term_boundary.py
+109b201d1dd6903c41d39a9f52ef849d55352bbf37466afc01586bc83219ee1f  los-canvas/canvas/t07_ui_consumes_canvas.py
+341965ab23ead6c886103d1978183d44810e200e72a68db1e61075c290ae0011  los-canvas/fix-f01-2026-10-20/FIXING-PLAN.md
+4719cd4d1fcd05883fc0e013e5e969b68814b7db3b391d739d012cfb915b2ec1  los-canvas/fix-f01-2026-10-20/OUTCOME.md
+a81ebbca5b61ecb0152d926f67d9f662b3dfb3d504c6a461adab7d72d9a08084  los-canvas/fix-f01-2026-10-20/breakdown.py
+7cce58605718dd6969b11da34b80862faf576fcb77526293398cb3537c1ec660  los-canvas/fix-f01-2026-10-20/check_scope_rule.py
+4098d503b15db22fc2813b74ce4d386ec1d177405922243e46e966e844688ad5  los-canvas/fix-f01-2026-10-20/compare_rules.py
+73a7ba51ff4eadc403364b02bfd10c18f8aadbb0fa3013cb6c586c75d1729fa5  los-canvas/fix-f01-2026-10-20/granularity.py
+1454098b0d16c79c6d7b8cdf0573279328e194fb22181fe2476e093cdf171668  los-canvas/fix-f01-2026-10-20/measure_scope.py
+89157a40de33c464e2e36dc9f9898aa67e254739c872464ec494fc415287de80  los-canvas/fix-f01-2026-10-20/rebuild_branch.sh
+7d97c019f37a4fb8acc622f80d0e1cc913f9623203418e297a0c694b4e132467  los-canvas/fix-f01-2026-10-20/repro_part_a.py
+aa18286545e09e75beda0dd4c632c313f82ce5cc3905928ffde5d57a32740cca  los-canvas/fix-f01-2026-10-20/run_scope_probe.py
+e0ebed8143d8c3c8df5910e59018a4aa5f62365a17e92cadd2535e7ce78f3d65  los-canvas/fix-f01-2026-10-20/scenario-case/note.create/body-with-frontmatter/body.bin
+60f35a16390a0902541348016b50373b0f670eb1fdf4fd8bec615143a33e780d  los-canvas/fix-f01-2026-10-20/split_by_cause.py
+6e97fff5ef3acd00e6d9d345007e0e7e75c3f2e4fd09109fa7559640eb026d4c  los-canvas/fix-f01-2026-10-20/split_transcripts.py
+13e83a9ef77f01f8909f1096e89ac2d8c5025a9abaf6a9ebb3808743051855b7  los-canvas/reports/FINDINGS.md
+7f1a1d950138d999dacb9cdc104e2c937d2d3dd4f6bf32658b7e136bac646eda  los-canvas/reports/FIX-BRIEF-F01.md
+7803c13deeaec33eeb23e3e4b723a9aff2894d730bc352ec8b1533bb08359392  los-canvas/reports/canvas-final-run.txt
+5162ba1315b1eced00490b8bbd1bcd5e6f4d1487dabc7e49fda20c41036e212e  los-canvas/reports/capability-schemas/atlas.question.save.json
+0c2639eeb5be40ff47a376a743b829f5f6cbe5d92c60973847ccebf5ae7309d3  los-canvas/reports/capability-schemas/collection.entry.revise.json
+f876edb1cb154c545d9a4c78c7187452bdde9f70f37bd81d04a4679561019df8  los-canvas/reports/capability-schemas/concept.relations.change.json
+488011ae34ac61516ea38a35a6ca5d110fd071e62043a0a1f2f3fcaed9d9b7ef  los-canvas/reports/capability-schemas/learner.observation.append.json
+0c8c8fb20cb7d2ac633e15da65ac9dce270ea8aa6009213f459d9b4ba9178507  los-canvas/reports/capability-schemas/learner.stage-result.append.json
+e01257d87989c2b0a5a2a4e13f9d36885ca2f21ef45bb775094deedc49921ad1  los-canvas/reports/capability-schemas/module.materials.compact.json
+70a4346e3b124c42c44b51b7f56cedf7f19eea91c1a21a44d7140db0ad836ae5  los-canvas/reports/capability-schemas/module.plan.import.json
+573cfd87f75f9de2f2e660035f764d21ed70b0a1e1e8fa3366479afe851e3015  los-canvas/reports/capability-schemas/note.evidence.add.json
+97276290e2ee9fb62dfc17348657202b352c8e75ca34e76126544c762175d005  los-canvas/reports/capability-schemas/review.apply.json
+4ca2cbb517edc1f46373057202e79738efb6a6bf9fee2329631fd37680dc20ff  los-canvas/reports/capability-schemas/review.prepare.json
+2b7c681e3194e85f630d39b3e62ffcd645eb6dcda7ee8c89f5fcd616a87d926d  los-canvas/reports/capability-schemas/route.patch.json
+4768777c42f0737e9d27cfad8f1a5351b2853d91bc840b008926ba0366b7d7ac  los-canvas/reports/capability-schemas/source.feedback.record.json
+bff9833f316c4a74b609922c910e2b0d4c379c4ee3b58bb77f0699a7517ee8f8  los-canvas/reports/capability-schemas/stage.note.write.json
+31617ff4e8663e838dc45f15d15aa774227da5f0979369c44a836d995573a129  los-canvas/reports/capability-schemas/unit.map.import.json
+a19b68e5c25c5023c0123926cd82effd4cec5b3c72f86190754eba666d6a75f7  los-canvas/reports/capability-schemas/unit.plan.revise.json
+cea77dbca18b62a8b675c43b6b908e1e2708ef4e5f91de7fa3406e29e5f1139d  los-canvas/reports/capability-schemas/unit.source-selection.set.json
+118b7ade62524825adc96dea1b4ecbaf0da20325d830860f9ae157c3d16d5294  los-canvas/reports/clone-failures-rerun.txt
+c10e18baa23409cf4aa098622c8d6efc6dd3bdd84809e7ec7a78b88ccecc0cef  los-canvas/reports/clone-test-suite.txt
+43d1994a2d527f80f2d25df938c4c952e59009e9c4c01c4e6f2c2a6e10aba45e  los-canvas/reports/t01/T01 — Operator entry points.json
+8f9175a97d14a00aa2dae496593758df397b9fcff875101612c788f6977e93e1  los-canvas/reports/t01/T01 — Operator entry points.md
+7bbc839f533ad670a853372bd48004582abb9893ddd9e96fd2d8acb42a9e2b28  los-canvas/reports/t02/T02 — The operator's filing journey.json
+80984141a2ddf053446d199942dcc4ae90b1c9710593c5c7b9fb51ed2f1b04c7  los-canvas/reports/t02/T02 — The operator's filing journey.md
+59680ea7a76ab8689728ddde23031ee8a83203b9df71765ffdec2ef871978845  los-canvas/reports/t03/T03 — Adversarial probes.json
+66aa87cb8a89cc3dc8dc3d620cac848c23add86c3514ecbcbb7d55ca700a1c29  los-canvas/reports/t03/T03 — Adversarial probes.md
+81580f6ce6149247c3e2995adf51f2e26b1f76bdd1446c81f56c399808e3e22e  los-canvas/reports/t04/T04 — The consumption seam.json
+b92124d24e6ea93c4558008d0674f612b7b444ecadf993b583c3fd8f76164f18  los-canvas/reports/t04/T04 — The consumption seam.md
+8633c955e4aeec11126e2517ed91453c8ee6738bbc643208e15abac845527e44  los-canvas/reports/t05/T05 — Workflow 27: the Master's promotion.json
+ebc0c80902a08465a8c576b4c1c4c84c6b01ae01512b0320e9b76e444f7e39a2  los-canvas/reports/t05/T05 — Workflow 27: the Master's promotion.md
+c08f00750223532e954d726f78db3d1484073dd12d6ddbd33448a54f2818bef3  los-canvas/reports/t06/T06 — Workflow 24: turning the semester.json
+099abfe522b784d63d1c1f413775f1931ec6a0f92baeeabbdfc20ea00f786daa  los-canvas/reports/t06/T06 — Workflow 24: turning the semester.md
+368b1d7919afa11a7774fa2ca468f3f125e7887130166546a99e1537d3ecb1cb  los-canvas/reports/t07/T07 — The UI consuming a canvas world.json
+669f4009b5be0984f3dc39d1e0b93278d621589164793d79a74d581c852443c9  los-canvas/reports/t07/T07 — The UI consuming a canvas world.md
+9ab60ab278a2286f352670c102a9e11d69ccdd4312036b28d87e6aacbb6a87d8  los-canvas/reports/ui-test-suite.txt

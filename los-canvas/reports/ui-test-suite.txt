@@ -1,0 +1,1076 @@
+
+> learningos-ui@2.0.0 test
+> npm run build && npm run check:code && npm run typecheck:contracts && npm run contract:check && npm run test:installer && npm run test:modules && npm run test:ui && npm run test:live-app-check && npm run test:ci-policy && npm run test:build-fingerprint && npm run test:response-validation-diff
+
+
+> learningos-ui@2.0.0 build
+> node build.mjs
+
+build: esbuild bundled 113 modules -> plugin/main.js (3474155 bytes, sha256:5a6d7b81018693560fe6b517a23355426d75f01b363bc8c2696f97de69bef705)
+build: composed 31 style modules -> plugin/styles.css (198065 bytes, sha256:bda5d68a6d5a32bdc3014b1b9f41b4050622c080c0344e676456c26e9cfb7e7e)
+
+> learningos-ui@2.0.0 check:code
+> npm run typecheck && npm run check:source-graph && npm run test:manifest-store-indexes && npm run test:atlas-graph && npm run test:library-finder && npm run test:trace-context && npm run test:operations && npm run test:abilities
+
+
+> learningos-ui@2.0.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+
+> learningos-ui@2.0.0 check:source-graph
+> node scripts/check-source-graph.mjs
+
+Source graph OK: 125 TypeScript source modules reachable; 0 dependency cycles; 0 feature-to-view imports.
+
+> learningos-ui@2.0.0 test:manifest-store-indexes
+> node tests/test-manifest-store-indexes.js
+
+ManifestStore indexes OK: cached reads preserve filtering, search, and atomic failure semantics.
+
+> learningos-ui@2.0.0 test:atlas-graph
+> node tests/test-atlas-graph.js
+
+Atlas graph OK: layers, direction, provenance, remainders, cycles, and determinism.
+
+> learningos-ui@2.0.0 test:library-finder
+> node tests/test-library-finder.js
+
+library-finder: MaterialTree OK — collation, hidden names and containment
+library-finder: core projection OK — 260 sources, all reachable across 170 folders
+library-finder: fixture OK — 3 sources across 17 folders
+
+> learningos-ui@2.0.0 test:trace-context
+> node tests/test-trace-context.js
+
+test-trace-context: ok (6 groups)
+
+> learningos-ui@2.0.0 test:operations
+> node tests/test-operations.js
+
+test-operations: ok (2 groups)
+
+> learningos-ui@2.0.0 test:abilities
+> node tests/test-abilities-model.js && node tests/test-atlas-presentation-review.js
+
+Abilities model OK: 23 groups (contracts, plane, claims, Review queue, drafts).
+Independent Atlas presentation review OK: 180 DAGs, fold claims/anchors/reopening, hidden edges, 12 large fits and 100 anchored zooms.
+
+> learningos-ui@2.0.0 typecheck:contracts
+> tsc -p tsconfig.contract.json --noEmit
+
+
+> learningos-ui@2.0.0 contract:check
+> node scripts/check-contract.mjs && node scripts/check-contract-production.mjs && node tests/test-ability-contract-mirror.mjs && node scripts/generate-responses.mjs --check
+
+contract: mirror of core v15 verified
+contract: ability-context-v1 query schema mirror verified
+contract: gesture admission verified (16 UI capabilities, 6 of them ui-channel only: ability.candidate.append, concept.relations.change, learner.ability-observation.append, review.apply, review.prepare, unit.map.import; core also admits goal.decision.record, learner.observation.append)
+contract: manifest v15 lock verified (28 top-level keys)
+contract: production validator, types, metadata, and lock match Core schema closure regeneration
+Ability query contract mirror OK: same shape, drift, absence and malformed schema
+strict mode: missing type "array" for keyword "minItems" at "https://learningos.local/schema/candidate-source-comparison.schema.json#/properties/comparisons/items/properties/concept_ids/allOf/1" (strictTypes)
+strict mode: missing type "array" for keyword "minItems" at "https://learningos.local/schema/candidate-source-comparison.schema.json#/properties/source_assessments/items/allOf/0/then/properties/evidence" (strictTypes)
+Response contracts match Core: 13 endpoints, 7 resources
+
+> learningos-ui@2.0.0 test:installer
+> python3 tests/test_installer.py
+
+..........................................
+----------------------------------------------------------------------
+Ran 42 tests in 2.424s
+
+OK
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpv3fsi7on/vault/.obsidian/plugins/learningos-ui
+install: vault: /private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpv3fsi7on/vault (fixture/other)
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpgi33q9km/vault/.obsidian/plugins/learningos-ui
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpzjvba33k/vault/.obsidian/plugins/learningos-ui
+install: recovered interrupted plugin install: previous asset set restored ✓
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp9m0vnhsc/vault/.obsidian/plugins/learningos-ui
+install: recovered interrupted plugin install: verified promoted asset set ✓
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmptihug13l/vault/.obsidian/plugins/learningos-ui
+install: recovered interrupted plugin install: verified previous asset set ✓
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp2bldp0vo/vault/.obsidian/plugins/learningos-ui
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp2bldp0vo/vault/.obsidian/plugins/learningos-ui
+install: verified and transactionally promoted 4 shipped file(s) by sha256 ✓
+install: vault: /private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpu93sor6p/vault (fixture/other)
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp289p_a3b/vault/.obsidian/plugins/learningos-ui
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp317tkf7t/vault/.obsidian/plugins/learningos-ui
+install: recovered interrupted plugin install: removed incomplete marker ✓
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmp58fv3mnf/vault/.obsidian/plugins/learningos-ui
+install: recovered interrupted plugin install: verified previous asset set ✓
+install: copy 4 declared file(s): plugin/ -> /var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/tmpqgkzg23y/vault/.obsidian/plugins/learningos-ui
+install: verified and transactionally promoted 4 shipped file(s) by sha256 ✓
+
+> learningos-ui@2.0.0 test:modules
+> node tests/test-runtime-modules.js
+
+
+Direct TypeScript module tests
+  ok   source groups preserve repeated placements, missing identities and authored order
+  ok   material inspection keeps repeated stage placements and parent-route caches separate
+  ok   material span sends the exact canonical stage position to Core
+  ok   contract list parser accepts PyYAML and indented YAML sequences
+  ok   program-job uses the ordinary module detail with a visual badge
+  ok   ManifestStore loads a contract-valid v15 fixture
+  ok   ManifestStore loads a withdrawal deadline and registered exam attempt
+  ok   ManifestStore loads a withdrawal deadline and sat exam attempt
+  ok   ManifestStore refuses invalid calendar deadline without publishing a partial store
+  ok   ManifestStore refuses null deadline without publishing a partial store
+  ok   ManifestStore refuses unknown sitting field without publishing a partial store
+  ok   ManifestStore refuses undeclared attempt outcome without publishing a partial store
+  ok   ManifestStore exposes projected examination on every source row
+  ok   ManifestStore rejects a source row without examination
+  ok   ManifestStore exposes bounded source discovery and rejects dangling provenance
+  ok   readLibraryRecord carries examination for the placed-from-metadata badge
+  ok   ManifestStore rejects an old contract before exposing data
+  ok   ManifestStore rejects a manifest with a different schema byte hash
+  ok   ManifestStore rejects an Atlas edge without evidence
+  ok   ManifestStore rejects an undeclared Atlas evidence field
+  ok   ManifestStore retains the prior snapshot, marked stale, after a reload failure
+  ok   ManifestStore exposes exact artifact revision guards
+  ok   ManifestStore resolves approved material synthesis only through the unit index
+  ok   ManifestStore refuses a synthesis without its source-map revision basis
+  ok   ManifestStore refuses synthesis rows without derived projection status
+  ok   ManifestStore rejects extension fields in closed record rows
+  ok   ManifestStore rejects malformed secondary surfaces before exposing data
+  ok   ManifestStore and assertManifest enforce centralized single-validation ownership
+  ok   assertManifest rejects malformed artifact_revisions and project_aliases dictionaries
+  ok   ManifestStore refuses wrong schema-pin while generated Ajv accepts, clearing all state (S31-08)
+  ok   Omnisearch full-text search uses only the public command
+  ok   an empty contract-valid resume pointer returns Home
+  ok   ManifestStore excludes prospective and boundary rows from the normal projection
+  ok   bounded health, archive, and prospective-planning decoders fail closed
+  ok   a persisted unit-note draft keeps the revisions it was composed against
+  ok   recovering stage drafts into a unit-note draft is idempotent
+  ok   a completion tick certifies a criterion, not a position
+  ok   a mark survives a restart, and a legacy positional array upgrades once
+  ok   editing one relation is checked against the graph the edit produces
+  ok   ManifestStore assertion rejects a missing required array
+  ok   material angle detail is record-backed, independent, and collapsed by default
+  ok   ManifestStore list accessors remain safe before load
+  ok   archived modules and their learning records stay out of every UI lookup
+  ok   button groups gain arrow, Home, and End navigation without changing selection
+  ok   GatewayClient refuses empty and unreadable write confirmations
+  ok   GatewayClient accepts one confirmed JSON result and carries the snapshot guard
+  ok   GatewayClient endSession always names the UI session identity
+  ok   LosRuntime stamps every child with the UI session identity
+  ok   LosRuntime stamps every child with the UI client marker
+  ok   Gateway approval sorting matches Python Unicode code-point order
+  ok   a success response with the wrong identity is ambiguous, not a refusal
+  ok   extension fields in the closed V2 success envelope leave the outcome open
+  ok   ordinary vault and material openers refuse symlinks outside their roots
+  ok   VS Code file links preserve the exact local target
+  ok   direct resource targets exclude folders and missing local files
+  ok   a qualified physical page in the locator becomes a destination
+  ok   a printed page beside a physical one is never the destination
+  ok   an unqualified page or a slide label is never guessed at
+  ok   the destination reaches the opener that can act on it
+  ok   resource opening skips a collection folder for its exact website
+  ok   resource opening skips a vault collection folder for its exact website
+  ok   randomized resource precedence remains file-first and fail-closed
+  ok   an unrecognised body still surfaces the reason the core gave
+  ok   Gateway V2 typed refusal codes survive the process boundary
+  ok   an ordinary failure with a real stderr still reports it
+  ok   every porcelain method sends one declared capability envelope
+  ok   a fresh text capture carries the guard derived from its own request
+  ok   a fresh file capture carries the guard derived from its own request
+  ok   a fresh Garden seed carries the guard derived from its own request
+  ok   two captures never reuse one request guard
+  ok   a request-scoped capability refuses a competing caller guard locally
+  ok   unrelated capabilities still transmit their caller-supplied guards unchanged
+  ok   the plan template is read from Core, not authored in the interface
+  ok   a reviewed study map is applied by path through one declared capability
+  ok   the four reviewed workflows send, and nothing else does
+  ok   a half-read plan-template answer is refused rather than trusted
+  ok   GatewayClient serializes writes and recovers after rejection
+  ok   a prepared request is recorded before the process is ever started
+  ok   an interrupted response is replayed once, byte for byte
+  ok   a second ambiguity blocks instead of looping
+  ok   a refusal during recovery cannot erase an ambiguous first attempt
+  ok   a definitive refusal clears the record; an ambiguous one keeps it
+  ok   success-shaped JSON from a failed process is not believed
+  ok   a fresh write is refused while any outcome is unresolved
+  ok   recovery is shared by every V2 method, not only capture and Garden
+  ok   a tampered persisted record is refused and nothing is sent
+  ok   recovery record validation is closed against shape and phase
+  ok   an obsolete persisted recovery shape blocks startup writes and is preserved
+  ok   only the draft the envelope carried is cleared
+  ok   the Diagnostics summary carries metadata and never the payload
+  ok   a failed discardRefused keeps the record in memory and on disk
+  ok   a failed settleConfirmed restores the record and its cleared drafts
+  ok   a failed settleConfirmed preserves newer edits in the cleared composer
+  ok   a failed settleConfirmed preserves unrelated drafts added during the await
+  ok   a failed settleConfirmed preserves existing unrelated drafts
+  ok   subsequent successful settlement remains safe and idempotent
+  ok   a failed transition enables no fresh write and no startup replay
+  ok   an older settings save cannot overwrite newer recovery state
+  ok   ApplicationRouter converts legacy leaves to product routes
+  ok   ApplicationRouter descriptors centralize all leaf knowledge
+  ok   ApplicationRouter overlay state is transient and snapshot-safe
+  ok   search matches every query word, not just the first
+  ok   search reads aliases and authors, not only the title
+  ok   an empty query matches everything rather than nothing
+  ok   regression: a lecture query returns its unit
+  ok   ranking prefers an exact title, then a prefix, then alphabetical
+  ok   a kind filter narrows results without changing the query
+  ok   a query matching nothing returns an empty list, not everything
+  ok   ability horizon refuses a shape-valid focus response with another identity
+  ok   ability horizon refuses a shape-valid focus response with another snapshot
+  ok   ability horizon refuses a shape-valid unmapped response with another identity
+  ok   ability horizon refuses a shape-valid unmapped response with another snapshot
+  ok   the snapshot guard refuses to build without a loaded snapshot
+  ok   a stale snapshot never authorizes a fresh write
+  ok   a guarded write never reaches the CLI without a snapshot
+  ok   GatewayClient.call parses CLI --json refusals from stderr when stdout is empty
+  ok   stale write admission also checks an explicit reviewed snapshot
+  ok   late confirmed refused and ambiguous responses cannot change a newer request
+  ok   a delayed response cannot resurrect a cleared recovery slot
+  ok   stale display state does not block exact prepared-envelope recovery
+  ok   an old failed phase save cannot roll back a newer request
+  ok   old settlement save failures cannot restore a retired request or its draft
+
+122 direct module tests passed
+
+> learningos-ui@2.0.0 test:ui
+> node tests/test-dashboard.js && node tests/test-ai-actions.js
+
+LearningOS module-first app tests (synthetic fixture only)
+
+versioned atomic contract
+  ok   manifest contract v15 loads
+  ok   snapshot guard is loaded
+  ok   program/module/unit/map collections load atomically
+  ok   reverse indexes resolve the active unit map
+  ok   German aliases are searchable
+  ok   a stage resolves from its ID alone through the flat index
+  ok   a non-stage ID is not mistaken for a stage
+  ok   flat index and ordered stage lists stay the same set
+  ok   fixture declares every top-level key the app reads
+  ok   retired exam_spine key is gone from the contract sample
+  ok   contract v1 fails closed with recovery text
+
+manifest v15 interaction plumbing
+  ok   Core review decisions load as concrete records
+  ok   Current use resolves authoritative source_to_modules directly
+  ok   Garden creation uses the deterministic public capability
+  ok   Garden creation carries the request-scoped guard Core requires
+
+startup and focused home
+  ok   Home opens and stays pinned
+  ok   navigator opens in its own leaf
+  ok   one Continue card names the exact stage to resume
+  ok   exactly one filled primary action exists on Home
+  ok   the Continue card states the position in the map
+  ok   Home exposes Capture and structural Search without making them primary
+  ok   Today contains time-sensitive work and a review entry
+  ok   Continue elsewhere is a short resume list, not the complete catalogue
+  ok   Home no longer renders module progress rows or a queue dashboard
+  ok   Home does not show progress percentages
+  ok   boundaries and maintenance controls are absent from Home
+  ok   the repeated ownership footer is gone from every screen
+  ok   a module the core marks non-actionable leaves Continue elsewhere
+
+reload state
+  ok   sidebar navigation brings an existing tab forward after asynchronous reveal
+  ok   reload restores the current unit and stage
+  ok   Home remains pinned as a non-exclusive fallback
+  ok   reloadStore refreshes sibling views through the public leaf iterator
+
+explicit application router
+  ok   feature navigation persists a product route rather than an Obsidian view type
+  ok   Back restores the prior route, filters, selection, and scroll position
+  ok   the compatibility router is the only runtime owner of leaf navigation
+
+global structural search
+  ok   opening search preserves the current application route
+  ok   the router records search as transient overlay state
+  ok   search is an explicitly named modal with button-group filters
+  ok   keyboard-launched search is ready for the first query keystroke
+  ok   search returns projected module identities
+  ok   choosing a result closes the overlay and opens the owning route
+  ok   global search returns first-class projects
+  ok   a project search result opens the project route
+  ok   no-results is explicit and offers a clear action
+  ok   clearing search restores quick access without changing the route
+  ok   closing search clears only overlay state
+  ok   global search is available as an Obsidian command
+  ok   the navigator exposes a persistent accessible search launcher
+  ok   decorative navigation icons are hidden from assistive technology
+
+navigation and boundaries
+  ok   eight permanent destinations, no more
+  ok   Review carries its live count: the same queue Review lists
+  ok   the application navigator opens at the compact design width
+  ok   Review is available as a first-class Obsidian command
+  ok   maintenance and boundaries are not study destinations
+  ok   legacy global path and entity taxonomy are absent
+  ok   Learn opens one destination carrying every area
+  ok   the active destination is visually and semantically marked
+  ok   Review lists Core-owned decision records rather than reconstructing queues
+  ok   Diagnostics reports contract, freshness and interpreter
+  ok   Diagnostics health is Core-owned and actionable
+  ok   Diagnostics exposes the installed UI build identity
+  ok   the ownership statement is stated once, in Diagnostics/About
+  ok   Legacy Archive stays a bounded diagnostics surface
+  ok   Future Master’s Planning is visibly prospective before access
+  ok   restoring the surface does not silently confirm prospective access
+  ok   a deliberate gesture opens only the sanitized prospective catalog
+  ok   Garden marks Garden, not Review, as the active destination
+  ok   Atlas has one navigation entry and no duplicate under More
+  ok   Concept atlas navigation opens the atlas view, not a Markdown wall
+  ok   the generated atlas file stays reachable from the view
+  ok   Atlas tools opens the root source-folder browser
+  ok   Back from source folders restores the exact Atlas concept/module/lens/depth
+
+Core-owned Review decisions and deterministic Garden capture
+  ok   Review renders one stable row per Core review_items record
+  ok   one item is open at a time, with its decision, evidence, effect and action
+  ok   Core-authored reasons are rendered rather than UI heuristics
+  ok   Review actions follow each Core-projected target exactly
+  ok   the open item is the leaf state, so a restored Review reopens it
+  ok   Garden is not synthesized into the Review queue
+  ok   Garden exposes a first-class no-AI seed composer
+  ok   Garden uses ordinary pressed buttons and blocks an empty seed
+  ok   Garden enables Add seed as soon as the required text is present
+  ok   Add seed delegates exact human text to garden.seed.create
+  ok   ordinary Garden capture invokes no AI action
+  ok   a confirmed Garden seed clears the composer
+  ok   an unconfirmed Garden write preserves the unsaved seed text
+
+focused prerequisite atlas
+  ok   the Atlas opens on search and recent focuses, not on the corpus
+  ok   the entry state makes the complete corpus browsable without graph controls
+  ok   typing filters concepts without redrawing the field under the caret
+  ok   an unrelated manifest refresh preserves the query, the focus and the caret
+  ok   one relation reads the same from either endpoint
+  ok   the outline carries edges between neighbours, not only the focus’s own
+  ok   every stated relation has both endpoints drawn, and none is stated twice
+  ok   graph, outline and inspector describe the selected relation identically
+  ok   inspecting a connection does not re-centre the view on the other concept
+  ok   the three provenance states stay distinct and none is invented
+  ok   the semantic layer is stated without joining the prerequisite order
+  ok   Atlas selection is persisted in the product route
+  ok   module evidence is reachable and names what exists, not what was understood
+  ok   evidence drills into the exact published unit and stage
+  ok   Back restores the selected Atlas concept rather than losing the drill-down
+
+atlas questions
+  ok   open questions appear by their explicit target, resolved ones do not
+  ok   a question whose target is gone keeps that target and stops being a link
+  ok   four questions add no relation to the graph and no arrow to the picture
+  ok   a filtered semantic relation is reported as hidden, never as absent
+  ok   a hidden relation is still inspectable rather than merely mentioned
+  ok   a concept carries the questions recorded against it, and only those
+  ok   a selected connection carries the question recorded against the connection
+  ok   no recorded question is stated as absence, not as understanding
+  ok   resolving a question sends one guarded capability envelope
+  ok   the write carries an id and a state, never the target or the wording
+  ok   a resolved question offers to be asked again, not marked incomplete
+  ok   reopening sends the same capability with the opposite state
+  ok   opening a question focuses the concept it was recorded against
+
+authoring connections
+  ok   connecting starts from the focused concept with the other end to choose
+  ok   the far end never offers the concept already chosen
+  ok   an incomplete claim cannot be saved, and says what is missing
+  ok   the preview is the assertion, and names the study order it implies
+  ok   saving asks for exactly one authored add, guarded on the registry
+  ok   a reviewed UI claim is submitted and confirmation closes the editor
+  ok   authoring a connection needs no AI provider
+  ok   changing a connection opens it as authored, wording and source intact
+  ok   swapping the ends changes the claim visibly rather than being tidied away
+  ok   a refused edit keeps the swapped claim intact
+  ok   an edit binds the exact previous row, not a reconstruction of it
+  ok   removal names the assertion and what stays untouched
+  ok   removing asks for the exact stored row and nothing else
+  ok   cancelling writes nothing and closes the editor
+
+concept-first browsing, explicit note parity and bounded crowded graph
+  ok   fresh Concepts has compact entry and no graph/depth/lens controls before selection
+  ok   complete Show more reaches every published concept exactly once
+  ok   each browser note count equals the selected concept projected backlink set
+  ok   zero-note concepts remain visible and text-only similarity never creates links
+  ok   browse search keeps the same labelled native input during continuous typing
+  ok   crowded concepts cap pictured nodes and explicitly name every omitted concept
+  ok   all linked notes remain reachable through an honest Show all disclosure
+  ok   opening notes is retained attention and adds no route history
+  ok   Back from an evidence unit restores the selected concept and linked-note context
+  ok   restoring a zero-note semantic deep link preserves concept, lens and depth honestly
+  ok   restoring the saved route returns the exact concept and note context
+  ok   browsing, graph selection, disclosures and history cause no Core writes
+
+reachable per-leaf concept Back and Forward preserve record attention
+  ok   a fresh semantic deep link has no invented previous selection and native history controls
+  ok   keyboard activation of Back restores exact concept/module/lens/depth, query and disclosure
+  ok   history keyboard movement reaches Forward without navigating
+  ok   Forward restores the next concept and its independent query
+  ok   search, disclosures and same-concept route controls do not consume the forward trail
+  ok   a new concept selection after Back clears Forward without adding application history
+  ok   the original concept returns with its saved route and attention, then exhausts Back
+  ok   a second leaf starts its own trail even while the first leaf has Forward available
+  ok   Back acts in its owning concurrent leaf and leaves the first route/attention intact
+  ok   concept trails remain absent from persisted routes and all traversal remains read-only
+
+Atlas section and linked-concept navigation stay in the originating leaf
+  ok   switching to Notes & shelves changes and activates its own leaf only
+  ok   a selected note opens its linked concept in that leaf without replacing the other concept
+  ok   returning through the Concepts section preserves the independent other leaf and learner state
+
+explicit concept exploration and module-filtered recent concepts
+  ok   the compact module filter also applies to recent concepts without changing recency order
+  ok   projected operator-drafted authorship is presented as Operator draft
+  ok   Explore explicitly opens full browsing despite remembered filtered entry attention
+  ok   Explore retains the selected module and the complete projected module membership
+  ok   explicit exploration retains Atlas replacement history and performs no Core writes
+  ok   entry Back and Forward restore the exact full browser route and its query attention
+
+the Atlas ability plane: complete loaded groups, one-hop attention, explicit evidence and camera
+  ok   the ability section displays every loaded group from one bounded read
+  ok   the reduced preparation graph stays available as text with all full routes retained
+  ok   reviewed bridges are explicitly disclosed, never preparation arrows
+  ok   selection highlights only immediate reduced-edge neighbours and opens no evidence inspector or read
+  ok   Routes discloses complete authored AND membership including transitive foundation
+  ok   reviewed immediate bridge peer has separate styling and count
+  ok   bridge-origin drag neither pans the canvas nor opens bridge detail
+  ok   bridge inspector retains reviewed conditions, source and freshness
+  ok   Details explicitly expands one snapshot-bound record and retains recorded evidence semantics
+  ok   full ability detail preserves conditions, encounters and explicit draft actions
+  ok   return from full detail restores presentation camera without persisting it into the route
+  ok   folding hides only records without another expanded claim while preserving selected anchor
+  ok   reopening restores same unique identities at stable positions
+  ok   search finds a loaded title and offers every match
+  ok   search-to-selection reveals existing identity without resetting camera scale
+  ok   double activation fits after the first click replaces the DOM target
+  ok   one Escape action clears selection with exactly one route transition
+  ok   all canvas interaction remains read-only
+
+bounded ability horizons and snapshot reconciliation stay honest
+  ok   loaded/total scope remains explicit and never implies global completeness
+
+general shared-foundation folding retains convergent identities
+  ok   withdrawing one foundation retains shared local targets through the other path
+  ok   folding both claims removes only downstream unanchored records
+  ok   general shared frontier reopens with exact ID and position parity
+
+empty/stale horizons and changed snapshots do not retain vanished presentation records
+  ok   changed snapshot removes stale folds/anchors, retains overlapping world camera and reports stale projection
+  ok   empty corpus remains an honest accessible empty state
+
+focused details outside the horizon never stitch extra records into the plane
+  ok   outside-horizon deep link retains its requested identity and offers explicit focused read
+  ok   outside focused detail uses the original snapshot and does not expand global scope
+  ok   return keeps bounded corpus and camera while restoring outside-horizon notice
+
+focused responses are bound to requested identity and snapshot before any presentation
+  ok   loaded detail refuses foreign identity without rendering its claim
+  ok   loaded detail refuses foreign snapshot without rendering its claim
+  ok   outside detail refuses foreign identity without rendering its claim
+  ok   outside detail refuses foreign snapshot without rendering its claim
+
+overview-scale orientation and group fits include branching-region headings
+  ok   Fit group retains the heading of a five-foundation AND branch
+  ok   distant canvas keeps readable group orientation outside its transform
+  ok   overview group action actually fits the retained region
+
+keyboard bridge attention and simultaneous search labels stay scoped to their leaves
+  ok   native keyboard bridge activation restores focus by stable bridge identity
+  ok   closing bridge details returns focus to the retained band
+  ok   fitting from keyboard overview transfers focus when its navigation hides
+  ok   two ability leaves use independent nested native labels with no duplicate search ID
+  ok   ability selection changes and activates its originating leaf only
+  ok   full ability detail remains in the selected second leaf
+  ok   return and layout controls preserve the other leaf camera, query and route without Core writes
+
+the Atlas says what it could not read, and draws nothing it did not read
+  ok   an unreadable horizon is an explicit error, not an empty or invented map
+
+ability drafts wait in Review; only Confirm & record writes
+  ok   the draft form says it records nothing and offers only covering workspaces
+  ok   saving a draft keeps it UI-owned and sends nothing
+  ok   Review shows the draft first, labelled, with its claim, evidence and effect
+  ok   the navigator counts the draft with the Core queue
+  ok   Confirm & record sends exactly the reviewed record over the ui channel
+  ok   one confirmation is one write: no stage progress, no candidate, and the draft is cleared
+
+a refused ability record keeps the draft and says why
+  ok   a possible connection is drafted, not recorded
+  ok   Review states that a tentative connection carries nothing
+  ok   the candidate names this request as where it was noticed
+  ok   a refusal keeps the draft and shows Core’s reason
+
+redraw focus: continuous typing, selection and independent leaves
+  ok   Atlas search accepts uninterrupted typing through result redraws
+  ok   replacing a selection retains its new caret rather than jumping to the end
+  ok   mid-string editing retains focus and the exact insertion point
+  ok   a refresh preserves the selected range and direction
+  ok   Atlas refresh never steals focus from a different leaf
+  ok   refreshing another Concept pane never takes the focused pane’s field
+  ok   refreshing both Concept leaves retains focus, backward selection and scroll in the first leaf
+  ok   the other Concept pane is also protected when it is the focused second leaf
+  ok   the second Concept leaf preserves its own selection and scroll during a full refresh
+  ok   independent Concept queries survive both refresh orders without Gateway writes
+  ok   filter activation preserves focus on the corresponding new button
+  ok   arrow navigation moves focus without selecting or writing
+  ok   native activation after arrow navigation selects and retains focus
+
+Notes & shelves: corpus parity, explicit selection and ordered source placements
+  ok   Notes & shelves keeps the existing route without opening the generated overview
+  ok   shared Atlas choices have the settled order and labels
+  ok   known empty domains and future path buckets stay reachable without inferred aliases
+  ok   full counts describe records while notes and shelves remain separate collections
+  ok   global search exposes matching source shelves while Notes is selected
+  ok   the matching-shelf action opens its full ordered placements without filtering entries
+  ok   row selection opens an explicit inspector without opening the file or pushing history
+  ok   unrecorded authorship remains honest rather than being labelled user writing
+  ok   continuous filtering retains the original field, focus, caret and selected domain
+  ok   mid-string editing keeps the exact caret and selection
+  ok   selected notes stay inspectable when outside the current search, with honest scope
+  ok   clearing search restores all rows and explicit provenance disclosure attention
+  ok   zero matches preserve the domain and selected record without stale result rows
+  ok   clearing the inspector returns keyboard focus to its retained note row
+  ok   domain arrow navigation changes focus without selecting or writing
+  ok   native activation retains focus on the replacement domain and clears foreign note attention
+  ok   future domains expose their complete note and role
+  ok   Open note follows the authored path through the resource adapter
+  ok   explicit linked concepts open their existing concept route
+  ok   returning to Notes & shelves restores its record attention independently of the concept route
+  ok   Source shelves preserves repeated placements in authored order with distinct counts
+  ok   Why this source discloses rationale for the exact repeated placement
+  ok   Open shelf uses the existing catalogue destination
+  ok   entry source navigation uses the existing source destination
+  ok   All source folders opens the complete folder browser rather than a flat source list
+  ok   source folders use actual thematic-group route prefixes
+  ok   sources without a valid thematic group stay reachable through Unfiled
+  ok   All sources opens the complete collection
+  ok   generated text overview remains reachable through tools
+  ok   Concepts retains the prerequisite route
+  ok   Abilities opens its existing route
+  ok   browsing, filtering and attention issue zero Gateway writes
+  ok   every projected role and authorship, including external and absent, is selectable
+  ok   all role × authorship filter intersections preserve exact corpus ids
+  ok   stable full-title order in mathematics
+  ok   stable full-title order in machine-learning
+  ok   stable full-title order in systems
+  ok   stable full-title order in data-systems
+  ok   stable full-title order in algorithms
+  ok   stable full-title order in programming
+  ok   stable full-title order in cross-domain
+  ok   stable full-title order in future-domain
+  ok   stable full-title order in future-research
+  ok   complete browse-all reach has exact corpus id/count parity without duplicates
+  ok   long titles remain intact and zero linked concepts are explicit
+  ok   resolved analysis sources remain openable even when direct note sources are empty
+  ok   recorded evidence presents its exact type and reference legibly
+  ok   the recorded analysis source action follows the actual source detail route
+  ok   many explicitly linked concepts remain fully reachable without a silent remainder
+  ok   unavailable direct and analysis sources preserve exact ids without broken actions
+  ok   large source shelves initially disclose an honest bounded entry count
+  ok   Show all keeps every authored entry index, duplicate source, group and rationale
+  ok   all catalogues and topic packs retain exact shelf id/count parity across domains
+  ok   large corpus browsing remains read only
+  ok   empty knowledge retains every known domain and source reach with honest emptiness
+  ok   unavailable projections show no stale counts and keep Atlas choices reachable
+  ok   missing required note roles still fail closed at the manifest boundary
+
+native tab attention: sidebar highlight without navigation or writes
+  ok   Concept and Domain variants share a stable native title and show their own in-pane heading
+  ok   switching natively from Diagnostics to Domains highlights the primary Atlas destination
+  ok   switching to an existing Library tab highlights Library
+  ok   switching to another Atlas leaf retains the single Atlas destination from that leaf’s state
+  ok   a native non-LearningOS tab does not fabricate a Home destination
+  ok   focusing the sidebar itself does not change the highlighted destination
+  ok   a transient null active leaf is ignored
+  ok   a separately restored Domain tab also highlights primary Atlas
+  ok   returning to Diagnostics follows the actual tab again
+  ok   attention changes preserve Domain query, selection, explicit disclosures and the original input node
+  ok   attention changes preserve the Library query and original field without redrawing the reading pane
+  ok   attention changes do not navigate, remember, persist settings, alter history or call Core
+
+library navigability
+  ok   opening the Library lands in the folder browser
+  ok   the folder root offers places and a domain folder per thematic group
+  ok   one click selects rather than navigating, and fills the inspector
+  ok   the moved selection takes focus, so a second arrow key has somewhere to go
+  ok   a click on the selected row opens it
+  ok   the enclosing folder lands back on the folder just left
+  ok   Learning Sources opens as one global faceted browser
+  ok   the five semantic facets are peers
+  ok   Sources and Curated packs remain separate collections
+  ok   Domain is a filter rather than a required first navigation level
+  ok   peer facets combine conjunctively without replacing one another
+  ok   the complete facet combination is persisted on the product route
+  ok   clearing facet state does not change source identity or collection
+  ok   no source is automatically selected
+  ok   source detail stays a full page and preserves shelf rationale
+  ok   shelf membership cache refreshes for a new manifest with the same snapshot
+  ok   record ID and Copy ID stay under Technical details
+  ok   Back restores the exact global facet state
+  ok   Topic Packs intentionally retain thematic-group navigation
+  ok   a Topic Pack group still opens its ordered pack list
+  ok   Topic Pack detail keeps one explicit purpose and canonical order
+  ok   Current use reads authoritative source_to_modules even with source_to_units empty
+  ok   reload restores query and all five source-facet fields exactly
+  ok   a text-only Library zero result offers a search-specific recovery
+  ok   Library recovery clears the persisted query and restores sources
+
+library native double-click
+  ok   a native double-click across a selection redraw opens the domain once
+  ok   a departed parent row cannot append its segment inside the opened domain
+  ok   a double-click before selection persistence finishes still opens one domain
+  ok   double-clicking an already selected domain cannot create a duplicate path
+  ok   the inspector Open folder button also remains bound to its rendered parent
+  ok   an unselected leaf opens once across the native selection redraw
+  ok   an already selected leaf opens once per native double-click
+  ok   a later ordinary click can reopen the selected leaf
+  ok   Columns double-click enters Mathematics without appending it twice
+  ok   double-clicking the retained ancestor column remains in Mathematics
+  ok   Columns double-click also opens a material-type child exactly once
+  ok   a Columns leaf still opens once after its selection clicks
+  ok   native folder browsing and opening never issue canonical writes
+
+library persisted folder recovery
+  ok   Back repairs duplicated folder history in the visible and persisted current route
+  ok   reload recovers only adjacent duplicated folder segments and preserves attention
+  ok   reload saves the repaired route without adding history or canonical writes
+  ok   a genuinely missing folder remains visible as unavailable
+  ok   non-adjacent invalid repetitions are preserved as unavailable
+
+library folder filter
+  ok   the report folder holds two books to filter
+  ok   three keystrokes without re-clicking keep the same focused field
+  ok   typing narrows the rows and the count while scoped to the folder
+  ok   a middle edit keeps focus and lands at the caret
+  ok   backspace keeps focus and deletes before the caret
+  ok   paste keeps focus and replaces the selection while results update
+  ok   Clear filter restores the rows and focuses the emptied field
+  ok   changing layout keeps the current folder and returns focus to its selected segment
+  ok   columns typing keeps the same focused field and narrows its column
+  ok   an unrelated refresh preserves the query, the focus and the caret
+  ok   a refresh preserves both selection endpoints and its direction
+  ok   another Library leaf cannot steal a focused filter during rendering
+  ok   selection still takes focus after filtering
+  ok   leaving the folder clears its filter
+
+zero-friction inbox capture
+  ok   Capture identifies itself in the Obsidian tab
+  ok   empty Capture actions are disabled consistently
+  ok   Capture text enables only after required content is present
+  ok   text capture delegates exact wording and optional title to los.py
+  ok   text capture carries the request-scoped guard Core requires
+  ok   capture refreshes the atomic projection after the write
+  ok   file capture enables only after a local file is selected
+  ok   file capture resolves the Electron File through webUtils
+  ok   file capture carries the request-scoped guard Core requires
+
+module and component ownership
+  ok   Modules contains only the current semester
+  ok   a module opens as a full-page detail route
+  ok   the module opens on Units, not on administration
+  ok   the header carries one line of facts, not six labelled rows
+  ok   structured component controls render
+  ok   Lecture 02 and Lecture 04 retain distinct state
+  ok   module units follow canonical unit_order instead of status or title
+  ok   needs-map is explicit
+  ok   component selection filters units without merging state
+  ok   academic facts stay on the academic module with human labels
+  ok   logistics does not block unit browsing
+  ok   related workspaces render their next action instead of a raw CONTEXT link
+  ok   Back restores the current-semester module list
+
+first-class project navigation
+  ok   Projects opens as a full-page first-class list
+  ok   the project list does not render a universal completion percentage
+  ok   opening a project replaces the route rather than splitting the screen
+  ok   project detail exposes the approved five tabs
+  ok   project-owned units retain first-class project context
+  ok   parallel and nested project structure renders without a percentage
+  ok   linked modules and Topic Packs render from projected relationships
+  ok   Why linked is an inspect-only temporary drawer/modal with a core-authored reason
+  ok   closing Why linked restores the project route and clears transient state
+  ok   Back restores the project list selection and scroll position
+
+unit stage workspace and guarded actions
+  ok   ordered stages and one current workspace render
+  ok   the stage promotes exactly one current action
+  ok   collapsing the catalogue still counts every material, on both scopes
+  ok   no permanent stage note editor remains
+  ok   rail rows carry a state dot and the ordinal inside the title
+  ok   the rail is labelled Stages and states the completed total once
+  ok   the stage head is one accent eyebrow naming position and state
+  ok   stage concepts render as typed chips resolved from their records
+  ok   the current action and the catalogue are named separately
+  ok   the completion rule is stated beside the completion action
+  ok   completing a stage is stated as progress, never as a learner attempt
+  ok   Current work is one prominent card with purpose, locator and availability
+  ok   Add note follows the final stage in the rail
+  ok   existing unit note sections are projected
+  ok   durable unit artifact remains a reference
+  ok   the action bar carries one primary button and one overflow
+  ok   only one action on the screen is a filled completion action
+  ok   secondary operations are discoverable in one menu
+  ok   End session is a header action and not also an overflow item
+  ok   one filled action per context survives the promotion
+  ok   the drawer is a named dialog carrying the honesty note
+  ok   the rail partitions the stage by need and reconciles with its total
+  ok   every material the page counted is reachable in the drawer
+  ok   resource triage tiers are visible, not just stored
+  ok   unranked resources stay visible and count as required
+  ok   resource feedback collapses into a rate menu instead of three buttons
+  ok   done-when criteria are interactive checkboxes
+  ok   a ticked criterion is UI-owned state, never a second completion record
+  ok   a tick does not survive a revision of the criterion it certifies
+  ok   the note modal references completed stages not already recorded
+  ok   the note modal is a named dialog and blocks an empty save
+  ok   the learning-session note opens ready for writing
+  ok   the note save enables when required text is present
+  ok   session note save uses the unit-level action-specific gateway
+  ok   unit note attachments use Electron webUtils instead of the removed File.path
+  ok   mutation carries optimistic snapshot token
+  ok   source feedback is unit/stage/source-specific
+  ok   gap action creates a scoped detour
+  ok   completing the stage sends stage progress and no ability evidence
+  ok   session closure first requests an exact change review
+
+the stage comparison drawer
+  ok   the drawer opens at its heading, not at the foot of the list
+  ok   source browsing preserves the host modal keyboard scope
+  ok   every group states a count that reconciles with the stage and the lecture
+  ok   every placement is reachable through its group, one group at a time
+  ok   a card states its title once
+  ok   same-route stage placements preserve separate instructions and direct targets
+  ok   a placement names its purpose, exact locator and where it is, in words
+  ok   every lecture route is in a counted type, including unknown formats
+  ok   types and material details start closed, without reading or choosing anything
+  ok   opening a material reveals its details without losing the other routes
+  ok   route cards carry the source chip, the exact locator and the angle
+  ok   "Why this one" is on demand and keeps coverage with the rationale
+  ok   "Why this one" opens in place
+  ok   remote material is said to be remote and is never inspected
+  ok   material with no copy and no link says so
+  ok   a local span is inspectable, and nothing is read before it is asked for
+  ok   the material excerpt comes from Core, snapshot-bound and bounded
+  ok   multi-character search preserves its input node and focus
+  ok   search also matches the parent source title
+  ok   search reveals matching types and retains exact routes
+  ok   clearing search restores the learner type state and the complete menu
+  ok   Collapse types closes every group while all routes remain reachable
+  ok   no-result state keeps the totals and says how to recover
+  ok   choosing the group again clears the search and recovers every route
+  ok   the rest of the course is one click away, without cross-unit mutation
+  ok   browsing and filtering never change canonical selection
+  ok   choosing from the drawer sends the unchanged governed selection
+
+the drawer on a stage with nothing required now
+  ok   a stage with nothing required still opens at the most urgent group present
+  ok   nothing is hidden by the fallback: the count line still reconciles
+  ok   an empty group says where the materials are instead of reading as empty
+  ok   an authored format outranks the working kind on the card
+
+lecture knowledge map and material choice
+  ok   knowledge nodes render as a dependency-aware lecture overview
+  ok   all material options are grouped by type with source identity available
+  ok   material cards preserve the source angle, locator, coverage, depth, and scope
+  ok   the complete material menu renders alongside an unmet map obligation
+  ok   openable material choices expose a direct action
+  ok   material choice is an explicit pressed-state control
+  ok   choosing a material persists the exact lecture option through the guarded gateway
+  ok   optional-path AI context uses unit choices when no stage exists
+
+the stage workspace leads a unit that has a map
+  ok   the ordered stages and the selected stage lead the page
+  ok   the complete menu is still rendered in full, not truncated
+  ok   approved material synthesis stays distinct from the option menu
+  ok   stale synthesis is labelled while its approved dossier remains visible
+
+the session keeps cross-module relationships in the Atlas
+  ok   same-module relations stay chips; other modules are only counted
+  ok   the count opens the Atlas on that concept
+
+missing map and explicit AI context
+  ok   unit owed a map says so and offers both routes to one
+  ok   AI prompt names area/module/component/unit/stage
+  ok   AI prompt carries sources and snapshot
+  ok   active file is supplementary only
+
+reviewed map replacement stays near the top of an existing map
+  ok   replacement is visible before the stage layout and outside the extras disclosure
+
+the assigned page survives the whole plugin route
+  ok   both plugin delegates forward the destination, not just the path
+  ok   openResource derives the destination and hands it on
+  ok   an unqualified locator hands on no destination rather than a guess
+  ok   a printed page beside a physical one never becomes the destination
+
+selected-only shelving
+  ok   proposal destinations and rationale are reviewable
+  ok   Core proposal defaults initialize selection once
+  ok   proposal revision resets stale selected IDs before rendering
+  ok   approval uses the guarded completion treatment
+  ok   approval asks core to apply, guarded, without restating approval
+  ok   only IDs from the current proposal revision can be applied
+  ok   the reviewed selection reaches Core through the UI authority path
+
+secondary library and exact source selections
+  ok   source opening behavior lands on a full-page detail
+  ok   ISLP detail preserves exact reading selections
+  ok   an evaluation shows what the source is good for, in the schema’s vocabulary
+  ok   an evaluation states what it assumes rather than ranking the source
+  ok   source use routes back to several distinct units
+  ok   source-title search remains successful
+
+degraded and interface-boundary safety
+  ok   offline CLI does not prevent read-only rendering
+
+broken gateways and hostile projections
+  ok   unreadable CLI output is never reported as a saved note
+  ok   an unconfirmed save keeps the unit-note draft
+  ok   a failed rebuild cannot bless a still-mismatched readable manifest
+  ok   the failed rebuild does not claim newer canonical changes were observed
+  ok   a capture the core never confirmed keeps the inbox draft
+  ok   a null row in the projection does not blank Home
+  ok   Library still opens a source around a null record
+  ok   a store that never loaded still answers list queries
+  ok   Inbox degrades instead of reading a null projection
+  ok   Library degrades instead of searching an unloaded record set
+  ok   isolated prospective planning does not depend on the normal projection
+  ok   a string where a list belongs renders an empty state, not one row per character
+  ok   a study map without stages shows an empty state instead of throwing
+  ok   two fast clicks produce exactly one guarded write
+  ok   a Unit action waits behind a write from another view instead of being discarded
+  ok   session closure waits behind the same global writer
+  ok   the queued write runs after the first transaction completes
+  ok   a rejected transaction does not poison the queue
+  ok   a note save is queued behind an unrelated write, not discarded
+  ok   the queued note reaches the core exactly once after the write ahead of it
+  ok   an unobserved receipt rebuilds the projection instead of denying the write
+  ok   the learner is told the recovered write sits beside newer canonical changes
+  ok   an accepted transaction retires its recovery record
+  ok   an unloadable projection blocks instead of pretending the write is settled
+  ok   the confirmed record survives so nothing is written on top of it
+  ok   a stale projection is rebuilt without replaying the refused write
+  ok   the refreshed refusal settles the queue
+  ok   a definitive refusal clears the recovery record and keeps the draft
+  ok   a conflict is surfaced after refresh and never replayed
+  ok   unsupported URL schemes never reach the viewer
+  ok   https still opens normally
+
+gateway recovery across a restart
+  ok   a host-swallowed settings error cannot authorize Core dispatch
+  ok   settings-save refusal preserves the draft and leaves no prepared record
+  ok   the record reaches disk before the process is started
+  ok   a settled write leaves nothing behind on disk
+  ok   a prepared record is replayed after a restart, byte for byte
+  ok   the restarted replay settles and retires the record
+  ok   the learner is told a replay happened rather than it being silent
+  ok   a confirmed record is reconciled only after a read-only Core proof
+  ok   persisted confirmation alone never clears recovery evidence
+  ok   an unverified persisted confirmation never clears its draft
+  ok   a replay interrupted in the prior session waits for an explicit retry
+  ok   a failed confirmed-write reconciliation does not reject plugin startup
+  ok   the confirmed record remains blocked after receipt verification
+  ok   a blocked record does not replay itself on the next launch
+  ok   the blocked record keeps its evidence for Diagnostics
+  ok   nothing new may be written while it is unresolved
+  ok   non-capability mutation paths are blocked before Core starts
+  ok   a malformed record starts no process
+  ok   the raw malformed value is kept exactly as it was written
+  ok   the application knows it is blocked
+
+gateway recovery in Diagnostics
+  ok   a clean gateway says so in one sentence
+  ok   Diagnostics names the capability, phase and identity of the stuck write
+  ok   Diagnostics never shows the payload the learner wrote
+  ok   Diagnostics offers a retry and a summary, and no way to discard
+  ok   the explicit retry settles the same request rather than creating one
+
+one serialized writer for data.json
+  ok   a second save waits for the first rather than racing it
+  ok   the queued save starts only after its predecessor settles
+  ok   each save serialized the newest state, never a captured snapshot
+  ok   a failed save rejects its caller without poisoning later ones
+  ok   an unloaded instance starts no queued Core work
+  ok   a late old callback cannot overwrite the active instance settings
+
+drafts and the record are settled together
+  ok   the matching draft and the record are cleared in one saved state
+  ok   text written while the write ran is newer, and is not cleared
+  ok   a Garden seed draft survives an Obsidian restart
+
+typed error details ride along without changing recovery
+  ok   an enriched INVALID_REQUEST settles as refused
+  ok   the refused message equals the message without the details
+  ok   an enriched INTERNAL_FAILURE stays pending through one replay
+  ok   the failure carries the real rollback flag merged with enrichment
+  ok   the pending message equals the message without the details
+  ok   the post-commit failure classifies ambiguous with UNRECOGNISED_RESPONSE
+  ok   the ambiguous record is retained and blocked
+  ok   the replay answers the same transaction the failure named
+  ok   the exact replay settles the stuck write
+  ok   the post-commit message equals the message without the details
+  ok   an identity-mismatched response is rejected with IDENTITY_MISMATCH
+  ok   the mismatch message equals the message without the details
+
+review regressions: freshness and asynchronous startup ownership
+  ok   unrelated vault churn does not reload the projection
+  ok   manifest events coalesce into one projection reload
+  ok   unloaded vault callbacks cannot reload or publish the projection
+  ok   failed refresh redraws Home with an accessible stale indication
+  ok   failed refresh preserves the learner draft
+  ok   projection maintenance remains available from a stale view
+  ok   unload during settings read prevents late view registration
+  ok   unload during manifest read prevents late view registration
+  ok   an unloaded instance cannot publish its pending manifest
+  ok   a late layout-ready callback cannot reopen disabled views
+
+material consumer contract (red gate)
+  ok   material_path takes precedence over a material URI in vault_path
+  ok   material opening never delegates a material URI to openVaultPath
+  ok   a lone material URI without material_path is refused
+  ok   ordinary vault paths still delegate to openVaultPath
+  ok   safe HTTPS resources open in the real browser, not an embedded view
+  ok   unsafe URL schemes remain refused by the material consumer patch
+  ok   a source collection never becomes a stage-level Open source button
+  ok   a projected missing file never renders a broken Open button
+  ok   a projected missing file says so and is never inspected
+  ok   a resource containing only material_path receives an Open button
+  ok   a locator-only resource can fall back to its openable source
+  ok   the source fallback uses the same safe resource opener
+  ok   AI selected_materials prefers material_uri
+  ok   AI selected_materials falls back to vault_path
+  ok   AI selected_materials falls back to URL
+  ok   AI selected_materials finally falls back to material_path
+  ok   AI selected_materials excludes rows without an identity
+  ok   AI selected_materials preserves the frozen identity precedence
+  ok   a configured interpreter that does not exist falls through, and is reported
+  ok   the Windows virtual-environment layout is attempted too
+  ok   excerpt truncation never leaves half an emoji in the DOM
+  ok   bundle has no vault.modify
+  ok   bundle has no vault.delete
+  ok   bundle has no vault.rename/copy
+  ok   bundle has no frontmatter writes
+  ok   bundle has no filesystem writes
+  ok   bundle has no direct canonical parsing
+  ok   bundle has no legacy global-path commands
+  ok   bundle uses only the atomic manifest projection
+  ok   python resolution covers configured, POSIX venv, Windows venv and PATH
+  ok   every mutation is serialized through one queue
+  ok   external links pass a protocol allowlist
+  ok   the repeated ownership footer no longer exists as a component
+  ok   view refresh uses Obsidian public leaf iteration
+  ok   persisted view state uses the public Obsidian accessor
+  ok   no surface refuses a write merely because another one is running
+  ok   local file paths use Electron webUtils
+  ok   bundle exposes action-specific writes
+  ok   bundle is generated from an explicit module graph
+  ok   the stylesheet is composed from an explicit cascade
+  ok   raw colour appears only in the palette token blocks
+  ok   every component colour resolves through a --los-* token
+  ok   every palette defines the same tokens
+  ok   every selectable palette meets numeric WCAG 2.2 AA contrast
+  ok   narrow-screen workspace is responsive
+  ok   button-like components are insulated from Obsidian theme distortion
+  ok   deadline layout cannot allocate a third action column
+  ok   the unit workspace is two columns and notes are a temporary modal
+  ok   LearningOS modals size their host and never overflow their content box
+  ok   the UI documentation names the active manifest contract
+  ok   ECOSYSTEM.md names the active manifest contract, not a retired one
+  ok   ECOSYSTEM.md documents Text Extractor and PDF++ as supplemental, never authoritative
+  ok   button filters do not claim incomplete ARIA tab semantics
+  ok   the primary button is filled, not an outline
+  ok   semantic button colours remain token-driven and purpose-specific
+  ok   the active navigation destination is visually obvious
+  ok   ordinary navigation rows carry no border
+  ok   compact type and control scale is explicit
+  ok   reduced motion is respected
+
+session-end review then commit
+  ok   End learning session opens the change review with no commit flags
+  ok   Commit session-owned files commits exactly the reviewed session
+
+session-end close without committing
+  ok   Close without committing makes no Core call
+
+all tests passed
+
+LearningOS AI-action tests (synthetic fixture only)
+  ok   Garden is a first-class review view
+  ok   launcher is action-specific rather than generic
+  ok   provider configuration stays out of the incubation row
+  ok   the original and AI-derived state remain distinct
+  ok   launcher invokes the exact garden.shelve capability
+  ok   request is snapshot guarded
+  ok   manual adapter is selected explicitly
+  ok   ordinary learning needs no Job export ceremony
+  ok   approved delivery application uses its exact delivery ID
+  ok   successful preparation is reported without provider access
+
+> learningos-ui@2.0.0 test:live-app-check
+> node tests/test-live-app-check.mjs
+
+  ok   the evidence directory stores the same machine-readable verdict
+  ok   every hard-allowed command is a plain, non-empty string
+  ok   a command outside the allowlist is refused
+  ok   a write-shaped argument is refused
+  ok   an ordinary allowed command passes
+  ok   the allowlist contains no reload or navigation command
+  ok   parseCommandList reads JSON array output
+  ok   parseCommandList reads tab-separated line output
+  ok   parseCommandList never throws on empty or unreadable output
+  ok   countDomClass matches a whole class token, not a substring
+  ok   assertExactlyOne passes for exactly one match
+  ok   assertExactlyOne fails when the class is missing
+  ok   assertExactlyOne fails when the class appears more than once
+  ok   versionAtLeast accepts the exact required version
+  ok   versionAtLeast accepts a newer version and refuses an older one
+  ok   versionAtLeast is false for unreadable version strings
+  ok   versionExactly requires the plugin version to match precisely
+  ok   newErrors reports only entries absent before
+  ok   newErrors reports nothing when the buffer only shrinks
+  ok   newErrors reports nothing for an unchanged buffer
+  ok   newErrors counts a repeated identical error as new
+  ok   requireFullSha accepts exactly 40 lowercase hex characters
+  ok   requireFullSha refuses short, uppercase, empty and missing values
+  ok   extractDiagnostics reads every declared attribute
+  ok   extractDiagnostics refuses missing metadata
+  ok   extractDiagnostics refuses ambiguous duplicated metadata
+  ok   a clean, matching live app passes identity verification
+  ok   a wrong Core or UI SHA is refused rather than echoed back
+  ok   the expected manifest contract is derived from the built pair
+  ok   declaredManifestContract refuses a missing or malformed build-info
+  ok   dirty, unknown, mismatched, stale and unresolved states all fail
+  ok   redactDiagnostics keeps only the declared safe fields
+  ok   redactDiagnostics tolerates a missing or empty input
+  ok   the app and installer versions are read from the line the host prints
+  ok   a newer app with an older installer meets the requirement
+  ok   plugins:enabled json is parsed for ids, which is all it reports
+  ok   a parameter error printed on exit 0 is detected as a refusal
+  ok   the dev:dom selector the driver sends names the Diagnostics view
+
+38 live-app-check tests passed
+
+> learningos-ui@2.0.0 test:ci-policy
+> node tests/test-ci-policy.mjs && node tests/test-sorting.js
+
+✔ UI CI policy (0.753708ms)
+✔ locale policy detects comparisons, multiline calls and case conversion (2.90575ms)
+✔ source code uses shared locale helpers (100.228042ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 106.802917
+Sorting OK
+
+> learningos-ui@2.0.0 test:build-fingerprint
+> node tests/test-build-fingerprint.mjs
+
+build-fingerprint: all assertions passed (A-G verified in disposable workspace)
+
+> learningos-ui@2.0.0 test:response-validation-diff
+> node tests/test-response-validation-diff.js
+
+Response differential OK: 12750 cases, 13 endpoints; 47 malformed values rejected by producer shape
+EXIT=0

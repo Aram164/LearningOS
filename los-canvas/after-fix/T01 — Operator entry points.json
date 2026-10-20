@@ -1,0 +1,565 @@
+[
+  {
+    "name": "entry-01-discover-capabilities",
+    "intent": "An agent starts a session and learns what the system can do.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.53,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "queries": 19,
+      "commands": 47,
+      "bytes": 2101,
+      "tokens": 525,
+      "rules_declared": {
+        "canonical_writes_are_transactional": true,
+        "successful_writes_have_receipts": true,
+        "artifact_revision_conflicts_fail_closed": true,
+        "shelving_requires_explicit_approval": true,
+        "ordinary_interfaces_read_projection_only": true,
+        "module_plan_preflight_required": true,
+        "ai_actions_are_provider_independent": true,
+        "bounded_ai_actions_use_exact_context": true
+      },
+      "one_capability_exit": 0,
+      "one_capability_bytes": 3178,
+      "one_capability_tokens": 794
+    }
+  },
+  {
+    "name": "entry-02-plan-edit-context-brief",
+    "intent": "Unit coverage, source completeness, or unknown ids \u2192 brief context.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 4618,
+      "tokens": 1154,
+      "keys": [
+        "analysis_refs",
+        "artifact_revisions",
+        "claims",
+        "contract",
+        "expand",
+        "inventory",
+        "module_id",
+        "preflight",
+        "required_inputs",
+        "schema_version",
+        "snapshot_id",
+        "unit_audit",
+        "unit_id"
+      ],
+      "route_id_discovered": "route-b2f1f80014860a929a3af0bc"
+    }
+  },
+  {
+    "name": "entry-03-plan-edit-context-route",
+    "intent": "Edit a known material route \u2192 route-scoped edit context.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.21,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1441,
+      "tokens": 360,
+      "keys": [
+        "artifact_revisions",
+        "claim",
+        "contract",
+        "module_id",
+        "patch_capability",
+        "patch_fields",
+        "preflight",
+        "route",
+        "schema_version",
+        "snapshot_id",
+        "unit_id",
+        "uses"
+      ]
+    }
+  },
+  {
+    "name": "entry-04-plan-edit-context-stage",
+    "intent": "Edit a known stage \u2192 stage-scoped edit context.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1643,
+      "tokens": 410,
+      "keys": [
+        "artifact_revisions",
+        "contract",
+        "module_id",
+        "preflight",
+        "requested_stage_id",
+        "schema_version",
+        "scope",
+        "snapshot_id",
+        "stage",
+        "stage_results",
+        "unit_id"
+      ]
+    }
+  },
+  {
+    "name": "entry-05-bootstrap-brief",
+    "intent": "Open work or a priority question \u2192 one-page session entry.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.32,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 3728,
+      "tokens": 932,
+      "keys": [
+        "academic_deadlines",
+        "active_study_maps",
+        "contract",
+        "counts",
+        "deadline_count",
+        "domain_atlas",
+        "expand",
+        "owed_study_maps",
+        "pointer_state",
+        "pointer_state_note",
+        "recorded_options",
+        "recorded_options_note",
+        "resume_pointer",
+        "schema_version",
+        "session_identity",
+        "snapshot_id"
+      ],
+      "session_identity": {
+        "session_id": "canvas-t01",
+        "source": "environment",
+        "how_to_set": "name it before the first write \u2014 export LOS_SESSION_ID=<id> when the shell persists, or seal session_id in each write envelope (.venv/bin/python tools/seal_envelope.py --session-id <id>); without either, writes share this channel's ledger"
+      },
+      "snapshot_id": "sha256:7f74dca429b92ba440e67a970ae1df06c6461c135f371d1473bee1f5e631fb36"
+    }
+  },
+  {
+    "name": "entry-05b-bootstrap-unbounded",
+    "intent": "TRAP: the same entry without --brief (measured, not asserted).",
+    "tags": [
+      "read",
+      "cost",
+      "trap"
+    ],
+    "ok": true,
+    "seconds": 0.34,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 43558,
+      "tokens": 10889,
+      "note": "the contract calls this 'a bulk read, never a session start'"
+    }
+  },
+  {
+    "name": "entry-06-inspect-workspace",
+    "intent": "Open work \u2192 inspect the workspace record.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.32,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 436,
+      "tokens": 109,
+      "keys": [
+        "archived",
+        "concepts",
+        "deadline",
+        "id",
+        "module_ids",
+        "next_action",
+        "notes",
+        "objective",
+        "path",
+        "program_ids",
+        "project_id",
+        "revision",
+        "sources",
+        "standing",
+        "status",
+        "title",
+        "type",
+        "unit_ids"
+      ]
+    }
+  },
+  {
+    "name": "entry-07-note-read",
+    "intent": "Read the body of a saved reasoning note.",
+    "tags": [
+      "read",
+      "entry-table",
+      "note-corpus"
+    ],
+    "ok": true,
+    "seconds": 0.21,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1212,
+      "tokens": 303,
+      "total_characters": 750,
+      "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+      "content_sha256": "sha256:ecd673fe86ebb2952d5efaf15ee8c4dc49f2f10c3710b795f3b8b0cafd23330c"
+    }
+  },
+  {
+    "name": "entry-07b-note-read-paged",
+    "intent": "Read a bounded segment of a note (context discipline).",
+    "tags": [
+      "read",
+      "bounded"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 849,
+      "tokens": 212,
+      "content_len": 400,
+      "next_offset": 400,
+      "total_characters": 750
+    }
+  },
+  {
+    "name": "entry-08-material-context",
+    "intent": "Find a saved explanation by need.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1435,
+      "tokens": 358,
+      "keys": [
+        "contract",
+        "items",
+        "next_offset",
+        "observations_sha256",
+        "pool",
+        "ranked_by",
+        "schema_version",
+        "searched",
+        "snapshot_id",
+        "total"
+      ]
+    }
+  },
+  {
+    "name": "entry-09-material-span",
+    "intent": "Describe one exact route.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1575,
+      "tokens": 393,
+      "keys": [
+        "analysis_refs",
+        "availability",
+        "contract",
+        "expansion",
+        "locator",
+        "module_id",
+        "next_action",
+        "route_id",
+        "schema_version",
+        "snapshot_id",
+        "source_id",
+        "spans",
+        "unit_id",
+        "url"
+      ]
+    }
+  },
+  {
+    "name": "entry-10-resume",
+    "intent": "Resume recorded study without moving state.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.2,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1176,
+      "tokens": 294,
+      "keys": []
+    }
+  },
+  {
+    "name": "entry-11-resume-study",
+    "intent": "The study suggestion must not move the resume pointer.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.17,
+    "error": null,
+    "detail": {
+      "exit_code": 2,
+      "bytes": 0,
+      "tokens": 1,
+      "stderr": "los: INVALID_REQUEST: no upcoming exam is recorded for an enrolled module; `status` shows the recorded exam spine",
+      "keys": [],
+      "note": "the fixture's only exam date (2026-10-09) is in the past relative to the wall clock, so the study suggestion has no upcoming exam to project"
+    }
+  },
+  {
+    "name": "entry-12-intelligence-scan",
+    "intent": "Read the decision queue (changes awaiting a decision).",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.18,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1972,
+      "tokens": 493,
+      "keys": [
+        "contract",
+        "detectors",
+        "full_result",
+        "groups",
+        "omitted_goals",
+        "omitted_groups",
+        "total_goals",
+        "total_groups"
+      ]
+    }
+  },
+  {
+    "name": "entry-13-ability-context-horizon",
+    "intent": "Read the small ability horizon.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.22,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1214,
+      "tokens": 303,
+      "keys": [
+        "abilities",
+        "bridges",
+        "candidate_connection_count",
+        "candidate_connections",
+        "contract",
+        "expand",
+        "expansions",
+        "has_more",
+        "next_offset",
+        "offset",
+        "returned",
+        "schema_version",
+        "snapshot_id",
+        "total",
+        "truncated"
+      ]
+    }
+  },
+  {
+    "name": "entry-14-ability-context-one",
+    "intent": "Expand one known ability.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.23,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 1612,
+      "tokens": 403,
+      "keys": [
+        "ability",
+        "bridges",
+        "candidate_connections",
+        "contract",
+        "encounters",
+        "expand",
+        "focus",
+        "related_encounters",
+        "related_encounters_total",
+        "schema_version",
+        "shared_concept_candidates",
+        "snapshot_id"
+      ]
+    }
+  },
+  {
+    "name": "entry-15-semantic-list",
+    "intent": "Governance question \u2192 the semantic registry.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.17,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "bytes": 5349,
+      "tokens": 1337,
+      "predicate_count": 26,
+      "first_predicates": [
+        "AllowedMutation",
+        "AttemptConsistent",
+        "CanonicalWritePath",
+        "ClaimStale",
+        "CritiquePointActionable",
+        "CurrentScopeAuthority",
+        "DossierFresh",
+        "EvidenceComplete"
+      ],
+      "distinct_authorities": [
+        "ADR-015; OPERATOR.md rule 2",
+        "ARCHITECTURE.md \u00a75.5; OPERATOR.md boundaries 4-5",
+        "OPERATOR.md 'clean'",
+        "OPERATOR.md boundaries 4-5",
+        "OPERATOR.md rule 10",
+        "OPERATOR.md rule 10, boundary 17",
+        "OPERATOR.md rule 12",
+        "OPERATOR.md rule 14",
+        "OPERATOR.md rule 15",
+        "OPERATOR.md rule 16",
+        "OPERATOR.md rule 2",
+        "OPERATOR.md rule 3"
+      ]
+    }
+  },
+  {
+    "name": "entry-16-semantic-predicate",
+    "intent": "Ask one governance question through the semantic surface.",
+    "tags": [
+      "read",
+      "entry-table"
+    ],
+    "ok": true,
+    "seconds": 0.36,
+    "error": null,
+    "detail": {
+      "predicate": "AllowedMutation",
+      "exit_code": 2,
+      "bytes": 0,
+      "tokens": 1,
+      "stdout_head": "",
+      "stderr_head": "los: INVALID_REQUEST: malformed inputs for AllowedMutation: allowed_mutation() missing 3 required keyword-only arguments: 'capability', 'target_path', and 'scopes'\n"
+    }
+  },
+  {
+    "name": "entry-17-supporting-reads",
+    "intent": "The other operator reads: lists, search, related, dossier.",
+    "tags": [
+      "read",
+      "cost"
+    ],
+    "ok": true,
+    "seconds": 2.89,
+    "error": null,
+    "detail": {
+      "status": {
+        "exit_code": 0,
+        "bytes": 543,
+        "tokens": 135
+      },
+      "module-list": {
+        "exit_code": 0,
+        "bytes": 944,
+        "tokens": 236
+      },
+      "unit-list": {
+        "exit_code": 0,
+        "bytes": 2126,
+        "tokens": 531
+      },
+      "project-list": {
+        "exit_code": 0,
+        "bytes": 518,
+        "tokens": 129
+      },
+      "program-list": {
+        "exit_code": 0,
+        "bytes": 296,
+        "tokens": 74
+      },
+      "inbox-list": {
+        "exit_code": 0,
+        "bytes": 454,
+        "tokens": 113
+      },
+      "search-empty": {
+        "exit_code": 0,
+        "bytes": 3482,
+        "tokens": 870
+      },
+      "search-content": {
+        "exit_code": 0,
+        "bytes": 783,
+        "tokens": 195
+      },
+      "related-note": {
+        "exit_code": 0,
+        "bytes": 302,
+        "tokens": 75
+      },
+      "dossier": {
+        "exit_code": 0,
+        "bytes": 1523,
+        "tokens": 380
+      }
+    }
+  }
+]

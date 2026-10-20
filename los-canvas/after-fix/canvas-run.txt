@@ -1,0 +1,131 @@
+[PASS] entry-01-discover-capabilities (0.5s)
+[PASS] entry-02-plan-edit-context-brief (0.2s)
+[PASS] entry-03-plan-edit-context-route (0.2s)
+[PASS] entry-04-plan-edit-context-stage (0.2s)
+[PASS] entry-05-bootstrap-brief (0.3s)
+[PASS] entry-05b-bootstrap-unbounded (0.3s)
+[PASS] entry-06-inspect-workspace (0.3s)
+[PASS] entry-07-note-read (0.2s)
+[PASS] entry-07b-note-read-paged (0.2s)
+[PASS] entry-08-material-context (0.2s)
+[PASS] entry-09-material-span (0.2s)
+[PASS] entry-10-resume (0.2s)
+[PASS] entry-11-resume-study (0.2s)
+[PASS] entry-12-intelligence-scan (0.2s)
+[PASS] entry-13-ability-context-horizon (0.2s)
+[PASS] entry-14-ability-context-one (0.2s)
+[PASS] entry-15-semantic-list (0.2s)
+[PASS] entry-16-semantic-predicate (0.4s)
+[PASS] entry-17-supporting-reads (2.9s)
+
+T01: 19/19 passed
+[PASS] j1-capture-inbox (1.2s)
+[PASS] j2-read-inbox (0.8s)
+[FAIL] j3-create-durable-note (0.2s)
+[FAIL] j4-read-back-the-note (0.4s)
+[FAIL] j5-bind-evidence (0.2s)
+[PASS] j6-relation (1.1s)
+[PASS] j7-garden-seed (1.1s)
+[PASS] j8-save-question (1.0s)
+[PASS] j9-register-source (1.3s)
+[PASS] j10-source-feedback (1.1s)
+[PASS] j11-record-observation (1.0s)
+[PASS] j12-stage-note (1.1s)
+[PASS] j13-shelving-prepare (1.3s)
+[PASS] j14-session-end (0.5s)
+[PASS] j15-read-back-the-world (0.9s)
+[PASS] j16-cost-ledger (0.0s)
+
+T02: 13/16 passed
+[PASS] a1-replay-same-envelope (1.9s)
+[PASS] a2-reseal-under-used-key (2.0s)
+[PASS] a3-same-key-different-intent (2.0s)
+[PASS] a4-replay-only (1.8s)
+[PASS] b1-stale-snapshot (2.1s)
+[PASS] b2-two-writers-one-snapshot (1.8s)
+[PASS] c1-bare-write-command-refuses (0.6s)
+[PASS] c2-out-of-scope-write (0.6s)
+[PASS] c3-shelving-needs-explicit-selection (2.1s)
+[PASS] c4-note-revise-needs-approval (0.6s)
+[PASS] d1-fail-closed-blocks-writes (1.1s)
+[PASS] d2-reads-refuse-rather-than-omit (1.1s)
+[PASS] e1-agent-improvised-study-map (0.4s)
+[PASS] e1b-agent-authored-scope-lands (4.1s)
+[PASS] e2-masters-promotion-surface (0.5s)
+[PASS] e3-turn-the-semester-surface (0.4s)
+[PASS] f1-note-body-with-frontmatter (0.7s)
+[PASS] f2-fragment-uri-two-resolvers (1.7s)
+[PASS] f3-unknown-and-tampered-envelope (0.8s)
+[PASS] f4-unbounded-read-is-clamped (0.6s)
+[PASS] g1-which-approval-paths-admit-a-plan-revision (2.4s)
+
+T03: 21/21 passed
+[PASS] s1-ui-reachable-surface (0.2s)
+[PASS] s2-projection-vs-note-body (0.5s)
+[PASS] s3-note-corpus-search (0.2s)
+[PASS] s4-ui-has-no-note-body-path (0.0s)
+[PASS] s5-ui-renders-note-provenance (0.0s)
+
+T04: 5/5 passed
+[PASS] w27-1-program-facts (0.3s)
+[PASS] w27-2-publish-catalog (1.0s)
+[PASS] w27-3-publish-comparison (1.1s)
+[PASS] w27-4-promote-the-module (0.6s)
+[PASS] w27-5-after-the-promotion (0.9s)
+[PASS] w27-6-stale-verification-refused (0.2s)
+
+T05: 6/6 passed
+[PASS] w24-1-a-remote-to-push-to (0.3s)
+[PASS] w24-2-record-the-attempt (1.0s)
+[PASS] w24-3-close-the-module (1.3s)
+[PASS] w24-4-archive-a-workspace (1.2s)
+[PASS] w24-5-the-garden-judgment (0.2s)
+[PASS] w24-6-commit-and-push (1.6s)
+[PASS] w24-7-after-the-boundary (0.6s)
+
+T06: 7/7 passed
+[PASS] u1-synthetic-note-in-the-projection (1.3s)
+[PASS] u2-the-ui-consumes-the-canvas-world (0.4s)
+[PASS] u3-what-the-ui-can-reach-of-the-note (0.0s)
+[PASS] u4-the-ui-suite (13.6s)
+
+T07: 4/4 passed
+
+======================================================================
+T01 — Operator entry points
+======================================================================
+
+======================================================================
+T02 — The operator's filing journey
+======================================================================
+
+======================================================================
+T03 — Adversarial probes
+======================================================================
+
+======================================================================
+T04 — The consumption seam
+======================================================================
+
+======================================================================
+T05 — Workflow 27: the Master's promotion
+======================================================================
+
+======================================================================
+T06 — Workflow 24: turning the semester
+======================================================================
+
+======================================================================
+T07 — The UI consuming a canvas world
+======================================================================
+
+======================================================================
+SCOREBOARD
+======================================================================
+  T01  Operator entry points                ok
+  T02  The operator's filing journey        ok
+  T03  Adversarial probes                   ok
+  T04  The consumption seam                 ok
+  T05  Workflow 27: the Master's promotion  ok
+  T06  Workflow 24: turning the semester    ok
+  T07  The UI consuming a canvas world      ok

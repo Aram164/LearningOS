@@ -1,0 +1,118 @@
+[
+  {
+    "name": "w27-1-program-facts",
+    "intent": "Step 1 of workflow 27: create the programme and semester facts.",
+    "tags": [
+      "workflow-27"
+    ],
+    "ok": true,
+    "seconds": 0.31,
+    "error": null,
+    "detail": {
+      "program_written": true,
+      "validate_exit": 0,
+      "validate_errors": []
+    }
+  },
+  {
+    "name": "w27-2-publish-catalog",
+    "intent": "Publish the prospective catalog into quarantine.",
+    "tags": [
+      "workflow-27",
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.01,
+    "error": null,
+    "detail": {
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "apply_error": null,
+      "apply_stderr": "",
+      "catalog_on_disk": true,
+      "quarantine_is_tracked": true,
+      "note": "the quarantine is a Git-tracked partition; the catalog is published through an operator-approval capability with no gesture admission"
+    }
+  },
+  {
+    "name": "w27-3-publish-comparison",
+    "intent": "Publish the reviewed source comparison.",
+    "tags": [
+      "workflow-27",
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.07,
+    "error": null,
+    "detail": {
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "apply_error": null,
+      "apply_stderr": "",
+      "comparison_on_disk": true,
+      "note": "the comparison binds the candidate set by checksum; the request_id and delivery_id are free strings, so the binding proves *which* candidates were compared, not who compared them"
+    }
+  },
+  {
+    "name": "w27-4-promote-the-module",
+    "intent": "Promote the candidate into the live curriculum, as the agent.",
+    "tags": [
+      "workflow-27",
+      "headline"
+    ],
+    "ok": true,
+    "seconds": 0.58,
+    "error": null,
+    "detail": {
+      "check_exit": 2,
+      "package_sha256": null,
+      "seal_exit": 0,
+      "apply_exit": 2,
+      "apply_error": {
+        "code": "INVALID_REQUEST",
+        "message": "invalid payload for module.plan.import: package_sha256: None is not of type 'string'",
+        "retryable": false,
+        "details": {}
+      },
+      "apply_stderr": "",
+      "module_promoted": false,
+      "evidence_url": "https://nonexistent.invalid/probe/module-catalog",
+      "evidence_url_resolves": false,
+      "note": "the verification evidence URL is a shape check: `^https://` and a date ordering. Nothing fetches it."
+    }
+  },
+  {
+    "name": "w27-5-after-the-promotion",
+    "intent": "What does the curriculum look like afterwards?",
+    "tags": [
+      "workflow-27",
+      "read"
+    ],
+    "ok": true,
+    "seconds": 0.92,
+    "error": null,
+    "detail": {
+      "validate_exit": 0,
+      "validate_errors": [],
+      "module_list_mentions_probe": false,
+      "status_head": "Learning OS v3 \u00b7 learning_os v3.2.0 \u00b7 /Users/aramaljanadi/los-canvas-fixed/worlds/t05/LearningOS/repository\n  notes 2 \u00b7 concepts 2 \u00b7 relations 1 \u00b7 sources 1\n  programs 2 \u00b7 modules 1 (1 enrolled) \u00b7 projects 1 \u00b7 units 2 \u00b7 study maps 1 \u00b7 workspaces 2 active (0 standing), 0 archived\n  inbox 2 top-level \u00b7 3 files \u00b7 garden 1 \u00b7 reviewed 0/2 \u00b7 evidence 0/2\n  exam: 2026-10-09 \u2014 Demo Module (Termin 2)\n  validation: OK \u00b7 14 warning(s), visible and nonblocking (`make warnings` for the delta)\n  human home pa"
+    }
+  },
+  {
+    "name": "w27-6-stale-verification-refused",
+    "intent": "Verification evidence older than as_of must refuse.",
+    "tags": [
+      "workflow-27",
+      "adversarial"
+    ],
+    "ok": true,
+    "seconds": 0.24,
+    "error": null,
+    "detail": {
+      "seal_exit": 2,
+      "seal_stderr": "seal_envelope: Master Planning promotion refused: One reviewed Future Master's Planning promotion package contract violation: verification/evidence/0: 'verifier' is a required property; fix the payload and seal again",
+      "apply_exit": 2,
+      "note": "evidence dated before `as_of` must be refused"
+    }
+  }
+]

@@ -1,0 +1,522 @@
+[
+  {
+    "name": "j1-capture-inbox",
+    "intent": "A learner (or the agent) drops an unsorted fragment.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.21,
+    "error": null,
+    "detail": {
+      "step": "capture",
+      "capability": "capture.create",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: capture-request:t02-capture=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 216,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143528-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143528-001.yaml",
+      "error": null,
+      "receipt_on_disk": true,
+      "inbox_after": [
+        "20261020-143528-synthetic-fragment.md",
+        "note-drop.md",
+        "pack/one.md",
+        "pack/two.md"
+      ]
+    }
+  },
+  {
+    "name": "j2-read-inbox",
+    "intent": "The operator lists the inbox and reads one drop, bounded.",
+    "tags": [
+      "read"
+    ],
+    "ok": true,
+    "seconds": 0.77,
+    "error": null,
+    "detail": {
+      "listing": {
+        "step": "inbox-list",
+        "argv": [
+          "inbox-list"
+        ],
+        "exit_code": 0,
+        "tokens": 171,
+        "bytes": 685
+      },
+      "captured_name": "20261020-143528-synthetic-fragment.md",
+      "read": {
+        "step": "inbox-read",
+        "argv": [
+          "inbox-read",
+          "20261020-143528-synthetic-fragment.md"
+        ],
+        "exit_code": 0,
+        "tokens": 153,
+        "bytes": 614,
+        "keys": [
+          "content",
+          "content_sha256",
+          "contract",
+          "item",
+          "next_offset",
+          "offset",
+          "offset_unit",
+          "path",
+          "schema_version",
+          "snapshot_id",
+          "start_line",
+          "total_characters"
+        ]
+      },
+      "content_sha256": "sha256:ca506f3c0cd794c223c5185058f8811013e32c3cbefce87363defcb75ceda45a"
+    }
+  },
+  {
+    "name": "j3-create-durable-note",
+    "intent": "The operator files the fragment as a durable, source-bound note.",
+    "tags": [
+      "write"
+    ],
+    "ok": false,
+    "seconds": 0.23,
+    "error": null,
+    "detail": {
+      "step": "note.create",
+      "capability": "note.create",
+      "seal_exit": 2,
+      "apply_exit": 2,
+      "seal_stderr": "seal_envelope: note body carries its own frontmatter; the writer owns the frontmatter \u2014 strip it and send the body only; fix the payload and seal again",
+      "apply_stderr": "seal_envelope: note body carries its own frontmatter; the writer owns the frontmatter \u2014 strip it and send the body only; fix the payload and seal again",
+      "seal_tokens": 1,
+      "apply_tokens": 1
+    }
+  },
+  {
+    "name": "j4-read-back-the-note",
+    "intent": "The operator reads the note back \u2014 the filing is observable.",
+    "tags": [
+      "read"
+    ],
+    "ok": false,
+    "seconds": 0.4,
+    "error": null,
+    "detail": {
+      "read": {
+        "step": "note-read",
+        "argv": [
+          "note-read",
+          "note-canvas-variance"
+        ],
+        "exit_code": 2,
+        "tokens": 1,
+        "bytes": 0
+      },
+      "path": null,
+      "has_content": false
+    }
+  },
+  {
+    "name": "j5-bind-evidence",
+    "intent": "The operator binds one piece of evidence to the note.",
+    "tags": [
+      "write"
+    ],
+    "ok": false,
+    "seconds": 0.24,
+    "error": null,
+    "detail": {
+      "step": "note.evidence.add",
+      "capability": "note.evidence.add",
+      "seal_exit": 2,
+      "apply_exit": 2,
+      "seal_stderr": "seal_envelope: note not found: note-canvas-variance; fix the payload and seal again",
+      "apply_stderr": "seal_envelope: note not found: note-canvas-variance; fix the payload and seal again",
+      "seal_tokens": 1,
+      "apply_tokens": 1
+    }
+  },
+  {
+    "name": "j6-relation",
+    "intent": "The operator records one explicit concept relation.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.05,
+    "error": null,
+    "detail": {
+      "step": "concept.relations.change",
+      "capability": "concept.relations.change",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: registry-concept-relations=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 208,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143530-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143530-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j7-garden-seed",
+    "intent": "A deliberately half-formed idea is planted, not filed.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.05,
+    "error": null,
+    "detail": {
+      "step": "garden.seed.create",
+      "capability": "garden.seed.create",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: garden-request:t02-garden=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 225,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143531-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143531-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j8-save-question",
+    "intent": "The operator saves a question as a first-class record.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.04,
+    "error": null,
+    "detail": {
+      "step": "atlas.question.save",
+      "capability": "atlas.question.save",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: note-canvas-question-variance=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 233,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143532-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143532-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j9-register-source",
+    "intent": "The operator registers one global source identity.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.26,
+    "error": null,
+    "detail": {
+      "step": "source.intake.record",
+      "capability": "source.intake.record",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: source-canvas-synthetic=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 199,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143534-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143534-001.yaml",
+      "error": null,
+      "receipt_on_disk": true,
+      "check_exit": 0,
+      "diff_sha256": "sha256:02b74017246d73bf2a500e42236abff3afad47b4b5f33111c12b11cb83faff77"
+    }
+  },
+  {
+    "name": "j10-source-feedback",
+    "intent": "The operator records lightweight personal evidence.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.07,
+    "error": null,
+    "detail": {
+      "step": "source.feedback.record",
+      "capability": "source.feedback.record",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 271,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143535-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143535-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j11-record-observation",
+    "intent": "The operator records one attempt \u2014 evidence, never mastery.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.05,
+    "error": null,
+    "detail": {
+      "step": "learner.observation.append",
+      "capability": "learner.observation.append",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: workspace-demo=0",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 435,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143536-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143536-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j12-stage-note",
+    "intent": "Stage-specific learning belongs in the stage's working note.",
+    "tags": [
+      "write"
+    ],
+    "ok": true,
+    "seconds": 1.07,
+    "error": null,
+    "detail": {
+      "step": "stage.note.write",
+      "capability": "stage.note.write",
+      "seal_exit": 0,
+      "apply_exit": 0,
+      "seal_stderr": "seal_envelope: guards auto: unit-demo-l01=4",
+      "apply_stderr": "",
+      "seal_tokens": 1,
+      "apply_tokens": 238,
+      "replayed": false,
+      "transaction_id": "transaction-20261020-143537-001",
+      "receipt_path": "operations/transactions/transaction-20261020-143537-001.yaml",
+      "error": null,
+      "receipt_on_disk": true
+    }
+  },
+  {
+    "name": "j13-shelving-prepare",
+    "intent": "The operator prepares the review packet \u2014 nothing is applied yet.",
+    "tags": [
+      "write",
+      "review-queue"
+    ],
+    "ok": true,
+    "seconds": 1.27,
+    "error": null,
+    "detail": {
+      "prepare": {
+        "step": "review.prepare",
+        "capability": "review.prepare",
+        "seal_exit": 0,
+        "apply_exit": 0,
+        "seal_stderr": "seal_envelope: guards auto: study-map-demo-l01=1, unit-demo-l01=5",
+        "apply_stderr": "",
+        "seal_tokens": 1,
+        "apply_tokens": 244,
+        "ok": true,
+        "replayed": false,
+        "transaction_id": "transaction-20261020-143538-001",
+        "receipt_path": "operations/transactions/transaction-20261020-143538-001.yaml",
+        "error": null,
+        "receipt_on_disk": true
+      },
+      "proposal_items": null,
+      "proposal_count": null
+    }
+  },
+  {
+    "name": "j14-session-end",
+    "intent": "The session ends deliberately; the ledger names its own rows.",
+    "tags": [
+      "write",
+      "session"
+    ],
+    "ok": true,
+    "seconds": 0.49,
+    "error": null,
+    "detail": {
+      "exit_code": 0,
+      "stderr": "",
+      "stdout_head": "{\"ok\":true,\"touched\":[\"curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md\",\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\",\"knowledge/concept-relations.yaml\",\"knowledge/garden/synthetic-half-formed-idea-maybe-the-variance-identity-is-a-spec.md\",\"knowledge/notes/questions/note-canvas-question-variance.md\",\"operations/transactions/idempotency.yaml\",\"operations/transactions/revisions.yaml\",\"operations/transactions/transaction-20261020-143528-001.yaml\",\"operations/transactions/t",
+      "keys": [
+        "client",
+        "committed",
+        "ok",
+        "other_sessions",
+        "owned_changes",
+        "ownership_conflicts",
+        "pushed",
+        "session_closed",
+        "session_id",
+        "stale_hours",
+        "stale_paths",
+        "touched",
+        "unrelated_changes",
+        "validation"
+      ]
+    }
+  },
+  {
+    "name": "j15-read-back-the-world",
+    "intent": "After the journey: the world still validates and the baseline holds.",
+    "tags": [
+      "read",
+      "verification"
+    ],
+    "ok": true,
+    "seconds": 0.86,
+    "error": null,
+    "detail": {
+      "validate_exit": 0,
+      "validate_stdout": "stage 'stage-demo-pending' teaches source-demo-book at '\u00a72' \u2014 the module's source map declares no route for it; adopt the material in the module's map, or bind the resource to a route the map declares [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]\n\n0 error(s), 13 warning(s) \u2014 OK",
+      "warnings_exit": 0,
+      "warnings_stdout": "warning-baseline: 13 warning(s) across 8 signature(s); baseline 13 across 8 (recorded 2026-09-20)\nwarning-baseline: OK \u2014 zero errors, no new warning signature.",
+      "status_stdout": "Learning OS v3 \u00b7 learning_os v3.2.0 \u00b7 /Users/aramaljanadi/los-canvas-fixed/worlds/t02/LearningOS/repository\n  notes 3 \u00b7 concepts 2 \u00b7 relations 2 \u00b7 sources 2\n  programs 1 \u00b7 modules 1 (1 enrolled) \u00b7 projects 1 \u00b7 units 2 \u00b7 study maps 1 \u00b7 workspaces 2 active (0 standing), 0 archived\n  inbox 3 top-level \u00b7 4 files \u00b7 garden 2 \u00b7 reviewed 0/3 \u00b7 evidence 0/3\n  exam: 2026-10-09 \u2014 Demo Module (Termin 2)\n  validation: OK \u00b7 13 warning(s), visible and nonblocking (`make warnings` for the delta)\n  human home page: generated/reading-room.md (make views)"
+    }
+  },
+  {
+    "name": "j16-cost-ledger",
+    "intent": "What did one filing session cost in steps and tokens?",
+    "tags": [
+      "cost"
+    ],
+    "ok": true,
+    "seconds": 0.0,
+    "error": null,
+    "detail": {
+      "steps": 14,
+      "writes": 11,
+      "reads": 3,
+      "write_tokens": 2282,
+      "read_tokens": 325,
+      "total_tokens": 2607,
+      "per_step": [
+        {
+          "step": "capture",
+          "capability": "capture.create",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 216
+        },
+        {
+          "step": "inbox-list",
+          "tokens": 171
+        },
+        {
+          "step": "inbox-read",
+          "tokens": 153
+        },
+        {
+          "step": "note.create",
+          "capability": "note.create",
+          "seal_exit": 2,
+          "apply_exit": 2,
+          "seal_tokens": 1,
+          "apply_tokens": 1
+        },
+        {
+          "step": "note-read",
+          "tokens": 1
+        },
+        {
+          "step": "note.evidence.add",
+          "capability": "note.evidence.add",
+          "seal_exit": 2,
+          "apply_exit": 2,
+          "seal_tokens": 1,
+          "apply_tokens": 1
+        },
+        {
+          "step": "concept.relations.change",
+          "capability": "concept.relations.change",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 208
+        },
+        {
+          "step": "garden.seed.create",
+          "capability": "garden.seed.create",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 225
+        },
+        {
+          "step": "atlas.question.save",
+          "capability": "atlas.question.save",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 233
+        },
+        {
+          "step": "source.intake.record",
+          "capability": "source.intake.record",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 199
+        },
+        {
+          "step": "source.feedback.record",
+          "capability": "source.feedback.record",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 271
+        },
+        {
+          "step": "learner.observation.append",
+          "capability": "learner.observation.append",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 435
+        },
+        {
+          "step": "stage.note.write",
+          "capability": "stage.note.write",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 238
+        },
+        {
+          "step": "review.prepare",
+          "capability": "review.prepare",
+          "seal_exit": 0,
+          "apply_exit": 0,
+          "seal_tokens": 1,
+          "apply_tokens": 244
+        }
+      ]
+    }
+  }
+]
