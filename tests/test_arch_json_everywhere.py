@@ -16,6 +16,10 @@ nothing further. Hence, against the base:
   new, as (a) when it has --json at the base, keeping (c) as before;
 - the flag-parses and no-handler-reads checks apply to every D16-approved
   subcommand, new or consumed.
+
+Commands introduced after the comparison base are born with the JSON flag.
+Their explicit creation approvals govern that addition; they are not
+retroactive D16 conversions of commands that did not exist at the base.
 """
 
 from __future__ import annotations
@@ -403,8 +407,24 @@ def test_no_b_handler_reads_the_json_flag():
     _assert_no_b_handler_reads_the_json_flag(cli)
 
 
+def _assert_new_json_command_is_approved(sub: str, fname: str, live: dict) -> None:
+    """A command born with JSON is an approved addition, not a D16 conversion."""
+    operation = fname.removesuffix(".schema.json")
+    required = {f"cli.{sub}", f"request_schemas.{fname}",
+                f"catalog.commands.{operation}"}
+    entries = yaml.safe_load(APPROVALS_PATH.read_text())["approvals"]
+    approved = {row["key"]: row for row in entries
+                if row.get("change") == "added" and row.get("key") in required}
+    assert set(approved) == required, (sub, required - set(approved))
+    assert all(row.get("pre_approved_by") and row.get("plan_ref")
+               for row in approved.values()), sub
+    assert len({row["plan_ref"] for row in approved.values()}) == 1, sub
+    _, reference = _schema_for_subcommand("module-plan-import")
+    assert live["properties"]["json"] == reference["properties"]["json"], sub
+
+
 def _assert_every_subcommand_is_a_b_or_c(base: str, new_cli: dict[str, str]) -> None:
-    """Closed world: (b) is new, (a) has the flag at the base, (c) is kept."""
+    """Keep D16 conversions distinct from approved commands born with JSON."""
     b = set(new_cli.values())
     parser = _parser()
     choices = _subcommands(parser)
@@ -417,15 +437,18 @@ def _assert_every_subcommand_is_a_b_or_c(base: str, new_cli: dict[str, str]) -> 
             hist_text = _git_show_optional(
                 base, f"system/schema/requests/{_historical_primary(fname)}"
             )
-            base_doc = json.loads(
-                hist_text
-                if hist_text is not None
-                else _git_show(base, f"system/schema/requests/{fname}")
-            )
+            had_historical_primary = hist_text is not None
+            if hist_text is None:
+                hist_text = _git_show_optional(base, f"system/schema/requests/{fname}")
+            if hist_text is None:
+                assert sub not in b, sub
+                _assert_new_json_command_is_approved(sub, fname, live)
+                continue
+            base_doc = json.loads(hist_text)
             had = "json" in base_doc["properties"]
             if sub in C_SUBCOMMANDS:
                 # B1 adds JSON to these two former human-only child tools.
-                assert (not had if hist_text is not None else had) and sub not in b, sub
+                assert (not had if had_historical_primary else had) and sub not in b, sub
                 _, reference = _schema_for_subcommand("health-report")
                 assert live["properties"]["json"] == reference["properties"]["json"], sub
             else:
@@ -524,3 +547,26 @@ def test_other_property_change_on_a_converted_pilot_still_fails(
     monkeypatch.setattr("test_arch_json_everywhere.REQUESTS_DIR", shadow)
     with pytest.raises(AssertionError):
         _assert_only_json_added_to_request_schemas(S13_BASE, {key: new_schemas[key]})
+
+
+@pytest.mark.parametrize("sub", ["module-create", "collection-create"])
+def test_commands_born_with_json_accept_only_the_transport_delta(sub):
+    parser = _parser()
+    argv = [sub, "--file", "reviewed.yaml"]
+    plain = parser.parse_args(argv)
+    flagged = parser.parse_args([*argv, "--json"])
+    assert vars(flagged) == {**vars(plain), "json": True}
+    fname, live = _schema_for_subcommand(sub)
+    _assert_new_json_command_is_approved(sub, fname, live)
+
+
+def test_new_json_classification_requires_the_creation_approval(tmp_path, monkeypatch):
+    entries = yaml.safe_load(APPROVALS_PATH.read_text())
+    entries["approvals"] = [row for row in entries["approvals"]
+                            if row.get("key") != "cli.collection-create"]
+    approvals = tmp_path / "approvals.yaml"
+    approvals.write_text(yaml.safe_dump(entries))
+    monkeypatch.setitem(globals(), "APPROVALS_PATH", approvals)
+    fname, live = _schema_for_subcommand("collection-create")
+    with pytest.raises(AssertionError):
+        _assert_new_json_command_is_approved("collection-create", fname, live)

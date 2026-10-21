@@ -417,7 +417,8 @@ def test_capability_backed_commands_take_only_the_approved_noop_json_flag(
     approvals = yaml.safe_load(
         (repo_root / "tests/architecture/surface-approvals.yaml")
         .read_text(encoding="utf-8"))
-    allowed = {entry["key"][len("cli."):] for entry in approvals["approvals"]
+    entries = approvals["approvals"]
+    allowed = {entry["key"][len("cli."):] for entry in entries
                if entry.get("plan_ref") == "PLAN D16"
                and entry["key"].startswith("cli.")}
     assert allowed, "no D16 approvals: the (b) set would be vacuous"
@@ -433,10 +434,33 @@ def test_capability_backed_commands_take_only_the_approved_noop_json_flag(
         assert len(flagged) <= 1, command
         if not flagged:
             continue
-        assert command in allowed, f"{command}: unapproved --json"
+        assert command in allowed or _born_with_json(entries, definition), (
+            f"{command}: unapproved --json")
         action = flagged[0]
         assert type(action).__name__ == "_StoreTrueAction", command
         assert action.default is False and action.const is True, command
+
+
+def _born_with_json(entries, definition) -> bool:
+    """Whether a command born after the base carries a complete creation approval.
+
+    A command that did not exist at the comparison base is born with the
+    no-op flag; its approval is the explicit creation approval — the cli
+    row, its request schema and its catalog entry under one plan
+    reference — not a D16 conversion of a command that was never there.
+    A partial set is not an approval.
+    """
+    command = definition.cli_command or ""
+    required = {
+        f"cli.{command}",
+        f"request_schemas.{definition.name}.schema.json",
+        f"catalog.commands.{definition.name}",
+    }
+    rows = [entry for entry in entries
+            if entry.get("change") == "added" and entry.get("key") in required]
+    if {row["key"] for row in rows} != required:
+        return False
+    return len({row.get("plan_ref") for row in rows}) == 1
 
 
 def test_no_capability_schema_gains_a_json_property(repo_root):

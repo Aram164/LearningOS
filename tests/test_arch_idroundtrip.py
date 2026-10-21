@@ -79,7 +79,7 @@ SPECIAL_KINDS: tuple[str, ...] = (
 
 #: Amendment (q)'s goal regex, exactly.
 EXPECTED_GOAL_PATTERN = (
-    r"^(?:lineage-stale|study-map-obligation|evidence-superseded|claims-needing-review|claims-audit|repeated-question-gap|inspection-without-dossier|reviewer-correction-pattern):\S+$"
+    r"^(?:lineage-stale|study-map-obligation|module-scope-obligation|evidence-superseded|claims-needing-review|claims-audit|repeated-question-gap|inspection-without-dossier|reviewer-correction-pattern):\S+$"
 )
 
 

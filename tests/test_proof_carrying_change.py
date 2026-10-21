@@ -15,6 +15,7 @@ from __future__ import annotations
 import pytest
 
 from learning_os.derive.semantics import (
+    CONTRACT_VERSION,
     ChangeError,
     admit,
     build_envelope,
@@ -82,7 +83,7 @@ def _context(**overrides):
                               for key, value in CONTRACT_SCOPES.items()},
         "claim_statuses": {"covers:route-1": "supported"},
         "evidence_digests": {"material://demo/deck.pdf": "h1"},
-        "current_contract_version": 2,
+        "current_contract_version": CONTRACT_VERSION,
         "current_revisions": dict(REVISIONS),
         "current_snapshot": SNAPSHOT,
     }
@@ -265,3 +266,9 @@ def test_malformed_contexts_refuse_at_construction():
         _context(current_contract_version="2")
     with pytest.raises(ChangeError):
         _context(current_revisions={"study-map-aml-l01": "six"})
+
+
+def test_an_old_contract_conflicts_with_the_current_context():
+    decision = admit(_envelope(read_contract_version=CONTRACT_VERSION - 1), _context())
+    assert decision.verdict == "conflict"
+    assert any("stale" in reason.lower() for reason in decision.reasons)

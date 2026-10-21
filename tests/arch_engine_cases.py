@@ -118,8 +118,13 @@ def _build_root(tmp_path: Path, name: str) -> Path:
     # This historical engine oracle includes contract bytes in its tree and
     # snapshot hashes. Keep its original inputs when later contracts change;
     # the full scenario suite exercises current contracts independently.
-    for relpath, data in historical_files(
-            "074f4717e14527798752de84b3c9c4e88348b658").items():
+    historical = historical_files("074f4717e14527798752de84b3c9c4e88348b658")
+    # Freeze the inventory as well as bytes: later schemas are not inputs
+    # to this historical oracle. Current-contract scenarios run separately.
+    for target in (root / "system/schema").rglob("*.schema.json"):
+        if target.relative_to(root).as_posix() not in historical:
+            target.unlink()
+    for relpath, data in historical.items():
         target = root / relpath
         # build_mini_repo deliberately omits host-local attachment policy.
         if target.is_file():

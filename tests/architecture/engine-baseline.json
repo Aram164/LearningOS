@@ -977,10 +977,11 @@
     "idempotency_before": null,
     "journal_after": {
       "files": {
-        "operations/transactions/.inflight/TX1/intent.json": "3c4001e41662f8cd078e09172df0a7748f9116bc26d87dc957bb8998fd054dd7"
+        "operations/transactions/.inflight/TX1/intent.json": "cc818e5e5e4f16203962c61149baa1b94c5b13ce42e1ba4d73c406fe45be2418"
       },
       "intents": {
         "operations/transactions/.inflight/TX1/intent.json": {
+          "created_directories": [],
           "paths": [
             {
               "after": {
@@ -1967,10 +1968,11 @@
     "journal_after": {
       "files": {
         "operations/transactions/.inflight/TX1/BK1": "01d09d19c2139a46aebfb577780d123d7396e97201bc7ead210a2ebff8239dee",
-        "operations/transactions/.inflight/TX1/intent.json": "8cfe386128b6885a5ada820923344a8ac506bc3c51751e4b2362750893ee2d49"
+        "operations/transactions/.inflight/TX1/intent.json": "08037ab297ec3e54f6d605b89e01eeb6ba54cca495971b604ed528449b7e4bed"
       },
       "intents": {
         "operations/transactions/.inflight/TX1/intent.json": {
+          "created_directories": [],
           "paths": [
             {
               "after": {

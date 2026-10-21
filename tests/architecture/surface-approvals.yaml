@@ -335,9 +335,3 @@ approvals:
   - {key: "catalog.commands.collection.create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
   - {key: "cli.collection-create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
   - {key: "request_schemas.collection.create.schema.json", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
-  # The no-op --json flag is PLAN D16's universal output convention; these two
-  # commands join that enumeration under the same approved policy.
-  - {key: "cli.module-create", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
-  - {key: "request_schemas.module.create.schema.json", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
-  - {key: "cli.collection-create", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
-  - {key: "request_schemas.collection.create.schema.json", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

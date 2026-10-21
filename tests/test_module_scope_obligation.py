@@ -187,3 +187,12 @@ def test_an_owned_module_without_units_is_owed(tmp_path):
                   kind="academic", units=[])
     obs = collect_observations(root)
     assert obs.scope_obligations == ("module-empty",)
+
+
+def test_emitted_scope_goal_ids_round_trip_through_the_canonical_parser():
+    from learning_os.derive.semantics.scan import ScanInput, scan_observations
+    from learning_os.domain.ids import parse
+
+    goals = scan_observations(ScanInput(scope_obligations=("module-demo-empty",)))
+    assert len(goals) == 1
+    assert parse("goal", goals[0].goal_id) == "module-scope-obligation:module-demo-empty"

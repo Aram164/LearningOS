@@ -112,12 +112,14 @@ def test_resume_reports_results_against_a_moved_requirement(mini_repo: Path):
     assert "against a requirement that has since changed" in text.stdout
 
 
-def test_semantic_list_registers_26_predicates(mini_repo: Path):
+def test_semantic_list_registers_27_predicates(mini_repo: Path):
     proc = run_los(mini_repo, "semantic", "--list")
     assert proc.returncode == 0, proc.stderr
     registry = json.loads(proc.stdout)
-    assert len(registry) == 26
+    assert len(registry) == 27
     by_name = {row["name"]: row for row in registry}
+    assert by_name["NeedsScope"]["inputs"] == [
+        "module_kind", "module_status", "unit_count", "owned"]
     assert by_name["NeedsStudyMap"]["inputs"] == [
         "unit_status", "module_status", "has_study_map"]
     assert by_name["NeedsStudyMap"]["authority"] == "OPERATOR.md rule 6"

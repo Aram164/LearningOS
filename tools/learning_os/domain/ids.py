@@ -71,7 +71,7 @@ KINDS: Mapping[str, IdKind] = {
     "goal": IdKind(
         "goal",
         re.compile(
-            r"^(?:lineage-stale|study-map-obligation|evidence-superseded|claims-needing-review|claims-audit|repeated-question-gap|inspection-without-dossier|reviewer-correction-pattern):\S+$"
+            r"^(?:lineage-stale|study-map-obligation|module-scope-obligation|evidence-superseded|claims-needing-review|claims-audit|repeated-question-gap|inspection-without-dossier|reviewer-correction-pattern):\S+$"
         ),
     ),
     "digest": IdKind(

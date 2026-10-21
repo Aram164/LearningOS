@@ -288,6 +288,7 @@ def test_precedence_covers_every_known_detector():
         "evidence-superseded",
         "claims-audit",
         "study-map-obligation",
+        "module-scope-obligation",
         "reviewer-correction-pattern",
         "repeated-question-gap",
         "inspection-without-dossier",
@@ -297,7 +298,7 @@ def test_precedence_covers_every_known_detector():
 def test_precedence_orders_every_known_detector():
     detectors = ["inspection-without-dossier", "claims-audit",
                  "lineage-stale", "claims-needing-review",
-                 "study-map-obligation", "evidence-superseded",
+                 "study-map-obligation", "module-scope-obligation", "evidence-superseded",
                  "repeated-question-gap",
                  "reviewer-correction-pattern"]
     clusters = [_ranked_cluster(f"c-{detector}", detector, f"g-{detector}")
@@ -310,6 +311,7 @@ def test_precedence_orders_every_known_detector():
         "evidence-superseded",
         "claims-audit",
         "study-map-obligation",
+        "module-scope-obligation",
         "reviewer-correction-pattern",
         "repeated-question-gap",
         "inspection-without-dossier",
