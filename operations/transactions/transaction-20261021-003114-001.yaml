@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261021-003114-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-21T00:31:14+02:00'
+snapshot_before: sha256:d1286a0c2961d4c3dc693d4e9cf73d4dc0c9545ce68d6c993b1cd58d6812bdbf
+snapshot_after: sha256:34df19a40110f13041eeb8e1228721ce5de8ad4b3b3d99a14e5f3980ee8d5ace
+expected_revisions:
+  source-blum-algorithmen-datenstrukturen: 1
+artifact_revisions:
+  source-blum-algorithmen-datenstrukturen:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: 6c7db15f6d0a1fbde0cf62ba8d9bc0b09a63750e68e1f1cde7cc1851a35cc6a6
+  sha256_after: da126d96d5f0dbdb82108170be43e3f6c605cf4b22c7b07205585fb12e00354b
+  created: false
+metadata:
+  data_roots_sha256: sha256:bec60db2eea9bb5c395ec5d7ed6131b300f853f33eee70bc66c676f99c618d77
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-course-intake-20261021-attach-source-blum-algorithmen-datenstrukturen-a90c7f38
+  idempotency_key: course-intake-20261021-attach-source-blum-algorithmen-datenstrukturen
+  intent_sha256: sha256:2e488c3c38ffb586b9733387190e81a3040dd9c237a3cffe6b2492eb5dad0568
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:2e488c3c38ffb586b9733387190e81a3040dd9c237a3cffe6b2492eb5dad0568

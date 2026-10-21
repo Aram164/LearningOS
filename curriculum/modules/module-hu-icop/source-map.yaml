@@ -1,0 +1,49 @@
+type: module-source-map
+module_id: module-hu-icop
+sources:
+- source_id: source-icop-hu-ws2627
+  role: course-material
+  why: Current organization and linear-programming slides supplied by Aram; the screenshot
+    preserves Moodle further-reading names.
+  when: WS 2026/27 course reference; no lecture units or study order inferred.
+  priority: 1
+  unit_routes: []
+- source_id: source-korte-vygen
+  role: spine
+  why: The lecturer identifies Korte & Vygen fifth edition (2012) as the main book
+    (organization slide 6).
+  when: Reference-only shelf; Chapter 3 is recommended after the linear-programming
+    chapter (LP slide 2).
+  priority: 2
+  unit_routes: []
+- source_id: source-blum-algorithmen-datenstrukturen
+  role: reference
+  why: The linear-programming slides explicitly follow Chapter 8 of Blum, second edition
+    (LP slide 2).
+  when: Reference-only shelf for linear programming.
+  priority: 3
+  unit_routes: []
+- source_id: source-dantzig-orden-wolfe-generalized-simplex-1955
+  role: optional-depth
+  why: Named in the supplied Moodle screenshot as recommended reading for linear programming.
+  when: 'Deferred: save the name and fetch only if needed, as Aram requested.'
+  priority: 4
+  unit_routes: []
+- source_id: source-gondzio-interior-point-2012
+  role: optional-depth
+  why: Named in the supplied Moodle screenshot as recommended reading for linear programming.
+  when: 'Deferred: save the name and fetch only if needed, as Aram requested.'
+  priority: 5
+  unit_routes: []
+- source_id: source-spielman-teng-smoothed-simplex-2004
+  role: optional-depth
+  why: Named in the supplied Moodle screenshot as recommended reading for linear programming.
+  when: 'Deferred: save the name and fetch only if needed, as Aram requested.'
+  priority: 6
+  unit_routes: []
+- source_id: source-disser-skutella-simplex-np-mighty-2018
+  role: optional-depth
+  why: Named in the supplied Moodle screenshot as recommended reading for linear programming.
+  when: 'Deferred: save the name and fetch only if needed, as Aram requested.'
+  priority: 7
+  unit_routes: []

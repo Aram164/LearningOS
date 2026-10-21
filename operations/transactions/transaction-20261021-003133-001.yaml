@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261021-003133-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-21T00:31:33+02:00'
+snapshot_before: sha256:34df19a40110f13041eeb8e1228721ce5de8ad4b3b3d99a14e5f3980ee8d5ace
+snapshot_after: sha256:7288563872b2735d5479de92742477aa6914fc811babeadab813710b32391e5a
+expected_revisions:
+  source-icop-hu-ws2627: 1
+artifact_revisions:
+  source-icop-hu-ws2627:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: da126d96d5f0dbdb82108170be43e3f6c605cf4b22c7b07205585fb12e00354b
+  sha256_after: 3c2c20220a8a0cc5e2b7317ea34ec89f17246afa0f17bbe09aa88a2fa5ee7baa
+  created: false
+metadata:
+  data_roots_sha256: sha256:3de99b493e9b0a11e91c5a2e5f5000786202c4269e93ff519fdbe9af5fcf7c42
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-course-intake-20261021-attach-source-icop-hu-ws2627-77a8f2b3
+  idempotency_key: course-intake-20261021-attach-source-icop-hu-ws2627
+  intent_sha256: sha256:7f338c98cb470f7ff9adfcc32b94ac7f617c579df6bbfef7ba3d426904bb6960
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:7f338c98cb470f7ff9adfcc32b94ac7f617c579df6bbfef7ba3d426904bb6960

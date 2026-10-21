@@ -1,0 +1,11 @@
+type: module-source-map
+module_id: module-hu-betriebssysteme
+sources:
+- source_id: source-bs-hu-prior-slides
+  role: reference
+  why: Aram is retaking BS and requested reuse of his old slides; the three located
+    PDFs were copied with matching hashes.
+  when: Prior-year reference only. Slides carry May 2006 dates; alignment to WS 2026/27
+    has not been checked.
+  priority: 1
+  unit_routes: []

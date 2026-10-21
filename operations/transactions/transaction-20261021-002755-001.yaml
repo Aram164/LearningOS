@@ -1,0 +1,66 @@
+schema_version: 2
+id: transaction-20261021-002755-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-10-21T00:27:55+02:00'
+snapshot_before: sha256:0025ce3da8c935e7992f681243f1351bbfddb7555ffe76525c669d1811598727
+snapshot_after: sha256:e2601888749768c07d2547f637c2af44b37cb87f9cc537f63297a759dbdd2dd9
+expected_revisions:
+  source-blum-algorithmen-datenstrukturen: 0
+  source-dantzig-orden-wolfe-generalized-simplex-1955: 0
+  source-disser-skutella-simplex-np-mighty-2018: 0
+  source-gondzio-interior-point-2012: 0
+  source-icop-hu-ws2627: 0
+  source-korte-vygen: 0
+  source-spielman-teng-smoothed-simplex-2004: 0
+artifact_revisions:
+  source-blum-algorithmen-datenstrukturen:
+    before: 0
+    after: 1
+  source-dantzig-orden-wolfe-generalized-simplex-1955:
+    before: 0
+    after: 1
+  source-disser-skutella-simplex-np-mighty-2018:
+    before: 0
+    after: 1
+  source-gondzio-interior-point-2012:
+    before: 0
+    after: 1
+  source-icop-hu-ws2627:
+    before: 0
+    after: 1
+  source-korte-vygen:
+    before: 0
+    after: 1
+  source-spielman-teng-smoothed-simplex-2004:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: 9fe4e30765b07230871a45999cb6efd366d7b9885f2d408bef22bff802b00ce3
+  sha256_after: 6c7db15f6d0a1fbde0cf62ba8d9bc0b09a63750e68e1f1cde7cc1851a35cc6a6
+  created: false
+- path: sources/registry/optimization.yaml
+  sha256_before: c37e74d735ee401ba3c11f092bf693aa29bac9bc6e39670c5721cc84cb7ceada
+  sha256_after: 1f550d73b9addc0f017fab83e2c713b04f1aa11a26bc37064558fbed1e13cc0b
+  created: false
+metadata:
+  data_roots_sha256: sha256:d0052112ec1e20a3848bf20e204ed7a2472ad05955a1d27f16087e28b18ee319
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-course-intake-20261021-sources-5a80df96
+  idempotency_key: course-intake-20261021-sources
+  intent_sha256: sha256:5cd625eee47ffb33125d4f578b6c5f73121c77d4020c796535f8a2db41eb7471
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:5cd625eee47ffb33125d4f578b6c5f73121c77d4020c796535f8a2db41eb7471

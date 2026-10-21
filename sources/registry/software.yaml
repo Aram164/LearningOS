@@ -691,3 +691,18 @@ sources:
   identifiers:
     tu-python-for-ml-sheet-4: https://github.com/mahmutoezmen/Python-for-ML-Course/tree/main/4.%20Sheet
     tu-python-for-ml-sheet-5: https://github.com/mahmutoezmen/Python-for-ML-Course/tree/main/5.%20Sheet
+- id: source-bs-hu-prior-slides
+  title: 'Betriebssysteme (HU Berlin) — prior-year slides: OS basics, processes, CPU scheduling'
+  type: lecture
+  organization: HU Berlin — Systems Architecture
+  year: 2006
+  discovery:
+    basis:
+    - kind: landing-page
+      ref: http://sar.informatik.hu-berlin.de
+    observed: '2026-10-21'
+    possible_use: Prior-year BS reference slides copied from Aram’s Desktop archive. Slides say May 2006;
+      no claim that they define WS 2026/27 scope.
+  thematic_group_ids:
+  - thematic-group-software
+  material: material://source-bs-hu-prior-slides/02_structure.pdf

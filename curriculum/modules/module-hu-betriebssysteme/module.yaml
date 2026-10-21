@@ -1,0 +1,12 @@
+id: module-hu-betriebssysteme
+type: module
+kind: academic
+area_id: program-bachelors
+title: Betriebssysteme (BS)
+status: enrolled
+institution: HU Berlin
+semester: wise-2026
+unit_order: []
+source_map: source-map.yaml
+thematic_group_ids:
+- thematic-group-software

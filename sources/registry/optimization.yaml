@@ -31,21 +31,6 @@ sources:
     strengths:
     - Free book + EE364a videos + published psets/finals with solutions; Ch 5 duality/KKT is the tool
       the SVM derivation stands on — one investment carries OptAlgos AND ML 2-X
-- id: source-korte-vygen
-  thematic_group_ids:
-  - thematic-group-optimization
-  - thematic-group-algorithms
-  title: 'Korte & Vygen — Combinatorial Optimization: Theory and Algorithms'
-  type: book
-  authors:
-  - Bernhard Korte
-  - Jens Vygen
-  evaluations:
-  - roles:
-    - reference
-    strengths:
-    - 'The ''Bonn bible'': matchings, matroids, flows, integer programs — covers ADM II''s second half
-      completely, and its approximation chapters are the bridge to ADM III'
 - id: source-mit-18657
   thematic_group_ids:
   - thematic-group-optimization
@@ -194,3 +179,93 @@ sources:
     latex-quellen-auf-github: https://github.com/MarcToussaint
     no-free-lunch: https://www.user.tu-berlin.de/mtoussai/teaching/Optimization/16-noFreeLunch.pdf
     bayesian-optimization: https://www.user.tu-berlin.de/mtoussai/teaching/Optimization/17-bayesOpt.pdf
+- id: source-korte-vygen
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+  title: 'Korte & Vygen — Combinatorial Optimization: Theory and Algorithms'
+  type: book
+  authors:
+  - Bernhard Korte
+  - Jens Vygen
+  evaluations:
+  - roles:
+    - reference
+    strengths:
+    - 'The ''Bonn bible'': matchings, matroids, flows, integer programs — covers ADM II''s second half
+      completely, and its approximation chapters are the bridge to ADM III'
+  year: 2012
+  identifiers:
+    doi: 10.1007/978-3-642-24488-9
+    edition: '5'
+    eisbn: 978-3-642-24488-9
+    isbn: 978-3-642-24487-2
+  material: material://source-korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf
+- id: source-dantzig-orden-wolfe-generalized-simplex-1955
+  title: The generalized simplex method for minimizing a linear form under linear inequality constraints
+  type: paper
+  authors:
+  - Dantzig
+  - Orden
+  - Wolfe
+  year: 1955
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: Reference-only ICOP reading, transcribed from Aram’s screenshot. Fetch only if needed;
+      paper contents and full bibliographic details not examined.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+- id: source-disser-skutella-simplex-np-mighty-2018
+  title: The simplex algorithm is NP-mighty
+  type: paper
+  authors:
+  - Disser
+  - Skutella
+  year: 2018
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: Reference-only ICOP reading, transcribed from Aram’s screenshot. Fetch only if needed;
+      paper contents and full bibliographic details not examined.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+- id: source-gondzio-interior-point-2012
+  title: Interior point methods 25 years later
+  type: paper
+  authors:
+  - Gondzio
+  year: 2012
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: Reference-only ICOP reading, transcribed from Aram’s screenshot. Fetch only if needed;
+      paper contents and full bibliographic details not examined.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+- id: source-spielman-teng-smoothed-simplex-2004
+  title: 'Smoothed analysis of algorithms: Why the simplex algorithm usually takes polynomial time'
+  type: paper
+  authors:
+  - Spielman
+  - Teng
+  year: 2004
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: Reference-only ICOP reading, transcribed from Aram’s screenshot. Fetch only if needed;
+      paper contents and full bibliographic details not examined.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms

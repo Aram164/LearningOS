@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-09-29'
+captured: '2026-10-21'
 totals:
-  files: 1519
-  bytes: 2105714887
+  files: 1527
+  bytes: 2120057904
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -344,6 +344,9 @@ files:
   algorithms/structures/algo2-hu-materials/stable matching aufgaben.pdf:
     size: 368338
     sha256: fd2da9ebd9a0dd3768d93cd5f7ca07550a288958a5192ad81f85057d087b7328
+  algorithms/structures/blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf:
+    size: 1701758
+    sha256: 07c641f78934770eb38c8cacdb3a898b2e71806b6551a11856967ed9cc6a4d68
   algorithms/structures/clrs/clrs-de.pdf:
     size: 8774407
     sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
@@ -353,12 +356,30 @@ files:
   algorithms/structures/dms-grundwerkzeuge/dms.pdf:
     size: 3644850
     sha256: 69e005550e32137612e71a1e15187c5cbf410ba88493866b6702bbdc7c4c4cc5
+  algorithms/structures/icop-hu-ws2627/further-reading-2026-10-21.png:
+    size: 611514
+    sha256: a3905719c428f8169be3f9890431d0475c65550bbd53fb7f91f572f2fe99c685
+  algorithms/structures/icop-hu-ws2627/ico_linearprogramming.pdf:
+    size: 767086
+    sha256: 76f3c809e569606b1d7422867ec0887f062aab814e6abeda31f2c990e15f45d1
+  algorithms/structures/icop-hu-ws2627/ico_organization.pdf:
+    size: 205253
+    sha256: 685c99b1156dcce6601b815c451253dc9024092526ce70d42ba0da3c1cbf3c0d
   algorithms/structures/kleinberg-tardos/Kleinberg-Tardos_Algorithm-Design.pdf:
     size: 44858555
     sha256: e11753413dd47283a293c0317f750f7fa658ab7c6148ecde705bd038f2f9a5a1
   algorithms/structures/ottmann-widmayer/ow.pdf:
     size: 6186269
     sha256: dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf
+  data-systems/architecture/bs-hu-prior-slides/02_structure.pdf:
+    size: 956030
+    sha256: b82d9c9e6652bffcef034e405f740615a5134011457fd1fef7fc1a93dfdbd9bf
+  data-systems/architecture/bs-hu-prior-slides/03_processes.pdf:
+    size: 973701
+    sha256: 0205e0c0546eb81d92dec1c149ae19f76a6dcce78570c9465961be771ec28b09
+  data-systems/architecture/bs-hu-prior-slides/04_cpu_scheduling copy.pdf:
+    size: 623417
+    sha256: 2b5059afd43bb8964bf2330b6881206bb78e6230b71d42fda5cdd2d5caf35cf9
   data-systems/architecture/scalable-dataframe-systems/Towards Scalable Dataframe Systems.pdf:
     size: 1033120
     sha256: d73d3f96dad8724fdab0a4a6dc0774f31b9a830ed9eb96b2f931a01fcb351ff5
@@ -3899,6 +3920,9 @@ files:
   ml-systems/scale/mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf:
     size: 18733188
     sha256: 7670d4ed7ee9c210e5da61988be2c9f68bbd6205e9c8b029db72c0f75f5a33bf
+  optimization/korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf:
+    size: 8504258
+    sha256: 529e982feea67c18fd8c2869191f42ec37932e7665aad9f2aca6abe18f9f5cbe
   software/engineering/cs-classics-shelf/Clean Architecture A Craftsman Guide to Software Structure and Design.pdf:
     size: 8414896
     sha256: eb3885d72fdb7c27a6a3531b06d69ae71c90f4c9c7a0e79f517654bad402baf5

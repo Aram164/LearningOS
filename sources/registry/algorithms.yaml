@@ -462,3 +462,44 @@ sources:
       matches the exam language; flows & matchings → AL.H/I, computational geometry → AL.J
   identifiers:
     course-page: https://ae.iti.kit.edu/english/4046.php
+- id: source-blum-algorithmen-datenstrukturen
+  title: Norbert Blum — Algorithmen und Datenstrukturen (2., überarbeitete Auflage)
+  type: book
+  authors:
+  - Norbert Blum
+  year: 2013
+  identifiers:
+    doi: 10.1524/9783486719666
+    edition: '2'
+    eisbn: 978-3-486-71966-6
+    isbn: 978-3-486-71403-6
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: 'ICOP linear programming: Chapter 8, as explicitly assigned on slide 2 of ico_linearprogramming.pdf.
+      Local book supplied by Aram.'
+  thematic_group_ids:
+  - thematic-group-algorithms
+  - thematic-group-optimization
+  material: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+- id: source-icop-hu-ws2627
+  title: Introduction to Combinatorial Optimization (ICOP) — Stefan Kratsch, HU Berlin, WS 2026/27
+  type: course
+  authors:
+  - Stefan Kratsch
+  organization: HU Berlin
+  year: 2026
+  url: https://moodle.hu-berlin.de/course/view.php?id=144365
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://moodle.hu-berlin.de/course/view.php?id=144365
+    observed: '2026-10-21'
+    possible_use: 'Current ICOP course: organization and linear-programming PDFs supplied by Aram; screenshot
+      preserves the optional reading list. No study plan requested.'
+  thematic_group_ids:
+  - thematic-group-algorithms
+  - thematic-group-optimization
+  material: material://source-icop-hu-ws2627/ico_linearprogramming.pdf

@@ -1,0 +1,38 @@
+schema_version: 2
+id: transaction-20261021-002904-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-10-21T00:29:04+02:00'
+snapshot_before: sha256:e2601888749768c07d2547f637c2af44b37cb87f9cc537f63297a759dbdd2dd9
+snapshot_after: sha256:6ecbab20b0acfade5e231f4fd3ffae9f65f8c7826643ad789ebc65d631a497c4
+expected_revisions:
+  source-bs-hu-prior-slides: 0
+artifact_revisions:
+  source-bs-hu-prior-slides:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/software.yaml
+  sha256_before: 28c227d871e815b0c69a31f7f474aac7c8431c70a9c999f75e339f09c6968113
+  sha256_after: da3efc5ab09b6f3691baf53620f688cddf387a75e3587fd2dc69af6181b40ffe
+  created: false
+metadata:
+  data_roots_sha256: sha256:b8b02709fc7f6648ac6b2cfd97848701d2c788e23671927388a37234d9b17e99
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-course-intake-20261021-bs-slides-d0c3701e
+  idempotency_key: course-intake-20261021-bs-slides
+  intent_sha256: sha256:6982ef10f9585a5b59e0b56f0ec3513a2ddd9ae508d0bef5e0c749121fb82c3f
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6982ef10f9585a5b59e0b56f0ec3513a2ddd9ae508d0bef5e0c749121fb82c3f

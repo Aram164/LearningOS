@@ -145,6 +145,10 @@ PLACEMENT = {
     "mathe-vorkurse":                    "mathematics/general",
     "programming-language-books":        "software/languages",
     "systems-architecture-shelf":        "data-systems/architecture",
+    "bs-hu-prior-slides":               "data-systems/architecture",
+    "icop-hu-ws2627":                   "algorithms/structures",
+    "blum-algorithmen-datenstrukturen":  "algorithms/structures",
+    "korte-vygen":                      "optimization",
     "theoinfo-hu-archive":               "algorithms/complexity",
     "vorkurs-mathe-2022":                "mathematics/general",
 

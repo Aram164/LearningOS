@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261021-003056-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-21T00:30:56+02:00'
+snapshot_before: sha256:508655fc23188820db00806dadad5e06ab694a63a6038183d95d85c7cea4bdf7
+snapshot_after: sha256:d1286a0c2961d4c3dc693d4e9cf73d4dc0c9545ce68d6c993b1cd58d6812bdbf
+expected_revisions:
+  source-korte-vygen: 1
+artifact_revisions:
+  source-korte-vygen:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/optimization.yaml
+  sha256_before: 1f550d73b9addc0f017fab83e2c713b04f1aa11a26bc37064558fbed1e13cc0b
+  sha256_after: 260858a16a21486e3c7941a244ef9b539e33fd8e6e213ec855423870c21b8d50
+  created: false
+metadata:
+  data_roots_sha256: sha256:e743797f5c7208f9f6776b65874afd8114fab74668c3e14be5cbe3d78cdce5eb
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-course-intake-20261021-attach-source-korte-vygen-f5203aa7
+  idempotency_key: course-intake-20261021-attach-source-korte-vygen
+  intent_sha256: sha256:6ab74456b4c436c782a2af4da1ac68e3cf40ec63246fdc511a5ca6414c753ce7
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6ab74456b4c436c782a2af4da1ac68e3cf40ec63246fdc511a5ca6414c753ce7

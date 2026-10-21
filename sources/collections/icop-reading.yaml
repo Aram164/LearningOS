@@ -1,0 +1,40 @@
+title: ICOP — course books and further reading
+collection_kind: topic-pack
+purpose: Books supplied for ICOP and optional paper names preserved for retrieval
+  only when needed.
+thematic_group_ids:
+- thematic-group-algorithms
+- thematic-group-optimization
+description: 'WS 2026/27. Course organization: source-icop-hu-ws2627, ico_organization.pdf.
+  Paper names: supplied Moodle screenshot; papers not downloaded or examined.'
+entries:
+- source: source-icop-hu-ws2627
+  group: Course material
+  why: Current organization and linear-programming slides supplied by Aram; the screenshot
+    preserves Moodle further-reading names. WS 2026/27 course reference; no lecture
+    units or study order inferred.
+- source: source-korte-vygen
+  group: Books
+  why: The lecturer identifies Korte & Vygen fifth edition (2012) as the main book
+    (organization slide 6). Reference-only shelf; Chapter 3 is recommended after the
+    linear-programming chapter (LP slide 2).
+- source: source-blum-algorithmen-datenstrukturen
+  group: Books
+  why: The linear-programming slides explicitly follow Chapter 8 of Blum, second edition
+    (LP slide 2). Reference-only shelf for linear programming.
+- source: source-dantzig-orden-wolfe-generalized-simplex-1955
+  group: Further reading — fetch if needed
+  why: 'Named in the supplied Moodle screenshot as recommended reading for linear
+    programming. Deferred: save the name and fetch only if needed, as Aram requested.'
+- source: source-gondzio-interior-point-2012
+  group: Further reading — fetch if needed
+  why: 'Named in the supplied Moodle screenshot as recommended reading for linear
+    programming. Deferred: save the name and fetch only if needed, as Aram requested.'
+- source: source-spielman-teng-smoothed-simplex-2004
+  group: Further reading — fetch if needed
+  why: 'Named in the supplied Moodle screenshot as recommended reading for linear
+    programming. Deferred: save the name and fetch only if needed, as Aram requested.'
+- source: source-disser-skutella-simplex-np-mighty-2018
+  group: Further reading — fetch if needed
+  why: 'Named in the supplied Moodle screenshot as recommended reading for linear
+    programming. Deferred: save the name and fetch only if needed, as Aram requested.'

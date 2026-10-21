@@ -482,6 +482,78 @@ entries:
       unit-m2-sad-l10: 12
     snapshot_before: sha256:05e3799be58b908125832aae70e1776ae0e804430810ed9df730421b0ade270d
     snapshot_after: sha256:7b7ca7b2b4ef6e1c0270c9828742fb7547615cba07f3c84d9b34094f5e9b8721
+  course-intake-20261021-attach-source-blum-algorithmen-datenstrukturen:
+    request_id: request-course-intake-20261021-attach-source-blum-algorithmen-datenstrukturen-a90c7f38
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:2e488c3c38ffb586b9733387190e81a3040dd9c237a3cffe6b2492eb5dad0568
+    transaction_id: transaction-20261021-003114-001
+    receipt_path: operations/transactions/transaction-20261021-003114-001.yaml
+    revisions:
+      source-blum-algorithmen-datenstrukturen: 2
+    snapshot_before: sha256:d1286a0c2961d4c3dc693d4e9cf73d4dc0c9545ce68d6c993b1cd58d6812bdbf
+    snapshot_after: sha256:34df19a40110f13041eeb8e1228721ce5de8ad4b3b3d99a14e5f3980ee8d5ace
+  course-intake-20261021-attach-source-bs-hu-prior-slides:
+    request_id: request-course-intake-20261021-attach-source-bs-hu-prior-slides-6d279c27
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:dd66e78a089697fa7313a479d23472ed964a5cf08e104870db662bc1c00bf759
+    transaction_id: transaction-20261021-005652-001
+    receipt_path: operations/transactions/transaction-20261021-005652-001.yaml
+    revisions:
+      source-bs-hu-prior-slides: 2
+    snapshot_before: sha256:7288563872b2735d5479de92742477aa6914fc811babeadab813710b32391e5a
+    snapshot_after: sha256:59d87c840f9b610ccad0294e904c98d06b8bbffbae670090427e3d30a94243ef
+  course-intake-20261021-attach-source-icop-hu-ws2627:
+    request_id: request-course-intake-20261021-attach-source-icop-hu-ws2627-77a8f2b3
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:7f338c98cb470f7ff9adfcc32b94ac7f617c579df6bbfef7ba3d426904bb6960
+    transaction_id: transaction-20261021-003133-001
+    receipt_path: operations/transactions/transaction-20261021-003133-001.yaml
+    revisions:
+      source-icop-hu-ws2627: 2
+    snapshot_before: sha256:34df19a40110f13041eeb8e1228721ce5de8ad4b3b3d99a14e5f3980ee8d5ace
+    snapshot_after: sha256:7288563872b2735d5479de92742477aa6914fc811babeadab813710b32391e5a
+  course-intake-20261021-attach-source-korte-vygen:
+    request_id: request-course-intake-20261021-attach-source-korte-vygen-f5203aa7
+    capability: source.record.revise
+    channel: operator
+    intent_sha256: sha256:6ab74456b4c436c782a2af4da1ac68e3cf40ec63246fdc511a5ca6414c753ce7
+    transaction_id: transaction-20261021-003056-001
+    receipt_path: operations/transactions/transaction-20261021-003056-001.yaml
+    revisions:
+      source-korte-vygen: 2
+    snapshot_before: sha256:508655fc23188820db00806dadad5e06ab694a63a6038183d95d85c7cea4bdf7
+    snapshot_after: sha256:d1286a0c2961d4c3dc693d4e9cf73d4dc0c9545ce68d6c993b1cd58d6812bdbf
+  course-intake-20261021-bs-slides:
+    request_id: request-course-intake-20261021-bs-slides-d0c3701e
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:6982ef10f9585a5b59e0b56f0ec3513a2ddd9ae508d0bef5e0c749121fb82c3f
+    transaction_id: transaction-20261021-002904-001
+    receipt_path: operations/transactions/transaction-20261021-002904-001.yaml
+    revisions:
+      source-bs-hu-prior-slides: 1
+    snapshot_before: sha256:e2601888749768c07d2547f637c2af44b37cb87f9cc537f63297a759dbdd2dd9
+    snapshot_after: sha256:6ecbab20b0acfade5e231f4fd3ffae9f65f8c7826643ad789ebc65d631a497c4
+  course-intake-20261021-sources:
+    request_id: request-course-intake-20261021-sources-5a80df96
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:5cd625eee47ffb33125d4f578b6c5f73121c77d4020c796535f8a2db41eb7471
+    transaction_id: transaction-20261021-002755-001
+    receipt_path: operations/transactions/transaction-20261021-002755-001.yaml
+    revisions:
+      source-blum-algorithmen-datenstrukturen: 1
+      source-dantzig-orden-wolfe-generalized-simplex-1955: 1
+      source-disser-skutella-simplex-np-mighty-2018: 1
+      source-gondzio-interior-point-2012: 1
+      source-icop-hu-ws2627: 1
+      source-korte-vygen: 1
+      source-spielman-teng-smoothed-simplex-2004: 1
+    snapshot_before: sha256:0025ce3da8c935e7992f681243f1351bbfddb7555ffe76525c669d1811598727
+    snapshot_after: sha256:e2601888749768c07d2547f637c2af44b37cb87f9cc537f63297a759dbdd2dd9
   coursera-retire-aml-2026-09-16:
     request_id: request-coursera-retire-aml
     capability: module.plan.import

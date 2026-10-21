@@ -1,0 +1,18 @@
+id: module-hu-icop
+type: module
+kind: academic
+area_id: program-bachelors
+title: Introduction to Combinatorial Optimization (ICOP)
+status: enrolled
+institution: HU Berlin
+semester: wise-2026
+unit_order: []
+source_map: source-map.yaml
+thematic_group_ids:
+- thematic-group-algorithms
+- thematic-group-optimization
+examination:
+  type: muendlich
+  notes: '30 minutes in person; English or German. No exam-admission requirements.
+    Appointment booking via Moodle and AGNES when announced. Source: source-icop-hu-ws2627,
+    ico_organization.pdf, slide 15. No sitting or exam registration inferred.'
