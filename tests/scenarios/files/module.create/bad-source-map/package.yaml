@@ -1,0 +1,10 @@
+module:
+  id: module-scenario-no-map
+  type: module
+  kind: academic
+  area_id: program-bachelors
+  title: Module without a source map
+  status: enrolled
+  institution: HU Berlin
+  semester: wise-2026
+  unit_order: []

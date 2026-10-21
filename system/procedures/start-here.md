@@ -352,5 +352,5 @@ ability-demo-derive ability-demo-derive True
 
 ```scrut
 $ los semantic --list | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d))'
-26
+27
 ```

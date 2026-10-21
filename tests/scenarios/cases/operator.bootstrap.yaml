@@ -43,7 +43,7 @@ cases:
   - --limit
   - 1
   - --expected-snapshot
-  - sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4
+  - sha256:fdfa92ae6123e1c7caa0956d22feb862bc7a1990582cf49871a3499dae14ee69
   expect:
     site: null
 - id: brief-and-compact
@@ -139,7 +139,7 @@ cases:
   - --limit
   - 1
   - --expected-snapshot
-  - sha256:3ec28ae278eff95f442e18b62a8c5807d2ba4d645799af9dfa9dcb0c068667c4
+  - sha256:fdfa92ae6123e1c7caa0956d22feb862bc7a1990582cf49871a3499dae14ee69
   expect:
     site: null
 - id: cli-brief-and-compact

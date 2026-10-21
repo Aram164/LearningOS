@@ -45,6 +45,12 @@ cases:
     request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:983c5f7ccb5c641f2cc7047867dec439f66a5a149254b4e3b03cc5a455760c84"}
     artifact_ids: []
     expect: {site: module.create.bad-module-record}
+  - id: bad-source-map
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:ec80c6e6d445dfeb6a2d7d15bb3bcc39e4c8e8f2ab6f6ceea1c2bc1a20749cbd"}
+    artifact_ids: []
+    expect: {site: module.create.bad-source-map}
   - id: bad-source-map-foreign
     kind: refusal
     transport: gateway
@@ -66,7 +72,7 @@ cases:
   - id: direct-cli-refused
     kind: refusal
     transport: cli
-    argv: [module-create, --file, "<CASEDATA>/package.yaml", --file-sha256, "sha256:8817d3bc0cd8ae0f03852551fc8f623b430b16066a5a4d258fdcdd22ee5de5e5"]
+    argv: [module-create, --file, "<CASEDATA>/package.yaml", --file-sha256, "sha256:23fb03495f4a5d98b1d18f39aad3b319d67c80f37d999528740a6ceba535ae8d"]
     expect: {site: null}
   - id: exact-replay
     kind: sequence

@@ -21,6 +21,12 @@ cases:
     request: {file: "<CASEDATA>/Bad Stem.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
     artifact_ids: []
     expect: {site: collection.create.bad-stem}
+  - id: bad-yaml
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/broken-shelf.yaml", file_sha256: "sha256:39f3cfcc8b2d428f69eed06730ad87c409aa9e2bae164ce8cbec1c6cd3e74de8"}
+    artifact_ids: []
+    expect: {site: collection.create.bad-yaml}
   - id: bad-record
     kind: refusal
     transport: gateway

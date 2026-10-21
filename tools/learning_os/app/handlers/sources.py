@@ -34,7 +34,7 @@ from learning_os.domain.suggest import with_suggestions
 from learning_os.domain.validation import CANONICAL_TREES
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.contracts.gateway import current_gateway_request
-from learning_os.store.contracts.json_schema import validate_contract
+from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 from learning_os.store.materials.resolution import (
     MATERIAL_SCHEME,
@@ -369,7 +369,7 @@ def collection_create(ctx: OpContext, req: dict) -> Result:
         )
     try:
         validate_contract(root, "collections.schema.json", record)
-    except Exception as exc:  # ContractValidationError and friends
+    except ContractValidationError as exc:
         raise WriteRefused(
             f"{stem}: {exc}",
             site=f"{ctx.operation}.bad-record",
