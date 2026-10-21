@@ -22,7 +22,7 @@ from learning_os.derive.semantics import (
 
 def test_the_contract_version_is_pinned():
     """Lineage (Phase 2) cites this; a bump must be a deliberate diff."""
-    assert CONTRACT_VERSION == 2
+    assert CONTRACT_VERSION == 3
 
 
 EXPECTED_PREDICATES = {

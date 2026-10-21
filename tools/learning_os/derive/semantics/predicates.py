@@ -29,7 +29,11 @@ from learning_os.store.contracts.write_scopes import WriteScopeError, scope_matc
 #: Version of the predicate contract. Bumped when a predicate's inputs, truth
 #: table, or registry membership changes. Lineage sidecars (Phase 2) cite this
 #: so "what goes stale if the contract changes" stays answerable.
-CONTRACT_VERSION = 2
+#:
+#: 3 — `NeedsScope` joined the registry: a studied academic module with an
+#: owning record and no units owes its initial units. Every claim judged
+#: under 2 is stale under 3 and must be re-examined before it is believed.
+CONTRACT_VERSION = 3
 
 #: A module whose units are still being studied. A dropped or archived module
 #: keeps its records as history and is never asked for new plans.

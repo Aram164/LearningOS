@@ -28,6 +28,7 @@ goal-detector motivating it.
 | Name | Authoritative inputs | Authority | Fallback |
 |---|---|---|---|
 | `NeedsStudyMap` | unit status, module status, map coverage | OPERATOR.md rule 6 | unresolvable module accuses nobody |
+| `NeedsScope` | module kind, module status, unit count, owning record | OPERATOR.md rule 6 (module level) | a module with no owning record owes nothing |
 | `ScopeAuthority` | fact kind + owning ids | OPERATOR.md boundaries 4–5 | unknown kind or ids → `"unknown"` |
 | `AllowedMutation` | capability, target path, declared scopes | capabilities.yaml | malformed or empty → deny |
 | `ShelvingApproval` | applied items, approved items | OPERATOR.md rule 9 | empty apply refused |
@@ -362,9 +363,24 @@ procedures outside the adjudicated set remain `unadjudicated`.
 ## Contract version
 
 `CONTRACT_VERSION` in `tools/learning_os/derive/semantics/predicates.py` is
-currently **2**. Lineage sidecars (Phase 2) cite it so "what goes stale if
+currently **3**. Lineage sidecars (Phase 2) cite it so "what goes stale if
 the contract changes" stays answerable. A bump must be a deliberate diff
 with updated predicates, fixtures, and lineage.
+
+Version 3 adds `NeedsScope` to the registry: a studied academic module with
+an owning partitioned record and no units owes its initial units. One unit
+discharges it, which says planning has begun and never that the module is
+covered. The registry's membership changed, so the version moved.
+
+Every claim judged under version 2 is stale under version 3 and is reported
+as such until it is re-examined. The stored sidecars keep the version they
+were judged under: a claim is not relabelled as reviewed under a contract
+it was never judged under. `lineage.restamp` narrows a claim's reads and
+never re-judges one, so a claim that needs re-judgment says so and waits
+for a human.
+
+Version 2 was the predicate contract as it stood before this change; the
+manifest contract is a separate version and did not move with it.
 
 ## Status
 
