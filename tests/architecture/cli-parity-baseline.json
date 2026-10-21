@@ -131,6 +131,8 @@
     "source-feedback",
     "source-intake",
     "collection-entry-revise",
+    "collection-create",
+    "module-create",
     "source-revise",
     "detour-create",
     "detour-resolve",
@@ -9490,6 +9492,244 @@
           "choices": null,
           "required": false,
           "help": null,
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--expected-revision"
+          ],
+          "dest": "expected_revision",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "[]",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+          "metavar": null,
+          "action": "append"
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "no-op: this command always prints JSON",
+          "metavar": null,
+          "action": "store_true"
+        }
+      ]
+    },
+    "collection-create": {
+      "help": "create one source collection as a transaction",
+      "description": null,
+      "epilog": null,
+      "prog": "los collection-create",
+      "defaults": {
+        "_operation": "'collection.create'",
+        "func": "learning_os.adapters.cli.invoke"
+      },
+      "groups": [],
+      "actions": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "const_repr": "None",
+          "default_repr": "'==SUPPRESS=='",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "metavar": null,
+          "action": "help"
+        },
+        {
+          "option_strings": [
+            "--file"
+          ],
+          "dest": "file",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": true,
+          "help": "reviewed YAML collection record",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--file-sha256"
+          ],
+          "dest": "file_sha256",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": "sha256_value",
+          "choices": null,
+          "required": false,
+          "help": "SHA-256 of the exact collection bytes approved for apply",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--check"
+          ],
+          "dest": "check",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "report what would be created without writing",
+          "metavar": null,
+          "action": "store_true"
+        },
+        {
+          "option_strings": [
+            "--expected-snapshot"
+          ],
+          "dest": "expected_snapshot",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "optimistic concurrency token from manifest _generated.snapshot_id",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--expected-revision"
+          ],
+          "dest": "expected_revision",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "[]",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+          "metavar": null,
+          "action": "append"
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "no-op: this command always prints JSON",
+          "metavar": null,
+          "action": "store_true"
+        }
+      ]
+    },
+    "module-create": {
+      "help": "create one module record and its source map as a transaction",
+      "description": null,
+      "epilog": null,
+      "prog": "los module-create",
+      "defaults": {
+        "_operation": "'module.create'",
+        "func": "learning_os.adapters.cli.invoke"
+      },
+      "groups": [],
+      "actions": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "const_repr": "None",
+          "default_repr": "'==SUPPRESS=='",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "metavar": null,
+          "action": "help"
+        },
+        {
+          "option_strings": [
+            "--file"
+          ],
+          "dest": "file",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": true,
+          "help": "reviewed YAML creation package: a 'module' record and an optional 'source_map'",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--file-sha256"
+          ],
+          "dest": "file_sha256",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": "sha256_value",
+          "choices": null,
+          "required": false,
+          "help": "SHA-256 of the exact creation-package bytes approved for apply",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--check"
+          ],
+          "dest": "check",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "report what would be created without writing",
+          "metavar": null,
+          "action": "store_true"
+        },
+        {
+          "option_strings": [
+            "--expected-snapshot"
+          ],
+          "dest": "expected_snapshot",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "optimistic concurrency token from manifest _generated.snapshot_id",
           "metavar": null,
           "action": "store"
         },

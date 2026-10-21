@@ -1,0 +1,15 @@
+module:
+  id: module-scenario-bad-name
+  type: module
+  kind: academic
+  area_id: program-bachelors
+  title: Bad source map name
+  status: enrolled
+  institution: HU Berlin
+  semester: wise-2026
+  unit_order: []
+  source_map: other.yaml
+source_map:
+  type: module-source-map
+  module_id: module-scenario-bad-name
+  sources: []

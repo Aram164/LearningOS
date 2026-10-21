@@ -1,0 +1,6 @@
+title: Scenario created collection
+collection_kind: catalogue
+entries:
+- source: source-demo-book
+  group: Demo
+  why: The demo book, listed in the scenario collection.

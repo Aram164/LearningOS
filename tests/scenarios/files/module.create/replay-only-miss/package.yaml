@@ -1,0 +1,15 @@
+module:
+  id: module-scenario-miss
+  type: module
+  kind: academic
+  area_id: program-bachelors
+  title: Scenario missed module
+  status: enrolled
+  institution: HU Berlin
+  semester: wise-2026
+  unit_order: []
+  source_map: source-map.yaml
+source_map:
+  type: module-source-map
+  module_id: module-scenario-miss
+  sources: []

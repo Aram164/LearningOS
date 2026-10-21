@@ -186,6 +186,12 @@ fields:
   pointer: /properties/module_id
   kind: module
   lookup: true
+- operation: collection.create
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+  decision: 'Aram 2026-10-21: the reviewed collection bytes are bound by SHA-256
+    before the collection file is written'
 - operation: collection.entry.revise
   pointer: /properties/expected_diff_sha256
   kind: digest
@@ -265,6 +271,12 @@ fields:
   lookup: false
   decision: 'Codex conductor 2026-10-08: commands/material.py:710-715 binds the computed
     requested compaction plan'
+- operation: module.create
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+  decision: 'Aram 2026-10-21: the reviewed creation package bytes are bound
+    by SHA-256 before the module record is written'
 - operation: module.plan.import
   pointer: /properties/apply_reviewed_sha256
   kind: digest

@@ -447,7 +447,7 @@ def test_no_capability_schema_gains_a_json_property(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 47
+    assert len(schemas) == 49
     for name, schema in schemas.items():
         assert "json" not in schema["properties"], name
 
@@ -628,12 +628,12 @@ def test_production_bindings_and_baseline_stay_frozen(repo_root):
     import los
     from learning_os.store.contracts.payloads import subparsers
 
-    assert len(subparsers(los.build_parser())) == 91
+    assert len(subparsers(los.build_parser())) == 93
     baseline = json.loads(
         (repo_root / "tests/architecture/cli-parity-baseline.json")
         .read_text(encoding="utf-8"))
     assert baseline["parser_class"] == "los._LosArgumentParser"
-    assert len(baseline["subparsers"]) == 91
+    assert len(baseline["subparsers"]) == 93
     corpus = json.loads(
         (repo_root / "tests/architecture/cli-parity-corpus.json")
         .read_text(encoding="utf-8"))

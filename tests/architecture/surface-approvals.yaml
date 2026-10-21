@@ -324,3 +324,20 @@ approvals:
   - {"key": "cli.route-patch", "change": "changed", "plan_ref": "workbench/architecture-hardening-2026-10-17/execution/C1-SURFACE-PACKET.json sha256:8e7781d6d10071e25eb0bc51cc0d068bbecffd51340946f1d82a7c107c31d2cf", "pre_approved_by": "Aram 2026-10-18: Approve this exact C1 surface packet"}
   - {"key": "request_schemas.goal.decide.schema.json", "change": "changed", "plan_ref": "workbench/architecture-hardening-2026-10-17/execution/C1-SURFACE-PACKET.json sha256:8e7781d6d10071e25eb0bc51cc0d068bbecffd51340946f1d82a7c107c31d2cf", "pre_approved_by": "Aram 2026-10-18: Approve this exact C1 surface packet"}
   - {"key": "request_schemas.route.patch.schema.json", "change": "changed", "plan_ref": "workbench/architecture-hardening-2026-10-17/execution/C1-SURFACE-PACKET.json sha256:8e7781d6d10071e25eb0bc51cc0d068bbecffd51340946f1d82a7c107c31d2cf", "pre_approved_by": "Aram 2026-10-18: Approve this exact C1 surface packet"}
+
+  # --- module.create and collection.create (2026-10-21) ---------------------
+  # Creation was the one structural act the gateway did not model. Aram
+  # approved the smaller scope on 2026-10-21: transactional creation, and a
+  # derived queue entry for studied academic modules with zero units.
+  - {key: "catalog.commands.module.create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  - {key: "cli.module-create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  - {key: "request_schemas.module.create.schema.json", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  - {key: "catalog.commands.collection.create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  - {key: "cli.collection-create", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  - {key: "request_schemas.collection.create.schema.json", change: added, plan_ref: "CREATION-CAPABILITIES-2026-10-21", pre_approved_by: "Aram 2026-10-21: approved transactional creation and a derived queue entry for studied academic modules with zero units"}
+  # The no-op --json flag is PLAN D16's universal output convention; these two
+  # commands join that enumeration under the same approved policy.
+  - {key: "cli.module-create", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.module.create.schema.json", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "cli.collection-create", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.collection.create.schema.json", change: changed, plan_ref: "PLAN D16", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}

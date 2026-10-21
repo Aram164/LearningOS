@@ -1,0 +1,65 @@
+operation: collection.create
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: create-collection
+    kind: success
+    transport: gateway
+    request: {file: "<CASEDATA>/scenario-shelf.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
+    artifact_ids: [collection:scenario-shelf]
+    a5_base: true
+    expect: {site: null}
+  - id: already-exists
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/shelf.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
+    artifact_ids: []
+    expect: {site: collection.create.already-exists}
+  - id: bad-stem
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/Bad Stem.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
+    artifact_ids: []
+    expect: {site: collection.create.bad-stem}
+  - id: bad-record
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/broken-shelf.yaml", file_sha256: "sha256:7de57a9cdee73a2948cb3f4642d066cf7f13a3adacc6ba17c309af17036e51c5"}
+    artifact_ids: []
+    expect: {site: collection.create.bad-record}
+  - id: bad-file
+    kind: refusal
+    transport: gateway
+    request: {file: "work/inbox/nope.yaml", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: collection.create.bad-file}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [collection-create, --file, "<CASEDATA>/scenario-shelf.yaml", --file-sha256, "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {file: "<CASEDATA>/replay-shelf.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
+        artifact_ids: [collection:replay-shelf]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {file: "<CASEDATA>/miss-shelf.yaml", file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"}
+    artifact_ids: [collection:miss-shelf]
+    expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    request:
+      file: "<CASEDATA>/revision-shelf.yaml"
+      file_sha256: "sha256:4ed5ae593342b244b72914f7835f292fe5553e2646b8d86b8849e823686dcaa5"
+      expected_revision:
+      - oops-no-equals
+    expect:
+      site: collection.create.bad-expected-revision

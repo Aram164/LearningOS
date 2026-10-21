@@ -23,6 +23,7 @@ GROUPS: dict[str, list[str]] = {
     # Curriculum, study maps, routes, units, plan revisions and promotion.
     "studyplan": [
         "test_curriculum_v2.py",
+        "test_creation_capabilities.py",
         "test_lecture_study_map_assembly.py",
         "test_learning_paths.py",
         "test_learning_plan_contract.py",

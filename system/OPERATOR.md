@@ -150,6 +150,13 @@ Skills and projects use modules and units without false academic metadata.
     `module.materials.compact` is the governed, lossless conversion to shared
     material references; it requires the reviewed preflight plan hash. It
     preserves every expanded map and commits stable route IDs with the references.
+    The records a module rests on are created the same way: `module.create`
+    creates one module record and its source map, and `collection.create`
+    creates one source collection, both from a reviewed file bound to its
+    exact SHA-256, both refusing a destination that already exists. A
+    module record that is written by hand is outside this boundary for the
+    same reason a hand-edited plan is: it leaves no receipt, no snapshot and
+    no revision behind to say what was decided.
 17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
     about the system itself. **An open point is not a work item.** It is
     recorded precisely so it can be deferred, and acting on one — fixing it,

@@ -573,7 +573,7 @@ def test_generated_payloads_carry_no_transport_annotations(repo_root):
     schemas = all_payload_schemas(
         repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 47
+    assert len(schemas) == 49
     for name, schema in schemas.items():
         assert list(_transport_keys(schema)) == [], name
     assert "x-los-id-kind" not in schemas["unit.note.append"][

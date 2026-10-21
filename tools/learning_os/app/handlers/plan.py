@@ -72,8 +72,13 @@ from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.contracts import current_template_problems
 from learning_os.store.contracts.gateway import current_gateway_request
+from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.store.revisions import load_revisions
 from learning_os.store.transactions import parse_expected_revisions
+
+#: A module's canonical identity. The record schema carries the same
+#: pattern; this is the same rule in the one place the write path needs it.
+_MODULE_ID = re.compile(r"^module-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # -------------------- module.plan.import / unit.plan.revise (PLAN 4.1,
 # Task 82). Pure construction lives in learning_os/domain/plan_import.py;
@@ -916,6 +921,172 @@ def module_plan_import(ctx: OpContext, req: dict) -> Result:
         source=_source,
         package_bytes=package_bytes,
         package=package,
+    )
+
+
+def _creation_record_problems(root: Path, schema_name: str, value) -> list[str]:
+    """Schema problems of one creation record, as readable lines."""
+    try:
+        validate_contract(root, schema_name, value)
+    except ContractValidationError as exc:
+        return [str(exc)]
+    return []
+
+
+def _creation_destination_problems(root: Path, module_id: str) -> list[str]:
+    """Why this module cannot be created, if it cannot.
+
+    The destination check is explicit and separate from the revision guard
+    on purpose. An absent artifact revision resolves to `0`, so a revision
+    of `0` proves nothing about absence: the two modules created by hand on
+    2026-10-21 carry no revision entry at all and exist on disk. Only the
+    filesystem can say whether the identity is already taken.
+    """
+    problems: list[str] = []
+    module_dir = root / "curriculum" / "modules" / module_id
+    record = module_dir / "module.yaml"
+    if record.exists():
+        problems.append(f"module.yaml already exists at {record.relative_to(root)}")
+    if module_dir.exists() and not record.exists():
+        problems.append(
+            f"module directory already exists at {module_dir.relative_to(root)}")
+    return problems
+
+
+@register("module.create", kind="command")
+def module_create(ctx: OpContext, req: dict) -> Result:
+    """Create one module record and its source map as one transaction.
+
+    Creation was the one structural act the gateway did not model: a module
+    record was hand-authored, so the most consequential decision in the tree
+    — which module, which semester, which sources are adopted, and what is
+    deliberately excluded — left no receipt, no snapshot, no revision and no
+    conflict detection. This capability gives that act the same guards every
+    other canonical write has.
+
+    It refuses an existing destination. An absent artifact revision resolves
+    to `0`, so a revision of `0` cannot prove that the identity is free;
+    the filesystem check is the one that can, and it runs under the
+    operator lock.
+    """
+    root = ctx.root
+    try:
+        source, package_bytes = _read_content_bound_file(
+            req.get("file"),
+            req.get("file_sha256"),
+            label="module creation file",
+        )
+    except WriteRefused as exc:
+        exc.site = f"{ctx.operation}.bad-file"
+        exc.gateway_message = f"los: {exc}"
+        exc.exit_code = 2
+        raise
+    try:
+        package = yaml.safe_load(package_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        _plan_refuse(ctx, f"invalid module creation YAML: {exc}", "bad-yaml")
+    if not isinstance(package, dict):
+        _plan_refuse(ctx, "module creation package must be a mapping", "bad-package")
+    record = package.get("module")
+    if not isinstance(record, dict):
+        _plan_refuse(ctx, "module creation package needs a 'module' record",
+                     "bad-package")
+    module_id = record.get("id")
+    if not isinstance(module_id, str) or not _MODULE_ID.match(module_id):
+        _plan_refuse(ctx, "the module record's id must match module-<slug>",
+                     "bad-module-id")
+    problems = _creation_record_problems(root, "module.schema.json", record)
+    if problems:
+        _plan_refuse(ctx, "the module record does not satisfy its schema",
+                     "bad-module-record", extra=tuple(problems))
+    source_map = package.get("source_map")
+    if not isinstance(source_map, dict):
+        _plan_refuse(
+            ctx,
+            "a created module needs a 'source_map': the module record names "
+            "one, and a module whose source map is missing cannot be loaded",
+            "bad-source-map",
+        )
+    if source_map.get("module_id") != module_id:
+        _plan_refuse(ctx, "source_map must belong to the created module",
+                     "source-map-foreign")
+    problems = _creation_record_problems(
+        root, "module-source-map.schema.json", source_map)
+    if problems:
+        _plan_refuse(ctx, "the source map does not satisfy its schema",
+                     "bad-source-map", extra=tuple(problems))
+    if record.get("source_map") != "source-map.yaml":
+        _plan_refuse(
+            ctx,
+            "a created module's source map is always 'source-map.yaml'; "
+            "the loader reads that one name",
+            "bad-source-map-name",
+        )
+    destination = _creation_destination_problems(root, module_id)
+    if destination:
+        _plan_refuse(
+            ctx,
+            "this module already exists; creation never overwrites",
+            "already-exists",
+            extra=tuple(destination),
+        )
+
+    module_dir = root / "curriculum" / "modules" / module_id
+    writes: dict[Path, str] = {
+        module_dir / "module.yaml": _dump_yaml(record),
+        module_dir / "source-map.yaml": _dump_yaml(source_map),
+    }
+    package_sha = "sha256:" + hashlib.sha256(package_bytes).hexdigest()
+
+    if req.get("check"):
+        expected_revisions = {module_id: load_revisions(root).get(module_id, 0)}
+        result = {
+            "ok": True,
+            "check": True,
+            "mode": "check",
+            "capability": "module.create",
+            "module_id": module_id,
+            "files_checked": len(writes),
+            "expected_write_paths": sorted(
+                str(path.relative_to(root)) for path in writes),
+            "expected_revisions": expected_revisions,
+            "commit_artifact_ids": [module_id],
+            "reviewed_file_sha256": package_sha,
+            "expected_snapshot": ctx.snapshot_id(),
+            "changes": "present",
+        }
+        result["gateway_envelope"] = prepare_review_envelope(
+            "module.create",
+            {"file": str(source), "file_sha256": package_sha},
+            result["expected_snapshot"],
+            expected_revisions,
+        )
+        return Result(result)
+
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+    def finish_module_create(confirmation):
+        return {"ok": True, "mode": "apply", "module_id": module_id,
+                "files_written": len(writes), **confirmation}
+
+    return Result(
+        ResponsePayload({"ok": True}, finish_module_create({}),
+                        confirmation="merge"),
+        proposal=TransactionProposal(
+            capability="module.create",
+            writes=writes,
+            artifact_ids=[module_id],
+            expected_revisions=expected_revisions,
+        ),
     )
 
 

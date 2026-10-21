@@ -41,6 +41,8 @@ def _root(args: argparse.Namespace) -> Path:
 # pathname after hashing is forbidden.
 _FILE_INPUTS_V2: dict[str, tuple[tuple[str, str, bool], ...]] = {
     "capture.create": (("file", "file_sha256", False),),
+    "collection.create": (("file", "file_sha256", False),),
+    "module.create": (("file", "file_sha256", False),),
     "module.plan.import": (("file", "file_sha256", False),),
     "note.revise": (("file", "file_sha256", False),),
     "path.attachment.add": (("file", "file_sha256", False),),

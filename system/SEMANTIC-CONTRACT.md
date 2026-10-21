@@ -369,7 +369,7 @@ with updated predicates, fixtures, and lineage.
 ## Status
 
 <!-- los:generated name=predicate-count -->
-26 predicates
+27 predicates
 <!-- /los:generated -->
 
 Phase 1 (contract + VOQs): predicates end-to-end with registry plus

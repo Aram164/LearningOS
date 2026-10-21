@@ -15,6 +15,8 @@ import yaml
 
 from learning_os.app.claim_admission import lineage_artifacts
 from learning_os.app.context import OpContext
+from learning_os.app.gateway import prepare_review_envelope
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import input_record as _input_record
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
@@ -312,6 +314,129 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
 
 
 
+    )
+
+
+@register("collection.create", kind="command")
+def collection_create(ctx: OpContext, req: dict) -> Result:
+    """Create one source collection as one transaction.
+
+    A collection's identity is its kebab-case filename (ARCHITECTURE §3.3),
+    so the reviewed file's own name is the identity: the collection is
+    created at `sources/collections/<stem>.yaml` and nowhere else.
+
+    An existing destination is refused. An absent artifact revision resolves
+    to `0`, so a revision of `0` cannot prove the identity is free; the
+    filesystem check is the one that can, and it runs under the operator
+    lock.
+    """
+    root = ctx.root
+    try:
+        source, content = _read_content_bound_file(
+            req.get("file"),
+            req.get("file_sha256"),
+            label="collection file",
+        )
+    except WriteRefused as exc:
+        exc.site = f"{ctx.operation}.bad-file"
+        exc.gateway_message = f"los: {exc}"
+        exc.exit_code = 2
+        raise
+    stem = source.stem
+    if not COLLECTION_STEM.match(stem):
+        raise WriteRefused(
+            f"a collection's identity is its kebab-case filename stem; "
+            f"{source.name!r} is not one",
+            site=f"{ctx.operation}.bad-stem",
+            prefixed=True,
+            exit_code=2,
+        )
+    try:
+        record = yaml.safe_load(content.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise WriteRefused(
+            f"invalid collection YAML: {exc}",
+            site=f"{ctx.operation}.bad-yaml",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    if not isinstance(record, dict):
+        raise WriteRefused(
+            "a collection record must be a mapping",
+            site=f"{ctx.operation}.bad-record",
+            prefixed=True,
+            exit_code=2,
+        )
+    try:
+        validate_contract(root, "collections.schema.json", record)
+    except Exception as exc:  # ContractValidationError and friends
+        raise WriteRefused(
+            f"{stem}: {exc}",
+            site=f"{ctx.operation}.bad-record",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    target = root / "sources" / "collections" / f"{stem}.yaml"
+    if target.exists():
+        raise WriteRefused(
+            f"collection '{stem}' already exists at "
+            f"{target.relative_to(root)}; creation never overwrites",
+            site=f"{ctx.operation}.already-exists",
+            prefixed=True,
+            exit_code=2,
+        )
+    writes = {target: _dump_yaml(record)}
+    file_sha = "sha256:" + hashlib.sha256(content).hexdigest()
+    artifact = f"collection:{stem}"
+
+    if req.get("check"):
+        expected_revisions = {artifact: artifact_revision(root, artifact)}
+        result = {
+            "ok": True,
+            "check": True,
+            "mode": "check",
+            "capability": "collection.create",
+            "collection": stem,
+            "files_checked": 1,
+            "expected_write_paths": [str(target.relative_to(root))],
+            "expected_revisions": expected_revisions,
+            "commit_artifact_ids": [artifact],
+            "reviewed_file_sha256": file_sha,
+            "expected_snapshot": ctx.snapshot_id(),
+            "changes": "present",
+        }
+        result["gateway_envelope"] = prepare_review_envelope(
+            "collection.create",
+            {"file": str(source), "file_sha256": file_sha},
+            result["expected_snapshot"],
+            expected_revisions,
+        )
+        return Result(result)
+
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+    def finish_collection_create(confirmation):
+        return {"ok": True, "mode": "apply", "collection": stem,
+                "files_written": 1, **confirmation}
+
+    return Result(
+        ResponsePayload({"ok": True}, finish_collection_create({}),
+                        confirmation='merge'),
+        proposal=TransactionProposal(
+            capability="collection.create",
+            writes=writes,
+            artifact_ids=[artifact],
+            expected_revisions=expected_revisions,
+        ),
     )
 
 

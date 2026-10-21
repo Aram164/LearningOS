@@ -1,0 +1,95 @@
+operation: module.create
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: create-module
+    kind: success
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3c331a14d2426caa78ad5bcbcbf62eb22fa7aac9ce425a25629c5413c7d85f2a"}
+    artifact_ids: [module-scenario-create-1]
+    a5_base: true
+    expect: {site: null}
+  - id: create-module-with-source-map
+    kind: success
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:7da591aef97bf4565a93e8ceafbb47bdd347296006dd7fa625885eee3a669458"}
+    artifact_ids: [module-scenario-create-2]
+    expect: {site: null}
+  - id: already-exists
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:c8a10e40af0170aa7c1d8906ab28aec6a75399ac28d95f932e8b84277a45cea0"}
+    artifact_ids: []
+    expect: {site: module.create.already-exists}
+  - id: bad-yaml
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:1a4c58b2501a2adac6088705c07a0c04bc3cefa4826804a470e4a64698abb857"}
+    artifact_ids: []
+    expect: {site: module.create.bad-yaml}
+  - id: bad-package
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:f6cdad3e5ce86ecd133f615cdc686e4a137ba525c8b01b73865d72271ff20e13"}
+    artifact_ids: []
+    expect: {site: module.create.bad-package}
+  - id: bad-module-id
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:1a3f7fa57365caf9861c994cc0576d8842da492284ec102a6a13d7e10b2f0a76"}
+    artifact_ids: []
+    expect: {site: module.create.bad-module-id}
+  - id: bad-module-record
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:983c5f7ccb5c641f2cc7047867dec439f66a5a149254b4e3b03cc5a455760c84"}
+    artifact_ids: []
+    expect: {site: module.create.bad-module-record}
+  - id: bad-source-map-foreign
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:52bc69b990010633febae76353f1b74eea7b0c906d1f804d73bf90dfc9028fe2"}
+    artifact_ids: []
+    expect: {site: module.create.source-map-foreign}
+  - id: bad-source-map-name
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:404ec6c458012b10b7f8bdceb310df10b7c4f4832cec3f85e34919b66cc35479"}
+    artifact_ids: []
+    expect: {site: module.create.bad-source-map-name}
+  - id: bad-file
+    kind: refusal
+    transport: gateway
+    request: {file: "work/inbox/nope.yaml", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: module.create.bad-file}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [module-create, --file, "<CASEDATA>/package.yaml", --file-sha256, "sha256:8817d3bc0cd8ae0f03852551fc8f623b430b16066a5a4d258fdcdd22ee5de5e5"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:8817d3bc0cd8ae0f03852551fc8f623b430b16066a5a4d258fdcdd22ee5de5e5"}
+        artifact_ids: [module-scenario-replay]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:e5eac46d594846f539c3799d28836bd703af6e2c075f31041781469e6186fc1c"}
+    artifact_ids: [module-scenario-miss]
+    expect: {site: null}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    request:
+      file: "<CASEDATA>/package.yaml"
+      file_sha256: "sha256:8817d3bc0cd8ae0f03852551fc8f623b430b16066a5a4d258fdcdd22ee5de5e5"
+      expected_revision:
+      - oops-no-equals
+    expect:
+      site: module.create.bad-expected-revision

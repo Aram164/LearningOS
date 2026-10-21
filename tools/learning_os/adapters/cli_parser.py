@@ -117,6 +117,8 @@ _SUBCOMMAND_ORDER = (
     "source-feedback",
     "source-intake",
     "collection-entry-revise",
+    "collection-create",
+    "module-create",
     "source-revise",
     "detour-create",
     "detour-resolve",

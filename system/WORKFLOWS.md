@@ -444,6 +444,8 @@ Procedure: [transcript](procedures/start-a-module.md).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
 
+The record is created through `module.create`, from a reviewed package bound to its exact SHA-256. It refuses a destination that already exists — the artifact revision cannot prove absence on its own, so the file does — and it leaves a receipt naming both files it wrote.
+
 ## 19. Close a module
 
 A module ending is larger than archiving one workspace (workflow 11): it settles the administrative record, may retire several workspaces, and confirms the durable knowledge survived. Use this only when the module is truly done; if a later attempt is still ahead, it is carrying, not closing — use workflow 20.

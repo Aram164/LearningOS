@@ -365,6 +365,26 @@ commands:
     - one module; sets the examination sitting's withdrawal_deadline for one termin, nothing else
     - the termin must already have a sitting; notes, attempts and every other sitting field are untouched
     - snapshot and module revision guarded, with one V2 receipt
+  module.create:
+    handler: module_create
+    cli_command: module-create
+    writes:
+    - curriculum/modules/**
+    invariants:
+    - creates one module record and its source map; it never edits an existing module
+    - "the destination must not exist: an existing canonical identity or file is refused, because an absent revision entry cannot prove absence"
+    - the reviewed package bytes are bound to their exact SHA-256 before use
+    - one transaction and one receipt cover the creation; the module's artifact revision is registered from birth
+  collection.create:
+    handler: collection_create
+    cli_command: collection-create
+    writes:
+    - sources/collections/**
+    invariants:
+    - creates one source collection file; it never edits an existing collection
+    - "the destination must not exist: an existing canonical identity or file is refused, because an absent revision entry cannot prove absence"
+    - the reviewed file bytes are bound to their exact SHA-256 before use
+    - one transaction and one receipt cover the creation; the collection's artifact revision is registered from birth
   module.plan.import:
     handler: module_plan_import
     cli_command: module-plan-import

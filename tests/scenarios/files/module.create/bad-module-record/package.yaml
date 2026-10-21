@@ -1,0 +1,9 @@
+module:
+  id: module-scenario-bad-record
+  type: module
+  kind: academic
+  title: Missing the area and the status
+source_map:
+  type: module-source-map
+  module_id: module-scenario-bad-record
+  sources: []

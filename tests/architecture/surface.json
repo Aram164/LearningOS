@@ -33,6 +33,14 @@
      "work/inbox/**"
     ]
    },
+   "collection.create": {
+    "admission": null,
+    "cli_command": "collection-create",
+    "handler": "collection_create",
+    "writes": [
+     "sources/collections/**"
+    ]
+   },
    "collection.entry.revise": {
     "admission": null,
     "cli_command": "collection-entry-revise",
@@ -153,6 +161,14 @@
     "handler": "module_attempt",
     "writes": [
      "curriculum/modules/*/module.yaml"
+    ]
+   },
+   "module.create": {
+    "admission": null,
+    "cli_command": "module-create",
+    "handler": "module_create",
+    "writes": [
+     "curriculum/modules/**"
     ]
    },
    "module.materials.compact": {
@@ -2098,6 +2114,100 @@
     "nargs": null,
     "option_strings": [
      "--title"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
+  "collection-create": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
     ],
     "required": false,
     "type": null
@@ -4205,6 +4315,100 @@
     ],
     "required": true,
     "type": "int"
+   }
+  ],
+  "module-create": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
    }
   ],
   "module-list": [
@@ -9145,6 +9349,7 @@
   "capabilities.read.schema.json": "2f5954b260d02f93171aec8dbddfdb0521a352a0cea7519e06050048a0c78bde",
   "capture.create.schema.json": "4d9e18d7a336c8d50d25d2a531c6906fe4bb5ba3706bcc04473b2a000e0f41db",
   "cli.capability.schema.json": "4880b312714e424cd0166679ed729b457a2f79b34eb5c61d066369aec9979e49",
+  "collection.create.schema.json": "e99fac17baaa64f1e29622dc58f6ba9c36b9061cd9b5fb7be48de84da027c1a6",
   "collection.entry.revise.schema.json": "e0fe8fdd6fbf6b21e798ba764165535779d86660523d6b8d345e447061a0c846",
   "concept.relations.change.schema.json": "00397570f92919dafd35d69f3201edb6352b323a91fb40249648eb4b2023ff13",
   "coordination.section.revise.schema.json": "30f747a4b6f117f2c189d3bdfa45860a7377b0272512781165d448b6ac6e3acd",
@@ -9172,6 +9377,7 @@
   "material.context.schema.json": "bd0d7e1155045d0b225dceea79cf75ffc65757333620699a5875789ab951cd3a",
   "material.span.schema.json": "15d21bba4426afe334cbd26a5337e60625137beb518e743d044f0960101c6ecd",
   "module.attempt.record.schema.json": "def44a95750a94e5fa986aa5eda0922daccf56be5e41651b6cbc29d0a1af0c56",
+  "module.create.schema.json": "02b73b8c4600f234426dfb360dd9d3a2676a71d6c7ee55a7f6c8cbceb6b6b18f",
   "module.list.schema.json": "e0bdb5628bffe00d0d37b004de890566a5faf8616aae657fd0421631731fddd8",
   "module.materials.compact.schema.json": "1bdd0efeb2eed2eae79448ddd0e2f2ae5d763dd7469b08980b16ad5527dd61be",
   "module.plan.import.schema.json": "19fea12cc4989f43d8ace4d82bb778e41aa87452b98e2eaa2777f70ba322f9e6",

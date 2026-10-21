@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: no such collection file: /private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-417/test_scenario_effects_collecti5/case/casedata/scenario-shelf.yaml\n",
+  "stdout": "",
+  "stdout_json": null
+}
