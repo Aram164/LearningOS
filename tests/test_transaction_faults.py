@@ -742,6 +742,36 @@ def test_restart_preserves_a_directory_that_existed_before_the_write(
     assert _inflight_dirs(root) == []
 
 
+def test_the_generated_created_directory_list_is_admitted(tmp_path: Path):
+    """The engine's own created-directory list must survive the bindings.
+
+    Admission refuses a journal whose created-directory list contradicts
+    its own write set. The list the engine writes is a contiguous run of
+    missing ancestors, deepest first, and it must still be admitted: a
+    binding that also refuses the engine's own journals is a regression,
+    not a fix.
+    """
+    tools = Path(__file__).resolve().parent.parent / "tools"
+    root = tmp_path / "kill-generated-list"
+    relative = "work/deep/nested/mod.md"
+    result = _child(root, tools, _CHILD_SCRIPT, "kill-created-directory", relative)
+    assert result.returncode == 70, result.stderr
+
+    inflight = _inflight_dirs(root)
+    assert len(inflight) == 1
+    intent = json.loads(
+        (inflight[0] / "intent.json").read_text(encoding="utf-8"))
+    assert intent["created_directories"] == [
+        "work/deep/nested", "work/deep", "work"], (
+        "the engine names a contiguous run of missing ancestors, deepest first")
+
+    restarted = _child(root, tools, _RECONCILE_SCRIPT)
+    assert restarted.returncode == 0, restarted.stderr
+    assert not (root / relative).exists()
+    assert not (root / "work").exists()
+    assert _inflight_dirs(root) == []
+
+
 def test_restart_retries_receipt_barrier_before_retiring_journal(
     mini_repo: Path, monkeypatch: pytest.MonkeyPatch
 ):

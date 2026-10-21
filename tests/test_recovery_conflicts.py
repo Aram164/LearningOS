@@ -39,9 +39,15 @@ def _sha(value: bytes) -> str:
 
 
 def _write_journal_v2(root: Path, tx_id: str, entries: list,
-                      *, receipt_rel: str | None = None) -> Path:
+                      *, receipt_rel: str | None = None,
+                      created_directories: list[str] | None = None) -> Path:
     """Hand-craft a schema-2 crash journal. Each entry is
     (relative, before_bytes | None, after_bytes | None | "UNKNOWN").
+
+    ``created_directories`` is the list the engine would have written:
+    the directories the write created while writing. It is omitted
+    entirely unless asked for, which is the shape of a journal written
+    before the field existed.
     """
     tx_dir = root / "operations" / "transactions" / ".inflight" / tx_id
     tx_dir.mkdir(parents=True)
@@ -69,6 +75,8 @@ def _write_journal_v2(root: Path, tx_id: str, entries: list,
         or f"operations/transactions/{tx_id}.yaml",
         "paths": paths,
     }
+    if created_directories is not None:
+        intent["created_directories"] = created_directories
     (tx_dir / "intent.json").write_text(json.dumps(intent), encoding="utf-8")
     return tx_dir
 
@@ -822,6 +830,174 @@ def test_symlinked_backup_is_rejected(tmp_path: Path):
     assert target.read_bytes() == b"new\n"
     assert blob.is_symlink()
     assert tx_dir.is_dir()
+
+
+# ---------------------------------------------------------------------------
+# The created-directory list is bound to the write set it describes.
+# ---------------------------------------------------------------------------
+
+def test_created_directory_outside_the_write_set_is_rejected(tmp_path: Path):
+    """A journal may not name a directory the write never touched.
+
+    The unwind removes every admitted created-directory once it is
+    empty, so an unrelated entry in the list is permission to delete a
+    directory that had nothing to do with the write. Admission binds the
+    list to the journaled write set, and a journal that fails the
+    binding changes nothing at all: the unrelated directory survives,
+    the journaled file is not restored, and the journal is preserved for
+    the next attempt.
+    """
+    root = tmp_path / "unrelated-directory"
+    unrelated = root / "unrelated-preexisting-empty"
+    unrelated.mkdir(parents=True)
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-110",
+        [("work/mod.md", b"old\n", b"new\n")],
+        created_directories=["unrelated-preexisting-empty"])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert unrelated.is_dir(), (
+        "a directory the write never touched must not be removed")
+    assert target.read_bytes() == b"new\n", (
+        "a rejected journal must restore nothing")
+    assert tx_dir.is_dir(), "the journal must be preserved for diagnosis"
+
+
+def test_created_directory_over_a_file_that_existed_is_rejected(
+        tmp_path: Path):
+    """A directory the write created cannot cover a file that existed.
+
+    If a journaled path beneath a named directory was recorded as a
+    file, that path existed before the write, so its directory did too.
+    The directory is not this transaction's to remove, and a journal
+    that says otherwise contradicts itself.
+    """
+    root = tmp_path / "pre-state-binding"
+    work = root / "work"
+    work.mkdir(parents=True)
+    target = work / "mod.md"
+    target.write_bytes(b"old\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-111",
+        [("work/mod.md", b"old\n", b"new\n")],
+        created_directories=["work"])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert work.is_dir(), "a directory that existed before the write must survive"
+    assert target.read_bytes() == b"old\n"
+    assert tx_dir.is_dir()
+
+
+def test_created_directory_that_skips_a_level_is_rejected(tmp_path: Path):
+    """The engine creates a contiguous run of missing ancestors.
+
+    A list that names an upper directory but skips the level below it is
+    not a list this engine could have written: if the write created the
+    upper directory, it created the level below it too. Admitting such a
+    list is not safe — the named directory would be removed on the
+    strength of a claim the journal itself contradicts.
+    """
+    root = tmp_path / "gap-in-the-run"
+    work = root / "work"
+    work.mkdir(parents=True)
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-112",
+        [("work/deep/mod.md", None, b"new\n")],
+        created_directories=["work"])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert work.is_dir(), "the named directory must not be removed"
+    assert tx_dir.is_dir()
+
+
+def test_created_directory_without_a_forward_write_is_rejected(
+        tmp_path: Path):
+    """A directory is created only for a write.
+
+    The engine derives the created-directory list from its forward
+    writes, because a directory comes into being when a write needs it.
+    A journal whose only entry is absent on both sides describes a
+    deletion of a file that never existed: no write beneath it could
+    have created the directory it names. Such a journal is refused
+    before anything is touched, and the pre-existing directory and the
+    journal both survive.
+    """
+    root = tmp_path / "no-forward-write"
+    work = root / "work"
+    work.mkdir(parents=True)
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-115",
+        [("work/mod.md", None, None)],
+        created_directories=["work"])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert work.is_dir(), (
+        "a directory no write could have created must not be removed")
+    assert tx_dir.is_dir(), "the journal must be preserved for diagnosis"
+
+
+def test_a_bound_created_directory_is_still_removed(tmp_path: Path):
+    """The control: a list the engine could have written is admitted.
+
+    The bindings refuse a journal that contradicts its own write set.
+    They must not refuse the engine's own journals, and the directories
+    the write created must still be gone once the tree is back at its
+    pre-state.
+    """
+    root = tmp_path / "bound-list"
+    target = root / "work" / "deep" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-113",
+        [("work/deep/mod.md", None, b"new\n")],
+        created_directories=["work/deep", "work"])
+
+    reconcile_inflight_transactions(root)
+
+    assert not target.exists(), "the created file must be gone"
+    assert not (root / "work").exists(), (
+        "the directories the write created must not survive its unwind")
+    assert not tx_dir.exists()
+
+
+def test_a_journal_without_the_field_keeps_its_residue(tmp_path: Path):
+    """A journal written before the field existed carries no list.
+
+    Its directories are residue this version may not remove: with no
+    claim naming them, the journal proves nothing about them. The
+    journal is still admitted, and the paths it does name are still
+    restored.
+    """
+    root = tmp_path / "pre-field-journal"
+    target = root / "work" / "deep" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-114",
+        [("work/deep/mod.md", None, b"new\n")])
+
+    reconcile_inflight_transactions(root)
+
+    assert not target.exists(), "the created file must be gone"
+    assert (root / "work" / "deep").is_dir(), (
+        "a directory this journal does not name is residue it may not remove")
+    assert not tx_dir.exists()
 
 
 # ---------------------------------------------------------------------------

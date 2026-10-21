@@ -177,6 +177,17 @@ def _created_ancestor_directories(root: Path, paths: Iterable[Path]) -> list[str
     return sorted(created, key=lambda rel: (-rel.count("/"), rel))
 
 
+def _ancestor_chain(relative: str) -> list[str]:
+    """The strict ancestors of a normalized relative path, nearest first.
+
+    ``work/deep/mod.md`` yields ``["work/deep", "work"]``. The repository
+    root is not among them: the engine never creates it, so a journal
+    that names it is naming the tree itself.
+    """
+    parts = relative.split("/")
+    return ["/".join(parts[:index]) for index in range(len(parts) - 1, 0, -1)]
+
+
 def transaction_artifacts(root: Path, artifact_ids: Iterable[str],
                           writes: Iterable[Path],
                           deletes: Iterable[Path] = ()) -> list[str]:
@@ -650,6 +661,108 @@ def _refuse_journal(root: Path, tx_dir: Path, detail: str,
         transaction_id=tx_dir.name, conflicts=[conflict])
 
 
+def _bind_created_directories(root: Path, tx_dir: Path, intent: dict,
+                              listed: Sequence[str]) -> None:
+    """Bind the created-directory list to the write set the journal claims.
+
+    A journal is a claim about the past, and the directory list is a
+    claim about what the write removed. Two claims about the same write
+    must agree, or the journal cannot be trusted with a removal. Three
+    bindings enforce that, and all of them are proved before anything
+    is restored or removed:
+
+    A — footprint. Every named directory must be a strict ancestor of a
+    journaled path, and the named ancestors of any one path must be a
+    contiguous prefix of that path's upward chain, starting at its
+    parent. The engine creates a *contiguous run* of missing ancestors,
+    so a list that skips a level is not a list the engine could have
+    produced. For ``work/deep/mod.md`` the chain is ``work/deep`` then
+    ``work``; the list may name the first, the first two, or none — never
+    the second alone.
+
+    C — a forward write. The engine derives the directory list from its
+    forward writes, because a directory is created only because a write
+    needed it. So every named directory must have a forward write
+    beneath it: a journaled path whose post-state records a file. A
+    journal that names a directory and describes no write under it
+    describes a transaction that could not have created anything — an
+    absent-to-absent deletion names a parent directory it had no
+    reason to bring into being.
+
+    B — pre-state. A directory the write created cannot have anything
+    under it that existed before the write. If a journaled path beneath a
+    named directory was recorded as a file, that path existed before the
+    write, so its directory did too, and the directory is not this
+    transaction's to remove.
+
+    What these bindings do NOT prove: for an empty directory, "the write
+    created it" and "it was already there" look identical on disk. A
+    journal that contradicts itself is refuted here; a journal that lies
+    consistently is not. The bindings bound the damage a corrupt journal
+    can do — it can no longer name a directory the write never touched —
+    but they do not make recovery infallible.
+    """
+    listed_set = set(listed)
+    rows: list[tuple[str, list[str], object, object]] = []
+    for entry in intent.get("paths", []):
+        # The caller validates every entry's shape before it gets here; the
+        # skips are belt-and-braces so a malformed entry can never crash
+        # admission on its way to being refused.
+        if not isinstance(entry, dict):
+            continue
+        relative = entry.get("path")
+        if not isinstance(relative, str):
+            continue
+        rows.append((relative, _ancestor_chain(relative), entry.get("before"),
+                     entry.get("after")))
+    # A — membership: a named directory must belong to the journaled
+    # write set. A directory the write never touched is not this
+    # transaction's to remove, however empty it is.
+    for relative in listed:
+        if not any(relative in chain for _, chain, _, _ in rows):
+            _refuse_journal(
+                root, tx_dir,
+                f"created directory is not an ancestor of any journaled "
+                f"path: {relative}", path=relative)
+    # C — a forward write must justify the creation. The engine creates a
+    # directory only for a write, so a named directory with no write
+    # beneath it is named by a journal no engine could have written.
+    for relative in listed:
+        if not any(relative in chain
+                   and isinstance(after, dict) and after.get("kind") == "file"
+                   for _, chain, _, after in rows):
+            _refuse_journal(
+                root, tx_dir,
+                f"created directory {relative} has no forward write beneath "
+                f"it: the engine creates a directory only for a write, and "
+                f"this journal describes none", path=relative)
+    # A — contiguity: no named ancestor may sit above a level the list
+    # skipped. The engine creates a contiguous run of missing ancestors.
+    for relative, chain, _, _ in rows:
+        gap = False
+        for ancestor in chain:
+            if ancestor not in listed_set:
+                gap = True
+            elif gap:
+                _refuse_journal(
+                    root, tx_dir,
+                    f"created directory {ancestor} skips a level below the "
+                    f"journaled path {relative}: the engine creates a "
+                    f"contiguous run of missing ancestors", path=ancestor)
+    # B — pre-state: nothing that existed before the write may sit under
+    # a directory the write claims to have created.
+    for relative, chain, before, _ in rows:
+        absent = isinstance(before, dict) and before.get("kind") == "absent"
+        for ancestor in chain:
+            if ancestor in listed_set and not absent:
+                _refuse_journal(
+                    root, tx_dir,
+                    f"created directory {ancestor} covers the journaled path "
+                    f"{relative}, whose pre-state is not absent: that path "
+                    f"existed before the write, so its directory did too",
+                    path=ancestor)
+
+
 def _admit_created_directories(root: Path, tx_dir: Path, intent: dict) -> None:
     """Prove the journal's created-directory list is safe to act on.
 
@@ -658,6 +771,14 @@ def _admit_created_directories(root: Path, tx_dir: Path, intent: dict) -> None:
     that names a path outside the repository, crosses a symlink, or is
     not a normalized relative path is a journal that cannot be trusted
     with a removal.
+
+    The list is also bound to the write set the journal describes (see
+    ``_bind_created_directories``): every named directory must belong to
+    the journaled paths, must have a forward write beneath it, and
+    every journaled path beneath a named directory must have been absent
+    before the write. Without those bindings a corrupt journal is
+    permission to delete any empty directory in the repository,
+    including one that had nothing to do with the write.
 
     A journal written before this field existed carries none, and that is
     an empty list: the directories it left behind are residue, not
@@ -701,6 +822,7 @@ def _admit_created_directories(root: Path, tx_dir: Path, intent: dict) -> None:
             _refuse_journal(root, tx_dir,
                             f"created directory escapes the repository: {relative}",
                             path=relative)
+    _bind_created_directories(root, tx_dir, intent, created)
 
 
 def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
@@ -709,9 +831,11 @@ def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
     Admission is lexical and structural: the journal must name its own
     directory, its own canonical receipt path, and a normalized, unique,
     in-root path set reachable without crossing a symlink. Backup ids
-    must be normalized, unique, and plain files. Anything else is
-    CORRUPT_JOURNAL with everything preserved — raised before receipt
-    inspection, before preflight, and therefore before any restore.
+    must be normalized, unique, and plain files. The created-directory
+    list is bound to that path set and to its recorded pre-state.
+    Anything else is CORRUPT_JOURNAL with everything preserved — raised
+    before receipt inspection, before preflight, and therefore before
+    any restore.
 
     One deliberate terminal exemption: a symlink (or any other unexpected
     node) AT the journaled path itself is live state that may have
@@ -733,7 +857,6 @@ def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
     entries = intent.get("paths")
     if not isinstance(entries, list) or not entries:
         _refuse_journal(root, tx_dir, "journal lists no paths")
-    _admit_created_directories(root, tx_dir, intent)
     resolved_root = root.resolve()
     seen_paths: set[str] = set()
     seen_backups: set[str] = set()
@@ -787,6 +910,9 @@ def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
             if (tx_dir / backup_id).is_symlink():
                 _refuse_journal(root, tx_dir,
                                 f"backup {backup_id} is a symlink", path=rel)
+    # The created-directory list is read against the journaled path set,
+    # so it is admitted once that set is known to be well-formed.
+    _admit_created_directories(root, tx_dir, intent)
     return transaction_id
 
 
@@ -857,10 +983,12 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     read as pre-state. Journal removal and projection handling belong to
     the caller, which knows whether its commit boundary was reached.
 
-    ``created_directories`` are the directories this transaction created
-    while writing. The tree is only back at its pre-state once they are
-    gone too: a directory left behind is residue that can block the next
-    write to the same identity.
+    ``created_directories`` are the directories the journal claims this
+    transaction created while writing, admitted only when the journal's
+    own path set and recorded pre-state agree that they could have been
+    (see ``_bind_created_directories``). The tree is only back at its
+    pre-state once they are gone too: a directory left behind is residue
+    that can block the next write to the same identity.
     """
     # PASS 1 — read-only preflight over every path. One conflict anywhere
     # stops the whole unwind before a single byte changes.
