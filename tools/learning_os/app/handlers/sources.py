@@ -18,6 +18,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import input_record as _input_record
+from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.handlers._shared import require_gateway_v2 as _require_gateway_v2
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
@@ -317,7 +318,8 @@ def collection_entry_revise(ctx: OpContext, req: dict) -> Result:
     )
 
 
-@register("collection.create", kind="command")
+@register("collection.create", kind="command",
+           render_check=_render_creation_check)
 def collection_create(ctx: OpContext, req: dict) -> Result:
     """Create one source collection as one transaction.
 
@@ -391,27 +393,34 @@ def collection_create(ctx: OpContext, req: dict) -> Result:
 
     if req.get("check"):
         expected_revisions = {artifact: artifact_revision(root, artifact)}
-        result = {
+        prepared = {
             "ok": True,
             "check": True,
             "mode": "check",
             "capability": "collection.create",
             "collection": stem,
             "files_checked": 1,
-            "expected_write_paths": [str(target.relative_to(root))],
-            "expected_revisions": expected_revisions,
-            "commit_artifact_ids": [artifact],
             "reviewed_file_sha256": file_sha,
-            "expected_snapshot": ctx.snapshot_id(),
             "changes": "present",
+            "gateway_envelope": prepare_review_envelope(
+                "collection.create",
+                {"file": str(source), "file_sha256": file_sha},
+                ctx.snapshot_id(),
+                expected_revisions,
+            ),
         }
-        result["gateway_envelope"] = prepare_review_envelope(
-            "collection.create",
-            {"file": str(source), "file_sha256": file_sha},
-            result["expected_snapshot"],
-            expected_revisions,
+        # The proposal is returned so the pipeline runs the shadow
+        # validation of this exact write: a collection the apply would
+        # refuse is refused by the check too.
+        return Result(
+            prepared,
+            proposal=TransactionProposal(
+                capability="collection.create",
+                writes=writes,
+                artifact_ids=[artifact],
+                expected_revisions=expected_revisions,
+            ),
         )
-        return Result(result)
 
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:

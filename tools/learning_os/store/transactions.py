@@ -147,6 +147,36 @@ def _safe_relative(root: Path, path: Path) -> str:
         raise TransactionFailure(f"transaction path escapes repository: {path}") from exc
 
 
+def _created_ancestor_directories(root: Path, paths: Iterable[Path]) -> list[str]:
+    """The directories a write set will create, deepest first.
+
+    `atomic_write_bytes` creates the missing ancestors of every file it
+    writes. A journal that does not name them cannot prove the tree back
+    at its pre-state after an unwind: the directories it left behind are
+    residue, and residue can block the very write that follows — a
+    creation whose validation failed would refuse its own identity on the
+    next attempt, because the empty directory it left is read as an
+    existing module.
+
+    Only directories that do not exist yet are named. A pre-existing
+    directory is not this transaction's to remove, and neither is a
+    directory that someone else created between the journal and the
+    write — that one is simply never empty, so the unwind leaves it.
+    """
+    created: set[str] = set()
+    for path in paths:
+        cursor = path.parent
+        while cursor != root and not cursor.exists():
+            if cursor.parent == cursor:
+                break
+            try:
+                created.add(_safe_relative(root, cursor))
+            except TransactionFailure:
+                break
+            cursor = cursor.parent
+    return sorted(created, key=lambda rel: (-rel.count("/"), rel))
+
+
 def transaction_artifacts(root: Path, artifact_ids: Iterable[str],
                           writes: Iterable[Path],
                           deletes: Iterable[Path] = ()) -> list[str]:
@@ -620,6 +650,59 @@ def _refuse_journal(root: Path, tx_dir: Path, detail: str,
         transaction_id=tx_dir.name, conflicts=[conflict])
 
 
+def _admit_created_directories(root: Path, tx_dir: Path, intent: dict) -> None:
+    """Prove the journal's created-directory list is safe to act on.
+
+    These are the directories the transaction will create while writing.
+    The unwind removes them again when it restores the tree, so a list
+    that names a path outside the repository, crosses a symlink, or is
+    not a normalized relative path is a journal that cannot be trusted
+    with a removal.
+
+    A journal written before this field existed carries none, and that is
+    an empty list: the directories it left behind are residue, not
+    something this version may remove.
+    """
+    created = intent.get("created_directories", [])
+    if not isinstance(created, list):
+        _refuse_journal(root, tx_dir,
+                        "journal names its created directories as a non-list")
+    resolved_root = root.resolve()
+    seen: set[str] = set()
+    for relative in created:
+        if not isinstance(relative, str):
+            _refuse_journal(root, tx_dir,
+                            "journal names an unsafe created directory",
+                            path=str(relative))
+        candidate = Path(relative)
+        if "\x00" in relative or "\\" in relative \
+                or candidate.as_posix() != relative \
+                or candidate.is_absolute() \
+                or any(part in {".", ".."} for part in candidate.parts):
+            _refuse_journal(root, tx_dir,
+                            f"created directory is not normalized: {relative}",
+                            path=relative)
+        if relative in seen:
+            _refuse_journal(root, tx_dir,
+                            f"journal names {relative} twice", path=relative)
+        seen.add(relative)
+        cursor = resolved_root
+        for part in candidate.parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                _refuse_journal(
+                    root, tx_dir,
+                    f"created directory traverses symlink: {relative}",
+                    path=relative)
+        try:
+            (resolved_root / relative).resolve(
+                strict=False).relative_to(resolved_root)
+        except (OSError, ValueError):
+            _refuse_journal(root, tx_dir,
+                            f"created directory escapes the repository: {relative}",
+                            path=relative)
+
+
 def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
     """Prove a version-2 journal is self-bound before anything is inspected.
 
@@ -650,6 +733,7 @@ def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
     entries = intent.get("paths")
     if not isinstance(entries, list) or not entries:
         _refuse_journal(root, tx_dir, "journal lists no paths")
+    _admit_created_directories(root, tx_dir, intent)
     resolved_root = root.resolve()
     seen_paths: set[str] = set()
     seen_backups: set[str] = set()
@@ -761,8 +845,9 @@ def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
 
 
 def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
-                       transaction_id: str, journal_rel: str) -> None:
-    """Run one admitted journal's compare-and-undo plan (passes 1-3).
+                       transaction_id: str, journal_rel: str,
+                       created_directories: list | None = None) -> None:
+    """Run one admitted journal's compare-and-undo plan (passes 1-4).
 
     The one unwind engine: crash recovery and live rollback both execute
     exactly this against the published journal. Either every path is
@@ -771,6 +856,11 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
     crash or IO failure completes idempotently because restored paths
     read as pre-state. Journal removal and projection handling belong to
     the caller, which knows whether its commit boundary was reached.
+
+    ``created_directories`` are the directories this transaction created
+    while writing. The tree is only back at its pre-state once they are
+    gone too: a directory left behind is residue that can block the next
+    write to the same identity.
     """
     # PASS 1 — read-only preflight over every path. One conflict anywhere
     # stops the whole unwind before a single byte changes.
@@ -850,6 +940,30 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
             _conflict_message(transaction_id, journal_rel,
                               "a path changed during recovery", drifted),
             transaction_id=transaction_id, conflicts=drifted)
+    # PASS 4 — remove the directories this transaction created. The files
+    # are back at their pre-state, but a directory the write created is
+    # not: it was absent before and is present now, and the tree is not
+    # restored until it is gone. A directory that is not empty holds
+    # something this transaction did not write, and is left alone.
+    for relative in (created_directories or []):
+        directory = root / relative
+        try:
+            if not directory.is_dir() or directory.is_symlink():
+                continue
+            if any(directory.iterdir()):
+                continue
+            with _engine_phase("restore"):
+                directory.rmdir()
+                _sync_directory(directory.parent)
+        except OSError as exc:
+            conflict = {"path": relative,
+                        "reason": "RESTORE_IO_FAILED",
+                        "detail": f"created directory could not be removed: {exc}"}
+            raise TransactionRecoveryConflict(
+                _conflict_message(transaction_id, journal_rel,
+                                  "a created directory could not be removed",
+                                  [conflict]),
+                transaction_id=transaction_id, conflicts=[conflict]) from exc
 
 
 def _retire_committed_journal(root: Path, tx_dir: Path, intent: dict,
@@ -905,7 +1019,7 @@ def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
                               "its commit receipt is contradictory", conflicts),
             transaction_id=transaction_id, conflicts=conflicts)
     _unwind_v2_entries(root, tx_dir, intent["paths"], transaction_id,
-                       journal_rel)
+                       journal_rel, intent.get("created_directories"))
     problems: list[str] = []
     _discard_stale_projection(root, problems)
     if problems:
@@ -1593,7 +1707,8 @@ class TransactionService:
                                           disk_intent)
                         _unwind_v2_entries(
                             self.root, run.inflight_dir, disk_intent["paths"],
-                            run.transaction_id, journal_rel)
+                            run.transaction_id, journal_rel,
+                            disk_intent.get("created_directories"))
                     except TransactionRecoveryConflict as exc:
                         failures.extend(conflict["path"]
                                         for conflict in exc.conflicts)
@@ -1670,6 +1785,8 @@ class TransactionService:
             "transaction_id": run.transaction_id,
             "receipt_path": _safe_relative(self.root, run.receipt_path),
             "paths": [],
+            "created_directories": _created_ancestor_directories(
+                self.root, run.normalized_writes),
         }
         for i, (path, old) in enumerate(run.backups.items()):
             if old is None:

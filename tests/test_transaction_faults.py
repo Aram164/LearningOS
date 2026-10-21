@@ -587,15 +587,16 @@ schema_dst = root / "system" / "schema" / "transaction-receipt.schema.json"
 schema_dst.parent.mkdir(parents=True, exist_ok=True)
 schema_dst.write_bytes(schema_src.read_bytes())
 target = root / relative
-target.parent.mkdir(parents=True, exist_ok=True)
-if mode != "kill-new-directory" and not target.exists():
-    target.write_bytes(b"old\\n")
+if mode != "kill-created-directory":
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if mode != "kill-new-directory" and not target.exists():
+        target.write_bytes(b"old\\n")
 def kill_validate():
     os._exit(70)
 def kill_touched(paths):
     os._exit(70)
 kwargs = {}
-if mode in ("kill-after-apply", "kill-new-directory"):
+if mode in ("kill-after-apply", "kill-new-directory", "kill-created-directory"):
     kwargs["validate_state"] = kill_validate
 elif mode == "kill-after-receipt":
     kwargs["touched"] = kill_touched
@@ -678,6 +679,35 @@ def test_child_interruption_in_new_directory_restarts_without_the_file(
     restarted = _child(root, tools, _RECONCILE_SCRIPT)
     assert restarted.returncode == 0, restarted.stderr
     assert not (root / relative).exists()
+
+
+def test_child_interruption_in_a_created_directory_removes_it(
+    tmp_path: Path,
+):
+    """A directory the transaction created is not residue after a restart.
+
+    The write creates the ancestors it needs, so the crash leaves them
+    behind holding the forward file. Recovery restores the file to its
+    pre-state — absent — and must remove the directories the write
+    created as well: the tree is not back where it started while they
+    remain, and a creation that failed validation would find its own
+    residue and refuse the identity it was trying to create.
+    """
+    tools = Path(__file__).resolve().parent.parent / "tools"
+    root = tmp_path / "kill-created-dir"
+    relative = "work/deep/nested/mod.md"
+    result = _child(root, tools, _CHILD_SCRIPT, "kill-created-directory", relative)
+    assert result.returncode == 70, result.stderr
+    assert (root / relative).read_bytes() == b"forward\n"
+    assert (root / "work" / "deep" / "nested").is_dir(), (
+        "the write created the ancestors")
+
+    restarted = _child(root, tools, _RECONCILE_SCRIPT)
+    assert restarted.returncode == 0, restarted.stderr
+    assert not (root / relative).exists()
+    assert not (root / "work").exists(), (
+        "the directories the transaction created must not survive its unwind")
+    assert _inflight_dirs(root) == []
 
 
 def test_restart_retries_receipt_barrier_before_retiring_journal(

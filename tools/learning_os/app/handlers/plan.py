@@ -37,6 +37,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.handlers._shared import apply_reviewed_envelope
+from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
 from learning_os.derive.masters_catalog import MastersPlanningError
@@ -953,7 +954,8 @@ def _creation_destination_problems(root: Path, module_id: str) -> list[str]:
     return problems
 
 
-@register("module.create", kind="command")
+@register("module.create", kind="command",
+           render_check=_render_creation_check)
 def module_create(ctx: OpContext, req: dict) -> Result:
     """Create one module record and its source map as one transaction.
 
@@ -1040,28 +1042,34 @@ def module_create(ctx: OpContext, req: dict) -> Result:
 
     if req.get("check"):
         expected_revisions = {module_id: load_revisions(root).get(module_id, 0)}
-        result = {
+        prepared = {
             "ok": True,
             "check": True,
             "mode": "check",
             "capability": "module.create",
             "module_id": module_id,
             "files_checked": len(writes),
-            "expected_write_paths": sorted(
-                str(path.relative_to(root)) for path in writes),
-            "expected_revisions": expected_revisions,
-            "commit_artifact_ids": [module_id],
             "reviewed_file_sha256": package_sha,
-            "expected_snapshot": ctx.snapshot_id(),
             "changes": "present",
+            "gateway_envelope": prepare_review_envelope(
+                "module.create",
+                {"file": str(source), "file_sha256": package_sha},
+                ctx.snapshot_id(),
+                expected_revisions,
+            ),
         }
-        result["gateway_envelope"] = prepare_review_envelope(
-            "module.create",
-            {"file": str(source), "file_sha256": package_sha},
-            result["expected_snapshot"],
-            expected_revisions,
+        # The proposal is returned so the pipeline runs the shadow
+        # validation of these exact writes: a package the apply would
+        # refuse is refused by the check too.
+        return Result(
+            prepared,
+            proposal=TransactionProposal(
+                capability="module.create",
+                writes=writes,
+                artifact_ids=[module_id],
+                expected_revisions=expected_revisions,
+            ),
         )
-        return Result(result)
 
     ctx.require_snapshot(req.get("expected_snapshot"))
     try:

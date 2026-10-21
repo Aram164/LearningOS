@@ -11,11 +11,35 @@ from learning_os.app.gateway import context_from_v2 as _context_from_v2
 from learning_os.app.gateway import read_structured_file as _read_structured_file
 from learning_os.app.gateway import validate_capability_envelope as _validate_capability_envelope
 from learning_os.app.proposal import GatewayDispatch
-from learning_os.domain.failures import NotFound, WriteRefused
+from learning_os.domain.failures import NotFound, ValidationFailed, WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.store.revisions import artifact_revision
 
 NOTES_PREFIX = Path("knowledge/notes")
+
+
+def render_creation_check(record: dict, prepared: dict) -> dict:
+    """Today's ``--check`` output from the shadow check record.
+
+    The record is the canonical validation of the exact writes this
+    request would make, staged on a shadow copy of the repository. A
+    package the apply would refuse is refused here with the same text: a
+    check that says ok for something the write refuses is worse than no
+    check, because it is a promise the system does not keep.
+    """
+    if not record["ok"]:
+        raise ValidationFailed(
+            "canonical validation failed: "
+            + "; ".join(map(str, record["errors"][:8])))
+    return {
+        **prepared,
+        "ok": True,
+        "check": True,
+        "expected_snapshot": record["expected_snapshot"],
+        "expected_revisions": record["expected_revisions"],
+        "expected_write_paths": record["writes"],
+        "warnings_delta": record.get("warnings_delta", []),
+    }
 
 
 def guard_rows(root, artifacts):

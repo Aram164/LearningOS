@@ -17,6 +17,8 @@ pin the properties that make it a governed write rather than a hand edit:
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -240,6 +242,47 @@ def test_a_refused_creation_leaves_the_tree_unchanged(repo: Path):
     assert canonical_fingerprint(repo) == before
 
 
+def test_a_failed_creation_leaves_no_residue_and_the_identity_is_free(repo: Path):
+    """A creation that fails after its write must not block its own retry.
+
+    The write begins: the module record and its source map land, the
+    post-write validation refuses the unknown source, and the rollback
+    unwinds. The residue of that rollback — the empty module directory —
+    used to be read as an existing module, so the corrected package was
+    refused with "this module already exists". The tree must come back to
+    its pre-state, directories included.
+
+    The fingerprint alone cannot see this: an empty directory is not
+    canonical content, so the restored fingerprint matches even while the
+    residue is on disk. The directory is therefore asserted directly.
+    """
+    module_id = "module-created-then-failed"
+    package = _write(repo, "package.yaml",
+                     _module_package(module_id, source_id="source-not-registered"))
+    before = canonical_fingerprint(repo)
+    proc = approved_v2_call(
+        repo, capability="module.create", payload=_payload(package),
+        artifact_ids=[module_id], idempotency_key="create-module-failed")
+    assert proc.returncode != 0
+    result = _result(proc)
+    assert result["ok"] is False
+    # The write reached the filesystem: the refusal names the written file.
+    assert result["error"]["code"] == "VALIDATION_FAILED"
+    assert "REF-SOURCE" in result["error"]["message"]
+    # Restored state, directories included.
+    target = repo / "curriculum" / "modules" / module_id
+    assert not target.exists(), f"residue left behind: {sorted(target.iterdir())}"
+    assert canonical_fingerprint(repo) == before
+    # The identity is free again.
+    corrected = _write(repo, "package.yaml", _module_package(module_id))
+    ok = approved_v2_call(
+        repo, capability="module.create", payload=_payload(corrected),
+        artifact_ids=[module_id], idempotency_key="create-module-retry")
+    assert ok.returncode == 0, ok.stdout + ok.stderr
+    assert (target / "module.yaml").is_file()
+    assert (target / "source-map.yaml").is_file()
+
+
 def test_creation_refuses_a_record_that_breaks_its_schema(repo: Path):
     package = _write(repo, "package.yaml", "module:\n  id: nope\n")
     proc = approved_v2_call(
@@ -249,6 +292,45 @@ def test_creation_refuses_a_record_that_breaks_its_schema(repo: Path):
     result = _result(proc)
     assert result["ok"] is False
     assert not (repo / "curriculum/modules/module-nope").exists()
+
+
+def test_the_check_refuses_a_package_the_apply_would_refuse(repo: Path):
+    """A preflight that says ok for a doomed write is a promise the system
+    does not keep.
+
+    The check stages the exact writes on a shadow copy of the repository
+    and validates them, so an unknown source is caught before anything
+    is written — with the same text the apply would have refused with.
+    """
+    package = _write(repo, "package.yaml",
+                     _module_package("module-checked-bad",
+                                     source_id="source-not-registered"))
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root", str(repo),
+         "module-create", "--file", str(package), "--check"],
+        capture_output=True, text=True)
+    assert proc.returncode != 0, proc.stdout
+    assert "REF-SOURCE" in proc.stderr
+    assert not (repo / "curriculum/modules/module-checked-bad").exists()
+
+
+def test_the_check_reports_the_writes_and_a_prepared_envelope(repo: Path):
+    package = _write(repo, "package.yaml", _module_package("module-checked-ok"))
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root", str(repo),
+         "module-create", "--file", str(package), "--check"],
+        capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["ok"] is True
+    assert payload["check"] is True
+    assert payload["expected_write_paths"] == [
+        "curriculum/modules/module-checked-ok/module.yaml",
+        "curriculum/modules/module-checked-ok/source-map.yaml",
+    ]
+    assert payload["expected_revisions"] == {"module-checked-ok": 0}
+    assert payload["gateway_envelope"]["capability"] == "module.create"
+    assert not (repo / "curriculum/modules/module-checked-ok").exists()
 
 
 # --------------------------------------------------------------------------
