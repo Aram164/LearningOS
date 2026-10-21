@@ -587,7 +587,10 @@ schema_dst = root / "system" / "schema" / "transaction-receipt.schema.json"
 schema_dst.parent.mkdir(parents=True, exist_ok=True)
 schema_dst.write_bytes(schema_src.read_bytes())
 target = root / relative
-if mode != "kill-created-directory":
+if mode == "kill-partial-ancestors":
+    # One ancestor pre-exists; the transaction creates the rest.
+    target.parent.parent.mkdir(parents=True, exist_ok=True)
+elif mode != "kill-created-directory":
     target.parent.mkdir(parents=True, exist_ok=True)
     if mode != "kill-new-directory" and not target.exists():
         target.write_bytes(b"old\\n")
@@ -596,7 +599,8 @@ def kill_validate():
 def kill_touched(paths):
     os._exit(70)
 kwargs = {}
-if mode in ("kill-after-apply", "kill-new-directory", "kill-created-directory"):
+if mode in ("kill-after-apply", "kill-new-directory", "kill-created-directory",
+            "kill-partial-ancestors"):
     kwargs["validate_state"] = kill_validate
 elif mode == "kill-after-receipt":
     kwargs["touched"] = kill_touched
@@ -707,6 +711,34 @@ def test_child_interruption_in_a_created_directory_removes_it(
     assert not (root / relative).exists()
     assert not (root / "work").exists(), (
         "the directories the transaction created must not survive its unwind")
+    assert _inflight_dirs(root) == []
+
+
+def test_restart_preserves_a_directory_that_existed_before_the_write(
+    tmp_path: Path,
+):
+    """Only the directories the transaction created are removed.
+
+    The write needs an ancestor that is not there; the ancestor above it
+    was. Restoring the tree means removing what the write made, and
+    keeping what it found.
+    """
+    tools = Path(__file__).resolve().parent.parent / "tools"
+    root = tmp_path / "kill-partial"
+    relative = "work/deep/nested/mod.md"
+    result = _child(root, tools, _CHILD_SCRIPT, "kill-partial-ancestors", relative)
+    assert result.returncode == 70, result.stderr
+    assert (root / "work" / "deep").is_dir(), "the pre-existing ancestor is there"
+    assert (root / "work" / "deep" / "nested").is_dir(), (
+        "the crash leaves the directory the write created")
+
+    restarted = _child(root, tools, _RECONCILE_SCRIPT)
+    assert restarted.returncode == 0, restarted.stderr
+    assert not (root / relative).exists()
+    assert not (root / "work" / "deep" / "nested").exists(), (
+        "the directory the write created must not survive its unwind")
+    assert (root / "work" / "deep").is_dir(), (
+        "a directory that existed before the write must survive it")
     assert _inflight_dirs(root) == []
 
 
