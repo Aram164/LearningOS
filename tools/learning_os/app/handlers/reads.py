@@ -24,7 +24,12 @@ from learning_os.derive.projection.learner_interpreter import (
 from learning_os.derive.projection.projection.atlas import STAGE_CONCEPT
 from learning_os.derive.projection.session_compiler import compile_session, replan_session
 from learning_os.derive.semantics.goals import RankedCluster, goal_to_dict
-from learning_os.derive.semantics.predicates import PREDICATES, evaluate
+from learning_os.derive.semantics.predicates import (
+    PREDICATES,
+    evaluate,
+    module_record_is_owned,
+    needs_scope,
+)
 from learning_os.derive.semantics.recipes import RecipeError, recipes_for
 from learning_os.derive.semantics.scan import observe_goal_ledger
 from learning_os.derive.semantics.session_counts import FeedError, feed_scan_kwargs
@@ -235,6 +240,25 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
                        key=lambda row: row["id"])
         owed = sorted(row["id"] for row in units
                       if row.get("needs_study_map"))
+        # The module-level counterpart of the unit obligation above: a
+        # studied academic module whose record names no units. No unit-level
+        # obligation can fire for it, so it would otherwise be enrolled and
+        # invisible. Derived from the same published rows the unit
+        # obligation is derived from, so the two can never disagree.
+        unit_counts: dict[str, int] = {}
+        for row in units:
+            module_id = str(row.get("module_id") or "")
+            if module_id:
+                unit_counts[module_id] = unit_counts.get(module_id, 0) + 1
+        owed_module_scopes = sorted(
+            str(row["id"]) for row in manifest.get("modules", [])
+            if needs_scope(
+                module_kind=row.get("kind", "academic"),
+                module_status=row.get("status"),
+                unit_count=unit_counts.get(str(row.get("id") or ""), 0),
+                owned=module_record_is_owned(row.get("path")),
+            )
+        )
         # Resumable work only: paused maps are shelved tracks, not
         # candidates for the next session. Full bootstrap still lists
         # them; the brief names what can actually start.
@@ -274,6 +298,7 @@ def _brief_bootstrap(ctx: OpContext, req: dict) -> Result:
              ),
              "counts": manifest.get("counts", {}),
              "owed_study_maps": owed,
+             "owed_module_scopes": owed_module_scopes,
              "active_study_maps": active,
              "academic_deadlines": deadlines,
              "deadline_count": len(deadlines),

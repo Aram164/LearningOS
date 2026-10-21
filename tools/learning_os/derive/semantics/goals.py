@@ -455,6 +455,7 @@ DETECTOR_PRECEDENCE = (
     "evidence-superseded",
     "claims-audit",
     "study-map-obligation",
+    "module-scope-obligation",
     "reviewer-correction-pattern",
     "repeated-question-gap",
     "inspection-without-dossier",

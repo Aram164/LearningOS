@@ -92,6 +92,8 @@ from learning_os.derive.semantics.predicates import (
     PREDICATES,
     Predicate,
     evaluate,
+    module_record_is_owned,
+    needs_scope,
     needs_study_map,
 )
 from learning_os.derive.semantics.recipes import RecipeError, recipe_classes, recipes_for
@@ -207,6 +209,8 @@ __all__ = [
     "load_dossier",
     "load_ledger",
     "needs_study_map",
+    "needs_scope",
+    "module_record_is_owned",
     "parse_feed",
     "plan_task",
     "query",

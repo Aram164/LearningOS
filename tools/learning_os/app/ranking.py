@@ -94,8 +94,13 @@ def _cluster_modules(repo, route_modules: dict[str, str],
     """
     modules: set[str] = set()
     units = getattr(repo, "units", {}) or {}
+    known_modules = getattr(repo, "modules", {}) or {}
     for goal_id in cluster.member_ids:
         kind, _, rest = goal_id.partition(":")
+        if kind == "module-scope-obligation":
+            if rest in known_modules:
+                modules.add(rest)
+            continue
         if kind == "study-map-obligation":
             unit = units.get(rest)
             module_id = getattr(unit, "module_id", None)

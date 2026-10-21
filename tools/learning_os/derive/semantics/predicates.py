@@ -43,6 +43,17 @@ UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({
     "complete", "archived", "paused", "ready-to-shelve",
 })
 
+#: Module kinds that carry a registrar's decision. Skill, project and
+#: foundation modules have no enrolment, so no module-level obligation can
+#: attach to them.
+ACADEMIC_MODULE_KINDS = frozenset({"academic"})
+
+#: Where a module's administrative facts live (OPERATOR.md boundary 5). A
+#: module known only through the frozen compatibility mirror
+#: `records/modules.yaml` has no owning record: that file owns nothing, and
+#: a record written before the unit model cannot owe initial units.
+MODULE_OWNER_PREFIX = "curriculum/modules/"
+
 #: Route scopes the schema knows. `unevaluated` is assessed-nothing: the
 #: source is routed but nobody has ever judged it — visibility debt, not a
 #: verdict. Anything outside this set is not a scope at all.
@@ -117,6 +128,53 @@ def needs_study_map(
     if module_status not in STUDIED_MODULE_STATUSES:
         return False
     return unit_status not in UNIT_STATUSES_WITHOUT_OBLIGATION
+
+
+def module_record_is_owned(owner_path: str | None) -> bool:
+    """Whether a module's owning record is a partitioned module record.
+
+    The compatibility mirror `records/modules.yaml` owns nothing (its own
+    header says so, and OPERATOR.md boundary 5 puts module facts in
+    `curriculum/modules/<module-id>/module.yaml`). A module known only
+    through the mirror has no owning record at all, so no fact about it can
+    be answered from an owned location. Fallback: never guess.
+    """
+    return bool(owner_path) and str(owner_path).startswith(MODULE_OWNER_PREFIX)
+
+
+def needs_scope(
+    *,
+    module_kind: str | None,
+    module_status: str | None,
+    unit_count: int,
+    owned: bool,
+) -> bool:
+    """Whether a studied module still owes its initial units.
+
+    The module-level counterpart of `needs_study_map`. A module record can
+    say `status: enrolled` and carry no units at all; nothing in the tree
+    then says what the module covers, and no unit-level obligation can fire
+    because there is no unit to owe anything. Derived for the same reason
+    `needs_study_map` is: an authored label is a claim someone has to
+    remember to set, and one derivation ends the disagreement between the
+    count, the badge and the queue.
+
+    Eligibility uses the *authored* status, not the administrative
+    projection. `lifecycle.module_lifecycle` maps a paused academic module
+    onto the administrative state "enrolled", and a paused module is not
+    owed new planning.
+
+    One unit discharges this. It says the module has begun to be planned;
+    it does not say the plan is complete, and it never claims the module is
+    covered.
+    """
+    if not owned:
+        return False
+    if str(module_kind or "") not in ACADEMIC_MODULE_KINDS:
+        return False
+    if module_status not in STUDIED_MODULE_STATUSES:
+        return False
+    return int(unit_count or 0) <= 0
 
 
 #: Which record owns each fact kind: (location template, required id fields).
@@ -701,6 +759,15 @@ PREDICATES: Mapping[str, Predicate] = {
         "OPERATOR.md rule 6",
         "Every unit of an active or enrolled module owes a study map unless "
         "complete, archived, paused, or leaving active study.",
+    ),
+    "NeedsScope": _predicate(
+        "NeedsScope", needs_scope,
+        ("module_kind", "module_status", "unit_count", "owned"),
+        "OPERATOR.md rule 6 (module level)",
+        "A studied academic module with an owning record and no units still "
+        "owes its initial units; one unit discharges the obligation. It "
+        "asserts that planning has not started, never that a module is "
+        "covered.",
     ),
     "ScopeAuthority": _predicate(
         "ScopeAuthority", scope_authority,

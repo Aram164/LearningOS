@@ -26,7 +26,8 @@ def test_the_contract_version_is_pinned():
 
 
 EXPECTED_PREDICATES = {
-    "NeedsStudyMap", "ScopeAuthority", "AllowedMutation", "ShelvingApproval",
+    "NeedsStudyMap", "NeedsScope", "ScopeAuthority", "AllowedMutation",
+    "ShelvingApproval",
     "CritiquePointActionable", "MasteryDeclared", "NoteChangeNeedsReview",
     "EvidenceComplete", "ClaimStale", "SourceComplete", "RouteValid",
     "RouteEvaluated", "StudyMapGrounded", "PlanTemplateCurrent", "RepoClean",

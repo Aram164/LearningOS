@@ -78,6 +78,7 @@ GROUPS: dict[str, list[str]] = {
         "test_resume_dossier.py",
         "test_semantic_contract.py",
         "test_semantic_lineage.py",
+        "test_module_scope_obligation.py",
         "test_session_compiler.py",
         "test_session_counts.py",
         "test_synthesis_analysis_refs.py",

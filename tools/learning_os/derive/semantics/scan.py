@@ -62,7 +62,11 @@ from learning_os.derive.semantics.goals import (
     detector_metrics,
     stale_observations,
 )
-from learning_os.derive.semantics.predicates import needs_study_map
+from learning_os.derive.semantics.predicates import (
+    module_record_is_owned,
+    needs_scope,
+    needs_study_map,
+)
 from learning_os.derive.semantics.session_counts import feed_scan_kwargs
 from learning_os.store import observations
 from learning_os.store.loader import load_repo
@@ -148,6 +152,7 @@ class ScanInput:
     claims: tuple[ClaimStatus, ...] = ()
     audits: tuple[tuple[str, AuditRecord], ...] = ()
     obligations: tuple[str, ...] = ()
+    scope_obligations: tuple[str, ...] = ()
     evidence_stale: tuple[tuple[str, str], ...] = ()
     known_ids: tuple[str, ...] = ()
     # Caller-fed session counts (see session_counts.py). Empty means
@@ -211,6 +216,20 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
             "producer.",
             [f"unit:{unit_id}"],
         ))
+    for module_id in observations.scope_obligations:
+        goal_id = f"module-scope-obligation:{module_id}"
+        if goal_id in known:
+            continue
+        goals.append(_emit(
+            goal_id, "module-scope-obligation",
+            f"Module {module_id} has no initial units — planning not started",
+            "A studied academic module whose record names no units. No "
+            "unit-level obligation can fire for it, so nothing else in the "
+            "tree would say what it covers. One unit discharges this: it "
+            "asserts that planning has not started, never that the module "
+            "is covered.",
+            [f"module:{module_id}"],
+        ))
     for observation_id, requirement_id in observations.evidence_stale:
         goal_id = f"evidence-superseded:{observation_id}"
         if goal_id in known:
@@ -247,9 +266,13 @@ def collect_observations(root: Path | str, *,
         if unit_id:
             study_map_units.add(unit_id)
     obligations: list[str] = []
+    unit_counts: dict[str, int] = {}
     for unit_id, unit in (getattr(repo, "units", {}) or {}).items():
         module = (getattr(repo, "modules", {}) or {}).get(
             getattr(unit, "module_id", ""), {})
+        module_id = str(getattr(unit, "module_id", "") or "")
+        if module_id:
+            unit_counts[module_id] = unit_counts.get(module_id, 0) + 1
         if needs_study_map(
             unit_status=getattr(unit, "data", {}).get("status"),
             module_status=module.get("status")
@@ -257,6 +280,27 @@ def collect_observations(root: Path | str, *,
             has_study_map=unit_id in study_map_units,
         ):
             obligations.append(unit_id)
+    # The module-level counterpart: a studied academic module whose record
+    # names no units. No unit-level obligation can fire for it, so without
+    # this the module is enrolled and invisible.
+    scope_obligations: list[str] = []
+    for module_id, module in sorted((getattr(repo, "modules", {}) or {}).items()):
+        if not isinstance(module, dict):
+            continue
+        origin = (getattr(repo, "module_origins", {}) or {}).get(module_id)
+        owner_path = None
+        if origin is not None:
+            try:
+                owner_path = str(Path(origin).relative_to(repo.root).as_posix())
+            except (OSError, ValueError):
+                owner_path = None
+        if needs_scope(
+            module_kind=module.get("kind", "academic"),
+            module_status=module.get("status"),
+            unit_count=unit_counts.get(module_id, 0),
+            owned=module_record_is_owned(owner_path),
+        ):
+            scope_obligations.append(module_id)
     # Decided goals stay decided: Aram's explicit reject/defer/close feeds
     # the detectors' `known_ids` dedup, so every scan stops re-emitting
     # what he already judged. The write side lives in
@@ -277,7 +321,9 @@ def collect_observations(root: Path | str, *,
     except RuntimeInputError:
         evidence_stale = ()
     return ScanInput(claims=tuple(status_map.values()), audits=tuple(sorted(audits.items())),
-                     obligations=tuple(sorted(obligations)), evidence_stale=evidence_stale,
+                     obligations=tuple(sorted(obligations)),
+                     scope_obligations=tuple(sorted(scope_obligations)),
+                     evidence_stale=evidence_stale,
                      known_ids=decided)
 
 
