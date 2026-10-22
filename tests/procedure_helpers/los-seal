@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import sys
+import subprocess
 
 
 def _venv_python() -> None:
@@ -40,10 +41,25 @@ def main(argv: list[str]) -> int:
             print("los-seal: LOS_FX is not set", file=sys.stderr)
             return 2
         rest = ["--root", root, *rest]
-    os.execv(sys.executable,
-             [sys.executable, os.path.join(repo, "tools", "seal_envelope.py"),
-              *rest])
-    raise AssertionError("unreachable")
+    proc = subprocess.run(
+        [sys.executable, os.path.join(repo, "tools", "seal_envelope.py"), *rest],
+        capture_output=True)
+    sys.stdout.buffer.write(proc.stdout)
+    sys.stderr.buffer.write(proc.stderr)
+    if proc.returncode == 0 and os.environ.get("LOS_OBSERVATIONS"):
+        # The sealer's JSON response names the exact approved intent.
+        import json
+        from pathlib import Path
+        import hashlib
+        output = next((rest[i + 1] for i, arg in enumerate(rest[:-1]) if arg == "--out"), None)
+        data = Path(output).read_bytes() if output else proc.stdout
+        envelope = json.loads(data)
+        for family, value in (("INTENT", envelope["approval"]["subject_sha256"]),
+                              ("FILE", hashlib.sha256(data).hexdigest())):
+            subprocess.run([sys.executable, os.path.join(
+                repo, "tests/procedure_helpers/los-fixture-values"), family, value],
+                check=True, stdout=subprocess.DEVNULL)
+    return proc.returncode
 
 
 if __name__ == "__main__":

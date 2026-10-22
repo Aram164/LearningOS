@@ -145,11 +145,13 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Dependencies\", \"text\": \"workspace-probe-heir waits on workspace-demo scratch.\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key s20-dep --request-id request-s20-dep --guards auto --out "$TMPDIR/s20-dep.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s20-dep.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s20-dep",
@@ -159,7 +161,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s20-dep.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:add2fe1ed81355dd14a2eac78d6a28f5e945e05c3f36e86b19f128459ffbc908",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -168,7 +170,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s20-dep.jso
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:add2fe1ed81355dd14a2eac78d6a28f5e945e05c3f36e86b19f128459ffbc908",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
     "replayed": false
   },
   "error": null

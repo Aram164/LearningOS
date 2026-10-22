@@ -39,6 +39,11 @@ from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, u
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.store.contracts.capability_catalog import load_capability_catalog
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
+from learning_os.store.contracts.task_scope import entry_read_verbs
+from learning_os.store.contracts.verb_catalogue import (
+    VerbCatalogueError,
+    build_verb_catalogue,
+)
 from learning_os.store.fingerprint import snapshot as _snapshot
 from learning_os.store.layout import PathBoundaryError, read_text_inside
 from learning_os.store.session.githistory import GitHistoryError
@@ -834,6 +839,20 @@ def _capabilities(root: Path) -> dict:
     }
 
 
+def _verb_catalogue(root: Path):
+    """The merged catalogue: one row per CLI verb, with the task it starts."""
+    try:
+        return build_verb_catalogue(root)
+    except VerbCatalogueError as exc:
+        raise WriteRefused(
+            f"the declared CLI surfaces do not join into one catalogue: "
+            f"{'; '.join(exc.problems)}",
+            site="capabilities.read.unjoined-catalogue",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+
+
 def _human_capabilities(payload, view) -> str:
     """The exact capabilities screen (SPEC (bu) 1).
 
@@ -853,7 +872,15 @@ def _human_capabilities(payload, view) -> str:
 
 @register("capabilities.read", kind="tool", human=_human_capabilities)
 def capabilities(ctx: OpContext, req: dict) -> Result:
-    """Serve the machine discovery/read catalogue, in full or in part."""
+    """Serve the machine discovery/read catalogue, in full or in part.
+
+    ``NAME`` names one thing: a capability, a CLI command, or a task. The
+    operator contract writes the command; the capability catalogue writes the
+    capability; the task contract writes the task. Rejecting two of the
+    three left the documented expansion path — ``capabilities NAME --json``,
+    where every other document names the command — refusing the names the
+    contract itself uses.
+    """
     root = ctx.root
     payload = _capabilities(root)
     name = req.get("name")
@@ -865,41 +892,78 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
+    catalogue = _verb_catalogue(root)
     if name:
-        section = next((key for key in ("queries", "commands") if name in payload[key]), None)
-        if section is None:
+        row = catalogue.capability(name) or catalogue.verb(name) \
+            or catalogue.operation(name)
+        task = catalogue.task(name)
+        if row is None and task is None:
             raise WriteRefused(
                 f"unknown or non-public capability: {name}",
                 site=f"{ctx.operation}.unknown-capability",
                 prefixed=True,
                 exit_code=2,
             )
-        definition = payload[section][name]
-        for key in ("queries", "commands"):
-            payload[key] = {name: definition} if key == section else {}
-        if section == "commands":
-            relative = f"system/schema/capabilities/{name}.schema.json"
-            try:
-                schema = json.loads(read_text_inside(root, root / relative))
-                if not isinstance(schema, dict):
-                    raise ValueError("payload schema must be an object")
-            except (OSError, PathBoundaryError, ValueError) as exc:
-                raise WriteRefused(
-                    f"cannot read declared payload schema: {exc}",
-                    site=f"{ctx.operation}.unreadable-payload-schema",
-                    prefixed=True,
-                    exit_code=2,
-                ) from exc
-            payload["payload_schema_path"] = relative
-            payload["payload_schema"] = schema
+        if task is not None:
+            payload["task"] = task.as_dict()
+            payload["verbs"] = [
+                catalogue.verb(verb).as_dict()
+                for verb in dict.fromkeys(entry_read_verbs(task.entry_read))
+                if catalogue.verb(verb) is not None
+            ]
+            payload["tasks"] = [task.as_dict()]
+            for key in ("queries", "commands"):
+                payload[key] = {}
+            return Result(payload, human_view={"branch": "name"})
+        capability = row.capability
+        section = next(
+            (key for key in ("queries", "commands") if capability in payload[key]),
+            None,
+        )
+        if section is None:
+            for key in ("queries", "commands"):
+                payload[key] = {}
+        else:
+            definition = payload[section][capability]
+            for key in ("queries", "commands"):
+                payload[key] = {capability: definition} if key == section else {}
+            if section == "commands":
+                relative = f"system/schema/capabilities/{capability}.schema.json"
+                try:
+                    schema = json.loads(read_text_inside(root, root / relative))
+                    if not isinstance(schema, dict):
+                        raise ValueError("payload schema must be an object")
+                except (OSError, PathBoundaryError, ValueError) as exc:
+                    raise WriteRefused(
+                        f"cannot read declared payload schema: {exc}",
+                        site=f"{ctx.operation}.unreadable-payload-schema",
+                        prefixed=True,
+                        exit_code=2,
+                    ) from exc
+                payload["payload_schema_path"] = relative
+                payload["payload_schema"] = schema
+        payload["verb"] = row.as_dict()
+        payload["verbs"] = [row.as_dict()]
+        payload["tasks"] = [
+            catalogue.task(task_id).as_dict()
+            for task_id in row.tasks
+            if catalogue.task(task_id) is not None
+        ]
         return Result(payload,
                       human_view={"branch": "name"})
     if compact:
         for key in ("queries", "commands"):
             payload[key] = sorted(payload[key])
+        payload["verbs"] = [row.verb for row in catalogue.verbs]
+        payload["tasks"] = [
+            {"id": task.id, "task": task.task, "entry_read": task.entry_read}
+            for task in catalogue.tasks
+        ]
         payload["detail"] = "capabilities NAME --json"
         return Result(payload,
                       human_view={"branch": "compact"})
+    payload["verbs"] = [row.as_dict() for row in catalogue.verbs]
+    payload["tasks"] = [task.as_dict() for task in catalogue.tasks]
     return Result(payload,
                   human_view={"branch": "screen"})
 

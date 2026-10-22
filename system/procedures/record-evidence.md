@@ -24,9 +24,10 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ## The direct path needs no envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"sha256:3d8f9cb80e40043a0a929a460d1290e579060889987faf23e709ac35359d5f3c","replayed":false}
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"ok":true,"observation_id":"observation-c5e7a09bdfe01c727161dcf3aef8fbe4","workspace_id":"workspace-demo","transaction_id":"transaction-20261001-090000-001","receipt_path":"operations/transactions/transaction-20261001-090000-001.yaml","artifact_revisions":{"workspace-demo":1},"snapshot_after":"$LOS_FIXTURE_SNAPSHOT_2","replayed":false}
 ```
 
 ## The newest receipt names the capability
@@ -73,13 +74,15 @@ los: INVALID_REQUEST: stage results require GatewayEnvelopeV2; direct CLI applic
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability learner.stage-result.append --payload '{"workspace": "workspace-demo", "unit": "unit-demo-l01", "stage": "stage-demo-pending", "activity": "exercise", "result": "correct", "condition": ["unfamiliar-example"], "note": "No target yet; recorded without credit."}' --key stage-result-001 --request-id request-stage-result-001 --guards auto --out "$TMPDIR/stage-result.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: workspace-demo=1
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-result.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-stage-result-001",
@@ -89,7 +92,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:2b61fc7f297cd2095d193ee50f99a254e9d0b16aaa2e0e0b7e540fcd80765372",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +105,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:2b61fc7f297cd2095d193ee50f99a254e9d0b16aaa2e0e0b7e540fcd80765372",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null

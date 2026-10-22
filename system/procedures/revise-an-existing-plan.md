@@ -66,13 +66,15 @@ True True 0
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Probe revision angle."}}' --key s25a-patch --request-id request-s25a-patch --guards auto --out "$TMPDIR/s25a-patch.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
 ```
 
 ## Apply the patch through the gateway
 
-```scrut
+```scrut {interpolated: true}
 $ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s25a-patch",
@@ -82,7 +84,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:68477a4122390268fc97f2b22d283f6b1b59e9db4fb1cd152d3ea359eb86931a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -126,7 +128,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s25a-patch.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:68477a4122390268fc97f2b22d283f6b1b59e9db4fb1cd152d3ea359eb86931a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -173,11 +175,13 @@ sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.materials.compact --payload "{\"module_id\": \"module-demo\", \"plan_sha256\": \"$COMPACT_PLAN\"}" --key s25a-compact --request-id request-s25a-compact --guards auto --out "$TMPDIR/s25a-compact.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=1, study-map-demo-l01=1, unit-demo-l01=4
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s25a-compact",
@@ -187,7 +191,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.j
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:7fb5e52693aae28cd6e767a65146d442df1659fd833508bb6a332439a165a125",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "schema_version": 1,
     "module_id": "module-demo",
@@ -215,7 +219,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/s25a-compact.j
       "study-map-demo-l01": 2,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:7fb5e52693aae28cd6e767a65146d442df1659fd833508bb6a332439a165a125",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -342,11 +346,13 @@ sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
 
 ```scrut {output_stream: stderr}
 $ PKG_SHA=$(sha256sum "$TMPDIR/package.yaml" | cut -d' ' -f1) && $H/los-seal --capability module.plan.import --payload "{\"module_id\": \"module-demo\", \"file\": \"$TMPDIR/package.yaml\", \"file_sha256\": \"sha256:$PKG_SHA\"}" --key s25a-imp --request-id request-s25a-imp --guards auto --out "$TMPDIR/s25a-imp.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=2
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s25a-imp",
@@ -356,7 +362,7 @@ $ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:99b32cee9d7ec0523c5e2f3c4fc4ede0faf7f7a34eecb46578bdd092c8c860c8",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -368,7 +374,7 @@ $ los capability module.plan.import --payload-file "$TMPDIR/s25a-imp.json"
     "artifact_revisions": {
       "module-demo": 3
     },
-    "snapshot_after": "sha256:99b32cee9d7ec0523c5e2f3c4fc4ede0faf7f7a34eecb46578bdd092c8c860c8",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -401,11 +407,13 @@ True check
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.plan.revise --payload '{"unit_id": "unit-demo-l01", "record": {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed probe angle."}}]}}}' --key s25a-rev --request-id request-s25a-rev --guards auto --out "$TMPDIR/s25a-rev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=3
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s25a-rev",
@@ -415,7 +423,7 @@ $ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:c1d9b05455effb9eac456d38914706ffd227581e61c9536252a7043c87fc5ff2",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -429,7 +437,7 @@ $ los capability unit.plan.revise --payload-file "$TMPDIR/s25a-rev.json"
     "artifact_revisions": {
       "module-demo": 4
     },
-    "snapshot_after": "sha256:c1d9b05455effb9eac456d38914706ffd227581e61c9536252a7043c87fc5ff2",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
     "replayed": false
   },
   "error": null
@@ -496,11 +504,13 @@ sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4
 
 ```scrut {output_stream: stderr}
 $ MAP_SHA=$(sha256sum "$TMPDIR/map-l02.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l02\", \"file\": \"$TMPDIR/map-l02.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\"}" --key s25a-map --request-id request-s25a-map --guards auto --out "$TMPDIR/s25a-map.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l02=0, unit-demo-l02=0
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s25a-map",
@@ -510,7 +520,7 @@ $ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-005",
   "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-  "snapshot_after": "sha256:2226ea4227e6de93c6dd3bcfc03fe4c088224f8484ca3eac406d806d7cd0eba3",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
   "result": {
     "ok": true,
     "mode": "apply",
@@ -606,7 +616,7 @@ $ los capability unit.map.import --payload-file "$TMPDIR/s25a-map.json"
       "study-map-demo-l02": 1,
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:2226ea4227e6de93c6dd3bcfc03fe4c088224f8484ca3eac406d806d7cd0eba3",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
     "replayed": false
   },
   "error": null

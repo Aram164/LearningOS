@@ -92,6 +92,75 @@ class ChecksContract:
             self.err("MANIFEST-CONTRACT-UNREADABLE", str(exc).replace("\n", " "),
                      "system/contracts/manifest-contract.yaml")
 
+    def check_cli_catalogue(self):
+        """The declared CLI surfaces join into one catalogue, or they do not.
+
+        The capability catalogue, the CLI operation contract and the request
+        schemas each name a command, and the operator contract told the
+        reader that one of them was the way in. Nothing compared them: nine
+        operations declared one kind and ran under another, and the
+        documented expansion path refused every name the contract itself
+        used. This check joins them on every run, so a command that no
+        contract declares, a command two contracts declare, or a command
+        without a kind is an error before an operator meets it.
+        """
+        from learning_os.store.contracts.verb_catalogue import (
+            VerbCatalogueError,
+            build_verb_catalogue,
+        )
+
+        try:
+            catalogue = build_verb_catalogue(self.repo.root)
+        except VerbCatalogueError as exc:
+            for problem in exc.problems:
+                self.err("CLI-CATALOGUE-UNJOINED", problem,
+                         "system/contracts/cli-operations.yaml")
+            return
+        for warning in catalogue.warnings:
+            self.warn("CLI-CATALOGUE-EXTRA", warning,
+                      "system/contracts/cli-operations.yaml")
+
+    def check_task_scope(self):
+        """The operator entry table is the task contract, not a copy of it.
+
+        The normative corpus says what binds. The task contract says what
+        binds *this* task, and the operator contract prints that as its
+        entry table. Two copies of a settled table drift, so the table in
+        ``system/OPERATOR.md`` is compared with the contract on every run and
+        a difference is an error, not a warning.
+        """
+        from learning_os.store.contracts.task_scope import (
+            OPERATOR_RELATIVE,
+            TaskScopeError,
+            load_task_scope,
+            operator_entry_table,
+            render_entry_table,
+        )
+
+        root = self.repo.root
+        if not (root / "system" / "contracts" / "task-scope.yaml").is_file():
+            return
+        try:
+            tasks = load_task_scope(root)
+        except TaskScopeError as exc:
+            self.err("TASK-SCOPE-INVALID", str(exc),
+                     "system/contracts/task-scope.yaml")
+            return
+        if not (root / OPERATOR_RELATIVE).is_file():
+            return
+        expected = render_entry_table(tasks)
+        actual = operator_entry_table(root)
+        if actual is None:
+            self.err("TASK-SCOPE-TABLE-MISSING",
+                     "the operator contract has no '## Start here' table",
+                     OPERATOR_RELATIVE)
+            return
+        if actual != expected:
+            self.err("TASK-SCOPE-TABLE-DRIFT",
+                     "the operator entry table differs from "
+                     "system/contracts/task-scope.yaml",
+                     "system/contracts/task-scope.yaml")
+
     def check_perimeter(self):
         """What may exist at the two levels above this repository.
 

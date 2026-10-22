@@ -6,6 +6,7 @@ queries:
   ability.context:
     handler: ability_context
     cli_command: ability-context
+    kind: porcelain
     result: ability-context-v1
     schema: system/schema/ability-context.schema.json
     invariants:
@@ -20,6 +21,7 @@ queries:
   material.span:
     handler: material_span
     cli_command: material-span
+    kind: query
     result: material-span-v1
     schema: system/schema/material-span.schema.json
     invariants:
@@ -53,6 +55,12 @@ queries:
     - compact mode returns bounded summary pages with snapshot-bound continuation
     - brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands
     - full material routes remain available through inspect; no source or angle is removed
+  semantic.query:
+    handler: semantic
+    result: semantic-query
+    invariants:
+    - one registered predicate evaluates against explicit --input k=v bindings; --list names the registry and --recipe shows the worked procedure for one class
+    - an unknown predicate names the registry instead of failing without a way forward
   note.content:
     handler: note_read
     result: note-content
@@ -82,6 +90,7 @@ queries:
   material.context:
     handler: material_context
     cli_command: material-context
+    kind: query
     result: material-context
     invariants:
     - read-only; touches no repository file
@@ -152,6 +161,7 @@ commands:
   ability.candidate.append:
     handler: ability_candidate_append
     cli_command: ability-candidate-append
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -164,6 +174,7 @@ commands:
   learner.ability-observation.append:
     handler: ability_observation_append
     cli_command: ability-observation-append
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -177,6 +188,7 @@ commands:
   learner.observation.append:
     handler: observation_append
     cli_command: observation-append
+    kind: command
     admission: direct-user-gesture
     writes:
     - work/active/*/observations.jsonl
@@ -188,6 +200,7 @@ commands:
   learner.stage-result.append:
     handler: stage_result
     cli_command: stage-result
+    kind: command
     writes:
     - work/active/*/stage-results.jsonl
     invariants:
@@ -198,6 +211,7 @@ commands:
   route.patch:
     handler: route_patch
     cli_command: route-patch
+    kind: command
     writes:
     - curriculum/modules/*/source-map.yaml
     - curriculum/modules/*/units/*/unit.yaml
@@ -246,6 +260,7 @@ commands:
   module.materials.compact:
     handler: module_materials_compact
     cli_command: module-materials-compact
+    kind: command
     writes:
     - curriculum/modules/*/source-map.yaml
     - curriculum/modules/*/units/*/study-map.yaml
@@ -257,6 +272,7 @@ commands:
   concept.relations.change:
     handler: concept_relations_change
     cli_command: concept-relations-change
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -294,6 +310,7 @@ commands:
   atlas.question.save:
     handler: atlas_question_save
     cli_command: atlas-question-save
+    kind: command
     admission: direct-user-gesture
     writes:
     - knowledge/notes/**
@@ -303,6 +320,7 @@ commands:
   capture.create:
     handler: capture
     cli_command: capture
+    kind: command
     admission: direct-user-gesture
     writes:
     - work/inbox/**
@@ -314,6 +332,7 @@ commands:
   inbox.resolve:
     handler: inbox_resolve
     cli_command: inbox-resolve
+    kind: command
     writes:
     - work/inbox/**
     - archive/inbox/**
@@ -325,6 +344,7 @@ commands:
   ai-action.delivery.apply:
     handler: ai_action_apply_delivery
     cli_command: ai-action-apply-delivery
+    kind: command
     writes:
     - operations/ai-actions/requests/**
     invariants:
@@ -340,6 +360,7 @@ commands:
   garden.seed.create:
     handler: garden_seed_create
     cli_command: garden-seed-create
+    kind: command
     admission: direct-user-gesture
     writes:
     - knowledge/garden/**
@@ -350,6 +371,7 @@ commands:
   module.attempt.record:
     handler: module_attempt
     cli_command: module-attempt
+    kind: command
     writes:
     - curriculum/modules/*/module.yaml
     invariants:
@@ -359,6 +381,7 @@ commands:
   module.sitting.update:
     handler: module_sitting
     cli_command: module-sitting
+    kind: command
     writes:
     - curriculum/modules/*/module.yaml
     invariants:
@@ -368,6 +391,7 @@ commands:
   module.create:
     handler: module_create
     cli_command: module-create
+    kind: command
     writes:
     - curriculum/modules/**
     invariants:
@@ -378,6 +402,7 @@ commands:
   collection.create:
     handler: collection_create
     cli_command: collection-create
+    kind: command
     writes:
     - sources/collections/**
     invariants:
@@ -388,6 +413,7 @@ commands:
   program.semester.update:
     handler: program_semester_update
     cli_command: program-semester-update
+    kind: command
     writes:
     - curriculum/programs/**
     invariants:
@@ -399,6 +425,7 @@ commands:
   module.plan.import:
     handler: module_plan_import
     cli_command: module-plan-import
+    kind: command
     writes:
     - curriculum/modules/**
     - work/active/**
@@ -422,6 +449,7 @@ commands:
   lineage.restamp:
     handler: lineage_restamp
     cli_command: lineage-restamp
+    kind: command
     writes:
     - operations/transactions/lineage.yaml
     invariants:
@@ -433,6 +461,7 @@ commands:
   note.analysis.save:
     handler: note_analysis_save
     cli_command: note-analysis-save
+    kind: command
     writes:
     - knowledge/notes/**
     invariants:
@@ -467,6 +496,7 @@ commands:
   note.analysis.save_batch:
     handler: note_analysis_save_batch
     cli_command: note-analysis-save-batch
+    kind: command
     writes:
     - knowledge/notes/**
     invariants:
@@ -480,6 +510,7 @@ commands:
   note.revise:
     handler: note_revise
     cli_command: note-revise
+    kind: command
     writes:
     - knowledge/notes/**
     invariants:
@@ -489,6 +520,7 @@ commands:
   note.evidence.add:
     handler: note_evidence
     cli_command: note-evidence
+    kind: command
     writes:
     - knowledge/notes/**
     invariants:
@@ -498,6 +530,7 @@ commands:
   note.create:
     handler: note_create
     cli_command: note-create
+    kind: command
     writes:
     - knowledge/notes/**
     invariants:
@@ -546,6 +579,7 @@ commands:
   unit.plan.revise:
     handler: unit_plan_revise
     cli_command: unit-plan-revise
+    kind: command
     writes:
     - curriculum/modules/**
     - work/active/**
@@ -598,6 +632,7 @@ commands:
   unit.map.import:
     handler: unit_map_import
     cli_command: unit-map-import
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -609,6 +644,7 @@ commands:
   unit.note.append:
     handler: unit_note
     cli_command: unit-note
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -620,6 +656,7 @@ commands:
   unit.source-selection.set:
     handler: unit_source_selection
     cli_command: unit-source-selection
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**/unit.yaml
@@ -630,6 +667,7 @@ commands:
   unit.material-synthesis.publish:
     handler: unit_material_synthesis_publish
     cli_command: unit-material-synthesis-publish
+    kind: command
     writes:
     - curriculum/modules/**/units/**/material-synthesis.yaml
     - operations/transactions/lineage.yaml
@@ -646,6 +684,7 @@ commands:
   legacy.archive.lock.publish:
     handler: legacy_archive_lock_publish
     cli_command: legacy-archive-lock-publish
+    kind: command
     writes:
     - operations/legacy/archive-lock.yaml
     invariants:
@@ -660,6 +699,7 @@ commands:
   masters-planning.catalog.update:
     handler: masters_planning_catalog_update
     cli_command: masters-planning-catalog-update
+    kind: command
     writes:
     - curriculum/quarantine/masters-planning/catalog.yaml
     invariants:
@@ -675,6 +715,7 @@ commands:
   masters-planning.comparison.publish:
     handler: masters_planning_comparison_publish
     cli_command: masters-planning-comparison-publish
+    kind: command
     writes:
     - curriculum/quarantine/masters-planning/comparisons/**
     invariants:
@@ -690,6 +731,7 @@ commands:
   stage.note.write:
     handler: stage_note
     cli_command: stage-note
+    kind: command
     writes:
     - curriculum/modules/**/units/**/stages/**
     invariants:
@@ -698,6 +740,7 @@ commands:
   stage.progress.update:
     handler: stage_progress
     cli_command: stage-progress
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -710,6 +753,7 @@ commands:
   stage.attachment.add:
     handler: stage_attach
     cli_command: stage-attach
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -720,6 +764,7 @@ commands:
   source.feedback.record:
     handler: source_feedback
     cli_command: source-feedback
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -729,6 +774,7 @@ commands:
   source.intake.record:
     handler: source_intake_record
     cli_command: source-intake
+    kind: command
     writes:
     - sources/sources.yaml
     - sources/registry/**
@@ -795,6 +841,7 @@ commands:
   collection.entry.revise:
     handler: collection_entry_revise
     cli_command: collection-entry-revise
+    kind: command
     writes:
     - sources/collections/**
     invariants:
@@ -822,6 +869,7 @@ commands:
   source.record.revise:
     handler: source_record_revise
     cli_command: source-revise
+    kind: command
     writes:
     - sources/sources.yaml
     - sources/registry/**
@@ -860,6 +908,7 @@ commands:
   detour.create:
     handler: detour_create
     cli_command: detour-create
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -868,6 +917,7 @@ commands:
   detour.resolve:
     handler: detour_resolve
     cli_command: detour-resolve
+    kind: command
     admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
@@ -876,6 +926,7 @@ commands:
   review.prepare:
     handler: shelving_prepare
     cli_command: shelving-prepare
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -887,6 +938,7 @@ commands:
   review.apply:
     handler: shelving_apply
     cli_command: shelving-apply
+    kind: command
     admission: direct-user-gesture
     admission_channels:
     - ui
@@ -900,6 +952,7 @@ commands:
   path.note.write:
     handler: path_note
     cli_command: path-note
+    kind: command
     writes:
     - work/active/**
     invariants:
@@ -908,6 +961,7 @@ commands:
   path.progress.update:
     handler: path_progress
     cli_command: path-progress
+    kind: command
     writes:
     - work/active/**
     invariants:
@@ -915,6 +969,7 @@ commands:
   path.attachment.add:
     handler: path_attach
     cli_command: path-attach
+    kind: command
     writes:
     - work/active/**
     invariants:
@@ -924,6 +979,7 @@ commands:
   coordination.section.revise:
     handler: coordination_section_revise
     cli_command: coordination-section-revise
+    kind: command
     writes:
     - work/COORDINATION.md
     invariants:
@@ -934,6 +990,7 @@ commands:
   workspace.next-action.update:
     handler: workspace_next_action
     cli_command: workspace-next-action
+    kind: command
     writes:
     - work/active/**
     invariants:
@@ -943,6 +1000,7 @@ commands:
   project.create:
     handler: project_create
     cli_command: project-create
+    kind: command
     writes:
     - projects/registry/*
     invariants:
@@ -973,6 +1031,7 @@ commands:
   project.update:
     handler: project_update
     cli_command: project-update
+    kind: command
     writes:
     - projects/registry/*
     invariants:

@@ -34,3 +34,7 @@ existing scenarios as the witnesses.
 Filed on 2026-10-22: [LearningOS #6](https://github.com/Aram164/LearningOS/issues/6),
 with the collector output, the reproduction, the scope limit and the
 acceptance criteria.
+
+## Implementation follow-up, 2026-10-22
+
+The resumed work follows local helper calls from each registered handler, binding positional/keyword/default slug and failure-class arguments. The collector now declares 497 sites, including all ten module.create sites. Thirty-nine existing scenarios now assert their actual site witnesses; forty-one internal assembly and fault-only branches have pipeline proofs asserting the exact site, typed refusal and unchanged canonical bytes. Both helper shapes and an uncalled-helper negative control pass. Final paired verification is pending.

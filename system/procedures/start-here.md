@@ -261,6 +261,20 @@ $ los capabilities note.create --json | $LOS_REPO/.venv/bin/python -c 'import js
 note_create note-create knowledge/notes/** id,title,path,role,concepts,sources,contexts,supersedes id,title,path
 ```
 
+## Fetch one definition by the command the operator writes
+
+```scrut
+$ los capabilities note-create --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["verb"]["verb"], d["verb"]["operation"], d["verb"]["capability"], sorted(d["commands"]))'
+note-create note.create note.create ['note.create']
+```
+
+## Ask what binds a task
+
+```scrut
+$ los capabilities governance-question --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["task"]["id"], ",".join(d["task"]["scope"]), [v["verb"] for v in d["verbs"]])'
+governance-question system/OPERATOR.md,system/SEMANTIC-CONTRACT.md ['semantic']
+```
+
 ## Start from the open-question brief
 
 ```scrut

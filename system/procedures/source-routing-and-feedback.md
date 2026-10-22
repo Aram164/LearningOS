@@ -69,11 +69,13 @@ True True 0
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"locator": "lecture-01.pdf, PDF pp. 20-22"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 21, "text": "Worked example part 1 of 4: a biased coin pays two on heads"}]}}' --key s26-locator --request-id request-s26-locator --guards auto --out "$TMPDIR/s26-locator.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-demo=0, study-map-demo-l01=0, unit-demo-l01=3
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s26-locator",
@@ -83,7 +85,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:177311e39ca8c1d6f52d0eae6ef626d75cc71a76f6b5def6f26b2e5be89e549d",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -157,7 +159,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s26-locator.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:177311e39ca8c1d6f52d0eae6ef626d75cc71a76f6b5def6f26b2e5be89e549d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -181,11 +183,13 @@ $ grep -n "lecture-01.pdf, PDF pp. 20-22" curriculum/modules/module-demo/source-
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.feedback.record --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "source_id": "source-demo-book", "feedback": "helpful"}' --key s26-fb --request-id request-s26-fb --guards auto --out "$TMPDIR/s26-fb.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=1, unit-demo-l01=4
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s26-fb",
@@ -195,7 +199,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:27f0c1da3872adaeabc7e8d36201a394b2668e91a78e38aedc25d60177485ccb",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -211,7 +215,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:27f0c1da3872adaeabc7e8d36201a394b2668e91a78e38aedc25d60177485ccb",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -228,11 +232,13 @@ $ $H/los-assert-receipt --last --capability source.feedback.record
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.feedback.record --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "source_id": "source-demo-book", "feedback": "useful-for-derivation", "resource_id": "resource-demo-book-ch01", "note": "Clear derivation."}' --key s26-fb2 --request-id request-s26-fb2 --guards auto --out "$TMPDIR/s26-fb2.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=2, unit-demo-l01=5
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s26-fb2",
@@ -242,7 +248,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:48fff041664ed4c08a2d51964fde910ca066f04c4178f349f01c7bd78b464d8f",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -260,7 +266,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/s26-fb2.json"
       "study-map-demo-l01": 3,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:48fff041664ed4c08a2d51964fde910ca066f04c4178f349f01c7bd78b464d8f",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -292,6 +298,7 @@ $ grep -n "source_feedback:" -A 6 curriculum/modules/module-demo/units/unit-demo
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.feedback.record --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "source_id": "source-nope", "feedback": "helpful"}' --key s26-bad --request-id request-s26-bad --guards auto --out "$TMPDIR/s26-bad.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: source not found: source-nope; fix the payload and seal again
 [2]
 ```

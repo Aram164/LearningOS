@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{\"operator.bootstrap\":{\"handler\":\"bootstrap\",\"result\":\"bootstrap\",\"invariants\":[\"compact mode returns bounded summary pages with snapshot-bound continuation\",\"brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands\",\"full material routes remain available through inspect; no source or angle is removed\"]}},\"commands\":{},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\"}\n",
+  "stdout": "{\"contract_version\":2,\"capability_contract_version\":2,\"cli_protocol\":6,\"gateway\":\"tools/los.py\",\"projection\":\"generated/manifest.json\",\"operator_contract\":\"system/OPERATOR.md\",\"queries\":{\"operator.bootstrap\":{\"handler\":\"bootstrap\",\"result\":\"bootstrap\",\"invariants\":[\"compact mode returns bounded summary pages with snapshot-bound continuation\",\"brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands\",\"full material routes remain available through inspect; no source or angle is removed\"]}},\"commands\":{},\"rules\":{\"canonical_writes_are_transactional\":true,\"successful_writes_have_receipts\":true,\"artifact_revision_conflicts_fail_closed\":true,\"shelving_requires_explicit_approval\":true,\"ordinary_interfaces_read_projection_only\":true,\"module_plan_preflight_required\":true,\"ai_actions_are_provider_independent\":true,\"bounded_ai_actions_use_exact_context\":true},\"root\":\"<ROOT>\",\"verb\":{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]},\"verbs\":[{\"verb\":\"bootstrap\",\"operation\":\"operator.bootstrap\",\"capability\":\"operator.bootstrap\",\"kind\":\"query\",\"surface\":\"catalog\",\"writes\":false,\"tasks\":[\"open-work-or-priority-question\"]}],\"tasks\":[{\"id\":\"open-work-or-priority-question\",\"task\":\"Open work or priority question\",\"entry_read\":\"`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination\",\"procedures\":[\"system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief\"],\"procedure_text\":null,\"scope\":[\"system/OPERATOR.md\",\"system/WORKFLOWS.md\",\"system/CLAUDE.md\"]}]}\n",
   "stdout_json": {
     "capability_contract_version": 2,
     "cli_protocol": 6,
@@ -37,6 +37,46 @@
       "ordinary_interfaces_read_projection_only": true,
       "shelving_requires_explicit_approval": true,
       "successful_writes_have_receipts": true
-    }
+    },
+    "tasks": [
+      {
+        "entry_read": "`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination",
+        "id": "open-work-or-priority-question",
+        "procedure_text": null,
+        "procedures": [
+          "system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief"
+        ],
+        "scope": [
+          "system/OPERATOR.md",
+          "system/WORKFLOWS.md",
+          "system/CLAUDE.md"
+        ],
+        "task": "Open work or priority question"
+      }
+    ],
+    "verb": {
+      "capability": "operator.bootstrap",
+      "kind": "query",
+      "operation": "operator.bootstrap",
+      "surface": "catalog",
+      "tasks": [
+        "open-work-or-priority-question"
+      ],
+      "verb": "bootstrap",
+      "writes": false
+    },
+    "verbs": [
+      {
+        "capability": "operator.bootstrap",
+        "kind": "query",
+        "operation": "operator.bootstrap",
+        "surface": "catalog",
+        "tasks": [
+          "open-work-or-priority-question"
+        ],
+        "verb": "bootstrap",
+        "writes": false
+      }
+    ]
   }
 }

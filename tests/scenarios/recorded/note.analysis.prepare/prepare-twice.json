@@ -16,13 +16,13 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\"ok\":true,\"out_dir\":\"<MATERIALS>/staging-prep\",\"envelope\":\"<MATERIALS>/staging-prep/envelope.json\",\"expected_snapshot\":\"SNAP1\",\"expected_revisions\":{\"note-scenario-prep-1\":0},\"notes\":[{\"note_id\":\"note-scenario-prep-1\",\"note_path\":\"knowledge/notes/mathematics/note-scenario-prep-1.md\",\"predicted_new\":true,\"frozen_input_sha256\":\"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\"body_file\":\"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"}],\"submit\":\".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"}\n",
+      "stdout": "{\"ok\":true,\"out_dir\":\"<MATERIALS>/staging-prep\",\"envelope\":\"<MATERIALS>/staging-prep/envelope.json\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"note-scenario-prep-1\":0},\"notes\":[{\"note_id\":\"note-scenario-prep-1\",\"note_path\":\"knowledge/notes/mathematics/note-scenario-prep-1.md\",\"predicted_new\":true,\"frozen_input_sha256\":\"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\"body_file\":\"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"}],\"submit\":\".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"}\n",
       "stdout_json": {
         "envelope": "<MATERIALS>/staging-prep/envelope.json",
         "expected_revisions": {
           "note-scenario-prep-1": 0
         },
-        "expected_snapshot": "SNAP1",
+        "expected_snapshot": "<FIXTURE_SNAPSHOT>",
         "notes": [
           {
             "body_file": "<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin",
@@ -55,13 +55,13 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\"ok\":true,\"out_dir\":\"<MATERIALS>/staging-prep\",\"envelope\":\"<MATERIALS>/staging-prep/envelope.json\",\"expected_snapshot\":\"SNAP1\",\"expected_revisions\":{\"note-scenario-prep-1\":0},\"notes\":[{\"note_id\":\"note-scenario-prep-1\",\"note_path\":\"knowledge/notes/mathematics/note-scenario-prep-1.md\",\"predicted_new\":true,\"frozen_input_sha256\":\"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\"body_file\":\"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"}],\"submit\":\".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"}\n",
+      "stdout": "{\"ok\":true,\"out_dir\":\"<MATERIALS>/staging-prep\",\"envelope\":\"<MATERIALS>/staging-prep/envelope.json\",\"expected_snapshot\":\"<FIXTURE_SNAPSHOT>\",\"expected_revisions\":{\"note-scenario-prep-1\":0},\"notes\":[{\"note_id\":\"note-scenario-prep-1\",\"note_path\":\"knowledge/notes/mathematics/note-scenario-prep-1.md\",\"predicted_new\":true,\"frozen_input_sha256\":\"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\"body_file\":\"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"}],\"submit\":\".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"}\n",
       "stdout_json": {
         "envelope": "<MATERIALS>/staging-prep/envelope.json",
         "expected_revisions": {
           "note-scenario-prep-1": 0
         },
-        "expected_snapshot": "SNAP1",
+        "expected_snapshot": "<FIXTURE_SNAPSHOT>",
         "notes": [
           {
             "body_file": "<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin",

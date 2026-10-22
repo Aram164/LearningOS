@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"material-context\",\"ranked_by\":\"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)\",\"items\":[{\"origin\":\"analysis-note\",\"id\":\"note-demo-analysis\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"use_evidence\":{\"counts\":{},\"positive\":0,\"mismatch\":0},\"match\":{\"terms\":[],\"concept\":\"concept-expected-value\",\"snippets\":[]},\"source\":{\"ref\":\"source-demo-book/book.pdf\",\"pages\":[1,1],\"freshness\":\"current\"},\"review\":{\"semantic_review\":null,\"resolution\":\"resolved\"},\"anchors\":[],\"anchor_returned\":0,\"anchors_truncated\":false,\"anchor_total\":0}],\"total\":1,\"next_offset\":null,\"observations_sha256\":\"sha256:41751233ffe7aff74b9e3a450728cdadf96b6c4976a30000e37507be8c7e6899\",\"searched\":{\"query_terms\":[],\"concept\":\"concept-expected-value\",\"purpose\":null,\"unit\":null,\"material\":null,\"include_related\":false,\"analysis_notes\":1,\"assessments\":0},\"pool\":{\"analysis_notes\":1,\"assessments\":0,\"related_analysis_notes\":0,\"analysis_by_resolution\":{\"resolved\":1},\"analysis_unreviewed\":0}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-context\",\"ranked_by\":\"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)\",\"items\":[{\"origin\":\"analysis-note\",\"id\":\"note-demo-analysis\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"use_evidence\":{\"counts\":{},\"positive\":0,\"mismatch\":0},\"match\":{\"terms\":[],\"concept\":\"concept-expected-value\",\"snippets\":[]},\"source\":{\"ref\":\"source-demo-book/book.pdf\",\"pages\":[1,1],\"freshness\":\"current\"},\"review\":{\"semantic_review\":null,\"resolution\":\"resolved\"},\"anchors\":[],\"anchor_returned\":0,\"anchors_truncated\":false,\"anchor_total\":0}],\"total\":1,\"next_offset\":null,\"observations_sha256\":\"sha256:41751233ffe7aff74b9e3a450728cdadf96b6c4976a30000e37507be8c7e6899\",\"searched\":{\"query_terms\":[],\"concept\":\"concept-expected-value\",\"purpose\":null,\"unit\":null,\"material\":null,\"include_related\":false,\"analysis_notes\":1,\"assessments\":0},\"pool\":{\"analysis_notes\":1,\"assessments\":0,\"related_analysis_notes\":0,\"analysis_by_resolution\":{\"resolved\":1},\"analysis_unreviewed\":0}}\n",
   "stdout_json": {
     "contract": "material-context",
     "items": [
@@ -67,7 +67,7 @@
       "query_terms": [],
       "unit": null
     },
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "total": 1
   }
 }

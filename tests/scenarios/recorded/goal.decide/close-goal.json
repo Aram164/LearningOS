@@ -13,8 +13,8 @@
           "revisions": {
             "file:operations/goal-ledger.yaml": 1
           },
-          "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP1",
+          "snapshot_after": "<FIXTURE_SNAPSHOT>",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "transaction_id": "TX1"
         }
       },
@@ -65,8 +65,8 @@
         "request_id": "KEY1"
       },
       "schema_version": 2,
-      "snapshot_after": "SNAP1",
-      "snapshot_before": "SNAP1",
+      "snapshot_after": "<FIXTURE_SNAPSHOT>",
+      "snapshot_before": "<FIXTURE_SNAPSHOT>",
       "status": "committed",
       "type": "transaction-receipt",
       "writes": [

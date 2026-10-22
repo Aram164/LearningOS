@@ -69,6 +69,12 @@
           "minLength": 1,
           "description": "One sentence: what a reader gets from this document."
         },
+        "applies_to": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "description": "Optional explicit applicability to task-scope task ids. When present, must equal the tasks that scope this document; an empty list declares no direct task scope. Absence preserves legacy classification and never makes a binding document optional."
+        },
         "supersedes": {
           "type": "array",
           "uniqueItems": true,

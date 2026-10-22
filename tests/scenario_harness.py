@@ -252,6 +252,9 @@ class _CaseContext:
         self.log_path = workdir / "audit.jsonl"
         self.tokens: list[str] = []
         self.casedata = CASEDATA_DIR / operation / case_id
+        from learning_os.store.fingerprint import snapshot
+        self.fixture_snapshot = snapshot(root)
+        self.fixture_digests: dict[str, str] = {}
 
 
 #: Scenario operations whose children observe a controlled Time Machine
@@ -431,7 +434,18 @@ def _substitute(value, ctx: _CaseContext):
 
     casedata_rel = _osp.relpath(ctx.workdir / "casedata", ctx.root)
     if isinstance(value, str):
+        digest_token = re.fullmatch(r"<CASEDATA_SHA256:([^<>]+)>", value)
+        if digest_token:
+            if value not in ctx.fixture_digests:
+                import hashlib
+
+                base = (ctx.workdir / "casedata").resolve()
+                path = (base / digest_token[1]).resolve()
+                path.relative_to(base)  # Refuse a token that escapes its fixture inputs.
+                ctx.fixture_digests[value] = 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest()
+            return ctx.fixture_digests[value]
         return (value.replace("<ROOT>", str(ctx.root))
+                .replace("<FIXTURE_SNAPSHOT>", ctx.fixture_snapshot)
                 .replace("<CASEDATA>", casedata_rel))
     if isinstance(value, list):
         return [_substitute(item, ctx) for item in value]
@@ -983,7 +997,8 @@ def _apply_commit_shas(recording: dict, mapping: dict[str, str]) -> dict:
     return recording
 
 
-def normalize(recording: dict, root: str | Path) -> dict:
+def normalize(recording: dict, root: str | Path, *, fixture_snapshot: str | None = None,
+              fixture_digests: dict[str, str] | None = None) -> dict:
     """Apply the SPEC §5.3 rules; returns a new recording.
 
     For sequences the TX/KEY/SNAP mapping is shared across steps so that
@@ -997,6 +1012,12 @@ def normalize(recording: dict, root: str | Path) -> dict:
         lambda text: text.replace(root, "<ROOT>").replace(
             materials, "<MATERIALS>").replace(
             learningos, "<LEARNINGOS>"))
+    if fixture_snapshot is not None:
+        recording = _walk_strings(recording, lambda text: text.replace(
+            fixture_snapshot, "<FIXTURE_SNAPSHOT>"))
+    for token, digest in (fixture_digests or {}).items():
+        recording = _walk_strings(recording, lambda text, digest=digest, token=token:
+                                  text.replace(digest, token))
     steps = _single_steps(recording)
     tx_values, key_values, snap_values, _, _ = _discover_identities(steps)
 
@@ -1118,14 +1139,32 @@ def _prepare_world(case: dict, operation: str, workdir: Path
     # The case's data directory, copied to a stable depth beside the
     # fixture so <CASEDATA> substitutes a relative path: an absolute
     # committed path would leak the checkout location into intent hashes.
+    ctx = _CaseContext(root=root, workdir=workdir,
+                       observations_path=observations_path,
+                       operation=operation, case_id=case["id"])
     committed = CASEDATA_DIR / operation / case["id"]
     if committed.is_dir():
         import shutil
 
         shutil.copytree(committed, workdir / "casedata")
-    return _CaseContext(root=root, workdir=workdir,
-                        observations_path=observations_path,
-                        operation=operation, case_id=case["id"])
+        for path in (workdir / "casedata").rglob("*"):
+            if not path.is_file():
+                continue
+            content = path.read_bytes()
+            if b"<FIXTURE_SNAPSHOT>" not in content:
+                continue
+            # Re-seal only a declaration explicitly asking for a live approval.
+            # Intentional corrupt subjects remain literal and are never healed.
+            text = content.decode("utf-8").replace("<FIXTURE_SNAPSHOT>", ctx.fixture_snapshot)
+            if "<FIXTURE_INTENT>" in text:
+                from learning_os.store.contracts.gateway import intent_sha256
+                envelope = json.loads(text)
+                approval = envelope.get("approval") if isinstance(envelope, dict) else None
+                if isinstance(approval, dict) and approval.get("subject_sha256") == "<FIXTURE_INTENT>":
+                    approval["subject_sha256"] = intent_sha256(envelope)
+                    text = json.dumps(envelope, indent=2, sort_keys=True) + "\n"
+            path.write_text(text, encoding="utf-8")
+    return ctx
 
 
 #: ``(witness file, "<operation>:<case-id>")`` -> the ``(operation, site)``
@@ -1218,7 +1257,8 @@ def run_case(case: dict, operation: str, workdir: str | Path) -> dict:
         recording = _run_step(ctx, operation, case, 0)
         check_witnesses(ctx)
         persist_case_audit(ctx)
-    return normalize(recording, ctx.root)
+    return normalize(recording, ctx.root, fixture_snapshot=ctx.fixture_snapshot,
+                     fixture_digests=ctx.fixture_digests)
 
 
 def run_sequence(case: dict, operation: str, workdir: str | Path) -> dict:
@@ -1244,4 +1284,5 @@ def run_sequence(case: dict, operation: str, workdir: str | Path) -> dict:
             steps.append(result)
         check_witnesses(ctx)
         persist_case_audit(ctx)
-    return normalize({"steps": steps}, ctx.root)
+    return normalize({"steps": steps}, ctx.root, fixture_snapshot=ctx.fixture_snapshot,
+                     fixture_digests=ctx.fixture_digests)

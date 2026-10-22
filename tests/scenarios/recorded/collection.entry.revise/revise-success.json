@@ -16,7 +16,7 @@
             "collection:shelf": 1
           },
           "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP2",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "transaction_id": "TX1"
         }
       },
@@ -68,7 +68,7 @@
       },
       "schema_version": 2,
       "snapshot_after": "SNAP1",
-      "snapshot_before": "SNAP2",
+      "snapshot_before": "<FIXTURE_SNAPSHOT>",
       "status": "committed",
       "type": "transaction-receipt",
       "writes": [

@@ -39,13 +39,15 @@ supporting note ride along.
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability concept.relations.change --payload '{"change": {"operations": [{"action": "add", "new": {"from": "concept-variance", "type": "requires", "to": "concept-expected-value", "context": "When variance is learned as a second moment.", "source": "note-demo"}}]}}' --key relation-requires --request-id request-relation-requires --guards auto --out "$TMPDIR/relation-requires.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: registry-concept-relations=0
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requires.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-relation-requires",
@@ -55,7 +57,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:d61649ec62f996e5a6b3a83f7c36bce95ae2a57dac58f179f85be745cbc447a1",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "operation_count": 1,
@@ -64,7 +66,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
     "artifact_revisions": {
       "registry-concept-relations": 1
     },
-    "snapshot_after": "sha256:d61649ec62f996e5a6b3a83f7c36bce95ae2a57dac58f179f85be745cbc447a1",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -101,6 +103,7 @@ captured 2
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability concept.relations.change --payload '{"change": {"operations": [{"action": "add", "new": {"from": "concept-variance", "type": "requires", "to": "concept-expected-value"}}]}}' --key relation-duplicate --request-id request-relation-duplicate --guards auto --out "$TMPDIR/relation-duplicate.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: E REL-DUP: duplicate relation edge ('concept-variance', 'requires', 'concept-expected-value') [knowledge/concept-relations.yaml]; fix the payload and seal again
 [2]
 ```

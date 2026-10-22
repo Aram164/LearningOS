@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"STALE_SNAPSHOT\",\n    \"message\": \"canonical state changed since this request was approved\",\n    \"retryable\": true,\n    \"details\": {\n      \"expected\": \"SNAP1\",\n      \"actual\": \"SNAP2\"\n    }\n  }\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"STALE_SNAPSHOT\",\n    \"message\": \"canonical state changed since this request was approved\",\n    \"retryable\": true,\n    \"details\": {\n      \"expected\": \"SNAP1\",\n      \"actual\": \"<FIXTURE_SNAPSHOT>\"\n    }\n  }\n}\n",
   "stdout_json": {
     "capability": "capture.create",
     "error": {
       "code": "STALE_SNAPSHOT",
       "details": {
-        "actual": "SNAP2",
+        "actual": "<FIXTURE_SNAPSHOT>",
         "expected": "SNAP1"
       },
       "message": "canonical state changed since this request was approved",

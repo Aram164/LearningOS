@@ -40,13 +40,15 @@ los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI ap
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l02", "source_id": "source-demo-book", "locator": "lecture-02.pdf", "action": "remove"}' --key sel-remove-l02 --request-id request-sel-remove-l02 --guards auto --out "$TMPDIR/sel-remove.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: unit-demo-l02=0
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-sel-remove-l02",
@@ -56,7 +58,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:37e681021e866ac83d8e3fdb74eba70dfa90d2f76fa5368d0bf8168e6f6bfba0",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -68,7 +70,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-remove.js
     "artifact_revisions": {
       "unit-demo-l02": 1
     },
-    "snapshot_after": "sha256:37e681021e866ac83d8e3fdb74eba70dfa90d2f76fa5368d0bf8168e6f6bfba0",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -91,13 +93,15 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l02/unit.yam
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l02", "source_id": "source-demo-book", "locator": "lecture-02.pdf", "action": "select", "purpose": "Follow-up derivation"}' --key sel-select-l02 --request-id request-sel-select-l02 --guards auto --out "$TMPDIR/sel-select.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: unit-demo-l02=1
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-sel-select-l02",
@@ -107,7 +111,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:8fafe632da2dc96555dbd60488170b45166e9ad85a3e86e1e5a4b2efcea7966d",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l02",
@@ -119,7 +123,7 @@ $ los capability unit.source-selection.set --payload-file "$TMPDIR/sel-select.js
     "artifact_revisions": {
       "unit-demo-l02": 2
     },
-    "snapshot_after": "sha256:8fafe632da2dc96555dbd60488170b45166e9ad85a3e86e1e5a4b2efcea7966d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -142,6 +146,7 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l02/unit.yam
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l01", "source_id": "source-demo-book", "locator": "lecture-02.pdf", "action": "select"}' --key sel-cross-l01 --request-id request-sel-cross-l01 --guards auto --out "$TMPDIR/sel-cross.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: selection must match one rich material route on this unit (source-demo-book · lecture-02.pdf); fix the payload and seal again
 [2]
 ```
@@ -154,6 +159,7 @@ constructed explicitly (the latter is checked by `tests/test_mismatches.py`).
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l01", "source_id": "source-demo-book", "locator": "lecture-01.pdf", "action": "remove"}' --key sel-remove-l01 --request-id request-sel-remove-l01 --guards auto --out "$TMPDIR/sel-wired.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: this choice is used by the current study path; remove it from those stages before removing the choice; fix the payload and seal again
 [2]
 ```

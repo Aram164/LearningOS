@@ -213,6 +213,8 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_local_attachments()
         self.check_contract_documentation()
         self.check_doc_blocks()
+        self.check_cli_catalogue()
+        self.check_task_scope()
         self.check_schemas()
         invalid = sorted({i.path for i in self.issues
                           if i.severity == "E" and i.code == "SCHEMA" and i.path})

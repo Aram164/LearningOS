@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"inbox-content\",\"item\":\"note-drop.md\",\"path\":\"work/inbox/note-drop.md\",\"content_sha256\":\"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":26,\"start_line\":1,\"content\":\"# Dropped \",\"next_offset\":10}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"inbox-content\",\"item\":\"note-drop.md\",\"path\":\"work/inbox/note-drop.md\",\"content_sha256\":\"sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":26,\"start_line\":1,\"content\":\"# Dropped \",\"next_offset\":10}\n",
   "stdout_json": {
     "content": "# Dropped ",
     "content_sha256": "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
@@ -18,7 +18,7 @@
     "offset_unit": "unicode_characters",
     "path": "work/inbox/note-drop.md",
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "start_line": 1,
     "total_characters": 26
   }

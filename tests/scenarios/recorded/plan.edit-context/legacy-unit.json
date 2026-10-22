@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l02\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"unit-demo-l02\":0},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"study_map\":null,\"routes\":[{\"unit_id\":\"unit-demo-l02\",\"title\":\"Demo book — variance derivation\",\"format\":\"book\",\"angle\":\"Derives variance and works a discrete example.\",\"covers\":[\"knowledge-demo-variance\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-02.pdf\",\"id\":\"route-7d42915c4988c513e6caa207\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"source_id\":\"source-demo-book\",\"locator\":\"lecture-02.pdf\",\"purpose\":\"Follow-up derivation\"}],\"claims\":{\"route-7d42915c4988c513e6caa207\":{\"status\":\"unrecorded\",\"basis\":\"\",\"causes\":[],\"audit\":\"unaudited\",\"goal_id\":\"\",\"next\":\"\",\"authorize\":\"\"}}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l02\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"unit-demo-l02\":0},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"study_map\":null,\"routes\":[{\"unit_id\":\"unit-demo-l02\",\"title\":\"Demo book — variance derivation\",\"format\":\"book\",\"angle\":\"Derives variance and works a discrete example.\",\"covers\":[\"knowledge-demo-variance\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-02.pdf\",\"id\":\"route-7d42915c4988c513e6caa207\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"source_id\":\"source-demo-book\",\"locator\":\"lecture-02.pdf\",\"purpose\":\"Follow-up derivation\"}],\"claims\":{\"route-7d42915c4988c513e6caa207\":{\"status\":\"unrecorded\",\"basis\":\"\",\"causes\":[],\"audit\":\"unaudited\",\"goal_id\":\"\",\"next\":\"\",\"authorize\":\"\"}}}\n",
   "stdout_json": {
     "artifact_revisions": {
       "module-demo": 0,
@@ -44,7 +44,7 @@
       }
     ],
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "source_selections": [
       {
         "locator": "lecture-02.pdf",

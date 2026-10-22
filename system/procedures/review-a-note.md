@@ -41,13 +41,15 @@ $ cat > "$TMPDIR/review-revised.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/review-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/review-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key review-demo --request-id request-review-demo --guards auto --out "$TMPDIR/review-demo.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo=0
 ```
 
 ## Submit the revision
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-review-demo",
@@ -57,7 +59,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3622ce45abbda43165ed1432b4e2e6cb14803c5872c8675fbcf0cc28b4549e25",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -67,7 +69,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:3622ce45abbda43165ed1432b4e2e6cb14803c5872c8675fbcf0cc28b4549e25",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null

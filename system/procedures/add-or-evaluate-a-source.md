@@ -11,9 +11,9 @@ search the registry by title, author, identifier and URL; register it
 metadata-only through the intake gateway with discovery provenance;
 refuse an intake that smuggles in an evaluation; place its bytes and
 attach them with the live hash after the inventory; record the
-evaluation; create the curated collection it belongs on (no approved
-capability creates a collection, so that file edit runs only in this
-disposable transcript fixture); revise one entry `why`; and rebuild.
+evaluation; create its curated collection through the reviewed-file,
+snapshot-guarded `collection.create` capability; revise one entry `why`;
+and rebuild.
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from the
 `LOS_REPO` environment variable the test sets.
 
@@ -126,13 +126,15 @@ sha256:a610c3e12a216350d6d776c556f03726e00a9cfc8fbe254039d12a6f6c77e0bd
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.intake.record --payload "{\"record\": {\"records\": [{\"action\": \"create\", \"id\": \"source-scenario-bare\", \"partition\": \"sources.yaml\", \"title\": \"Bare Essay\", \"type\": \"paper\", \"discovery\": {\"observed\": \"2026-10-01\", \"basis\": [{\"kind\": \"list-entry\", \"ref\": \"shelf/probe.md#L3\"}], \"possible_use\": \"Probe shelf.\"}}]}, \"expected_diff_sha256\": \"$INTAKE_DIFF\"}" --key s06-intake --request-id request-s06-intake --guards auto --out "$TMPDIR/s06-intake.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-scenario-bare=0
 ```
 
 ## Submit the intake
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s06-intake",
@@ -142,7 +144,7 @@ $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:4dea71ff2feb29ec5950a732f9d30a26b3d9b95684bc940f15657b3c041540f3",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-001",
@@ -150,7 +152,7 @@ $ los capability source.intake.record --payload-file "$TMPDIR/s06-intake.json"
     "artifact_revisions": {
       "source-scenario-bare": 1
     },
-    "snapshot_after": "sha256:4dea71ff2feb29ec5950a732f9d30a26b3d9b95684bc940f15657b3c041540f3",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -207,7 +209,7 @@ any destination outside the transcript `TMPDIR`.
 ```scrut
 $ mkdir -p "$TMPDIR/inv-pair/repo" && export INV_PAIR="$(realpath "$TMPDIR/inv-pair")" INV_REPO="$(realpath "$TMPDIR/inv-pair/repo")" && $H/los-anchored-copy materials_manifest "$INV_REPO"
 sha256:110e3f0ca7cc152523bddb53ed2cd4d727864cc6d6a0a20317e37f705f5a423e Makefile
-sha256:fbce5559fb85b4ed7d434e00aa3eb01484ed9f3f937ede06394cc8332355b95b pyproject.toml
+sha256:aaa8b777e16126b83c8ea3aca95295e25fa5ba879c8251c3842807bd90455d95 pyproject.toml
 sha256:0c84a5cae52dc8aa786e0009eaaa38e9e2f202b5f140e8cb07d1b188bc338ba8 tools/learning_os/__init__.py
 sha256:9f4511b38e35ff56efa15bc8b486a589d9dc42eed38ab331da85c7e7f6503c41 tools/learning_os/domain/material_inventory.py
 sha256:8bdcc529afb1448f8856ba13e615b894989c70786024d702e839f62b52e96e3b tools/materials_manifest.py
@@ -291,13 +293,15 @@ sha256:2f478959e6ecde768db3beffe4aa953f658c82c8a00714cc3704afde1cc9248a
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"material\": \"material://source-scenario-bare/attached.pdf\", \"material_sha256\": \"$MAT_SHA\"}, \"expected_diff_sha256\": \"$ATTACH_DIFF\"}" --key s06-attach --request-id request-s06-attach --guards auto --out "$TMPDIR/s06-attach.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-scenario-bare=1
 ```
 
 ## Submit the attach
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s06-attach",
@@ -307,7 +311,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:5d5db1b94c1e6679ccbe84f0e9e671b7011ffaf6a2773972b84434976bec9f2c",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-002",
@@ -315,7 +319,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-attach.json"
     "artifact_revisions": {
       "source-scenario-bare": 2
     },
-    "snapshot_after": "sha256:5d5db1b94c1e6679ccbe84f0e9e671b7011ffaf6a2773972b84434976bec9f2c",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -337,11 +341,13 @@ sha256:875f78222b721f37e24ca30af4b597c88cfd562df9a283540bc0447df1ab38ec
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-scenario-bare\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"short and exact\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$EVAL_DIFF\"}" --key s06-eval --request-id request-s06-eval --guards auto --out "$TMPDIR/s06-eval.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-scenario-bare=2
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s06-eval",
@@ -351,7 +357,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:01a91d131bf97505db876b4e9e8e4df37d89cfe2c602854ab5be628d4a1dc5a1",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-003",
@@ -359,7 +365,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/s06-eval.json"
     "artifact_revisions": {
       "source-scenario-bare": 3
     },
-    "snapshot_after": "sha256:01a91d131bf97505db876b4e9e8e4df37d89cfe2c602854ab5be628d4a1dc5a1",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -375,7 +381,7 @@ $ $H/los-assert-receipt --last --capability source.record.revise
 ## Create the curated collection it belongs on
 
 ```scrut
-$ cat > sources/collections/probe-essays.yaml <<'EOF'
+$ cat > "$TMPDIR/probe-essays.yaml" <<'EOF'
 > title: Probe essays
 > entries:
 > - source: source-scenario-bare
@@ -384,11 +390,47 @@ $ cat > sources/collections/probe-essays.yaml <<'EOF'
 > EOF
 ```
 
+The draft stays outside the canonical destination. Bind its exact bytes,
+check it, seal the current snapshot and revision, and retain the envelope
+for an exact replay.
+
+```scrut
+$ export COLLECTION_SHA="sha256:$(shasum -a 256 "$TMPDIR/probe-essays.yaml" | cut -d ' ' -f 1)"; los collection-create --file "$TMPDIR/probe-essays.yaml" --file-sha256 "$COLLECTION_SHA" --check > "$TMPDIR/collection-check.json" && $H/los-bind COLLECTION_PAYLOAD '$' < "$TMPDIR/collection-check.json" > /dev/null
+```
+
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability collection.create --payload "{\"file\":\"$TMPDIR/probe-essays.yaml\",\"file_sha256\":\"$COLLECTION_SHA\"}" --key source-collection --request-id request-source-collection --guards auto --out "$TMPDIR/collection.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: collection:probe-essays=0
+```
+
+```scrut
+$ los capability collection.create --payload-file "$TMPDIR/collection.json" > "$TMPDIR/collection-created.json" && $H/los-assert-receipt --last --capability collection.create && eval "$(cat "$TMPDIR/collection-created.json" | $H/los-bind COLLECTION_REV '$.result.artifact_revisions.collection:probe-essays')" && echo "$COLLECTION_REV"
+1
+```
+
+```scrut
+$ los capability collection.create --payload-file "$TMPDIR/collection.json" > "$TMPDIR/collection-replayed.json" && eval "$(cat "$TMPDIR/collection-replayed.json" | $H/los-bind COLLECTION_REPLAY '$.replayed')" && echo "$COLLECTION_REPLAY"
+true
+```
+
+```scrut {output_stream: stderr}
+$ los collection-create --file "$TMPDIR/probe-essays.yaml" --file-sha256 "$COLLECTION_SHA" --check
+los: INVALID_REQUEST: collection 'probe-essays' already exists at sources/collections/probe-essays.yaml; creation never overwrites
+[2]
+```
+
+```scrut
+$ printf '\n' >> "$TMPDIR/probe-essays.yaml"; los collection-create --file "$TMPDIR/probe-essays.yaml" --file-sha256 "$COLLECTION_SHA" --check > "$TMPDIR/changed-collection.txt" 2>&1; refusal_status=$?; test "$refusal_status" -eq 2 && grep -q "approved collection file changed before use" "$TMPDIR/changed-collection.txt" && echo "changed reviewed bytes refused"
+changed reviewed bytes refused
+```
+
 ## The collection validates clean
 
 ```scrut
 $ (set -o pipefail; los validate | tail -n 1)
-0 error(s), 14 warning(s) — OK
+0 error(s), 13 warning(s) — OK
 ```
 
 ## Revise one entry why through its gateway
@@ -400,11 +442,13 @@ sha256:2282313ea24c7f43af808416941f8b45aee64af28ce53b58c25356ecad4f0c55
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability collection.entry.revise --payload "{\"record\": {\"collection\": \"probe-essays\", \"source\": \"source-scenario-bare\", \"why\": \"The bare essay, examined.\"}, \"expected_diff_sha256\": \"$ENTRY_DIFF\"}" --key s06-entry --request-id request-s06-entry --guards auto --out "$TMPDIR/s06-entry.json"
-seal_envelope: guards auto: collection:probe-essays=0
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+seal_envelope: guards auto: collection:probe-essays=1
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability collection.entry.revise --payload-file "$TMPDIR/s06-entry.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s06-entry",
@@ -412,17 +456,17 @@ $ los capability collection.entry.revise --payload-file "$TMPDIR/s06-entry.json"
   "capability": "collection.entry.revise",
   "ok": true,
   "replayed": false,
-  "transaction_id": "transaction-20261001-090000-004",
-  "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:1d07179772001ace999043cfd1b33f2525b8d3d458b7018a2cd0e19fd1dc7e1d",
+  "transaction_id": "transaction-20261001-090000-005",
+  "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
   "result": {
     "ok": true,
-    "transaction_id": "transaction-20261001-090000-004",
-    "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
+    "transaction_id": "transaction-20261001-090000-005",
+    "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
     "artifact_revisions": {
-      "collection:probe-essays": 1
+      "collection:probe-essays": 2
     },
-    "snapshot_after": "sha256:1d07179772001ace999043cfd1b33f2525b8d3d458b7018a2cd0e19fd1dc7e1d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
     "replayed": false
   },
   "error": null

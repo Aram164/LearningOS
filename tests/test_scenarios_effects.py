@@ -632,3 +632,72 @@ def test_audit_startup_pins_this_checkout_before_importing_production(tmp_path):
     witnesses = [json.loads(line) for line in log.read_text().splitlines()]
     assert any(row.get("event") == "installed" for row in witnesses)
     assert any(row.get("event") == "completed" and row.get("capture_ok") is True for row in witnesses)
+
+
+def test_fixture_tokens_follow_contract_edits_and_keep_approval_exact(tmp_path, monkeypatch):
+    from learning_os.store.contracts.gateway import intent_sha256
+
+    original = scenario_harness._build_fixture
+    def changed_contract(name, container):
+        root = original(name, container)
+        contract = root / 'system/contracts/capabilities.yaml'
+        contract.write_text(contract.read_text() + '\n# Changed contract fixture.\n')
+        return root
+    monkeypatch.setattr(scenario_harness, '_build_fixture', changed_contract)
+    doc = scenario_harness.load_case_file(scenario_harness.CASES_DIR / 'cli.capability.yaml')
+    case = next(c for c in doc['cases'] if c['id'] == 'dispatch-success')
+    case = {**case, 'observations': doc['observations']}
+    work = tmp_path / 'case'
+    work.mkdir()
+    ctx = scenario_harness._prepare_world(case, 'cli.capability', work)
+    envelope_path = work / 'casedata/valid-capture.json'
+    envelope = json.loads(envelope_path.read_text())
+    assert envelope['expected_snapshot'] == ctx.fixture_snapshot
+    assert envelope['approval']['subject_sha256'] == intent_sha256(envelope)
+    result = scenario_harness._run_step(ctx, 'cli.capability', case, 0)
+    assert result['exit'] == 0, result['stdout'] + result['stderr']
+    # Replacing the token happens once, so an exact sealed request becomes
+    # stale after another canonical edit rather than silently refreshing.
+    (ctx.root / 'work/inbox/changed.md').write_text('external change\n')
+    stale = scenario_harness._run_step(ctx, 'cli.capability', {**case, 'argv':
+        ['capability', 'capture.create', '--payload-file', '<CASEDATA>/valid-capture.json']}, 1)
+    assert stale['stdout_json']['replayed'] is True
+    # The exact committed request replays; a fresh intent with its original
+    # fixture snapshot must instead refuse as stale.
+    envelope['request_id'] += '-fresh'
+    envelope['idempotency_key'] += '-fresh'
+    envelope['expected_revisions'] = {'capture-request:' + envelope['idempotency_key']: 0}
+    envelope['approval']['subject_sha256'] = intent_sha256(envelope)
+    envelope_path.write_text(json.dumps(envelope))
+    stale = scenario_harness._run_step(ctx, 'cli.capability', case, 2)
+    assert stale['stdout_json']['error']['code'] == 'STALE_SNAPSHOT'
+    assert stale['canonical_changed'] == {}
+
+
+def test_fixture_snapshot_normalization_keeps_unrelated_digests(tmp_path):
+    live = 'sha256:' + 'a' * 64
+    other = 'sha256:' + 'b' * 64
+    result = scenario_harness.normalize(
+        _bare_recording({'message': f'fixture {live}', 'file_sha256': other}),
+        tmp_path, fixture_snapshot=live)
+    assert '<FIXTURE_SNAPSHOT>' in result['stdout']
+    assert result['stdout_json']['file_sha256'] == other
+
+
+def test_fixture_file_digest_is_frozen_and_cannot_escape(mini_repo, tmp_path):
+    import hashlib
+
+    data = tmp_path / 'casedata'
+    data.mkdir()
+    path = data / 'delivery.yaml'
+    path.write_bytes(b'reviewed bytes\n')
+    ctx = scenario_harness._CaseContext(
+        root=mini_repo, workdir=tmp_path, observations_path=tmp_path / 'obs.json',
+        operation='ai-action.delivery.apply', case_id='digest-control')
+    token = '<CASEDATA_SHA256:delivery.yaml>'
+    expected = 'sha256:' + hashlib.sha256(path.read_bytes()).hexdigest()
+    assert scenario_harness._substitute(token, ctx) == expected
+    path.write_bytes(b'changed after approval\n')
+    assert scenario_harness._substitute(token, ctx) == expected
+    with pytest.raises(ValueError):
+        scenario_harness._substitute('<CASEDATA_SHA256:../outside>', ctx)

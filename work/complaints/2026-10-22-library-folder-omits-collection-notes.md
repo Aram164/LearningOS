@@ -33,3 +33,7 @@ Carry the current collection's role and note into its folder preview, preserving
 Scope limit: this was checked on one catalogue member in the real vault, then corroborated by the two render paths. It is not a general usability audit. No unrelated UI fix was implemented.
 
 Filed: [learningos-obsidian-ui #3](https://github.com/Aram164/learningos-obsidian-ui/issues/3). Existing repository issues were searched first; none matched this preview gap.
+
+## Implementation follow-up, 2026-10-22
+
+The UI now carries the current collection group/why on its Finder entry and shows both in the selected source inspector before opening its URL. Empty annotations add no facts, and shared sources retain distinct context in different collections. The Finder model tests, actual rendered-inspector tests and UI check suite pass. Live vault verification of the committed build is pending.

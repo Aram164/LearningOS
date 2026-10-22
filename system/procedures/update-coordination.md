@@ -40,9 +40,10 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ## Review the check diff without a digest
 
-```scrut
+```scrut {interpolated: true}
 $ los coordination-section-revise Commitments --text "Ship the demo module plan." --check
-{"ok":true,"section":"Commitments","before":"(none)","after":"Ship the demo module plan.","expected_content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","expected_snapshot":"sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90","expected_revisions":{"coordination":0},"write_paths":["work/COORDINATION.md"]}
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"ok":true,"section":"Commitments","before":"(none)","after":"Ship the demo module plan.","expected_content_sha256":"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655","expected_snapshot":"$LOS_FIXTURE_SNAPSHOT_1","expected_revisions":{"coordination":0},"write_paths":["work/COORDINATION.md"]}
 ```
 
 ## Capture the pre-refusal state
@@ -56,6 +57,7 @@ captured 1
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability coordination.section.revise --payload '{"section": "Commitments", "text": "Ship the demo module plan.", "expected_content_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}' --key coord-stale --request-id request-coord-stale --guards auto --out "$TMPDIR/coord-stale.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: placeholder content digest sha256:0000000000000000000000000000000000000000000000000000000000000000; the current content digest is sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655 (read it with `inspect coordination`); fix the payload and seal again
 [2]
 ```
@@ -71,13 +73,15 @@ unchanged
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Commitments\", \"text\": \"Ship the demo module plan.\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key coord-commit --request-id request-coord-commit --guards auto --out "$TMPDIR/coord-commit.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
 ```
 
 ## Submit the revision
 
-```scrut
+```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commit.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-coord-commit",
@@ -87,7 +91,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:c97fc056a15b02ba99a47e4987ff8815096e1ae34b71b3cd8af8c3d779e6142a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "section": "Commitments",
@@ -96,7 +100,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:c97fc056a15b02ba99a47e4987ff8815096e1ae34b71b3cd8af8c3d779e6142a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null

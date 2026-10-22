@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"note-content\",\"note_id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"content_sha256\":\"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":162,\"start_line\":1,\"content\":\"---\\nid: no\",\"next_offset\":10}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"note-content\",\"note_id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"content_sha256\":\"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":162,\"start_line\":1,\"content\":\"---\\nid: no\",\"next_offset\":10}\n",
   "stdout_json": {
     "content": "---\nid: no",
     "content_sha256": "sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276",
@@ -18,7 +18,7 @@
     "offset_unit": "unicode_characters",
     "path": "knowledge/notes/mathematics/note-demo.md",
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "start_line": 1,
     "total_characters": 162
   }

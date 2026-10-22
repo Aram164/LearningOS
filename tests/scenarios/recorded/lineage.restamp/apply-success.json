@@ -13,8 +13,8 @@
           "revisions": {
             "file:operations/transactions/lineage.yaml": 1
           },
-          "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP1",
+          "snapshot_after": "<FIXTURE_SNAPSHOT>",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "transaction_id": "TX1"
         }
       },
@@ -67,8 +67,8 @@
         "request_id": "KEY1"
       },
       "schema_version": 2,
-      "snapshot_after": "SNAP1",
-      "snapshot_before": "SNAP1",
+      "snapshot_after": "<FIXTURE_SNAPSHOT>",
+      "snapshot_before": "<FIXTURE_SNAPSHOT>",
       "status": "committed",
       "type": "transaction-receipt",
       "writes": [
@@ -136,7 +136,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"lineage.restamp\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"capability\": \"lineage.restamp\",\n    \"claim_ids\": [\n      \"covers:route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"claims_sha256\": \"sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef\",\n    \"plan_sha256\": \"sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"lineage.restamp\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"capability\": \"lineage.restamp\",\n    \"claim_ids\": [\n      \"covers:route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"claims_sha256\": \"sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef\",\n    \"plan_sha256\": \"sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1\n    },\n    \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
   "stdout_json": {
     "capability": "lineage.restamp",
     "error": null,
@@ -159,11 +159,11 @@
       "plan_sha256": "sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77",
       "receipt_path": "operations/transactions/TX1.yaml",
       "replayed": false,
-      "snapshot_after": "SNAP1",
+      "snapshot_after": "<FIXTURE_SNAPSHOT>",
       "transaction_id": "TX1"
     },
     "schema_version": 2,
-    "snapshot_after": "SNAP1",
+    "snapshot_after": "<FIXTURE_SNAPSHOT>",
     "transaction_id": "TX1"
   }
 }

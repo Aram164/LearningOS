@@ -150,13 +150,15 @@ W WS-COUNT: 8 non-standing active workspaces (target 3-7; finish or archive some
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability workspace.next-action.update --payload '{"workspace_id": "workspace-probe", "next_action": "Probe the next thing."}' --key ws-na-001 --request-id request-ws-na-001 --guards auto --out "$TMPDIR/ws-na.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: workspace-probe=0
 ```
 
 ## Submit the update
 
-```scrut
+```scrut {interpolated: true}
 $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-ws-na-001",
@@ -166,7 +168,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:dfcd3b1e9d10ebb3f8ab4c380aecf31f47e51dd82c8ef0f1ca98fc31c36e50fd",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "workspace_id": "workspace-probe",
@@ -176,7 +178,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/ws-na.json
     "artifact_revisions": {
       "workspace-probe": 1
     },
-    "snapshot_after": "sha256:dfcd3b1e9d10ebb3f8ab4c380aecf31f47e51dd82c8ef0f1ca98fc31c36e50fd",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
     "replayed": false
   },
   "error": null

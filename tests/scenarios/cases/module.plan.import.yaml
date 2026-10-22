@@ -30,7 +30,7 @@ cases:
     staged_basis: unit-demo-l01
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.staged-basis-needs-check
 - id: promotion-mismatch
   kind: refusal
   transport: gateway
@@ -49,7 +49,7 @@ cases:
       module_plan: {}
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.promotion-mismatch
 - id: promotion-refused
   kind: refusal
   transport: gateway
@@ -68,7 +68,7 @@ cases:
       module_plan: {}
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.promotion-refused
 - id: promotion-direct-cli
   kind: refusal
   transport: cli
@@ -78,7 +78,7 @@ cases:
   - --promotion
   - '{"canonical_module_id": "module-demo"}'
   expect:
-    site: null
+    site: module.plan.import.promotion-needs-gateway
 - id: missing-file
   kind: refusal
   transport: gateway
@@ -88,7 +88,7 @@ cases:
     file_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.bad-file
 - id: sha-mismatch
   kind: refusal
   transport: gateway
@@ -98,7 +98,7 @@ cases:
     file_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.bad-file
 - id: bad-yaml
   kind: refusal
   transport: gateway
@@ -108,7 +108,7 @@ cases:
     file_sha256: sha256:cacff250bc00b11d1b54f998a1de75ae085a9146875df9043e3919a1631d81e5
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.bad-yaml
 - id: wrong-module
   kind: refusal
   transport: gateway
@@ -118,7 +118,7 @@ cases:
     file_sha256: sha256:425644c807524ab217face7e3025b9de3b02b0da10f09fab0ee15474404cd19e
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.wrong-module
 - id: compact-assembly
   kind: refusal
   transport: gateway
@@ -129,7 +129,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.compact-assembly-failed
 - id: compact-check-apply-sha
   kind: refusal
   transport: cli
@@ -142,7 +142,7 @@ cases:
   - --apply-reviewed-sha256
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: null
+    site: module.plan.import.check-and-reviewed
 - id: compact-stale
   kind: refusal
   transport: cli
@@ -156,7 +156,7 @@ cases:
   - --apply-reviewed-sha256
   - sha256:0000000000000000000000000000000000000000000000000000000000000000
   expect:
-    site: null
+    site: module.plan.import.stale-reviewed-apply
 - id: contract-missing
   kind: refusal
   transport: gateway
@@ -167,7 +167,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.contract-failed
 - id: contract-audit
   kind: refusal
   transport: gateway
@@ -178,7 +178,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.contract-failed
 - id: unknown-module
   kind: refusal
   transport: gateway
@@ -200,7 +200,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.module-patch-escape
 - id: source-map-foreign
   kind: refusal
   transport: gateway
@@ -211,7 +211,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.source-map-foreign
 - id: source-patches-nonlist
   kind: refusal
   transport: gateway
@@ -222,7 +222,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.source-patches-nonlist
 - id: source-patch-unknown
   kind: refusal
   transport: gateway
@@ -233,7 +233,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.source-patch-unknown
 - id: units-nonlist
   kind: refusal
   transport: gateway
@@ -244,7 +244,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.units-nonlist
 - id: unit-invalid
   kind: refusal
   transport: gateway
@@ -255,7 +255,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.unit-invalid
 - id: unit-duplicate
   kind: refusal
   transport: gateway
@@ -266,7 +266,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.unit-invalid
 - id: map-foreign-unit
   kind: refusal
   transport: gateway
@@ -277,7 +277,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.map-foreign-unit
 - id: stage-note-escape
   kind: refusal
   transport: gateway
@@ -288,7 +288,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.stage-note-escape
 - id: synthesis-unknown-unit
   kind: refusal
   transport: gateway
@@ -299,7 +299,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.synthesis-unknown-unit
 - id: workspace-updates-nonlist
   kind: refusal
   transport: gateway
@@ -310,7 +310,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.workspace-updates-nonlist
 - id: workspace-not-joined
   kind: refusal
   transport: gateway
@@ -321,7 +321,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.workspace-not-joined
 - id: workspace-splice
   kind: refusal
   transport: gateway
@@ -332,7 +332,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.workspace-splice
 - id: ordering-reorder
   kind: refusal
   transport: gateway
@@ -343,7 +343,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.ordering-preflight-failed
 - id: routing-omission
   kind: refusal
   transport: gateway
@@ -354,7 +354,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.routing-preflight-failed
 - id: lineage-evidence
   kind: refusal
   transport: gateway
@@ -365,7 +365,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.lineage-preflight-failed
 - id: validation-preflight
   kind: refusal
   transport: gateway
@@ -376,7 +376,7 @@ cases:
     check: true
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.validation-preflight-failed
 - id: staged-outside-package
   kind: refusal
   transport: gateway
@@ -388,7 +388,7 @@ cases:
     staged_basis: unit-nope
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.staged-outside-package
 - id: staged-unavailable
   kind: refusal
   transport: gateway
@@ -400,7 +400,7 @@ cases:
     staged_basis: unit-scenario-new
   artifact_ids: []
   expect:
-    site: null
+    site: module.plan.import.staged-unavailable
 - id: direct-cli-refused
   kind: refusal
   transport: cli
@@ -410,7 +410,7 @@ cases:
   - --file
   - <CASEDATA>/package.yaml
   expect:
-    site: null
+    site: module.plan.import.contract-failed
 - id: apply-without-snapshot
   kind: refusal
   transport: cli
@@ -420,7 +420,7 @@ cases:
   - --file
   - <CASEDATA>/package.yaml
   expect:
-    site: null
+    site: module.plan.import.needs-snapshot
 - id: check-with-reviewed-sha
   kind: refusal
   transport: cli
@@ -433,7 +433,7 @@ cases:
   - --apply-reviewed-sha256
   - sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
   expect:
-    site: null
+    site: module.plan.import.check-and-reviewed
 - id: stale-reviewed-apply
   kind: refusal
   transport: cli
@@ -447,7 +447,7 @@ cases:
   - --review-report
   - <CASEDATA>/review.json
   expect:
-    site: null
+    site: module.plan.import.stale-reviewed-apply
 - id: lineage-admission-direct
   kind: refusal
   transport: cli
@@ -457,7 +457,7 @@ cases:
   - --file
   - <CASEDATA>/package.yaml
   - --expected-snapshot
-  - sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+  - <FIXTURE_SNAPSHOT>
   expect:
     site: module.plan.import.lineage-preflight-failed
 - id: import-hits-warning-gate
@@ -492,6 +492,8 @@ cases:
       file_sha256: sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b
     artifact_ids:
     - module-demo
+  expect:
+    site: module.plan.import.validation-preflight-failed
 - id: exact-replay
   kind: sequence
   steps:
@@ -569,3 +571,48 @@ untriggered:
 - site: module.plan.import.bad-expected-revision
   reason: fixture-inexpressible
   proof: _prove_phase4_plan_backstop
+- site: module.plan.import.noop-revision
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.inventory-preflight-failed
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.source-patch-splice
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.synthesis-destination
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.lineage-admission-failed
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.validation-crash
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.report-out-failed
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-hash-mismatch
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-needs-hash
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-preflight-failed
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-revisions-mismatch
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-needs-approval
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.promotion-needs-snapshot
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.assembled-contract-failed
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop
+- site: module.plan.import.reviewed-needs-file
+  reason: fixture-inexpressible
+  proof: _prove_helper_plan_backstop

@@ -169,13 +169,29 @@ contracts:
 
   - declaration: system/contracts/cli-operations.yaml
     governs: >-
-      The CLI-only operations: every subcommand that is not a catalog
-      command or query cli_command, with its kind (query, command,
-      porcelain or tool) derived from today's lock and write path.
-      Enforced by the CLI parity test, which pins the inventory.
+      The CLI-only operations: every subcommand not declared by the
+      capability catalogue, with its runtime kind (query, command,
+      porcelain or tool). The joined verb catalogue checks complete,
+      disjoint coverage; CLI parity compares every kind with the runtime.
     enforced_by: test
     checker: test_arch_cli_parity
     test: tests/test_arch_cli_parity.py
+
+  - declaration: system/contracts/task-scope.yaml
+    governs: >-
+      What binds a task: the entry read that starts it, the executable
+      procedure that carries it, and the current binding documents that
+      scope it. Enforced by the task-scope loader, which refuses a scope
+      that names a non-binding document, a procedure that does not exist or
+      names an anchor that is not there, and an entry read that names a
+      command the parser does not have. system/OPERATOR.md renders its
+      "Start here" table from this file, so the operator contract and the
+      machine surface cannot disagree.
+    enforced_by: validator
+    checker: learning_os.store.contracts.task_scope
+    validator_method: check_task_scope
+    severity: error
+    test: tests/test_operator_discovery.py
 
 exempt:
 

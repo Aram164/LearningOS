@@ -158,6 +158,28 @@ def _scrut_bin() -> Path:
     return ROOT / ".venv" / "bin" / "scrut"
 
 
+def test_fixture_values_bind_exact_snapshots_after_contract_changes(mini_repo, tmp_path):
+    from learning_os.store.fingerprint import snapshot
+
+    env = dict(os.environ, LOS_REPO=str(ROOT), LOS_FX=str(mini_repo),
+               LOS_OBSERVATIONS=str(tmp_path / 'observations.json'))
+    helper = ROOT / 'tests/procedure_helpers/los-fixture-values'
+    def exports():
+        proc = subprocess.run([sys.executable, str(helper)], env=env,
+                              capture_output=True, text=True, check=True)
+        return proc.stdout
+    initial = snapshot(mini_repo)
+    assert f'LOS_FIXTURE_SNAPSHOT_1={initial}' in exports()
+    declaration = mini_repo / 'system/contracts/capabilities.yaml'
+    declaration.write_text(declaration.read_text() + '\n# Contract edit.\n')
+    changed = snapshot(mini_repo)
+    assert initial != changed
+    output = exports()
+    assert f'LOS_FIXTURE_SNAPSHOT_1={initial}' in output
+    assert f'LOS_FIXTURE_SNAPSHOT_2={changed}' in output
+    assert exports() == output
+
+
 def _procedure_child_env(*, log_path: Path, token: str) -> dict:
     """The env procedure children inherit: audit hook plus render check.
 

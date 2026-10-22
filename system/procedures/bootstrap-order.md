@@ -79,15 +79,16 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 ```scrut
 $ los capabilities --compact --json | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract_version"]); print(len(d["queries"]), len(d["commands"])); print(d["operator_contract"])'
 2
-19 50
+20 50
 system/OPERATOR.md
 ```
 
 ## Start from the brief bootstrap
 
-```scrut
+```scrut {interpolated: true}
 $ los bootstrap --brief | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["snapshot_id"]); print(d["session_identity"]["session_id"], d["session_identity"]["source"]); print(d["pointer_state"], d["resume_pointer"]["unit_id"], d["resume_pointer"]["stage_id"]); print(d["counts"]["notes"], d["counts"]["concepts"], d["counts"]["sources"], d["counts"]["workspaces_active"])'
-bootstrap-brief sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+bootstrap-brief $LOS_FIXTURE_SNAPSHOT_1
 channel:operator channel
 confirmed unit-demo-l01 stage-demo
 2 2 1 2
@@ -108,9 +109,10 @@ cross-domain 0 0 1
 
 ## Expand to the compact bootstrap when the task needs it
 
-```scrut
+```scrut {interpolated: true}
 $ los bootstrap --compact | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["contract"], d["snapshot_id"]); print(d["collections"]["units"]["total"], d["collections"]["study_maps"]["total"]); print(d["resume_pointer"]["unit_id"], d["counts"]["units_needing_map"])'
-bootstrap-summary sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+bootstrap-summary $LOS_FIXTURE_SNAPSHOT_1
 2 1
 unit-demo-l01 1
 ```
@@ -135,16 +137,18 @@ one stage only — universe questions (e.g. no source covers X) need the full un
 
 ## Discover units with exact filters
 
-```scrut
+```scrut {interpolated: true}
 $ los unit-list --compact
-{"schema_version":1,"snapshot_id":"sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90","contract":"unit-list-summary","filters":{},"items":[{"id":"unit-demo-l01","title":"Expected value","status":"active","module_id":"module-demo","order":1,"current_study_map":"study-map-demo-l01","needs_study_map":false},{"id":"unit-demo-l02","title":"Variance","status":"active","module_id":"module-demo","order":2,"needs_study_map":true}],"total":2,"next_offset":null,"detail":"inspect UNIT_ID"}
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":1,"snapshot_id":"$LOS_FIXTURE_SNAPSHOT_1","contract":"unit-list-summary","filters":{},"items":[{"id":"unit-demo-l01","title":"Expected value","status":"active","module_id":"module-demo","order":1,"current_study_map":"study-map-demo-l01","needs_study_map":false},{"id":"unit-demo-l02","title":"Variance","status":"active","module_id":"module-demo","order":2,"needs_study_map":true}],"total":2,"next_offset":null,"detail":"inspect UNIT_ID"}
 ```
 
 ## Batch known record ids in one inspect call
 
-```scrut
+```scrut {interpolated: true}
 $ los inspect note-demo concept-expected-value
-{"schema_version":1,"snapshot_id":"sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":1,"snapshot_id":"$LOS_FIXTURE_SNAPSHOT_1","contract":"record-batch","requested_ids":["note-demo","concept-expected-value"],"records":[{"atlas_question":null,"attachments":[],"authorship":null,"concepts":["concept-expected-value"],"contexts":[],"domain":"mathematics","evidence":[],"id":"note-demo","material_analysis":null,"path":"knowledge/notes/mathematics/note-demo.md","reviewed":null,"role":"synthesis","semantic_review":null,"sources":["source-demo-book"],"state":null,"summary":"Body prose.","supersedes":[],"title":"Demo note","transcription":null,"type":"note"},{"aliases":["Erwartungswert"],"deprecated":false,"id":"concept-expected-value","path":"knowledge/concepts.yaml","title":"Expected value","type":"concept"}]}
 ```
 
 ## Resolve the id through its alias
@@ -163,9 +167,10 @@ $ los related concept-expected-value
 
 ## Open the note body
 
-```scrut
+```scrut {interpolated: true}
 $ los note-read note-demo
-{"schema_version":1,"snapshot_id":"sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90","contract":"note-content","note_id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","content_sha256":"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276","offset":0,"offset_unit":"unicode_characters","total_characters":162,"start_line":1,"content":"---\nid: note-demo\ntype: note\ntitle: Demo note\ncreated: 2026-07-16\nrole: synthesis\nconcepts: [concept-expected-value]\nsources: [source-demo-book]\n---\n\nBody prose.\n","next_offset":null}
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+{"schema_version":1,"snapshot_id":"$LOS_FIXTURE_SNAPSHOT_1","contract":"note-content","note_id":"note-demo","path":"knowledge/notes/mathematics/note-demo.md","content_sha256":"sha256:5bfb18040cdeba3b47d06700b13c0edf6ebcac90d085e6fc78cfe8565261d276","offset":0,"offset_unit":"unicode_characters","total_characters":162,"start_line":1,"content":"---\nid: note-demo\ntype: note\ntitle: Demo note\ncreated: 2026-07-16\nrole: synthesis\nconcepts: [concept-expected-value]\nsources: [source-demo-book]\n---\n\nBody prose.\n","next_offset":null}
 ```
 
 ## Return to interrupted study without re-deriving it

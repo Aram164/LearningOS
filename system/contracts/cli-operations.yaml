@@ -22,7 +22,7 @@ operations:
     kind: porcelain
   backup.manifest:
     cli_command: backup-manifest
-    kind: tool
+    kind: query
   backup.verify:
     cli_command: backup-verify
     kind: tool
@@ -43,10 +43,11 @@ operations:
     kind: porcelain
   goal.decide:
     cli_command: goal
-    kind: porcelain
+    kind: command
+    capability: goal.decision.record
   health.report:
     cli_command: health-report
-    kind: tool
+    kind: query
   inbox.list:
     cli_command: inbox-list
     kind: tool
@@ -61,13 +62,13 @@ operations:
     kind: tool
   legacy.archive.inspect:
     cli_command: legacy-archive-inspect
-    kind: tool
+    kind: query
   legacy.archive.status:
     cli_command: legacy-archive-status
-    kind: tool
+    kind: query
   masters-planning.dashboard:
     cli_command: masters-planning-dashboard
-    kind: tool
+    kind: query
   module.list:
     cli_command: module-list
     kind: query
@@ -85,10 +86,10 @@ operations:
     kind: tool
   plan.edit-context:
     cli_command: plan-edit-context
-    kind: porcelain
+    kind: query
   plan.template:
     cli_command: plan-template
-    kind: tool
+    kind: query
   program.list:
     cli_command: program-list
     kind: query

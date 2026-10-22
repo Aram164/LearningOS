@@ -344,3 +344,12 @@ approvals:
   - {key: "catalog.commands.program.semester.update", change: added, plan_ref: "LearningOS-ISSUE-2 https://github.com/Aram164/LearningOS/issues/2", pre_approved_by: "Aram 2026-10-22: approved fixing LearningOS #2 — a governed program-semester update and the creation preflight's visibility feedback"}
   - {key: "cli.program-semester-update", change: added, plan_ref: "LearningOS-ISSUE-2 https://github.com/Aram164/LearningOS/issues/2", pre_approved_by: "Aram 2026-10-22: approved fixing LearningOS #2 — a governed program-semester update and the creation preflight's visibility feedback"}
   - {key: "request_schemas.program.semester.update.schema.json", change: added, plan_ref: "LearningOS-ISSUE-2 https://github.com/Aram164/LearningOS/issues/2", pre_approved_by: "Aram 2026-10-22: approved fixing LearningOS #2 — a governed program-semester update and the creation preflight's visibility feedback"}
+
+  # --- operator discovery surface (2026-10-22) --------------------------------
+  # The capability catalogue, the CLI operation contract and the request
+  # schemas each named a command, and the operator contract told the reader
+  # that one of them was the way in while refusing the names it used. Aram
+  # approved the fix on 2026-10-22: one catalogue that names every command
+  # with the kind the runtime gives it, and the semantic surface published as
+  # the query it always was.
+  - {key: "catalog.queries.semantic.query", change: added, plan_ref: "OPERATOR-DISCOVERY-2026-10-22", pre_approved_by: "Aram 2026-10-22: approved the operator discovery surface — one catalogue over every CLI command, and semantic.query published as a public query"}

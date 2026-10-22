@@ -25,6 +25,15 @@ create no obligation, and `authority: historical` documents (the frozen build
 and migration records, every dated review) record what was true and are never
 a current rule.
 
+The corpus says what binds. It does not say what binds *this* task.
+`system/contracts/task-scope.yaml` answers that: each task names the entry
+read that starts it, the executable procedure that carries it, and the current
+binding documents that scope it. The table below is that contract, and every
+validation run compares the two — a task's scope may name only a document the
+corpus records as current and binding, a procedure may name only a transcript
+that exists with the heading it claims, and an entry read may name only a
+command the parser has.
+
 ## What "clean" means
 
 Validation success means **zero errors**. Warnings stay visible and never
@@ -65,6 +74,12 @@ always names its file. Fix the defect; do not route around the guard.
 | Ability evidence | `ability-context` horizon, then a known ability | [Read a bounded ability](procedures/start-here.md#read-one-ability-through-the-bounded-horizon) |
 | Governance question | `semantic --list`, then `semantic PREDICATE --input k=v` | [Ask the semantic surface](procedures/start-here.md#ask-a-governance-question-through-the-semantic-surface) |
 | Process a lecture (23), turn the semester (24), promote a Master's module (27) | none — stop and ask | none: these three have no executable transcript, and the scope authority they need does not exist in a checkout (boundary 18) |
+
+`capabilities NAME --json` takes a capability, a CLI command, or a task.
+`capabilities resume --json` and `capabilities resume.read --json` answer the
+same thing; `capabilities governance-question --json` answers what binds that
+task. `capabilities --compact --json` names every command the gateway has,
+with the task each one starts.
 
 ## Product hierarchy
 

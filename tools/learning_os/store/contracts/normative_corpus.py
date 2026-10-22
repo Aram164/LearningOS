@@ -83,6 +83,7 @@ class Document:
     summary: str
     supersedes: tuple[str, ...] = ()
     amends: tuple[str, ...] = ()
+    applies_to: tuple[str, ...] | None = None
 
 
 @dataclass
@@ -141,6 +142,7 @@ def load(root: Path) -> Corpus:
             summary=str(entry["summary"]).strip(),
             supersedes=tuple(entry.get("supersedes") or ()),
             amends=tuple(entry.get("amends") or ()),
+            applies_to=tuple(entry["applies_to"]) if "applies_to" in entry else None,
         )
         for entry in raw.get("documents") or ()
     )

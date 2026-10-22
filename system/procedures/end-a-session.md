@@ -51,6 +51,7 @@ $ eval "$(los bootstrap --brief | $H/los-bind SNAP '$.snapshot_id')"
 
 ```scrut
 $ $H/los-seal --capability unit.note.append --payload '{"unit_id": "unit-demo-l01", "title": "Stale attempt", "text": "Sealed before the stage write."}' --key end-a-session-stale-001 --request-id request-end-a-session-stale-001 --snapshot "$SNAP" --out "$TMPDIR/unit-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 ```
 
 ## Step 1: seal the stage-progress envelope
@@ -66,19 +67,22 @@ $ $H/los-seal --capability unit.note.append --payload '{"unit_id": "unit-demo-l0
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability stage.progress.update --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "status": "complete"}' --key end-a-session-stage-001 --request-id request-end-a-session-stage-001 --guards auto --out "$TMPDIR/stage-progress.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3
 ```
 
 ## The sealed envelope's sha256, before submission
 
-```scrut
-$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 7e733ac1c6b085c32ccbf88874771301926a8957f00113aa166b0f336d015e33
+```scrut {interpolated: true}
+$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 "$LOS_FIXTURE_FILE_2"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 ```
 
 ## Step 1: submit the stage-progress envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-end-a-session-stage-001",
@@ -88,7 +92,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:e16b0a85aa4c00dc283bb465d206f11eb86686adbe008e6df1c2d822eeaeaf94",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -108,7 +112,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:e16b0a85aa4c00dc283bb465d206f11eb86686adbe008e6df1c2d822eeaeaf94",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -129,8 +133,9 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/study-ma
 
 ## Step 2: the note sealed earlier now refuses as stale
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-end-a-session-stale-001",
@@ -147,8 +152,8 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90",
-      "actual": "sha256:e16b0a85aa4c00dc283bb465d206f11eb86686adbe008e6df1c2d822eeaeaf94"
+      "expected": "$LOS_FIXTURE_SNAPSHOT_1",
+      "actual": "$LOS_FIXTURE_SNAPSHOT_2"
     }
   }
 }

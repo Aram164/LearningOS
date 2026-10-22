@@ -58,13 +58,15 @@ unchanged
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 2, "date": "2026-10-09", "result": "sat"}' --key module-attempt-sat --request-id request-module-attempt-sat --guards auto --out "$TMPDIR/module-attempt-sat.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=0
 ```
 
 ## Submit the attempt
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sat.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-module-attempt-sat",
@@ -74,7 +76,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:2c9e5c2aa722890a4c88aecc47f48e784dc0823335d43c9501a4379fa289531d",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -88,7 +90,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:2c9e5c2aa722890a4c88aecc47f48e784dc0823335d43c9501a4379fa289531d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -118,13 +120,15 @@ owns transaction-20261001-090000-001
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.sitting.update --payload '{"module_id": "module-demo", "termin": 2, "withdrawal_deadline": "2026-09-30"}' --key module-sitting-deadline --request-id request-module-sitting-deadline --guards auto --out "$TMPDIR/module-sitting-deadline.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=1
 ```
 
 ## Submit the sitting deadline
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-deadline.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-module-sitting-deadline",
@@ -134,7 +138,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:f5db18a150c69122ab017cb2368a12ef4d769271e8204b46a604b4eb1e253170",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -145,7 +149,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:f5db18a150c69122ab017cb2368a12ef4d769271e8204b46a604b4eb1e253170",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null

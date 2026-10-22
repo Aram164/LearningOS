@@ -71,3 +71,5 @@ untriggered:
     and no step can remove it'
 - site: capabilities.read.unreadable-payload-schema
   reason: fixture-inexpressible
+- site: capabilities.read.unjoined-catalogue
+  reason: fixture-inexpressible

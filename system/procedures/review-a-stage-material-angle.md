@@ -54,11 +54,13 @@ True True 0
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"vault_path": "material://source-demo-book/lecture-01.pdf"}, "claim_evidence": {"claim_id": "covers:route-b2f1f80014860a929a3af0bc", "evidence": [{"kind": "quote", "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": "Expected value, page 1 of 24: an outcome is a value a variable can take"}]}}' --key s29-vault --request-id request-s29-vault --guards auto --out "$TMPDIR/s29-vault.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: file:operations/transactions/lineage.yaml=0, module-demo=0, unit-demo-l01=3
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability route.patch --payload-file "$TMPDIR/s29-vault.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s29-vault",
@@ -68,7 +70,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s29-vault.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:be426d8b3a851dac717d65e3489b3d03b76f110fbd43289af5d68394fa72c71e",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -137,7 +139,7 @@ $ los capability route.patch --payload-file "$TMPDIR/s29-vault.json"
       "module-demo": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:be426d8b3a851dac717d65e3489b3d03b76f110fbd43289af5d68394fa72c71e",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -256,15 +258,17 @@ sha256:31ac987f75414ab831ac92f8013ace3b607aa1dae035358c08fc51c2b4613f56
 
 ```scrut {output_stream: stderr}
 $ MAP_SHA=$(sha256sum "$TMPDIR/map-l01-replace.yaml" | cut -d' ' -f1) && $H/los-seal --capability unit.map.import --payload "{\"unit_id\": \"unit-demo-l01\", \"file\": \"$TMPDIR/map-l01-replace.yaml\", \"file_sha256\": \"sha256:$MAP_SHA\", \"replace\": true}" --key s29-replace --request-id request-s29-replace --guards auto --out "$TMPDIR/s29-replace.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=4
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability unit.map.import --payload-file "$TMPDIR/s29-replace.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"], d["result"]["mode"], d["transaction_id"]); print(d["result"]["study_map_id"], d["result"]["diff"]["replacement"]); print(json.dumps(d["result"]["artifact_revisions"], sort_keys=True)); print(d["snapshot_after"])'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 True apply transaction-20261001-090000-002
 study-map-demo-l01 True
 {"study-map-demo-l01": 1, "unit-demo-l01": 5}
-sha256:424e577f92c0ea9401889572263cb6a43b8f9afcbf28b4d0ed248673ec1aa820
+$LOS_FIXTURE_SNAPSHOT_3
 ```
 
 ## The newest receipt names the capability
@@ -316,6 +320,7 @@ refuses the seal; the fingerprints are never merely refreshed.
 
 ```scrut
 $ (set -o pipefail; $H/los-seal --capability route.patch --payload '{"unit_id": "unit-demo-l01", "route_id": "route-b2f1f80014860a929a3af0bc", "changes": {"angle": "Derives the weighted sum, reworded after review."}}' --key s29-stale --request-id request-s29-stale --guards auto --out "$TMPDIR/s29-stale.json" 2>&1 | cut -d'(' -f1 | sed 's/ $//')
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: W NEW-OR-GROWN-WARNING: ANGLE-REVIEW-STALE at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 2
 [2]
 ```

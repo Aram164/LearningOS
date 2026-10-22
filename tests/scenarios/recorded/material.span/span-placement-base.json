@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"material-span-v1\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-01.pdf\",\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot SNAP1\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"analysis_notes_total\":0,\"analysis_notes_truncated\":false,\"expand\":\"plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot SNAP1\"},\"spans\":[{\"material_uri\":\"material://source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"not-requested\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"}}],\"expansion\":\"material-span unit-demo-l01 route-b2f1f80014860a929a3af0bc --stage stage-demo --resource-index 3 --extract --expected-snapshot SNAP1\"}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-span-v1\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-01.pdf\",\"url\":null,\"availability\":\"local-observed\",\"next_action\":null,\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot <FIXTURE_SNAPSHOT>\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"analysis_notes_total\":0,\"analysis_notes_truncated\":false,\"expand\":\"plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot <FIXTURE_SNAPSHOT>\"},\"spans\":[{\"material_uri\":\"material://source-demo-book/lecture-01.pdf\",\"format\":\"pdf\",\"file_sha256\":\"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"extraction\":\"not-requested\",\"binding\":{\"resolution\":\"resolved\",\"source_id\":\"source-demo-book\",\"material\":\"source-demo-book/lecture-01.pdf\",\"recorded_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\",\"live_source_digest\":\"395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"}}],\"expansion\":\"material-span unit-demo-l01 route-b2f1f80014860a929a3af0bc --stage stage-demo --resource-index 3 --extract --expected-snapshot <FIXTURE_SNAPSHOT>\"}\n",
   "stdout_json": {
     "analysis_refs": {
       "analysis_by_resolution": {},
@@ -15,20 +15,20 @@
       "analysis_notes_total": 0,
       "analysis_notes_truncated": false,
       "approved_assessment_routes": [],
-      "expand": "plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot SNAP1",
+      "expand": "plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc --expected-snapshot <FIXTURE_SNAPSHOT>",
       "related_count": 1,
-      "related_expand": "plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot SNAP1",
+      "related_expand": "plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot <FIXTURE_SNAPSHOT>",
       "stale_assessment_routes": []
     },
     "availability": "local-observed",
     "contract": "material-span-v1",
-    "expansion": "material-span unit-demo-l01 route-b2f1f80014860a929a3af0bc --stage stage-demo --resource-index 3 --extract --expected-snapshot SNAP1",
+    "expansion": "material-span unit-demo-l01 route-b2f1f80014860a929a3af0bc --stage stage-demo --resource-index 3 --extract --expected-snapshot <FIXTURE_SNAPSHOT>",
     "locator": "lecture-01.pdf",
     "module_id": "module-demo",
     "next_action": null,
     "route_id": "route-b2f1f80014860a929a3af0bc",
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "source_id": "source-demo-book",
     "spans": [
       {

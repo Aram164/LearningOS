@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-xdist>=3", "ruff>=0.16", "import-linter>=2.1", "mypy"]
+dev = ["pytest", "pytest-xdist>=3", "ruff>=0.16", "import-linter>=2.1", "mypy", "types-PyYAML"]
 
 [project.scripts]
 los = "los:main"
@@ -66,6 +66,9 @@ files = [
   "tools/learning_os/domain/verbatim.py",
   "tools/learning_os/store/materials/pdf_text.py",
   "tools/learning_os/store/materials/anchors.py",
+  "tools/learning_os/store/contracts/cli_operations.py",
+  "tools/learning_os/store/contracts/task_scope.py",
+  "tools/learning_os/store/contracts/verb_catalogue.py",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).

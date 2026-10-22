@@ -56,6 +56,7 @@ $ los module-list | $LOS_REPO/.venv/bin/python -c 'import json,sys; print([(a["t
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 3, "date": "2026-10-12", "result": "registered"}' --key s18-reg --request-id request-s18-reg --guards auto --out "$TMPDIR/s18-reg.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: E MOD-REGISTERED: module 'module-demo' attempt[1] is 'registered' but is not the latest attempt [curriculum/modules/module-demo/module.yaml]; fix the payload and seal again
 [2]
 ```
@@ -111,11 +112,13 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Dependencies\", \"text\": \"workspace-probe-course waits on module-demo lectures.\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key s18-dep --request-id request-s18-dep --guards auto --out "$TMPDIR/s18-dep.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s18-dep",
@@ -125,7 +128,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:93b65f4b747167e45ab809aa5137003d2008478a5feb8d0dfdf87cd55c3de87f",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -134,7 +137,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s18-dep.jso
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:93b65f4b747167e45ab809aa5137003d2008478a5feb8d0dfdf87cd55c3de87f",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null

@@ -72,13 +72,15 @@ $ cat > "$TMPDIR/durable-revised.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/durable-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/durable-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key durable-revise-demo --request-id request-durable-revise-demo --guards auto --out "$TMPDIR/durable-revise.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo=0
 ```
 
 ## Submit the revision
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-durable-revise-demo",
@@ -88,7 +90,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:12f1f66d3676d4989c620e8633061da307e984276bc1e36f4875d55b007dae36",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -98,7 +100,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:12f1f66d3676d4989c620e8633061da307e984276bc1e36f4875d55b007dae36",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -138,13 +140,15 @@ $ cat > "$TMPDIR/durable-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/durable-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-triangulation-memo\", \"title\": \"Triangulation memo\", \"path\": \"knowledge/notes/mathematics/note-triangulation-memo.md\", \"concepts\": [\"concept-expected-value\"], \"sources\": [\"source-demo-book\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/durable-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key durable-create-memo --request-id request-durable-create-memo --guards auto --out "$TMPDIR/durable-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-triangulation-memo=0
 ```
 
 ## Submit the creation
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-durable-create-memo",
@@ -154,7 +158,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:0e6c5dbac9fa50482aa40499a7a3a84abfab64f70f690556d41b64caa8a0b6d4",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "note_id": "note-triangulation-memo",
@@ -165,7 +169,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
     "artifact_revisions": {
       "note-triangulation-memo": 1
     },
-    "snapshot_after": "sha256:0e6c5dbac9fa50482aa40499a7a3a84abfab64f70f690556d41b64caa8a0b6d4",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -202,6 +206,7 @@ captured 3
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/durable-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-triangulation-ref\", \"title\": \"Triangulation ref\", \"path\": \"knowledge/notes/mathematics/note-triangulation-ref.md\", \"role\": \"reference\"}, \"body_file\": \"$TMPDIR/durable-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key durable-create-ref --request-id request-durable-create-ref --guards auto --out "$TMPDIR/durable-ref.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: role 'reference' keeps its dedicated capability; use note.analysis.save; fix the payload and seal again
 [2]
 ```
@@ -217,13 +222,15 @@ unchanged
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability atlas.question.save --payload '{"question": {"id": "note-variance-order", "title": "Does variance need expectation first?", "text": "The registry says variance builds on expectation. What breaks if the order flips?", "target": {"concepts": ["concept-variance"]}}}' --key durable-question --request-id request-durable-question --guards auto --out "$TMPDIR/durable-question.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-variance-order=0
 ```
 
 ## Submit the question
 
-```scrut
+```scrut {interpolated: true}
 $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-durable-question",
@@ -233,7 +240,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:4eb819fcc758cf98d131deea76ec45b9c687ca334768ecb7d918989472da7649",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "note_id": "note-variance-order",
@@ -243,7 +250,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
     "artifact_revisions": {
       "note-variance-order": 1
     },
-    "snapshot_after": "sha256:4eb819fcc758cf98d131deea76ec45b9c687ca334768ecb7d918989472da7649",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -283,13 +290,15 @@ $ cat > "$TMPDIR/durable-analysis-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ ABODY_SHA=$(sha256sum "$TMPDIR/durable-analysis-body.md" | cut -d' ' -f1) && ABODY_BYTES=$(wc -c < "$TMPDIR/durable-analysis-body.md" | tr -d ' ') && $H/los-seal --capability note.analysis.save --payload "{\"analysis\": {\"id\": \"note-deck-analysis\", \"title\": \"Deck analysis\", \"path\": \"knowledge/notes/mathematics/note-deck-analysis.md\", \"binding\": {\"resolution\": \"unresolved\", \"material\": \"demo/deck.pdf\", \"recorded_source_digest\": \"abababababababababababababababababababababababababababababababab\", \"inspected_range\": {\"start\": 1, \"end\": 3}, \"frozen_input_sha256\": \"$ABODY_SHA\", \"frozen_input_bytes\": $ABODY_BYTES}}, \"body_file\": \"$TMPDIR/durable-analysis-body.md\", \"body_file_sha256\": \"sha256:$ABODY_SHA\"}" --key durable-analysis --request-id request-durable-analysis --guards auto --out "$TMPDIR/durable-analysis.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-deck-analysis=0
 ```
 
 ## Submit the analysis
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-durable-analysis",
@@ -299,7 +308,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:7ab3e2eb5865b9db45e7d1a519064f7fff8887bddfe5a88e68bf294709b0f977",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "replayed": false,
@@ -310,7 +319,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
     "artifact_revisions": {
       "note-deck-analysis": 1
     },
-    "snapshot_after": "sha256:7ab3e2eb5865b9db45e7d1a519064f7fff8887bddfe5a88e68bf294709b0f977"
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5"
   },
   "error": null
 }

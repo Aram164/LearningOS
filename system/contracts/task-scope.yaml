@@ -1,0 +1,151 @@
+# The task-scope contract: what binds a task, stated instead of judged.
+#
+# The normative corpus answers what binds. This file answers what binds
+# *this* task: the entry read that starts it, the executable procedure that
+# carries it, and the current binding documents that scope it.
+#
+# system/OPERATOR.md renders its "Start here" table from this file, so the
+# operator contract and the machine surface cannot disagree. Every scoped
+# document must be a current binding document in
+# system/contracts/normative-corpus.yaml; every procedure must name a
+# runnable system/procedures/*.md transcript and a heading that exists in
+# it; every command in an entry read must be a real CLI verb.
+contract: learningos-task-scope
+schema_version: 1
+
+tasks:
+  - id: discover-capabilities
+    task: Discover capabilities
+    entry_read: '`capabilities --compact --json`, then `capabilities NAME --json`'
+    procedures:
+      - label: Discover and expand
+        target: system/procedures/start-here.md#discover-the-capability-index
+    scope:
+      - system/OPERATOR.md
+
+  - id: edit-a-known-material-route
+    task: Edit a known material route
+    entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`'
+    procedures:
+      - label: Revise a plan
+        target: system/procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+      - system/ARCHITECTURE.md
+
+  - id: edit-a-known-stage
+    task: Edit a known stage
+    entry_read: '`plan-edit-context UNIT_ID --stage-id STAGE_ID`'
+    procedures:
+      - label: Enter through the stage
+        target: system/procedures/bootstrap-order.md#enter-through-the-named-stage
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+      - system/ARCHITECTURE.md
+
+  - id: unit-coverage-and-unknown-ids
+    task: Unit coverage, source completeness, or unknown IDs
+    entry_read: '`plan-edit-context UNIT_ID --brief`'
+    procedures:
+      - label: Choose the focused context
+        target: system/procedures/start-here.md#follow-one-printed-expansion-with-its-snapshot-pin
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: open-work-or-priority-question
+    task: Open work or priority question
+    entry_read: '`bootstrap --brief`, then `inspect WORKSPACE_ID` and relevant coordination'
+    procedures:
+      - label: Read operational state
+        target: system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+      - system/CLAUDE.md
+
+  - id: known-record-or-stage-note
+    task: Known record or stage note
+    entry_read: '`inspect ID`, including a batch of known IDs'
+    procedures:
+      - label: Read one record
+        target: system/procedures/start-here.md#read-one-named-record
+      - label: read one stage note
+        target: system/procedures/start-here.md#read-one-named-stage-with-its-working-note-content
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: note-body-or-saved-reasoning
+    task: Note body or saved reasoning
+    entry_read: '`note-read NOTE_ID`'
+    procedures:
+      - label: Read saved reasoning
+        target: system/procedures/start-here.md#search-beyond-note-summaries-then-read-the-saved-reasoning
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: material-or-concept-explanation
+    task: Material or concept explanation
+    entry_read: '`material-context`, then an exact `material-span` when needed'
+    procedures:
+      - label: Retrieve explanations
+        target: system/procedures/retrieval-behavior.md#read-what-explains-it
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: resume-recorded-study
+    task: Resume recorded study
+    entry_read: '`resume` or `resume --study`'
+    procedures:
+      - label: Resume without moving state
+        target: system/procedures/start-here.md#the-study-suggestion-never-moves-the-resume-pointer
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+      - system/CLAUDE.md
+
+  - id: changes-awaiting-a-decision
+    task: Changes awaiting a decision
+    entry_read: '`intelligence-scan --brief --json`'
+    procedures:
+      - label: Read the decision queue
+        target: system/procedures/start-here.md#read-what-wants-a-decision
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: ability-evidence
+    task: Ability evidence
+    entry_read: '`ability-context` horizon, then a known ability'
+    procedures:
+      - label: Read a bounded ability
+        target: system/procedures/start-here.md#read-one-ability-through-the-bounded-horizon
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md
+
+  - id: governance-question
+    task: Governance question
+    entry_read: '`semantic --list`, then `semantic PREDICATE --input k=v`'
+    procedures:
+      - label: Ask the semantic surface
+        target: system/procedures/start-here.md#ask-a-governance-question-through-the-semantic-surface
+    scope:
+      - system/OPERATOR.md
+      - system/SEMANTIC-CONTRACT.md
+
+  - id: untranscribable-workflows
+    task: Process a lecture (23), turn the semester (24), promote a Master's module (27)
+    entry_read: none — stop and ask
+    procedures: []
+    procedure_text: >-
+      none: these three have no executable transcript, and the scope authority
+      they need does not exist in a checkout (boundary 18)
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md

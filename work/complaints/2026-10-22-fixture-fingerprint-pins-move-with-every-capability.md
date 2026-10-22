@@ -29,3 +29,9 @@ recordings and the transcripts' real snapshot.
 Filed on 2026-10-22: [LearningOS #7](https://github.com/Aram164/LearningOS/issues/7),
 with the file lists, the reproduction, the scope limit and the acceptance
 criteria.
+
+## Implementation follow-up, 2026-10-22
+
+The trigger is any edit under the canonical contract roots, including register wording. The resumed work replaces initial scenario-input pins with explicit fixture tokens, reseals only approvals that explicitly request a fixture intent, and normalizes the exact observed fixture fingerprint in free text. Procedure expectations interpolate exact observed snapshots and sealed intents; authored file hashes and intentionally stale snapshots stay literal. Helper-held snapshot history survives retries, and tests prove a contract edit changes the live value while stale newly sealed requests still refuse. Final paired verification is pending.
+
+The review also found that the approved AI delivery file digest changes with its substituted snapshot. Two success/replay scenarios now request a frozen digest of their copied input explicitly; the mismatched-digest case remains literal. The full recording pass completed 1,150 tests, and review found no exit/outcome changes among the 285 changed recordings after correcting those two bindings. Backup transcript expectations bind the captured aggregate across the drill while full verification and the tamper refusal remain executable.

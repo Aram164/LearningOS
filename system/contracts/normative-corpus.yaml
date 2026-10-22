@@ -51,7 +51,7 @@
 # Adding a document under system/ without adding it here fails `make check`.
 # That is the point: the corpus cannot grow silently again.
 
-corpus_version: 2
+corpus_version: 3
 entrypoint: system/OPERATOR.md
 
 documents:
@@ -59,6 +59,7 @@ documents:
   # ---- the binding spine ---------------------------------------------------
 
   - path: AGENTS.md
+    applies_to: []
     class: adapter
     status: current
     authority: binding
@@ -68,6 +69,7 @@ documents:
       role instructions. Ancestor instructions belong to their owning tree.
 
   - path: README.md
+    applies_to: []
     class: reference
     status: current
     authority: informative
@@ -76,6 +78,7 @@ documents:
       Setup and command guide; the binding operator contract governs operations.
 
   - path: system/OPERATOR.md
+    applies_to: [discover-capabilities, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, governance-question, untranscribable-workflows]
     class: contract
     status: current
     authority: binding
@@ -86,6 +89,7 @@ documents:
       weaken it.
 
   - path: system/CLAUDE.md
+    applies_to: [open-work-or-priority-question, resume-recorded-study]
     class: adapter
     status: current
     authority: binding
@@ -96,6 +100,7 @@ documents:
       sediment.
 
   - path: system/ARCHITECTURE.md
+    applies_to: [edit-a-known-material-route, edit-a-known-stage]
     class: reference
     status: current
     authority: binding
@@ -105,6 +110,7 @@ documents:
       the physical tree, and the numbered invariants.
 
   - path: system/VALIDATION.md
+    applies_to: []
     class: reference
     status: current
     authority: binding
@@ -114,6 +120,7 @@ documents:
       rule's severity.
 
   - path: system/WORKFLOWS.md
+    applies_to: [edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, untranscribable-workflows]
     class: procedure
     status: current
     authority: binding
@@ -123,6 +130,7 @@ documents:
       routing, plan revision, unit building, session closure.
 
   - path: system/PLAN-CREATION-SOP.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -132,6 +140,7 @@ documents:
       module material mapping.
 
   - path: system/AI-ACTIONS.md
+    applies_to: []
     class: reference
     status: current
     authority: binding
@@ -141,6 +150,7 @@ documents:
       validation, approval, and receipts.
 
   - path: system/ACCEPTANCE-TESTS.md
+    applies_to: []
     class: reference
     status: current
     authority: binding
@@ -150,6 +160,7 @@ documents:
       contracts outrank any version named here.
 
   - path: system/SEMANTIC-CONTRACT.md
+    applies_to: [governance-question]
     class: reference
     status: current
     authority: binding
@@ -162,6 +173,7 @@ documents:
   # ---- executable procedure transcripts ------------------------------------
 
   - path: system/procedures/end-a-session.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -171,6 +183,7 @@ documents:
       refuse a stale note, review, commit, and verify the session ledger.
 
   - path: system/procedures/build-write-envelope.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -181,6 +194,7 @@ documents:
       refuse a stale write.
 
   - path: system/procedures/capture-temporary-material.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -191,6 +205,7 @@ documents:
       through its envelope.
 
   - path: system/procedures/process-inbox.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -201,6 +216,7 @@ documents:
       drop.
 
   - path: system/procedures/record-evidence.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -210,6 +226,7 @@ documents:
       both refusals, and the untargeted ledger envelope.
 
   - path: system/procedures/unit-workflow.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -220,6 +237,7 @@ documents:
       guard.
 
   - path: system/procedures/capture-routing.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -230,6 +248,7 @@ documents:
       implying progress.
 
   - path: system/procedures/shelving-session-closure.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -240,6 +259,7 @@ documents:
       regenerate, and close the session.
 
   - path: system/procedures/start-here.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -250,6 +270,7 @@ documents:
       and the named-record, scan, and saved-reasoning reads.
 
   - path: system/procedures/create-durable-note.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -260,6 +281,7 @@ documents:
       branches, and the reference refusal.
 
   - path: system/procedures/add-concept-relation.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -270,6 +292,7 @@ documents:
       and refuse the duplicate.
 
   - path: system/procedures/update-coordination.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -280,6 +303,7 @@ documents:
       refusing a stale one.
 
   - path: system/procedures/record-module-event.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -290,6 +314,7 @@ documents:
       status held and the views rebuilt.
 
   - path: system/procedures/generate-indexes-reports.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -300,6 +325,7 @@ documents:
       validation report.
 
   - path: system/procedures/review-a-note.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -309,6 +335,7 @@ documents:
       revision with its review date set and uncertainty preserved.
 
   - path: system/procedures/maintain-crosswalk.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -318,6 +345,7 @@ documents:
       note, judgment on the source record, and the table warning.
 
   - path: system/procedures/save-a-batch-of-source-analyses.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -328,6 +356,7 @@ documents:
       tamper, and live-bytes refusals.
 
   - path: system/procedures/read-an-operation.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -338,6 +367,7 @@ documents:
       id-reused requests.
 
   - path: system/procedures/review-exact-goal-decisions-together.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -348,6 +378,7 @@ documents:
       malformed-batch refusals.
 
   - path: system/procedures/back-up-and-restore.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -358,6 +389,7 @@ documents:
       inside-root and tamper refusals.
 
   - path: system/procedures/bootstrap-order.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -368,6 +400,7 @@ documents:
       contexts, lookup, resume, and corpus consult.
 
   - path: system/procedures/retrieval-behavior.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -378,6 +411,7 @@ documents:
       sources, modules, and coordination.
 
   - path: system/procedures/mismatch-archive-probe.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -388,6 +422,7 @@ documents:
       repaired pointer fails the schema.
 
   - path: system/procedures/start-a-workspace.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -398,6 +433,7 @@ documents:
       warning, and update Next Action through its envelope.
 
   - path: system/procedures/add-a-concept.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -408,6 +444,7 @@ documents:
       short disambiguation, and rebuild.
 
   - path: system/procedures/add-or-evaluate-a-source.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -418,6 +455,7 @@ documents:
       evaluation revise, collection creation and entry revise.
 
   - path: system/procedures/complete-and-archive-a-workspace.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -428,6 +466,7 @@ documents:
       it unmoved per the M-05 decision.
 
   - path: system/procedures/move-or-rename-a-note.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -438,6 +477,7 @@ documents:
       generated artifacts rebuilt and validated.
 
   - path: system/procedures/deprecate-or-supersede.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -448,6 +488,7 @@ documents:
       concept, and verify the generated marks.
 
   - path: system/procedures/ingest-a-handwritten-note.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -458,6 +499,7 @@ documents:
       gateway, and set metadata and evidence.
 
   - path: system/procedures/start-a-module.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -468,6 +510,7 @@ documents:
       workspace, wire coordination, and rebuild.
 
   - path: system/procedures/close-a-module.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -478,6 +521,7 @@ documents:
       clear the dead deferral, and rebuild.
 
   - path: system/procedures/carry-work-across-semesters.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -488,6 +532,7 @@ documents:
       split scratch, and record the dependency.
 
   - path: system/procedures/revise-an-existing-plan.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -498,6 +543,7 @@ documents:
       module import, unit revise, and unit map import.
 
   - path: system/procedures/source-routing-and-feedback.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -508,6 +554,7 @@ documents:
       two feedback rows with the unknown-source refusal.
 
   - path: system/procedures/review-a-stage-material-angle.md
+    applies_to: []
     class: procedure
     status: current
     authority: binding
@@ -527,6 +574,7 @@ documents:
   # add mechanics and must never weaken the contract.
 
   - path: system/skills/lecture-unit-builder/SKILL.md
+    applies_to: []
     class: adapter
     status: current
     authority: binding
@@ -537,6 +585,7 @@ documents:
       that task; the procedure and the acceptance gate live in the spine.
 
   - path: system/skills/promotion-ritual/SKILL.md
+    applies_to: []
     class: adapter
     status: current
     authority: binding
@@ -546,6 +595,7 @@ documents:
       curriculum, under the gateway capabilities the contract declares.
 
   - path: system/skills/semester-kickoff/SKILL.md
+    applies_to: []
     class: adapter
     status: current
     authority: binding
@@ -557,6 +607,7 @@ documents:
   # ---- standing logs and reasoning ----------------------------------------
 
   - path: system/CRITIQUE-POINTS.md
+    applies_to: []
     class: log
     status: current
     authority: informative
@@ -567,6 +618,7 @@ documents:
       not work items.
 
   - path: system/PHILOSOPHY.md
+    applies_to: []
     class: rationale
     status: current
     authority: informative
@@ -577,6 +629,7 @@ documents:
       settle.
 
   - path: system/SPEC-README.md
+    applies_to: []
     class: reference
     status: current
     authority: informative
@@ -589,6 +642,7 @@ documents:
   # ---- frozen history ------------------------------------------------------
 
   - path: system/WHY-REDESIGN.md
+    applies_to: []
     class: rationale
     status: frozen
     authority: historical
@@ -597,6 +651,7 @@ documents:
       Why v3 exists, written before the rebuild. Reasoning, not rules.
 
   - path: system/BUILD-SPEC.md
+    applies_to: []
     class: reference
     status: frozen
     authority: historical
@@ -606,6 +661,7 @@ documents:
       the 2026-07-17 cutover.
 
   - path: system/MIGRATION.md
+    applies_to: []
     class: reference
     status: frozen
     authority: historical
@@ -615,6 +671,7 @@ documents:
       content moved.
 
   - path: system/PILOT-CRITERIA.md
+    applies_to: []
     class: reference
     status: frozen
     authority: historical
@@ -626,6 +683,7 @@ documents:
   # ---- decisions -----------------------------------------------------------
 
   - path: system/adr/ADR-001-external-review-2026-07-17.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -633,6 +691,7 @@ documents:
     summary: Disposition of the 12-point external review after the Stage-2 cutover.
 
   - path: system/adr/ADR-002-garden-layer-2026-07-18.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -640,6 +699,7 @@ documents:
     summary: The Garden and Harvest exploratory layer, and the contract governing it.
 
   - path: system/adr/ADR-003-architecture-review-2026-08-03.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -649,6 +709,7 @@ documents:
       Job-quarantine portions are retired by ADR-013.
 
   - path: system/adr/ADR-004-hygiene-sweep-2026-08-03.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -658,6 +719,7 @@ documents:
       Job/shadow-scan exclusions are retired by ADR-013.
 
   - path: system/adr/ADR-005-domain-atlas-2026-08-03.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -665,6 +727,7 @@ documents:
     summary: Cross-domain reach through a generated domain atlas, without new canon.
 
   - path: system/adr/ADR-006-interface-layer-boundary-2026-08-03.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -674,6 +737,7 @@ documents:
       interface layer may read or write through.
 
   - path: system/adr/ADR-007-library-taxonomy-2026-08-07.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -681,6 +745,7 @@ documents:
     summary: Learning material is grouped by subject, not by the era it arrived in.
 
   - path: system/adr/ADR-008-semantic-normalization-2026-08-08.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -688,6 +753,7 @@ documents:
     summary: A live-data and prose normalization pass; no new entity types or hierarchy.
 
   - path: system/adr/ADR-009-faceted-library-and-resource-identity-2026-08-08.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -695,6 +761,7 @@ documents:
     summary: Faceted Library and stable, id-based resource identity. Extends ADR-007.
 
   - path: system/adr/ADR-010-job-surface-2026-08-14.md
+    applies_to: []
     class: decision
     status: superseded
     authority: historical
@@ -704,6 +771,7 @@ documents:
       learning became ordinary learning.
 
   - path: system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -713,6 +781,7 @@ documents:
       additive schema extensions.
 
   - path: system/adr/ADR-012-agent-ui-contract-consolidation-2026-08-19.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -722,6 +791,7 @@ documents:
       Job dashboard/plan contracts are retired by ADR-013.
 
   - path: system/adr/ADR-013-job-learning-collapse-2026-08-26.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -739,6 +809,7 @@ documents:
       - system/ARCHITECTURE.md
 
   - path: system/adr/ADR-014-workspace-root-consolidation-2026-08-27.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -746,6 +817,7 @@ documents:
     summary: Consolidation of the semestercontext root into its current shape.
 
   - path: system/adr/ADR-015-module-concept-atlas-2026-08-28.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -755,6 +827,7 @@ documents:
       no concept is ever inferred. Extends ADR-005 and ADR-006.
 
   - path: system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -769,6 +842,7 @@ documents:
       - system/adr/ADR-015-module-concept-atlas-2026-08-28.md
 
   - path: system/adr/ADR-017-atlas-authoring-2026-09-05.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -783,6 +857,7 @@ documents:
       - system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
 
   - path: system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md
+    applies_to: []
     class: decision
     status: current
     authority: binding
@@ -796,6 +871,7 @@ documents:
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical
@@ -803,6 +879,7 @@ documents:
     summary: Outside read of the pre-v3 system, deliberately carrying no system frontmatter.
 
   - path: system/adr/human-operability-review-2026-07-17.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical
@@ -810,6 +887,7 @@ documents:
     summary: Post-cutover review of how operable the system is without an AI operator.
 
   - path: system/adr/review-recommendations-2026-07-17.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical
@@ -819,6 +897,7 @@ documents:
       dated; verify against code before relying on it.
 
   - path: system/adr/engineering-audit-2026-08-08.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical
@@ -826,6 +905,7 @@ documents:
     summary: External-perspective audit of the pushed heads; findings recorded.
 
   - path: system/adr/semantic-state-report-2026-08-14.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical
@@ -833,6 +913,7 @@ documents:
     summary: Semantic recheck of the live plans and the system; remediation applied the same day.
 
   - path: system/adr/critical-review-2026-08-19.md
+    applies_to: []
     class: review
     status: frozen
     authority: historical

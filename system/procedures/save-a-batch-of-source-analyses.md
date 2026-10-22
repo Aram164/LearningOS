@@ -115,10 +115,11 @@ $ cat > "$TMPDIR/batch1.json" <<EOF
 
 ## Prepare the first batch
 
-```scrut
+```scrut {interpolated: true}
 $ los note-analysis-prepare --drafts "$TMPDIR/batch1.json" --out "$TMPDIR/stage1" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["note_path"], n["predicted_new"], n["frozen_input_sha256"]) for n in d["notes"]]'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 True
-sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+$LOS_FIXTURE_SNAPSHOT_1
 {"note-batch-alpha": 0, "note-batch-beta": 0}
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md True aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md True 472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
@@ -141,9 +142,10 @@ Alpha analysis of the inspected page.
 
 ## Review the staged envelope
 
-```scrut
+```scrut {interpolated: true}
 $ cat "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["capability"], d["channel"], d["expected_snapshot"]); [print(n["analysis"]["id"], n["analysis"]["path"], n["body_file_sha256"]) for n in d["payload"]["bundle"]["notes"]]'
-note.analysis.save_batch operator sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+note.analysis.save_batch operator $LOS_FIXTURE_SNAPSHOT_1
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md sha256:aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md sha256:472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
 ```
@@ -164,18 +166,20 @@ $ cat > "$TMPDIR/batch2.json" <<EOF
 > EOF
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 True
-sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+$LOS_FIXTURE_SNAPSHOT_1
 {"note-batch-gamma": 0}
 note-batch-gamma True
 ```
 
 ## Submit the first batch unchanged
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.analysis.save_batch",
   "error": null,
@@ -199,11 +203,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelop
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:37b96723a6fedade6d03ca13727ea5d37d5313d791df32e6f7b7c22fca3dcde3",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "transaction_id": "transaction-20261001-090000-001"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:37b96723a6fedade6d03ca13727ea5d37d5313d791df32e6f7b7c22fca3dcde3",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "transaction_id": "transaction-20261001-090000-001"
 }
 ```
@@ -248,15 +252,16 @@ captured 2
 
 ## The second batch now submits stale
 
-```scrut
+```scrut {interpolated: true}
 $ (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))')
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.analysis.save_batch",
   "error": {
     "code": "STALE_SNAPSHOT",
     "details": {
-      "actual": "sha256:37b96723a6fedade6d03ca13727ea5d37d5313d791df32e6f7b7c22fca3dcde3",
-      "expected": "sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90"
+      "actual": "$LOS_FIXTURE_SNAPSHOT_2",
+      "expected": "$LOS_FIXTURE_SNAPSHOT_1"
     },
     "message": "canonical state changed since this request was approved",
     "retryable": true
@@ -281,17 +286,19 @@ unchanged
 
 ## Re-prep the second batch against the moved snapshot
 
-```scrut
+```scrut {interpolated: true}
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2b" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 True
-sha256:37b96723a6fedade6d03ca13727ea5d37d5313d791df32e6f7b7c22fca3dcde3
+$LOS_FIXTURE_SNAPSHOT_2
 note-batch-gamma True
 ```
 
 ## Submit the re-prepped batch
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2b/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.analysis.save_batch",
   "error": null,
@@ -312,11 +319,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2b/envelo
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:e150b09319cec05800e7964aeeff2ca1ffbc091bb70ec9a812413501f110b9ff",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "transaction_id": "transaction-20261001-090000-002"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:e150b09319cec05800e7964aeeff2ca1ffbc091bb70ec9a812413501f110b9ff",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "transaction_id": "transaction-20261001-090000-002"
 }
 ```

@@ -38,3 +38,7 @@ Update this procedure to demonstrate the existing governed creation path rather 
 No unrelated implementation is requested by this observation. Issue filing is authorized by the standing problem-reporting rule.
 
 Filed: [LearningOS #5](https://github.com/Aram164/LearningOS/issues/5). Existing repository issues were searched first; none matched this procedure drift.
+
+## Implementation follow-up, 2026-10-22
+
+The resumed work replaces the fixture-only canonical collection write with an external draft, exact reviewed SHA-256, creation preflight, guarded collection.create envelope, creation revision and receipt, exact replay, duplicate refusal and changed-byte refusal. The introduction now names the governed capability. Final executable-transcript and paired verification is pending.

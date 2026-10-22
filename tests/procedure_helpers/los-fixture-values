@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+"""Export exact fixture snapshots and approved intents for Scrut interpolation.
+
+Only values observed from the canonical fingerprint or the real sealing helper
+enter this registry. No hash-shaped authored value is normalized. The registry
+lives beside observations, outside the fixture's canonical tree.
+"""
+
+import json
+import os
+import shlex
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(os.environ["LOS_REPO"]) / "tools"))
+
+from learning_os.store.fingerprint import snapshot  # noqa: E402
+
+
+def main():
+    path = Path(os.environ["LOS_OBSERVATIONS"]).parent / "fixture-values.json"
+    values = json.loads(path.read_text()) if path.exists() else {}
+    family = "SNAPSHOT" if len(sys.argv) == 1 else sys.argv[1]
+    value = snapshot(Path(os.environ["LOS_FX"])) if family == "SNAPSHOT" else sys.argv[2]
+    members = values.setdefault(family, [])
+    if value not in members:
+        members.append(value)
+    path.write_text(json.dumps(values, indent=2) + "\n")
+    if os.environ.get("LOS_FIXTURE_VALUES_EXPORT"):
+        Path(os.environ["LOS_FIXTURE_VALUES_EXPORT"]).write_text(path.read_text())
+    for kind, members in values.items():
+        for index, member in enumerate(members, 1):
+            print(f"export LOS_FIXTURE_{kind}_{index}={shlex.quote(member)}")
+
+
+if __name__ == "__main__":
+    main()

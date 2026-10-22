@@ -37,11 +37,13 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 2, "date": "2026-10-09", "result": "passed"}' --key s19-pass --request-id request-s19-pass --guards auto --out "$TMPDIR/s19-pass.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=0
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s19-pass",
@@ -51,7 +53,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:5e71884533dd09697495de3ba4ddfe396c8977ff401d171087fe0c184c2cc3f5",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -65,7 +67,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-pass.json"
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:5e71884533dd09697495de3ba4ddfe396c8977ff401d171087fe0c184c2cc3f5",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -82,11 +84,13 @@ $ $H/los-assert-receipt --last --capability module.attempt.record
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability module.attempt.record --payload '{"module_id": "module-demo", "termin": 2, "date": "2026-10-09", "result": "passed", "grade": 1.0}' --key s19-grade --request-id request-s19-grade --guards auto --out "$TMPDIR/s19-grade.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: module-demo=1
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s19-grade",
@@ -96,7 +100,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:86aee651e48f4915b733c11716f477f12ebeaee8d9c2e1a74c7a8e8d594b32da",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -111,7 +115,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/s19-grade.json"
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:86aee651e48f4915b733c11716f477f12ebeaee8d9c2e1a74c7a8e8d594b32da",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -169,11 +173,13 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability coordination.section.revise --payload "{\"section\": \"Deferrals\", \"text\": \"(none)\", \"expected_content_sha256\": \"$COORD_SHA\"}" --key s19-defer --request-id request-s19-defer --guards auto --out "$TMPDIR/s19-defer.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: coordination=0
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s19-defer",
@@ -183,7 +189,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.j
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:e8a1494a9186cd2fb9d91d55bfe007dd531be274bd3fe1107d2c3d2bff8cde3d",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
   "result": {
     "ok": true,
     "section": "Deferrals",
@@ -192,7 +198,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/s19-defer.j
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:e8a1494a9186cd2fb9d91d55bfe007dd531be274bd3fe1107d2c3d2bff8cde3d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
     "replayed": false
   },
   "error": null

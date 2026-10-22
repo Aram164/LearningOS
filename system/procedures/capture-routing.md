@@ -23,13 +23,15 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key log-stage-note-001 --request-id request-log-stage-note-001 --guards auto --out "$TMPDIR/log-stage-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: unit-demo-l01=3
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-log-stage-note-001",
@@ -39,7 +41,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:9356d1168149a53213357c99eb92188b5ed2f1f69d28c851dec7af1cbbcadb60",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -50,7 +52,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:9356d1168149a53213357c99eb92188b5ed2f1f69d28c851dec7af1cbbcadb60",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -73,13 +75,15 @@ $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/stages/s
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability capture.create --payload '{"text": "Log: a stray thought with no stage yet."}' --key log-capture-001 --request-id request-log-capture-001 --guards auto --out "$TMPDIR/log-capture.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: capture-request:log-capture-001=0
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-log-capture-001",
@@ -89,7 +93,7 @@ $ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:7e41ff6746f6cf908b2eb1cd2f63e4993e058e1cd84e1c2a6523a664f949478a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-log-a-stray-thought-with-no-stage-yet.md",
@@ -98,7 +102,7 @@ $ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
     "artifact_revisions": {
       "capture-request:log-capture-001": 1
     },
-    "snapshot_after": "sha256:7e41ff6746f6cf908b2eb1cd2f63e4993e058e1cd84e1c2a6523a664f949478a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null

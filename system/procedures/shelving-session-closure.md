@@ -37,13 +37,15 @@ explicit selected-item approval. After application, validate and regenerate.
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key shelve-note-001 --request-id request-shelve-note-001 --guards auto --out "$TMPDIR/shelve-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: unit-demo-l01=3
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-shelve-note-001",
@@ -53,7 +55,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:9356d1168149a53213357c99eb92188b5ed2f1f69d28c851dec7af1cbbcadb60",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -64,7 +66,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:9356d1168149a53213357c99eb92188b5ed2f1f69d28c851dec7af1cbbcadb60",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -91,13 +93,15 @@ the submission below carries the weight.
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability review.prepare --payload "{\"unit_id\": \"unit-demo-l01\", \"items_file\": \"$TMPDIR/shelve-items.json\", \"items_file_sha256\": \"sha256:$ITEMS_SHA\"}" --key shelve-prepare-001 --request-id request-shelve-prepare-001 --guards auto --out "$TMPDIR/shelve-prepare.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=4
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-shelve-prepare-001",
@@ -107,7 +111,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:ae0154493d1def40f2525e81e2102ec902b8f76e704059be1fc4588c2e26c0dc",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -119,7 +123,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:ae0154493d1def40f2525e81e2102ec902b8f76e704059be1fc4588c2e26c0dc",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -144,13 +148,15 @@ los: INVALID_REQUEST: shelving apply requires --approve and explicit selected pr
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability review.apply --payload '{"unit_id": "unit-demo-l01", "selected": ["proposal-derivation-note"]}' --key shelve-apply-001 --request-id request-shelve-apply-001 --guards auto --out "$TMPDIR/shelve-apply.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: proposal-derivation-note=0, study-map-demo-l01=1, unit-demo-l01=5
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-shelve-apply-001",
@@ -160,7 +166,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:11ee613324bb7b0f7fda1c3cf8b7a703574939912bd2966e29692565aaaafa5f",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -174,7 +180,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:11ee613324bb7b0f7fda1c3cf8b7a703574939912bd2966e29692565aaaafa5f",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null

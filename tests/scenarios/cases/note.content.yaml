@@ -110,7 +110,7 @@ cases:
   - --limit
   - 20
   - --expected-snapshot
-  - sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+  - <FIXTURE_SNAPSHOT>
   expect:
     site: null
 - id: cli-unknown-note

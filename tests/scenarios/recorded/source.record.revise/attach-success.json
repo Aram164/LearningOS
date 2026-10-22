@@ -18,7 +18,7 @@
                 "source-scenario-bare": 1
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             }
           },
@@ -72,7 +72,7 @@
           },
           "schema_version": 2,
           "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP2",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "status": "committed",
           "type": "transaction-receipt",
           "writes": [
@@ -184,7 +184,7 @@
                 "source-scenario-bare": 1
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             },
             "KEY4": {
@@ -196,7 +196,7 @@
               "revisions": {
                 "source-scenario-bare": 2
               },
-              "snapshot_after": "SNAP3",
+              "snapshot_after": "SNAP2",
               "snapshot_before": "SNAP1",
               "transaction_id": "TX2"
             }
@@ -216,7 +216,7 @@
                 "source-scenario-bare": 1
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             }
           },
@@ -270,7 +270,7 @@
             "request_id": "KEY3"
           },
           "schema_version": 2,
-          "snapshot_after": "SNAP3",
+          "snapshot_after": "SNAP2",
           "snapshot_before": "SNAP1",
           "status": "committed",
           "type": "transaction-receipt",
@@ -379,7 +379,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"source.record.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP3\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"source-scenario-bare\": 2\n    },\n    \"snapshot_after\": \"SNAP3\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"source.record.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"source-scenario-bare\": 2\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "source.record.revise",
         "error": null,
@@ -395,11 +395,11 @@
           "ok": true,
           "receipt_path": "operations/transactions/TX2.yaml",
           "replayed": false,
-          "snapshot_after": "SNAP3",
+          "snapshot_after": "SNAP2",
           "transaction_id": "TX2"
         },
         "schema_version": 2,
-        "snapshot_after": "SNAP3",
+        "snapshot_after": "SNAP2",
         "transaction_id": "TX2"
       },
       "step": 1,

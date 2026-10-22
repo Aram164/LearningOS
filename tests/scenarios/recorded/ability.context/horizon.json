@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"ability-context-v1\",\"abilities\":[{\"id\":\"ability-demo-derive\",\"title\":\"Derive expected value\",\"state\":\"supported\",\"lifecycle\":\"active\",\"reasons\":[\"current confirmed worked attempt\"],\"reason_codes\":[\"current-confirmed-attempt\"],\"concept_ids\":[\"concept-expected-value\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[{\"id\":\"ability-observation-1\",\"result\":\"correct\",\"work_ref\":\"conversation://fixture/work-1\"}],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0},{\"id\":\"ability-demo-variance\",\"title\":\"Derive variance\",\"state\":\"uncertain\",\"lifecycle\":\"active\",\"reasons\":[\"no current confirmed work under the stated conditions\"],\"reason_codes\":[\"no-current-work\"],\"concept_ids\":[\"concept-variance\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0}],\"total\":2,\"offset\":0,\"returned\":2,\"next_offset\":null,\"has_more\":false,\"bridges\":[],\"candidate_connections\":[],\"candidate_connection_count\":0,\"truncated\":false,\"expand\":\"ability-context ABILITY_ID\",\"expansions\":{\"next\":null}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"ability-context-v1\",\"abilities\":[{\"id\":\"ability-demo-derive\",\"title\":\"Derive expected value\",\"state\":\"supported\",\"lifecycle\":\"active\",\"reasons\":[\"current confirmed worked attempt\"],\"reason_codes\":[\"current-confirmed-attempt\"],\"concept_ids\":[\"concept-expected-value\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[{\"id\":\"ability-observation-1\",\"result\":\"correct\",\"work_ref\":\"conversation://fixture/work-1\"}],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0},{\"id\":\"ability-demo-variance\",\"title\":\"Derive variance\",\"state\":\"uncertain\",\"lifecycle\":\"active\",\"reasons\":[\"no current confirmed work under the stated conditions\"],\"reason_codes\":[\"no-current-work\"],\"concept_ids\":[\"concept-variance\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"transfer\":[],\"evidence\":[],\"off_page_bridge_count\":0,\"off_page_candidate_count\":0}],\"total\":2,\"offset\":0,\"returned\":2,\"next_offset\":null,\"has_more\":false,\"bridges\":[],\"candidate_connections\":[],\"candidate_connection_count\":0,\"truncated\":false,\"expand\":\"ability-context ABILITY_ID\",\"expansions\":{\"next\":null}}\n",
   "stdout_json": {
     "abilities": [
       {
@@ -76,7 +76,7 @@
     "offset": 0,
     "returned": 2,
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "total": 2,
     "truncated": false
   }

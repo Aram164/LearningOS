@@ -104,9 +104,10 @@ export PAYLOAD_SCHEMA='{"$schema": "https://json-schema.org/draft/2020-12/schema
 
 ## Step 2: the snapshot comes from bootstrap
 
-```scrut
+```scrut {interpolated: true}
 $ eval "$(los bootstrap --compact | $H/los-bind SNAP '$.snapshot_id')" && echo "$SNAP"
-sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+$LOS_FIXTURE_SNAPSHOT_1
 ```
 
 ## The bare mutating command refuses by design
@@ -121,20 +122,23 @@ los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI ap
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability capture.create --payload '{"text": "Half-formed idea about the derivation."}' --key envelope-capture-a --request-id request-envelope-capture-a --snapshot "$SNAP" --guards auto --out "$TMPDIR/capture-a.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: capture-request:envelope-capture-a=0
 ```
 
 ## The sealed envelope's sha256, before submission
 
-```scrut
-$ $H/los-assert-file "$TMPDIR/capture-a.json" --sha256 7bed50ec366e6425c0a45f3c263f30a23912334e183517c7b29cd935b3a4cc96
+```scrut {interpolated: true}
+$ $H/los-assert-file "$TMPDIR/capture-a.json" --sha256 "$LOS_FIXTURE_FILE_1"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 ```
 
 ## The envelope carries the bound snapshot
 
-```scrut
+```scrut {interpolated: true}
 $ cat "$TMPDIR/capture-a.json" | $H/los-bind EXPECTED '$.expected_snapshot'
-export EXPECTED=sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+export EXPECTED=$LOS_FIXTURE_SNAPSHOT_1
 ```
 
 ## Step 5: the approval subject is the intent hash
@@ -179,15 +183,17 @@ approval = "sha256:" + hashlib.sha256(json.dumps(
     ensure_ascii=False).encode("utf-8")).hexdigest()
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ $LOS_REPO/.venv/bin/python -c "import hashlib,json,os; e=json.load(open(os.path.join(os.environ['TMPDIR'],'capture-a.json'))); s={k:e[k] for k in ('schema_version','capability','channel','expected_snapshot','expected_revisions','payload')}; h='sha256:'+hashlib.sha256(json.dumps(s,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest(); assert h==e['approval']['subject_sha256'],h; print(h)"
-sha256:3bb34660d7b266f50c98dfe141b262f8da0dda906fb3ed1cf96b2901469415f1
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
+$LOS_FIXTURE_INTENT_1
 ```
 
 ## Step 6: submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-envelope-capture-a",
@@ -197,7 +203,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:47c2205deda0b75d9e73c28084376b937da49d989f9353cf86b5f86bebe1f9ba",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md",
@@ -206,7 +212,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
     "artifact_revisions": {
       "capture-request:envelope-capture-a": 1
     },
-    "snapshot_after": "sha256:47c2205deda0b75d9e73c28084376b937da49d989f9353cf86b5f86bebe1f9ba",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -227,8 +233,9 @@ $ $H/los-assert-file work/inbox/20261001-090000-half-formed-idea-about-the-deriv
 
 ## Step 4: resubmitting the saved envelope replays it
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-envelope-capture-a",
@@ -238,14 +245,14 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
   "replayed": true,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:47c2205deda0b75d9e73c28084376b937da49d989f9353cf86b5f86bebe1f9ba",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "transaction_id": "transaction-20261001-090000-001",
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
     "artifact_revisions": {
       "capture-request:envelope-capture-a": 1
     },
-    "snapshot_after": "sha256:47c2205deda0b75d9e73c28084376b937da49d989f9353cf86b5f86bebe1f9ba",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": true,
     "captured": "work/inbox/20261001-090000-half-formed-idea-about-the-derivation.md"
   },
@@ -257,6 +264,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-a.json"
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability capture.create --payload '{"text": "A second capture that moves the snapshot."}' --key envelope-capture-b --request-id request-envelope-capture-b --guards auto --out "$TMPDIR/capture-b.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: capture-request:envelope-capture-b=0
 ```
 
@@ -264,13 +272,15 @@ seal_envelope: guards auto: capture-request:envelope-capture-b=0
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability capture.create --payload '{"text": "A third capture, sealed too early."}' --key envelope-capture-c --request-id request-envelope-capture-c --guards auto --out "$TMPDIR/capture-c.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: capture-request:envelope-capture-c=0
 ```
 
 ## Submitting the second capture moves the snapshot
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-envelope-capture-b",
@@ -280,7 +290,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:cc96e32b22a46ca9637dc830be48010ac68fc439c9bb769a29492c965e1bc80d",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-a-second-capture-that-moves-the-snapshot.md",
@@ -289,7 +299,7 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
     "artifact_revisions": {
       "capture-request:envelope-capture-b": 1
     },
-    "snapshot_after": "sha256:cc96e32b22a46ca9637dc830be48010ac68fc439c9bb769a29492c965e1bc80d",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -298,8 +308,9 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-b.json"
 
 ## The third envelope now refuses as stale
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/capture-c.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-envelope-capture-c",
@@ -316,8 +327,8 @@ $ los capability capture.create --payload-file "$TMPDIR/capture-c.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:47c2205deda0b75d9e73c28084376b937da49d989f9353cf86b5f86bebe1f9ba",
-      "actual": "sha256:cc96e32b22a46ca9637dc830be48010ac68fc439c9bb769a29492c965e1bc80d"
+      "expected": "$LOS_FIXTURE_SNAPSHOT_2",
+      "actual": "$LOS_FIXTURE_SNAPSHOT_3"
     }
   }
 }

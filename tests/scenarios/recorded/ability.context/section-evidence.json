@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"ability-context-v1\",\"focus\":\"ability-demo-derive\",\"section\":\"evidence\",\"observations\":[{\"ability_id\":\"ability-demo-derive\",\"ability_sha256\":\"sha256:fce436d58e0ea7978004658f1afe5d2b41e9b5844a5d655e4de89bef2bd266f4\",\"activity\":\"worked derivation\",\"assistance\":\"none\",\"claim\":\"I derived this from the stated problem.\",\"conditions\":[\"finite discrete outcomes\",\"probabilities sum to one\"],\"confirmation_ref\":\"conversation://fixture/confirmation-1\",\"confirmed_by\":\"learner\",\"evidence_tags\":[\"correct derivation\"],\"id\":\"ability-observation-1\",\"result\":\"correct\",\"timestamp\":\"2026-09-23T10:01:00Z\",\"work_ref\":\"conversation://fixture/work-1\",\"origin\":{\"path\":\"work/active/workspace-demo/ability-observations.jsonl\",\"line\":1,\"workspace_id\":\"workspace-demo\"}}],\"total\":1,\"offset\":0,\"returned\":1,\"next_offset\":null,\"has_more\":false,\"expansions\":{\"next\":null}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"ability-context-v1\",\"focus\":\"ability-demo-derive\",\"section\":\"evidence\",\"observations\":[{\"ability_id\":\"ability-demo-derive\",\"ability_sha256\":\"sha256:fce436d58e0ea7978004658f1afe5d2b41e9b5844a5d655e4de89bef2bd266f4\",\"activity\":\"worked derivation\",\"assistance\":\"none\",\"claim\":\"I derived this from the stated problem.\",\"conditions\":[\"finite discrete outcomes\",\"probabilities sum to one\"],\"confirmation_ref\":\"conversation://fixture/confirmation-1\",\"confirmed_by\":\"learner\",\"evidence_tags\":[\"correct derivation\"],\"id\":\"ability-observation-1\",\"result\":\"correct\",\"timestamp\":\"2026-09-23T10:01:00Z\",\"work_ref\":\"conversation://fixture/work-1\",\"origin\":{\"path\":\"work/active/workspace-demo/ability-observations.jsonl\",\"line\":1,\"workspace_id\":\"workspace-demo\"}}],\"total\":1,\"offset\":0,\"returned\":1,\"next_offset\":null,\"has_more\":false,\"expansions\":{\"next\":null}}\n",
   "stdout_json": {
     "contract": "ability-context-v1",
     "expansions": {
@@ -47,7 +47,7 @@
     "returned": 1,
     "schema_version": 1,
     "section": "evidence",
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "total": 1
   }
 }

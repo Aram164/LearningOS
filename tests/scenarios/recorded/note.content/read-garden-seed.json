@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"note-content\",\"note_id\":\"garden-note-seed\",\"path\":\"knowledge/garden/seed.md\",\"content_sha256\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":17,\"start_line\":1,\"content\":\"A thought. #idea\\n\",\"next_offset\":null}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"note-content\",\"note_id\":\"garden-note-seed\",\"path\":\"knowledge/garden/seed.md\",\"content_sha256\":\"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\",\"offset\":0,\"offset_unit\":\"unicode_characters\",\"total_characters\":17,\"start_line\":1,\"content\":\"A thought. #idea\\n\",\"next_offset\":null}\n",
   "stdout_json": {
     "content": "A thought. #idea\n",
     "content_sha256": "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169",
@@ -18,7 +18,7 @@
     "offset_unit": "unicode_characters",
     "path": "knowledge/garden/seed.md",
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "start_line": 1,
     "total_characters": 17
   }

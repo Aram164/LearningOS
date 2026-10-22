@@ -43,13 +43,15 @@ los: INVALID_REQUEST: canonical writes must use GatewayEnvelopeV2; direct CLI ap
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability capture.create --payload '{"text": "Unrouted fragment for later triage."}' --key temp-capture-001 --request-id request-temp-capture-001 --guards auto --out "$TMPDIR/temp-capture.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: capture-request:temp-capture-001=0
 ```
 
 ## Submit the envelope
 
-```scrut
+```scrut {interpolated: true}
 $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-temp-capture-001",
@@ -59,7 +61,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:540e16908cb16a9f4ce9a28fc8c0bb8a1f97853c77a386fdefe1aa0e0956bc5a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "captured": "work/inbox/20261001-090000-unrouted-fragment-for-later-triage.md",
@@ -68,7 +70,7 @@ $ los capability capture.create --payload-file "$TMPDIR/temp-capture.json"
     "artifact_revisions": {
       "capture-request:temp-capture-001": 1
     },
-    "snapshot_after": "sha256:540e16908cb16a9f4ce9a28fc8c0bb8a1f97853c77a386fdefe1aa0e0956bc5a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null

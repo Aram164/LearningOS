@@ -511,6 +511,10 @@
    "runtime.session": {
     "cli_command": null,
     "handler": "runtime_session"
+   },
+   "semantic.query": {
+    "cli_command": null,
+    "handler": "semantic"
    }
   }
  },

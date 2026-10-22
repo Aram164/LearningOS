@@ -54,6 +54,32 @@ def _handler_for_subcommand(subcommand: str) -> str | None:
     return None
 
 
+def test_the_declared_kind_is_the_kind_the_runtime_gives_the_command():
+    """One kind per command, and it is the kind the runtime gives it.
+
+    Nine operations declared one kind in the operation contract and ran under
+    another: a read declared as a tool took no lock, and a plan edit declared
+    as porcelain took the exclusive lock while the runtime took the shared
+    one. Nothing compared them, so the contract and the behaviour disagreed
+    quietly.
+    """
+    import learning_os.app.handlers  # noqa: F401  (populates the registry)
+    from learning_os.app.registry import REGISTRY
+    from learning_os.store.contracts.verb_catalogue import build_verb_catalogue
+
+    catalogue = build_verb_catalogue(ROOT)
+    for row in catalogue.verbs:
+        operation = REGISTRY.get(row.operation)
+        if operation is None:
+            # The one command outside the operation registry: it runs a
+            # reviewed envelope through its own adapter.
+            assert row.operation == "cli.capability", row.operation
+            continue
+        assert row.kind == operation.kind, (
+            f"{row.verb} declares kind {row.kind!r} and runs as "
+            f"{operation.kind!r}")
+
+
 # Approved B2 internal binding relocation. These five commands were lock-free
 # tools before their duplicate registrations merged into canonical queries.
 CLI_TOOL_BINDINGS = {

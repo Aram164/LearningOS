@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"route\":{\"unit_id\":\"unit-demo-l01\",\"id\":\"route-b2f1f80014860a929a3af0bc\",\"title\":\"Demo book — expected-value derivation\",\"format\":\"book\",\"angle\":\"Derives the weighted sum and works a discrete example.\",\"covers\":[\"knowledge-demo-outcomes\",\"knowledge-demo-expectation\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-01.pdf\",\"source_id\":\"source-demo-book\"},\"uses\":[{\"stage_id\":\"stage-demo\",\"resource_index\":3,\"scope_triage\":null,\"overrides\":{}}],\"patch_fields\":[\"angle\",\"angle_detail\",\"locator\",\"title\",\"url\",\"vault_path\"],\"patch_capability\":\"route.patch\",\"claim\":{\"status\":\"stale\",\"basis\":\"256eccf4fafba28f4b59c542c1d897062bef72a47836b19bdb53e8f7e1cd08e6\",\"causes\":[\"coarse-pin\",\"evidence-changed\"],\"audit\":\"unaudited\",\"goal_id\":\"lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2\",\"next\":\"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\"authorize\":\"goal lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2 --authorize\"}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"route\":{\"unit_id\":\"unit-demo-l01\",\"id\":\"route-b2f1f80014860a929a3af0bc\",\"title\":\"Demo book — expected-value derivation\",\"format\":\"book\",\"angle\":\"Derives the weighted sum and works a discrete example.\",\"covers\":[\"knowledge-demo-outcomes\",\"knowledge-demo-expectation\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-01.pdf\",\"source_id\":\"source-demo-book\"},\"uses\":[{\"stage_id\":\"stage-demo\",\"resource_index\":3,\"scope_triage\":null,\"overrides\":{}}],\"patch_fields\":[\"angle\",\"angle_detail\",\"locator\",\"title\",\"url\",\"vault_path\"],\"patch_capability\":\"route.patch\",\"claim\":{\"status\":\"stale\",\"basis\":\"256eccf4fafba28f4b59c542c1d897062bef72a47836b19bdb53e8f7e1cd08e6\",\"causes\":[\"coarse-pin\",\"evidence-changed\"],\"audit\":\"unaudited\",\"goal_id\":\"lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2\",\"next\":\"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\"authorize\":\"goal lineage-stale:covers:route-b2f1f80014860a929a3af0bc@458feec230ea42e809b521ce1193b446af1a4e07dbb99efec17e601d545481c2 --authorize\"}}\n",
   "stdout_json": {
     "artifact_revisions": {
       "module-demo": 0,
@@ -54,7 +54,7 @@
       "unit_id": "unit-demo-l01"
     },
     "schema_version": 1,
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "unit_id": "unit-demo-l01",
     "uses": [
       {

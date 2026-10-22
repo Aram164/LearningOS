@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"module_id\":\"module-demo\",\"map_bytes_saved\":35,\"referenced_routes\":1,\"plan_sha256\":\"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93\",\"affected_files\":[\"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"],\"artifact_ids\":[\"module-demo\",\"study-map-demo-l01\",\"unit-demo-l01\"],\"expected_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"ok\":true,\"check\":true,\"canonical_files_written\":0}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"module_id\":\"module-demo\",\"map_bytes_saved\":35,\"referenced_routes\":1,\"plan_sha256\":\"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93\",\"affected_files\":[\"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"],\"artifact_ids\":[\"module-demo\",\"study-map-demo-l01\",\"unit-demo-l01\"],\"expected_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"ok\":true,\"check\":true,\"canonical_files_written\":0}\n",
   "stdout_json": {
     "affected_files": [
       "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
@@ -30,6 +30,6 @@
     "plan_sha256": "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93",
     "referenced_routes": 1,
     "schema_version": 1,
-    "snapshot_id": "SNAP1"
+    "snapshot_id": "<FIXTURE_SNAPSHOT>"
   }
 }

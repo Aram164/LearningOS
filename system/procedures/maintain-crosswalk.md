@@ -40,13 +40,15 @@ $ cat > "$TMPDIR/crosswalk-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/crosswalk-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-demo-crosswalk\", \"title\": \"Demo crosswalk\", \"path\": \"knowledge/notes/mathematics/note-demo-crosswalk.md\", \"role\": \"crosswalk\", \"sources\": [\"source-demo-book\"]}, \"body_file\": \"$TMPDIR/crosswalk-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key crosswalk-create --request-id request-crosswalk-create --guards auto --out "$TMPDIR/crosswalk-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=0
 ```
 
 ## Submit the crosswalk note
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/crosswalk-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-crosswalk-create",
@@ -56,7 +58,7 @@ $ los capability note.create --payload-file "$TMPDIR/crosswalk-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:7451ee93ddb5ad1f33f12affc7089976400d9ae6433adacda4f28e421548c778",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -67,7 +69,7 @@ $ los capability note.create --payload-file "$TMPDIR/crosswalk-create.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 1
     },
-    "snapshot_after": "sha256:7451ee93ddb5ad1f33f12affc7089976400d9ae6433adacda4f28e421548c778",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -117,13 +119,15 @@ $ cat > "$TMPDIR/crosswalk-narrative.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-narrative --request-id request-crosswalk-narrative --guards auto --out "$TMPDIR/crosswalk-narrative.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=1
 ```
 
 ## Submit the narrative revision
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/crosswalk-narrative.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-crosswalk-narrative",
@@ -133,7 +137,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-narrative.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:9765b59e67b637c5d947840cb6bf501251c4ee69682f0edec011e55da85b45f8",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -143,7 +147,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-narrative.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 2
     },
-    "snapshot_after": "sha256:9765b59e67b637c5d947840cb6bf501251c4ee69682f0edec011e55da85b45f8",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
     "replayed": false
   },
   "error": null
@@ -180,13 +184,15 @@ sha256:5cf4f53f2b78917c2c821605236cb675c32bead66dec3d73a7f3519798303260
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability source.record.revise --payload "{\"record\": {\"id\": \"source-demo-book\", \"evaluations\": [{\"level\": \"introductory\", \"roles\": [\"first-learning\"], \"strengths\": [\"clear intuition\", \"worked variance examples\"], \"concepts\": [\"concept-expected-value\"]}]}, \"expected_diff_sha256\": \"$CROSS_DIFF\"}" --key crosswalk-judgment --request-id request-crosswalk-judgment --guards auto --out "$TMPDIR/crosswalk-judgment.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: source-demo-book=0
 ```
 
 ## Submit the judgment
 
-```scrut
+```scrut {interpolated: true}
 $ los capability source.record.revise --payload-file "$TMPDIR/crosswalk-judgment.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-crosswalk-judgment",
@@ -196,7 +202,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/crosswalk-judgment
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:ee1ad05475695f4d39093e959f4659358f7226b6d6ef9abf68eea5dbe0baf36a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-003",
@@ -204,7 +210,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/crosswalk-judgment
     "artifact_revisions": {
       "source-demo-book": 1
     },
-    "snapshot_after": "sha256:ee1ad05475695f4d39093e959f4659358f7226b6d6ef9abf68eea5dbe0baf36a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -276,11 +282,13 @@ $ cat > "$TMPDIR/crosswalk-table.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-table.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-table.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-table --request-id request-crosswalk-table --guards auto --out "$TMPDIR/crosswalk-table.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=2
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/crosswalk-table.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-crosswalk-table",
@@ -290,7 +298,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-table.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:b7d7ae8e9ed967bbe28825a858293dbc3c94b73a44aa2a80ede5a59b56dd76a0",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -300,7 +308,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-table.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 3
     },
-    "snapshot_after": "sha256:b7d7ae8e9ed967bbe28825a858293dbc3c94b73a44aa2a80ede5a59b56dd76a0",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
     "replayed": false
   },
   "error": null
@@ -329,11 +337,13 @@ $ los validate | grep -c "CROSSWALK-TABLE"
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/crosswalk-narrative.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo-crosswalk\", \"file\": \"$TMPDIR/crosswalk-narrative.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key crosswalk-restore --request-id request-crosswalk-restore --guards auto --out "$TMPDIR/crosswalk-restore.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo-crosswalk=3
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-crosswalk-restore",
@@ -343,7 +353,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-005",
   "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-  "snapshot_after": "sha256:ee1ad05475695f4d39093e959f4659358f7226b6d6ef9abf68eea5dbe0baf36a",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -353,7 +363,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 4
     },
-    "snapshot_after": "sha256:ee1ad05475695f4d39093e959f4659358f7226b6d6ef9abf68eea5dbe0baf36a",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null

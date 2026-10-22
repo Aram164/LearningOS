@@ -52,13 +52,15 @@ $ cat > "$TMPDIR/ops-first-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/ops-first-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-ops-first\", \"title\": \"First ops note\", \"path\": \"knowledge/notes/mathematics/note-ops-first.md\", \"concepts\": [\"concept-expected-value\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/ops-first-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key ops-first --request-id request-ops-first --guards auto --out "$TMPDIR/ops-first.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-ops-first=0
 ```
 
 ## Setup: submit the first note
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-ops-first",
@@ -68,7 +70,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "note_id": "note-ops-first",
@@ -79,7 +81,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
     "artifact_revisions": {
       "note-ops-first": 1
     },
-    "snapshot_after": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -119,8 +121,9 @@ request-ops-first note.create COMMITTED
 
 ## The committed request explains itself fully
 
-```scrut
+```scrut {interpolated: true}
 $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); d["diagnosis"]["attempts"] = [{k: v for k, v in a.items() if k not in ("span", "replay_of")} for a in d["diagnosis"]["attempts"]]; print(json.dumps(d, indent=2, sort_keys=True))'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.create",
   "diagnosis": {
@@ -132,7 +135,7 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-001.yaml",
       "ledger:ops-first",
-      "observed:sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135"
+      "observed:$LOS_FIXTURE_SNAPSHOT_2"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -146,11 +149,11 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "snapshot_after": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
-    "snapshot_before": "sha256:9e7c5b192a800c54579a9d6000353279ce6ee414781191cd4bc1110d91149a90",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
+    "snapshot_before": "$LOS_FIXTURE_SNAPSHOT_1",
     "transaction_id": "transaction-20261001-090000-001"
   },
-  "observed_snapshot": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
+  "observed_snapshot": "$LOS_FIXTURE_SNAPSHOT_2",
   "request_id": "request-ops-first",
   "timeline": [
     {
@@ -212,6 +215,7 @@ $ cat > "$TMPDIR/ops-refused-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/ops-refused-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-ops-refused\", \"title\": \"Refused ops note\", \"path\": \"knowledge/notes/mathematics/note-ops-refused.md\", \"concepts\": [\"concept-expected-value\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/ops-refused-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key ops-refused --request-id request-ops-refused --snapshot sha256:0000000000000000000000000000000000000000000000000000000000000000 --guards auto --out "$TMPDIR/ops-refused.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-ops-refused=0
 ```
 
@@ -224,8 +228,9 @@ captured 2
 
 ## Setup: submit the refused note
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-ops-refused",
@@ -243,7 +248,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
     "retryable": true,
     "details": {
       "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "actual": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135"
+      "actual": "$LOS_FIXTURE_SNAPSHOT_2"
     }
   }
 }
@@ -265,8 +270,9 @@ unchanged
 
 ## The refused request explains itself as refused
 
-```scrut
+```scrut {interpolated: true}
 $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); d["diagnosis"]["attempts"] = [{k: v for k, v in a.items() if k not in ("span", "replay_of")} for a in d["diagnosis"]["attempts"]]; print(json.dumps(d, indent=2, sort_keys=True))'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.create",
   "diagnosis": {
@@ -277,7 +283,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     ],
     "authoritative_evidence": [
       "response:STALE_SNAPSHOT",
-      "observed:sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135"
+      "observed:$LOS_FIXTURE_SNAPSHOT_2"
     ],
     "canonical_outcome": "NOT_COMMITTED",
     "execution_outcome": "refused",
@@ -295,7 +301,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     "snapshot_before": null,
     "transaction_id": null
   },
-  "observed_snapshot": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
+  "observed_snapshot": "$LOS_FIXTURE_SNAPSHOT_2",
   "request_id": "request-ops-refused",
   "timeline": [
     {
@@ -351,6 +357,7 @@ $ cat > "$TMPDIR/ops-reuse-two-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/ops-reuse-one-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-ops-reuse-one\", \"title\": \"Reuse one\", \"path\": \"knowledge/notes/mathematics/note-ops-reuse-one.md\", \"concepts\": [\"concept-expected-value\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/ops-reuse-one-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key ops-reuse-one --request-id request-ops-reused --guards auto --out "$TMPDIR/ops-reuse-one.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-ops-reuse-one=0
 ```
 
@@ -361,6 +368,7 @@ True transaction-20261001-090000-002
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/ops-reuse-two-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-ops-reuse-two\", \"title\": \"Reuse two\", \"path\": \"knowledge/notes/mathematics/note-ops-reuse-two.md\", \"concepts\": [\"concept-expected-value\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/ops-reuse-two-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key ops-reuse-two --request-id request-ops-reused --guards auto --out "$TMPDIR/ops-reuse-two.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-ops-reuse-two=0
 ```
 
@@ -393,8 +401,9 @@ owns transaction-20261001-090000-003
 
 ## The reused id names every distinct request
 
-```scrut
+```scrut {interpolated: true}
 $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); d["diagnosis"]["attempts"] = [{k: v for k, v in a.items() if k not in ("span", "replay_of")} for a in d["diagnosis"]["attempts"]]; print(json.dumps(d, indent=2, sort_keys=True))'
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "capability": "note.create",
   "diagnosis": {
@@ -409,7 +418,7 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-002.yaml",
       "ledger:ops-reuse-one",
-      "observed:sha256:f3ecbbd11f1860745a7033b899da3e139e7fe9a72dc8beb403bfd78e452b0481"
+      "observed:$LOS_FIXTURE_SNAPSHOT_4"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -424,11 +433,11 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "snapshot_after": "sha256:60a35872e45f5ed4ceedf2b254ec452793a66a3d241b8fd48c83de8c180434f7",
-    "snapshot_before": "sha256:871bcad08738c4015307b740bf3f97fda4ed5c1b9865a74b41d4d066805cb135",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_3",
+    "snapshot_before": "$LOS_FIXTURE_SNAPSHOT_2",
     "transaction_id": "transaction-20261001-090000-002"
   },
-  "observed_snapshot": "sha256:f3ecbbd11f1860745a7033b899da3e139e7fe9a72dc8beb403bfd78e452b0481",
+  "observed_snapshot": "$LOS_FIXTURE_SNAPSHOT_4",
   "request_id": "request-ops-reused",
   "timeline": [
     {

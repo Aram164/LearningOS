@@ -79,13 +79,15 @@ $ cat > "$TMPDIR/transcription.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/transcription.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-probe-derivation\", \"title\": \"Sample mean as an estimator — own derivation\", \"path\": \"knowledge/notes/mathematics/note-probe-derivation.md\", \"role\": \"derivation\", \"concepts\": [\"concept-expected-value\"], \"sources\": [\"source-demo-book\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/transcription.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key s17-create --request-id request-s17-create --guards auto --out "$TMPDIR/s17-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-probe-derivation=0
 ```
 
 ## Submit the creation
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s17-create",
@@ -95,7 +97,7 @@ $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:d4aeec1931142bfcdfad4625656372acd7ad3ede5d5db01a8c6056fe9c60eed2",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -106,7 +108,7 @@ $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
     "artifact_revisions": {
       "note-probe-derivation": 1
     },
-    "snapshot_after": "sha256:d4aeec1931142bfcdfad4625656372acd7ad3ede5d5db01a8c6056fe9c60eed2",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_4",
     "replayed": false
   },
   "error": null
@@ -150,11 +152,13 @@ $ cat > "$TMPDIR/transcription-rev.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/transcription-rev.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-probe-derivation\", \"file\": \"$TMPDIR/transcription-rev.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key s17-rev --request-id request-s17-rev --guards auto --out "$TMPDIR/s17-rev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-probe-derivation=1
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s17-rev",
@@ -164,7 +168,7 @@ $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:613a3a70cf45912cf335f0ba2f2c3eee11c4c3d1072e68dbda18fa7b2b174116",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -174,7 +178,7 @@ $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
     "artifact_revisions": {
       "note-probe-derivation": 2
     },
-    "snapshot_after": "sha256:613a3a70cf45912cf335f0ba2f2c3eee11c4c3d1072e68dbda18fa7b2b174116",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_5",
     "replayed": false
   },
   "error": null
@@ -191,11 +195,13 @@ $ $H/los-assert-receipt --last --capability note.revise
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability note.evidence.add --payload '{"note_id": "note-probe-derivation", "evidence_type": "derivation", "ref": "note://note-probe-derivation"}' --key s17-ev --request-id request-s17-ev --guards auto --out "$TMPDIR/s17-ev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-probe-derivation=2
 ```
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s17-ev",
@@ -205,7 +211,7 @@ $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:dc9c03edb55b94a2ac6d26b4f73a84212a509e3a1e36736032e7339fa48bd2bc",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -221,7 +227,7 @@ $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
     "artifact_revisions": {
       "note-probe-derivation": 3
     },
-    "snapshot_after": "sha256:dc9c03edb55b94a2ac6d26b4f73a84212a509e3a1e36736032e7339fa48bd2bc",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_6",
     "replayed": false
   },
   "error": null

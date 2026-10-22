@@ -20,7 +20,7 @@
                 "unit-demo-l01": 4
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             }
           },
@@ -78,7 +78,7 @@
           },
           "schema_version": 2,
           "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP2",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "status": "committed",
           "type": "transaction-receipt",
           "writes": [
@@ -213,7 +213,7 @@
                 "unit-demo-l01": 4
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             },
             "KEY4": {
@@ -226,7 +226,7 @@
                 "study-map-demo-l01": 2,
                 "unit-demo-l01": 5
               },
-              "snapshot_after": "SNAP3",
+              "snapshot_after": "SNAP2",
               "snapshot_before": "SNAP1",
               "transaction_id": "TX2"
             }
@@ -247,7 +247,7 @@
                 "unit-demo-l01": 4
               },
               "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP2",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             }
           },
@@ -303,7 +303,7 @@
             "request_id": "KEY3"
           },
           "schema_version": 2,
-          "snapshot_after": "SNAP3",
+          "snapshot_after": "SNAP2",
           "snapshot_before": "SNAP1",
           "status": "committed",
           "type": "transaction-receipt",
@@ -430,7 +430,7 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"detour.resolve\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP3\",\n  \"result\": {\n    \"ok\": true,\n    \"detour_id\": \"detour-revisit-expectation\",\n    \"return_to_stage\": \"stage-demo\",\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 2,\n      \"unit-demo-l01\": 5\n    },\n    \"snapshot_after\": \"SNAP3\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"detour.resolve\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"detour_id\": \"detour-revisit-expectation\",\n    \"return_to_stage\": \"stage-demo\",\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 2,\n      \"unit-demo-l01\": 5\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "detour.resolve",
         "error": null,
@@ -449,11 +449,11 @@
           "receipt_path": "operations/transactions/TX2.yaml",
           "replayed": false,
           "return_to_stage": "stage-demo",
-          "snapshot_after": "SNAP3",
+          "snapshot_after": "SNAP2",
           "transaction_id": "TX2"
         },
         "schema_version": 2,
-        "snapshot_after": "SNAP3",
+        "snapshot_after": "SNAP2",
         "transaction_id": "TX2"
       },
       "step": 1,

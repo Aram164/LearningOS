@@ -35,13 +35,15 @@ $ cat > "$TMPDIR/successor-body.md" <<'EOF'
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/successor-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-worked-variance-v2\", \"title\": \"Worked variance, revised\", \"path\": \"knowledge/notes/mathematics/note-worked-variance-v2.md\", \"concepts\": [\"concept-variance\"], \"supersedes\": [\"note-demo\"]}, \"body_file\": \"$TMPDIR/successor-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key s15-create --request-id request-s15-create --guards auto --out "$TMPDIR/s15-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: guards auto: note-demo=0, note-worked-variance-v2=0
 ```
 
 ## Submit the successor
 
-```scrut
+```scrut {interpolated: true}
 $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
   "request_id": "request-s15-create",
@@ -51,7 +53,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:569c49c4281813197f0f5f997b89bcd612adef2f81b9c50377e95e5c541e53fc",
+  "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
   "result": {
     "ok": true,
     "note_id": "note-worked-variance-v2",
@@ -65,7 +67,7 @@ $ los capability note.create --payload-file "$TMPDIR/s15-create.json"
       "note-demo": 1,
       "note-worked-variance-v2": 1
     },
-    "snapshot_after": "sha256:569c49c4281813197f0f5f997b89bcd612adef2f81b9c50377e95e5c541e53fc",
+    "snapshot_after": "$LOS_FIXTURE_SNAPSHOT_2",
     "replayed": false
   },
   "error": null
@@ -102,6 +104,7 @@ owns transaction-20261001-090000-001
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/successor-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-worked-variance-v3\", \"title\": \"v3\", \"path\": \"knowledge/notes/mathematics/note-worked-variance-v3.md\", \"supersedes\": [\"note-nope\"]}, \"body_file\": \"$TMPDIR/successor-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key s15-bad --request-id request-s15-bad --guards auto --out "$TMPDIR/s15-bad.json"
+> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 seal_envelope: superseded note does not exist: 'note-nope'; fix the payload and seal again
 [2]
 ```

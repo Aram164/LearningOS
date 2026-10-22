@@ -54,8 +54,13 @@ def main(argv: list[str]) -> int:
     print(f"export LOS_FX={shlex.quote(root)}"
           f" LOS_OBSERVATIONS={shlex.quote(obs)}"
           f" TZ=Europe/Berlin; cd {shlex.quote(root)}")
-    print(f'los() {{ {repo}/.venv/bin/python'
-          f' {repo}/tools/los.py --root "$LOS_FX" "$@"; }}')
+    helper = shlex.quote(os.path.join(repo, "tests/procedure_helpers/los-fixture-values"))
+    python = shlex.quote(os.path.join(repo, ".venv/bin/python"))
+    print(f'los_fixture_values() {{ {python} {helper}; }}')
+    print(f'los() {{ eval "$(los_fixture_values)"; {python}'
+          f' {shlex.quote(repo)}/tools/los.py --root "$LOS_FX" "$@"; '
+          'local los_status=$?; eval "$(los_fixture_values)"; return "$los_status"; }')
+    print('eval "$(los_fixture_values)"')
     return 0
 
 

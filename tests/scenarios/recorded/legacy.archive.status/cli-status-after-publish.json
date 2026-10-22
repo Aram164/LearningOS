@@ -15,8 +15,8 @@
               "revisions": {
                 "legacy-archive-lock": 1
               },
-              "snapshot_after": "SNAP1",
-              "snapshot_before": "SNAP1",
+              "snapshot_after": "<FIXTURE_SNAPSHOT>",
+              "snapshot_before": "<FIXTURE_SNAPSHOT>",
               "transaction_id": "TX1"
             }
           },
@@ -68,8 +68,8 @@
             "request_id": "KEY1"
           },
           "schema_version": 2,
-          "snapshot_after": "SNAP1",
-          "snapshot_before": "SNAP1",
+          "snapshot_after": "<FIXTURE_SNAPSHOT>",
+          "snapshot_before": "<FIXTURE_SNAPSHOT>",
           "status": "committed",
           "type": "transaction-receipt",
           "writes": [
@@ -137,7 +137,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"legacy.archive.lock.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"legacy-archive-lock\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"legacy.archive.lock.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"legacy-archive-lock\": 1\n    },\n    \"snapshot_after\": \"<FIXTURE_SNAPSHOT>\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "legacy.archive.lock.publish",
         "error": null,
@@ -153,11 +153,11 @@
           "ok": true,
           "receipt_path": "operations/transactions/TX1.yaml",
           "replayed": false,
-          "snapshot_after": "SNAP1",
+          "snapshot_after": "<FIXTURE_SNAPSHOT>",
           "transaction_id": "TX1"
         },
         "schema_version": 2,
-        "snapshot_after": "SNAP1",
+        "snapshot_after": "<FIXTURE_SNAPSHOT>",
         "transaction_id": "TX1"
       },
       "step": 0,

@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"inbox-folder\",\"item\":\"pack\",\"path\":\"work/inbox/pack\",\"files\":[\"pack/one.md\",\"pack/two.md\"],\"drop_sha256\":\"sha256:9713b5460cdf08c8abdfa9e3210e465d5dbd6a1cd35026d9c1d2f57dcdbc4d29\"}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"inbox-folder\",\"item\":\"pack\",\"path\":\"work/inbox/pack\",\"files\":[\"pack/one.md\",\"pack/two.md\"],\"drop_sha256\":\"sha256:9713b5460cdf08c8abdfa9e3210e465d5dbd6a1cd35026d9c1d2f57dcdbc4d29\"}\n",
   "stdout_json": {
     "contract": "inbox-folder",
     "drop_sha256": "sha256:9713b5460cdf08c8abdfa9e3210e465d5dbd6a1cd35026d9c1d2f57dcdbc4d29",
@@ -18,6 +18,6 @@
     "item": "pack",
     "path": "work/inbox/pack",
     "schema_version": 1,
-    "snapshot_id": "SNAP1"
+    "snapshot_id": "<FIXTURE_SNAPSHOT>"
   }
 }

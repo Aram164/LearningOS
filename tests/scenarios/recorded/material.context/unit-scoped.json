@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"material-context\",\"ranked_by\":\"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)\",\"items\":[],\"total\":0,\"next_offset\":null,\"observations_sha256\":\"sha256:7c99fc58db9997160ec565ad05752066ffc0d076dc0af8403553195c0f8f0883\",\"searched\":{\"query_terms\":[\"derivation\"],\"concept\":null,\"purpose\":null,\"unit\":\"unit-demo-l01\",\"material\":null,\"include_related\":false,\"analysis_notes\":1,\"assessments\":0},\"pool\":{\"analysis_notes\":0,\"assessments\":0,\"related_analysis_notes\":1,\"analysis_by_resolution\":{},\"analysis_unreviewed\":0},\"empty\":\"no match in the searched records; this never proves no source explains the topic\"}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"<FIXTURE_SNAPSHOT>\",\"contract\":\"material-context\",\"ranked_by\":\"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)\",\"items\":[],\"total\":0,\"next_offset\":null,\"observations_sha256\":\"sha256:7c99fc58db9997160ec565ad05752066ffc0d076dc0af8403553195c0f8f0883\",\"searched\":{\"query_terms\":[\"derivation\"],\"concept\":null,\"purpose\":null,\"unit\":\"unit-demo-l01\",\"material\":null,\"include_related\":false,\"analysis_notes\":1,\"assessments\":0},\"pool\":{\"analysis_notes\":0,\"assessments\":0,\"related_analysis_notes\":1,\"analysis_by_resolution\":{},\"analysis_unreviewed\":0},\"empty\":\"no match in the searched records; this never proves no source explains the topic\"}\n",
   "stdout_json": {
     "contract": "material-context",
     "empty": "no match in the searched records; this never proves no source explains the topic",
@@ -35,7 +35,7 @@
       ],
       "unit": "unit-demo-l01"
     },
-    "snapshot_id": "SNAP1",
+    "snapshot_id": "<FIXTURE_SNAPSHOT>",
     "total": 0
   }
 }

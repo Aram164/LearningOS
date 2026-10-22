@@ -25,6 +25,7 @@ from pathlib import Path
 
 import pytest
 from arch_audit_hook import SITE_WITNESS_ENV
+from plan_refusal_proofs import prove as _prove_helper_plan_backstop
 
 import learning_os.app.handlers  # noqa: F401  (registration side effect)
 from learning_os.app.registry import REGISTRY
@@ -327,6 +328,100 @@ def _except_handler_sites(node: ast.ExceptHandler, *, stem: str,
     return found
 
 
+def _helper_sites(tree: ast.Module, stem: str, entered: list[str], rel: str
+                  ) -> dict[tuple[str, str], str]:
+    """Follow local helper calls, binding literal slugs and failure classes.
+
+    Start from each registered handler, so a never-called helper declares
+    nothing. Bind positional, keyword and default parameters without running
+    application code; unresolved dynamic helper sites fail closed.
+    """
+    functions = {node.name: node for node in tree.body
+                 if isinstance(node, ast.FunctionDef)}
+    found: dict[tuple[str, str], str] = {}
+    visited = set()
+
+    def resolve(value, bindings):
+        if isinstance(value, ast.Name) and value.id in bindings:
+            return bindings[value.id]
+        return value
+
+    def text(value, bindings, operation):
+        value = resolve(value, bindings)
+        if isinstance(value, ast.Constant) and isinstance(value.value, str):
+            return value.value
+        if isinstance(value, ast.Attribute) and value.attr == "operation":
+            return operation
+        if isinstance(value, ast.JoinedStr):
+            parts = []
+            for part in value.values:
+                if isinstance(part, ast.FormattedValue):
+                    if part.conversion != -1 or part.format_spec is not None:
+                        return None
+                    part = part.value
+                rendered = text(part, bindings, operation)
+                if rendered is None:
+                    return None
+                parts.append(rendered)
+            return "".join(parts)
+        return None
+
+    def visit(name, bindings, operation, stack):
+        if name in stack or name not in functions:
+            return
+        key = (name, operation, tuple(sorted(
+            (parameter, ast.dump(value)) for parameter, value in bindings.items())))
+        if key in visited:
+            return
+        visited.add(key)
+        function = functions[name]
+        stack = stack | {name}
+        for node in ast.walk(function):
+            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call):
+                call = node.exc
+                failure = resolve(call.func, bindings)
+                site = next((kw.value for kw in call.keywords if kw.arg == "site"), None)
+                # Only parameterized raises belong to this expansion; the
+                # existing collector owns ordinary literal/template sites.
+                parameterized = any(isinstance(sub, ast.Name) and sub.id in bindings
+                                    for sub in ast.walk(call.func)) or (
+                    site is not None and any(isinstance(sub, ast.Name)
+                                             and sub.id in bindings
+                                             for sub in ast.walk(site)))
+                if not parameterized or site is None:
+                    continue
+                if not isinstance(failure, ast.Name) or _resolve_failure(stem, failure.id) is None:
+                    continue
+                rendered = text(site, bindings, operation)
+                assert rendered and rendered.startswith(operation + "."), (
+                    f"A9 {rel}:{node.lineno}: unresolvable helper site — {FIX}")
+                found.setdefault((operation, rendered), f"{rel}:{node.lineno}")
+            if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+                continue
+            target = functions.get(node.func.id)
+            if target is None:
+                continue
+            parameters = target.args.posonlyargs + target.args.args
+            defaults = dict(zip(
+                [arg.arg for arg in parameters][-len(target.args.defaults):],
+                target.args.defaults, strict=True)) if target.args.defaults else {}
+            defaults.update({arg.arg: default for arg, default in
+                             zip(target.args.kwonlyargs, target.args.kw_defaults, strict=True)
+                             if default is not None})
+            bound = {key: resolve(value, bindings) for key, value in defaults.items()}
+            bound.update({arg.arg: resolve(value, bindings)
+                          for arg, value in zip(parameters, node.args, strict=False)})
+            bound.update({kw.arg: resolve(kw.value, bindings)
+                          for kw in node.keywords if kw.arg is not None})
+            visit(target.name, bound, operation, stack)
+
+    for operation in entered:
+        handler = REGISTRY[operation].handler
+        if handler.__module__.rsplit(".", 1)[-1] == stem:
+            visit(handler.__name__, {}, operation, set())
+    return found
+
+
 def _declared_sites() -> dict[tuple[str, str], str]:
     """``(operation, site)`` -> ``"rel:line"`` for every declared site.
 
@@ -354,6 +449,7 @@ def _declared_sites() -> dict[tuple[str, str], str]:
         assert serving.get(path.name), f"A9 {rel} serves nothing — {FIX}"
         tree = ast.parse(path.read_text(encoding="utf-8"))
         entered = sorted(set(serving[path.name]) & entry_points)
+        declared.update(_helper_sites(tree, path.stem, entered, rel))
         for top in tree.body:
             twin_func = top.name if isinstance(top, ast.FunctionDef) else None
             for node in ast.walk(top):
@@ -381,6 +477,12 @@ def _declared_sites() -> dict[tuple[str, str], str]:
                         record(operation, site, rel, node.lineno)
                         continue
                     slugs = _operation_templates(site_kw.value)
+                    if not slugs and twin_func and any(
+                            isinstance(sub, ast.Name) and sub.id in {
+                                arg.arg for arg in top.args.args + top.args.kwonlyargs}
+                            for sub in ast.walk(site_kw.value)):
+                        # Expanded at each reachable call by _helper_sites.
+                        continue
                     assert slugs, (
                         f"A9 {rel}:{node.lineno}: unresolvable site form — "
                         f"{FIX}")
@@ -2488,6 +2590,23 @@ def _prove_capabilities_unreadable_schema(mini_repo: Path, tmp_path: Path,
                       "class": "WriteRefused", "exit_code": 2}]
     assert exit_for(WriteRefused("a9-proof", exit_code=2), "cli") == 2
 
+
+def _prove_capabilities_unjoined_catalogue(mini_repo, tmp_path, monkeypatch):
+    """Only a broken contract, never an ordinary case input, breaks the join."""
+    import yaml
+
+    ctx = _a9_world('capabilities.read', 'one-command', tmp_path)
+    path = ctx.root / 'system/contracts/cli-operations.yaml'
+    declaration = yaml.safe_load(path.read_text())
+    declaration['operations'].pop(next(iter(declaration['operations'])))
+    path.write_text(yaml.safe_dump(declaration))
+    outcome, lines = _a9_run_cli(ctx.root, 'capabilities.read',
+                                ['capabilities', '--compact', '--json'], tmp_path, monkeypatch)
+    assert outcome.exit_code == 2
+    assert lines == [{'operation': 'capabilities.read', 'kind': 'failure',
+                      'site': 'capabilities.read.unjoined-catalogue',
+                      'class': 'WriteRefused', 'exit_code': 2}]
+
 def _prove_unit_list_read_failed(mini_repo: Path, tmp_path: Path,
                                  monkeypatch) -> None:
     """An OSError mid-read fires the site (os-error-only proof).
@@ -2866,6 +2985,7 @@ _PROOF_FNS.update({
     'resume.read.dossier-build-failed': _prove_resume_dossier_build_failed,
     'runtime.session.mid-read-stale': _prove_runtime_mid_read_stale,
     'capabilities.read.unreadable-payload-schema': _prove_capabilities_unreadable_schema,
+    'capabilities.read.unjoined-catalogue': _prove_capabilities_unjoined_catalogue,
     'unit.list.read-failed': _prove_unit_list_read_failed,
     'ability.context.unreadable-records': _prove_ability_unreadable_records,
     'ability.context.reasons-not-parallel': _prove_ability_reasons_not_parallel,
@@ -3196,6 +3316,12 @@ def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
 for _phase4_site in ('lineage.restamp.analysis-failed', 'lineage.restamp.restamp-failed', 'lineage.restamp.bad-expected-revision', 'lineage.restamp.reviewed-bytes-changed', 'lineage.restamp.reviewed-needs-report', 'module.plan.import.bad-expected-revision', 'unit.plan.revise.bad-expected-revision', 'unit.plan.revise.unknown-module'):
     _PROOF_FNS[_phase4_site] = _phase4_partial(_prove_phase4_plan_backstop, site=_phase4_site)
 
+
+
+
+
+for _helper_site in ('module.plan.import.noop-revision', 'module.plan.import.inventory-preflight-failed', 'module.plan.import.source-patch-splice', 'module.plan.import.synthesis-destination', 'module.plan.import.lineage-admission-failed', 'module.plan.import.validation-crash', 'module.plan.import.report-out-failed', 'module.plan.import.promotion-hash-mismatch', 'module.plan.import.promotion-needs-hash', 'module.plan.import.promotion-preflight-failed', 'module.plan.import.promotion-revisions-mismatch', 'module.plan.import.promotion-needs-approval', 'module.plan.import.promotion-needs-snapshot', 'module.plan.import.assembled-contract-failed', 'module.plan.import.reviewed-needs-file', 'unit.plan.revise.module-patch-escape', 'unit.plan.revise.source-patches-nonlist', 'unit.plan.revise.units-nonlist', 'unit.plan.revise.workspace-updates-nonlist', 'unit.plan.revise.ordering-preflight-failed', 'unit.plan.revise.routing-preflight-failed', 'unit.plan.revise.lineage-preflight-failed', 'unit.plan.revise.source-map-foreign', 'unit.plan.revise.source-patch-unknown', 'unit.plan.revise.unit-invalid', 'unit.plan.revise.map-foreign-unit', 'unit.plan.revise.synthesis-unknown-unit', 'unit.plan.revise.workspace-not-joined', 'unit.plan.revise.staged-outside-package', 'unit.plan.revise.validation-preflight-failed', 'unit.plan.revise.inventory-preflight-failed', 'unit.plan.revise.source-patch-splice', 'unit.plan.revise.stage-note-escape', 'unit.plan.revise.synthesis-destination', 'unit.plan.revise.workspace-splice', 'unit.plan.revise.lineage-admission-failed', 'unit.plan.revise.staged-unavailable', 'unit.plan.revise.validation-crash', 'unit.plan.revise.report-out-failed', 'unit.plan.revise.assembled-contract-failed', 'unit.plan.revise.needs-file-or-record'):
+    _PROOF_FNS[_helper_site] = _phase4_partial(_prove_helper_plan_backstop, site=_helper_site)
 
 @pytest.mark.parametrize("site", sorted(_PROOF_FNS))
 def test_proof_untriggered_site(mini_repo, tmp_path, monkeypatch, site):
@@ -4025,3 +4151,28 @@ def test_control_command_line_without_code_fails(tmp_path, monkeypatch):
     monkeypatch.setenv(SITE_WITNESS_ENV, str(witness))
     with pytest.raises(AssertionError, match="not an item 8.1 refusal line"):
         _session_witnesses()
+
+@pytest.mark.parametrize('failure', ['WriteRefused', 'cls'])
+def test_control_helper_literal_slug_is_required(monkeypatch, failure):
+    from types import SimpleNamespace
+
+    def handler():
+        pass
+    handler.__module__ = 'learning_os.app.handlers.plan'
+    handler.__name__ = 'handle'
+    monkeypatch.setitem(REGISTRY, 'a9-helper-control', SimpleNamespace(handler=handler))
+    tree = ast.parse(f'''
+def refuse(ctx, slug, *, cls=WriteRefused):
+    raise {failure}("refused", site=f"{{ctx.operation}}.{{slug}}")
+def bridge(ctx, slug):
+    refuse(ctx, slug, cls=RevisionConflict)
+def unused(ctx):
+    refuse(ctx, "never-called")
+def handle(ctx):
+    bridge(ctx, "missing-witness")
+''')
+    sites = _helper_sites(tree, 'plan', ['a9-helper-control'], 'control.py')
+    assert set(sites) == {('a9-helper-control', 'a9-helper-control.missing-witness')}
+    with pytest.raises(AssertionError, match='no case carries'):
+        _assert_matched('a9-helper-control', 'a9-helper-control.missing-witness',
+                        'control.py', witnesses=set(), cased={}, entries={}, proofs={})
