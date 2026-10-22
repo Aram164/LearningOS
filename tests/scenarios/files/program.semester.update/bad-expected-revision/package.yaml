@@ -1,0 +1,5 @@
+program_id: program-bachelors
+semester:
+  id: semester-wise-2026
+  title: WiSe 2026/27
+  order: 2

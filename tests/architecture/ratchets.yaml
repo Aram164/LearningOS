@@ -172,10 +172,10 @@ checks:
     count: 1
     since: approved
     approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
-  - signature: tools/learning_os/derive/validation/registries.py::_references_generated::regex::(?<![\w/])generated/
+  - signature: 'tools/learning_os/derive/validation/registries.py::_references_generated::regex::(?<![\w/])generated/[\w.-]'
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
+    approved_by: "Aram 2026-10-22: approved fixing LearningOS #4 — the generated-input rule names a path under the generated tree"
   A4-plumbing: []
   A4-plumbing-2: []
   A8-transcripts:

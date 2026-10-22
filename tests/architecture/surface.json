@@ -266,6 +266,14 @@
      "work/active/**"
     ]
    },
+   "program.semester.update": {
+    "admission": null,
+    "cli_command": "program-semester-update",
+    "handler": "program_semester_update",
+    "writes": [
+     "curriculum/programs/**"
+    ]
+   },
    "project.create": {
     "admission": null,
     "cli_command": "project-create",
@@ -6399,6 +6407,100 @@
     "type": null
    }
   ],
+  "program-semester-update": [
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "check",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--check"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "append",
+    "choices": null,
+    "default_repr": "[]",
+    "dest": "expected_revision",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-revision"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "expected_snapshot",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--expected-snapshot"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file"
+    ],
+    "required": true,
+    "type": null
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "file_sha256",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--file-sha256"
+    ],
+    "required": false,
+    "type": "sha256_value"
+   },
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false,
+    "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "json",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--json"
+    ],
+    "required": false,
+    "type": null
+   }
+  ],
   "project-create": [
    {
     "action": "append",
@@ -9398,6 +9500,7 @@
   "plan.edit-context.schema.json": "42e249f897c5b3cf2fad884c2260f5c37ba207e352079e6910321fc7fd020602",
   "plan.template.schema.json": "1c532b6ed114dbfd914a206019055da000eaf2d356d299fa28146d0c1dba5bf7",
   "program.list.schema.json": "1c6989676b267ba1c4b5d70c58c5099a4a2af841211d8e01af6574c59c80b365",
+  "program.semester.update.schema.json": "fc100aa9cbfce8c13ac5a4f288d22e4bdff17ee1237bfbd382b14db832857526",
   "project.create.schema.json": "5c997ab044e343104516dec512e8f385fc943c2b5a40cd415903e322a7fc25d3",
   "project.inspect.schema.json": "e402d151940ad6ef46140bf7f6367bb78b804dde9f03cb77d46ce8711002314b",
   "project.list.schema.json": "21515ab76275ae9c009f014e72b2ed5ebc4546467b8ae65e839b01a1d9011c04",

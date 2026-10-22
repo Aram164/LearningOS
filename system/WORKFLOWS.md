@@ -446,6 +446,8 @@ Check before creating: never open a workspace before its module record exists, a
 
 The record is created through `module.create`, from a reviewed package bound to its exact SHA-256. It refuses a destination that already exists — the artifact revision cannot prove absence on its own, so the file does — and it leaves a receipt naming both files it wrote.
 
+Its `--check` also says what the interface will do with the module: a module is listed when it is an open academic module, and the term is context rather than a gate, so a module created for a later term is not hidden by the term that is current. The report names the module's semester and the program's current semester when the two differ, because a creation that succeeds is not yet a module the learner can find.
+
 ## 19. Close a module
 
 A module ending is larger than archiving one workspace (workflow 11): it settles the administrative record, may retire several workspaces, and confirms the durable knowledge survived. Use this only when the module is truly done; if a later attempt is still ahead, it is carrying, not closing — use workflow 20.
@@ -602,7 +604,14 @@ registrations). Pure orchestration — every step is an existing workflow:
    term (workflow 6b); the inbox is empty (workflow 21).
 4. **Plan forward:** newly chosen modules enter via workflow 18 (record →
    promote menu → workspaces → dependencies).
-5. **Rebuild, validate, commit, push** (workflow 22) — the semester turns in
+5. **Turn the term:** the program record's current semester moves through
+   `program.semester.update`, from a reviewed package bound to its exact
+   SHA-256 — the previous semester becomes `previous`, no semester record is
+   dropped, and nothing else is written. The term never rolls forward on its
+   own: the reviewed package names the semester that becomes current, and the
+   term boundary itself stays Aram's judgment (workflow 24 has no executable
+   transcript, and that gap is declared rather than hidden).
+6. **Rebuild, validate, commit, push** (workflow 22) — the semester turns in
    one reviewed commit.
 
 ## 25. The two-layer operating model (ADR-006)

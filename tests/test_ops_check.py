@@ -652,3 +652,95 @@ def test_check_proposal_declared_ids_win_over_touched_paths(
     assert record["expected_revisions"] == {"test-only:journey": 0}
     assert record["writes"] == ["work/inbox/journey.md"]
     assert record["deletes"] == []
+
+
+# --------------------------------------------------------------------------
+# The real-tree layers: the preflight must predict the apply (LearningOS #3)
+# --------------------------------------------------------------------------
+
+def _tree_contract_applies(root: Path) -> None:
+    """Give the synthetic repository the tree contract's applicability anchors.
+
+    The contract applies only where all three are present, so a synthetic
+    repository is silent by design. The anchors are what the shadow copy
+    lacks — which is exactly why the shadow cannot answer for the tree.
+    """
+    (root / "system/adr").mkdir(parents=True, exist_ok=True)
+    (root / "tools/learning_os").mkdir(parents=True, exist_ok=True)
+    (root / "system/ARCHITECTURE.md").write_text(
+        "# Architecture\n\n<!-- tree:begin -->\n<!-- tree:end -->\n",
+        encoding="utf-8")
+
+
+def test_the_real_tree_layer_reports_a_missing_declared_directory(
+        mini_repo: Path):
+    """The tree contract is read from the real root, not from the shadow.
+
+    The shadow copy carries no ``.git`` — so the contract cannot prove a
+    rebuildable directory is ignored — and no ``tools/`` — so the
+    contract's applicability anchors are absent and the whole contract is
+    silent there. The live transaction validates the real tree and refuses
+    on ``TREE-MISSING``; the preflight has to see the same thing.
+    """
+    from learning_os.app.check import real_tree_errors
+
+    _tree_contract_applies(mini_repo)
+    errors = real_tree_errors(mini_repo)
+    assert any("TREE-MISSING" in line and "'bases'" in line
+               for line in errors), errors
+    # A declared directory that exists is not reported.
+    (mini_repo / "bases").mkdir(parents=True, exist_ok=True)
+    assert not any("'bases'" in line for line in real_tree_errors(mini_repo))
+
+
+def test_the_preflight_refuses_a_tree_the_apply_would_refuse(mini_repo: Path):
+    """A preflight that says ok for a doomed write promises what the apply
+    does not keep: the apply validates the real tree, and refuses it
+    (LearningOS #3)."""
+    from learning_os.app.check import check_proposal
+    from learning_os.app.proposal import TransactionProposal
+
+    _tree_contract_applies(mini_repo)
+    proposal = TransactionProposal(
+        capability=TEST_OP,
+        writes={mini_repo / "work/inbox/tree.md": "pipe\n"},
+        artifact_ids=("test-only:tree",),
+        deletes=(),
+    )
+    record = check_proposal(_file_guard_ctx(mini_repo), proposal)
+    assert record["ok"] is False
+    assert any("TREE-MISSING" in line and "'bases'" in line
+               for line in record["errors"]), record["errors"]
+
+
+def test_a_complete_tree_passes_the_real_tree_layer(mini_repo: Path):
+    """The layer is silent on a tree the contract describes."""
+    from learning_os.app.check import real_tree_errors
+    from learning_os.store.contracts import tree_contract
+
+    _tree_contract_applies(mini_repo)
+    contract = tree_contract.load(mini_repo)
+    for entry in contract.directories:
+        for node in _declared_paths(entry):
+            (mini_repo / node).mkdir(parents=True, exist_ok=True)
+    for row in contract.tracked_hidden:
+        target = mini_repo / str(row["path"])
+        if target.exists():
+            continue
+        if target.suffix:
+            target.write_text("tracked\n", encoding="utf-8")
+        else:
+            target.mkdir(parents=True, exist_ok=True)
+    tree_contract.write_block(mini_repo, contract)
+    assert real_tree_errors(mini_repo) == []
+
+
+def _declared_paths(entry) -> list[str]:
+    """Every declared path of one tree-contract entry, depth first."""
+    paths: list[str] = []
+    if entry.path:
+        paths.append(entry.path)
+    for child in entry.children:
+        paths.extend(_declared_paths(child))
+    return paths
+

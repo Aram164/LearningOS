@@ -341,6 +341,43 @@ def test_generated_reference_in_canonical_file_is_error(mini_repo):
     assert "GEN-INPUT" in codes(run(mini_repo), "E")
 
 
+def test_a_complaint_may_quote_a_missing_generated_directory(mini_repo):
+    """Evidence about the system is not a dependency on the system.
+
+    A dated complaint records what an agent observed. A sentence naming the
+    missing generated-output directory is that observation, and blocking it
+    would block the very workflow the rule exists to protect (LearningOS #4).
+    """
+    complaint = mini_repo / "work" / "complaints" / "2026-10-21-observed.md"
+    complaint.parent.mkdir(parents=True, exist_ok=True)
+    complaint.write_text(
+        "# Structural failure observed\n\n"
+        "Observed: the archive lacked the gitignored `generated/` and "
+        "`bases/` directories.\n",
+        encoding="utf-8")
+    assert "GEN-INPUT" not in codes(run(mini_repo), "E")
+
+
+def test_a_complaint_may_name_a_generated_artifact(mini_repo):
+    """Nothing derives from a complaint, so it cannot consume a derived file."""
+    complaint = mini_repo / "work" / "complaints" / "2026-10-21-observed.md"
+    complaint.parent.mkdir(parents=True, exist_ok=True)
+    complaint.write_text(
+        "# Structural failure observed\n\n"
+        "The apply refused with TREE-MISSING for `generated/manifest.json` "
+        "and `bases/`.\n",
+        encoding="utf-8")
+    assert "GEN-INPUT" not in codes(run(mini_repo), "E")
+
+
+def test_a_bare_directory_mention_is_not_a_generated_dependency(mini_repo):
+    """`generated/` alone names no artifact; `generated/<name>` does."""
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(
+        note.read_text() + "\nThe rebuildable tree lives in `generated/`.\n")
+    assert "GEN-INPUT" not in codes(run(mini_repo), "E")
+
+
 def test_a_view_shaped_like_a_directory_is_a_named_error_not_a_crash(mini_repo):
     manifest = mini_repo / "generated/manifest.json"
     manifest.parent.mkdir(parents=True, exist_ok=True)

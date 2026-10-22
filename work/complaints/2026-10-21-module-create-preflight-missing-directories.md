@@ -29,3 +29,9 @@ Filed on 2026-10-21: [LearningOS #3](https://github.com/Aram164/LearningOS/issue
 including the exact reviewed-package digest, successful preflight, apply
 refusal, experiment limitations, and acceptance criteria.
 
+Acted on 2026-10-22: the preflight now reads the tree contract and the
+perimeter from the real root (`learning_os.app.check.real_tree_errors` and
+`real_perimeter_errors`), because the shadow copy it validates cannot
+answer either: it carries no `.git` and no `tools/`. The same preflight
+that reported `ok: true` now refuses the same archive with the same
+`TREE-MISSING` the apply named. The apply guard is unchanged.

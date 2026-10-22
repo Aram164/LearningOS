@@ -50,6 +50,7 @@ from learning_os.derive.semantics.lineage import (
     LEDGER_RELATIVE,
     LineageError,
 )
+from learning_os.derive.semesters import module_listing as _module_listing
 from learning_os.domain.failures import NotFound, RevisionConflict, WriteRefused
 from learning_os.domain.plan_import import ack_shape_problems as _ack_shape_problems
 from learning_os.domain.plan_import import apply_unit_route_changes as _apply_unit_route_changes
@@ -1039,6 +1040,10 @@ def module_create(ctx: OpContext, req: dict) -> Result:
         module_dir / "source-map.yaml": _dump_yaml(source_map),
     }
     package_sha = "sha256:" + hashlib.sha256(package_bytes).hexdigest()
+    # What the interface will do with this module once it exists: a
+    # creation that succeeds is not yet a module the learner can see, and
+    # LearningOS #2 is exactly that gap.
+    listing = _module_listing(ctx.repo(), record)
 
     if req.get("check"):
         expected_revisions = {module_id: load_revisions(root).get(module_id, 0)}
@@ -1051,6 +1056,7 @@ def module_create(ctx: OpContext, req: dict) -> Result:
             "files_checked": len(writes),
             "reviewed_file_sha256": package_sha,
             "changes": "present",
+            "module_listing": listing,
             "gateway_envelope": prepare_review_envelope(
                 "module.create",
                 {"file": str(source), "file_sha256": package_sha},
@@ -1084,7 +1090,8 @@ def module_create(ctx: OpContext, req: dict) -> Result:
 
     def finish_module_create(confirmation):
         return {"ok": True, "mode": "apply", "module_id": module_id,
-                "files_written": len(writes), **confirmation}
+                "files_written": len(writes), "module_listing": listing,
+                **confirmation}
 
     return Result(
         ResponsePayload({"ok": True}, finish_module_create({}),

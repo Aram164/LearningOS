@@ -9,19 +9,30 @@ from learning_os.domain.validation import (
     ISO_DATE_RE,
     JUDGMENT_HEADERS,
 )
+from learning_os.domain.validation import in_evidence as _in_evidence
 from learning_os.domain.vocabulary import PREREQUISITE_RELATIONS, RELATION_TYPES
 
-_GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/")
+#: A path *under* the generated tree: ``generated/<name>``. The bare directory
+#: name (``generated/``) names no artifact — it says where derived output
+#: lives — so it is prose about the tree, not a dependency on one. A file
+#: inside it is a dependency: something downstream would read a rebuildable
+#: artifact as if it were canonical.
+_GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/[\w.-]")
 
 
 def _references_generated(text: str) -> bool:
-    """Whether a canonical text references the repository's own generated/ tree.
+    """Whether a canonical text depends on something under the generated tree.
 
     The substring pre-filter skips the lookbehind regex over texts that
     cannot match (386 ms down to 14 ms per validation, #112). Only the
     repository's own tree counts — 'generated/' inside URLs or longer
     paths (e.g. sklearn.org/modules/generated/) must not be preceded by
     a slash or word character.
+
+    The dependency has to name something: ``generated/manifest.json`` is a
+    file downstream would read, while ``generated/`` on its own is the
+    directory an observation names when it reports that the directory was
+    missing (LearningOS #4).
     """
     return "generated/" in text and _GENERATED_REF_RE.search(text) is not None
 
@@ -163,11 +174,18 @@ class ChecksRegistries:
 
     def check_ownership(self):
         r = self.repo
-        # No canonical file references generated/ as input
+        # No canonical file depends on the generated tree as an input.
         for f, text in self._canonical_texts():
+            if _in_evidence(self.repo.root, f):
+                # A complaint is a dated observation about the system itself
+                # (OPERATOR: Report observed problems). Nothing derives from
+                # it, so naming the generated tree there records the
+                # observation instead of depending on it (LearningOS #4).
+                continue
             if _references_generated(text):
                 self.err("GEN-INPUT",
-                         "canonical file references 'generated/' — generated files are never inputs",
+                         "canonical file depends on a generated artifact — "
+                         "generated files are never inputs",
                          self._rel(f))
         # No file under generated/ tracked by git (except .gitkeep)
         tracked = self._git(["ls-files", "generated/"])

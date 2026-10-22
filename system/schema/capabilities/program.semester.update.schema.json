@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/program.semester.update.schema.json",
+  "title": "payload for capability program.semester.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean",
+      "description": "report what would change without writing"
+    },
+    "file": {
+      "type": "string",
+      "description": "reviewed YAML package: the program id and the semester that becomes current"
+    },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact package bytes approved for apply"
+    }
+  },
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
+  }
+}

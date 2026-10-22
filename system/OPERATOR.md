@@ -156,7 +156,14 @@ Skills and projects use modules and units without false academic metadata.
     exact SHA-256, both refusing a destination that already exists. A
     module record that is written by hand is outside this boundary for the
     same reason a hand-edited plan is: it leaves no receipt, no snapshot and
-    no revision behind to say what was decided.17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
+    no revision behind to say what was decided. The term a program is in is
+    the same kind of fact: `program.semester.update` turns one program's
+    current semester from a reviewed package, writing the program record and
+    nothing else. It never rolls the term forward on its own — the reviewed
+    package names the semester that becomes current, the previous one becomes
+    `previous`, and no semester record is dropped. A program record edited by
+    hand is outside this boundary for the same reason as the others.
+17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
     about the system itself. **An open point is not a work item.** It is
     recorded precisely so it can be deferred, and acting on one — fixing it,
     or "improving" it as a side effect of unrelated work — requires Aram to say

@@ -3059,6 +3059,57 @@ _PROOF_FNS.update({
 })
 
 
+def _prove_program_semester_not_semester_bound(mini_repo: Path,
+                                                tmp_path: Path,
+                                                monkeypatch) -> None:
+    """A program that is not semester-bound refuses the term update (R-A9-2).
+
+    The rich world carries one program and it is semester-bound, so no case
+    input reaches the gate. The proof plants a skills program by direct
+    tree surgery and asserts the witness line, the class and the exit.
+    """
+    import hashlib
+
+    from repo_builders import add_curriculum, write_yaml
+
+    from learning_os.app.outcomes import exit_for
+    from learning_os.domain.failures import WriteRefused
+
+    add_curriculum(mini_repo)
+    write_yaml(mini_repo / "curriculum/programs/program-skills.yaml", {
+        "id": "program-skills", "type": "program", "title": "Skills",
+        "kind": "skills", "status": "active", "default": False,
+        "semester_bound": False, "semesters": [],
+    })
+    package = tmp_path / "skills-semester.yaml"
+    package.write_text(
+        "program_id: program-skills\nsemester:\n"
+        "  id: semester-wise-2026\n  title: WiSe 2026/27\n  order: 2\n",
+        encoding="utf-8")
+    payload = {
+        "file": str(package),
+        "file_sha256": "sha256:" + hashlib.sha256(
+            package.read_bytes()).hexdigest(),
+    }
+    outcome, lines = _a9_run_gateway(
+        mini_repo, "program.semester.update", payload, [],
+        "a9-not-semester-bound", tmp_path, monkeypatch)
+    assert outcome.ok is False
+    assert outcome.exit_code == 2
+    assert lines == [{"operation": "program.semester.update",
+                      "kind": "failure",
+                      "site": "program.semester.update.not-semester-bound",
+                      "class": "WriteRefused", "exit_code": 2}]
+    assert exit_for(WriteRefused("a9-proof", exit_code=2),
+                    "gateway.dispatch") == 2
+
+
+_PROOF_FNS.update({
+    "program.semester.update.not-semester-bound":
+        _prove_program_semester_not_semester_bound,
+})
+
+
 
 def _prove_phase4_plan_backstop(mini_repo, tmp_path, monkeypatch, *, site):
     """Fault-inject the actual pipeline backstop, preserving its typed witness.

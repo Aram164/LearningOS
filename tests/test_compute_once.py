@@ -351,6 +351,11 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
     ("xgenerated/y is a longer path", False),
     ("/generated/y has a leading slash", False),
     ("generated without the slash", False),
+    # A bare directory names no artifact: it is prose about where derived
+    # output lives, not a dependency on a derived file (LearningOS #4).
+    ("the archive lacked the gitignored `generated/` and `bases/` directories", False),
+    ("the tree contract declares generated/ as rebuildable", False),
+    ("rebuild generated/ before validating", False),
 ])
 def test_generated_reference_predicate(text: str, expected: bool):
     from learning_os.derive.validation.registries import _references_generated

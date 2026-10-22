@@ -107,7 +107,11 @@ rule as current, which is indistinguishable from the rule being wrong.
 
 ## Ownership boundaries
 
-- **E** No canonical file references anything under `generated/` as an input.
+- **E** No canonical file depends on anything under `generated/` as an input.
+  A bare mention of the `generated` directory names no artifact and is prose
+  about the tree, not a dependency on it; the dated observation records under
+  `work/complaints/` are evidence about the system and are exempt, because
+  nothing derives from them.
 - **E** No file under `generated/` is tracked by Git.
 - **E** COORDINATION.md contains no ISO date equal to any partitioned academic
   module attempt date (exam-date duplication), and no `status:` restatements of

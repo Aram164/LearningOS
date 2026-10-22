@@ -119,6 +119,7 @@ _SUBCOMMAND_ORDER = (
     "collection-entry-revise",
     "collection-create",
     "module-create",
+    "program-semester-update",
     "source-revise",
     "detour-create",
     "detour-resolve",

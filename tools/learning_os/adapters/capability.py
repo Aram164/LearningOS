@@ -46,6 +46,7 @@ _FILE_INPUTS_V2: dict[str, tuple[tuple[str, str, bool], ...]] = {
     "module.plan.import": (("file", "file_sha256", False),),
     "note.revise": (("file", "file_sha256", False),),
     "path.attachment.add": (("file", "file_sha256", False),),
+    "program.semester.update": (("file", "file_sha256", False),),
     "project.create": (("file", "file_sha256", False),),
     "project.update": (("file", "file_sha256", False),),
     "review.prepare": (("items_file", "items_file_sha256", False),),

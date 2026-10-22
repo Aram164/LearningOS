@@ -385,6 +385,17 @@ commands:
     - "the destination must not exist: an existing canonical identity or file is refused, because an absent revision entry cannot prove absence"
     - the reviewed file bytes are bound to their exact SHA-256 before use
     - one transaction and one receipt cover the creation; the collection's artifact revision is registered from birth
+  program.semester.update:
+    handler: program_semester_update
+    cli_command: program-semester-update
+    writes:
+    - curriculum/programs/**
+    invariants:
+    - turns one semester-bound program's current semester; it never rolls the term forward on its own
+    - the reviewed package names the semester that becomes current; the previous one becomes previous, and no semester record is dropped
+    - only the program record is written — exam outcomes, registrations, learner state and study work are untouched
+    - the reviewed package bytes are bound to their exact SHA-256 before use
+    - snapshot and program revision guarded, with one V2 receipt
   module.plan.import:
     handler: module_plan_import
     cli_command: module-plan-import

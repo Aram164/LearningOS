@@ -34,3 +34,10 @@ with the observed records and UI behavior, reproduction, scope limits, and
 acceptance criteria. The visibility correction is applied; the onboarding
 capability gaps remain open in that issue.
 
+Acted on 2026-10-22: `program.semester.update` turns a program's current
+semester from a reviewed package bound to its exact SHA-256, under the
+snapshot and program-revision guards, with one receipt; and the creation
+preflight now reports what the interface will do with the module it would
+create, naming the module's semester and the program's current semester
+when the two differ. The term is context, not a gate: the sibling UI
+lists open academic modules across semesters (UI #2).

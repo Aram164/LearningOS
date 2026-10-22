@@ -15,7 +15,7 @@ from learning_os.app._plan_gate import (
     module_plan_validation_errors as _module_plan_validation_errors,
 )
 from learning_os.app._plan_gate import plan_apply_gate as _plan_apply_gate
-from learning_os.app._plan_gate import real_perimeter_errors as _real_perimeter_errors
+from learning_os.app.check import real_perimeter_errors as _real_perimeter_errors
 from learning_os.app.claim_admission import (
     anchor_report,
     lineage_artifacts,

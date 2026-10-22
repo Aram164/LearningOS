@@ -133,6 +133,7 @@
     "collection-entry-revise",
     "collection-create",
     "module-create",
+    "program-semester-update",
     "source-revise",
     "detour-create",
     "detour-resolve",
@@ -11245,6 +11246,125 @@
           "help": "newest operations to list (at most 50)",
           "metavar": null,
           "action": "store"
+        }
+      ]
+    },
+    "program-semester-update": {
+      "help": "turn one program's current semester as a transaction",
+      "description": null,
+      "epilog": null,
+      "prog": "los program-semester-update",
+      "defaults": {
+        "_operation": "'program.semester.update'",
+        "func": "learning_os.adapters.cli.invoke"
+      },
+      "groups": [],
+      "actions": [
+        {
+          "option_strings": [
+            "-h",
+            "--help"
+          ],
+          "dest": "help",
+          "nargs": 0,
+          "const_repr": "None",
+          "default_repr": "'==SUPPRESS=='",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "show this help message and exit",
+          "metavar": null,
+          "action": "help"
+        },
+        {
+          "option_strings": [
+            "--file"
+          ],
+          "dest": "file",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": true,
+          "help": "reviewed YAML package: the program id and the semester that becomes current",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--file-sha256"
+          ],
+          "dest": "file_sha256",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": "sha256_value",
+          "choices": null,
+          "required": false,
+          "help": "SHA-256 of the exact package bytes approved for apply",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--check"
+          ],
+          "dest": "check",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "report what would change without writing",
+          "metavar": null,
+          "action": "store_true"
+        },
+        {
+          "option_strings": [
+            "--expected-snapshot"
+          ],
+          "dest": "expected_snapshot",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "None",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "optimistic concurrency token from manifest _generated.snapshot_id",
+          "metavar": null,
+          "action": "store"
+        },
+        {
+          "option_strings": [
+            "--expected-revision"
+          ],
+          "dest": "expected_revision",
+          "nargs": null,
+          "const_repr": "None",
+          "default_repr": "[]",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+          "metavar": null,
+          "action": "append"
+        },
+        {
+          "option_strings": [
+            "--json"
+          ],
+          "dest": "json",
+          "nargs": 0,
+          "const_repr": "True",
+          "default_repr": "False",
+          "type": null,
+          "choices": null,
+          "required": false,
+          "help": "no-op: this command always prints JSON",
+          "metavar": null,
+          "action": "store_true"
         }
       ]
     }

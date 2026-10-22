@@ -95,7 +95,7 @@ $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:c1da8ae4c611cddd9017e35e9d59ffa14a7653eae17790d6902b78127a0429d6",
+  "snapshot_after": "sha256:d4aeec1931142bfcdfad4625656372acd7ad3ede5d5db01a8c6056fe9c60eed2",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -106,7 +106,7 @@ $ los capability note.create --payload-file "$TMPDIR/s17-create.json"
     "artifact_revisions": {
       "note-probe-derivation": 1
     },
-    "snapshot_after": "sha256:c1da8ae4c611cddd9017e35e9d59ffa14a7653eae17790d6902b78127a0429d6",
+    "snapshot_after": "sha256:d4aeec1931142bfcdfad4625656372acd7ad3ede5d5db01a8c6056fe9c60eed2",
     "replayed": false
   },
   "error": null
@@ -164,7 +164,7 @@ $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:f86b8f76f93b9e23b5190a2b607e7b22e18106254b795b8c4c6b66e8c6bb3225",
+  "snapshot_after": "sha256:613a3a70cf45912cf335f0ba2f2c3eee11c4c3d1072e68dbda18fa7b2b174116",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -174,7 +174,7 @@ $ los capability note.revise --payload-file "$TMPDIR/s17-rev.json"
     "artifact_revisions": {
       "note-probe-derivation": 2
     },
-    "snapshot_after": "sha256:f86b8f76f93b9e23b5190a2b607e7b22e18106254b795b8c4c6b66e8c6bb3225",
+    "snapshot_after": "sha256:613a3a70cf45912cf335f0ba2f2c3eee11c4c3d1072e68dbda18fa7b2b174116",
     "replayed": false
   },
   "error": null
@@ -205,7 +205,7 @@ $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:f8fb41b603eb6e07581058bf978fdcce193bed5d0aa3c511529780706927af8b",
+  "snapshot_after": "sha256:dc9c03edb55b94a2ac6d26b4f73a84212a509e3a1e36736032e7339fa48bd2bc",
   "result": {
     "ok": true,
     "note_id": "note-probe-derivation",
@@ -221,7 +221,7 @@ $ los capability note.evidence.add --payload-file "$TMPDIR/s17-ev.json"
     "artifact_revisions": {
       "note-probe-derivation": 3
     },
-    "snapshot_after": "sha256:f8fb41b603eb6e07581058bf978fdcce193bed5d0aa3c511529780706927af8b",
+    "snapshot_after": "sha256:dc9c03edb55b94a2ac6d26b4f73a84212a509e3a1e36736032e7339fa48bd2bc",
     "replayed": false
   },
   "error": null

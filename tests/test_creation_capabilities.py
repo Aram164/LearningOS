@@ -333,6 +333,46 @@ def test_the_check_reports_the_writes_and_a_prepared_envelope(repo: Path):
     assert not (repo / "curriculum/modules/module-checked-ok").exists()
 
 
+def test_the_check_says_whether_the_module_will_be_listed(repo: Path):
+    """A creation that succeeds is not yet a module the learner can see.
+
+    The preflight names the module's own facts and the term facts, so the
+    operator learns from it what the interface will show — the gap
+    LearningOS #2 reports.
+    """
+    package = _write(repo, "package.yaml", _module_package("module-checked-list"))
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root", str(repo),
+         "module-create", "--file", str(package), "--check"],
+        capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    listing = json.loads(proc.stdout)["module_listing"]
+    assert listing["listed"] is True
+    assert listing["kind"] == "academic"
+    assert listing["status"] == "enrolled"
+    assert listing["semester"] == "wise-2026"
+    assert listing["current_semester"]["id"] == "semester-sose-2026"
+    # The two semesters differ, and the report says so — the module list
+    # is not gated by the term, so the module is listed anyway.
+    assert listing["semester_matches_current"] is False
+    assert "differs from the current semester" in listing["note"]
+
+
+def test_the_check_reports_a_closed_module_as_not_listed(repo: Path):
+    package = _write(
+        repo, "package.yaml",
+        _module_package("module-checked-closed").replace(
+            "status: enrolled", "status: completed"))
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "los.py"), "--root", str(repo),
+         "module-create", "--file", str(package), "--check"],
+        capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    listing = json.loads(proc.stdout)["module_listing"]
+    assert listing["listed"] is False
+    assert "not an open academic module" in listing["note"]
+
+
 # --------------------------------------------------------------------------
 # collection.create
 # --------------------------------------------------------------------------

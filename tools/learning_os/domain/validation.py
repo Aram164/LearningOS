@@ -109,6 +109,14 @@ KNOWLEDGE_TEXT_SUFFIXES = {".md", ".yaml", ".yml"}
 # non-Markdown files there are still flagged, keeping the Garden text-only.)
 GARDEN_SUBTREE = ("knowledge", "garden")
 
+# work/complaints/ is the evidence layer (OPERATOR: Report observed problems):
+# dated records of what an agent observed about the system itself. Nothing
+# derives from them, so a complaint that names the generated tree is evidence
+# about the system, not a dependency on a derived artifact — the boundary that
+# keeps the evidence-reporting workflow from being blocked by the rule it
+# documents.
+EVIDENCE_SUBTREE = ("work", "complaints")
+
 # ---- Hygiene sweep (ADR-004, 2026-08-03) -----------------------------------
 # Mess must be self-announcing inside the canonical repository. External
 # archives and external code repositories are intentionally absent. Legacy is
@@ -127,6 +135,17 @@ def in_quarantine(root: Path, path: Path) -> bool:
     """Normal validation never reads sealed prospective content."""
     quarantine = root / "curriculum" / "quarantine"
     return path == quarantine or quarantine in path.parents
+
+
+def in_evidence(root: Path, path: Path) -> bool:
+    """Whether a path is a dated observation about the system itself.
+
+    The evidence layer records what happened; nothing reads it to produce
+    anything else. A rule about canonical content depending on derived
+    artifacts therefore does not apply to it.
+    """
+    evidence = root.joinpath(*EVIDENCE_SUBTREE)
+    return path == evidence or evidence in path.parents
 
 
 @dataclass

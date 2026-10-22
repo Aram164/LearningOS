@@ -1,0 +1,61 @@
+operation: program.semester.update
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: turn-the-term
+    kind: success
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:266607b4b619416e278fadef0433a088212881a55549c97d44e8d1da5886c3d4"}
+    artifact_ids: [program-bachelors]
+    expect: {site: null}
+  - id: unknown-program
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3f7db8f85454dbfe531ab2236f280732d7eb9def212ad27a0f4e1dd64ca61f53"}
+    artifact_ids: []
+    expect: {site: program.semester.update.unknown-program}
+  - id: no-change
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:dd66b6c400515d2728ac9a6c7ff57d06d60f95fafc5a8e38871bf8d7b77a14c0"}
+    artifact_ids: []
+    expect: {site: program.semester.update.no-change}
+  - id: bad-semester
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:abdf278d9d5be942c1c50b32f2a56c0d5812989788033b69ec8719750be9055c"}
+    artifact_ids: []
+    expect: {site: program.semester.update.bad-semester}
+  - id: bad-package
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:5101ecfc4cdae1f23a037ed75b52142f37e87918dde580f18518387c110ef7f7"}
+    artifact_ids: []
+    expect: {site: program.semester.update.bad-package}
+  - id: bad-yaml
+    kind: refusal
+    transport: gateway
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:e65fbdd3c7c7132bce3ca3cab698789e7fb55eb45719dd66a3c04cf936c11e48"}
+    artifact_ids: []
+    expect: {site: program.semester.update.bad-yaml}
+  - id: bad-file
+    kind: refusal
+    transport: gateway
+    request: {file: "work/inbox/nope.yaml", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: program.semester.update.bad-file}
+  - id: bad-expected-revision
+    kind: refusal
+    transport: cli
+    request:
+      file: "<CASEDATA>/package.yaml"
+      file_sha256: "sha256:266607b4b619416e278fadef0433a088212881a55549c97d44e8d1da5886c3d4"
+      expected_revision:
+      - oops-no-equals
+    expect:
+      site: program.semester.update.bad-expected-revision
+untriggered:
+  # The rich world has one program, and it is semester-bound: no case
+  # input reaches this gate. The proof drives it by direct injection.
+  - site: program.semester.update.not-semester-bound
+    reason: fixture-inexpressible

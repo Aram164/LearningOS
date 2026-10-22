@@ -7,9 +7,15 @@ import datetime as _dt
 import hashlib
 import re
 
+import yaml
+
 from learning_os.app.context import OpContext
-from learning_os.app.proposal import Result, TransactionProposal
+from learning_os.app.gateway import prepare_review_envelope
+from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
+from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
+from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
+from learning_os.derive.semesters import semester_plan as _semester_plan
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.render import parse_sections
 from learning_os.domain.render import replace_h2_section as _replace_h2_section
@@ -17,10 +23,13 @@ from learning_os.domain.suggest import not_found
 from learning_os.store.codec import dump_yaml as _dump_yaml
 from learning_os.store.codec import render_frontmatter as _render_frontmatter
 from learning_os.store.layout import PathBoundaryError, read_bytes_inside
-from learning_os.store.revisions import artifact_revision
+from learning_os.store.revisions import artifact_revision, load_revisions
 from learning_os.store.transactions import parse_expected_revisions
 
 ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
+
+#: A semester's canonical identity, as the program record declares it.
+_SEMESTER_ID = re.compile(r"^semester-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
 #: A digest-shaped value that was never a real file hash: all zeros.
@@ -393,4 +402,204 @@ def workspace_next_action(ctx: OpContext, req: dict) -> Result:
         ),
 
 
+    )
+
+
+def _semester_problems(semester) -> list[str]:
+    """Why a reviewed semester row cannot become the current one."""
+    if not isinstance(semester, dict):
+        return ["the package needs a 'semester' mapping"]
+    problems: list[str] = []
+    semester_id = semester.get("id")
+    if not isinstance(semester_id, str) or not _SEMESTER_ID.match(semester_id):
+        problems.append(
+            "the semester id must match 'semester-<slug>'")
+    title = semester.get("title")
+    if not isinstance(title, str) or not title.strip():
+        problems.append("the semester needs a non-empty title")
+    order = semester.get("order")
+    if isinstance(order, bool) or not isinstance(order, int) or order < 0:
+        problems.append("the semester needs a non-negative integer order")
+    return problems
+
+
+def _semester_fact(row: dict | None) -> dict | None:
+    """One semester row, as the report shows it."""
+    if not isinstance(row, dict):
+        return None
+    return {
+        "id": row.get("id"),
+        "title": row.get("title"),
+        "status": row.get("status"),
+        "order": row.get("order"),
+    }
+
+
+@register("program.semester.update", kind="command",
+           render_check=_render_creation_check)
+def program_semester_update(ctx: OpContext, req: dict) -> Result:
+    """Turn one program's current semester, from a reviewed package.
+
+    The term boundary is a curriculum fact, and it used to be changed by
+    editing the program record by hand: no receipt, no snapshot, no
+    revision, no conflict detection, and nothing that said what the change
+    did to the interface (LearningOS #2).
+
+    It writes the program record and nothing else. Exam outcomes,
+    registrations, learner state and study work live in the module, unit
+    and study-map records, and a term change never touches them. It never
+    rolls the term forward on its own either: the reviewed package names
+    the semester that becomes current, and the previous one becomes
+    ``previous`` — history is kept, never dropped.
+    """
+    root = ctx.root
+    try:
+        source, package_bytes = _read_content_bound_file(
+            req.get("file"),
+            req.get("file_sha256"),
+            label="program semester update file",
+        )
+    except WriteRefused as exc:
+        exc.site = "program.semester.update.bad-file"
+        exc.gateway_message = f"los: {exc}"
+        exc.exit_code = 2
+        raise
+    try:
+        package = yaml.safe_load(package_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
+        raise WriteRefused(
+            f"invalid program semester YAML: {exc}",
+            site="program.semester.update.bad-yaml",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    if not isinstance(package, dict):
+        raise WriteRefused(
+            "the program semester package must be a mapping",
+            site="program.semester.update.bad-package",
+            prefixed=True,
+            exit_code=2,
+        )
+    program_id = package.get("program_id")
+    if not isinstance(program_id, str) or not program_id.strip():
+        raise WriteRefused(
+            "the package needs the id of the program whose semester changes",
+            site="program.semester.update.bad-package",
+            prefixed=True,
+            exit_code=2,
+        )
+    problems = _semester_problems(package.get("semester"))
+    if problems:
+        message = "the reviewed semester cannot become the current one"
+        details = tuple(f"- {problem}" for problem in problems)
+        raise WriteRefused(
+            message,
+            site="program.semester.update.bad-semester",
+            extra_stderr=details,
+            gateway_message=f"los: {message}" + "".join(f"\n{line}" for line in details),
+            exit_code=2,
+        )
+    repo = ctx.repo()
+    program = repo.programs.get(program_id)
+    if program is None:
+        message = not_found("program", program_id, repo.programs)
+        raise NotFound(
+            "program", program_id, repo.programs,
+            site="program.semester.update.unknown-program",
+            gateway_message=f"los: {message}",
+            exit_code=2,
+        )
+    if not program.data.get("semester_bound"):
+        message = (f"program {program_id} has no semesters; it is not "
+                   "semester-bound")
+        raise WriteRefused(
+            message,
+            site="program.semester.update.not-semester-bound",
+            prefixed=True,
+            exit_code=2,
+        )
+    semester = package["semester"]
+    plan = _semester_plan(program.data, semester)
+    if plan["semesters"] == (program.data.get("semesters") or []):
+        message = (f"semester {semester['id']} is already the current semester "
+                   f"of {program_id}, with the same title and order; nothing "
+                   "to change")
+        raise WriteRefused(
+            message,
+            site="program.semester.update.no-change",
+            prefixed=True,
+            exit_code=2,
+        )
+    revised = copy.deepcopy(program.data)
+    revised["semesters"] = plan["semesters"]
+    writes = {program.path: _dump_yaml(revised)}
+    package_sha = "sha256:" + hashlib.sha256(package_bytes).hexdigest()
+    listed = sorted(
+        module_id for module_id, module in repo.modules.items()
+        if module.get("area_id") == program_id
+        and module.get("kind") == "academic"
+        and str(module.get("status") or "") not in
+        ("completed", "archived", "dropped")
+    )
+    report = {
+        "program_id": program_id,
+        "current_semester_before": _semester_fact(plan["current_before"]),
+        "current_semester_after": _semester_fact(plan["current_after"]),
+        "semester_added": plan["added"],
+        "module_listing": {
+            "rule": "open academic modules; the term does not gate the list",
+            "listed_module_ids": listed,
+            "changed": False,
+        },
+        "preserved": "exam outcomes, registrations, learner state and study "
+                     "work live in other records and are untouched",
+    }
+    if req.get("check"):
+        expected_revisions = {program_id: load_revisions(root).get(program_id, 0)}
+        prepared = {
+            "ok": True,
+            "check": True,
+            "mode": "check",
+            "capability": "program.semester.update",
+            "reviewed_file_sha256": package_sha,
+            "write_paths": [program.path.relative_to(root).as_posix()],
+            **report,
+            "gateway_envelope": prepare_review_envelope(
+                "program.semester.update",
+                {"file": str(source), "file_sha256": package_sha},
+                ctx.snapshot_id(),
+                expected_revisions,
+            ),
+        }
+        return Result(
+            prepared,
+            proposal=TransactionProposal(
+                capability="program.semester.update",
+                writes=writes,
+                artifact_ids=[program_id],
+                expected_revisions=expected_revisions,
+            ),
+        )
+    ctx.require_snapshot(req.get("expected_snapshot"))
+    try:
+        expected_revisions = parse_expected_revisions(req.get("expected_revision"))
+    except ValueError as exc:
+        raise WriteRefused(
+            str(exc),
+            site=f"{ctx.operation}.bad-expected-revision",
+            prefixed=True,
+            exit_code=2,
+        ) from exc
+    return Result(
+        ResponsePayload(
+            {"ok": True},
+            {"ok": True, "mode": "apply", **report},
+            confirmation="merge",
+        ),
+        proposal=TransactionProposal(
+            capability="program.semester.update",
+            writes=writes,
+            artifact_ids=[program_id],
+            expected_revisions=expected_revisions,
+        ),
     )

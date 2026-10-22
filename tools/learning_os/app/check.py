@@ -104,6 +104,54 @@ def staged_shadow(root: Path, writes: Mapping[Path, str | bytes],
         yield shadow
 
 
+def real_perimeter_errors(root: Path) -> list[str]:
+    """Environment errors from the real wrapper tree, in live format.
+
+    Content validation runs in a shadow copy of ``repository/`` alone, where
+    the perimeter checker is silent by design (no wrapper anchors exist there).
+    The live transaction then validates the real tree and refuses on
+    ``PERIMETER-*`` errors — so a preflight that omits this layer passes while
+    the application fails. Run this layer against the real root before both
+    ``--check`` and live application; synthetic repositories without a
+    declaration stay silent, exactly as in live validation.
+    """
+    from learning_os.store.contracts import perimeter as _perimeter
+
+    out: list[str] = []
+    for issue in _perimeter.check(root):
+        if issue.severity != "E":
+            continue
+        loc = f" [{issue.path}]" if issue.path else ""
+        out.append(f"E PERIMETER-{issue.code}: {issue.message}{loc}")
+    return out
+
+
+def real_tree_errors(root: Path) -> list[str]:
+    """The declared shape of the repository on disk, read from the real root.
+
+    The shadow copy cannot answer this layer, for three separate reasons:
+    it carries no ``.git`` (so the tree contract cannot prove a rebuildable
+    directory is ignored), it carries no ``tools/`` (so the tree contract's
+    applicability anchors are absent and the whole contract is silent), and
+    it has no wrapper (so the perimeter is silent too). The live transaction
+    validates the real tree and refuses on both, so a preflight that omitted
+    them promised an application that would not happen — the mismatch
+    LearningOS #3 reports.
+
+    The write set is not consulted here: this layer says whether the tree the
+    writes will land in is the tree the contract describes.
+    """
+    from learning_os.store.contracts import tree_contract as _tree_contract
+
+    out: list[str] = []
+    for issue in _tree_contract.check(root):
+        if issue.severity != "E":
+            continue
+        loc = f" [{issue.path}]" if issue.path else ""
+        out.append(f"E TREE-{issue.code}: {issue.message}{loc}")
+    return out
+
+
 def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
     """Stage the proposal on a shadow copy, validate once, return the record.
 
@@ -141,6 +189,11 @@ def check_proposal(ctx: OpContext, proposal: TransactionProposal) -> dict:
         signatures, _ = signatures_from_issues(issues)
         baseline, _ = load_baseline(root)
         regressions, _repairs = delta(baseline, signatures)
+    # The two layers that describe the repository ON DISK cannot be answered
+    # by the shadow; they are read from the real root, exactly as the live
+    # transaction reads them.
+    errors.extend(real_perimeter_errors(root))
+    errors.extend(real_tree_errors(root))
     revisions = load_revisions(root)
     artifacts = transaction_artifacts(
         root, proposal.artifact_ids, proposal.writes,

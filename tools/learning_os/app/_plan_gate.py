@@ -13,6 +13,7 @@ from pathlib import Path
 import yaml
 
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
+from learning_os.app.check import real_perimeter_errors
 from learning_os.app.check import staged_shadow as _staged_shadow
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
@@ -401,28 +402,6 @@ def _semantic_ack_problems(module_id: str, live_repo, staged_repo,
                 or diff["map_state_changes"]:
             needs("learner-state", unit_id, "learner-state fields change")
     return problems
-
-
-def real_perimeter_errors(root: Path) -> list[str]:
-    """Environment errors from the real wrapper tree, in live format.
-
-    Content validation runs in a shadow copy of ``repository/`` alone, where
-    the perimeter checker is silent by design (no wrapper anchors exist there).
-    The live transaction then validates the real tree and refuses on
-    ``PERIMETER-*`` errors — so a preflight that omits this layer passes while
-    the application fails. Run this layer against the real root before both
-    ``--check`` and live application; synthetic repositories without a
-    declaration stay silent, exactly as in live validation.
-    """
-    from learning_os.store.contracts import perimeter as _perimeter
-
-    out: list[str] = []
-    for issue in _perimeter.check(root):
-        if issue.severity != "E":
-            continue
-        loc = f" [{issue.path}]" if issue.path else ""
-        out.append(f"E PERIMETER-{issue.code}: {issue.message}{loc}")
-    return out
 
 
 #: Validator codes emitted by the perimeter checker share this namespace

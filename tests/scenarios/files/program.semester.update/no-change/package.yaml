@@ -1,0 +1,5 @@
+program_id: program-bachelors
+semester:
+  id: semester-sose-2026
+  title: SoSe 2026
+  order: 1

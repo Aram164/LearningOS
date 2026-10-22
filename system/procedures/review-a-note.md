@@ -57,7 +57,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:1ec2a075ed32010683fca878963a341dd40d07d992183486732a5d9d7cce199e",
+  "snapshot_after": "sha256:3622ce45abbda43165ed1432b4e2e6cb14803c5872c8675fbcf0cc28b4549e25",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -67,7 +67,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:1ec2a075ed32010683fca878963a341dd40d07d992183486732a5d9d7cce199e",
+    "snapshot_after": "sha256:3622ce45abbda43165ed1432b4e2e6cb14803c5872c8675fbcf0cc28b4549e25",
     "replayed": false
   },
   "error": null

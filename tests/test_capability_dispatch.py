@@ -101,7 +101,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     from learning_os.store.contracts.payloads import all_payload_schemas
 
     published = sorted((repo_root / SCHEMA_DIR).glob("*.schema.json"))
-    assert len(published) == 49
+    assert len(published) == 50
     before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
               for path in published}
     work = tmp_path / "repo"
@@ -116,7 +116,7 @@ def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
     corrupted_path.write_text(json.dumps(corrupted), encoding="utf-8")
     drifted = all_payload_schemas(
         work, command_definitions(work), payload_records=resolve_all(work))
-    assert len(drifted) == 49
+    assert len(drifted) == 50
     on_disk = json.loads(
         (repo_root / SCHEMA_DIR / "capture.create.schema.json").read_text(
             encoding="utf-8"))

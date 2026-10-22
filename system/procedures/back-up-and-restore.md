@@ -55,16 +55,16 @@ Take the backup:
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
 True
 ['core', 'materials', 'ui']
-487
-sha256:0f28583e8ad7a8d8b45ab2877e2356b16d1fd4d31a63d3d43c98e99ebb1ef18c
+489
+sha256:0bd481660e215ab1ab76c0f9f871e0a8103afde5ebf2ec1522032b360f28d3b3
 ```
 
 ## The manifest binds data to Core's commit
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
-487
-sha256:0f28583e8ad7a8d8b45ab2877e2356b16d1fd4d31a63d3d43c98e99ebb1ef18c
+489
+sha256:0bd481660e215ab1ab76c0f9f871e0a8103afde5ebf2ec1522032b360f28d3b3
 56
 True None
 ```
@@ -73,9 +73,9 @@ True None
 
 ```scrut
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
-487
+489
 ['core', 'materials', 'ui']
-sha256:0f28583e8ad7a8d8b45ab2877e2356b16d1fd4d31a63d3d43c98e99ebb1ef18c
+sha256:0bd481660e215ab1ab76c0f9f871e0a8103afde5ebf2ec1522032b360f28d3b3
 ```
 
 ## Capture the pre-refusal state
@@ -117,7 +117,7 @@ copies match
 
 ```scrut
 $ los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only
-{"ok":true,"checked":487,"issues":[]}
+{"ok":true,"checked":489,"issues":[]}
 ```
 
 ## Verify the restore in full
@@ -142,7 +142,7 @@ True
 ```scrut
 $ printf 'tamper' >> "$TMPDIR/backup/restored-materials/source-demo-book/book.pdf" && los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only >"$TMPDIR/backup/tamper-out.txt" 2>&1; echo "exit=$?"; cat "$TMPDIR/backup/tamper-out.txt"
 exit=1
-{"ok":false,"checked":487,"issues":[{"root":"materials","path":"source-demo-book/book.pdf","issue":"checksum-mismatch"}]}
+{"ok":false,"checked":489,"issues":[{"root":"materials","path":"source-demo-book/book.pdf","issue":"checksum-mismatch"}]}
 ```
 
 ## The fixture itself still validates

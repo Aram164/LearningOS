@@ -277,6 +277,12 @@ fields:
   lookup: false
   decision: 'Aram 2026-10-21: the reviewed creation package bytes are bound
     by SHA-256 before the module record is written'
+- operation: program.semester.update
+  pointer: /properties/file_sha256
+  kind: digest
+  lookup: false
+  decision: 'Aram 2026-10-22: the reviewed semester package bytes are bound
+    by SHA-256 before the program record is written'
 - operation: module.plan.import
   pointer: /properties/apply_reviewed_sha256
   kind: digest

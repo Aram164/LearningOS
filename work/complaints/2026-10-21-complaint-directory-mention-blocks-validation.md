@@ -35,3 +35,9 @@ Filed on 2026-10-21: [LearningOS #4](https://github.com/Aram164/LearningOS/issue
 with the exact input sentence, validation output, exit status, code locations,
 policy uncertainty, and acceptance criteria.
 
+Acted on 2026-10-22: the generated-input rule now fires on a reference to
+something *under* the generated tree (`generated/<name>`) rather than on a
+bare mention of the directory, and the dated observation records under
+`work/complaints/` are exempt: nothing derives from them, so a complaint
+that names the generated tree records the observation instead of depending
+on it. A canonical file that consumes a generated artifact still fails.
