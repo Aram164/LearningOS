@@ -4,6 +4,10 @@ Use this tracked folder to record friction an agent actually encountered while n
 
 Agent friction notes live here directly — `work/inbox/` stays for learner captures. When a note has been acted on (a GitHub issue, a repair, a rejected proposal), the note itself stays as the dated evidence; link the outcome from the note rather than deleting it.
 
+Mandatory issue filing after the task, evidence requirements, duplicate
+handling, and blocked-filing behavior are governed by
+[OPERATOR: Report observed problems](../../system/OPERATOR.md#report-observed-problems).
+
 Create one dated Markdown file per issue. Keep each note short and include:
 
 1. The task and the exact workflow step that exposed the problem.

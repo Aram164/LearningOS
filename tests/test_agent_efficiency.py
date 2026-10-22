@@ -41,6 +41,7 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
         "## What binds, and what does not", "## What \"clean\" means",
         "## Start here", "## Product hierarchy", "## Hard boundaries",
         "## Procedures", "## Capture routing",
+        "## Report observed problems",
     ]
     assert "### Unit workflow" in operator
     assert "### Shelving and session closure" in operator

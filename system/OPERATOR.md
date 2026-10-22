@@ -156,8 +156,7 @@ Skills and projects use modules and units without false academic metadata.
     exact SHA-256, both refusing a destination that already exists. A
     module record that is written by hand is outside this boundary for the
     same reason a hand-edited plan is: it leaves no receipt, no snapshot and
-    no revision behind to say what was decided.
-17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
+    no revision behind to say what was decided.17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
     about the system itself. **An open point is not a work item.** It is
     recorded precisely so it can be deferred, and acting on one — fixing it,
     or "improving" it as a side effect of unrelated work — requires Aram to say
@@ -261,8 +260,8 @@ destination and receipt. The capture does not imply progress or mastery and
 does not move the resume pointer.
 
 Agent friction — an agent's own observation about navigating or changing
-LearningOS — is not a learner capture: record it directly in
-`work/complaints/` (see its README), never in the inbox. A routed inbox
+LearningOS — is not a learner capture: follow the
+[problem-reporting rule](#report-observed-problems), never use the inbox. A routed inbox
 drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
 §21); the inbox trends toward empty.
 
@@ -274,3 +273,34 @@ crosses an ownership or workflow boundary. A routine lookup does not require
 loading every schema, historical review, or unrelated workflow into context.
 
 Procedure: [capture routing](procedures/capture-routing.md); [write envelopes](procedures/build-write-envelope.md).
+
+## Report observed problems
+
+Aram's standing instruction: whenever an operator encounters a problem, a
+missing capability, unnecessary complexity, or measurable inefficiency during
+an authorized task, preserve the evidence and, after finishing the main work,
+file a GitHub issue in the task's owning repository before the final response.
+This instruction authorizes that issue filing without asking again each time.
+It does not require an extra audit or authorize an unrelated implementation.
+
+Record the observation promptly in `work/complaints/`, following its README.
+Search existing issues before filing. For a matching unresolved issue, add the
+new evidence there instead of creating a duplicate; keep distinct problems
+separate. Choose the repository by ownership, such as Core for its gateway or
+validation and the sibling UI for interface behavior.
+
+Every report must identify the affected workflow and impact, expected versus
+observed behavior, the reproduction steps, and the proof: bounded command
+output or UI observations, relevant paths, tested commit/environment, and
+receipt or artifact identifiers when applicable. Distinguish verified facts
+from inference, mark unverified repository claims as ASSUMPTION, and state
+the limits of the experiment. Propose the smallest improvement to investigate
+and concrete acceptance criteria while preserving the safeguards involved.
+Do not publish secrets or unnecessary personal data.
+
+Link the filed issue from the retained complaint note and report its URL to
+Aram. Local notes alone do not complete this requirement. If filing is blocked
+by access or service availability, preserve the ready-to-file issue body and
+evidence locally, report the exact blocker, and do not claim the issue exists.
+Filing never authorizes fixing or closing an open critique point or making
+unrelated changes; those decisions retain their existing approval boundaries.

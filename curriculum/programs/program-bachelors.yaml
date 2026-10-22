@@ -9,5 +9,9 @@ description: Current Bachelor’s execution and its semester history.
 semesters:
 - id: semester-sose-2026
   title: SoSe 2026
-  status: current
+  status: previous
   order: 202601
+- id: semester-wise-2026
+  title: WiSe 2026/27
+  status: current
+  order: 202602
