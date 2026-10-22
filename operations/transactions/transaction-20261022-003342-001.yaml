@@ -1,0 +1,98 @@
+schema_version: 2
+id: transaction-20261022-003342-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-10-22T00:33:42+02:00'
+snapshot_before: sha256:b2317feb373fcff782780c6b0db75e6da5411ad8df0bbed65b2b2aae70190731
+snapshot_after: sha256:2b38cdaff685661afafb1d56df75bf56d14924add9da2f83807937c528796794
+expected_revisions:
+  source-algoexpert-catalogue: 0
+  source-boot-dev-catalogue: 0
+  source-codedex-catalogue: 0
+  source-datacamp-catalogue: 0
+  source-educative-catalogue: 0
+  source-frontendmasters-catalogue: 0
+  source-github-student-developer-pack: 0
+  source-gorails-catalogue: 0
+  source-interviewcake-catalogue: 0
+  source-mongodb-university: 0
+  source-scrimba-catalogue: 0
+  source-symfonycasts-catalogue: 0
+  source-visual-studio-dev-essentials: 0
+artifact_revisions:
+  source-algoexpert-catalogue:
+    before: 0
+    after: 1
+  source-boot-dev-catalogue:
+    before: 0
+    after: 1
+  source-codedex-catalogue:
+    before: 0
+    after: 1
+  source-datacamp-catalogue:
+    before: 0
+    after: 1
+  source-educative-catalogue:
+    before: 0
+    after: 1
+  source-frontendmasters-catalogue:
+    before: 0
+    after: 1
+  source-github-student-developer-pack:
+    before: 0
+    after: 1
+  source-gorails-catalogue:
+    before: 0
+    after: 1
+  source-interviewcake-catalogue:
+    before: 0
+    after: 1
+  source-mongodb-university:
+    before: 0
+    after: 1
+  source-scrimba-catalogue:
+    before: 0
+    after: 1
+  source-symfonycasts-catalogue:
+    before: 0
+    after: 1
+  source-visual-studio-dev-essentials:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: 3c2c20220a8a0cc5e2b7317ea34ec89f17246afa0f17bbe09aa88a2fa5ee7baa
+  sha256_after: a3497c5e9878ebf3c025c4222cf2fd709e61ec830d54082e00983c8238c2d8ff
+  created: false
+- path: sources/registry/data-systems.yaml
+  sha256_before: f22f1bfe51de174bf3ad2481f847a4556e135fc05767124ef55291db9ff3b871
+  sha256_after: 8d30d92fa12fa9f803f59df4eeaf1a6c796a6cfdb5e9b451e2ef93685b0a14a9
+  created: false
+- path: sources/registry/method-admin.yaml
+  sha256_before: 13780869fcb86545050cae8d9200f1c66077e746b4048fea5365eb46b2d9085c
+  sha256_after: 5b00907533459a2be72d5a99d111cb2f0d50d747f60713169ad179b40592b44b
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: 1e077b1b803216811b0dfdf25e43ec96cc7ef2706367c40a38e3b584a9de0d0d
+  sha256_after: 43f051549d7007ece856093a9dd88d766b71125def2af309feac146f76539a27
+  created: false
+metadata:
+  data_roots_sha256: sha256:a6dff2b988d4704b48b44c6123c90dd814dbc51f109e52855197eb71cddf596a
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-github-student-pack-sources-20261022-cb983fd0
+  idempotency_key: github-student-pack-sources-20261022
+  intent_sha256: sha256:656185836759b284b66e017bba310a910e3f7520114741d22d587ba17e83f92d
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:656185836759b284b66e017bba310a910e3f7520114741d22d587ba17e83f92d

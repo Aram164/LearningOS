@@ -169,3 +169,19 @@ sources:
       usable for Research Data Infrastructures
   identifiers:
     arxiv-2003-02320: https://arxiv.org/abs/2003.02320
+- id: source-mongodb-university
+  title: MongoDB University — courses and labs
+  type: website
+  organization: MongoDB
+  url: https://learn.mongodb.com/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://learn.mongodb.com/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-data-systems

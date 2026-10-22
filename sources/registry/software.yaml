@@ -706,3 +706,151 @@ sources:
   thematic_group_ids:
   - thematic-group-software
   material: material://source-bs-hu-prior-slides/02_structure.pdf
+- id: source-boot-dev-catalogue
+  title: Boot.dev — backend, DevOps and data-analysis curriculum
+  type: website
+  organization: Boot.dev
+  url: https://www.boot.dev/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.boot.dev/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+  - thematic-group-data-systems
+- id: source-codedex-catalogue
+  title: Codédex — programming course catalogue
+  type: website
+  organization: Codédex
+  url: https://www.codedex.io/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.codedex.io/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-datacamp-catalogue
+  title: DataCamp — course catalogue
+  type: website
+  organization: DataCamp
+  url: https://www.datacamp.com/github-students
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.datacamp.com/github-students
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
+- id: source-educative-catalogue
+  title: Educative — course catalogue and GitHub student bundle
+  type: website
+  organization: Educative
+  url: https://www.educative.io/github-students
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.educative.io/github-students
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+  - thematic-group-machine-learning
+- id: source-frontendmasters-catalogue
+  title: Frontend Masters (Master.dev) — course catalogue
+  type: website
+  organization: Master.dev
+  url: https://master.dev/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://master.dev/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-gorails-catalogue
+  title: GoRails — web-development tutorial catalogue
+  type: website
+  organization: GoRails
+  url: https://gorails.com/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://gorails.com/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-scrimba-catalogue
+  title: Scrimba — interactive course catalogue
+  type: website
+  organization: Scrimba
+  url: https://scrimba.com/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://scrimba.com/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-symfonycasts-catalogue
+  title: SymfonyCasts — PHP and Symfony tutorial catalogue
+  type: website
+  organization: SymfonyCasts
+  url: https://symfonycasts.com/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://symfonycasts.com/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software
+- id: source-visual-studio-dev-essentials
+  title: Visual Studio Dev Essentials — tools and training directory
+  type: website
+  organization: Microsoft
+  url: https://visualstudio.microsoft.com/dev-essentials/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://visualstudio.microsoft.com/dev-essentials/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-software

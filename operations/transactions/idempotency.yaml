@@ -873,6 +873,40 @@ entries:
       module-hu-m2-statistik-analysis: 60
     snapshot_before: sha256:3bd00790c56e5b08da42f129e13e32a0387235daa3330e58a8c5b7f71aafaa61
     snapshot_after: sha256:6f90a505cdfc90b3773f44affd231b7f3732dba48afd1e30d278d1afb0a58592
+  github-student-pack-collection-20261022:
+    request_id: request-github-student-pack-collection-20261022-c79ca927
+    capability: collection.create
+    channel: operator
+    intent_sha256: sha256:c61fc169e801b39984835b17545447b167d5dea0bd1b5441363d25af2bad3b99
+    transaction_id: transaction-20261022-003423-001
+    receipt_path: operations/transactions/transaction-20261022-003423-001.yaml
+    revisions:
+      collection:github-student-developer-pack: 1
+    snapshot_before: sha256:2b38cdaff685661afafb1d56df75bf56d14924add9da2f83807937c528796794
+    snapshot_after: sha256:7c478c4afd954c64973bce52d000f0f4e59d00c5f4f5c9a6f5521a7d5893e936
+  github-student-pack-sources-20261022:
+    request_id: request-github-student-pack-sources-20261022-cb983fd0
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:656185836759b284b66e017bba310a910e3f7520114741d22d587ba17e83f92d
+    transaction_id: transaction-20261022-003342-001
+    receipt_path: operations/transactions/transaction-20261022-003342-001.yaml
+    revisions:
+      source-algoexpert-catalogue: 1
+      source-boot-dev-catalogue: 1
+      source-codedex-catalogue: 1
+      source-datacamp-catalogue: 1
+      source-educative-catalogue: 1
+      source-frontendmasters-catalogue: 1
+      source-github-student-developer-pack: 1
+      source-gorails-catalogue: 1
+      source-interviewcake-catalogue: 1
+      source-mongodb-university: 1
+      source-scrimba-catalogue: 1
+      source-symfonycasts-catalogue: 1
+      source-visual-studio-dev-essentials: 1
+    snapshot_before: sha256:b2317feb373fcff782780c6b0db75e6da5411ad8df0bbed65b2b2aae70190731
+    snapshot_after: sha256:2b38cdaff685661afafb1d56df75bf56d14924add9da2f83807937c528796794
   grinstead-attach-20260929:
     request_id: request-grinstead-attach-20260929
     capability: source.record.revise

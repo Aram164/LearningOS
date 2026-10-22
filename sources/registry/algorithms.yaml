@@ -503,3 +503,35 @@ sources:
   - thematic-group-algorithms
   - thematic-group-optimization
   material: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+- id: source-algoexpert-catalogue
+  title: AlgoExpert — coding-interview practice catalogue
+  type: website
+  organization: AlgoExpert
+  url: https://www.algoexpert.io/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.algoexpert.io/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-algorithms
+- id: source-interviewcake-catalogue
+  title: Interview Cake — algorithm practice and interview course
+  type: website
+  organization: Interview Cake
+  url: https://www.interviewcake.com/
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    - kind: landing-page
+      ref: https://www.interviewcake.com/
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-algorithms

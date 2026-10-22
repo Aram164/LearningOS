@@ -1,0 +1,58 @@
+title: GitHub Student Developer Pack — learning sources
+collection_kind: catalogue
+purpose: Keep student-access learning catalogues discoverable for future source selection.
+thematic_group_ids:
+- thematic-group-software
+- thematic-group-machine-learning
+- thematic-group-data-systems
+- thematic-group-algorithms
+- thematic-group-method-admin
+description: 'Aram reports access to the GitHub Student Developer Pack on 2026-10-22. Public offers were
+  checked on that date. Partner redemption, activation dates and expiry dates are not recorded. Included
+  entries are provider-level discovery metadata, not examined courses or approved replacements for existing
+  plans. Other tool, cloud, domain and productivity benefits remain reachable through the Pack directory.
+  The shelf does not activate subscriptions or start trial periods. GitHub Campus Experts remains deferred
+  in the Pack directory: it requires a separate application, and Pack access does not establish admission.'
+entries:
+- source: source-github-student-developer-pack
+  group: Pack directory
+  why: Complete offers and Experiences; user reports access. Individual partner redemption remains unrecorded.
+- source: source-datacamp-catalogue
+  group: Learning platforms
+  why: Three-month offer; one redemption, existing subscribers excluded. Activate when ready to use it.
+- source: source-educative-catalogue
+  group: Learning platforms
+  why: Six-month selected bundle, over 70 courses; not unrestricted catalogue access.
+- source: source-frontendmasters-catalogue
+  group: Learning platforms
+  why: Pack advertises six months. Former Frontend Masters site now redirects to Master.dev; verify redemption
+    there.
+- source: source-boot-dev-catalogue
+  group: Learning platforms
+  why: Three-month membership offer. Courses remain unexamined; no learning path adopted.
+- source: source-codedex-catalogue
+  group: Learning platforms
+  why: Six-month Club offer. Keep available as a course option; redemption not recorded.
+- source: source-scrimba-catalogue
+  group: Learning platforms
+  why: One-month Pro offer. Reserve activation for a chosen course.
+- source: source-algoexpert-catalogue
+  group: Algorithm practice
+  why: Twenty included questions; remaining products are discounted rather than fully included.
+- source: source-interviewcake-catalogue
+  group: Algorithm practice
+  why: One-week course offer. Deferred until a focused practice window is chosen.
+- source: source-gorails-catalogue
+  group: Other specialisms — available for later
+  why: Twelve-month lessons offer. Deferred until Ruby/Rails or related web work is needed.
+- source: source-symfonycasts-catalogue
+  group: Other specialisms — available for later
+  why: Three-month subscription offer. Deferred until PHP/Symfony work is needed.
+- source: source-mongodb-university
+  group: Additional training programmes
+  why: MongoDB offer includes University and a certification benefit. Exact certification eligibility
+    requires partner verification.
+- source: source-visual-studio-dev-essentials
+  group: Additional training programmes
+  why: Training access includes a Pluralsight listing. Confirm the current entitlement and duration before
+    relying on it.

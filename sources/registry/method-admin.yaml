@@ -81,3 +81,17 @@ sources:
     - reference
     strengths:
     - Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing
+- id: source-github-student-developer-pack
+  title: GitHub Student Developer Pack — benefits and learning directory
+  type: website
+  organization: GitHub Education
+  url: https://education.github.com/pack
+  discovery:
+    basis:
+    - kind: catalogue-entry
+      ref: https://education.github.com/pack
+    observed: '2026-10-22'
+    possible_use: Learning-access catalogue or programme directory; examine exact teaching material before
+      selecting it for a unit or stage.
+  thematic_group_ids:
+  - thematic-group-method-admin

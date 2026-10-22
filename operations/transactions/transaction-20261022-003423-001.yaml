@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261022-003423-001
+type: transaction-receipt
+status: committed
+capability: collection.create
+committed_at: '2026-10-22T00:34:23+02:00'
+snapshot_before: sha256:2b38cdaff685661afafb1d56df75bf56d14924add9da2f83807937c528796794
+snapshot_after: sha256:7c478c4afd954c64973bce52d000f0f4e59d00c5f4f5c9a6f5521a7d5893e936
+expected_revisions:
+  collection:github-student-developer-pack: 0
+artifact_revisions:
+  collection:github-student-developer-pack:
+    before: 0
+    after: 1
+writes:
+- path: sources/collections/github-student-developer-pack.yaml
+  sha256_before: null
+  sha256_after: f0f27d8070d103fb2110dac70749bdfd3f74b362638a4e2516fe486858e3cb90
+  created: true
+metadata:
+  data_roots_sha256: sha256:1927cd7ae3ae126e2c385f7bfcae98741e46a5c7cbca090cf7a447fb1a0ad7c7
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: collection.create
+    declared_writes:
+    - sources/collections/**
+request:
+  channel: operator
+  request_id: request-github-student-pack-collection-20261022-c79ca927
+  idempotency_key: github-student-pack-collection-20261022
+  intent_sha256: sha256:c61fc169e801b39984835b17545447b167d5dea0bd1b5441363d25af2bad3b99
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c61fc169e801b39984835b17545447b167d5dea0bd1b5441363d25af2bad3b99
