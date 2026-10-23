@@ -629,3 +629,38 @@ def test_receipt_sidecar_hash_settles_mtime_only_changes(
     warm = _frozen(validate(load_repo(mini_repo), online=False))
     assert calls == []
     assert warm == cold
+
+
+# Regex compilations in one full validation of this repository's own data. A
+# rule that builds a pattern per data item is the regression this catches: the
+# GEN-INPUT check did it (#112), and plan_rigor._filename_present compiled
+# 203,154 patterns per run — ~70 % of every validation — until its substring
+# pre-filter (2026-10-23). The count after that fix is 132, online and offline.
+# A count is deterministic where a time share is not: the share of the slowest
+# remaining check moves with the runner and with every other rule.
+PATTERN_COMPILE_BUDGET = 1_000
+
+
+def test_full_validation_compiles_a_bounded_number_of_patterns(monkeypatch: pytest.MonkeyPatch):
+    import re
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    compiler = getattr(re, "_compiler", None)
+    if compiler is None:  # CPython-internal; the budget needs its compile hook
+        pytest.skip("re._compiler is not available on this interpreter")
+    original = compiler.compile
+    compiled: list = []
+
+    def counted(*args, **kwargs):
+        compiled.append(1)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(compiler, "compile", counted)
+    re.purge()
+    validate(load_repo(Path(__file__).resolve().parents[1]), online=False)
+    assert len(compiled) <= PATTERN_COMPILE_BUDGET, (
+        f"one validation compiled {len(compiled)} regular expressions "
+        f"(budget {PATTERN_COMPILE_BUDGET}); a rule is building a pattern per "
+        "data item — run tools/validate.py --timings to find it")
