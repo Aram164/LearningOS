@@ -17,11 +17,124 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ISO_DATE_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
-MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+# Where an inline link's destination starts; the destination itself is read
+# by `markdown_link_targets`, because a title, angle brackets or balanced
+# parentheses are beyond what one regex captures correctly.
+_MD_LINK_OPEN_RE = re.compile(r"\[[^\]]*\]\(")
+_MD_ESCAPABLE = frozenset("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~")
+_MD_TITLE_CLOSE = {'"': '"', "'": "'", "(": ")"}
+_MD_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})")
+_MD_CODE_SPAN_RE = re.compile(r"(?<!`)(`+)(?!`).*?(?<!`)\1(?!`)", re.DOTALL)
 # Collision suffixes are short counters (-02, -03, …); longer trailing numbers
 # are usually identifiers (course numbers like -1805, -6036), not suffixes.
 SUFFIX_RE = re.compile(r"^(?P<base>.+)-(?P<num>\d{1,2})$")
 WORKSPACE_TOKEN_RE = re.compile(r"\bworkspace-[a-z0-9]+(?:-[a-z0-9]+)*\b")
+
+
+def markdown_link_targets(text: str) -> list[str]:
+    """The destination of every inline Markdown link in ``text``.
+
+    Read as CommonMark reads an inline link: ``<...>`` or a bare destination
+    with balanced, or backslash-escaped, parentheses, then an optional
+    ``"title"``, ``'title'`` or ``(title)``. The title is not part of the
+    target, so ``[t](./missing.md "title")`` is checked like
+    ``[t](./missing.md)``. Text that is not a link (``[t](a b)``, ``[t]()``)
+    yields nothing, as before, and neither does a link quoted in a fenced
+    block or a code span: code is shown, not followed.
+    """
+    if "](" not in text:
+        return []
+    text = _without_code(text)
+    targets: list[str] = []
+    for match in _MD_LINK_OPEN_RE.finditer(text):
+        target = _inline_link_destination(text, match.end())
+        if target:
+            targets.append(target)
+    return targets
+
+
+def _without_code(text: str) -> str:
+    """``text`` with fenced code blocks and code spans blanked out."""
+    lines = text.split("\n")
+    fence: str | None = None
+    for index, line in enumerate(lines):
+        opened = _MD_FENCE_RE.match(line)
+        if fence is None:
+            if opened:
+                fence = opened.group(1)
+                lines[index] = ""
+            continue
+        if opened and opened.group(1)[0] == fence[0] \
+                and len(opened.group(1)) >= len(fence) \
+                and not line.strip().strip(fence[0]):
+            fence = None
+        lines[index] = ""
+    return _MD_CODE_SPAN_RE.sub(" ", "\n".join(lines))
+
+
+def _skip_link_space(text: str, i: int) -> int:
+    """Past spaces and tabs, and at most one line ending (CommonMark)."""
+    newline_seen = False
+    while i < len(text):
+        if text[i] in " \t":
+            i += 1
+        elif text[i] == "\n" and not newline_seen:
+            newline_seen = True
+            i += 1
+        else:
+            break
+    return i
+
+
+def _inline_link_destination(text: str, i: int) -> str | None:
+    """The destination of the inline link whose ``(`` ends at ``i``, if it is one."""
+    n = len(text)
+    i = _skip_link_space(text, i)
+    chars: list[str] = []
+    if i < n and text[i] == "<":
+        j = i + 1
+        while j < n and text[j] not in "<>\n":
+            if text[j] == "\\" and j + 1 < n and text[j + 1] in _MD_ESCAPABLE:
+                chars.append(text[j + 1])
+                j += 2
+                continue
+            chars.append(text[j])
+            j += 1
+        if j >= n or text[j] != ">":
+            return None
+        j += 1
+    else:
+        depth, j = 0, i
+        while j < n:
+            c = text[j]
+            if c == "\\" and j + 1 < n and text[j + 1] in _MD_ESCAPABLE:
+                chars.append(text[j + 1])
+                j += 2
+                continue
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                if depth == 0:
+                    break
+                depth -= 1
+            elif c.isspace() or ord(c) < 0x20 or c == "\x7f":
+                break
+            chars.append(c)
+            j += 1
+        if depth != 0:
+            return None
+    k = _skip_link_space(text, j)
+    if k > j and k < n and text[k] in _MD_TITLE_CLOSE:
+        close = _MD_TITLE_CLOSE[text[k]]
+        k += 1
+        while k < n and text[k] != close:
+            k += 2 if text[k] == "\\" else 1
+        if k >= n:
+            return None
+        k = _skip_link_space(text, k + 1)
+    if k < n and text[k] == ")":
+        return "".join(chars)
+    return None
 
 
 def id_list_items(value):

@@ -8,13 +8,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 from learning_os.domain import generated_reads
 from learning_os.domain.validation import (
-    CANONICAL_TREES,
     GENERATED_ALLOWED,
     GENERATED_REPORT_PREFIXES,
-    MD_LINK_RE,
+    markdown_link_targets,
 )
-from learning_os.domain.validation import in_garden as _in_garden
-from learning_os.domain.validation import in_quarantine as _in_quarantine
 
 
 def _collect_http_urls(value, urls: set[str] | None = None) -> set[str]:
@@ -162,16 +159,14 @@ class ChecksGenerated:
                 "projected URL discovery unavailable; audited loaded canonical "
                 f"records instead ({exc.__class__.__name__})",
             )
-        for tree in CANONICAL_TREES:
-            base = self.repo.root / tree
-            if not base.is_dir():
+        # The texts the link check already read: same trees, same garden
+        # and quarantine exclusions, no second read of any file.
+        for f, text in self._canonical_texts():
+            if f.suffix != ".md":
                 continue
-            for f in base.rglob("*.md"):
-                if _in_garden(self.repo.root, f) or _in_quarantine(self.repo.root, f):
-                    continue
-                for target in MD_LINK_RE.findall(f.read_text(encoding="utf-8", errors="replace")):
-                    if target.startswith(("http://", "https://")):
-                        urls.add(target)
+            for target in markdown_link_targets(text):
+                if target.startswith(("http://", "https://")):
+                    urls.add(target)
         with ThreadPoolExecutor(max_workers=min(8, len(urls) or 1)) as pool:
             findings = list(pool.map(_probe_external_url, sorted(urls)))
         for url, (finding, detail) in zip(sorted(urls), findings, strict=True):

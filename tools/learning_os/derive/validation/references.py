@@ -8,10 +8,10 @@ from typing import Literal
 
 from learning_os.derive.routes import exact_selection_matches, iter_route_references
 from learning_os.domain.validation import (
-    MD_LINK_RE,
     WORKSPACE_TOKEN_RE,
     id_list_items,
     list_items,
+    markdown_link_targets,
 )
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES
 
@@ -636,7 +636,7 @@ class ChecksReferences:
         for f, text in self._canonical_texts():
             if f.suffix != ".md":
                 continue
-            for target in MD_LINK_RE.findall(text):
+            for target in markdown_link_targets(text):
                 self._check_link(target, f)
 
     def _check_link(self, target: str, source_file: Path):
