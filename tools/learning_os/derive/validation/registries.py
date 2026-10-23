@@ -6,6 +6,7 @@ import re
 
 from learning_os.domain.validation import (
     COORDINATION_SECTIONS,
+    GENERATED_DIRECTORIES,
     ISO_DATE_RE,
     JUDGMENT_HEADERS,
 )
@@ -16,8 +17,20 @@ from learning_os.domain.vocabulary import PREREQUISITE_RELATIONS, RELATION_TYPES
 #: name (``generated/``) names no artifact — it says where derived output
 #: lives — so it is prose about the tree, not a dependency on one. A file
 #: inside it is a dependency: something downstream would read a rebuildable
-#: artifact as if it were canonical.
-_GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/[\w.-]")
+#: artifact as if it were canonical. Group 1 is the first entry, group 2 the
+#: slash that goes deeper.
+_GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/([\w.-]+)(/)?")
+
+
+def _names_generated_entry(entry: str, deeper: bool) -> bool:
+    """Whether ``generated/<entry>`` is path-shaped, not a slashed word pair.
+
+    A file has an extension (a sentence's closing period is not one), a
+    path that goes on past ``entry`` is a path, and a directory the tree
+    really holds is one by name. ``generated/programmed interrupt`` is
+    none of these: it is prose offering two words (#11).
+    """
+    return deeper or entry in GENERATED_DIRECTORIES or "." in entry.rstrip(".")
 
 
 def _references_generated(text: str) -> bool:
@@ -34,7 +47,9 @@ def _references_generated(text: str) -> bool:
     directory an observation names when it reports that the directory was
     missing (LearningOS #4).
     """
-    return "generated/" in text and _GENERATED_REF_RE.search(text) is not None
+    return "generated/" in text and any(
+        _names_generated_entry(match.group(1), match.group(2) is not None)
+        for match in _GENERATED_REF_RE.finditer(text))
 
 
 class ChecksRegistries:

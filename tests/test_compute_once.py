@@ -345,8 +345,19 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
 @pytest.mark.parametrize("text, expected", [
     ("See generated/concept-index.md for the list.", True),
     ("(generated/manifest.json)", True),
-    ("\ngenerated/views are disposable", True),
+    ("[Manifest](generated/manifest.json)", True),
+    ("generated/manifest.json", True),
+    ("\ngenerated/reports are disposable", True),
+    ("read generated/derived-state before it is rebuilt", True),
+    ("generated/views/module.md", True),
+    ("see generated/.gitkeep", True),
     ("no reference here", False),
+    # Two words offered with a slash are prose, not a path: the entry has
+    # no extension, goes no deeper, and is not a directory the tree holds
+    # (#11). A sentence's closing period is not an extension.
+    ("software generated/programmed interrupt", False),
+    ("software generated interrupt or programmed interrupt", False),
+    ("an interrupt is hardware or software generated/programmed.", False),
     ("https://sklearn.org/modules/generated/foo", False),
     ("xgenerated/y is a longer path", False),
     ("/generated/y has a leading slash", False),
@@ -361,6 +372,32 @@ def test_generated_reference_predicate(text: str, expected: bool):
     from learning_os.derive.validation.registries import _references_generated
 
     assert _references_generated(text) is expected
+
+
+def test_generated_directories_are_the_ones_the_tree_holds(mini_repo: Path):
+    """The directory names the predicate trusts are the projection's own."""
+    from learning_os.derive.projection import generate_all
+    from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS
+    from learning_os.domain.validation import GENERATED_DIRECTORIES
+    from learning_os.store.loader import load_repo
+
+    written = {Path(rel).parts[0] for rel in generate_all(load_repo(mini_repo))
+               if len(Path(rel).parts) > 1}
+    assert written and written <= GENERATED_DIRECTORIES
+    assert _KEEP_TOP_DIRS <= GENERATED_DIRECTORIES
+
+
+def test_gen_input_accepts_slashed_interrupt_prose(mini_repo: Path):
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(
+        note.read_text(encoding="utf-8")
+        + "\nA trap is a software generated/programmed interrupt.\n",
+        encoding="utf-8")
+    issues = validate(load_repo(mini_repo), online=False)
+    assert not any(i.code == "GEN-INPUT" for i in issues)
 
 
 def test_gen_input_still_flags_a_canonical_reference(mini_repo: Path):

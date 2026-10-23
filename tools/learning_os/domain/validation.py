@@ -53,6 +53,13 @@ GENERATED_ALLOWED = {
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
+# The directories the generated tree holds: the projection's own (reports,
+# collection views) and the caches owned by sibling producers. A test pins it
+# against what the projection writes and keeps.
+GENERATED_DIRECTORIES = frozenset({
+    "reports", "collections", "text-cache", "summaries", "dossiers",
+    "derived-state",
+})
 
 # Warnings about the environment *around* the authored content — a stale
 # generated view, an unmounted drive, an inventory that needs rebuilding — as
