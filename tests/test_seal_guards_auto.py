@@ -805,7 +805,6 @@ def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
     import seal_envelope
     from repo_builders import add_curriculum
 
-    import learning_os.app.seal as seal_module
     from learning_os.derive.validation.core import Validator
 
     add_curriculum(mini_repo)
@@ -828,7 +827,7 @@ def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
     assert invoke("one-call-count-001") == 0
     assert calls["validate"] == 1, calls
 
-    original_seal = seal_module.seal_with_key
+    original_seal = seal_envelope._seal_with_key
 
     def seal_then_race(root, **kwargs):
         envelope = original_seal(root, **kwargs)
@@ -838,11 +837,11 @@ def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
         assert raced.returncode == 0, raced.stdout + raced.stderr
         return envelope
 
-    monkeypatch.setattr(seal_module, "seal_with_key", seal_then_race)
+    monkeypatch.setattr(seal_envelope, "_seal_with_key", seal_then_race)
     capsys.readouterr()
     assert invoke("one-call-stale-001") == 3
     assert json.loads(capsys.readouterr().out)["error"]["code"] == "STALE_SNAPSHOT"
-    monkeypatch.setattr(seal_module, "seal_with_key", original_seal)
+    monkeypatch.setattr(seal_envelope, "_seal_with_key", original_seal)
     assert invoke("one-call-stale-001") == 0
 
 

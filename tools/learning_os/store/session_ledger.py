@@ -102,6 +102,24 @@ def process_state_dir(root: Path) -> Path:
     return state
 
 
+def sealed_request_path(root: Path, key: str) -> Path:
+    """Where ``seal_envelope.py --submit`` keeps the envelope it sealed for ``key``.
+
+    Retry state only (agent-cost plan D1): an exact retry after a lost
+    response resubmits these bytes, so the gateway replays the committed
+    receipt instead of seeing a new intent under a used key. Losing the file
+    loses exact replay for that key, never data. The root is part of the
+    name because roots without a git directory share the temp-dir location.
+    """
+    name = hashlib.sha256(f"{Path(root).resolve()}\n{key}".encode()).hexdigest()[:40]
+    return process_state_dir(root) / "sealed-requests" / f"{name}.json"
+
+
+def save_sealed_request(path: Path, text: str) -> None:
+    """Keep one sealed envelope at ``path`` (see :func:`sealed_request_path`)."""
+    _atomic_text(path, text)
+
+
 def is_anchored(root: Path) -> bool:
     return _git_dir(root) is not None
 

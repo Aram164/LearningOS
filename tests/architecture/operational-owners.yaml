@@ -24,3 +24,6 @@ entries:
   - {glob: "<STATE>/learningos-*-released.json", sink: module, owner: learning_os.store.session_ledger}
   - {glob: "<STATE>/operator.lock", sink: module, owner: learning_os.app.lock}
   - {glob: "<STATE>/learningos-*.lock", sink: module, owner: learning_os.app.lock}
+  # seal_envelope.py --submit retry state: the exact envelope a lost response
+  # retries with, so the gateway replays it (agent-cost plan D1).
+  - {glob: "<STATE>/sealed-requests/**", sink: module, owner: learning_os.store.session_ledger}
