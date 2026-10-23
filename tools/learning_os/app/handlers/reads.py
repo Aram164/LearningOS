@@ -952,6 +952,14 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
             for task_id in row.tasks
             if catalogue.task(task_id) is not None
         ]
+        # A task whose entry read is this very expansion (`log:` starts at
+        # `capabilities capture.create --json`) gets its reading here, as
+        # `capabilities TASK --json` would give it: the documented entry is
+        # the reading, not a pointer to a second call (#22).
+        entered = catalogue.entered_at(name, row.capability, row.verb)
+        if len(entered) == 1:
+            payload["read"] = task_reading(root, entered[0].procedures,
+                                           entered[0].scope)
         return Result(payload,
                       human_view={"branch": "name"})
     if compact:

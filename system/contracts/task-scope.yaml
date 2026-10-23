@@ -38,6 +38,45 @@ tasks:
       - system/WORKFLOWS.md#2-capture-temporary-material
       - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
 
+  - id: record-stage-progress
+    task: Record stage progress or end a session
+    entry_read: '`capabilities stage.progress.update --json`'
+    procedures:
+      - label: Read the stage-progress payload
+        target: system/procedures/end-a-session.md#read-the-stage-progress-payload-contract
+      - label: review the session
+        target: system/procedures/end-a-session.md#step-3-review-the-session
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#22-end-a-session
+      - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
+
+  - id: create-or-revise-a-durable-note
+    task: Create or revise a durable note
+    entry_read: '`capabilities note.create --json`, or `capabilities note.revise --json` for an existing note'
+    procedures:
+      - label: Search for an existing note first
+        target: system/procedures/create-durable-note.md#search-for-an-existing-note-with-the-same-purpose
+      - label: the creation payload
+        target: system/procedures/create-durable-note.md#seal-the-creation-with-derived-guards
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#3-create-or-evolve-a-durable-note
+      - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
+
+  - id: save-source-analyses
+    task: Save source analyses
+    entry_read: '`capabilities note.analysis.save_batch --json`'
+    procedures:
+      - label: Draft one batch
+        target: system/procedures/save-a-batch-of-source-analyses.md#draft-the-first-batch-two-notes-one-drafts-file
+      - label: prepare it
+        target: system/procedures/save-a-batch-of-source-analyses.md#prepare-the-first-batch
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#25b-save-a-batch-of-source-analyses
+      - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
+
   - id: edit-a-known-material-route
     task: Edit a known material route
     entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`'

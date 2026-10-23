@@ -36,6 +36,7 @@ from learning_os.store.contracts.cli_operations import (
 )
 from learning_os.store.contracts.task_scope import (
     TaskScopeError,
+    entry_read_expansions,
     entry_read_verbs,
     load_task_scope,
 )
@@ -103,6 +104,15 @@ class VerbCatalogue:
     #: fixture that registers a test-only capability is not a validation
     #: error.
     warnings: tuple[str, ...] = ()
+    #: (name, task id) for every ``capabilities NAME`` an entry read expands:
+    #: the task starts at NAME, so reading NAME is reading the task (#22).
+    expansions: tuple[tuple[str, str], ...] = ()
+
+    def entered_at(self, *names: str | None) -> list[TaskRow]:
+        """The tasks whose entry read is ``capabilities NAME`` for one of ``names``."""
+        ids = dict.fromkeys(task_id for name, task_id in self.expansions
+                            if name in names)
+        return [row for task_id in ids if (row := self.task(task_id)) is not None]
 
     def verb(self, name: str) -> VerbRow | None:
         for row in self.verbs:
@@ -245,11 +255,24 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
             "a contract declares the CLI command(s) the parser does not have: "
             + ", ".join(extra))
 
-    # Which task starts where.
+    # Which task starts where: at the verb its entry read runs, and at the
+    # name a `capabilities NAME` entry read expands.
     task_verbs: dict[str, list[str]] = {}
+    expansions: list[tuple[str, str]] = []
+    known = {*public, *internal, *request_operations, *tasks}
     for task in tasks.values():
         for verb in entry_read_verbs(task.entry_read):
             task_verbs.setdefault(verb, []).append(task.id)
+        for name in entry_read_expansions(task.entry_read):
+            if name not in known:
+                problems.append(
+                    f"task scope {task.id} expands {name!r}, which is no "
+                    f"capability, CLI command or task")
+                continue
+            expansions.append((name, task.id))
+    expanded: dict[str, set[str]] = {}
+    for name, task_id in expansions:
+        expanded.setdefault(name, set()).add(task_id)
 
     rows: list[VerbRow] = []
     for verb in sorted(request_operations):
@@ -279,7 +302,9 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
             kind=kind,
             surface=surface,
             writes=writes,
-            tasks=tuple(sorted(set(task_verbs.get(verb, [])))),
+            tasks=tuple(sorted(
+                set(task_verbs.get(verb, [])) | expanded.get(verb, set())
+                | (expanded.get(capability, set()) if capability else set()))),
         ))
 
     task_rows = tuple(
@@ -297,4 +322,4 @@ def build_verb_catalogue(root: Path) -> VerbCatalogue:
     if problems:
         raise VerbCatalogueError(problems)
     return VerbCatalogue(verbs=tuple(rows), tasks=task_rows,
-                          warnings=tuple(warnings))
+                          warnings=tuple(warnings), expansions=tuple(expansions))
