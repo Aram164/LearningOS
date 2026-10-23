@@ -1,0 +1,40 @@
+schema_version: 2
+id: transaction-20261023-015414-001
+type: transaction-receipt
+status: committed
+capability: source.record.revise
+committed_at: '2026-10-23T01:54:14+02:00'
+snapshot_before: sha256:a1249a06a514ca07ed13188b7496b7f4915868fb5360f3105a95912389b89fa0
+snapshot_after: sha256:93f10323beaf4039913e1356af2e05d3148e56e7b2b6ff6b0f55ffe6bc030e7f
+expected_revisions:
+  source-sklearn-user-guide: 1
+artifact_revisions:
+  source-sklearn-user-guide:
+    before: 1
+    after: 2
+writes:
+- path: sources/registry/machine-learning.yaml
+  sha256_before: 8db6e3fa99afd07c9fcf4cb93db68b46685dc77d598639cc64efda9ec08ad1dd
+  sha256_after: 20c5b805f539c1b10a379e80ab66ec98a2d260c295954c4fffd5d71a88bd6945
+  created: false
+metadata:
+  data_roots_sha256: sha256:d833fd638615b092f525c5084b938796ac384c00477902a6a49c640d2e5d60cb
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.record.revise
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-thesis-mle-20261023-source-sklearn-user-guide
+  idempotency_key: thesis-mle-20261023-source-sklearn-user-guide
+  intent_sha256: sha256:51ab8980a824e1cd9d7f274421614af0d4d39bb2716db8b85287d84c462e4128
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:51ab8980a824e1cd9d7f274421614af0d4d39bb2716db8b85287d84c462e4128

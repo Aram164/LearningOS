@@ -19,6 +19,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from importlib import metadata as importlib_metadata
@@ -26,6 +27,14 @@ from pathlib import Path
 
 STAMP_FILENAME = "learningos-verified-pairs.jsonl"
 STAMP_KEEP = 200
+
+#: Repository routing Git exports to hooks. Each call below names its
+#: repository with ``-C``; an inherited GIT_DIR would override that and read
+#: Core's index and HEAD for the UI, so a stamp could record the wrong pair
+#: (#24).
+GIT_ROUTING = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR",
+               "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+               "GIT_NAMESPACE", "GIT_PREFIX")
 
 
 def _core_root() -> Path:
@@ -41,6 +50,8 @@ def _git(repo: Path, *args: str) -> str | None:
         proc = subprocess.run(
             ["git", "-C", str(repo), *args],
             capture_output=True, text=True, timeout=30,
+            env={key: value for key, value in os.environ.items()
+                 if key not in GIT_ROUTING},
         )
     except (OSError, subprocess.SubprocessError):
         return None

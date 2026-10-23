@@ -9733,6 +9733,19 @@
     ],
     "required": false,
     "type": null
+   },
+   {
+    "action": "store_true",
+    "choices": null,
+    "default_repr": "False",
+    "dest": "submit",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--submit"
+    ],
+    "required": false,
+    "type": null
    }
   ]
  }

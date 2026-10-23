@@ -37,15 +37,20 @@ def test_material_locator_accepts_slide_counts_but_rejects_compounds():
     assert _safe_material_locator("../outside.pdf, 12 pages") is None
 
 
+@pytest.mark.parametrize("escape_kind", ["directory", "named-directory", "file"])
 def test_material_location_refuses_symlink_escape_to_external_directory(
-    mini_repo: Path, monkeypatch: pytest.MonkeyPatch
+    mini_repo: Path, monkeypatch: pytest.MonkeyPatch, escape_kind: str
 ):
     materials = mini_repo.parent / "materials"
     materials.mkdir(exist_ok=True)
     external = mini_repo.parent.parent / "external-code"
-    external.mkdir()
+    if escape_kind != "directory":
+        # A matching ancestor name must never invite alias discovery outside.
+        external = external / "materials" / "book"
+    external.mkdir(parents=True)
     (external / "sealed.pdf").write_bytes(b"EXTERNAL SENTINEL")
-    (materials / "escape").symlink_to(external, target_is_directory=True)
+    target = external / "sealed.pdf" if escape_kind == "file" else external
+    (materials / "escape").symlink_to(target, target_is_directory=escape_kind != "file")
 
     real_stat = os.stat
     real_lstat = os.lstat
@@ -67,7 +72,8 @@ def test_material_location_refuses_symlink_escape_to_external_directory(
     monkeypatch.setattr(os, "lstat", guarded_lstat)
 
     location = _material_location(
-        load_repo(mini_repo), "material://escape/sealed.pdf"
+        load_repo(mini_repo),
+        "material://escape" if escape_kind == "file" else "material://escape/sealed.pdf",
     )
 
     assert location == {"material_path": None, "material_exists": False}

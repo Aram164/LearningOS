@@ -219,18 +219,26 @@ def test_generated_findings_have_one_shared_implementation(tmp_path: Path):
     (tmp_path / "dir.json").mkdir()
     (tmp_path / "dir.md").mkdir()
     (tmp_path / "broken.json").symlink_to(tmp_path / "nowhere.json")
+    (tmp_path / "broken.md").symlink_to(tmp_path / "nowhere.md")
     (tmp_path / "link.json").symlink_to(tmp_path / "valid.json")
+    (tmp_path / "link.md").symlink_to(tmp_path / "valid.md")
     (tmp_path / "note.txt").write_text("not a checked suffix\n", encoding="utf-8")
     assert findings(tmp_path / "valid.json") == []
     assert findings(tmp_path / "list.json") == []
     assert findings(tmp_path / "link.json") == []
     assert findings(tmp_path / "note.txt") == []
     assert findings(tmp_path / "valid.md") == []
+    assert findings(tmp_path / "link.md") == []
     assert findings(tmp_path / "noheader.json")[0][0] == "GEN-HEADER"
     assert findings(tmp_path / "bad.json")[0][0] == "GEN-JSON"
-    assert findings(tmp_path / "bare.md")[0][0] == "GEN-HEADER"
+    assert findings(tmp_path / "bare.md") == [
+        ("GEN-HEADER", "generated file lacks a generated-file warning header")]
     assert findings(tmp_path / "dir.json")[0][0] == "GEN-JSON"
     assert findings(tmp_path / "dir.md")[0][0] == "GEN-HEADER"
+    assert "is a directory" in findings(tmp_path / "dir.md")[0][1]
+    # #13: a dangling Markdown link is named as one, like the JSON case.
+    assert findings(tmp_path / "broken.md")[0][0] == "GEN-HEADER"
+    assert "is a broken symlink" in findings(tmp_path / "broken.md")[0][1]
     assert findings(tmp_path / "broken.json")[0][0] == "GEN-JSON"
     non_utf8 = tmp_path / "nonutf8.json"
     non_utf8.write_bytes(b"\xff\xfe not utf-8")

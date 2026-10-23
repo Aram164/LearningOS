@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261022-202136-001
+type: transaction-receipt
+status: committed
+capability: note.create
+committed_at: '2026-10-22T20:21:36+02:00'
+snapshot_before: sha256:4148cd2155e61d2eaa83ce8163b1a9040fac646e780170f1e9dbc88eb6a3a576
+snapshot_after: sha256:d4de36205d6ef3f979009a69b3b7418ea42b8d62e694b1a8140d83db2e50d8fe
+expected_revisions:
+  note-icop-l01-exercise-bank: 0
+artifact_revisions:
+  note-icop-l01-exercise-bank:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/algorithms/note-icop-l01-exercise-bank.md
+  sha256_before: null
+  sha256_after: c5768aad76c4e07b0c094fc8cc0890fe27c82ac4e0ef3a0360131ac9c98a91c7
+  created: true
+metadata:
+  data_roots_sha256: sha256:a03ef6e91c4a4f77149918bd558278d0a8146f11feade602e5a59c9f5204fde5
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.create
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-icop-l01-exercise-bank-20261022-36e0fb59
+  idempotency_key: icop-l01-exercise-bank-20261022
+  intent_sha256: sha256:f82066010c43b6bf2e48000d251e0187f1c874701c9b1a5305d14730d447c1dd
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:f82066010c43b6bf2e48000d251e0187f1c874701c9b1a5305d14730d447c1dd

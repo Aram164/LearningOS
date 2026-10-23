@@ -62,6 +62,10 @@ always names its file. Fix the defect; do not route around the guard.
 | Task | Entry read | Executable procedure |
 |---|---|---|
 | Discover capabilities | `capabilities --compact --json`, then `capabilities NAME --json` | [Discover and expand](procedures/start-here.md#discover-the-capability-index) |
+| Log a line (`log:`) | `capabilities capture.create --json`, or `capabilities stage.note.write --json` for an identified stage | [Log to the stage](procedures/capture-routing.md#a-logged-line-for-an-identified-stage-is-one-stage-note-write), [log to the inbox](procedures/capture-routing.md#a-logged-line-with-no-stage-is-one-inbox-capture) |
+| Record stage progress or end a session | `capabilities stage.progress.update --json` | [Read the stage-progress payload](procedures/end-a-session.md#read-the-stage-progress-payload-contract), [review the session](procedures/end-a-session.md#step-3-review-the-session) |
+| Create or revise a durable note | `capabilities note.create --json`, or `capabilities note.revise --json` for an existing note | [Search for an existing note first](procedures/create-durable-note.md#search-for-an-existing-note-with-the-same-purpose), [the creation payload](procedures/create-durable-note.md#seal-the-creation-with-derived-guards) |
+| Save source analyses | `capabilities note.analysis.save_batch --json` | [Draft one batch](procedures/save-a-batch-of-source-analyses.md#draft-the-first-batch-two-notes-one-drafts-file), [prepare it](procedures/save-a-batch-of-source-analyses.md#prepare-the-first-batch) |
 | Edit a known material route | `plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B` | [Revise a plan](procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context) |
 | Edit a known stage | `plan-edit-context UNIT_ID --stage-id STAGE_ID` | [Enter through the stage](procedures/bootstrap-order.md#enter-through-the-named-stage) |
 | Unit coverage, source completeness, or unknown IDs | `plan-edit-context UNIT_ID --brief` | [Choose the focused context](procedures/start-here.md#follow-one-printed-expansion-with-its-snapshot-pin) |
@@ -139,7 +143,9 @@ Skills and projects use modules and units without false academic metadata.
 13. Validate after authored changes. Acceptance requires zero errors and no new
     or grown warning signature (`.venv/bin/python tools/warning_baseline.py --check`).
     Baseline-exempt operational and clock-derived advisories stay visible and
-    never block; see "What 'clean' means" above.
+    never block; see "What 'clean' means" above. A write submitted with
+    `seal_envelope.py --submit` prints both from the commit's own validation
+    on its `validation:` line; for that write, that line is the check.
 14. Source completeness is mandatory. Every learning source named by an
     authoritative template, bibliography, plan, or course artifact must remain
     reachable and be explicitly selected, reference-only, or deferred with a
@@ -273,7 +279,11 @@ Procedure: [shelving and session closure](procedures/shelving-session-closure.md
 Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
 `knowledge/garden/`. The operator, not the learner, handles filing. Every one
-of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
+of these writes goes through a GatewayEnvelopeV2 (WORKFLOWS §25c), sealed and
+submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
+NAME --payload JSON --key KEY --submit`. It binds any file the payload names
+to its bytes; a write that needs review first is `--guards auto --check-out
+REC`, then `--guards-from REC --submit`.
 When Aram starts a message with `log:`, treat the following text as an explicit
 request to capture it verbatim. If the stage was explicitly identified in the
 current conversation, append it to that stage's working note through
@@ -287,12 +297,15 @@ LearningOS — is not a learner capture: follow the
 drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
 §21); the inbox trends toward empty.
 
-Read the applicable platform adapter, then the task-relevant sections of
-`system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
-reference before acting. Consult `system/PHILOSOPHY.md` for unresolved intent.
-All binding rules still apply; expand the reading scope whenever the task
-crosses an ownership or workflow boundary. A routine lookup does not require
-loading every schema, historical review, or unrelated workflow into context.
+Read the applicable platform adapter, then what `capabilities TASK --json`
+returns for the task before acting: its `read` carries the procedure and the
+binding sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md` that
+scope the task, and a section it cut names where the rest is. Open a whole
+document only through that pointer, or when the task crosses an ownership or
+workflow boundary its scope does not cover. Consult `system/PHILOSOPHY.md` for
+unresolved intent. All binding rules still apply. A routine lookup does not
+require loading every schema, historical review, or unrelated workflow into
+context.
 
 Procedure: [capture routing](procedures/capture-routing.md); [write envelopes](procedures/build-write-envelope.md).
 

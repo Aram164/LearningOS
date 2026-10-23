@@ -8,3 +8,4 @@ module:
   institution: HU Berlin
   semester: wise-2026
   unit_order: []
+  source_map: source-map.yaml

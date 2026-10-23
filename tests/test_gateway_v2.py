@@ -14,7 +14,7 @@ from jsonschema import Draft202012Validator
 from learning_os.app.gateway import prepare_review_envelope
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.pipeline import _classify_failure, _projection_error
-from learning_os.domain.failures import StaleSnapshot
+from learning_os.domain.failures import ProjectionInputChanged, StaleSnapshot
 from learning_os.store.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
@@ -741,6 +741,29 @@ def test_projection_error_maps_rollback_outcome_not_prose(
         "stage": "core.projection",
         "rollback_complete": rollback_complete,
     }
+
+
+@pytest.mark.parametrize("complete, pre_existing, code", [
+    (True, False, "PROJECTION_FAILED"),
+    (False, False, "INTERNAL_FAILURE"),
+    (True, True, "VALIDATION_FAILED"),
+])
+def test_projection_input_details_preserve_the_rollback_classification(
+    complete: bool, pre_existing: bool, code: str,
+):
+    change = ProjectionInputChanged(
+        "no classifier words", changed_paths=("sources/registry/demo.yaml",),
+        changed_paths_total=5)
+    error = _projection_error(ProjectionFailure(
+        "ordinary-looking failure", rollback_complete=complete,
+        pre_existing_defect=pre_existing, input_change=change))
+    assert error["code"] == code
+    assert error["retryable"] is (not pre_existing)
+    assert error["details"]["rollback_complete"] is complete
+    assert error["details"]["reason"] == "CANONICAL_INPUTS_CHANGED"
+    assert error["details"]["changed_paths"] == ["sources/registry/demo.yaml"]
+    assert error["details"]["changed_paths_total"] == 5
+    assert error["details"].get("pre_existing_defect", False) is pre_existing
 
 
 def test_projection_error_maps_pre_existing_defect_to_validation_failed():

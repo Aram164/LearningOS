@@ -1,0 +1,116 @@
+id: unit-bs-os-structure
+type: unit
+module_id: module-hu-betriebssysteme
+kind: lecture
+title: BS 02 - Operating System Basics (ältere Folien)
+order: 1
+scope: Der ausdrücklich von Aram gewählte ältere Foliensatz 02_structure.pdf, PDF-S.1-46 (Mai 2006). Inhaltliche
+  Arbeit S.2-44, S.45 Schlusskarikatur, S.46 Vokabelkontrolle. Keine Behauptung über den aktuellen Lehr-
+  oder Prüfungsumfang; spätere Foliensätze bleiben zurückgestellt.
+status: ready
+knowledge_map:
+  summary: Von Betriebssystemaufgaben und Hardware über Interrupts, Speicherschutz und Privilegien zum
+    Systemaufruf und zu Entwurfsgrenzen des Kernels.
+  nodes:
+  - id: knowledge-bs-os-hardware
+    title: Betriebssystem und Hardware zusammendenken
+    summary: Abstraktion, Ressourcenverwaltung und Schutz mit CPU, Speicher und Gerätecontrollern verbinden.
+  - id: knowledge-bs-interrupts
+    title: Interrupt, Trap und Rückkehr auseinanderhalten
+    summary: Asynchrones Geräteereignis und synchrone Trap unterscheiden; Zustandssicherung, Dispatch,
+      Handler und Rückkehr nachzeichnen.
+    builds_on:
+    - knowledge-bs-os-hardware
+  - id: knowledge-bs-memory
+    title: Speicher schützen und Adressen übersetzen
+    summary: Base-/Limit-Schutz vom Übersetzen virtueller Adressen mit MMU und Seitentabelle unterscheiden.
+    builds_on:
+    - knowledge-bs-os-hardware
+  - id: knowledge-bs-privileges
+    title: Privileggrenzen mit Schutzbedarf begründen
+    summary: User-/Kernel-Modus und kontrollierte Hardwareübergänge erklären; privilegierte Operationen
+      von normalen Instruktionen abgrenzen.
+    builds_on:
+    - knowledge-bs-memory
+    - knowledge-bs-interrupts
+  - id: knowledge-bs-syscall-boundary
+    title: Einen Systemaufruf über die Vertrauensgrenze verfolgen
+    summary: Bibliotheksaufruf, Systemaufruf und Geräteinterrupt unterscheiden; den kontrollierten Kerneintritt
+      samt Prüfung und Rückkehr verfolgen.
+    builds_on:
+    - knowledge-bs-privileges
+    - knowledge-bs-interrupts
+  - id: knowledge-bs-linux-example
+    title: Das historische Linux-Beispiel rekonstruieren
+    summary: Wrapper, Aufrufnummer, Dispatchtabelle und Serviceroutine am alten alarm-Beispiel zusammensetzen;
+      Parameterübergabe und Nutzerpuffer erklären.
+    builds_on:
+    - knowledge-bs-syscall-boundary
+  - id: knowledge-bs-os-structures
+    title: Betriebssystemstrukturen vergleichen und anwenden
+    summary: Monolithische, geschichtete und Mikrokernel-Strukturen anhand von Aufrufgrenzen, Isolation
+      und Kosten vergleichen; die NT-Einordnung der Folien begründen.
+    builds_on:
+    - knowledge-bs-syscall-boundary
+    - knowledge-bs-privileges
+scope_sources:
+- source_id: source-bs-hu-prior-slides
+  authority: reference
+  locator: 02_structure.pdf, pdf pp. 1-46; ausdrücklich gewählte ältere Arbeitsgrundlage
+source_selections:
+- route_id: route-bs-os-hardware
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 1-7
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-os-hardware
+- route_id: route-bs-interrupts
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 8-12
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-interrupts
+- route_id: route-bs-memory
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 13-18
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-memory
+- route_id: route-bs-privileges
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 19-22
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-privileges
+- route_id: route-bs-syscall-boundary
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 23-27
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-syscall-boundary
+- route_id: route-bs-linux-example
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 28-34
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-linux-example
+- route_id: route-bs-os-structures
+  source_id: source-bs-hu-prior-slides
+  locator: 02_structure.pdf, pdf pp. 35-44
+  purpose: 'Explizite Wahl von Aram: erster größerer älterer BS-Foliensatz als Grundlage des initialen
+    Lernplans.'
+  stage_ids:
+  - stage-bs-os-structures
+current_study_map: study-map-bs-os-structure
+artifacts:
+  ultimate_reference: note-bs-os-basics-reference
+  exercise_bank: note-bs-os-basics-exercise-bank
+  mock_exam: note-bs-os-basics-self-test
+workspace_ids:
+- workspace-bs-foundations

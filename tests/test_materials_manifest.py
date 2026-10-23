@@ -230,6 +230,12 @@ def test_uri_sweep_strips_fragments():
     assert _uris_in("`material://a/b.pdf#page=12`") == {"a/b.pdf"}
 
 
+def test_uri_sweep_strips_queries_like_every_reader():
+    """#18: the sweep ends a path where the resolver and the UI end it."""
+    assert _uris_in("`material://a/b.pdf?x=1`") == {"a/b.pdf"}
+    assert _uris_in("`material://a/b.pdf?x=1#page=2`") == {"a/b.pdf"}
+
+
 # ------------------------------------------------------------ validator tier
 def _wire(mini_repo, *, uri: str, manifest_files: dict | None):
     """Point a canonical note at `uri`, optionally writing a manifest."""
@@ -388,6 +394,82 @@ def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypa
     assert "MATERIAL-MISSING" not in codes(issues, "E")
     assert any("not readable" in issue.message for issue in issues
                if issue.code == "MATERIALS-OFFLINE")
+
+
+# ------------------------------------------------------------- evidence layer
+#
+# A complaint quotes the inputs that failed, fixture targets included. That is
+# evidence about the system, not a reference any record resolves through, so
+# the sweep reads every other canonical text but not work/complaints/
+# (LearningOS #19) — the boundary check_ownership already draws for GEN-INPUT
+# (#4). Both sides are pinned: the exemption must hold, and it must stay
+# exactly that wide.
+
+_FIXTURE_TARGET = "material://source-x/foo.pdf"
+
+
+def _quote_in(mini_repo, rel: str):
+    """Make `rel` quote the fixture target in an inline code span.
+
+    An existing document gains the sentence; a new one is a small note, so the
+    canonical note keeps its frontmatter.
+    """
+    path = mini_repo / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = path.read_text(encoding="utf-8") if path.exists() else "# Observed\n"
+    path.write_text(f"{text}\nThe fixture target `{_FIXTURE_TARGET}` was refused.\n",
+                    encoding="utf-8")
+
+
+def _validate_against_empty_inventory(mini_repo):
+    """Validate with the sweep armed: a manifest exists and the tree is mounted."""
+    (mini_repo / "records" / "materials-manifest.yaml").write_text(
+        yaml.safe_dump({"schema_version": 1, "captured": "2026-08-07",
+                        "totals": {"files": 0, "bytes": 0}, "files": {}}),
+        encoding="utf-8")
+    return validate(load_repo(mini_repo))
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "work/complaints/2026-10-23-observed.md",
+        "work/complaints/archive/2026-10-23-observed.md",
+    ],
+)
+def test_a_complaint_may_quote_an_unresolvable_material_target(mini_repo, rel):
+    """Quoting a failing fixture must not turn the whole tree red (LearningOS #19).
+
+    One validation error anywhere blocks the pre-commit gate and every
+    canonical write, so a complaint about material handling could otherwise
+    block the very workflow that files it.
+    """
+    _quote_in(mini_repo, rel)
+    issues = _validate_against_empty_inventory(mini_repo)
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+    assert codes(issues, "E") == []
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "knowledge/notes/mathematics/note-demo.md",
+        "work/active/workspace-demo/CONTEXT.md",
+        # A sibling that merely shares the prefix is not inside the subtree.
+        "work/complaints-archive/2026-10-23-observed.md",
+    ],
+)
+def test_the_same_target_outside_the_evidence_layer_still_errors(mini_repo, rel):
+    """The exemption is the complaints subtree and nothing wider.
+
+    A canonical record whose material is gone is the failure the sweep exists
+    to catch; a note or a workspace that points at the same unresolvable target
+    must still say so.
+    """
+    _quote_in(mini_repo, rel)
+    issues = _validate_against_empty_inventory(mini_repo)
+    assert any(issue.code == "MATERIAL-MISSING" and "source-x/foo.pdf" in issue.message
+               for issue in issues if issue.severity == "E")
 
 
 # --------------------------------------------------------------- URI carriers

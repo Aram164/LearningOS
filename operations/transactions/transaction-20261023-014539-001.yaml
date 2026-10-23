@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-014539-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save_batch
+committed_at: '2026-10-23T01:45:39+02:00'
+snapshot_before: sha256:969347251f408e4e01655b2831745a757e3395007a81db35e687d2661393b217
+snapshot_after: sha256:b7595091f3ff178d4a3bdc8d501df4b9b7a266bdc21ba739a39ee7426e50ded2
+expected_revisions:
+  note-bs-os-basics-reference: 0
+artifact_revisions:
+  note-bs-os-basics-reference:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/systems/note-bs-os-basics-reference.md
+  sha256_before: null
+  sha256_after: 8be8f9412110c164e28f5121f498afc1942d9baf23a16dc5e34cf3c162eca8a9
+  created: true
+metadata:
+  data_roots_sha256: sha256:9e19c85ecfcb96bf69fef7dcf8b0f8be13ca873c21fe1451658901aa9f4eef7a
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save_batch
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-reviewed-88f66dc6e77745dca50024b4265f2a4d
+  idempotency_key: reviewed-fc33f73b034444d792f33cee9db2dd12
+  intent_sha256: sha256:924db4aa508aeb0ecaf1d23821692f3485420be916acd532d6d9ed213dee1473
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:924db4aa508aeb0ecaf1d23821692f3485420be916acd532d6d9ed213dee1473

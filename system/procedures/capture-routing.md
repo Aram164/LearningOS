@@ -10,8 +10,11 @@ Executable transcript of the `log:` path: when the stage was explicitly
 identified, the text is appended to that stage's working note through
 `stage.note.write`; otherwise it goes to the inbox through
 `capture.create`. Neither capture moves the resume pointer or implies
-progress. `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes
-from the `LOS_REPO` environment variable the test sets.
+progress. Each write is one call: `seal_envelope.py --submit` derives the
+guards, seals the envelope and submits it, and its stderr line reports what
+the commit's own validation proved, so no separate `validate.py` or
+`warning_baseline.py` run follows. `tests/test_procedures.py` runs it with
+Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the test sets.
 
 ## Build the fixture
 
@@ -19,18 +22,10 @@ from the `LOS_REPO` environment variable the test sets.
 $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
 ```
 
-## A logged line for an identified stage seals a stage-note envelope
-
-```scrut {output_stream: stderr}
-$ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key log-stage-note-001 --request-id request-log-stage-note-001 --guards auto --out "$TMPDIR/log-stage-note.json"
-> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-seal_envelope: guards auto: unit-demo-l01=3
-```
-
-## Submit the envelope
+## A logged line for an identified stage is one stage-note write
 
 ```scrut {interpolated: true}
-$ los capability stage.note.write --payload-file "$TMPDIR/log-stage-note.json"
+$ $H/los-seal --capability stage.note.write --payload '{"unit_id": "unit-demo-l01", "stage_id": "stage-demo", "text": "Log: the derivation finally clicked."}' --key log-stage-note-001 --request-id request-log-stage-note-001 --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,
@@ -71,18 +66,10 @@ $ $H/los-assert-receipt --last --capability stage.note.write
 $ $H/los-assert-file curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md --sha256 2075907701a7799cf602dd36721722000f68fff0a7a772034b1e716bc7a49599
 ```
 
-## A logged line with no stage seals an inbox capture
-
-```scrut {output_stream: stderr}
-$ $H/los-seal --capability capture.create --payload '{"text": "Log: a stray thought with no stage yet."}' --key log-capture-001 --request-id request-log-capture-001 --guards auto --out "$TMPDIR/log-capture.json"
-> los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
-seal_envelope: guards auto: capture-request:log-capture-001=0
-```
-
-## Submit the envelope
+## A logged line with no stage is one inbox capture
 
 ```scrut {interpolated: true}
-$ los capability capture.create --payload-file "$TMPDIR/log-capture.json"
+$ $H/los-seal --capability capture.create --payload '{"text": "Log: a stray thought with no stage yet."}' --key log-capture-001 --request-id request-log-capture-001 --submit
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")
 {
   "schema_version": 2,

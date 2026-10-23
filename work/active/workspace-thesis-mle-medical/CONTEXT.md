@@ -84,12 +84,7 @@ build.
 
 ## Next Action
 
-*(Slack-time action — see the Current Scope banner.)* Confirm the scope boundary
-+ compute budget with the supervisor (one email/meeting), then stand up the AIDE
-("AID") environment and run it once on `histopathologic-cancer-detection`
-(smallest medical Lite task) to establish the baseline medal /
-valid-submission / cost numbers. Details in
-`outputs/thesis-landscape-and-plan.md` §6 (Exploration phase — Phase 0).
+When thesis time is allocated under [coordination](../../COORDINATION.md), start the [AIDE medical MLE preparation guide](../../../knowledge/notes/machine-learning/note-bachelor-thesis-medical-mle-exploration.md): read MLE-bench §2, AIDE §3/Algorithm 1 and ReX-MLE, then compare the APTOS and SIIM-ISIC solution writeups. Produce a one-page orientation and a two-task feasibility shortlist. Confirm the medical scope and compute/API budget with the supervisor before the first AIDE pilot; keep final test scores reserved until the adaptation is frozen. The earlier landscape survey remains in outputs/thesis-landscape-and-plan.md.
 
 ## Deferred
 

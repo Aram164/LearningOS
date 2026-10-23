@@ -38,9 +38,9 @@ from learning_os.store.contracts.gateway import current_gateway_request
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
 from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 from learning_os.store.materials.resolution import (
-    MATERIAL_SCHEME,
     canonical_material_uri,
-    material_uri_authority,
+    materials_mount,
+    parse_material_uri,
     sha256_file,
 )
 from learning_os.store.revisions import artifact_revision
@@ -948,11 +948,18 @@ def _resolve_revise_material(root: Path, repo, uri: str,
     .flat/ alias farm when it exists — with no physical-form fallback, so a
     link the learner could not open is refused here instead of recorded. A
     folder-level reference has no single hashable byte string, so only one
-    concrete file is attachable.
+    concrete file is attachable, and a selector (``#page=2``) is refused: a
+    source's material is its whole file.
+
+    The tree is mounted when ``materials_mount`` says so, the predicate every
+    other reader uses: a ``materials/`` link to a readable directory counts
+    (#14). Resolution keeps that link's own spelling for both the boundary
+    and the path, so the containment check compares like with like.
     """
-    authority = material_uri_authority(uri)
-    if authority is None:
+    parsed = parse_material_uri(uri)
+    if parsed is None:
         raise WriteRefused(f"{sid}: '{uri}' is not a safe material:// URI")
+    authority = parsed.authority
     if authority != sid:
         raise WriteRefused(
             f"{sid}: material URI authority '{authority}' must equal the source id"
@@ -963,16 +970,21 @@ def _resolve_revise_material(root: Path, repo, uri: str,
             f"{sid}: '{uri}' is not the canonical material spelling; "
             f"use '{canonical}'"
         )
-    payload = str(uri)[len(MATERIAL_SCHEME):]
+    if parsed.selector:
+        raise WriteRefused(
+            f"{sid}: '{uri}' selects inside a file ('{parsed.selector}'); a "
+            "source's material is the whole file — put the selector on a route"
+        )
     physical = repo.learningos_root / "materials"
-    if physical.is_symlink() or not physical.is_dir():
+    tree, _why = materials_mount(repo)
+    if tree is None:
         raise WriteRefused(
             f"{sid}: materials tree not mounted at {physical} — attach needs "
             "the live bytes, not just the URI"
         )
     try:
         resolved = resolve_symlinks_inside(
-            physical, repo.materials_root / payload, strict=False)
+            physical, repo.materials_root / parsed.path, strict=False)
         relative = resolved.relative_to(physical)
     except (OSError, PathBoundaryError, ValueError):
         raise WriteRefused(

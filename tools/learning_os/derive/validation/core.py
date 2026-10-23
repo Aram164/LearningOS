@@ -7,6 +7,7 @@ inspect. `run` below is the whole order of validation, on one screen.
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import jsonschema
@@ -55,6 +56,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         # in the repository — exam dates. One checker serves every validator.
         self._format_checker = jsonschema.FormatChecker()
         self._canonical_text_cache: list[tuple[Path, str]] | None = None
+        self.timings: dict[str, float] = {}
         try:
             self.schema_registry = schema_registry(
                 self.repo.root / "system" / "schema"
@@ -203,19 +205,33 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         return ""
 
     # ------------------------------------------------------------------ run
+    def _timed(self, check) -> None:
+        # Seconds per check, for `validate.py --timings`. Nothing reads them to
+        # decide anything: a time share moves with the runner and with every
+        # other rule, so the blocking cost budget counts work instead
+        # (tests/test_compute_once.py).
+        started = time.perf_counter()
+        try:
+            check()
+        finally:
+            self.timings[check.__name__] = time.perf_counter() - started
+
     def run(self) -> list[Issue]:
-        self.check_parse_failures()
-        self.check_data_contract()
-        self.check_manifest_contract()
-        self.check_normative_corpus()
-        self.check_perimeter()
-        self.check_tree_contract()
-        self.check_local_attachments()
-        self.check_contract_documentation()
-        self.check_doc_blocks()
-        self.check_cli_catalogue()
-        self.check_task_scope()
-        self.check_schemas()
+        for check in (
+            self.check_parse_failures,
+            self.check_data_contract,
+            self.check_manifest_contract,
+            self.check_normative_corpus,
+            self.check_perimeter,
+            self.check_tree_contract,
+            self.check_local_attachments,
+            self.check_contract_documentation,
+            self.check_doc_blocks,
+            self.check_cli_catalogue,
+            self.check_task_scope,
+            self.check_schemas,
+        ):
+            self._timed(check)
         invalid = sorted({i.path for i in self.issues
                           if i.severity == "E" and i.code == "SCHEMA" and i.path})
         checks = [
@@ -252,7 +268,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             # contained, as one error naming those files; the rest of that pass
             # is skipped. On schema-valid input a crash is a defect: it stays loud.
             try:
-                check()
+                self._timed(check)
             except (AttributeError, IndexError, KeyError, TypeError, ValueError) as exc:
                 if not invalid:
                     raise

@@ -34,4 +34,10 @@ PUBLIC_CODES: tuple[str, ...] = (
     INTERNAL_FAILURE,
 )
 
-REASONS: tuple[str, ...] = ("NOT_FOUND", "MALFORMED_ID")
+REASONS: tuple[str, ...] = (
+    "NOT_FOUND",
+    "MALFORMED_ID",
+    # LearningOS #12: the projection snapshot conflict names changed
+    # canonical inputs; see outcomes.projection_failure_details.
+    "CANONICAL_INPUTS_CHANGED",
+)

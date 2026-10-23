@@ -14,6 +14,22 @@ envelope, and refuse a stale one. `tests/test_procedures.py` runs it with
 Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the test
 sets.
 
+The steps below are the wire format and its guarantees. To write, you do
+not perform them by hand: `.venv/bin/python tools/seal_envelope.py
+--capability NAME --payload JSON --key KEY --submit` reads the snapshot,
+derives the guards, seals, submits and prints the gateway's result, plus one
+`validation:` line from the commit's own validation. A retry with the same
+key and payload replays the committed receipt. The executable example is
+the `log:` path in [capture routing](capture-routing.md).
+
+A payload that names a file in a byte-bound field (`file`, `body_file`,
+`attachment`, …) needs no digest from you: the seal sets the field's
+`…_sha256` to the file's current bytes and says so on stderr. A write that
+needs review first is two calls. `--guards auto --check-out REC` writes the
+check record: every validation error, any new warning signature, and the
+planned writes. After the review, `--guards-from REC --submit` applies
+exactly what was reviewed, and refuses if the file or the tree changed since.
+
 ## Build the fixture
 
 ```scrut

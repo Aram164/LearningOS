@@ -191,6 +191,7 @@ def _stat_line(path: Path) -> bytes:
 
 def canonical_data_and_stat_fingerprints(
     root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+    stat_lines: dict[str, bytes] | None = None,
 ) -> tuple[str, str, str]:
     """One walk yielding canonical, data-roots, and stat digests.
 
@@ -199,11 +200,14 @@ def canonical_data_and_stat_fingerprints(
     separately: the data roots keep their relative order inside the
     canonical walk, and each file's content is read once for both. The
     stat digest covers the same enumeration without content reads, for
-    cheap post-publication change detection.
+    cheap post-publication change detection. An optional ``stat_lines``
+    receives the same path identities for diagnostics without another walk.
     """
     _check_definition(definition)
     excluded = _excluded_local_paths(root, definition)
     data_set = set(DATA_ROOTS)
+    if stat_lines is not None:
+        stat_lines.clear()
     canonical = hashlib.sha256()
     data = hashlib.sha256()
     stat = hashlib.sha256()
@@ -241,24 +245,31 @@ def canonical_data_and_stat_fingerprints(
                         except OSError:
                             digest.update(b"<unreadable>")
                 digest.update(b"\0")
+            line = _stat_line(path)
+            if stat_lines is not None:
+                stat_lines[rel.as_posix()] = line
             stat.update(rel_bytes)
             stat.update(b"\0")
-            stat.update(_stat_line(path))
+            stat.update(line)
             stat.update(b"\0")
     return canonical.hexdigest(), data.hexdigest(), stat.hexdigest()
 
 
 def canonical_stat_digest(
     root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+    stat_lines: dict[str, bytes] | None = None,
 ) -> str:
     """Stat-only digest over the canonical enumeration, for change checks.
 
     Same file set and order as the content walk, but no content reads.
     Any realistic mutation moves it; identical content with identical
     stat (same size, times, mode, link value) is accepted as unchanged.
+    ``stat_lines`` receives the observations used by this exact digest.
     """
     _check_definition(definition)
     excluded = _excluded_local_paths(root, definition)
+    if stat_lines is not None:
+        stat_lines.clear()
     digest = hashlib.sha256()
     for rel_root in CANONICAL_ROOTS:
         base = root / rel_root
@@ -274,11 +285,31 @@ def canonical_stat_digest(
                 continue
             if rel.as_posix() in excluded:
                 continue
+            line = _stat_line(path)
+            if stat_lines is not None:
+                stat_lines[rel.as_posix()] = line
             digest.update(rel.as_posix().encode("utf-8"))
             digest.update(b"\0")
-            digest.update(_stat_line(path))
+            digest.update(line)
             digest.update(b"\0")
     return digest.hexdigest()
+
+
+CHANGED_PATHS_SHOWN = 32
+
+
+def changed_canonical_paths(
+    before: dict[str, bytes], after: dict[str, bytes],
+) -> tuple[tuple[str, ...], int]:
+    """Bounded, sorted paths with different filesystem observations.
+
+    These are diagnostic stat identities, not a content diff or a write
+    guard. A timestamp-only touch can be included; file contents and link
+    destinations never leave the maps.
+    """
+    changed = sorted(path for path in before.keys() | after.keys()
+                     if before.get(path) != after.get(path))
+    return tuple(changed[:CHANGED_PATHS_SHOWN]), len(changed)
 
 
 def canonical_fingerprint(

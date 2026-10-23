@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-013033-001
+type: transaction-receipt
+status: committed
+capability: note.create
+committed_at: '2026-10-23T01:30:33+02:00'
+snapshot_before: sha256:d4de36205d6ef3f979009a69b3b7418ea42b8d62e694b1a8140d83db2e50d8fe
+snapshot_after: sha256:5f54941d2889ee220a458309dfedb9aa1b260a27d01e497fffb6d0f64b0ab525
+expected_revisions:
+  note-icop-l01-mock-exam: 0
+artifact_revisions:
+  note-icop-l01-mock-exam:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/algorithms/note-icop-l01-mock-exam.md
+  sha256_before: null
+  sha256_after: 4884421b864f473d6c31a9c71ecc4b9fff48b692877130a565ad8194a7d15ba1
+  created: true
+metadata:
+  data_roots_sha256: sha256:a54a505a472c2f1ce4e803bcc8235ab9a3f0fbc4db6524377da9719bcedcd0e4
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.create
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-icop-l01-mock-exam-20261022-3b6bdc23
+  idempotency_key: icop-l01-mock-exam-20261022
+  intent_sha256: sha256:bc37a39f4a6278d3464e8a28975e59c4eb28102db2b4e12221027c54e4e5bdd3
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:bc37a39f4a6278d3464e8a28975e59c4eb28102db2b4e12221027c54e4e5bdd3

@@ -158,6 +158,47 @@ def test_declared_scan_bytes_do_not_move_the_snapshot(mini_repo: Path):
     assert after == before
 
 
+def test_canonical_stat_maps_share_the_digest_enumeration(mini_repo: Path):
+    from learning_os.store.fingerprint import (
+        canonical_data_and_stat_fingerprints,
+        canonical_stat_digest,
+    )
+
+    _declare_scan(mini_repo)
+    hidden = mini_repo / "work/.private/scratch.md"
+    hidden.parent.mkdir(parents=True)
+    hidden.write_text("ignored\n", encoding="utf-8")
+    link = mini_repo / "knowledge/notes/link.md"
+    link.symlink_to(mini_repo.parent / "external-target")
+    combined_lines: dict[str, bytes] = {}
+    stat_lines: dict[str, bytes] = {}
+    combined = canonical_data_and_stat_fingerprints(
+        mini_repo, stat_lines=combined_lines)
+    stat = canonical_stat_digest(mini_repo, stat_lines=stat_lines)
+    assert combined == canonical_data_and_stat_fingerprints(mini_repo)
+    assert combined[2] == stat == canonical_stat_digest(mini_repo)
+    assert combined_lines == stat_lines
+    assert "knowledge/notes/link.md" in stat_lines
+    assert SCAN_REL not in stat_lines
+    assert hidden.relative_to(mini_repo).as_posix() not in stat_lines
+    link.unlink()
+    canonical_stat_digest(mini_repo, stat_lines=stat_lines)
+    canonical_data_and_stat_fingerprints(mini_repo, stat_lines=combined_lines)
+    assert combined_lines == stat_lines
+    assert "knowledge/notes/link.md" not in stat_lines
+
+
+def test_canonical_path_changes_include_add_delete_and_stat_changes():
+    from learning_os.store.fingerprint import changed_canonical_paths
+
+    before = {"knowledge/deleted.md": b"old", "work/changed.md": b"old",
+              "sources/same.yaml": b"same"}
+    after = {"knowledge/added.md": b"new", "work/changed.md": b"new",
+             "sources/same.yaml": b"same"}
+    assert changed_canonical_paths(before, after) == ((
+        "knowledge/added.md", "knowledge/deleted.md", "work/changed.md"), 3)
+
+
 def test_re_pinning_moves_the_snapshot_through_the_declaration(mini_repo: Path):
     from learning_os.store.fingerprint import canonical_fingerprint, data_roots_fingerprint
 
@@ -345,8 +386,19 @@ def test_absent_then_present_scan_misses(mini_repo: Path):
 @pytest.mark.parametrize("text, expected", [
     ("See generated/concept-index.md for the list.", True),
     ("(generated/manifest.json)", True),
-    ("\ngenerated/views are disposable", True),
+    ("[Manifest](generated/manifest.json)", True),
+    ("generated/manifest.json", True),
+    ("\ngenerated/reports are disposable", True),
+    ("read generated/derived-state before it is rebuilt", True),
+    ("generated/views/module.md", True),
+    ("see generated/.gitkeep", True),
     ("no reference here", False),
+    # Two words offered with a slash are prose, not a path: the entry has
+    # no extension, goes no deeper, and is not a directory the tree holds
+    # (#11). A sentence's closing period is not an extension.
+    ("software generated/programmed interrupt", False),
+    ("software generated interrupt or programmed interrupt", False),
+    ("an interrupt is hardware or software generated/programmed.", False),
     ("https://sklearn.org/modules/generated/foo", False),
     ("xgenerated/y is a longer path", False),
     ("/generated/y has a leading slash", False),
@@ -361,6 +413,32 @@ def test_generated_reference_predicate(text: str, expected: bool):
     from learning_os.derive.validation.registries import _references_generated
 
     assert _references_generated(text) is expected
+
+
+def test_generated_directories_are_the_ones_the_tree_holds(mini_repo: Path):
+    """The directory names the predicate trusts are the projection's own."""
+    from learning_os.derive.projection import generate_all
+    from learning_os.derive.projection.outputs import _KEEP_TOP_DIRS
+    from learning_os.domain.validation import GENERATED_DIRECTORIES
+    from learning_os.store.loader import load_repo
+
+    written = {Path(rel).parts[0] for rel in generate_all(load_repo(mini_repo))
+               if len(Path(rel).parts) > 1}
+    assert written and written <= GENERATED_DIRECTORIES
+    assert _KEEP_TOP_DIRS <= GENERATED_DIRECTORIES
+
+
+def test_gen_input_accepts_slashed_interrupt_prose(mini_repo: Path):
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(
+        note.read_text(encoding="utf-8")
+        + "\nA trap is a software generated/programmed interrupt.\n",
+        encoding="utf-8")
+    issues = validate(load_repo(mini_repo), online=False)
+    assert not any(i.code == "GEN-INPUT" for i in issues)
 
 
 def test_gen_input_still_flags_a_canonical_reference(mini_repo: Path):
@@ -629,3 +707,38 @@ def test_receipt_sidecar_hash_settles_mtime_only_changes(
     warm = _frozen(validate(load_repo(mini_repo), online=False))
     assert calls == []
     assert warm == cold
+
+
+# Regex compilations in one full validation of this repository's own data. A
+# rule that builds a pattern per data item is the regression this catches: the
+# GEN-INPUT check did it (#112), and plan_rigor._filename_present compiled
+# 203,154 patterns per run — ~70 % of every validation — until its substring
+# pre-filter (2026-10-23). The count after that fix is 132, online and offline.
+# A count is deterministic where a time share is not: the share of the slowest
+# remaining check moves with the runner and with every other rule.
+PATTERN_COMPILE_BUDGET = 1_000
+
+
+def test_full_validation_compiles_a_bounded_number_of_patterns(monkeypatch: pytest.MonkeyPatch):
+    import re
+
+    from learning_os.derive.validation import validate
+    from learning_os.store.loader import load_repo
+
+    compiler = getattr(re, "_compiler", None)
+    if compiler is None:  # CPython-internal; the budget needs its compile hook
+        pytest.skip("re._compiler is not available on this interpreter")
+    original = compiler.compile
+    compiled: list = []
+
+    def counted(*args, **kwargs):
+        compiled.append(1)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(compiler, "compile", counted)
+    re.purge()
+    validate(load_repo(Path(__file__).resolve().parents[1]), online=False)
+    assert len(compiled) <= PATTERN_COMPILE_BUDGET, (
+        f"one validation compiled {len(compiled)} regular expressions "
+        f"(budget {PATTERN_COMPILE_BUDGET}); a rule is building a pattern per "
+        "data item — run tools/validate.py --timings to find it")

@@ -269,3 +269,57 @@ sources:
   thematic_group_ids:
   - thematic-group-optimization
   - thematic-group-algorithms
+- id: source-cornell-topaloglu-lp
+  title: Cornell — Fundamentals of Linear Programming
+  type: course
+  authors:
+  - Huseyin Topaloglu
+  organization: Cornell University
+  url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+    observed: '2026-10-22'
+    possible_use: Aram supplied research recommends the topic-matched lectures and handwritten notes for
+      ICOP geometry, simplex and duality. Official course outline and packet checked; no full-video analysis
+      claimed.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+- id: source-mit-18200-2024
+  title: MIT 18.200 — Principles of Discrete Applied Mathematics (Spring 2024)
+  type: course
+  authors:
+  - Peter Shor
+  organization: MIT
+  year: 2024
+  url: https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-12-version-2_mp4/
+    observed: '2026-10-22'
+    possible_use: Aram supplied research recommends L12 for the ICOP LP introduction and L13 as a duality
+      alternative. Official descriptions and transcripts checked; no full-video analysis claimed.
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms
+- id: source-stanford-cs261-2016
+  title: Stanford CS261 — A Second Course in Algorithms (Winter 2016)
+  type: course
+  authors:
+  - Tim Roughgarden
+  organization: Stanford University
+  year: 2016
+  url: https://theory.stanford.edu/~tim/w16/w16.html
+  discovery:
+    basis:
+    - kind: list-entry
+      ref: https://theory.stanford.edu/~tim/w16/w16.html
+    observed: '2026-10-22'
+    possible_use: 'Reference-only alternative named in Aram''s research: L7-L10 connect LP and combinatorial
+      algorithms; primary course outline checked.'
+  thematic_group_ids:
+  - thematic-group-optimization
+  - thematic-group-algorithms

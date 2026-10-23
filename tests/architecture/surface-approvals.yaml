@@ -353,3 +353,10 @@ approvals:
   # with the kind the runtime gives it, and the semantic surface published as
   # the query it always was.
   - {key: "catalog.queries.semantic.query", change: added, plan_ref: "OPERATOR-DISCOVERY-2026-10-22", pre_approved_by: "Aram 2026-10-22: approved the operator discovery surface — one catalogue over every CLI command, and semantic.query published as a public query"}
+  # One call per intent (agent-cost PLAN D1/B1, workbench/
+  # agent-cost-architecture-2026-10-23): `seal_envelope.py --submit` seals the
+  # GatewayEnvelopeV2 with derived guards and submits it in the same call, so
+  # an operator write no longer needs a hand-built envelope or a second
+  # command. Aram told the session to execute that plan on 2026-10-23 and then
+  # approved landing its changes ("approved do as you see fit").
+  - {key: "tools.seal_envelope.py", change: changed, plan_ref: "AGENT-COST-2026-10-23 D1", pre_approved_by: "Aram 2026-10-23: told the session to execute the agent-cost plan, then 'approved do as you see fit' for landing it"}

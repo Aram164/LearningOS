@@ -63,6 +63,69 @@ def _heading_slugs(path: Path) -> set[str]:
     }
 
 
+def scoped_paths(scope: tuple[str, ...]) -> set[str]:
+    """The documents a scope names, whole or by one of their sections."""
+    return {entry.partition("#")[0] for entry in scope}
+
+
+#: What ``capabilities TASK --json`` inlines (agent-cost plan D7). Every early
+#: read stays in an agent's context and is paid again on every later turn, so
+#: the task read carries the sections it binds instead of naming whole
+#: documents. Bounded (~3k tokens in all) so the entry read stays small.
+READ_SECTION_LIMIT = 6_000
+READ_TOTAL_LIMIT = 12_000
+
+
+def _section(path: Path, anchor: str) -> tuple[str, str, int] | None:
+    """The level-2 heading, full text and first line of one ``path#anchor`` section."""
+    text = path.read_text(encoding="utf-8")
+    line = 1
+    for part in re.split(r"(?m)^(?=## )", text):
+        if part.startswith("## "):
+            heading = part.splitlines()[0][3:].strip()
+            if _slug(heading) == anchor:
+                return heading, part.rstrip() + "\n", line
+        line += part.count("\n")
+    return None
+
+
+def task_reading(root: Path, procedures: tuple[str, ...],
+                 scope: tuple[str, ...]) -> list[dict[str, object]]:
+    """The text a task binds: its procedure sections, then its scoped ones.
+
+    Whole-document scope entries are not inlined. The operator contract is
+    read at entry, and any other whole document is expanded only when the
+    task crosses into it. A section cut at the bound says how much was left
+    out and the exact lines that hold the rest (``rest_lines``, first and
+    last, 1-based), so the next read is one ranged read, not a search.
+    """
+    rows: list[dict[str, object]] = []
+    used = 0
+    refs = [*procedures, *(entry for entry in scope if "#" in entry)]
+    for ref in dict.fromkeys(refs):
+        relative, _, anchor = ref.partition("#")
+        if not (root / relative).is_file():
+            continue
+        found = _section(root / relative, anchor)
+        if found is None:
+            continue
+        heading, text, first_line = found
+        budget = max(0, min(READ_SECTION_LIMIT, READ_TOTAL_LIMIT - used))
+        shown = text if len(text) <= budget else text[:budget].rsplit("\n", 1)[0] + "\n"
+        if len(shown) > budget:
+            shown = ""
+        row: dict[str, object] = {"ref": ref, "text": shown}
+        if len(shown) < len(text):
+            start = first_line + shown.count("\n")
+            end = first_line + text.count("\n") - 1
+            row["omitted_chars"] = len(text) - len(shown)
+            row["rest"] = f"{relative} lines {start}-{end}, section '## {heading}'"
+            row["rest_lines"] = [start, end]
+        rows.append(row)
+        used += len(shown)
+    return rows
+
+
 def _parser_verbs(root: Path) -> set[str]:
     requests = root / REQUESTS_RELATIVE
     if not requests.is_dir():
@@ -104,6 +167,23 @@ def entry_read_verbs(entry_read: str) -> list[str]:
             continue
         verbs.append(candidate)
     return verbs
+
+
+def entry_read_expansions(entry_read: str) -> list[str]:
+    """The names an entry read expands with ``capabilities NAME``.
+
+    ``capabilities capture.create --json`` starts its task at
+    ``capture.create``, not at the discovery verb, so the task is linked to
+    that name and ``capabilities capture.create --json`` returns the task's
+    reading (#22). Placeholders (``NAME``, ``TASK``) are not names.
+    """
+    names = []
+    for span in re.findall(r"`([^`]+)`", entry_read):
+        words = span.split()
+        if len(words) >= 2 and words[0] == "capabilities" \
+                and re.fullmatch(r"[a-z][a-z0-9._-]*", words[1]):
+            names.append(words[1])
+    return names
 
 
 def load_task_scope(root: Path) -> dict[str, TaskScope]:
@@ -208,10 +288,24 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
         if not isinstance(scope, list) or not scope:
             raise TaskScopeError(f"task scope {identifier} declares no scope")
         for document in scope:
-            if not isinstance(document, str) or document not in binding:
+            # A scope entry is a whole binding document or one of its
+            # level-2 sections (`path#anchor`, the anchor rule procedures
+            # use), so a task can bind the section it needs instead of the
+            # whole document.
+            relative, _, anchor = document.partition("#") if isinstance(document, str) \
+                else ("", "", "")
+            if relative not in binding:
                 raise TaskScopeError(
                     f"task scope {identifier} scopes {document!r}, which is not "
                     f"a current binding document")
+            # Checked where the document is present, as procedure anchors
+            # are where the transcripts are: a synthetic repository carries
+            # the contracts without the prose they scope.
+            if anchor and (root / relative).is_file() \
+                    and anchor not in _heading_slugs(root / relative):
+                raise TaskScopeError(
+                    f"task scope {identifier} scopes a section that does not "
+                    f"exist: {document}")
         declared[identifier] = TaskScope(
             id=identifier,
             task=task.strip(),
@@ -229,7 +323,8 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
             raise TaskScopeError(
                 f"corpus document {document.path} applies to unknown tasks: "
                 f"{', '.join(sorted(unknown))}")
-        expected = {task.id for task in declared.values() if document.path in task.scope}
+        expected = {task.id for task in declared.values()
+                    if document.path in scoped_paths(task.scope)}
         if actual != expected:
             raise TaskScopeError(
                 f"corpus document {document.path} applicability disagrees with "

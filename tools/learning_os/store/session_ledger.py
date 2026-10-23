@@ -102,6 +102,67 @@ def process_state_dir(root: Path) -> Path:
     return state
 
 
+def sealed_request_path(root: Path, key: str) -> Path:
+    """Where ``seal_envelope.py --submit`` keeps the envelope it sealed for ``key``.
+
+    Retry state only (agent-cost plan D1): an exact retry after a lost
+    response resubmits these bytes, so the gateway replays the committed
+    receipt instead of seeing a new intent under a used key. Losing the file
+    loses exact replay for that key, never data. The root is part of the
+    name because roots without a git directory share the temp-dir location.
+    """
+    name = hashlib.sha256(f"{Path(root).resolve()}\n{key}".encode()).hexdigest()[:40]
+    return process_state_dir(root) / "sealed-requests" / f"{name}.json"
+
+
+def save_sealed_request(path: Path, text: str) -> None:
+    """Keep one sealed envelope at ``path`` (see :func:`sealed_request_path`)."""
+    _atomic_text(path, text)
+
+
+def _attempt_stem(root: Path, key: str, request_id: str) -> str:
+    rid = hashlib.sha256(request_id.encode()).hexdigest()[:16]
+    return f"{sealed_request_path(root, key).stem}.attempt-{rid}"
+
+
+def sealed_attempt_path(root: Path, key: str, request_id: str) -> Path:
+    """A new file for one sealing attempt under ``key``, kept until it resolves.
+
+    Each attempt has its own file, so the bytes a caller submits are the bytes
+    it sealed even when another caller seals the same key at the same moment.
+    Only the attempt that committed becomes the key's retry file
+    (:func:`promote_sealed_request`); the others are discarded. One that a
+    crash left behind is found again by its request id
+    (:func:`sealed_attempts`).
+    """
+    nonce = os.urandom(4).hex()
+    return sealed_request_path(root, key).with_name(
+        f"{_attempt_stem(root, key, request_id)}-{nonce}.json")
+
+
+def sealed_attempts(root: Path, key: str, request_id: str) -> list[Path]:
+    """The attempt files kept for ``key`` and one request id, oldest name first."""
+    final = sealed_request_path(root, key)
+    return sorted(final.parent.glob(f"{_attempt_stem(root, key, request_id)}-*.json"))
+
+
+def promote_sealed_request(attempt: Path, root: Path, key: str) -> None:
+    """Make the attempt that committed ``key`` its retry file.
+
+    The caller has checked that the attempt's request id is the one the
+    idempotency ledger committed for ``key``. A key commits once, so at most
+    one attempt can ever pass that check and the committed retry file is never
+    replaced by another; what this replaces is only a file that does not
+    hold the committed request (kept by an earlier version of the tool).
+    """
+    os.replace(attempt, sealed_request_path(root, key))
+
+
+def discard_sealed_request(attempt: Path) -> None:
+    """Drop an attempt that did not commit (refused, conflicting, or replayed)."""
+    attempt.unlink(missing_ok=True)
+
+
 def is_anchored(root: Path) -> bool:
     return _git_dir(root) is not None
 

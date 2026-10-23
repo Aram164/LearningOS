@@ -16,7 +16,7 @@ import datetime as _dt
 import time as _time
 from pathlib import Path
 
-from learning_os.derive.validation import render_report, validate  # noqa: E402
+from learning_os.derive.validation import Validator, render_report  # noqa: E402
 from learning_os.domain.validation import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 from learning_os.store.fingerprint import seed_source_fingerprint  # noqa: E402
 from learning_os.store.loader import load_repo  # noqa: E402
@@ -41,6 +41,9 @@ def build_parser() -> argparse.ArgumentParser:
                              "streaming every unchanged warning; the complete "
                              "list stays in the validation report unless "
                              "--no-report is also given")
+    parser.add_argument("--timings", action="store_true",
+                        help="after the summary, print seconds and share of the "
+                             "run per check, slowest first")
     return parser
 
 
@@ -65,7 +68,8 @@ def main() -> int:
         # same bytes again. A write landing between the pin and the load
         # is already caught: the next `status` misses on the pins.
         seed_source_fingerprint(repo, f"sha256:{pins['canonical_fingerprint']}")
-    issues = validate(repo, online=args.online)
+    validator = Validator(repo, online=args.online)
+    issues = validator.run()
     elapsed = _time.monotonic() - started
 
     errors = [i for i in issues if i.severity == "E"]
@@ -89,6 +93,10 @@ def main() -> int:
             print(issue)
         print(f"\n{len(errors)} error(s), {len(warnings)} warning(s) — "
               f"{'FAIL' if errors else 'OK'}")
+    if args.timings:
+        checked = sum(validator.timings.values()) or 1.0
+        for name, seconds in sorted(validator.timings.items(), key=lambda kv: -kv[1]):
+            print(f"  {seconds:6.2f}s {100 * seconds / checked:5.1f}%  {name}")
 
     if not args.no_report:
         generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")

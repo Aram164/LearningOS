@@ -30,6 +30,10 @@ def generated_file_findings(path: Path) -> list[tuple[str, str]]:
     """
     name = path.name
     if name.endswith(".md"):
+        if path.is_symlink() and not path.exists():
+            return [("GEN-HEADER",
+                     "generated Markdown is a broken symlink, not the "
+                     "published view — delete it and rebuild")]
         if not path.is_file():
             return [("GEN-HEADER",
                      "generated Markdown is a directory, not the published "

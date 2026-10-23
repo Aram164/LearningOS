@@ -49,6 +49,37 @@ def test_pre_existing_detail_keys_survive(mini_repo):
         kind="result")
 
 
+@pytest.mark.parametrize("paths, total", [([], 0), (["knowledge/note.md"], 1),
+                                        (["knowledge/note.md"], 40)])
+def test_projection_input_details_are_validated(mini_repo, paths, total):
+    response = _response({
+        "stage": "core.projection", "rollback_complete": True,
+        "reason": "CANONICAL_INPUTS_CHANGED",
+        "changed_paths": paths, "changed_paths_total": total,
+    })
+    response["error"]["code"] = "PROJECTION_FAILED"
+    _validate_capability_envelope(mini_repo, response, kind="result")
+
+
+@pytest.mark.parametrize("change", [
+    {"reason": "CANONICAL_INPUTS_CHANGED"},
+    {"changed_paths": []},
+    {"changed_paths_total": 0},
+    {"reason": "NOT_FOUND", "changed_paths": [], "changed_paths_total": 0},
+    {"changed_paths": "knowledge/note.md", "changed_paths_total": 1},
+    {"changed_paths": [""], "changed_paths_total": 1},
+    {"changed_paths": ["knowledge/note.md"] * 2, "changed_paths_total": 2},
+    {"changed_paths": [f"knowledge/note-{i}.md" for i in range(33)],
+     "changed_paths_total": 33},
+    {"changed_paths": [], "changed_paths_total": -1},
+    {"changed_paths": [], "changed_paths_total": "0"},
+])
+def test_malformed_projection_input_details_are_refused(mini_repo, change):
+    details = {"reason": "CANONICAL_INPUTS_CHANGED", **change}
+    with pytest.raises(WriteRefused):
+        _validate_capability_envelope(mini_repo, _response(details), kind="result")
+
+
 @pytest.mark.parametrize("details", [
     {"reason": ["NOT_FOUND"]},
     {"suggestions": 5},

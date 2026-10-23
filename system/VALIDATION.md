@@ -215,6 +215,11 @@ stage id + `runtime_target` + sorted `(route_id, affordance)` pairs).
 - **W** `RUNTIME-REVIEW-STALE` — the payload no longer matches the fingerprint;
   re-review and refresh it.
 
+An imported map (`unit-map-import`, `module-plan-import`, a unit plan
+revision) may declare a review without its fingerprint: the import fills it
+from the stage it writes. A fingerprint already written is kept, so a stale
+review stays stale until someone re-reviews it.
+
 Warnings, never errors: the invariant is being introduced into existing
 authored state. `reviewed_by` is a declared attestation, not authenticated
 proof — the transaction history proves when the metadata was written, not the

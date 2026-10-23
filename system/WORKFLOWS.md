@@ -722,9 +722,13 @@ with apply, `--staged-basis`, in-repository targets, and existing files.
 Hand-editing a `study-map.yaml` or a `source-map.yaml` produces a file the
 validator accepts and the pre-commit hook passes, so nothing will object — but
 it skips the snapshot guard, the artifact-revision check, and the append-only
-receipt, and afterwards nothing distinguishes it from a mediated write.
-`tools/plan_write_audit.py` measures how much of the plan surface has changed
-that way. A migration under `tools/migrations/` is the one legitimate exception,
+receipt. `tools/plan_write_audit.py` reports whether plan-changing commits also
+added receipt documents across the Git refs available in the clone. This is
+commit co-occurrence, not proof of per-write gateway provenance: a receipt can
+concern another write or be committed separately. Ledger updates and edits to
+existing receipts do not count as receipt additions; the report does not
+validate receipt schemas, write sets or hashes. A migration under
+`tools/migrations/` is the one legitimate exception to the governed write path,
 and it is legitimate because it is recorded.
 
 ## 25b. Save a batch of source analyses
@@ -775,15 +779,24 @@ missing diagnosis: the `message` names the defect.
 
 Procedure: [capture transcript](procedures/build-write-envelope.md#step-6-submit-the-envelope).
 
-**Sealing helper.** `.venv/bin/python tools/seal_envelope.py --capability NAME
---payload JSON-or-@FILE --key KEY --guards auto` reads the snapshot live,
-derives the exact guard set, and emits the sealed envelope above (to
-stdout, or `--out` a scratch path — never inside the repo). It performs
-steps 2, 3, 4 and 5, minting a fresh `request_id` per run — so seal once
-per attempt and keep the output: a retry resubmits that saved envelope,
-never a re-sealed one (step 4). The derived guard set is printed on
-stderr for the approval record. An explicit `--revision ART=REV` stays
-and wins over the derived entry when given. Submit the output via step 6.
+**One-call write.** `.venv/bin/python tools/seal_envelope.py --capability
+NAME --payload JSON-or-@FILE --key KEY --submit` reads the snapshot live,
+derives the exact guard set, binds any file the payload names to its bytes,
+seals, and submits (steps 2 to 6) in one call; its `validation:` line is the
+commit's own check. A retry is the same call under the same key: the kept
+envelope replays the original receipt, while another payload, channel or
+session under that key is refused as `IDEMPOTENCY_CONFLICT`. A write that
+needs review first is two calls: `--guards auto --check-out REC`, then
+`--guards-from REC --submit`.
+
+**Sealing helper.** Without `--submit`, `--guards auto` emits the sealed
+envelope above (to stdout, or `--out` a scratch path — never inside the
+repo). It performs steps 2, 3, 4 and 5, minting a fresh `request_id` per
+run — so seal once per attempt and keep the output: a retry resubmits that
+saved envelope, never a re-sealed one (step 4). The derived guard set is
+printed on stderr for the approval record. An explicit `--revision ART=REV`
+stays and wins over the derived entry when given. Submit the output via
+step 6.
 
 ## 26. Source routing and feedback
 

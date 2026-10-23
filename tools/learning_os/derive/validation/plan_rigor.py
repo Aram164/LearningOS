@@ -105,6 +105,12 @@ _EM_DASH_RE = re.compile(r"\s—\s")
 
 
 def _filename_present(name: str, locator: str) -> bool:
+    # The substring test is necessary for the boundary match, so it never
+    # changes the answer. It is here for cost: this runs once per route and
+    # manifest name, and a fresh pattern per pair defeats re's cache — it was
+    # ~70 % of a full validation on the live tree (2026-10-23).
+    if name not in locator:
+        return False
     return bool(re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", locator))
 
 

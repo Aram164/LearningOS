@@ -675,3 +675,24 @@ def test_frozen_broadcast_has_exact_historical_findings_and_repaired_rows_have_n
     assert sum(message.count("route-an-") for message in duplicates) == 6
     assert locator_binding_findings(fixture["module_id"], fixture["source_id"],
         fixture["revisions"]["repaired"]["routes"], {"ana_inf_serie05.pdf", "unser skript.pdf"}) == []
+
+
+@pytest.mark.parametrize(("name", "locator"), [
+    ("script.pdf", "script.pdf p. 3"),
+    ("script.pdf", "see myscript.pdf p. 3"),
+    ("script.pdf", "script.pdfx"),
+    ("script.pdf", "Lecture 2, slides"),
+    ("a.pdf", "a.pdf, b.pdf"),
+    ("b.pdf", "a.pdf,b.pdf"),
+    ("ü.pdf", "ü.pdf"),
+    ("", "anything"),
+    ("", ""),
+])
+def test_filename_present_prefilter_never_changes_the_answer(name, locator):
+    """The substring pre-filter is only a cost guard: the boundary regex decides."""
+    import re
+
+    from learning_os.derive.validation.plan_rigor import _filename_present
+
+    expected = bool(re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", locator))
+    assert _filename_present(name, locator) is expected

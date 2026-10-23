@@ -3,26 +3,321 @@ module_id: module-hu-icop
 sources:
 - source_id: source-icop-hu-ws2627
   role: course-material
-  why: Current organization and linear-programming slides supplied by Aram; the screenshot
-    preserves Moodle further-reading names.
-  when: WS 2026/27 course reference; no lecture units or study order inferred.
+  why: Current organization and linear-programming slides supplied by Aram; the screenshot preserves Moodle
+    further-reading names.
+  when: 'Confirmed by Aram on 2026-10-22: the entire 129-page LP chapter, divided into sessions. Course
+    definitions and proofs remain authoritative.'
   priority: 1
-  unit_routes: []
+  unit_routes:
+  - id: route-icop-l01-deck-forms
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Model an LP and translate its forms
+    format: course-material
+    angle: Course notation and the actual shortest-path modeling task fix the meaning of each formulation.
+    angle_detail: Read the deck framing on pages 1-5; work pages 6-23. Kratsch canonical means min c^T
+      x with Ax<=b and x>=0; standard means Ax=b and x>=0. Do not carry names across textbooks without
+      checking the equations. Read the indicated physical PDF pages; the complete deck remains the scope
+      authority.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 1-23
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-geometry
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — See constraints and objectives geometrically
+    format: course-material
+    angle: Course geometric definitions and segment arguments connect local and global LP optimality.
+    angle_detail: Recall the existing convexity idea through note-aml-l06-gradient-descent §7; add the
+      LP-specific proof and polyhedral structure here. Convexity does not imply a unique optimizer; do
+      not assume uniqueness when an objective is constant along a face. Read the indicated physical PDF
+      pages; the complete deck remains the scope authority.
+    covers:
+    - knowledge-icop-l01-geometry
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 24-40
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-bases
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Connect vertices, extreme points and feasible bases
+    format: course-material
+    angle: Course proofs establish the vertex/extreme-point/BFS equivalence and support reduction.
+    angle_detail: 'Distinguish independent support columns from a full m-column basis; a degenerate BFS
+      may have fewer than m positive coordinates. Answer the question on slide 55: standard-form nonempty
+      feasible polyhedra have vertices; arbitrary LP polyhedra need not. Read the indicated physical PDF
+      pages; the complete deck remains the scope authority.'
+    covers:
+    - knowledge-icop-l01-bases
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 41-62
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-pivots
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Derive and carry out a simplex pivot
+    format: course-material
+    angle: Course matrix derivation connects reduced costs and the ratio test to a feasible edge move.
+    angle_detail: Use the matrix derivation first; Blum §8.2 PDF pages 244-245 is optional tableau support.
+      Carry one small LP forward into the duality sessions instead of starting a new numerical example
+      every time. Read the indicated physical PDF pages; the complete deck remains the scope authority.
+    covers:
+    - knowledge-icop-l01-pivots
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 63-81
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-phase-one
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Find a starting basis and handle failure cases
+    format: course-material
+    angle: Course auxiliary-LP construction and bit-cost discussion handle the missing starting basis.
+    angle_detail: Revisit slide 67 before applying nondegeneracy claims; explain the zero artificial-variable
+      cleanup or redundant-row case. Klee-Minty and the Hirsch discussion are context on slides 90-91.
+      Detailed smoothed analysis and interior-point papers remain deferred. Read the indicated physical
+      PDF pages; the complete deck remains the scope authority.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 82-91
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-standard-duality
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Prove bounds and standard-form duality
+    format: course-material
+    angle: Course optimal-basis certificate proves weak and strong duality in standard form.
+    angle_detail: Use Cornell L14 then L15 for examples and L16 for the simplex-to-duality connection.
+      Keep the optimal-basis/nonnegative-reduced-cost qualification when discussing degenerate solutions.
+      Read the indicated physical PDF pages; the complete deck remains the scope authority.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 92-102
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-general-duality
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Derive dual signs and diagnose primal-dual status
+    format: course-material
+    angle: Course transformations derive general sign rules and the complete primal-dual status table.
+    angle_detail: Cornell L8 supports transformations; MIT Shor L13 is an optional second perspective.
+      Explain why an unbounded primal forces dual infeasibility, while primal infeasibility alone does
+      not force dual unboundedness. Read the indicated physical PDF pages; the complete deck remains the
+      scope authority.
+    covers:
+    - knowledge-icop-l01-general-duality
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 103-115
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-slackness
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Use complementary slackness as an optimality certificate
+    format: course-material
+    angle: Course gap decomposition proves the full complementary-slackness theorem.
+    angle_detail: Cornell L17 supplies examples; its packet does not prove the converse explicitly, so
+      complete the proof from Kratsch/Blum. Read the chapter summary on slide 125 and identify how modeling,
+      geometry, bases, simplex and dual certificates connect. Read the indicated physical PDF pages; the
+      complete deck remains the scope authority.
+    covers:
+    - knowledge-icop-l01-slackness
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 116-125
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-deck-oral-review
+    unit_id: unit-icop-l01-linear-programming
+    title: Kratsch — Integrate the chapter and rehearse the oral exam
+    format: course-material
+    angle: Course outlook and further exercises test transfer after the chapter; oral criteria come from
+      the organization deck.
+    angle_detail: Read organization slides 15-16 for the oral expectations; use your own blackboard notes
+      where available (organization slide 12 says the PDFs omit sketches). Slide 126 is an outlook only.
+      The further exercises on slides 128-129 provide practice; organization slide 16 does not make their
+      solutions exam content. Read the indicated physical PDF pages; the complete deck remains the scope
+      authority.
+    covers:
+    - knowledge-icop-l01-oral-review
+    depth: course-aligned
+    scope: current
+    locator: ico_linearprogramming.pdf, pdf pp. 126-129
+    vault_path: material://source-icop-hu-ws2627/ico_linearprogramming.pdf
+  - id: route-icop-l01-organization
+    unit_id: unit-icop-l01-linear-programming
+    title: ICOP oral-exam expectations and missing board sketches
+    format: course-material
+    angle: Defines the actual oral format and separates lecture exercises from further transfer exercises.
+    angle_detail: 'Organization slides 12 and 15-16: the PDF omits some blackboard sketches; exam is 30
+      minutes with definitions, facts, methods and main proof ideas. Further transfer-exercise solutions
+      are excluded from exam content.'
+    covers:
+    - knowledge-icop-l01-oral-review
+    depth: orientation
+    scope: current
+    locator: ico_organization.pdf, pdf pp. 12-16
+    vault_path: material://source-icop-hu-ws2627/ico_organization.pdf
 - source_id: source-korte-vygen
   role: spine
-  why: The lecturer identifies Korte & Vygen fifth edition (2012) as the main book
-    (organization slide 6).
-  when: Reference-only shelf; Chapter 3 is recommended after the linear-programming
-    chapter (LP slide 2).
+  why: The lecturer identifies Korte & Vygen fifth edition (2012) as the main book (organization slide
+    6).
+  when: Reference-only shelf; Chapter 3 is recommended after the linear-programming chapter (LP slide
+    2).
   priority: 2
-  unit_routes: []
+  unit_routes:
+  - id: route-icop-l01-kv-review
+    unit_id: unit-icop-l01-linear-programming
+    title: Korte & Vygen — Chapter 3 overview after the LP chapter
+    format: book
+    angle: An English polyhedral overview reconnects simplex and duality after completing Kratsch, as
+      slide 2 recommends.
+    angle_detail: Chapter 3 exposition is physical PDF pages 70-87, exercises 87-89 and references 89-90.
+      Its opening max{cx:Ax<=b} with unrestricted variables uses different conventions; translate the
+      equations explicitly. This is a reference after the chapter, not prerequisite reading.
+    covers:
+    - knowledge-icop-l01-oral-review
+    - knowledge-icop-l01-geometry
+    - knowledge-icop-l01-pivots
+    - knowledge-icop-l01-standard-duality
+    depth: advanced-reference
+    scope: optional
+    locator: 'Chapter 3: Linear Programming, pdf pp. 70-90'
+    vault_path: material://source-korte-vygen/korte-vygen-combinatorial-optimization-5e.pdf
 - source_id: source-blum-algorithmen-datenstrukturen
   role: reference
-  why: The linear-programming slides explicitly follow Chapter 8 of Blum, second edition
-    (LP slide 2).
-  when: Reference-only shelf for linear programming.
+  why: The linear-programming slides explicitly follow Chapter 8 of Blum, second edition (LP slide 2).
+  when: Matching written derivation alongside the current slides; stop before dual simplex at the bottom
+    of PDF page 255.
   priority: 3
-  unit_routes: []
+  unit_routes:
+  - id: route-icop-l01-blum-forms
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Model an LP and translate its forms
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.1, pdf pp. 229-232: Model an LP and translate its forms'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-geometry
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — See constraints and objectives geometrically
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-geometry
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.1, pdf pp. 232-234: See constraints and objectives geometrically'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-bases
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Connect vertices, extreme points and feasible bases
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-bases
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.1, pdf pp. 234-238: Connect vertices, extreme points and feasible bases'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-pivots
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Derive and carry out a simplex pivot
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-pivots
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.2, pdf pp. 238-245: Derive and carry out a simplex pivot'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-phase-one
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Find a starting basis and handle failure cases
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.2, pdf pp. 245-249: Find a starting basis and handle failure cases'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-standard-duality
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Prove bounds and standard-form duality
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.3, pdf pp. 249-251: Prove bounds and standard-form duality'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-general-duality
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Derive dual signs and diagnose primal-dual status
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-general-duality
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.3, pdf pp. 251-254: Derive dual signs and diagnose primal-dual status'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-slackness
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Use complementary slackness as an optimality certificate
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Stop before dual-simplex discussion
+      at the bottom of PDF page 255.
+    covers:
+    - knowledge-icop-l01-slackness
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 8 §8.3, pdf pp. 254-255: Use complementary slackness as an optimality certificate'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
+  - id: route-icop-l01-blum-oral-review
+    unit_id: unit-icop-l01-linear-programming
+    title: Blum — Integrate the chapter and rehearse the oral exam
+    format: book
+    angle: The lecturer's chosen German reference writes out the matching argument in continuous prose.
+    angle_detail: Read only the stated subsection span as a repair/derivation option. Physical PDF page
+      numbers include the cover; the chapter offset is printed page +12. Page overlaps reflect section
+      transitions; follow the topic heading named here.
+    covers:
+    - knowledge-icop-l01-oral-review
+    depth: practice
+    scope: complementary
+    locator: 'Chapter 8 §8.5, exercises 8.15-8.16, pdf pp. 266-266: Integrate the chapter and rehearse
+      the oral exam'
+    vault_path: material://source-blum-algorithmen-datenstrukturen/blum-algorithmen-und-datenstrukturen-2e.pdf
 - source_id: source-dantzig-orden-wolfe-generalized-simplex-1955
   role: optional-depth
   why: Named in the supplied Moodle screenshot as recommended reading for linear programming.
@@ -47,3 +342,551 @@ sources:
   when: 'Deferred: save the name and fetch only if needed, as Aram requested.'
   priority: 7
   unit_routes: []
+- source_id: source-mit-18200-2024
+  role: first-exposure
+  why: Shor L12 supplies concrete LP models before the HU formal treatment; L13 is an alternative explanation
+    for duality.
+  when: Selected support only where explicitly placed; all other lecture options remain reference-only.
+  priority: 8
+  unit_routes:
+  - id: route-icop-l01-mit12
+    unit_id: unit-icop-l01-linear-programming
+    title: Shor L12 — Introduction to Linear Programming
+    format: video
+    angle: Diet and bake-sale models give concrete meaning to the variables and constraints before the
+      formal HU transformations.
+    angle_detail: Official description and transcript establish the introduction and forms. Watch once
+      as an opening explanation; then do the HU task. No duration, timestamp, full-video examination or
+      proof-equivalence claim is made.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: orientation
+    scope: complementary
+    locator: 'MIT 18.200 Lecture 12: Introduction to Linear Programming'
+    url: https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-12-version-2_mp4/
+  - id: route-icop-l01-mit13
+    unit_id: unit-icop-l01-linear-programming
+    title: Shor L13 — Duality in Linear Programming
+    format: video
+    angle: An alternative duality explanation links arbitrary dual construction, slackness and a min-max
+      application.
+    angle_detail: Official description verifies these topics. Keep this reference-only unless the Cornell/HU
+      explanation leaves a specific gap; it is not an additional mandatory full lecture.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    - knowledge-icop-l01-general-duality
+    - knowledge-icop-l01-slackness
+    depth: intuition
+    scope: optional
+    locator: 'MIT 18.200 Lecture 13: Duality in Linear Programming'
+    url: https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-13-version-2_mp4/
+- source_id: source-cornell-topaloglu-lp
+  role: intuition
+  why: Worked examples and algebraic explanations support geometry, simplex and duality; course packet
+    and notes make the intended content inspectable.
+  when: Selected support only where explicitly placed; all other lecture options remain reference-only.
+  priority: 9
+  unit_routes:
+  - id: route-icop-l01-cornell-1
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L1 — Formulating a Linear Program and Excel's Solver
+    format: video
+    angle: A second applied modeling example is available when Shor leaves an abstraction gap.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 1: Formulating a Linear Program and
+      Excel''s Solver'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-1
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L1 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_1.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 1 handwritten notes, pdf pp. 1-7
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_1.pdf
+  - id: route-icop-l01-cornell-2
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L2 — Geometry of Linear Programming
+    format: video
+    angle: Worked two-variable pictures connect algebraic constraints with objective movement.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-geometry
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 2: Geometry of Linear Programming'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-2
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L2 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_2.pdf, physical PDF pages 1-5. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-geometry
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 2 handwritten notes, pdf pp. 1-5
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_2.pdf
+  - id: route-icop-l01-cornell-3
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L3 — Useful Linear Algebra Concepts
+    format: video
+    angle: A targeted linear-algebra refresher prepares basis calculations without assigning a whole textbook.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations. Full HU vertex/extreme-point/BFS
+      proof equivalence was not established for this external lecture.
+    covers:
+    - knowledge-icop-l01-bases
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 3: Useful Linear Algebra Concepts'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-3
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L3 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_3.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations. Full HU vertex/extreme-point/BFS proof equivalence was not established for this external
+      lecture.
+    covers:
+    - knowledge-icop-l01-bases
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 3 handwritten notes, pdf pp. 1-6
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_3.pdf
+  - id: route-icop-l01-cornell-4
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L4 — Introduction to the Simplex Method
+    format: video
+    angle: Row-operation examples turn the basis idea into a computable simplex step.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations. Full HU vertex/extreme-point/BFS
+      proof equivalence was not established for this external lecture.
+    covers:
+    - knowledge-icop-l01-bases
+    - knowledge-icop-l01-pivots
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 4: Introduction to the Simplex Method'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-4
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L4 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_4.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations. Full HU vertex/extreme-point/BFS proof equivalence was not established for this external
+      lecture.
+    covers:
+    - knowledge-icop-l01-bases
+    - knowledge-icop-l01-pivots
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 4 handwritten notes, pdf pp. 1-6
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_4.pdf
+  - id: route-icop-l01-cornell-5
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L5 — A Second Example on the Simplex Method
+    format: video
+    angle: A second numerical pivot example lets you test whether you can follow the mechanics independently.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-pivots
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 5: A Second Example on the Simplex Method'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-5
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L5 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_5.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-pivots
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 5 handwritten notes, pdf pp. 1-7
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_5.pdf
+  - id: route-icop-l01-cornell-6
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L6 — Phase-1 Linear Program to Construct a Feasible Solution to a Linear Program
+    format: video
+    angle: A complete Phase-I example builds an initial feasible solution instead of assuming one.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 6: Phase-1 Linear Program to Construct
+      a Feasible Solution to a Linear Program'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-6
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L6 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_6.pdf, physical PDF pages 1-7. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 6 handwritten notes, pdf pp. 1-7
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_6.pdf
+  - id: route-icop-l01-cornell-7
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L7 — Solving a Linear Program Starting with the Feasible Solution from the Phase-1
+      Linear Program
+    format: video
+    angle: The continuation after Phase I shows how its feasible basis feeds the original objective.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 7: Solving a Linear Program Starting
+      with the Feasible Solution from the Phase-1 Linear Program'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-7
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L7 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_7.pdf, physical PDF pages 1-10. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 7 handwritten notes, pdf pp. 1-10
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_7.pdf
+  - id: route-icop-l01-cornell-8
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L8 — Linear Programs in General Form
+    format: video
+    angle: Explicit general-form conversions provide a second way to check sign and variable transformations.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-forms
+    - knowledge-icop-l01-general-duality
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 8: Linear Programs in General Form'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-8
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L8 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_8.pdf, physical PDF pages 1-3. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-forms
+    - knowledge-icop-l01-general-duality
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 8 handwritten notes, pdf pp. 1-3
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_8.pdf
+  - id: route-icop-l01-cornell-9
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L9 — Unbounded Linear Programs, Multiple Optima and Degeneracy
+    format: video
+    angle: Separate examples distinguish unboundedness, multiple optima and degeneracy.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 9: Unbounded Linear Programs, Multiple
+      Optima and Degeneracy'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-9
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L9 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_9.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-phase-one
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 9 handwritten notes, pdf pp. 1-9
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_9.pdf
+  - id: route-icop-l01-cornell-14
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L14 — Introduction to Duality
+    format: video
+    angle: Constructing a dual from a model gives the certificate variables a concrete interpretation.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 14: Introduction to Duality'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-14
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L14 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_14.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 14 handwritten notes, pdf pp. 1-9
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_14.pdf
+  - id: route-icop-l01-cornell-15
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L15 — Weak Duality
+    format: video
+    angle: Numerical bounds make the direction of weak-duality inequalities checkable.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 15: Weak Duality'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-15
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L15 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_15.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 15 handwritten notes, pdf pp. 1-9
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_15.pdf
+  - id: route-icop-l01-cornell-16
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L16 — Strong Duality
+    format: video
+    angle: The simplex-to-duality derivation connects reduced costs to an optimal dual solution.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 16: Strong Duality'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-16
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L16 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_16.pdf, physical PDF pages 1-9. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 16 handwritten notes, pdf pp. 1-9
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_16.pdf
+  - id: route-icop-l01-cornell-17
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L17 — Complementary Slackness
+    format: video
+    angle: Complementary-slackness calculations show how tight constraints identify an optimal partner.
+    angle_detail: Official course title, linked handwritten notes and course packet checked on 2026-10-22.
+      Use the named video from the official course page, or the linked notes for a written alternative.
+      HU/Blum supply the exact course definitions and proof obligations. The course packet explicitly
+      leaves the converse proof unproved; do not stop the HU proof at the example.
+    covers:
+    - knowledge-icop-l01-slackness
+    depth: intuition
+    scope: complementary
+    locator: 'Cornell Fundamentals of Linear Programming, Lecture 17: Complementary Slackness'
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lp_course.html
+  - id: route-icop-l01-cornell-notes-17
+    unit_id: unit-icop-l01-linear-programming
+    title: Cornell L17 — handwritten notes
+    format: course-material
+    angle: A written companion lets you pause the same example and reconstruct its algebra at your own
+      pace.
+    angle_detail: Official lecture_17.pdf, physical PDF pages 1-6. These are the lecture-specific handwritten
+      notes, distinct from chapter numbering in the combined packet. Official course title, linked handwritten
+      notes and course packet checked on 2026-10-22. Use the named video from the official course page,
+      or the linked notes for a written alternative. HU/Blum supply the exact course definitions and proof
+      obligations. The course packet explicitly leaves the converse proof unproved; do not stop the HU
+      proof at the example.
+    covers:
+    - knowledge-icop-l01-slackness
+    depth: course-aligned
+    scope: complementary
+    locator: Cornell Lecture 17 handwritten notes, pdf pp. 1-6
+    url: https://people.orie.cornell.edu/huseyin/lp_course/lecture_17.pdf
+- source_id: source-stanford-cs261-2016
+  role: reference
+  why: Optional algorithms-oriented LP and duality explanations from the supplied research.
+  when: Selected support only where explicitly placed; all other lecture options remain reference-only.
+  priority: 10
+  unit_routes:
+  - id: route-icop-l01-stanford-7
+    unit_id: unit-icop-l01-linear-programming
+    title: 'Stanford CS261 L7 — Linear Programming: Introduction and Applications'
+    format: video
+    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
+    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
+      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
+      video links from the course page.
+    covers:
+    - knowledge-icop-l01-forms
+    - knowledge-icop-l01-geometry
+    depth: intuition
+    scope: optional
+    locator: 'Stanford CS261 (Winter 2016), Lecture 7: Linear Programming: Introduction and Applications'
+    url: https://theory.stanford.edu/~tim/w16/w16.html
+  - id: route-icop-l01-stanford-8
+    unit_id: unit-icop-l01-linear-programming
+    title: Stanford CS261 L8 — Linear Programming Duality (Part 1)
+    format: video
+    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
+    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
+      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
+      video links from the course page.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    - knowledge-icop-l01-general-duality
+    depth: intuition
+    scope: optional
+    locator: 'Stanford CS261 (Winter 2016), Lecture 8: Linear Programming Duality (Part 1)'
+    url: https://theory.stanford.edu/~tim/w16/w16.html
+  - id: route-icop-l01-stanford-9
+    unit_id: unit-icop-l01-linear-programming
+    title: Stanford CS261 L9 — Linear Programming Duality (Part 2)
+    format: video
+    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
+    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
+      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
+      video links from the course page.
+    covers:
+    - knowledge-icop-l01-standard-duality
+    - knowledge-icop-l01-slackness
+    depth: intuition
+    scope: optional
+    locator: 'Stanford CS261 (Winter 2016), Lecture 9: Linear Programming Duality (Part 2)'
+    url: https://theory.stanford.edu/~tim/w16/w16.html
+  - id: route-icop-l01-stanford-10
+    unit_id: unit-icop-l01-linear-programming
+    title: Stanford CS261 L10 — The Minimax Theorem & Algorithms for Linear Programming
+    format: video
+    angle: An algorithms-oriented second opinion connects the LP idea to combinatorial optimization.
+    angle_detail: Official 2016 course schedule verifies the numbered lecture. L7/L8 notes were inspected;
+      L9/L10 note retrieval timed out, so their detailed mapping is syllabus-based. Access the official
+      video links from the course page.
+    covers:
+    - knowledge-icop-l01-oral-review
+    depth: intuition
+    scope: optional
+    locator: 'Stanford CS261 (Winter 2016), Lecture 10: The Minimax Theorem & Algorithms for Linear Programming'
+    url: https://theory.stanford.edu/~tim/w16/w16.html
+- source_id: source-mit-6046j
+  role: reference
+  why: Existing registered MIT algorithms course; Lecture 15 is an alternate first explanation.
+  when: Selected support only where explicitly placed; all other lecture options remain reference-only.
+  priority: 11
+  unit_routes:
+  - id: route-icop-l01-mit6046
+    unit_id: unit-icop-l01-linear-programming
+    title: 'MIT 6.046J L15 — Linear Programming: LP, Reductions, Simplex'
+    format: video
+    angle: An algorithms-focused alternative opening connects LP formulations, reductions and certificates.
+    angle_detail: Official lecture page resolves and lists the LP, reductions and simplex lecture. Keep
+      as an alternate explanation, not an additional compulsory introduction or a substitute for the local
+      simplex proof.
+    covers:
+    - knowledge-icop-l01-forms
+    depth: orientation
+    scope: optional
+    locator: 'MIT 6.046J Lecture 15: Linear Programming: LP, Reductions, Simplex'
+    url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-15-linear-programming-lp-reductions-simplex/

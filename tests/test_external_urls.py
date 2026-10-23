@@ -125,6 +125,9 @@ def test_online_gate_blocks_rot_but_keeps_access_control_advisory(
             self.repo = SimpleNamespace(root=tmp_path)
             self.issues = []
 
+        def _canonical_texts(self):
+            return []
+
         def err(self, code, message, path=""):
             self.issues.append(("E", code, message, path))
 
@@ -138,3 +141,42 @@ def test_online_gate_blocks_rot_but_keeps_access_control_advisory(
         ("E", "URL-DEAD"),
         ("W", "URL-ACCESS-CONTROLLED"),
     ]
+
+
+def test_online_audit_reads_link_urls_from_the_texts_already_read(
+    mini_repo, monkeypatch
+):
+    """The URL sweep takes canonical Markdown from the validator's one read.
+
+    It walked and read every note a second time; and a link with a title
+    was invisible to it, as to the link check.
+    """
+    from pathlib import Path
+
+    from learning_os.derive.validation.core import Validator
+    from learning_os.store.loader import load_repo
+
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(
+        note.read_text(encoding="utf-8")
+        + '\n[docs](https://example.org/titled "with a title")\n',
+        encoding="utf-8")
+    monkeypatch.setattr(generated, "_loaded_http_urls", lambda _repo: set())
+    monkeypatch.setattr(generated, "_projected_http_urls", lambda _repo: set())
+    probed: list[str] = []
+    monkeypatch.setattr(generated, "_probe_external_url",
+                        lambda url: probed.append(url) or (None, "HTTP 200"))
+    validator = Validator(load_repo(mini_repo))
+    validator._canonical_texts()
+    reads: list[Path] = []
+    original = Path.read_text
+
+    def counted(self, *args, **kwargs):
+        if self == note:
+            reads.append(self)
+        return original(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", counted)
+    validator.check_external_urls()
+    assert probed == ["https://example.org/titled"]
+    assert reads == []

@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
-"""How did the plans on disk actually get there?
+"""Inspect plan changes and receipt additions committed together.
 
-This repository has a designed way to create and change a plan: a declared
-capability, committed through the transaction service, snapshot-guarded,
-validated whole, and recorded by an append-only receipt under
-`operations/transactions/`. `module.plan.import` carries a module's source map
-and its units together; `unit.map.import` carries one unit's map; the smaller
-stage capabilities carry progress, notes, feedback and detours.
+The transaction service records canonical writes with append-only receipts
+under `operations/transactions/`. This tool measures a narrower fact: which
+plan-changing commits also added a YAML document whose type is
+`transaction-receipt`. Ledger updates, edits to existing receipts, and renames
+recognized by Git do not count as additions. Receipt documents are identified
+by their type marker; this audit does not validate their schemas or match their
+write sets and content hashes to individual plan changes.
 
-Nothing makes that path mandatory, and — the part that matters — nothing makes
-its absence visible. A plan record edited with a text editor or an ad-hoc
-script lands in exactly the same shape, passes the same validator, and is
-indistinguishable from a gateway write the moment the commit is made.
+Co-occurrence is not proof that the gateway mediated a plan change. A receipt
+may concern a different write, or be committed separately from its plan;
+recorded migrations are also legitimate. Investigate the actual receipt and
+change before making a provenance judgment.
 
-So this tool asks the only question that separates them after the fact: for
-every commit that changed a plan record, was a transaction receipt written in
-the same commit? A commit with no receipt is not necessarily wrong — migrations
-and the assembler's own drafts are legitimate — but it is a change the gateway
-did not mediate, and the count is the honest size of that.
+History covers commits selected by `git log --all` for the declared plan
+paths, using all refs available in this clone. It excludes uncommitted changes,
+unreachable commits, and history absent from a shallow or incomplete clone.
+The on-disk receipt count describes the current working tree separately.
 
     python tools/plan_write_audit.py            # summary
-    python tools/plan_write_audit.py --list     # every off-gateway commit
+    python tools/plan_write_audit.py --list     # commits without receipt additions
 """
 
 from __future__ import annotations
@@ -29,6 +29,8 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -58,6 +60,50 @@ def commits_touching(paths) -> list[str]:
     return out.split() if out else []
 
 
+def is_receipt(text: str, location: str) -> bool:
+    """Identify receipt documents without claiming schema or hash validation."""
+    try:
+        document = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        sys.exit(f"transaction YAML could not be inspected: {location}\n{exc}")
+    return isinstance(document, dict) and document.get("type") == "transaction-receipt"
+
+
+def receipt_added(commit: str) -> bool:
+    """Does a commit add a receipt, rather than edit or rename one?
+
+    Inspect the whole diff before filtering paths so renames from outside the
+    transaction directory remain renames. For merges an addition must be new
+    relative to every parent, rather than brought in from one parent branch.
+    """
+    parents = git("rev-list", "--parents", "-n", "1", commit).split()[1:]
+    comparisons = [(parent, commit) for parent in parents] or [(commit,)]
+    additions = None
+    for comparison in comparisons:
+        changes = git("diff-tree", "--root", "--no-commit-id", "--name-status",
+                      "-r", "--find-renames", "--diff-filter=A", "-z", *comparison)
+        fields = changes.rstrip("\0").split("\0") if changes else []
+        paths = {path for status, path in zip(fields[::2], fields[1::2], strict=True)
+                 if status == "A" and Path(path).parent.as_posix() == RECEIPT_PATH
+                 and Path(path).suffix == ".yaml"}
+        additions = paths if additions is None else additions & paths
+    for path in sorted(additions):
+        if is_receipt(git("show", f"{commit}:{path}"), f"{commit}:{path}"):
+            return True
+    return False
+
+
+def receipts_on_disk() -> int:
+    count = 0
+    for path in (REPO / RECEIPT_PATH).glob("*.yaml"):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError) as exc:
+            sys.exit(f"transaction YAML could not be inspected: {path}\n{exc}")
+        count += is_receipt(text, str(path))
+    return count
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
@@ -65,7 +111,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--list", action="store_true",
-                        help="print every commit that changed a plan without a receipt")
+                        help="print plan-changing commits without a receipt addition")
     return parser
 
 
@@ -74,35 +120,37 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     plan_commits = commits_touching(PLAN_PATHS)
-    with_receipt = set(commits_touching([RECEIPT_PATH]))
     if not plan_commits:
         print("no commits touch a plan record — is this a fresh clone?")
         return 0
 
-    mediated = [c for c in plan_commits if c in with_receipt]
-    unmediated = [c for c in plan_commits if c not in with_receipt]
-    share = 100.0 * len(mediated) / len(plan_commits)
+    with_receipt = {c for c in plan_commits if receipt_added(c)}
+    without_receipt = [c for c in plan_commits if c not in with_receipt]
+    share = 100.0 * len(with_receipt) / len(plan_commits)
+    on_disk = receipts_on_disk()
 
+    print("history scope: all refs available in this clone (git log --all)")
     print(f"commits that changed a plan record : {len(plan_commits)}")
-    print(f"  carrying a transaction receipt   : {len(mediated)} ({share:.0f}%)")
-    print(f"  with no receipt in the same commit: {len(unmediated)}")
+    print(f"  also adding a receipt document   : {len(with_receipt)} ({share:.0f}%)")
+    print(f"  without a receipt addition       : {len(without_receipt)}")
     print()
-    print(f"receipts on disk                   : "
-          f"{len(list((REPO / RECEIPT_PATH).glob('*.yaml')))}")
+    print(f"receipt documents in working tree  : {on_disk}")
 
     if args.list:
-        print("\noff-gateway commits, newest first:")
-        for commit in unmediated:
+        print("\nplan-changing commits without a receipt addition, newest first:")
+        for commit in without_receipt:
             print("  " + git("log", "-1", "--format=%h %ad %s",
                              "--date=short", commit)[:100])
     else:
         print("\nRun with --list to see which commits those were.")
 
     print(
-        "\nA commit without a receipt is not automatically a defect — migrations\n"
-        "under tools/migrations/ and the assembler's reviewed drafts are\n"
-        "legitimate. What the number measures is how much of the plan surface\n"
-        "changed outside the one path that leaves evidence."
+        "\nThis measures commit co-occurrence, not gateway mediation or per-write\n"
+        "provenance. A receipt may concern a different write or be committed\n"
+        "separately; recorded migrations are legitimate. Receipt schemas, write\n"
+        "sets and hashes are not verified here. Ledger and existing-receipt\n"
+        "updates are excluded. Uncommitted, unreachable and unavailable history\n"
+        "is excluded; a shallow or incomplete clone can omit earlier changes."
     )
     return 0
 

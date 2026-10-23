@@ -37,6 +37,7 @@ from jsonschema import Draft202012Validator
 from learning_os.domain.failures import (
     PostCommitFailure,
     ProjectionFailure,
+    ProjectionInputChanged,
     ReplayEvidenceError,
     TransactionConflict,
     TransactionFailure,
@@ -80,6 +81,7 @@ from learning_os.store.fingerprint import (
     canonical_data_and_stat_fingerprints,
     canonical_fingerprint,
     canonical_stat_digest,
+    changed_canonical_paths,
     data_roots_fingerprint,
 )
 from learning_os.store.layout import PathBoundaryError, read_text_inside
@@ -1461,6 +1463,7 @@ class _CommitRun:
     failed_stage: str = "core.commit"
     use_combined: bool = False
     pre_stat: str | None = None
+    pre_stat_lines: dict[str, bytes] = field(default_factory=dict)
     snapshot_after_id: str | None = None
     data_roots_after_id: str | None = None
 
@@ -2021,12 +2024,14 @@ class TransactionService:
         run.use_combined = fingerprint is None
         if run.use_combined:
             post_hex, data_hex, run.pre_stat = (
-                canonical_data_and_stat_fingerprints(self.root)
+                canonical_data_and_stat_fingerprints(
+                    self.root, stat_lines=run.pre_stat_lines)
             )
             run.snapshot_after_id = f"sha256:{post_hex}"
             run.data_roots_after_id = f"sha256:{data_hex}"
         else:
             run.pre_stat = None
+            canonical_stat_digest(self.root, stat_lines=run.pre_stat_lines)
         run.failed_stage = "core.validation"
         if validate_state is not None:
             errors = list(validate_state())
@@ -2065,28 +2070,27 @@ class TransactionService:
             attrs={"snapshot": projected_snapshot})
 
         if run.use_combined:
-            post_stat = canonical_stat_digest(self.root)
+            post_lines: dict[str, bytes] = {}
+            post_stat = canonical_stat_digest(self.root, stat_lines=post_lines)
             if post_stat != run.pre_stat:
+                post_lines = {}
                 actual_hex, actual_data_hex, _ = (
-                    canonical_data_and_stat_fingerprints(self.root)
+                    canonical_data_and_stat_fingerprints(
+                        self.root, stat_lines=post_lines)
                 )
                 actual_id = f"sha256:{actual_hex}"
                 if projected_snapshot is not None \
                         and projected_snapshot != actual_id:
-                    raise TransactionFailure(
-                        "canonical state changed during projection publication "
-                        f"(projected {projected_snapshot}, actual {actual_id})"
-                    )
+                    raise self._projection_input_change(
+                        run, projected_snapshot, actual_id, post_lines)
                 run.snapshot_after_id = actual_id
                 run.data_roots_after_id = f"sha256:{actual_data_hex}"
             elif projected_snapshot is not None \
                     and projected_snapshot != run.snapshot_after_id:
                 actual_hex = canonical_fingerprint(self.root)
                 actual_id = f"sha256:{actual_hex}"
-                raise TransactionFailure(
-                    "canonical state changed during projection publication "
-                    f"(projected {projected_snapshot}, actual {actual_id})"
-                )
+                raise self._projection_input_change(
+                    run, projected_snapshot, actual_id, post_lines)
         else:
             snapshot_after = run.take_fingerprint()
             run.snapshot_after_id = f"sha256:{snapshot_after}"
@@ -2099,10 +2103,21 @@ class TransactionService:
             run.data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
             if projected_snapshot is not None \
                     and projected_snapshot != run.snapshot_after_id:
-                raise TransactionFailure(
-                    "canonical state changed during projection publication "
-                    f"(projected {projected_snapshot}, actual {run.snapshot_after_id})"
-                )
+                post_lines = {}
+                canonical_stat_digest(self.root, stat_lines=post_lines)
+                raise self._projection_input_change(
+                    run, projected_snapshot, run.snapshot_after_id, post_lines)
+
+    def _projection_input_change(
+        self, run: _CommitRun, projected: str, actual: str,
+        after: dict[str, bytes],
+    ) -> ProjectionInputChanged:
+        shown, total = changed_canonical_paths(run.pre_stat_lines, after)
+        return ProjectionInputChanged(
+            "canonical state changed during projection publication "
+            f"(projected {projected}, actual {actual})",
+            changed_paths=shown, changed_paths_total=total,
+        )
 
     def _record_idempotency(self, run: _CommitRun) -> None:
         run.failed_stage = "core.commit"
@@ -2318,10 +2333,12 @@ class TransactionService:
             # Typed projection provenance: the gateway classifies by
             # subsystem and rollback outcome, never by exception prose.
             # Message text stays byte-identical to the untyped path.
+            input_change = exc if isinstance(exc, ProjectionInputChanged) else None
             if rollback_failures:
                 return ProjectionFailure(
                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
                     rollback_complete=False,
+                    input_change=input_change,
                 )
             if run.republication_defects:
                 # Fixed wording: the message names only the defect's
@@ -2335,8 +2352,10 @@ class TransactionService:
                     "this write",
                     rollback_complete=True,
                     pre_existing_defect=True,
+                    input_change=input_change,
                 )
-            return ProjectionFailure(str(exc), rollback_complete=True)
+            return ProjectionFailure(str(exc), rollback_complete=True,
+                                     input_change=input_change)
         if rollback_failures:
             return TransactionRollbackIncomplete(
                 f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"

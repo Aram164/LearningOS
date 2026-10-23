@@ -19,6 +19,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any, NamedTuple
 
@@ -69,24 +70,65 @@ MATERIAL_SUFFIX_TOKEN = re.compile(
 )
 
 
-def material_uri_authority(ref) -> str | None:
-    """Return the safe identity authority of a material URI."""
+class MaterialRef(NamedTuple):
+    """One ``material://`` URI split the way every reader splits it."""
+
+    authority: str
+    #: The file or folder the URI names, as written after the scheme.
+    path: str
+    #: ``#...`` or ``?...`` from the first such mark on, or "" — a page or
+    #: view selector inside the file, never part of its name.
+    selector: str
+
+
+def _has_control(text: str) -> bool:
+    return any(unicodedata.category(char) == "Cc" for char in text)
+
+
+def parse_material_uri(ref) -> MaterialRef | None:
+    """The one reading of a material URI, or None when it is not safe.
+
+    The path ends at the first ``#`` or ``?``: what follows selects inside
+    the file (``#page=2``) and is never part of a filename (RFC 3986). The
+    Obsidian UI splits on the same marks (``resource-target.ts``), and no
+    material file is named with either, so every reader resolves the bytes
+    of ``source-x/foo.pdf`` for ``material://source-x/foo.pdf#page=2`` (#16,
+    #18). A control character anywhere is refused: no file is named with
+    one, and it could not stay a one-line scalar (#15). Spaces are ordinary
+    filename characters and stay.
+    """
     if not isinstance(ref, str) or not ref.startswith(MATERIAL_SCHEME):
         return None
 
     payload = ref[len(MATERIAL_SCHEME):]
+    if _has_control(payload):
+        return None
+    cut = len(payload)
+    for mark in ("#", "?"):
+        found = payload.find(mark)
+        if found != -1:
+            cut = min(cut, found)
+    path, selector = payload[:cut], payload[cut:]
 
-    if not payload or payload.startswith("/") or "\\" in payload:
+    if not path or path.startswith("/") or "\\" in path:
         return None
 
-    material_path = PurePosixPath(payload)
+    material_path = PurePosixPath(path)
 
     if material_path.is_absolute() or any(
             part in {"", ".", ".."}
             for part in material_path.parts):
         return None
 
-    return material_path.parts[0] if material_path.parts else None
+    if not material_path.parts:
+        return None
+    return MaterialRef(material_path.parts[0], path, selector)
+
+
+def material_uri_authority(ref) -> str | None:
+    """Return the safe identity authority of a material URI."""
+    parsed = parse_material_uri(ref)
+    return parsed.authority if parsed is not None else None
 
 
 def canonical_material_uri(ref) -> str | None:
@@ -96,24 +138,18 @@ def canonical_material_uri(ref) -> str | None:
     ``//`` and drops ``.`` segments before the authority check — so dot and
     double-slash spellings resolve to the same bytes as the clean form.
     This answers "what did the operator mean" the same way, so writers can
-    refuse the odd spelling while naming the form to use instead. Anything
+    refuse the odd spelling while naming the form to use instead. A selector
+    is kept as written: it says where in the file, not which file. Anything
     resolution refuses outright (non-URIs, absolute payloads, backslashes,
-    ``..``) has no canonical form and returns None.
+    ``..``, control characters) has no canonical form and returns None.
     """
-    if not isinstance(ref, str) or not ref.startswith(MATERIAL_SCHEME):
+    parsed = parse_material_uri(ref)
+    if parsed is None:
         return None
 
-    payload = ref[len(MATERIAL_SCHEME):]
+    parts = [part for part in parsed.path.split("/") if part not in {"", "."}]
 
-    if not payload or payload.startswith("/") or "\\" in payload:
-        return None
-
-    parts = [part for part in payload.split("/") if part not in {"", "."}]
-
-    if not parts or any(part == ".." for part in parts):
-        return None
-
-    return MATERIAL_SCHEME + "/".join(parts)
+    return MATERIAL_SCHEME + "/".join(parts) + parsed.selector
 
 
 def safe_material_locator(value) -> str | None:
@@ -127,7 +163,7 @@ def safe_material_locator(value) -> str | None:
         not locator
         or "\\" in locator
         or ";" in locator
-        or "\n" in locator
+        or _has_control(locator)
         or len(MATERIAL_SUFFIX_TOKEN.findall(locator)) != 1
     ):
         return None
@@ -158,7 +194,8 @@ def leading_material_locator(value) -> str | None:
     Weaker is not loose. Every guard that prevents resolving to a file nobody
     asked for is kept: exactly one material-suffix token in the whole locator
     (so ``a.pdf through b.pdf`` stays ambiguous and is refused), no absolute
-    path, no ``.`` or ``..`` component, no backslash or newline. Nothing is
+    path, no ``.`` or ``..`` component, no backslash or control character
+    (a newline, a tab, a NUL: no file is named with one). Nothing is
     scanned or basename-matched — the head either names a real file under the
     source, or the caller's existence check reports it missing, exactly as an
     unresolvable locator does today.
@@ -168,7 +205,7 @@ def leading_material_locator(value) -> str | None:
 
     text = PAGE_COUNT_SUFFIX.sub("", value.strip())
 
-    if "\\" in text or "\n" in text:
+    if "\\" in text or _has_control(text):
         return None
     if len(MATERIAL_SUFFIX_TOKEN.findall(text)) != 1:
         return None
@@ -199,10 +236,10 @@ def single_file_material(source_material) -> str | None:
     row that names it without repeating the path resolves to the one thing it
     could mean.
     """
-    if material_uri_authority(source_material) is None:
+    parsed = parse_material_uri(source_material)
+    if parsed is None:
         return None
-    payload = str(source_material)[len(MATERIAL_SCHEME):]
-    if PurePosixPath(payload).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+    if PurePosixPath(parsed.path).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
         return None
     return str(source_material)
 
@@ -223,12 +260,13 @@ def resolve_material_target(
 
     Raises ``PathBoundaryError`` when the URI is unsafe or escapes the
     boundary, and ``FileNotFoundError`` when nothing exists at that exact path.
+    A selector (``#page=2``) is not part of the path.
     """
-    if material_uri_authority(ref) is None:
-        raise PathBoundaryError(f"not a safe material URI: {ref}")
-    payload = ref[len(MATERIAL_SCHEME):]
+    parsed = parse_material_uri(ref)
+    if parsed is None:
+        raise PathBoundaryError(f"not a safe material URI: {ref!r}")
     resolved = resolve_symlinks_inside(
-        Path(boundary_root), Path(resolution_root) / payload, strict=False
+        Path(boundary_root), Path(resolution_root) / parsed.path, strict=False
     )
     if not resolved.exists():
         raise FileNotFoundError(
@@ -240,10 +278,12 @@ def resolve_material_target(
 def material_location(repo: Repo, ref) -> dict:
     """Resolve a ``material://`` URI to a path relative to the LearningOS root
     (the vault's parent) plus an existence flag. Interfaces get a path they can
-    hand to the OS file opener; the resolution rule stays here."""
-    if material_uri_authority(ref) is None:
+    hand to the OS file opener; the resolution rule stays here. A selector
+    stays on the URI and out of the path."""
+    parsed = parse_material_uri(ref)
+    if parsed is None:
         return {"material_path": None, "material_exists": False}
-    target = repo.materials_root / str(ref)[len(MATERIAL_SCHEME):]
+    target = repo.materials_root / parsed.path
     try:
         resolved = resolve_symlinks_inside(
             repo.learningos_root / "materials", target, strict=False

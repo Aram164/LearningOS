@@ -135,15 +135,27 @@ def _snapshot_details(exc: BaseException) -> dict:
 
 def _projection_complete_defect_details(exc: BaseException) -> dict:
     return {"stage": "core.projection", "rollback_complete": True,
-            "pre_existing_defect": True}
+            "pre_existing_defect": True, **_changed_input_details(exc)}
+
+
+def _changed_input_details(exc: BaseException) -> dict:
+    """Only the typed publication conflict carries input observations."""
+    change = exc.input_change
+    if change is None:
+        return {}
+    return {"reason": "CANONICAL_INPUTS_CHANGED",
+            "changed_paths": list(change.changed_paths),
+            "changed_paths_total": change.changed_paths_total}
 
 
 def _projection_complete_details(exc: BaseException) -> dict:
-    return {"stage": "core.projection", "rollback_complete": True}
+    return {"stage": "core.projection", "rollback_complete": True,
+            **_changed_input_details(exc)}
 
 
 def _projection_incomplete_details(exc: BaseException) -> dict:
-    return {"stage": "core.projection", "rollback_complete": False}
+    return {"stage": "core.projection", "rollback_complete": False,
+            **_changed_input_details(exc)}
 
 
 def _commit_details(exc: BaseException) -> dict:

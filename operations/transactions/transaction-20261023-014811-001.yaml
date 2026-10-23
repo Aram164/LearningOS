@@ -1,0 +1,99 @@
+schema_version: 2
+id: transaction-20261023-014811-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-10-23T01:48:11+02:00'
+snapshot_before: sha256:b0b80d029ae16dca22f4c252f80a36d96c545da45a949e6ed1272d63e2d26e18
+snapshot_after: sha256:9d818d21ab15f8c7ed06914944cc7b0ff2c311f4b9fe6e8aa5f47889e849b167
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 2
+  module-hu-betriebssysteme: 0
+  unit-bs-os-structure: 0
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 2
+    after: 3
+  module-hu-betriebssysteme:
+    before: 0
+    after: 1
+  unit-bs-os-structure:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-betriebssysteme/module.yaml
+  sha256_before: d3da500bee659110a68e08aeebb98cf2da611b5cafbfb4152a7995bf614e748b
+  sha256_after: e4713d5dbef91f16946685c81b3893ced84277b293afc2ffbbada8b786446593
+  created: false
+- path: curriculum/modules/module-hu-betriebssysteme/source-map.yaml
+  sha256_before: ad8fe592dadc57fd429a460ee052e0ce036b68ef926cbf22c5360c87a9c155ad
+  sha256_after: 928c8363705ee6f929f836b3a699aa7e74e55ae08bb6ebb9c88791a108dfc6a4
+  created: false
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-interrupts/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-linux-example/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-memory/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-hardware/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-structures/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-privileges/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-syscall-boundary/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/study-map.yaml
+  sha256_before: null
+  sha256_after: b58cdd8ce3aa481cecf1a309b63088c0aa5776dee778e91f06935e538ccb0699
+  created: true
+- path: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/unit.yaml
+  sha256_before: null
+  sha256_after: 71a9d4ce6b53ca9c92a2d8e31f1567e0b4666d2e4a4d1989de365662e26b3ed0
+  created: true
+- path: operations/transactions/lineage.yaml
+  sha256_before: 3c3a91f7e521a6edcdcd535b4bb9e95588d87bc8afdf07842439dc96891e8e8b
+  sha256_after: 2f35ef2355145ffae19e9446f1541cbadb04d1fc394fefbe9cfc40ef64dd92e1
+  created: false
+- path: work/active/workspace-bs-foundations/CONTEXT.md
+  sha256_before: 92127cf4b8c1135627d85a8a30ceb6d724bf1b06b87189a97602758aacd5d7ff
+  sha256_after: 3df92242eecfdfb9bed1363b3a642e2bfd06b01f2940026745ced33fa0e60eb6
+  created: false
+metadata:
+  data_roots_sha256: sha256:5b7e12c9ce9664a1db47becc3d15b62222b4baa4aa75a95645ee9babf92751a7
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-reviewed-9bbea4588a0e4f5d98b0c1cfe4fb8586
+  idempotency_key: reviewed-6f8104f8817c4c3cb3f0b3fe8f9fc414
+  intent_sha256: sha256:6eba4e0f30f7941fd1860883dc686435871251da95dc1ee098148b7d0c917944
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6eba4e0f30f7941fd1860883dc686435871251da95dc1ee098148b7d0c917944

@@ -1,0 +1,372 @@
+id: study-map-bs-os-structure
+type: study-map
+plan_template_version: 1
+unit_id: unit-bs-os-structure
+status: ready
+current_stage: stage-bs-os-hardware
+source_plan:
+  path: ../workbench/bs-initial-setup-2026-10-23/module-plan.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-bs-os-hardware
+  number: 1
+  title: Betriebssystem und Hardware zusammendenken
+  status: pending
+  objective: Abstraktion, Ressourcenverwaltung und Schutz mit CPU, Speicher und Gerätecontrollern verbinden.
+  done_when:
+  - Zeichne ohne Folie CPU, Speicher und zwei Gerätecontroller; erläutere einen I/O-Ablauf, während die
+    CPU weiterarbeitet.
+  - Ordne dem Ablauf Abstraktion, Ressourcenverwaltung und Schutz zu; bearbeite Übung A1.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-os-hardware
+    kind: read
+    material_ref:
+      route_id: route-bs-os-hardware
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-os-hardware
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-hardware/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-os-hardware
+  runtime_target:
+    concept: knowledge-bs-os-hardware
+    capability:
+      kind: explain
+      operands:
+      - Betriebssystem und Hardware zusammendenken
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Zeichne ohne Folie CPU, Speicher und zwei Gerätecontroller; erläutere einen I/O-Ablauf, während
+      die CPU weiterarbeitet.
+    - Ordne dem Ablauf Abstraktion, Ressourcenverwaltung und Schutz zu; bearbeite Übung A1.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:43fa76de0bb887ca5a79864b8bca76fdcc3da1f16a53e89fd2cc69c110b8eb68
+- id: stage-bs-interrupts
+  number: 2
+  title: Interrupt, Trap und Rückkehr auseinanderhalten
+  status: pending
+  objective: Asynchrones Geräteereignis und synchrone Trap unterscheiden; Zustandssicherung, Dispatch,
+    Handler und Rückkehr nachzeichnen.
+  done_when:
+  - Klassifiziere Geräteabschluss, Rechenfehler und absichtliche Trap-Instruktion mit Begründung.
+  - Zeichne Sicherung und Wiederherstellung von PC, Registern und Modus; entscheide im historischen IRQL-Modell,
+    ob Level 2 einen Handler auf Level 28 unterbrechen darf; bearbeite A2.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-interrupts
+    kind: read
+    material_ref:
+      route_id: route-bs-interrupts
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-interrupts
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-interrupts/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-interrupts
+  runtime_target:
+    concept: knowledge-bs-interrupts
+    capability:
+      kind: explain
+      operands:
+      - Interrupt, Trap und Rückkehr auseinanderhalten
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Klassifiziere Geräteabschluss, Rechenfehler und absichtliche Trap-Instruktion mit Begründung.
+    - Zeichne Sicherung und Wiederherstellung von PC, Registern und Modus; entscheide im historischen
+      IRQL-Modell, ob Level 2 einen Handler auf Level 28 unterbrechen darf; bearbeite A2.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:b001578b0c05fb1c60ce3ea9ffc2cf2df3a07e2f4a3209be409dee5b8d75d997
+- id: stage-bs-memory
+  number: 3
+  title: Speicher schützen und Adressen übersetzen
+  status: pending
+  objective: Base-/Limit-Schutz vom Übersetzen virtueller Adressen mit MMU und Seitentabelle unterscheiden.
+  done_when:
+  - Prüfe für base=300040 und limit=120900 die Adressen 300039, 300040, 420939 und 420940; gib die Intervallgrenzen
+    an.
+  - Zeichne virtuelle Adresse, MMU, Seitentabelle und physische Adresse; erläutere, warum der Offset gleich
+    bleibt; bearbeite A3 und A4.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-memory
+    kind: read
+    material_ref:
+      route_id: route-bs-memory
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-memory
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-memory/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-memory
+  runtime_target:
+    concept: knowledge-bs-memory
+    capability:
+      kind: explain
+      operands:
+      - Speicher schützen und Adressen übersetzen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Prüfe für base=300040 und limit=120900 die Adressen 300039, 300040, 420939 und 420940; gib die Intervallgrenzen
+      an.
+    - Zeichne virtuelle Adresse, MMU, Seitentabelle und physische Adresse; erläutere, warum der Offset
+      gleich bleibt; bearbeite A3 und A4.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:5871149aa29bb0f32d963a143d1d882aef9e8f4ab0af037031a13a43c6509718
+- id: stage-bs-privileges
+  number: 4
+  title: Privileggrenzen mit Schutzbedarf begründen
+  status: pending
+  objective: User-/Kernel-Modus und kontrollierte Hardwareübergänge erklären; privilegierte Operationen
+    von normalen Instruktionen abgrenzen.
+  done_when:
+  - Begründe, weshalb Nutzerprogramme weder Speichermappings ändern noch die CPU beliebig anhalten oder
+    sich selbst privilegieren dürfen.
+  - Zeichne Eintritt und Rückkehr zwischen den Modi; unterscheide Privilegstufe und Interrupt-Priorität;
+    bearbeite A5.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-privileges
+    kind: read
+    material_ref:
+      route_id: route-bs-privileges
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-privileges
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-privileges/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-privileges
+  runtime_target:
+    concept: knowledge-bs-privileges
+    capability:
+      kind: explain
+      operands:
+      - Privileggrenzen mit Schutzbedarf begründen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Begründe, weshalb Nutzerprogramme weder Speichermappings ändern noch die CPU beliebig anhalten oder
+      sich selbst privilegieren dürfen.
+    - Zeichne Eintritt und Rückkehr zwischen den Modi; unterscheide Privilegstufe und Interrupt-Priorität;
+      bearbeite A5.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:d75f64ad62306b67ac1321022e09f50ec0ab264363813bcb8eb24cf205e311e5
+- id: stage-bs-syscall-boundary
+  number: 5
+  title: Einen Systemaufruf über die Vertrauensgrenze verfolgen
+  status: pending
+  objective: Bibliotheksaufruf, Systemaufruf und Geräteinterrupt unterscheiden; den kontrollierten Kerneintritt
+    samt Prüfung und Rückkehr verfolgen.
+  done_when:
+  - Verfolge read(fd, buf, size) vom Nutzerprogramm über Stub und Kerneintritt bis zur Rückkehr; benenne
+    jede Übergabe.
+  - Erkläre, weshalb Aufrufnummer und Parameter trotz kontrolliertem Eintritt geprüft werden müssen und
+    ein Bibliotheksaufruf allein keinen Moduswechsel garantiert; bearbeite A6.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-syscall-boundary
+    kind: read
+    material_ref:
+      route_id: route-bs-syscall-boundary
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-syscall-boundary
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-syscall-boundary/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-syscall-boundary
+  runtime_target:
+    concept: knowledge-bs-syscall-boundary
+    capability:
+      kind: explain
+      operands:
+      - Einen Systemaufruf über die Vertrauensgrenze verfolgen
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Verfolge read(fd, buf, size) vom Nutzerprogramm über Stub und Kerneintritt bis zur Rückkehr; benenne
+      jede Übergabe.
+    - Erkläre, weshalb Aufrufnummer und Parameter trotz kontrolliertem Eintritt geprüft werden müssen
+      und ein Bibliotheksaufruf allein keinen Moduswechsel garantiert; bearbeite A6.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:04e066d442f679a411d6b810edce03a5dfee5da7ceabdf6dc9138520a408b79a
+- id: stage-bs-linux-example
+  number: 6
+  title: Das historische Linux-Beispiel rekonstruieren
+  status: pending
+  objective: Wrapper, Aufrufnummer, Dispatchtabelle und Serviceroutine am alten alarm-Beispiel zusammensetzen;
+    Parameterübergabe und Nutzerpuffer erklären.
+  done_when:
+  - Rekonstruiere alarm() über Wrapper, system_call und Tabelle bis sys_alarm; finde die Fehlerumsetzung
+    auf -1 und errno.
+  - Vergleiche Register-, Tabellen- und Stackparameter; begründe am Puffer von write(fd, buf, count),
+    weshalb ein übergebener Zeiger die Daten nicht vertrauenswürdig macht; bearbeite A7.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-linux-example
+    kind: read
+    material_ref:
+      route_id: route-bs-linux-example
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-linux-example
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-linux-example/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-linux-example
+  runtime_target:
+    concept: knowledge-bs-linux-example
+    capability:
+      kind: explain
+      operands:
+      - Das historische Linux-Beispiel rekonstruieren
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Rekonstruiere alarm() über Wrapper, system_call und Tabelle bis sys_alarm; finde die Fehlerumsetzung
+      auf -1 und errno.
+    - Vergleiche Register-, Tabellen- und Stackparameter; begründe am Puffer von write(fd, buf, count),
+      weshalb ein übergebener Zeiger die Daten nicht vertrauenswürdig macht; bearbeite A7.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:70b6503dfd342363ce76e48ea05c523d4d7eb2eaae327b64050935a41dbe4b4a
+- id: stage-bs-os-structures
+  number: 7
+  title: Betriebssystemstrukturen vergleichen und anwenden
+  status: pending
+  objective: Monolithische, geschichtete und Mikrokernel-Strukturen anhand von Aufrufgrenzen, Isolation
+    und Kosten vergleichen; die NT-Einordnung der Folien begründen.
+  done_when:
+  - Vergleiche die Platzierung eines Dateisystemdienstes in den drei Strukturen; begründe Fehlerausbreitung
+    und Kosten ohne pauschale Siegerbehauptung.
+  - Erkläre anhand S.42-44, weshalb NT laut Folien kein akademisch reiner Mikrokernel ist; bearbeite A8
+    und anschließend den separaten Selbsttest.
+  - Nutze S.46 zur freien Begriffswiederholung; markiere DMA und synchrone/asynchrone I/O als im Deck
+    nur genannte Begriffe mit offenem Erklärbedarf.
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - id: resource-bs-os-structures
+    kind: read
+    material_ref:
+      route_id: route-bs-os-structures
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    affordance: intervention
+    scope_triage: required-now
+    route_id: route-bs-os-structures
+  - id: resource-bs-vocabulary
+    kind: reference
+    source_id: source-bs-hu-prior-slides
+    label: Abschließender Vocabulary Check
+    locator: 02_structure.pdf, pdf p. 46
+    vault_path: material://source-bs-hu-prior-slides/02_structure.pdf
+    angle: Abrufliste für die sieben Stufen; DMA und synchrone/asynchrone I/O sind hier nur genannt.
+    angle_detail: S.46 ist eine Vokabelliste. Die Begriffe dürfen als offene Lücken markiert werden; aus
+      ihrer Nennung folgt keine erklärte Mechanik.
+    scope_triage: helpful-now
+    affordance: intervention
+  working_note: curriculum/modules/module-hu-betriebssysteme/units/unit-bs-os-structure/stages/stage-bs-os-structures/notes.md
+  attachments: []
+  source_feedback: []
+  knowledge_node_id: knowledge-bs-os-structures
+  runtime_target:
+    concept: knowledge-bs-os-structures
+    capability:
+      kind: explain
+      operands:
+      - Betriebssystemstrukturen vergleichen und anwenden
+    conditions:
+    - Ohne Folien nach dem Durcharbeiten erklären; historische Beispiele als solche kennzeichnen.
+    evidence_spec:
+    - Vergleiche die Platzierung eines Dateisystemdienstes in den drei Strukturen; begründe Fehlerausbreitung
+      und Kosten ohne pauschale Siegerbehauptung.
+    - Erkläre anhand S.42-44, weshalb NT laut Folien kein akademisch reiner Mikrokernel ist; bearbeite
+      A8 und anschließend den separaten Selbsttest.
+    - Nutze S.46 zur freien Begriffswiederholung; markiere DMA und synchrone/asynchrone I/O als im Deck
+      nur genannte Begriffe mit offenem Erklärbedarf.
+  runtime_review:
+    reviewed_by: codex (operator)
+    reviewed_on: '2026-10-23'
+    fingerprint: sha256:ee4e4cc42566007defa1d8a0ee840a0b62c8689b35be025b1eacc55a0ff69439
+shelving:
+  state: none

@@ -500,6 +500,47 @@ def test_broken_internal_link_is_error(mini_repo):
     assert "LINK-BROKEN" in codes(run(mini_repo), "E")
 
 
+# A title, angle brackets or parentheses in the destination used to hide a
+# link from the check entirely: no LINK-BROKEN, no LINK-ESCAPE.
+@pytest.mark.parametrize("link,code", [
+    ('[missing](./does-not-exist.md "a title")', "LINK-BROKEN"),
+    ("[missing](./does-not-exist.md 'a title')", "LINK-BROKEN"),
+    ("[missing](./does-not-exist.md (a title))", "LINK-BROKEN"),
+    ("[missing](<./does not exist.md>)", "LINK-BROKEN"),
+    ("[missing](./does-not-(exist).md)", "LINK-BROKEN"),
+    ('[out](../../../../outside.md "a title")', "LINK-ESCAPE"),
+    ("[out](<../../../../outside.md>)", "LINK-ESCAPE"),
+])
+def test_titled_and_bracketed_links_are_checked(mini_repo, link, code):
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(note.read_text() + f"\n{link}\n")
+    assert code in codes(run(mini_repo), "E")
+
+
+@pytest.mark.parametrize("link", [
+    '[self](./note-demo.md "the same note")',
+    "[self](<./note-demo.md>)",
+    '[site](https://example.org/a_(b) "external")',
+    '`[quoted](./does-not-exist.md "in a code span")`',
+    '```\n[quoted](./does-not-exist.md "in a fenced block")\n```',
+])
+def test_resolving_external_and_quoted_links_raise_nothing(mini_repo, link):
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(note.read_text() + f"\n{link}\n")
+    found = codes(run(mini_repo), "E")
+    assert "LINK-BROKEN" not in found and "LINK-ESCAPE" not in found
+
+
+@pytest.mark.parametrize("uri,target", [
+    ("material://book/lecture.pdf#page=2", "book/lecture.pdf"),
+    ("material://book/lecture.pdf?x=1", "book/lecture.pdf"),
+    ("material://book/lecture.pdf?x=1#page=2", "book/lecture.pdf"),
+    ("note://note-a#section?not-a-query", "note-a"),
+])
+def test_reference_parser_ends_a_material_path_at_its_selector(uri, target):
+    assert parse_reference_uri(uri).target == target
+
+
 def test_material_uri_unresolved_is_warning_not_error(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     note.write_text(note.read_text() + "\n[slides](material://source-demo-book/deck.pdf)\n")

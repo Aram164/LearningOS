@@ -27,6 +27,41 @@ def resolved_inside(root: Path, path: Path, *, strict: bool = True) -> Path:
     return resolved
 
 
+# These operating-system aliases are trusted independently of any requested
+# material path. Resolving an arbitrary candidate ancestor to discover aliases
+# would inspect an escaping sibling before deciding whether to admit it.
+_TRUSTED_PREFIX_ALIASES = (Path("/var"), Path("/tmp"), Path("/etc"))
+
+
+def _authority_parts(path: Path, authority: Path) -> tuple[str, ...] | None:
+    """Return parts below an admitted authority spelling, without probing path.
+
+    The caller admits the authority and its resolved spelling. Standard macOS
+    aliases can spell that same authority in reverse (``/var`` for
+    ``/private/var``), but their roots come from an explicit trusted list,
+    never from the candidate or a symlink target.
+    """
+    try:
+        return path.relative_to(authority).parts
+    except ValueError:
+        pass
+    real = Path(os.path.realpath(authority))
+    try:
+        return path.relative_to(real).parts
+    except ValueError:
+        pass
+    for alias in _TRUSTED_PREFIX_ALIASES:
+        resolved_alias = Path(os.path.realpath(alias))
+        if resolved_alias == alias:
+            continue
+        try:
+            alias_authority = alias / real.relative_to(resolved_alias)
+            return path.relative_to(alias_authority).parts
+        except ValueError:
+            continue
+    return None
+
+
 def resolve_symlinks_inside(root: Path, path: Path, *, strict: bool = True) -> Path:
     """Resolve links only after proving each lexical target stays in *root*.
 
@@ -34,19 +69,22 @@ def resolve_symlinks_inside(root: Path, path: Path, *, strict: bool = True) -> P
     too late for privacy boundaries. Reading the link value first lets the
     materials subsystem support its in-tree ``.flat`` aliases without ever
     touching a sibling target.
+
+    One directory can have two spellings: macOS reaches the same tree as
+    ``/var/...`` and ``/private/var/...``. A path or absolute link target
+    spelled the other way is still inside (#17); see ``_authority_parts``.
     """
     authority = Path(os.path.abspath(os.fspath(root)))
     candidate = Path(path)
     lexical = candidate if candidate.is_absolute() else authority / candidate
     lexical = Path(os.path.abspath(os.fspath(lexical)))
-    try:
-        relative = lexical.relative_to(authority)
-    except ValueError as exc:
-        raise PathBoundaryError(f"path escapes {authority}: {path}") from exc
-    if any(part in {"", ".", ".."} for part in relative.parts):
+    relative_parts = _authority_parts(lexical, authority)
+    if relative_parts is None:
+        raise PathBoundaryError(f"path escapes {authority}: {path}")
+    if any(part in {"", ".", ".."} for part in relative_parts):
         raise PathBoundaryError(f"path is not normalized under {authority}: {path}")
 
-    pending = deque(relative.parts)
+    pending = deque(relative_parts)
     cursor = authority
     hops = 0
     while pending:
@@ -70,13 +108,10 @@ def resolve_symlinks_inside(root: Path, path: Path, *, strict: bool = True) -> P
             ) from exc
         target = link_value if link_value.is_absolute() else cursor.parent / link_value
         normalized = Path(os.path.abspath(os.fspath(target)))
-        try:
-            target_relative = normalized.relative_to(authority)
-        except ValueError as exc:
-            raise PathBoundaryError(
-                f"symlink target escapes {authority}: {cursor}"
-            ) from exc
-        pending = deque((*target_relative.parts, *pending))
+        target_parts = _authority_parts(normalized, authority)
+        if target_parts is None:
+            raise PathBoundaryError(f"symlink target escapes {authority}: {cursor}")
+        pending = deque((*target_parts, *pending))
         cursor = authority
 
     if strict and not cursor.exists():

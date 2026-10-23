@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261023-014606-001
+type: transaction-receipt
+status: committed
+capability: note.create
+committed_at: '2026-10-23T01:46:06+02:00'
+snapshot_before: sha256:b7595091f3ff178d4a3bdc8d501df4b9b7a266bdc21ba739a39ee7426e50ded2
+snapshot_after: sha256:b472f603ec327bd1bbe23c4d3491efa927b10400453789c95981ac2d07b7b997
+expected_revisions:
+  note-bs-os-basics-exercise-bank: 0
+artifact_revisions:
+  note-bs-os-basics-exercise-bank:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/systems/note-bs-os-basics-exercise-bank.md
+  sha256_before: null
+  sha256_after: 5c381e60146c9e059fbbed3f41e8b43534244434675ddf6b997fdaf34f1e3af6
+  created: true
+metadata:
+  data_roots_sha256: sha256:c3194c0c699260ae195263ec8506f758f50aabf20bc5738633f0ee8435f8fdbc
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.create
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-bs-exercise-bank-20261023-df2d5ea1
+  idempotency_key: bs-exercise-bank-20261023
+  intent_sha256: sha256:d68eb45f1a1a9b2f77b3a81a467ca337d80696a9e379214c0eff66f2d8a6b339
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:d68eb45f1a1a9b2f77b3a81a467ca337d80696a9e379214c0eff66f2d8a6b339

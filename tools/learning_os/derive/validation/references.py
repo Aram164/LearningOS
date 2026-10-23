@@ -8,10 +8,10 @@ from typing import Literal
 
 from learning_os.derive.routes import exact_selection_matches, iter_route_references
 from learning_os.domain.validation import (
-    MD_LINK_RE,
     WORKSPACE_TOKEN_RE,
     id_list_items,
     list_items,
+    markdown_link_targets,
 )
 from learning_os.domain.vocabulary import EVIDENCE_SCHEMES
 
@@ -38,11 +38,14 @@ def parse_reference_uri(value: str) -> ParsedReference | None:
     way (``resource-target.ts`` splits the path on ``[?#]``), so the validator
     has to resolve the same file — a validator that kept the fragment would
     warn about a file that is there, and a write the system accepted would
-    leave a warning behind that breaks the acceptance gate.
+    leave a warning behind that breaks the acceptance gate. A material URI
+    also ends its path at ``?``, as every material reader does (#18).
     """
     for prefix in EVIDENCE_SCHEMES:
         if value.startswith(prefix):
-            target = value[len(prefix):].split("#", 1)[0]
+            target = value[len(prefix):]
+            for mark in ("#", "?") if prefix == "material://" else ("#",):
+                target = target.split(mark, 1)[0]
             return ParsedReference(prefix.removesuffix("://"), target)
     return None
 
@@ -636,7 +639,7 @@ class ChecksReferences:
         for f, text in self._canonical_texts():
             if f.suffix != ".md":
                 continue
-            for target in MD_LINK_RE.findall(text):
+            for target in markdown_link_targets(text):
                 self._check_link(target, f)
 
     def _check_link(self, target: str, source_file: Path):
