@@ -377,7 +377,8 @@ def retry_path(root: Path, key: str) -> Path:
 def seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                   parser_factory, channel: str = "operator",
                   approval_kind: str = "operator-approval",
-                  session_id: str | None = None) -> dict:
+                  session_id: str | None = None,
+                  request_id: str | None = None) -> dict:
     """The sealed envelope for one operator write under idempotency ``key``.
 
     If ``key`` already committed this exact capability and payload, the
@@ -398,7 +399,7 @@ def seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
         if stored.get("capability") == capability and stored.get("payload") == payload \
                 and intent_sha256(stored) == committed.get("intent_sha256"):
             return stored
-    request_id = fresh_request_id(key)
+    request_id = request_id or fresh_request_id(key)
     common = dict(capability=capability, payload=payload, key=key,
                   request_id=request_id, channel=channel,
                   approval_kind=approval_kind, snapshot=None,

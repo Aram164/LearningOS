@@ -11,6 +11,7 @@ before the standard legacy catches.
 
 from __future__ import annotations
 
+from contextvars import ContextVar
 from pathlib import Path
 
 from learning_os.app.context import OpContext
@@ -43,6 +44,7 @@ from learning_os.store.transactions import (
     TransactionPublicationUncertain,
     TransactionService,
 )
+from learning_os.store.warning_baseline import delta, load_baseline, signatures_from_issues
 
 
 def _confirmation_from(result) -> dict:
@@ -60,6 +62,39 @@ def _confirmation_from(result) -> dict:
         "artifact_revisions": dict(result.revisions),
         "snapshot_after": result.snapshot_after,
         "replayed": bool(result.replayed),
+    }
+
+
+#: What the last successful commit in this context proved with its own
+#: validation (agent-cost PLAN D4). Only ``seal_envelope.py --submit`` reads
+#: it, to print one line after the gateway's unchanged JSON result, so that
+#: an agent does not validate the same state twice more to learn it. It is a
+#: report, never an input: nothing reads it to decide a write, and the result
+#: JSON that transcripts, recordings and the UI parse stays byte-identical.
+#: A context variable, not a module global: it belongs to the call that set
+#: it, and the caller resets it before the call it reports on.
+LAST_VALIDATION: ContextVar[dict | None] = ContextVar("last_validation", default=None)
+
+
+def _validation_summary(root: Path, issues) -> dict:
+    """What this commit's own validation proved (agent-cost PLAN D4).
+
+    The commit already validates the whole tree after its writes land, and
+    every issue it found is here, warnings included. The counts and the
+    warning-baseline delta come from that same run. It reports and never
+    refuses: which writes are accepted is unchanged.
+    """
+    signatures, errors = signatures_from_issues(issues)
+    try:
+        baseline, _ = load_baseline(root)
+    except ValueError:
+        regressions = None  # an unreadable baseline: say so, do not guess
+    else:
+        regressions, _repairs = delta(baseline, signatures)
+    return {
+        "errors": len(errors),
+        "warnings": sum(1 for issue in issues if issue.severity == "W"),
+        "new_warning_signatures": regressions,
     }
 
 
@@ -125,11 +160,14 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
             return CommitOutcome(
                 2, [f"cannot change {path}: target is not a regular file"], {})
     validated_repo = None
+    validation_summary: dict = {}
 
     def validation_errors():
         nonlocal validated_repo
         validated_repo = load_repo(root)
         issues = validate(validated_repo, online=False)
+        validation_summary.clear()
+        validation_summary.update(_validation_summary(root, issues))
         if proposal.validate_extra is not None:
             return proposal.validate_extra(validated_repo, issues)
         return [issue for issue in issues if issue.severity == "E"]
@@ -227,4 +265,7 @@ def commit_proposal(ctx: OpContext, proposal: TransactionProposal) -> CommitOutc
         if refusal is not None:
             _record_gateway_refusal(refusal.code, refusal.retryable)
         return CommitOutcome(2, [str(exc)], {}, refusal=refusal)
-    return CommitOutcome(0, [], _confirmation_from(result))
+    confirmation = _confirmation_from(result)
+    if validation_summary and not confirmation.get("replayed"):
+        LAST_VALIDATION.set(dict(validation_summary))
+    return CommitOutcome(0, [], confirmation)

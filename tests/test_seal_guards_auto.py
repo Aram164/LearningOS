@@ -780,7 +780,7 @@ def test_one_call_refusal_leaves_the_key_free_for_a_corrected_retry(
 
 @pytest.mark.parametrize("extra", [
     ["--revision", "unit-demo-l01=0"], ["--snapshot", "sha256:" + "0" * 64],
-    ["--request-id", "request-one-call-explicit"], ["--out", "/tmp/x.json"],
+    ["--out", "/tmp/x.json"],
 ])
 def test_one_call_refuses_a_second_source_for_a_derived_fact(
         mini_repo: Path, extra: list[str]):
@@ -844,3 +844,41 @@ def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
     assert json.loads(capsys.readouterr().out)["error"]["code"] == "STALE_SNAPSHOT"
     monkeypatch.setattr(seal_module, "seal_with_key", original_seal)
     assert invoke("one-call-stale-001") == 0
+
+
+def test_one_call_reports_what_the_commit_validated(mini_repo: Path):
+    """The write's own validation is the acceptance check (PLAN D4).
+
+    The JSON result is unchanged; one stderr line reports the commit's own
+    validation, so the agent does not run validate.py and the baseline check
+    on the same state again. A replay validated nothing and says so.
+    """
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = {"text": "a capture whose validation is reported"}
+    first = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-report-001")
+    assert first.returncode == 0, first.stdout + first.stderr
+    assert "seal_envelope: validation: 0 error(s)" in first.stderr
+    assert "no new warning signature" in first.stderr
+    assert "validation" not in json.loads(first.stdout)["result"]
+    replay = _one_call(mini_repo, capability="capture.create", payload=payload,
+                       key="one-call-report-001")
+    assert replay.returncode == 0, replay.stdout + replay.stderr
+    assert "validation: none ran in this call" in replay.stderr
+
+
+@pytest.mark.parametrize("proved,expected", [
+    ({"errors": 0, "warnings": 3, "new_warning_signatures": []},
+     "no new warning signature"),
+    ({"errors": 0, "warnings": 4, "new_warning_signatures": ["W-CODE at a.md (+1)"]},
+     "NEW warning signature(s): W-CODE at a.md (+1)"),
+    ({"errors": 0, "warnings": 3, "new_warning_signatures": None},
+     "the warning baseline is unreadable"),
+    (None, "none ran in this call"),
+])
+def test_validation_line_names_every_outcome(proved, expected):
+    import seal_envelope
+
+    assert expected in seal_envelope._validation_line(proved)

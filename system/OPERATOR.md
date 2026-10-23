@@ -139,7 +139,9 @@ Skills and projects use modules and units without false academic metadata.
 13. Validate after authored changes. Acceptance requires zero errors and no new
     or grown warning signature (`.venv/bin/python tools/warning_baseline.py --check`).
     Baseline-exempt operational and clock-derived advisories stay visible and
-    never block; see "What 'clean' means" above.
+    never block; see "What 'clean' means" above. A write submitted with
+    `seal_envelope.py --submit` prints both from the commit's own validation
+    on its `validation:` line; for that write, that line is the check.
 14. Source completeness is mandatory. Every learning source named by an
     authoritative template, bibliography, plan, or course artifact must remain
     reachable and be explicitly selected, reference-only, or deferred with a
@@ -273,7 +275,9 @@ Procedure: [shelving and session closure](procedures/shelving-session-closure.md
 Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
 `knowledge/garden/`. The operator, not the learner, handles filing. Every one
-of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
+of these writes goes through a GatewayEnvelopeV2 (WORKFLOWS §25c), sealed and
+submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
+NAME --payload JSON --key KEY --submit`.
 When Aram starts a message with `log:`, treat the following text as an explicit
 request to capture it verbatim. If the stage was explicitly identified in the
 current conversation, append it to that stage's working note through

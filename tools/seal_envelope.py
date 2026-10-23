@@ -130,20 +130,45 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
     """
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.adapters.capability import cmd_capability
+    from learning_os.app import commit as _commit
     from learning_os.domain.failures import TransactionFailure, WriteRefused
 
     try:
         _seal.seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
             parser_factory=los.build_parser, channel=args.channel,
-            approval_kind=args.approval_kind, session_id=session_id)
+            approval_kind=args.approval_kind, session_id=session_id,
+            request_id=args.request_id)
     except (OSError, ValueError, WriteRefused, TransactionFailure) as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
-    return cmd_capability(argparse.Namespace(
+    _commit.LAST_VALIDATION.set(None)
+    code = cmd_capability(argparse.Namespace(
         root=str(root), name=args.capability,
         payload_file=str(_seal.retry_path(root, args.key)),
         replay_only=False, _parser_factory=los.build_parser))
+    if code == 0:
+        print(_validation_line(_commit.LAST_VALIDATION.get()), file=sys.stderr)
+    return code
+
+
+def _validation_line(proved: dict | None) -> str:
+    """One line saying what the commit's own validation proved (PLAN D4)."""
+    if proved is None:
+        return ("seal_envelope: validation: none ran in this call (an exact "
+                "replay commits nothing new); run tools/validate.py --compact "
+                "if the current state needs checking")
+    counts = f"{proved['errors']} error(s), {proved['warnings']} warning(s)"
+    new = proved["new_warning_signatures"]
+    if new is None:
+        return (f"seal_envelope: validation: {counts}; the warning baseline is "
+                "unreadable — run tools/warning_baseline.py --check")
+    if new:
+        return (f"seal_envelope: validation: {counts}; NEW warning signature(s): "
+                + "; ".join(new))
+    return (f"seal_envelope: validation: {counts}, no new warning signature — "
+            "this commit's own validation; no separate validate.py or "
+            "warning_baseline.py run is needed")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -172,11 +197,11 @@ def main(argv: list[str] | None = None) -> int:
         # second, conflicting source for the same fact.
         clashing = [flag for flag, value in (
             ("--guards-from", args.guards_from), ("--revision", args.revision),
-            ("--snapshot", args.snapshot), ("--request-id", args.request_id),
-            ("--check-out", args.check_out), ("--out", args.out)) if value]
+            ("--snapshot", args.snapshot), ("--check-out", args.check_out),
+            ("--out", args.out)) if value]
         if clashing:
-            print(f"seal_envelope: --submit derives its own guards and request "
-                  f"id; drop {', '.join(clashing)}", file=sys.stderr)
+            print(f"seal_envelope: --submit derives its own guards and keeps "
+                  f"its own envelope; drop {', '.join(clashing)}", file=sys.stderr)
             return 2
 
     if args.channel not in GATEWAY_CHANNELS:

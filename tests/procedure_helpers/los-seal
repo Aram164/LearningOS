@@ -46,7 +46,10 @@ def main(argv: list[str]) -> int:
         capture_output=True)
     sys.stdout.buffer.write(proc.stdout)
     sys.stderr.buffer.write(proc.stderr)
-    if proc.returncode == 0 and os.environ.get("LOS_OBSERVATIONS"):
+    # A --submit prints the gateway's result, not an envelope, so there is no
+    # sealed intent to observe here.
+    if proc.returncode == 0 and os.environ.get("LOS_OBSERVATIONS") \
+            and "--submit" not in rest:
         # The sealer's JSON response names the exact approved intent.
         import json
         from pathlib import Path

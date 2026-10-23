@@ -14,6 +14,14 @@ envelope, and refuse a stale one. `tests/test_procedures.py` runs it with
 Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the test
 sets.
 
+The steps below are the wire format and its guarantees. To write, you do
+not perform them by hand: `.venv/bin/python tools/seal_envelope.py
+--capability NAME --payload JSON --key KEY --submit` reads the snapshot,
+derives the guards, seals, submits and prints the gateway's result, plus one
+`validation:` line from the commit's own validation. A retry with the same
+key and payload replays the committed receipt. The executable example is
+the `log:` path in [capture routing](capture-routing.md).
+
 ## Build the fixture
 
 ```scrut
