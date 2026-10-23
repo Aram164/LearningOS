@@ -27,14 +27,19 @@ def resolved_inside(root: Path, path: Path, *, strict: bool = True) -> Path:
     return resolved
 
 
-def _authority_parts(path: Path, authority: Path) -> tuple[str, ...] | None:
-    """``path``'s parts below ``authority``, whichever spelling it uses, or None.
+# These operating-system aliases are trusted independently of any requested
+# material path. Resolving an arbitrary candidate ancestor to discover aliases
+# would inspect an escaping sibling before deciding whether to admit it.
+_TRUSTED_PREFIX_ALIASES = (Path("/var"), Path("/tmp"), Path("/etc"))
 
-    The authority's own spelling and its resolved spelling are trusted:
-    the caller admitted that directory. Any other spelling has to be a
-    prefix of ``path`` carrying the authority's name that resolves to the
-    same directory. Only such a prefix is resolved, never anything beneath
-    it, so a target outside is still refused without being walked.
+
+def _authority_parts(path: Path, authority: Path) -> tuple[str, ...] | None:
+    """Return parts below an admitted authority spelling, without probing path.
+
+    The caller admits the authority and its resolved spelling. Standard macOS
+    aliases can spell that same authority in reverse (``/var`` for
+    ``/private/var``), but their roots come from an explicit trusted list,
+    never from the candidate or a symlink target.
     """
     try:
         return path.relative_to(authority).parts
@@ -45,10 +50,15 @@ def _authority_parts(path: Path, authority: Path) -> tuple[str, ...] | None:
         return path.relative_to(real).parts
     except ValueError:
         pass
-    names = {authority.name, real.name}
-    for prefix in path.parents:
-        if prefix.name in names and Path(os.path.realpath(prefix)) == real:
-            return path.relative_to(prefix).parts
+    for alias in _TRUSTED_PREFIX_ALIASES:
+        resolved_alias = Path(os.path.realpath(alias))
+        if resolved_alias == alias:
+            continue
+        try:
+            alias_authority = alias / real.relative_to(resolved_alias)
+            return path.relative_to(alias_authority).parts
+        except ValueError:
+            continue
     return None
 
 

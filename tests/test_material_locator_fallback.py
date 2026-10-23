@@ -24,6 +24,7 @@ a derived path that does not exist is reported missing rather than replaced.
 from __future__ import annotations
 
 import os
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -309,15 +310,18 @@ def test_a_projected_resource_keeps_its_page_selector(mini_repo: Path):
 
 
 # ----------------------------------- #17: one directory, two spellings of it
-# macOS reaches one temporary tree as /var/... and /private/var/...; an alias
-# directory reproduces that anywhere. A path or absolute link target spelled
-# the other way is inside; a real escape is still refused.
-def _two_spellings(tmp_path: Path) -> tuple[Path, Path]:
+# macOS reaches one temporary tree as /var/... and /private/var/...; an explicit
+# trusted prefix reproduces that anywhere. Candidate paths never establish
+# trust merely by carrying an ancestor with the same name as the authority.
+def _two_spellings(tmp_path: Path, monkeypatch) -> tuple[Path, Path]:
+    from learning_os.store import layout
+
     real = tmp_path / "private" / "var" / "tree"
     real.mkdir(parents=True)
     (real / "real.pdf").write_bytes(b"%PDF inside\n")
     (tmp_path / "var").symlink_to(tmp_path / "private" / "var",
                                   target_is_directory=True)
+    monkeypatch.setattr(layout, "_TRUSTED_PREFIX_ALIASES", (tmp_path / "var",))
     return real, tmp_path / "var" / "tree"
 
 
@@ -325,10 +329,10 @@ def _two_spellings(tmp_path: Path) -> tuple[Path, Path]:
     ("real", "alias"), ("alias", "real"), ("real", "real"), ("alias", "alias"),
 ])
 def test_an_absolute_link_inside_is_admitted_whichever_spelling(
-        tmp_path: Path, root_spelling, link_spelling):
+        tmp_path: Path, monkeypatch, root_spelling, link_spelling):
     from learning_os.store.layout import resolve_symlinks_inside
 
-    real, alias = _two_spellings(tmp_path)
+    real, alias = _two_spellings(tmp_path, monkeypatch)
     spelled = {"real": real, "alias": alias}
     (real / "link.pdf").symlink_to(spelled[link_spelling] / "real.pdf")
     root = spelled[root_spelling]
@@ -337,27 +341,59 @@ def test_an_absolute_link_inside_is_admitted_whichever_spelling(
     assert resolved.read_bytes() == b"%PDF inside\n"
 
 
-def test_a_path_spelled_through_the_other_prefix_is_admitted(tmp_path: Path):
+def test_a_path_spelled_through_the_other_prefix_is_admitted(tmp_path: Path, monkeypatch):
     from learning_os.store.layout import resolve_symlinks_inside
 
-    real, alias = _two_spellings(tmp_path)
+    real, alias = _two_spellings(tmp_path, monkeypatch)
     assert resolve_symlinks_inside(real, alias / "real.pdf") == real / "real.pdf"
     assert resolve_symlinks_inside(alias, real / "real.pdf") == alias / "real.pdf"
 
 
-def test_a_real_escape_is_refused_whichever_spelling(tmp_path: Path):
+def test_a_real_escape_is_refused_whichever_spelling(tmp_path: Path, monkeypatch):
     from learning_os.store.layout import PathBoundaryError, resolve_symlinks_inside
 
-    real, alias = _two_spellings(tmp_path)
+    real, alias = _two_spellings(tmp_path, monkeypatch)
     outside = tmp_path / "private" / "var" / "elsewhere" / "tree"
     outside.mkdir(parents=True)
     (outside / "secret.pdf").write_bytes(b"outside\n")
     (real / "out.pdf").symlink_to(outside / "secret.pdf")
     (real / "out-alias.pdf").symlink_to(
         tmp_path / "var" / "elsewhere" / "tree" / "secret.pdf")
+    real_stat, real_lstat = os.stat, os.lstat
+
+    def guarded(call):
+        def inspect(path, *args, **kwargs):
+            if isinstance(path, (str, bytes, os.PathLike)) \
+                    and "elsewhere" in Path(os.fsdecode(path)).parts:
+                raise AssertionError("boundary inspected an escaping target")
+            return call(path, *args, **kwargs)
+        return inspect
+
+    monkeypatch.setattr(os, "stat", guarded(real_stat))
+    monkeypatch.setattr(os, "lstat", guarded(real_lstat))
     for root in (real, alias):
         for name in ("out.pdf", "out-alias.pdf"):
             with pytest.raises(PathBoundaryError, match="escapes"):
                 resolve_symlinks_inside(root, root / name)
         with pytest.raises(PathBoundaryError, match="escapes"):
             resolve_symlinks_inside(root, outside / "secret.pdf")
+
+
+def test_the_actual_macos_var_alias_keeps_both_spellings_inside():
+    from learning_os.store.layout import resolve_symlinks_inside
+
+    if Path(os.path.realpath("/var")) != Path("/private/var"):
+        pytest.skip("requires the macOS /var alias")
+    with tempfile.TemporaryDirectory(prefix="los-var-alias-") as temporary:
+        real = Path(temporary).resolve()
+        try:
+            alias = Path("/var") / real.relative_to("/private/var")
+        except ValueError:
+            pytest.skip("temporary directory is not under /private/var")
+        (real / "file.pdf").write_bytes(b"inside\n")
+        (real / "alias-link.pdf").symlink_to(alias / "file.pdf")
+        (real / "real-link.pdf").symlink_to(real / "file.pdf")
+        assert resolve_symlinks_inside(real, alias / "file.pdf") == real / "file.pdf"
+        assert resolve_symlinks_inside(alias, real / "file.pdf") == alias / "file.pdf"
+        assert resolve_symlinks_inside(real, real / "alias-link.pdf") == real / "file.pdf"
+        assert resolve_symlinks_inside(alias, alias / "real-link.pdf") == alias / "file.pdf"
