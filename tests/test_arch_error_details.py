@@ -81,6 +81,19 @@ def test_malformed_projection_input_details_are_refused(mini_repo, change):
 
 
 @pytest.mark.parametrize("details", [
+    {"changed_paths": []},
+    {"changed_paths_total": 0},
+    {"changed_paths": [], "changed_paths_total": 0},
+])
+def test_projection_path_details_require_their_reason(mini_repo, details):
+    """Do not inject the reason: these incomplete objects must fail as sent."""
+    response = _response(details)
+    response["error"]["code"] = "PROJECTION_FAILED"
+    with pytest.raises(WriteRefused):
+        _validate_capability_envelope(mini_repo, response, kind="result")
+
+
+@pytest.mark.parametrize("details", [
     {"reason": ["NOT_FOUND"]},
     {"suggestions": 5},
     {"remedy": {"x": 1}},
