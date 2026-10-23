@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: the module record does not satisfy its schema\\nPartitioned module record contract violation: <root>: 'source_map' is a required property\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.create\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: a created module needs a 'source_map': the module record names one, and a module whose source map is missing cannot be loaded\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
   "stdout_json": {
     "capability": "module.create",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "los: the module record does not satisfy its schema\nPartitioned module record contract violation: <root>: 'source_map' is a required property",
+      "message": "los: a created module needs a 'source_map': the module record names one, and a module whose source map is missing cannot be loaded",
       "retryable": false
     },
     "idempotency_key": "KEY2",

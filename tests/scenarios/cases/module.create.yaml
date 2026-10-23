@@ -42,13 +42,13 @@ cases:
   - id: bad-module-record
     kind: refusal
     transport: gateway
-    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:983c5f7ccb5c641f2cc7047867dec439f66a5a149254b4e3b03cc5a455760c84"}
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:ffe3c764382484f18614d83034482938ed4228bbe61ed1cc59a7b1de0df9f4e4"}
     artifact_ids: []
     expect: {site: module.create.bad-module-record}
   - id: bad-source-map
     kind: refusal
     transport: gateway
-    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:ec80c6e6d445dfeb6a2d7d15bb3bcc39e4c8e8f2ab6f6ceea1c2bc1a20749cbd"}
+    request: {file: "<CASEDATA>/package.yaml", file_sha256: "sha256:b64700d296a75656677ceb1e5d7ddb47c702ef841599803e46aca327e4a2efdd"}
     artifact_ids: []
     expect: {site: module.create.bad-source-map}
   - id: bad-source-map-foreign

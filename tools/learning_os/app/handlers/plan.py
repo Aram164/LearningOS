@@ -998,6 +998,16 @@ def module_create(ctx: OpContext, req: dict) -> Result:
     if not isinstance(module_id, str) or not _MODULE_ID.match(module_id):
         _plan_refuse(ctx, "the module record's id must match module-<slug>",
                      "bad-module-id")
+    # Before the record schema, which pins the same name: checked there
+    # first, this specific refusal could never be reached, and the generic
+    # schema message hid the reason the name is fixed.
+    if record.get("source_map") != "source-map.yaml":
+        _plan_refuse(
+            ctx,
+            "a created module's source map is always 'source-map.yaml'; "
+            "the loader reads that one name",
+            "bad-source-map-name",
+        )
     problems = _creation_record_problems(root, "module.schema.json", record)
     if problems:
         _plan_refuse(ctx, "the module record does not satisfy its schema",
@@ -1018,13 +1028,6 @@ def module_create(ctx: OpContext, req: dict) -> Result:
     if problems:
         _plan_refuse(ctx, "the source map does not satisfy its schema",
                      "bad-source-map", extra=tuple(problems))
-    if record.get("source_map") != "source-map.yaml":
-        _plan_refuse(
-            ctx,
-            "a created module's source map is always 'source-map.yaml'; "
-            "the loader reads that one name",
-            "bad-source-map-name",
-        )
     destination = _creation_destination_problems(root, module_id)
     if destination:
         _plan_refuse(

@@ -29,6 +29,7 @@ CHECK_ID = "A8-doc-commands"
 FIX = "Update the transcript, or fix the doc command (PLAN D11)."
 MENTION_RE = re.compile(r"(?<![A-Za-z0-9_.])(?:tools/(?P<tool>[a-z_]+)\.py|(?P<los>los)(?=\s|$))")
 ALL_CAPS_RE = re.compile(r"[A-Z0-9_]*[A-Z][A-Z0-9_]*\Z")
+SHELL_VAR_RE = re.compile(r"\$(?:[A-Z][A-Z0-9_]*|\{[A-Z][A-Z0-9_]*\})\Z")
 ANGLE_RE = re.compile(r"<([^<>]+)>")
 ANNOTATION_RE = re.compile(r"^\s*<!-- los:(reference|macro) (\{.*\}) -->\s*$")
 FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})(.*)$")
@@ -89,6 +90,12 @@ def _placeholder(token, action):
     if token.startswith("sha256:") and ALL_CAPS_RE.fullmatch(token[7:]):
         return "sha256:" + "0" * 64
     if ALL_CAPS_RE.fullmatch(token):
+        return _dummy(action)
+    # A whole-token shell expansion ("$COLLECTION_SHA" in an executable
+    # transcript) is a value only the run knows, exactly like an ALL_CAPS
+    # placeholder: the flag and its position are still checked, only the
+    # value is filled. A token that merely contains an expansion is not.
+    if SHELL_VAR_RE.fullmatch(token):
         return _dummy(action)
     match = ANGLE_RE.fullmatch(token)
     if match:
