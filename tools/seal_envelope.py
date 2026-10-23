@@ -484,6 +484,21 @@ def _settle_attempt(root: Path, key: str, attempt: Path) -> None:
     discard_sealed_request(attempt)  # a no-op once it was promoted
 
 
+def _same_authored_intent(kept: dict, *, capability: str, channel: str,
+                          session_id: str | None, payload: dict) -> bool:
+    """Whether a kept envelope says what this caller asks, guards aside.
+
+    These are the intent fields a caller chooses (``intent_subject``); the
+    guards are not, because a retry seals after its own commit moved the
+    tree. A sealed session decides whose ledger owns the rows, so adding,
+    removing or changing it is another request, as a new channel is.
+    """
+    return (kept.get("capability") == capability
+            and kept.get("channel") == channel
+            and kept.get("session_id") == session_id
+            and kept.get("payload") == payload)
+
+
 def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                    channel: str, approval_kind: str, session_id: str | None,
                    request_id: str | None,
@@ -491,9 +506,9 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     """Seal one operator write under ``key``; return the file to submit and
     whether it is a new attempt.
 
-    If ``key`` already committed this exact capability and payload, its kept
-    envelope is returned unchanged, so the gateway replays the original
-    receipt. Otherwise a fresh envelope is sealed into a new attempt file of
+    If ``key`` already committed this exact capability, channel, session and
+    payload, its kept envelope is returned unchanged, so the gateway replays
+    the original receipt. Otherwise a fresh envelope is sealed into a new attempt file of
     its own: with ``guards`` (a reviewed check record's snapshot and
     revisions), against exactly those, so a tree that moved since the review
     is refused as stale; without, against the live snapshot with the guards
@@ -501,7 +516,8 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     means a second caller sealing the same key cannot change the bytes this
     caller submits, and a refused attempt cannot replace the retry file of a
     key that already committed (``_settle_attempt``). A used key with another
-    payload is refused by the gateway as ``IDEMPOTENCY_CONFLICT``. Sealing
+    payload, channel or session is sealed afresh and refused by the gateway
+    as ``IDEMPOTENCY_CONFLICT``, never answered with the old request. Sealing
     here adds no authority: on the operator channel the approval subject is
     the operator's assertion, which this tool computes as well as an agent can.
     """
@@ -511,8 +527,9 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     committed = load_idempotency_entries(root).get(key)
     if committed is not None:
         kept = _committed_request(root, key, committed)
-        if kept is not None and kept[1].get("capability") == capability \
-                and kept[1].get("payload") == payload:
+        if kept is not None and _same_authored_intent(
+                kept[1], capability=capability, channel=channel,
+                session_id=session_id, payload=payload):
             return kept[0], False
     request_id = request_id or _fresh_request_id(key)
     common = dict(capability=capability, payload=payload, key=key,

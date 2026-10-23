@@ -899,6 +899,43 @@ def test_a_conflicting_reuse_of_a_key_keeps_the_committed_retry(mini_repo: Path)
     assert len(_receipts(mini_repo)) == 1
 
 
+@pytest.mark.parametrize("first,changed", [
+    (["--session-id", "session-A"], ["--session-id", "session-B"]),
+    ([], ["--session-id", "session-B"]),
+    (["--session-id", "session-A"], []),
+    ([], ["--channel", "codex"]),
+], ids=["changed-session", "added-session", "removed-session", "changed-channel"])
+def test_a_retry_with_another_session_or_channel_is_not_the_old_request(
+        mini_repo: Path, first: list[str], changed: list[str]):
+    """The kept envelope replays only for the intent it sealed (#21 review).
+
+    Same key, same payload, but another sealed session or channel asks for
+    other ownership: it is refused as a key conflict, not answered with the
+    committed request, and the exact retry still replays.
+    """
+    from repo_builders import add_curriculum
+
+    from learning_os.store import session_ledger
+
+    add_curriculum(mini_repo)
+    payload = {"text": "same capture text"}
+    committed = _one_call(mini_repo, capability="capture.create", payload=payload,
+                          key="one-call-intent-001", extra=first)
+    assert committed.returncode == 0, committed.stdout + committed.stderr
+    other = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-intent-001", extra=changed)
+    assert other.returncode != 0, other.stdout
+    assert json.loads(other.stdout)["error"]["code"] == "IDEMPOTENCY_CONFLICT"
+    assert session_ledger.load_session_paths(mini_repo, "session-B") == {}
+    retry = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-intent-001", extra=first)
+    assert retry.returncode == 0, retry.stdout + retry.stderr
+    body = json.loads(retry.stdout)
+    assert body["replayed"] is True
+    assert body["transaction_id"] == json.loads(committed.stdout)["transaction_id"]
+    assert len(_receipts(mini_repo)) == 1
+
+
 def test_a_concurrent_seal_under_the_key_cannot_change_what_commits(
         mini_repo: Path, monkeypatch, capsys):
     import seal_envelope
