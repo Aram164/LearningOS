@@ -693,3 +693,154 @@ def test_inbox_resolve_envelope_missing_a_file_guard_still_refuses(
     assert "must cover exactly every transaction artifact" in body["error"]["message"]
     assert archive_guard in body["error"]["message"]
     assert (mini_repo / "work/inbox" / payload["name"]).is_file()
+
+
+# One call per intent (agent-cost PLAN D1/B1): `seal_envelope.py --submit`
+# seals through the same guard derivation as `--guards auto` and submits the
+# envelope itself. The staged-shadow check is skipped, because the commit
+# validates the real tree once.
+def _one_call(root: Path, *, capability: str, payload: dict, key: str,
+              extra: list[str] | None = None):
+    command = [sys.executable, str(SEAL), "--root", str(root),
+               "--capability", capability, "--payload", json.dumps(payload),
+               "--key", key, "--submit"]
+    command.extend(extra or [])
+    return subprocess.run(command, capture_output=True, text=True, timeout=120)
+
+
+def _receipts(root: Path) -> list[Path]:
+    return sorted((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+@pytest.mark.parametrize("capability,key,payload", FIRST_SUBMISSION_CASES,
+                         ids=[case[0] for case in FIRST_SUBMISSION_CASES])
+def test_one_call_write_commits_without_a_hand_built_envelope(
+        mini_repo: Path, tmp_path: Path, capability: str, key: str,
+        payload: dict | None):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    if payload is None:  # stage.attachment.add needs a real approved file
+        source = tmp_path / "attachment.txt"
+        source.write_text("one-call attachment bytes", encoding="utf-8")
+        payload = {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                   "file": str(source), "file_sha256": file_sha256(source),
+                   "label": "auto"}
+    applied = _one_call(mini_repo, capability=capability, payload=payload,
+                        key=f"{key}-one-call")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    body = json.loads(applied.stdout)
+    assert body["ok"] is True, body
+    assert body["replayed"] is False
+
+
+def test_one_call_retry_replays_and_a_new_payload_under_the_key_conflicts(
+        mini_repo: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = {"text": "captured once, retried after a lost response"}
+    first = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-retry-001")
+    assert first.returncode == 0, first.stdout + first.stderr
+    receipts = _receipts(mini_repo)
+    retry = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-retry-001")
+    assert retry.returncode == 0, retry.stdout + retry.stderr
+    first_body, retry_body = json.loads(first.stdout), json.loads(retry.stdout)
+    assert retry_body["replayed"] is True
+    assert retry_body["transaction_id"] == first_body["transaction_id"]
+    assert _receipts(mini_repo) == receipts
+    other = _one_call(mini_repo, capability="capture.create",
+                      payload={"text": "a different capture"},
+                      key="one-call-retry-001")
+    assert other.returncode != 0, other.stdout
+    assert json.loads(other.stdout)["error"]["code"] == "IDEMPOTENCY_CONFLICT"
+    assert _receipts(mini_repo) == receipts
+
+
+def test_one_call_refusal_leaves_the_key_free_for_a_corrected_retry(
+        mini_repo: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    refused = _one_call(mini_repo, capability="stage.progress.update",
+                        payload={"unit_id": "unit-demo-l01",
+                                 "stage_id": "stage-demo", "status": "done"},
+                        key="one-call-corrected-001")
+    assert refused.returncode == 2
+    assert "invalid payload" in refused.stderr
+    corrected = _one_call(mini_repo, capability="stage.progress.update",
+                          payload={"unit_id": "unit-demo-l01",
+                                   "stage_id": "stage-demo", "status": "active"},
+                          key="one-call-corrected-001")
+    assert corrected.returncode == 0, corrected.stdout + corrected.stderr
+    assert json.loads(corrected.stdout)["ok"] is True
+
+
+@pytest.mark.parametrize("extra", [
+    ["--revision", "unit-demo-l01=0"], ["--snapshot", "sha256:" + "0" * 64],
+    ["--request-id", "request-one-call-explicit"], ["--out", "/tmp/x.json"],
+])
+def test_one_call_refuses_a_second_source_for_a_derived_fact(
+        mini_repo: Path, extra: list[str]):
+    refused = _one_call(mini_repo, capability="capture.create",
+                        payload={"text": "explicit guard"},
+                        key="one-call-explicit-001", extra=extra)
+    assert refused.returncode == 2
+    assert "--submit derives its own guards" in refused.stderr
+    assert _receipts(mini_repo) == []
+
+
+def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
+        mini_repo: Path, monkeypatch, capsys):
+    """Seal plus commit run the validator once, not twice (PLAN D4/A5).
+
+    The guards still bind the snapshot sealed in process: a canonical write
+    that lands between the seal and the commit refuses as STALE_SNAPSHOT,
+    and the same key then seals afresh, because nothing committed under it.
+    """
+    import functools
+
+    import seal_envelope
+    from repo_builders import add_curriculum
+
+    import learning_os.app.seal as seal_module
+    from learning_os.derive.validation.core import Validator
+
+    add_curriculum(mini_repo)
+    calls = {"validate": 0}
+    original_validate = Validator.run
+
+    @functools.wraps(original_validate)
+    def counted_validate(self, *args, **kwargs):
+        calls["validate"] += 1
+        return original_validate(self, *args, **kwargs)
+
+    monkeypatch.setattr(Validator, "run", counted_validate)
+
+    def invoke(key: str) -> int:
+        return seal_envelope.main([
+            "--root", str(mini_repo), "--capability", "capture.create",
+            "--payload", json.dumps({"text": f"counted capture {key}"}),
+            "--key", key, "--submit"])
+
+    assert invoke("one-call-count-001") == 0
+    assert calls["validate"] == 1, calls
+
+    original_seal = seal_module.seal_with_key
+
+    def seal_then_race(root, **kwargs):
+        envelope = original_seal(root, **kwargs)
+        raced = _one_call(mini_repo, capability="garden.seed.create",
+                          payload={"text": "landed between seal and commit"},
+                          key="one-call-race-001")
+        assert raced.returncode == 0, raced.stdout + raced.stderr
+        return envelope
+
+    monkeypatch.setattr(seal_module, "seal_with_key", seal_then_race)
+    capsys.readouterr()
+    assert invoke("one-call-stale-001") == 3
+    assert json.loads(capsys.readouterr().out)["error"]["code"] == "STALE_SNAPSHOT"
+    monkeypatch.setattr(seal_module, "seal_with_key", original_seal)
+    assert invoke("one-call-stale-001") == 0
