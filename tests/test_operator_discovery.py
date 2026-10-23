@@ -146,7 +146,8 @@ def test_a_task_scope_names_only_current_binding_documents():
     for task in load_task_scope(ROOT).values():
         assert task.scope, task.id
         for document in task.scope:
-            assert document in binding, (task.id, document)
+            # A whole binding document, or one section of one (`path#anchor`).
+            assert document.partition("#")[0] in binding, (task.id, document)
         assert "system/OPERATOR.md" in task.scope, task.id
 
 
@@ -199,3 +200,49 @@ def test_a_command_the_contract_routes_to_is_reachable_by_its_own_name(name):
     payload = json.loads(result.stdout)
     assert payload["verb"]["verb"] == name
     assert payload["verb"]["operation"]
+
+
+def test_a_task_read_inlines_the_sections_it_binds_within_its_bound():
+    """`capabilities TASK --json` carries the reading (agent-cost plan D7).
+
+    Every procedure and every scoped section arrives inline, the whole read
+    stays within ~3k tokens, and a cut section says what it left out and
+    where the rest is, so no task starts by opening whole documents.
+    """
+    from learning_os.store.contracts.task_scope import READ_TOTAL_LIMIT
+
+    for task in load_task_scope(ROOT).values():
+        result = run_los(ROOT, "capabilities", task.id, "--json")
+        assert result.returncode == 0, result.stderr
+        read = json.loads(result.stdout)["read"]
+        expected = [link.target for link in task.procedures] + [
+            entry for entry in task.scope if "#" in entry]
+        assert [row["ref"] for row in read] == list(dict.fromkeys(expected)), task.id
+        assert sum(len(row["text"]) for row in read) <= READ_TOTAL_LIMIT, task.id
+        for row in read:
+            assert row["text"].startswith("## ") or "omitted_chars" in row, row["ref"]
+            if "omitted_chars" in row:
+                assert row["omitted_chars"] > 0 and "section '## " in row["rest"]
+
+
+def test_the_log_task_read_carries_the_one_call_write():
+    result = run_los(ROOT, "capabilities", "log-a-line", "--json")
+    assert result.returncode == 0, result.stderr
+    text = "".join(row["text"] for row in json.loads(result.stdout)["read"])
+    assert "--submit" in text
+    assert "stage.note.write" in text and "capture.create" in text
+
+
+def test_a_scoped_section_must_exist(mini_repo):
+    from learning_os.store.contracts.task_scope import TaskScopeError
+
+    (mini_repo / "system/SEMANTIC-CONTRACT.md").write_text(
+        "# Semantic contract\n\n## A real section\n\nText.\n", encoding="utf-8")
+    path = mini_repo / "system/contracts/task-scope.yaml"
+    text = path.read_text(encoding="utf-8")
+    assert "      - system/SEMANTIC-CONTRACT.md\n" in text
+    path.write_text(text.replace(
+        "      - system/SEMANTIC-CONTRACT.md\n",
+        "      - system/SEMANTIC-CONTRACT.md#no-such-section\n", 1), encoding="utf-8")
+    with pytest.raises(TaskScopeError, match="section that does not exist"):
+        load_task_scope(mini_repo)

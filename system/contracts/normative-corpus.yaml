@@ -78,7 +78,7 @@ documents:
       Setup and command guide; the binding operator contract governs operations.
 
   - path: system/OPERATOR.md
-    applies_to: [discover-capabilities, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, governance-question, untranscribable-workflows]
+    applies_to: [discover-capabilities, log-a-line, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, governance-question, untranscribable-workflows]
     class: contract
     status: current
     authority: binding
@@ -120,7 +120,7 @@ documents:
       rule's severity.
 
   - path: system/WORKFLOWS.md
-    applies_to: [edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, untranscribable-workflows]
+    applies_to: [log-a-line, edit-a-known-material-route, edit-a-known-stage, unit-coverage-and-unknown-ids, open-work-or-priority-question, known-record-or-stage-note, note-body-or-saved-reasoning, material-or-concept-explanation, resume-recorded-study, changes-awaiting-a-decision, ability-evidence, untranscribable-workflows]
     class: procedure
     status: current
     authority: binding

@@ -5,8 +5,10 @@
 # carries it, and the current binding documents that scope it.
 #
 # system/OPERATOR.md renders its "Start here" table from this file, so the
-# operator contract and the machine surface cannot disagree. Every scoped
-# document must be a current binding document in
+# operator contract and the machine surface cannot disagree. A scope entry
+# is a whole document or one of its level-2 sections (`path#anchor`), and
+# `capabilities TASK --json` inlines every procedure and scoped section,
+# bounded. Every scoped document must be a current binding document in
 # system/contracts/normative-corpus.yaml; every procedure must name a
 # runnable system/procedures/*.md transcript and a heading that exists in
 # it; every command in an entry read must be a real CLI verb.
@@ -23,6 +25,19 @@ tasks:
     scope:
       - system/OPERATOR.md
 
+  - id: log-a-line
+    task: Log a line (`log:`)
+    entry_read: '`capabilities capture.create --json`, or `capabilities stage.note.write --json` for an identified stage'
+    procedures:
+      - label: Log to the stage
+        target: system/procedures/capture-routing.md#a-logged-line-for-an-identified-stage-is-one-stage-note-write
+      - label: log to the inbox
+        target: system/procedures/capture-routing.md#a-logged-line-with-no-stage-is-one-inbox-capture
+    scope:
+      - system/OPERATOR.md
+      - system/WORKFLOWS.md#2-capture-temporary-material
+      - system/WORKFLOWS.md#25c-build-a-write-envelope-gatewayenvelopev2
+
   - id: edit-a-known-material-route
     task: Edit a known material route
     entry_read: '`plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B`'
@@ -31,8 +46,8 @@ tasks:
         target: system/procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
-      - system/ARCHITECTURE.md
+      - system/WORKFLOWS.md#25a-revise-an-existing-plan
+      - system/ARCHITECTURE.md#14a-module-first-curriculum-model
 
   - id: edit-a-known-stage
     task: Edit a known stage
@@ -42,8 +57,8 @@ tasks:
         target: system/procedures/bootstrap-order.md#enter-through-the-named-stage
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
-      - system/ARCHITECTURE.md
+      - system/WORKFLOWS.md#25a-revise-an-existing-plan
+      - system/ARCHITECTURE.md#14a-module-first-curriculum-model
 
   - id: unit-coverage-and-unknown-ids
     task: Unit coverage, source completeness, or unknown IDs
@@ -53,7 +68,8 @@ tasks:
         target: system/procedures/start-here.md#follow-one-printed-expansion-with-its-snapshot-pin
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#25a-revise-an-existing-plan
+      - system/WORKFLOWS.md#26-source-routing-and-feedback
 
   - id: open-work-or-priority-question
     task: Open work or priority question
@@ -63,7 +79,7 @@ tasks:
         target: system/procedures/retrieval-behavior.md#orient-operational-questions-from-the-brief
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
       - system/CLAUDE.md
 
   - id: known-record-or-stage-note
@@ -76,7 +92,7 @@ tasks:
         target: system/procedures/start-here.md#read-one-named-stage-with-its-working-note-content
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
 
   - id: note-body-or-saved-reasoning
     task: Note body or saved reasoning
@@ -86,7 +102,7 @@ tasks:
         target: system/procedures/start-here.md#search-beyond-note-summaries-then-read-the-saved-reasoning
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
 
   - id: material-or-concept-explanation
     task: Material or concept explanation
@@ -96,7 +112,7 @@ tasks:
         target: system/procedures/retrieval-behavior.md#read-what-explains-it
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#26-source-routing-and-feedback
 
   - id: resume-recorded-study
     task: Resume recorded study
@@ -106,7 +122,7 @@ tasks:
         target: system/procedures/start-here.md#the-study-suggestion-never-moves-the-resume-pointer
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#25-the-two-layer-operating-model-adr-006
       - system/CLAUDE.md
 
   - id: changes-awaiting-a-decision
@@ -117,7 +133,7 @@ tasks:
         target: system/procedures/start-here.md#read-what-wants-a-decision
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#30-review-exact-goal-decisions-together
 
   - id: ability-evidence
     task: Ability evidence
@@ -127,7 +143,7 @@ tasks:
         target: system/procedures/start-here.md#read-one-ability-through-the-bounded-horizon
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#8-record-evidence
 
   - id: governance-question
     task: Governance question
@@ -148,4 +164,6 @@ tasks:
       they need does not exist in a checkout (boundary 18)
     scope:
       - system/OPERATOR.md
-      - system/WORKFLOWS.md
+      - system/WORKFLOWS.md#23-process-a-lecture
+      - system/WORKFLOWS.md#24-turn-the-semester
+      - system/WORKFLOWS.md#27-promote-a-future-masters-module

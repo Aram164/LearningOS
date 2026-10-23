@@ -62,6 +62,7 @@ always names its file. Fix the defect; do not route around the guard.
 | Task | Entry read | Executable procedure |
 |---|---|---|
 | Discover capabilities | `capabilities --compact --json`, then `capabilities NAME --json` | [Discover and expand](procedures/start-here.md#discover-the-capability-index) |
+| Log a line (`log:`) | `capabilities capture.create --json`, or `capabilities stage.note.write --json` for an identified stage | [Log to the stage](procedures/capture-routing.md#a-logged-line-for-an-identified-stage-is-one-stage-note-write), [log to the inbox](procedures/capture-routing.md#a-logged-line-with-no-stage-is-one-inbox-capture) |
 | Edit a known material route | `plan-edit-context UNIT_ID --route-id ROUTE_ID` or `--route-ids A B` | [Revise a plan](procedures/revise-an-existing-plan.md#start-from-the-named-routes-edit-context) |
 | Edit a known stage | `plan-edit-context UNIT_ID --stage-id STAGE_ID` | [Enter through the stage](procedures/bootstrap-order.md#enter-through-the-named-stage) |
 | Unit coverage, source completeness, or unknown IDs | `plan-edit-context UNIT_ID --brief` | [Choose the focused context](procedures/start-here.md#follow-one-printed-expansion-with-its-snapshot-pin) |
@@ -291,12 +292,15 @@ LearningOS — is not a learner capture: follow the
 drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
 §21); the inbox trends toward empty.
 
-Read the applicable platform adapter, then the task-relevant sections of
-`system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
-reference before acting. Consult `system/PHILOSOPHY.md` for unresolved intent.
-All binding rules still apply; expand the reading scope whenever the task
-crosses an ownership or workflow boundary. A routine lookup does not require
-loading every schema, historical review, or unrelated workflow into context.
+Read the applicable platform adapter, then what `capabilities TASK --json`
+returns for the task before acting: its `read` carries the procedure and the
+binding sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md` that
+scope the task, and a section it cut names where the rest is. Open a whole
+document only through that pointer, or when the task crosses an ownership or
+workflow boundary its scope does not cover. Consult `system/PHILOSOPHY.md` for
+unresolved intent. All binding rules still apply. A routine lookup does not
+require loading every schema, historical review, or unrelated workflow into
+context.
 
 Procedure: [capture routing](procedures/capture-routing.md); [write envelopes](procedures/build-write-envelope.md).
 

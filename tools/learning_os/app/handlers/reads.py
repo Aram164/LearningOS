@@ -39,7 +39,7 @@ from learning_os.domain.failures import NotFound, StaleSnapshot, WriteRefused, u
 from learning_os.domain.suggest import expansion, not_found, with_suggestions
 from learning_os.store.contracts.capability_catalog import load_capability_catalog
 from learning_os.store.contracts.json_schema import ContractValidationError, validate_contract
-from learning_os.store.contracts.task_scope import entry_read_verbs
+from learning_os.store.contracts.task_scope import entry_read_verbs, task_reading
 from learning_os.store.contracts.verb_catalogue import (
     VerbCatalogueError,
     build_verb_catalogue,
@@ -912,6 +912,9 @@ def capabilities(ctx: OpContext, req: dict) -> Result:
                 if catalogue.verb(verb) is not None
             ]
             payload["tasks"] = [task.as_dict()]
+            # The sections the task binds, inline and bounded, so the entry
+            # read is the reading instead of a list of documents to open.
+            payload["read"] = task_reading(root, task.procedures, task.scope)
             for key in ("queries", "commands"):
                 payload[key] = {}
             return Result(payload, human_view={"branch": "name"})
