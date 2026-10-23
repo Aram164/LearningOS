@@ -14,7 +14,7 @@
             "UNCONFIRMED",
             "INTERNAL_FAILURE"]},
         "details": {"additionalProperties": true,
-          "properties": {"reason": {"enum": ["NOT_FOUND", "MALFORMED_ID"]},
+          "properties": {"reason": {"enum": ["NOT_FOUND", "MALFORMED_ID", "CANONICAL_INPUTS_CHANGED"]},
             "remedy": {"minLength": 1, "type": "string"},
             "suggestions": {"items": {"minLength": 1, "type": "string"},
               "maxItems": 5,

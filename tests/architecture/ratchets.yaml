@@ -103,7 +103,7 @@ checks:
   - signature: 'tools/learning_os/domain/validation.py::markdown_link_targets::substring::]('
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-23 takeover: record the count fix/remaining-issues-2026-10-23 3efd54c4 introduced (#25 CommonMark inline-link destinations); the leading_material_locator newline exception it also touched is gone and its entry is removed"
+    approved_by: "Aram 2026-10-23: record the count fix/remaining-issues-2026-10-23 3efd54c4 introduced (#25 CommonMark inline-link destinations); the leading_material_locator newline exception it also touched is gone and its entry is removed"
   - signature: tools/learning_os/store/materials/resolution.py::leading_material_locator::substring::\
     count: 1
     since: approved
@@ -149,7 +149,7 @@ checks:
       '
     count: 1
     since: approved
-    approved_by: "Aram 2026-10-23 takeover: record the count fix/remaining-issues-2026-10-23 introduced with #22 task reading; the registries.py generated-input regex exception is gone (a0057c65, #11 path-shaped GENERATED_DIRECTORIES) and its entry is removed"
+    approved_by: "Aram 2026-10-23: record the count fix/remaining-issues-2026-10-23 introduced with #22 task reading; the registries.py generated-input regex exception is gone (a0057c65, #11 path-shaped GENERATED_DIRECTORIES) and its entry is removed"
   A3-prose-2:
   - signature: tools/learning_os/store/derived/store.py::read_state::regex::[0-9a-f]{64}
     count: 1
