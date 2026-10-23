@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 60
-schema_fingerprint: sha256:107d89adf9db4c550f91719082e3108d7e245b5a4fbbcc1a66af056c38a7cee0
+contract_version: 61
+schema_fingerprint: sha256:9caec3ee7c1dccd7450fd8f19ce1c4216a0edbdd2d7fab836193bc26b64393da
 record_schemas: 36
 history:
 - version: 1
@@ -437,5 +437,12 @@ history:
   adopted: '2026-10-23'
   note: 'v60: correct the CANONICAL_INPUTS_CHANGED details guard — the reason condition
     requires the reason key (issue #12)'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 61
+  adopted: '2026-10-23'
+  note: Projection conflict path fields require their reason and companion field even
+    when the reason is absent; valid diagnostic responses and canonical records remain
+    unchanged, requiring no migration.
   migration: null
   fixture: tests/fixtures/formats/v46/

@@ -61,6 +61,10 @@ def _details_fragment() -> dict:
             },
             "changed_paths_total": {"type": "integer", "minimum": 0},
         },
+        "dependentRequired": {
+            "changed_paths": ["reason", "changed_paths_total"],
+            "changed_paths_total": ["reason", "changed_paths"],
+        },
         "allOf": [
             {
                 "if": {
