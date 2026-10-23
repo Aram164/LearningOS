@@ -38,6 +38,14 @@ case "$(basename "$current")" in
         ;;
 esac
 
+# Git hands a hook the pushing repository's routing (GIT_DIR, absolute in a
+# linked worktree, and its kin). Inherited, it overrides `git -C`: the UI's
+# status was read from Core's index and a clean pair looked dirty (#24).
+# Every command below names its repository, and so do the stamp tool and
+# the gates it runs, so none of them may inherit another repository's.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY \
+    GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_NAMESPACE GIT_PREFIX
+
 
 # The installed copy is deliberately checked before it is trusted. Once this
 # version has been installed, every later edit to the canonical gate becomes a

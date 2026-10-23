@@ -286,6 +286,61 @@ def test_hook_also_runs_from_the_ui_checkout(pair):
     ]
 
 
+# ---- #24: a hook inherits Git's routing for the pushing repository --------
+
+
+def test_inherited_git_dir_does_not_route_the_ui_check_to_core(pair):
+    """Git exports an absolute GIT_DIR to a hook; `git -C <ui>` must still
+    read the UI. Before #24 the clean UI looked dirty: Core's index listed
+    ui.txt as untracked and core.txt as deleted."""
+    head = _head(pair["core"])
+    hook = pair["core"] / ".git" / "hooks" / "pre-push"
+    result = subprocess.run(
+        [str(hook)], cwd=pair["core"],
+        input=f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+        env={**os.environ, "GIT_DIR": str(pair["core"] / ".git")},
+        capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stderr
+    assert "requires clean Core and UI" not in result.stderr
+    assert "lighter local gate" in result.stdout
+
+
+def test_a_push_from_a_linked_worktree_passes_the_clean_pair_gate(pair, tmp_path):
+    """The real route: `git push` from a linked Core worktree beside a UI
+    clone runs the installed hook with Git's own environment."""
+    remote = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "-q", "--bare", str(remote)], check=True)
+    linked = tmp_path / "linked-pair"
+    linked.mkdir()
+    subprocess.run(["git", "-C", str(pair["core"]), "worktree", "add", "-q",
+                    "-b", "feature", str(linked / "repository")], check=True)
+    subprocess.run(["git", "clone", "-q", str(pair["ui"]),
+                    str(linked / "obsidian-ui")], check=True)
+    pushed = subprocess.run(
+        ["git", "-C", str(linked / "repository"), "push", "-q", str(remote),
+         "feature"], capture_output=True, text=True, timeout=120)
+    assert pushed.returncode == 0, pushed.stderr
+    assert _invocations(pair["log"]) == [
+        f"make -C {linked / 'repository'} check",
+        f"make -C {linked / 'repository'} test-affected",
+        f"npm --prefix {linked / 'obsidian-ui'} run check",
+    ]
+
+
+def test_a_stamp_under_an_inherited_git_dir_records_the_ui_head(pair):
+    core, ui = pair["core"], pair["ui"]
+    ui_head = _commit(ui, "ui-2.txt", "ui moves on")
+    stamped = subprocess.run(
+        [str(core / ".venv" / "bin" / "python"),
+         str(core / "tools" / "verified_pairs.py"), "stamp"],
+        cwd=core, env={**os.environ, "GIT_DIR": str(core / ".git")},
+        capture_output=True, text=True, timeout=120)
+    assert stamped.returncode == 0, stamped.stderr
+    rows = [json.loads(line) for line in (core / ".git" / "learningos-verified-pairs.jsonl")
+            .read_text(encoding="utf-8").splitlines()]
+    assert [(row["core_sha"], row["ui_sha"]) for row in rows] == [(_head(core), ui_head)]
+
+
 # ---- #113: the gate verifies the pushed SHAs, not the checkout -------------
 
 
