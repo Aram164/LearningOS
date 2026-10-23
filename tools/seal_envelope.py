@@ -61,7 +61,15 @@ def _derive_guards_auto(root: Path, **kwargs) -> tuple[str, dict[str, int]]:
 
 
 def _derive_registered_guards(root: Path, **kwargs) -> tuple[str, dict[str, int]]:
-    """The registered-operation derivation, with its staged-shadow check."""
+    """The registered-operation derivation, with its staged-shadow check.
+
+    The package never imports the ``los`` entrypoint, so the parser factory
+    is resolved here when the caller passes none.
+    """
+    if kwargs.get("parser_factory") is None:
+        import los  # noqa: E402  (imports the parser, not a command)
+
+        kwargs["parser_factory"] = los.build_parser
     return _seal.derive_registered_guards(root, **kwargs)
 
 

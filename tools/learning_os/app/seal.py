@@ -67,7 +67,7 @@ class _DryRunCapture(Exception):
 def derive_guards_auto(root: Path, *, capability: str, payload: dict,
                        key: str, request_id: str, channel: str,
                        approval_kind: str, snapshot: str | None,
-                       parser_factory=None) -> tuple[str, dict[str, int]]:
+                       parser_factory) -> tuple[str, dict[str, int]]:
     """Derive the exact guard set with a gateway dry run.
 
     Runs the capability's own handler through the gateway's ``_dispatch``
@@ -93,10 +93,6 @@ def derive_guards_auto(root: Path, *, capability: str, payload: dict,
     from learning_os.store.revisions import load_revisions
     from learning_os.store.transactions import transaction_artifacts
 
-    if parser_factory is None:
-        import los  # noqa: E402  (imports the parser, not a command)
-
-        parser_factory = los.build_parser
     definitions = command_definitions(root)
     if capability not in definitions:
         raise ValueError(f"unknown capability: {capability}")
@@ -200,8 +196,7 @@ def derive_guards_auto(root: Path, *, capability: str, payload: dict,
 def derive_registered_guards(root: Path, *, capability: str, payload: dict,
                              key: str, request_id: str, channel: str,
                              approval_kind: str, snapshot: str | None,
-                             check_out: str | None = None,
-                             parser_factory=None,
+                             parser_factory, check_out: str | None = None,
                              preflight: bool = True) -> tuple[str, dict[str, int]]:
     """Derive the guard set for a registered operation through the pipeline.
 
@@ -233,10 +228,6 @@ def derive_registered_guards(root: Path, *, capability: str, payload: dict,
     )
     from learning_os.store.contracts.requests import request_schema
 
-    if parser_factory is None:
-        import los  # noqa: E402  (imports the parser, not a command)
-
-        parser_factory = los.build_parser
     definitions = command_definitions(root)
     if capability not in definitions:
         raise ValueError(f"unknown capability: {capability}")
