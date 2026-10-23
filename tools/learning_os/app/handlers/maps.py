@@ -13,6 +13,7 @@ from learning_os.app.context import OpContext
 from learning_os.app.gateway import read_content_bound_file as _read_content_bound_file
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
+from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
 from learning_os.domain.failures import NotFound, WriteRefused
 from learning_os.domain.material_refs import MaterialReferenceError, expand_map
 from learning_os.domain.suggest import not_found
@@ -345,6 +346,7 @@ def unit_map_import(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
+    data = _bind_runtime_reviews(data)
 
     current_map_id = unit.data.get("current_study_map")
     current_map = repo.study_maps.get(current_map_id) if current_map_id else None

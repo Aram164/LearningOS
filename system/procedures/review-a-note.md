@@ -39,6 +39,11 @@ $ cat > "$TMPDIR/review-revised.md" <<'EOF'
 
 ## Seal the revision with derived guards
 
+This transcript keeps the explicit form so the envelope stays visible. To
+revise a note, one `seal_envelope.py … --submit` call replaces this step
+and the next, and binds `file_sha256` itself
+([build a write envelope](build-write-envelope.md)).
+
 ```scrut {output_stream: stderr}
 $ REV_SHA=$(sha256sum "$TMPDIR/review-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/review-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key review-demo --request-id request-review-demo --guards auto --out "$TMPDIR/review-demo.json"
 > los_snapshot_status=$?; eval "$(los_fixture_values)"; (exit "$los_snapshot_status")

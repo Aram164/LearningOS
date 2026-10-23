@@ -792,6 +792,83 @@ def test_one_call_refuses_a_second_source_for_a_derived_fact(
     assert _receipts(mini_repo) == []
 
 
+# The seal fills the digest of every file a byte-bound field names
+# (agent-cost D3), so an operator write needs no hand-run sha256sum, and a
+# reviewed write is two calls: --check-out for the review, then --guards-from
+# with --submit, which seals with the reviewed guards and the reviewed bytes.
+def _attachment_payload(tmp_path: Path, text: str = "reviewed attachment bytes") -> dict:
+    source = tmp_path / "attachment.txt"
+    source.write_text(text, encoding="utf-8")
+    return {"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+            "file": str(source), "label": "reviewed"}
+
+
+def test_one_call_binds_a_named_file_to_its_bytes(mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    applied = _one_call(mini_repo, capability="stage.attachment.add",
+                        payload=payload, key="one-call-digest-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    assert "bound file_sha256 to the bytes of" in applied.stderr
+    sealed = json.loads(sealed_request_path(mini_repo, "one-call-digest-001")
+                        .read_text(encoding="utf-8"))
+    assert sealed["payload"]["file_sha256"] == file_sha256(Path(payload["file"]))
+    retry = _one_call(mini_repo, capability="stage.attachment.add",
+                      payload=payload, key="one-call-digest-001")
+    assert json.loads(retry.stdout)["replayed"] is True
+
+
+def test_reviewed_write_is_two_calls_and_applies_the_reviewed_bytes(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="reviewed-two-call-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    assert json.loads(record.read_text(encoding="utf-8"))["ok"] is True
+    source = Path(payload["file"])
+    source.write_text("bytes nobody reviewed", encoding="utf-8")
+    changed = _one_call(mini_repo, capability="stage.attachment.add", payload=payload,
+                        key="reviewed-two-call-001", extra=["--guards-from", str(record)])
+    assert changed.returncode == 2
+    assert "record payload differs from the sealing payload" in changed.stderr
+    assert _receipts(mini_repo) == []
+    source.write_text("reviewed attachment bytes", encoding="utf-8")
+    applied = _one_call(mini_repo, capability="stage.attachment.add", payload=payload,
+                        key="reviewed-two-call-001", extra=["--guards-from", str(record)])
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    assert json.loads(applied.stdout)["ok"] is True
+    assert len(_receipts(mini_repo)) == 1
+
+
+def test_reviewed_write_refuses_a_tree_that_moved_since_the_review(
+        mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    payload = _attachment_payload(tmp_path)
+    record = tmp_path / "review.json"
+    reviewed = _seal(mini_repo, tmp_path / "unused.json",
+                     capability="stage.attachment.add", payload=payload,
+                     key="reviewed-stale-001", extra=["--check-out", str(record)])
+    assert reviewed.returncode == 0, reviewed.stderr
+    moved = _one_call(mini_repo, capability="capture.create",
+                      payload={"text": "lands after the review"}, key="reviewed-stale-move")
+    assert moved.returncode == 0, moved.stdout + moved.stderr
+    stale = _one_call(mini_repo, capability="stage.attachment.add", payload=payload,
+                      key="reviewed-stale-001", extra=["--guards-from", str(record)])
+    assert stale.returncode != 0
+    assert json.loads(stale.stdout)["error"]["code"] == "STALE_SNAPSHOT"
+
+
 def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
         mini_repo: Path, monkeypatch, capsys):
     """Seal plus commit run the validator once, not twice (PLAN D4/A5).

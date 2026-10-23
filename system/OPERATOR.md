@@ -278,7 +278,9 @@ to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
 `knowledge/garden/`. The operator, not the learner, handles filing. Every one
 of these writes goes through a GatewayEnvelopeV2 (WORKFLOWS §25c), sealed and
 submitted in one call: `.venv/bin/python tools/seal_envelope.py --capability
-NAME --payload JSON --key KEY --submit`.
+NAME --payload JSON --key KEY --submit`. It binds any file the payload names
+to its bytes; a write that needs review first is `--guards auto --check-out
+REC`, then `--guards-from REC --submit`.
 When Aram starts a message with `log:`, treat the following text as an explicit
 request to capture it verbatim. If the stage was explicitly identified in the
 current conversation, append it to that stage's working note through

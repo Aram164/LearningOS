@@ -109,6 +109,28 @@ def runtime_review_fingerprint(stage: dict) -> str:
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
 
 
+def bind_runtime_reviews(map_data: object) -> object:
+    """Fill the fingerprint of every ``runtime_review`` that omits one.
+
+    The fingerprint is a pure function of the stage, so an author who
+    declares a review in an imported map gets the value they would have
+    computed for the stage they are importing; the import's reviewed bytes
+    then bind it (agent-cost D3). Material-reference expansion never touches
+    the fingerprinted fields, so the authored and the loaded stage agree. A
+    fingerprint already present is kept as written, stale or not: replacing
+    it would re-bind a review to a payload nobody reviewed. Returns a copy.
+    """
+    if not isinstance(map_data, dict) or not isinstance(map_data.get("stages"), list):
+        return map_data
+    return {**map_data, "stages": [
+        {**stage, "runtime_review": {**stage["runtime_review"],
+                                     "fingerprint": runtime_review_fingerprint(stage)}}
+        if isinstance(stage, dict) and isinstance(stage.get("runtime_review"), dict)
+        and "fingerprint" not in stage["runtime_review"] else stage
+        for stage in map_data["stages"]
+    ]}
+
+
 def requirement_id_for(unit_id: str, stage_id: str) -> str:
     """Deterministic IR id derived from the owning unit and stage only."""
     unit_suffix = unit_id[len("unit-"):] if unit_id.startswith("unit-") else unit_id

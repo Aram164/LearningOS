@@ -20,6 +20,7 @@ The gateway receives the envelope exactly as ``los capability NAME
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import secrets
 import sys
@@ -74,6 +75,61 @@ def _load_payload(spec: str) -> dict:
     if not isinstance(payload, dict):
         raise ValueError("payload must be a JSON object")
     return payload
+
+
+def _bind_file_digests(root: Path, capability: str, payload: dict) -> dict:
+    """Fill ``X_sha256`` for every file the payload names in a byte-bound field ``X``.
+
+    A gateway write binds an external file to its exact bytes
+    (``read_content_bound_file``), and the request schema pairs each such
+    field with its digest (``file``/``file_sha256``,
+    ``body_file``/``body_file_sha256``). On the operator channel the approver
+    is the sealing operator, so hashing the bytes here binds exactly what its
+    own ``sha256sum`` would (agent-cost D3). A digest the caller supplies is
+    kept. A check record keeps the filled payload, so a file that changes
+    after review no longer matches its ``--guards-from`` record.
+    """
+    from learning_os.store.contracts.requests import request_schema
+
+    try:
+        properties = request_schema(root, capability).get("properties", {})
+    except (OSError, ValueError):
+        return payload
+    bound = dict(payload)
+    for name in sorted(properties):
+        field = name.removesuffix("_sha256")
+        value = payload.get(field)
+        if field == name or field not in properties or name in payload \
+                or not isinstance(value, str) or value == "-":
+            continue
+        source = Path(value).expanduser().resolve()
+        if not source.is_file():
+            continue  # the handler's own refusal names the missing file
+        bound[name] = "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest()
+        print(f"seal_envelope: bound {name} to the bytes of {value}", file=sys.stderr)
+    return bound
+
+
+def _record_guards(path: str, capability: str, payload: dict) -> tuple[str, dict[str, int]]:
+    """The snapshot and revisions of a passing ``--check-out`` record at ``path``.
+
+    Refuses a record that is unreadable, of another schema, failed, for
+    another capability, or for another payload than the one being sealed.
+    """
+    record = json.loads(Path(path).read_text(encoding="utf-8"))
+    # S13 candidate J9-J12: record validation, in SPEC order.
+    if not isinstance(record, dict) or record.get("schema") != 1:
+        raise ValueError("--guards-from record schema must be 1")
+    if record.get("ok") is not True:
+        raise ValueError("--guards-from record reports a failed check")
+    if record.get("capability") != capability:
+        raise ValueError(f"--guards-from record is for capability "
+                         f"{record.get('capability')!r}, not {capability!r}")
+    sealing = {key: value for key, value in payload.items() if key != "check"}
+    if (json.dumps(sealing, sort_keys=True)
+            != json.dumps(record.get("payload"), sort_keys=True)):
+        raise ValueError("--guards-from record payload differs from the sealing payload")
+    return record["expected_snapshot"], dict(record["expected_revisions"])
 
 
 class _DryRunCapture(Exception):
@@ -381,18 +437,21 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
 
 def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                    channel: str, approval_kind: str, session_id: str | None,
-                   request_id: str | None) -> Path:
+                   request_id: str | None,
+                   guards: tuple[str, dict[str, int]] | None = None) -> Path:
     """Seal one operator write under ``key`` and keep it; return its path.
 
     If ``key`` already committed this exact capability and payload, the kept
     envelope is reused unchanged, so the gateway replays the original
-    receipt. Otherwise a fresh envelope is sealed against the live snapshot
-    with the guards ``--guards auto`` derives, minus the staged-shadow check,
-    and kept before it is submitted. A used key with another payload is
-    sealed fresh and refused by the gateway as ``IDEMPOTENCY_CONFLICT``.
-    Sealing here adds no authority: on the operator channel the approval
-    subject is the operator's assertion, which this tool computes as well as
-    an agent can.
+    receipt. Otherwise a fresh envelope is sealed and kept before it is
+    submitted: with ``guards`` (a reviewed check record's snapshot and
+    revisions), against exactly those, so a tree that moved since the review
+    is refused as stale; without, against the live snapshot with the guards
+    ``--guards auto`` derives, minus the staged-shadow check. A used key with
+    another payload is sealed fresh and refused by the gateway as
+    ``IDEMPOTENCY_CONFLICT``. Sealing here adds no authority: on the operator
+    channel the approval subject is the operator's assertion, which this tool
+    computes as well as an agent can.
     """
     from learning_os.store.evidence import load_idempotency_entries
     from learning_os.store.session_ledger import save_sealed_request, sealed_request_path
@@ -408,7 +467,9 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     common = dict(capability=capability, payload=payload, key=key,
                   request_id=request_id, channel=channel,
                   approval_kind=approval_kind, snapshot=None)
-    if capability in REGISTRY:
+    if guards is not None:
+        snapshot, revisions = guards
+    elif capability in REGISTRY:
         snapshot, revisions = _derive_registered_guards(
             root, check_out=None, preflight=False, **common)
     else:
@@ -438,7 +499,10 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
     The envelope is the per-key retry file ``_seal_with_key`` keeps, so
     the gateway reads exactly the bytes a retry would resubmit. The commit
     validates the real tree once; the staged-shadow check ``--guards auto``
-    runs is skipped, because it would only run the same rules again.
+    runs is skipped, because it would only run the same rules again. With
+    ``--guards-from`` the reviewed journey is two calls: ``--guards auto
+    --check-out REC`` for the review, then this, which seals with the
+    record's guards and submits.
     """
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.adapters.capability import cmd_capability
@@ -446,10 +510,12 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
     from learning_os.domain.failures import TransactionFailure, WriteRefused
 
     try:
+        guards = (_record_guards(args.guards_from, args.capability, payload)
+                  if args.guards_from else None)
         sealed = _seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
             channel=args.channel, approval_kind=args.approval_kind,
-            session_id=session_id, request_id=args.request_id)
+            session_id=session_id, request_id=args.request_id, guards=guards)
     except (OSError, ValueError, WriteRefused, TransactionFailure) as exc:
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
@@ -529,7 +595,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out", default=None,
                         help="write the envelope here (default: stdout)")
     parser.add_argument("--submit", action="store_true",
-                        help="seal with derived guards and submit through the "
+                        help="seal with derived guards, or with a reviewed "
+                             "--guards-from record's, and submit through the "
                              "gateway in this one call, printing its result; "
                              "a retry with the same --key and payload replays "
                              "the committed receipt")
@@ -557,13 +624,13 @@ def main(argv: list[str] | None = None) -> int:
         print("seal_envelope: --check-out requires --guards auto", file=sys.stderr)
         return 2
     if args.submit:
-        # A one-call write derives every guard itself and keeps its envelope
-        # as retry state, so an explicit guard or output would be a second,
+        # A one-call write takes its guards from derivation or from one
+        # reviewed check record (--guards-from) and keeps its envelope as
+        # retry state, so an explicit guard or output would be a second,
         # conflicting source for the same fact.
         clashing = [flag for flag, value in (
-            ("--guards-from", args.guards_from), ("--revision", args.revision),
-            ("--snapshot", args.snapshot), ("--check-out", args.check_out),
-            ("--out", args.out)) if value]
+            ("--revision", args.revision), ("--snapshot", args.snapshot),
+            ("--check-out", args.check_out), ("--out", args.out)) if value]
         if clashing:
             print(f"seal_envelope: --submit derives its own guards and keeps "
                   f"its own envelope; drop {', '.join(clashing)}", file=sys.stderr)
@@ -613,6 +680,7 @@ def main(argv: list[str] | None = None) -> int:
             print("seal_envelope: refusing to write the envelope inside the "
                   "repository; point --out at scratch", file=sys.stderr)
             return 2
+    payload = _bind_file_digests(root, args.capability, payload)
 
     if args.submit:
         return _submit(root, args, payload, sealed_session)
@@ -620,37 +688,10 @@ def main(argv: list[str] | None = None) -> int:
     request_id = args.request_id or _fresh_request_id(args.key)
     if args.guards_from:
         try:
-            record = json.loads(
-                Path(args.guards_from).read_text(encoding="utf-8"))
+            snapshot, revisions = _record_guards(args.guards_from, args.capability, payload)
         except (ValueError, OSError) as exc:
             print(f"seal_envelope: {exc}", file=sys.stderr)
             return 2
-        # S13 candidate J9-J12: record validation, in SPEC order.
-        if not isinstance(record, dict) or record.get("schema") != 1:
-            print("seal_envelope: --guards-from record schema must be 1",
-                  file=sys.stderr)
-            return 2
-        if record.get("ok") is not True:
-            print("seal_envelope: --guards-from record reports a failed check",
-                  file=sys.stderr)
-            return 2
-        if record.get("capability") != args.capability:
-            print(f"seal_envelope: --guards-from record is for capability "
-                  f"{record.get('capability')!r}, not {args.capability!r}",
-                  file=sys.stderr)
-            return 2
-        if isinstance(payload, dict):
-            sealing = {key: value for key, value in payload.items()
-                       if key != "check"}
-        else:
-            sealing = payload
-        if (json.dumps(sealing, sort_keys=True)
-                != json.dumps(record.get("payload"), sort_keys=True)):
-            print("seal_envelope: --guards-from record payload differs from "
-                  "the sealing payload", file=sys.stderr)
-            return 2
-        snapshot = record["expected_snapshot"]
-        revisions = dict(record["expected_revisions"])
     elif args.guards == "auto":
         if args.check_out and args.capability not in REGISTRY:
             print("seal_envelope: --check-out requires a registered operation",

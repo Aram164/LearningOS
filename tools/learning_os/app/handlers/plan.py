@@ -40,6 +40,7 @@ from learning_os.app.handlers._shared import apply_reviewed_envelope
 from learning_os.app.handlers._shared import render_creation_check as _render_creation_check
 from learning_os.app.proposal import ResponsePayload, Result, TransactionProposal
 from learning_os.app.registry import register
+from learning_os.derive.learning_runtime import bind_runtime_reviews as _bind_runtime_reviews
 from learning_os.derive.masters_catalog import MastersPlanningError
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
@@ -558,6 +559,7 @@ def _execute_plan_import(ctx, req, *, module_id, source, package_bytes,
             continue
         if not isinstance(map_data, dict) or map_data.get("unit_id") != uid:
             _plan_refuse(ctx, f"study map must belong to {uid}", "map-foreign-unit")
+        map_data = _bind_runtime_reviews(map_data)
         existing_map = next((sm for sm in repo.study_maps.values() if sm.unit_id == uid), None)
         writes[unit_dir / "study-map.yaml"] = (
             _dump_study_map(existing_map, map_data) if existing_map else _dump_yaml(map_data)
