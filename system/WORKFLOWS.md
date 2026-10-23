@@ -722,9 +722,13 @@ with apply, `--staged-basis`, in-repository targets, and existing files.
 Hand-editing a `study-map.yaml` or a `source-map.yaml` produces a file the
 validator accepts and the pre-commit hook passes, so nothing will object — but
 it skips the snapshot guard, the artifact-revision check, and the append-only
-receipt, and afterwards nothing distinguishes it from a mediated write.
-`tools/plan_write_audit.py` measures how much of the plan surface has changed
-that way. A migration under `tools/migrations/` is the one legitimate exception,
+receipt. `tools/plan_write_audit.py` reports whether plan-changing commits also
+added receipt documents across the Git refs available in the clone. This is
+commit co-occurrence, not proof of per-write gateway provenance: a receipt can
+concern another write or be committed separately. Ledger updates and edits to
+existing receipts do not count as receipt additions; the report does not
+validate receipt schemas, write sets or hashes. A migration under
+`tools/migrations/` is the one legitimate exception to the governed write path,
 and it is legitimate because it is recorded.
 
 ## 25b. Save a batch of source analyses

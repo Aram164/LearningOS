@@ -14,7 +14,7 @@ operations, and one unit map — each drafted outside the repository,
 reviewed as a diff, preflighted from the CLI with zero canonical
 writes, and applied through the gateway). The assembler refuses the
 fixture batch, so the drafts below are edited copies; the closing
-sections run a byte-identical copy of the hand-edit audit tool
+sections run a byte-identical copy of the plan/receipt co-occurrence audit tool
 against a disposable git history built from the fixture's real plan
 and receipt files. `tests/test_procedures.py` runs it with Scrut;
 `<REPO>` comes from the `LOS_REPO` environment variable the test sets.
@@ -647,7 +647,7 @@ $ los generate
 published generated/manifest.json (atomic contract snapshot)
 ```
 
-## Copy the hand-edit audit into a disposable pair
+## Copy the plan/receipt audit into a disposable pair
 
 `tools/plan_write_audit.py` anchors the inspected repository to its
 own file location, so a byte-identical copy audits wherever it is
@@ -656,14 +656,16 @@ destination outside the transcript `TMPDIR`.
 
 ```scrut
 $ mkdir -p "$TMPDIR/audit-pair/repo" && export AUDIT_REPO="$(realpath "$TMPDIR/audit-pair/repo")" && $H/los-anchored-copy plan_write_audit "$AUDIT_REPO"
-sha256:d58cbf1bdd8de190aea7e3497287afd89c8dfb815b6ba42c792ebc14488ef286 tools/plan_write_audit.py
+sha256:1b59de3de42e6c27c6a5d0a67a4166ada5631c2368b29023cb9b21703f94d410 tools/plan_write_audit.py
 ```
 
 ## Commit the fixture's real plans and receipts
 
 The first commit carries every plan record and every transaction
 receipt the gateway wrote above; the second is a labeled fixture
-hand-edit with no receipt, the control the audit must catch. Only
+hand-edit without a receipt addition, the control the audit must list. The
+metric alone does not associate the first commit's plan changes with its
+receipts or establish which path wrote either commit. Only
 the plan tree and the receipts copy over — the diagnostics traces
 beside them vary per run. Identity and dates are fixed, but the two
 file-import envelopes carry their draft's absolute run-temporary
@@ -676,10 +678,10 @@ $ mkdir -p "$AUDIT_REPO/operations" && cp -R curriculum "$AUDIT_REPO/curriculum"
 ```
 
 ```scrut
-$ printf '%s\n' '# fixture hand-edit: an unmediated plan touch for the audit demo' >> "$AUDIT_REPO/curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml" && git -C "$AUDIT_REPO" add -A && GIT_AUTHOR_DATE="2026-10-02T09:00:00+02:00" GIT_COMMITTER_DATE="2026-10-02T09:00:00+02:00" git -C "$AUDIT_REPO" commit --quiet -m "hand-edit one study map without a receipt"
+$ printf '%s\n' '# fixture hand-edit: plan touch without a receipt addition' >> "$AUDIT_REPO/curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml" && git -C "$AUDIT_REPO" add -A && GIT_AUTHOR_DATE="2026-10-02T09:00:00+02:00" GIT_COMMITTER_DATE="2026-10-02T09:00:00+02:00" git -C "$AUDIT_REPO" commit --quiet -m "hand-edit one study map without a receipt"
 ```
 
-## The fixture history holds one mediated and one bare plan commit
+## The fixture history holds plan commits with and without receipt additions
 
 ```scrut
 $ git -C "$AUDIT_REPO" log --format=%s
@@ -689,41 +691,49 @@ gateway plan revisions with receipts
 
 ## Audit the fixture history with the copied entrypoint
 
-Nine files sit under `operations/transactions/`: the five new
-receipts, the three fixture records, and the gateway idempotency
-ledger the applies wrote.
+Nine YAML files sit under `operations/transactions/`: six receipt documents
+(five new and one seeded), plus the artifact-revision, semantic-lineage, and
+gateway idempotency ledgers. Only the six documents whose type is
+`transaction-receipt` count in the current working-tree receipt inventory;
+this is separate from the history's count of commits adding receipts.
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $AUDIT_REPO/tools/plan_write_audit.py
+history scope: all refs available in this clone (git log --all)
 commits that changed a plan record : 2
-  carrying a transaction receipt   : 1 (50%)
-  with no receipt in the same commit: 1
+  also adding a receipt document   : 1 (50%)
+  without a receipt addition       : 1
 
-receipts on disk                   : 9
+receipt documents in working tree  : 6
 
 Run with --list to see which commits those were.
 
-A commit without a receipt is not automatically a defect — migrations
-under tools/migrations/ and the assembler's reviewed drafts are
-legitimate. What the number measures is how much of the plan surface
-changed outside the one path that leaves evidence.
+This measures commit co-occurrence, not gateway mediation or per-write
+provenance. A receipt may concern a different write or be committed
+separately; recorded migrations are legitimate. Receipt schemas, write
+sets and hashes are not verified here. Ledger and existing-receipt
+updates are excluded. Uncommitted, unreachable and unavailable history
+is excluded; a shallow or incomplete clone can omit earlier changes.
 ```
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python $AUDIT_REPO/tools/plan_write_audit.py --list | sed -E "s/^  [0-9a-f]{7,} ([0-9]{4}-[0-9]{2}-[0-9]{2}) /  <hash> \1 /"
+history scope: all refs available in this clone (git log --all)
 commits that changed a plan record : 2
-  carrying a transaction receipt   : 1 (50%)
-  with no receipt in the same commit: 1
+  also adding a receipt document   : 1 (50%)
+  without a receipt addition       : 1
 
-receipts on disk                   : 9
+receipt documents in working tree  : 6
 
-off-gateway commits, newest first:
+plan-changing commits without a receipt addition, newest first:
   <hash> 2026-10-02 hand-edit one study map without a receipt
 
-A commit without a receipt is not automatically a defect — migrations
-under tools/migrations/ and the assembler's reviewed drafts are
-legitimate. What the number measures is how much of the plan surface
-changed outside the one path that leaves evidence.
+This measures commit co-occurrence, not gateway mediation or per-write
+provenance. A receipt may concern a different write or be committed
+separately; recorded migrations are legitimate. Receipt schemas, write
+sets and hashes are not verified here. Ledger and existing-receipt
+updates are excluded. Uncommitted, unreachable and unavailable history
+is excluded; a shallow or incomplete clone can omit earlier changes.
 ```
 
 ## The audit bound to the fixture repository

@@ -25,6 +25,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.domain.validation import in_evidence as _in_evidence
 from learning_os.store.layout import PathBoundaryError, read_text_inside, resolve_symlinks_inside
 from learning_os.store.loading.yamlio import UniqueKeySafeLoader
 from learning_os.store.materials.resolution import materials_mount
@@ -252,14 +253,23 @@ class ChecksMaterials:
         return None
 
     def _referenced_materials(self) -> set[str]:
-        """Every ``material://`` target named anywhere in the canonical trees.
+        """Every ``material://`` target named in the canonical trees, evidence aside.
 
         A regex sweep rather than a field walk: material URIs legitimately appear
         in source records, stage resources, note frontmatter and prose links, and
         a new carrier field should not silently escape the integrity check.
+
+        The evidence layer is the one exception. A complaint quotes the inputs
+        that failed, fixture targets included, so what it names is an
+        observation about the system and not a reference anything resolves
+        through. Reading it would turn the whole tree red whenever a note quotes
+        an unresolvable target (LearningOS #19).
         """
         found: set[str] = set()
-        for _path, text in self._canonical_texts():
+        for path, text in self._canonical_texts():
+            if _in_evidence(self.repo.root, path):
+                # The boundary check_ownership draws for GEN-INPUT (#4).
+                continue
             if "material://" in text:
                 found |= uris_in(text)
         found.discard("")
