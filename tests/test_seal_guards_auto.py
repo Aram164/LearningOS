@@ -869,6 +869,92 @@ def test_reviewed_write_refuses_a_tree_that_moved_since_the_review(
     assert json.loads(stale.stdout)["error"]["code"] == "STALE_SNAPSHOT"
 
 
+# Two callers can use one key, by accident: agents copy documented example
+# keys. Each attempt is sealed into a file of its own, and only the attempt
+# that committed becomes the key's retry file, so neither a refused attempt
+# nor a concurrent one can change what was, or is being, committed.
+def _inbox_texts(root: Path) -> str:
+    return "\n".join(path.read_text(encoding="utf-8")
+                     for path in sorted((root / "work/inbox").glob("*.md")))
+
+
+def test_a_conflicting_reuse_of_a_key_keeps_the_committed_retry(mini_repo: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    first = {"text": "capture A, committed first"}
+    committed = _one_call(mini_repo, capability="capture.create", payload=first,
+                          key="one-call-reused-001")
+    assert committed.returncode == 0, committed.stdout + committed.stderr
+    reused = _one_call(mini_repo, capability="capture.create",
+                       payload={"text": "capture B, same key by accident"},
+                       key="one-call-reused-001")
+    assert json.loads(reused.stdout)["error"]["code"] == "IDEMPOTENCY_CONFLICT"
+    retry = _one_call(mini_repo, capability="capture.create", payload=first,
+                      key="one-call-reused-001")
+    assert retry.returncode == 0, retry.stdout + retry.stderr
+    body = json.loads(retry.stdout)
+    assert body["replayed"] is True
+    assert body["transaction_id"] == json.loads(committed.stdout)["transaction_id"]
+    assert len(_receipts(mini_repo)) == 1
+
+
+def test_a_concurrent_seal_under_the_key_cannot_change_what_commits(
+        mini_repo: Path, monkeypatch, capsys):
+    import seal_envelope
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    original_seal = seal_envelope._seal_with_key
+    other = {"text": "capture B, sealed while A was in flight"}
+
+    def seal_then_another_caller_seals(root, **kwargs):
+        sealed = original_seal(root, **kwargs)
+        original_seal(root, **{**kwargs, "payload": other, "request_id": None})
+        return sealed
+
+    monkeypatch.setattr(seal_envelope, "_seal_with_key", seal_then_another_caller_seals)
+    capsys.readouterr()
+    assert seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "capture.create",
+        "--payload", json.dumps({"text": "capture A, the one submitted"}),
+        "--key", "one-call-concurrent-001", "--submit"]) == 0
+    monkeypatch.setattr(seal_envelope, "_seal_with_key", original_seal)
+    assert "capture A, the one submitted" in _inbox_texts(mini_repo)
+    assert "capture B" not in _inbox_texts(mini_repo)
+    late = _one_call(mini_repo, capability="capture.create", payload=other,
+                     key="one-call-concurrent-001")
+    assert json.loads(late.stdout)["error"]["code"] == "IDEMPOTENCY_CONFLICT"
+    assert len(_receipts(mini_repo)) == 1
+
+
+def test_a_commit_whose_attempt_was_never_settled_still_replays(
+        mini_repo: Path, monkeypatch, capsys):
+    """A crash after the commit, before the attempt became the retry file."""
+    import seal_envelope
+    from repo_builders import add_curriculum
+
+    from learning_os.store.session_ledger import sealed_request_path
+
+    add_curriculum(mini_repo)
+    payload = {"text": "committed, then the process died"}
+    monkeypatch.setattr(seal_envelope, "_settle_attempt", lambda *args: None)
+    capsys.readouterr()
+    assert seal_envelope.main([
+        "--root", str(mini_repo), "--capability", "capture.create",
+        "--payload", json.dumps(payload), "--key", "one-call-crash-001", "--submit"]) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert not sealed_request_path(mini_repo, "one-call-crash-001").exists()
+    monkeypatch.undo()
+    retry = _one_call(mini_repo, capability="capture.create", payload=payload,
+                      key="one-call-crash-001")
+    assert retry.returncode == 0, retry.stdout + retry.stderr
+    body = json.loads(retry.stdout)
+    assert body["replayed"] is True
+    assert body["transaction_id"] == first["transaction_id"]
+    assert sealed_request_path(mini_repo, "one-call-crash-001").is_file()
+
+
 def test_one_call_write_validates_once_and_a_moved_snapshot_is_stale(
         mini_repo: Path, monkeypatch, capsys):
     """Seal plus commit run the validator once, not twice (PLAN D4/A5).

@@ -435,34 +435,85 @@ def _derive_registered_guards(root: Path, *, capability: str, payload: dict,
         record["expected_revisions"])
 
 
+def _committed_request(root: Path, key: str,
+                       committed: dict) -> tuple[Path, dict] | None:
+    """The kept envelope that committed ``key``, and its path, if one was kept.
+
+    It is the key's retry file when that holds the committed request id and
+    intent. A crash between a commit and its promotion leaves the committing
+    attempt under its own name; it is promoted here, so an exact retry still
+    replays. Nothing that holds the committed request is ever replaced.
+    """
+    from learning_os.store.session_ledger import (
+        promote_sealed_request,
+        sealed_attempts,
+        sealed_request_path,
+    )
+
+    def holding(candidate: Path) -> dict | None:
+        try:
+            envelope = json.loads(candidate.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+        if isinstance(envelope, dict) \
+                and envelope.get("request_id") == committed.get("request_id") \
+                and intent_sha256(envelope) == committed.get("intent_sha256"):
+            return envelope
+        return None
+
+    path = sealed_request_path(root, key)
+    stored = holding(path)
+    if stored is not None:
+        return path, stored
+    for attempt in sealed_attempts(root, key, str(committed.get("request_id"))):
+        stored = holding(attempt)
+        if stored is not None:
+            promote_sealed_request(attempt, root, key)
+            return path, stored
+    return None
+
+
+def _settle_attempt(root: Path, key: str, attempt: Path) -> None:
+    """After the gateway answered: keep the attempt if it committed, else drop it."""
+    from learning_os.store.evidence import load_idempotency_entries
+    from learning_os.store.session_ledger import discard_sealed_request
+
+    committed = load_idempotency_entries(root).get(key)
+    if committed is not None:
+        _committed_request(root, key, committed)
+    discard_sealed_request(attempt)  # a no-op once it was promoted
+
+
 def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
                    channel: str, approval_kind: str, session_id: str | None,
                    request_id: str | None,
-                   guards: tuple[str, dict[str, int]] | None = None) -> Path:
-    """Seal one operator write under ``key`` and keep it; return its path.
+                   guards: tuple[str, dict[str, int]] | None = None) -> tuple[Path, bool]:
+    """Seal one operator write under ``key``; return the file to submit and
+    whether it is a new attempt.
 
-    If ``key`` already committed this exact capability and payload, the kept
-    envelope is reused unchanged, so the gateway replays the original
-    receipt. Otherwise a fresh envelope is sealed and kept before it is
-    submitted: with ``guards`` (a reviewed check record's snapshot and
+    If ``key`` already committed this exact capability and payload, its kept
+    envelope is returned unchanged, so the gateway replays the original
+    receipt. Otherwise a fresh envelope is sealed into a new attempt file of
+    its own: with ``guards`` (a reviewed check record's snapshot and
     revisions), against exactly those, so a tree that moved since the review
     is refused as stale; without, against the live snapshot with the guards
-    ``--guards auto`` derives, minus the staged-shadow check. A used key with
-    another payload is sealed fresh and refused by the gateway as
-    ``IDEMPOTENCY_CONFLICT``. Sealing here adds no authority: on the operator
-    channel the approval subject is the operator's assertion, which this tool
-    computes as well as an agent can.
+    ``--guards auto`` derives, minus the staged-shadow check. A private file
+    means a second caller sealing the same key cannot change the bytes this
+    caller submits, and a refused attempt cannot replace the retry file of a
+    key that already committed (``_settle_attempt``). A used key with another
+    payload is refused by the gateway as ``IDEMPOTENCY_CONFLICT``. Sealing
+    here adds no authority: on the operator channel the approval subject is
+    the operator's assertion, which this tool computes as well as an agent can.
     """
     from learning_os.store.evidence import load_idempotency_entries
-    from learning_os.store.session_ledger import save_sealed_request, sealed_request_path
+    from learning_os.store.session_ledger import save_sealed_request, sealed_attempt_path
 
-    path = sealed_request_path(root, key)
     committed = load_idempotency_entries(root).get(key)
-    if committed is not None and path.is_file():
-        stored = json.loads(path.read_text(encoding="utf-8"))
-        if stored.get("capability") == capability and stored.get("payload") == payload \
-                and intent_sha256(stored) == committed.get("intent_sha256"):
-            return path
+    if committed is not None:
+        kept = _committed_request(root, key, committed)
+        if kept is not None and kept[1].get("capability") == capability \
+                and kept[1].get("payload") == payload:
+            return kept[0], False
     request_id = request_id or _fresh_request_id(key)
     common = dict(capability=capability, payload=payload, key=key,
                   request_id=request_id, channel=channel,
@@ -487,22 +538,24 @@ def _seal_with_key(root: Path, *, capability: str, payload: dict, key: str,
     }
     envelope["approval"] = {"kind": approval_kind,
                             "subject_sha256": intent_sha256(envelope)}
-    save_sealed_request(path, json.dumps(envelope, indent=2, sort_keys=True,
-                                         ensure_ascii=False) + "\n")
-    return path
+    attempt = sealed_attempt_path(root, key, request_id)
+    save_sealed_request(attempt, json.dumps(envelope, indent=2, sort_keys=True,
+                                            ensure_ascii=False) + "\n")
+    return attempt, True
 
 
 def _submit(root: Path, args: argparse.Namespace, payload: dict,
             session_id: str | None) -> int:
     """Seal in process and hand the envelope to the gateway (agent-cost D1).
 
-    The envelope is the per-key retry file ``_seal_with_key`` keeps, so
-    the gateway reads exactly the bytes a retry would resubmit. The commit
-    validates the real tree once; the staged-shadow check ``--guards auto``
-    runs is skipped, because it would only run the same rules again. With
-    ``--guards-from`` the reviewed journey is two calls: ``--guards auto
-    --check-out REC`` for the review, then this, which seals with the
-    record's guards and submits.
+    The gateway reads the exact file this call sealed: a new attempt of its
+    own, which becomes the key's retry file only if it is what committed, or
+    the kept envelope of a key that already committed this payload, so a
+    retry replays. The commit validates the real tree once; the
+    staged-shadow check ``--guards auto`` runs is skipped, because it would
+    only run the same rules again. With ``--guards-from`` the reviewed
+    journey is two calls: ``--guards auto --check-out REC`` for the review,
+    then this, which seals with the record's guards and submits.
     """
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.adapters.capability import cmd_capability
@@ -512,7 +565,7 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
     try:
         guards = (_record_guards(args.guards_from, args.capability, payload)
                   if args.guards_from else None)
-        sealed = _seal_with_key(
+        sealed, fresh = _seal_with_key(
             root, capability=args.capability, payload=payload, key=args.key,
             channel=args.channel, approval_kind=args.approval_kind,
             session_id=session_id, request_id=args.request_id, guards=guards)
@@ -520,10 +573,14 @@ def _submit(root: Path, args: argparse.Namespace, payload: dict,
         print(f"seal_envelope: {exc}", file=sys.stderr)
         return 2
     _commit.LAST_VALIDATION.set(None)
-    code = cmd_capability(argparse.Namespace(
-        root=str(root), name=args.capability,
-        payload_file=str(sealed),
-        replay_only=False, _parser_factory=los.build_parser))
+    try:
+        code = cmd_capability(argparse.Namespace(
+            root=str(root), name=args.capability,
+            payload_file=str(sealed),
+            replay_only=False, _parser_factory=los.build_parser))
+    finally:
+        if fresh:
+            _settle_attempt(root, args.key, sealed)
     if code == 0:
         print(_validation_line(_commit.LAST_VALIDATION.get()), file=sys.stderr)
     return code
