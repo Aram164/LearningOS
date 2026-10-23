@@ -230,6 +230,12 @@ def test_uri_sweep_strips_fragments():
     assert _uris_in("`material://a/b.pdf#page=12`") == {"a/b.pdf"}
 
 
+def test_uri_sweep_strips_queries_like_every_reader():
+    """#18: the sweep ends a path where the resolver and the UI end it."""
+    assert _uris_in("`material://a/b.pdf?x=1`") == {"a/b.pdf"}
+    assert _uris_in("`material://a/b.pdf?x=1#page=2`") == {"a/b.pdf"}
+
+
 # ------------------------------------------------------------ validator tier
 def _wire(mini_repo, *, uri: str, manifest_files: dict | None):
     """Point a canonical note at `uri`, optionally writing a manifest."""

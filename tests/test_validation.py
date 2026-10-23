@@ -531,6 +531,16 @@ def test_resolving_external_and_quoted_links_raise_nothing(mini_repo, link):
     assert "LINK-BROKEN" not in found and "LINK-ESCAPE" not in found
 
 
+@pytest.mark.parametrize("uri,target", [
+    ("material://book/lecture.pdf#page=2", "book/lecture.pdf"),
+    ("material://book/lecture.pdf?x=1", "book/lecture.pdf"),
+    ("material://book/lecture.pdf?x=1#page=2", "book/lecture.pdf"),
+    ("note://note-a#section?not-a-query", "note-a"),
+])
+def test_reference_parser_ends_a_material_path_at_its_selector(uri, target):
+    assert parse_reference_uri(uri).target == target
+
+
 def test_material_uri_unresolved_is_warning_not_error(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     note.write_text(note.read_text() + "\n[slides](material://source-demo-book/deck.pdf)\n")

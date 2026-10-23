@@ -38,11 +38,14 @@ def parse_reference_uri(value: str) -> ParsedReference | None:
     way (``resource-target.ts`` splits the path on ``[?#]``), so the validator
     has to resolve the same file — a validator that kept the fragment would
     warn about a file that is there, and a write the system accepted would
-    leave a warning behind that breaks the acceptance gate.
+    leave a warning behind that breaks the acceptance gate. A material URI
+    also ends its path at ``?``, as every material reader does (#18).
     """
     for prefix in EVIDENCE_SCHEMES:
         if value.startswith(prefix):
-            target = value[len(prefix):].split("#", 1)[0]
+            target = value[len(prefix):]
+            for mark in ("#", "?") if prefix == "material://" else ("#",):
+                target = target.split(mark, 1)[0]
             return ParsedReference(prefix.removesuffix("://"), target)
     return None
 

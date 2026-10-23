@@ -289,5 +289,8 @@ def _nfc(value: str) -> str:
 
 
 def _normalise(target: str) -> str:
-    """Strip a trailing anchor/fragment and normalise separators."""
-    return Path(target.split("#", 1)[0].strip()).as_posix().strip("/")
+    """Strip a trailing selector (``#…`` or ``?…``) and normalise separators.
+
+    The path ends where every material reader ends it (``parse_material_uri``).
+    """
+    return Path(target.split("#", 1)[0].split("?", 1)[0].strip()).as_posix().strip("/")

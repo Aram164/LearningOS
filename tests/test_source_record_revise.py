@@ -774,6 +774,45 @@ def test_revise_refuses_unresolvable_and_directory_material(mini_repo, tmp_path)
         "must resolve to one file")
 
 
+def _symlinked_material_tree(root: Path) -> Path:
+    """The same tree, reached through a ``materials`` link to an external drive."""
+    _with_material_tree(root)
+    external = root.parent.parent / "external-drive-materials"
+    (root.parent / "materials").rename(external)
+    (root.parent / "materials").symlink_to(external, target_is_directory=True)
+    return external
+
+
+def test_revise_attaches_through_a_symlinked_materials_tree(mini_repo, tmp_path):
+    """#14: a mounted tree reached through a link is the tree every reader uses."""
+    _symlinked_material_tree(mini_repo)
+    checked = _check(mini_repo, _package(tmp_path, _revise()))
+    assert checked["diff_sha256"]
+
+
+def test_revise_refuses_a_broken_materials_link(mini_repo, tmp_path):
+    external = _symlinked_material_tree(mini_repo)
+    external.rename(external.with_name("unplugged"))
+    _refuses(mini_repo, _package(tmp_path, _revise()), "materials tree not mounted")
+
+
+def test_revise_refuses_an_inner_link_out_of_the_mounted_tree(mini_repo, tmp_path):
+    external = _symlinked_material_tree(mini_repo)
+    outside = mini_repo.parent.parent / "outside"
+    outside.mkdir()
+    (outside / "demo.pdf").write_bytes(PDF)
+    target = external / "mathematics" / "demo" / "demo.pdf"
+    target.unlink()
+    target.symlink_to(outside / "demo.pdf")
+    _refuses(mini_repo, _package(tmp_path, _revise()), "does not resolve to a file")
+
+
+def test_revise_refuses_a_selector_on_a_source_material(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    _refuses(mini_repo, _package(tmp_path, _revise(material=URI + "#page=2")),
+             "whole file")
+
+
 def test_revise_requires_the_uri_authority_to_match_the_source(mini_repo, tmp_path):
     _with_material_tree(mini_repo)
     flat = mini_repo.parent / "materials" / ".flat"
