@@ -64,9 +64,23 @@ def test_transaction_failure_defaults_are_preserved():
     projection = failures.ProjectionFailure("p", rollback_complete=True)
     assert projection.pre_existing_defect is False
     assert projection.rollback_complete is True
+    assert projection.input_change is None
     recovery = failures.TransactionRecoveryConflict("r", transaction_id="t")
     assert recovery.transaction_id == "t"
     assert recovery.conflicts == []
+
+
+def test_projection_input_observations_survive_the_rollback_wrapper():
+    change = failures.ProjectionInputChanged(
+        "snapshot mismatch", changed_paths=("knowledge/note.md",),
+        changed_paths_total=1)
+    projection = failures.ProjectionFailure(
+        "rollback incomplete", rollback_complete=False, input_change=change)
+    assert str(change) == "snapshot mismatch"
+    assert projection.input_change is change
+    assert projection.input_change.changed_paths == ("knowledge/note.md",)
+    assert projection.input_change.changed_paths_total == 1
+    assert projection.rollback_complete is False
 
 
 def test_not_found_message_reason_and_suggestions():

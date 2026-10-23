@@ -134,7 +134,8 @@
                     "reason": {
                       "enum": [
                         "NOT_FOUND",
-                        "MALFORMED_ID"
+                        "MALFORMED_ID",
+                        "CANONICAL_INPUTS_CHANGED"
                       ]
                     },
                     "suggestions": {
@@ -148,8 +149,71 @@
                     "remedy": {
                       "type": "string",
                       "minLength": 1
+                    },
+                    "changed_paths": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "maxItems": 32,
+                      "uniqueItems": true
+                    },
+                    "changed_paths_total": {
+                      "type": "integer",
+                      "minimum": 0
                     }
                   },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "reason": {
+                            "const": "CANONICAL_INPUTS_CHANGED"
+                          }
+                        },
+                        "required": [
+                          "reason"
+                        ]
+                      },
+                      "then": {
+                        "required": [
+                          "changed_paths",
+                          "changed_paths_total"
+                        ]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "reason": {
+                            "not": {
+                              "const": "CANONICAL_INPUTS_CHANGED"
+                            }
+                          }
+                        },
+                        "required": [
+                          "reason"
+                        ]
+                      },
+                      "then": {
+                        "not": {
+                          "anyOf": [
+                            {
+                              "required": [
+                                "changed_paths"
+                              ]
+                            },
+                            {
+                              "required": [
+                                "changed_paths_total"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
                   "additionalProperties": true
                 }
               }

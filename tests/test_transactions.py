@@ -21,6 +21,7 @@ import learning_os.store.fingerprint as fingerprint_module
 import learning_os.store.session_ledger as session_support
 import learning_os.store.transactions as transaction_module
 from learning_os.app.context import OpContext
+from learning_os.app.pipeline import _projection_error
 from learning_os.app.proposal import TransactionProposal
 from learning_os.domain.failures import (
     StaleSnapshot,
@@ -334,10 +335,10 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
         calls += 1
         return original(root)
 
-    def counted_combined(root: Path):
+    def counted_combined(root: Path, **kwargs):
         nonlocal calls
         calls += 1
-        return original_combined(root)
+        return original_combined(root, **kwargs)
 
     monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
     monkeypatch.setattr(context_module, "canonical_fingerprint", counted)
@@ -867,7 +868,7 @@ def test_seeded_publisher_type_error_fails_once_not_republished(tmp_path: Path):
         calls.append(snapshot_after_id)
         raise TypeError("bug inside the projection")
 
-    with pytest.raises(ProjectionFailure):
+    with pytest.raises(ProjectionFailure) as caught:
         TransactionService(root).commit(
             capability="project.update",
             writes={target: "new\n"},
@@ -877,6 +878,152 @@ def test_seeded_publisher_type_error_fails_once_not_republished(tmp_path: Path):
         )
     assert len(calls) == 1
     assert calls[0] is not None and calls[0].startswith("sha256:")
+    assert not target.exists()
+    assert caught.value.input_change is None
+    assert _projection_error(caught.value)["details"] == {
+        "stage": "core.projection", "rollback_complete": True}
+
+
+@pytest.mark.parametrize("mutation", ["rewrite", "add", "delete", "symlink"])
+def test_projection_input_change_names_the_foreign_path_and_rolls_back(
+    tmp_path: Path, mutation: str,
+):
+    root = tmp_path.resolve()
+    target = root / "projects/registry/project-demo.yaml"
+    other = root / "knowledge/notes/foreign.md"
+    other.parent.mkdir(parents=True)
+    if mutation != "add":
+        other.write_text("before\n", encoding="utf-8")
+
+    def publish(snapshot_after_id: str) -> str:
+        if mutation == "delete":
+            other.unlink()
+        elif mutation == "symlink":
+            other.unlink()
+            other.symlink_to(root.parent / "private-target-must-not-be-disclosed")
+        else:
+            other.write_text("private learner content\n", encoding="utf-8")
+        return snapshot_after_id
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"], publish=publish,
+            rollback_publish=lambda: None,
+        )
+
+    error = _projection_error(caught.value)
+    assert error["code"] == "PROJECTION_FAILED"
+    assert error["details"] == {
+        "stage": "core.projection", "rollback_complete": True,
+        "reason": "CANONICAL_INPUTS_CHANGED",
+        "changed_paths": ["knowledge/notes/foreign.md"],
+        "changed_paths_total": 1,
+    }
+    assert not target.exists()
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert not list((root / "operations/transactions/.inflight").glob("transaction-*"))
+    if mutation == "delete":
+        assert not other.exists()
+    elif mutation == "symlink":
+        assert other.is_symlink()
+    else:
+        assert other.read_text(encoding="utf-8") == "private learner content\n"
+    assert "private learner content" not in json.dumps(error)
+    assert "private-target" not in json.dumps(error)
+
+
+def test_projection_input_change_bounds_paths_and_keeps_the_total(tmp_path: Path):
+    from learning_os.store.fingerprint import CHANGED_PATHS_SHOWN
+
+    root = tmp_path.resolve()
+    target = root / "projects/registry/project-demo.yaml"
+    notes = root / "knowledge/notes"
+    notes.mkdir(parents=True)
+    count = CHANGED_PATHS_SHOWN + 3
+
+    def publish(snapshot_after_id: str) -> str:
+        for i in reversed(range(count)):
+            (notes / f"changed-{i:02d}.md").write_text("changed\n", encoding="utf-8")
+        return snapshot_after_id
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"], publish=publish,
+            rollback_publish=lambda: None,
+        )
+    details = _projection_error(caught.value)["details"]
+    assert details["changed_paths"] == [
+        f"knowledge/notes/changed-{i:02d}.md" for i in range(CHANGED_PATHS_SHOWN)]
+    assert details["changed_paths_total"] == count
+    assert not target.exists()
+    assert len(list(notes.glob("*.md"))) == count
+
+
+def test_projection_input_change_survives_incomplete_rollback(tmp_path: Path):
+    root = tmp_path.resolve()
+    target = root / "projects/registry/project-demo.yaml"
+
+    def publish(snapshot_after_id: str) -> str:
+        target.write_text("foreign replacement\n", encoding="utf-8")
+        return snapshot_after_id
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"], publish=publish,
+            rollback_publish=lambda: None,
+        )
+    error = _projection_error(caught.value)
+    assert error["code"] == "INTERNAL_FAILURE"
+    assert error["details"] == {
+        "stage": "core.projection", "rollback_complete": False,
+        "reason": "CANONICAL_INPUTS_CHANGED",
+        "changed_paths": ["projects/registry/project-demo.yaml"],
+        "changed_paths_total": 1,
+    }
+    assert target.read_text(encoding="utf-8") == "foreign replacement\n"
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert list((root / "operations/transactions/.inflight").glob("transaction-*"))
+
+
+def test_projection_stamp_mismatch_does_not_invent_changed_paths(tmp_path: Path):
+    root = tmp_path.resolve()
+    target = root / "projects/registry/project-demo.yaml"
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=lambda: "sha256:" + "0" * 64,
+            rollback_publish=lambda: None,
+        )
+    details = _projection_error(caught.value)["details"]
+    assert details["reason"] == "CANONICAL_INPUTS_CHANGED"
+    assert details["changed_paths"] == []
+    assert details["changed_paths_total"] == 0
+    assert not target.exists()
+
+
+def test_projection_input_change_with_a_caller_supplied_fingerprint(tmp_path: Path):
+    root = tmp_path.resolve()
+    target = root / "projects/registry/project-demo.yaml"
+    other = root / "knowledge/notes/foreign.md"
+    other.parent.mkdir(parents=True)
+
+    def publish() -> str:
+        other.write_text("foreign\n", encoding="utf-8")
+        return "sha256:" + "b" * 64
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"], publish=publish,
+            fingerprint=lambda: "a" * 64, rollback_publish=lambda: None,
+        )
+    details = _projection_error(caught.value)["details"]
+    assert details["changed_paths"] == ["knowledge/notes/foreign.md"]
+    assert details["changed_paths_total"] == 1
     assert not target.exists()
 
 

@@ -33,6 +33,12 @@ def _details_fragment() -> dict:
 
     The reason enum is generated from domain.codes.REASONS; pre-existing
     detail keys keep working through additionalProperties.
+
+    ``CANONICAL_INPUTS_CHANGED`` (LearningOS #12) is the one reason with
+    fields of its own: the bounded changed-input path list (sorted,
+    unique, at most 32 non-empty repository-relative paths) and the exact
+    changed-path total that exposes truncation. Both are required
+    together, only with that reason, and never with another one.
     """
 
     from learning_os.domain.codes import REASONS  # noqa: E402
@@ -47,7 +53,41 @@ def _details_fragment() -> dict:
                 "maxItems": 5,
             },
             "remedy": {"type": "string", "minLength": 1},
+            "changed_paths": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1},
+                "maxItems": 32,
+                "uniqueItems": True,
+            },
+            "changed_paths_total": {"type": "integer", "minimum": 0},
         },
+        "allOf": [
+            {
+                "if": {
+                    "properties": {
+                        "reason": {"const": "CANONICAL_INPUTS_CHANGED"}
+                    },
+                    "required": ["reason"],
+                },
+                "then": {"required": ["changed_paths", "changed_paths_total"]},
+            },
+            {
+                "if": {
+                    "properties": {
+                        "reason": {"not": {"const": "CANONICAL_INPUTS_CHANGED"}}
+                    },
+                    "required": ["reason"],
+                },
+                "then": {
+                    "not": {
+                        "anyOf": [
+                            {"required": ["changed_paths"]},
+                            {"required": ["changed_paths_total"]},
+                        ]
+                    }
+                },
+            },
+        ],
         "additionalProperties": True,
     }
 

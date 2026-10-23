@@ -52,6 +52,20 @@ class TransactionFailure(Exception):
         self.pre_existing_defect = pre_existing_defect
 
 
+class ProjectionInputChanged(TransactionFailure):
+    """A publication snapshot mismatch, observed before rollback.
+
+    The bounded paths name changed canonical filesystem inputs, not their
+    contents. An inconsistent projection stamp can have no observed paths.
+    """
+
+    def __init__(self, message: str, *, changed_paths: tuple[str, ...],
+                 changed_paths_total: int):
+        super().__init__(message)
+        self.changed_paths = changed_paths
+        self.changed_paths_total = changed_paths_total
+
+
 class ProjectionFailure(TransactionFailure):
     """The commit-time projection/publication step failed.
 
@@ -66,9 +80,11 @@ class ProjectionFailure(TransactionFailure):
     """
 
     def __init__(self, message: str, *, rollback_complete: bool,
-                 pre_existing_defect: bool = False):
+                 pre_existing_defect: bool = False,
+                 input_change: ProjectionInputChanged | None = None):
         super().__init__(message, pre_existing_defect=pre_existing_defect)
         self.rollback_complete = rollback_complete
+        self.input_change = input_change
 
 
 class PostCommitFailure(TransactionFailure):

@@ -158,6 +158,47 @@ def test_declared_scan_bytes_do_not_move_the_snapshot(mini_repo: Path):
     assert after == before
 
 
+def test_canonical_stat_maps_share_the_digest_enumeration(mini_repo: Path):
+    from learning_os.store.fingerprint import (
+        canonical_data_and_stat_fingerprints,
+        canonical_stat_digest,
+    )
+
+    _declare_scan(mini_repo)
+    hidden = mini_repo / "work/.private/scratch.md"
+    hidden.parent.mkdir(parents=True)
+    hidden.write_text("ignored\n", encoding="utf-8")
+    link = mini_repo / "knowledge/notes/link.md"
+    link.symlink_to(mini_repo.parent / "external-target")
+    combined_lines: dict[str, bytes] = {}
+    stat_lines: dict[str, bytes] = {}
+    combined = canonical_data_and_stat_fingerprints(
+        mini_repo, stat_lines=combined_lines)
+    stat = canonical_stat_digest(mini_repo, stat_lines=stat_lines)
+    assert combined == canonical_data_and_stat_fingerprints(mini_repo)
+    assert combined[2] == stat == canonical_stat_digest(mini_repo)
+    assert combined_lines == stat_lines
+    assert "knowledge/notes/link.md" in stat_lines
+    assert SCAN_REL not in stat_lines
+    assert hidden.relative_to(mini_repo).as_posix() not in stat_lines
+    link.unlink()
+    canonical_stat_digest(mini_repo, stat_lines=stat_lines)
+    canonical_data_and_stat_fingerprints(mini_repo, stat_lines=combined_lines)
+    assert combined_lines == stat_lines
+    assert "knowledge/notes/link.md" not in stat_lines
+
+
+def test_canonical_path_changes_include_add_delete_and_stat_changes():
+    from learning_os.store.fingerprint import changed_canonical_paths
+
+    before = {"knowledge/deleted.md": b"old", "work/changed.md": b"old",
+              "sources/same.yaml": b"same"}
+    after = {"knowledge/added.md": b"new", "work/changed.md": b"new",
+             "sources/same.yaml": b"same"}
+    assert changed_canonical_paths(before, after) == ((
+        "knowledge/added.md", "knowledge/deleted.md", "work/changed.md"), 3)
+
+
 def test_re_pinning_moves_the_snapshot_through_the_declaration(mini_repo: Path):
     from learning_os.store.fingerprint import canonical_fingerprint, data_roots_fingerprint
 

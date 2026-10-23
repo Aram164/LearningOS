@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 56
-schema_fingerprint: sha256:ae98924f723f19f6fefe2426be18e6f5938bc14aa0a747b0aaf843454e2ce026
+contract_version: 60
+schema_fingerprint: sha256:107d89adf9db4c550f91719082e3108d7e245b5a4fbbcc1a66af056c38a7cee0
 record_schemas: 36
 history:
 - version: 1
@@ -412,5 +412,30 @@ history:
   adopted: '2026-10-20'
   note: 'master-planning-promotion: the verifier description states what it guarantees
     (attribution, not truth)'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 57
+  adopted: '2026-10-23'
+  note: Add bounded canonical input-change diagnostics to projection refusals; existing
+    request/result envelopes and canonical records remain valid, so the previous frozen
+    data shape still applies and no migration is required.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 58
+  adopted: '2026-10-23'
+  note: 'v58: envelope error-details fragment regenerated for CANONICAL_INPUTS_CHANGED
+    (issue #12); fingerprint follows the owning generator'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 59
+  adopted: '2026-10-23'
+  note: 'v59: envelope details fragment gains the CANONICAL_INPUTS_CHANGED bounded
+    path fields (issue #12); reason enum follows domain.codes.REASONS'
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 60
+  adopted: '2026-10-23'
+  note: 'v60: correct the CANONICAL_INPUTS_CHANGED details guard — the reason condition
+    requires the reason key (issue #12)'
   migration: null
   fixture: tests/fixtures/formats/v46/
