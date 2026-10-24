@@ -242,7 +242,17 @@ def pytest_collection_modifyitems(items, config):
         spec = shards.get(name)
         if spec is not None:
             index, count = spec
-            bucket = zlib.crc32(item.nodeid.encode("utf-8")) % count
+            # Tests that share a parametrized id can share module-level
+            # per-parameter state — A9's _PROOFS is written by the proof
+            # tests and read by the entry and match tests of the same
+            # site — so the bracketed parameter, not the whole node id,
+            # is the shard key when one is present. Every test of one
+            # parameter lands in one leg; unparametrized tests shard by
+            # their own id.
+            nodeid = item.nodeid
+            key = (nodeid.split("[", 1)[-1].rstrip("]")
+                   if "[" in nodeid else nodeid)
+            bucket = zlib.crc32(key.encode("utf-8")) % count
             if bucket != index:
                 deselected.append(item)
                 continue
