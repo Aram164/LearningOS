@@ -241,6 +241,7 @@ GROUPS: dict[str, list[str]] = {
     ],
     # Migrations and multi-year format compatibility.
     "migrations": [
+        "test_contract_rebump.py",
         "test_format_fixtures.py",
         "test_job_quarantine_collapse.py",
         "test_legacy_exit_review.py",

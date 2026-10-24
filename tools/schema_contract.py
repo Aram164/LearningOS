@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from learning_os.store.contracts.data_contract import bump, check, fingerprint
+from learning_os.store.contracts.data_contract import bump, check, fingerprint, rebump
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -28,7 +28,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--bump", action="store_true",
         help="declare a new format version from the current schemas",
     )
-    parser.add_argument("--note", default=None, help="what changed (required with --bump)")
+    parser.add_argument(
+        "--rebump", action="store_true",
+        help="fold a schema iteration into this branch's own top entry "
+             "(same version, new fingerprint); a branch gets one --bump",
+    )
+    parser.add_argument(
+        "--note", default=None, help="what changed (required with --bump/--rebump)",
+    )
     parser.add_argument(
         "--migration", default=None,
         help="path to the migration that brings the previous version forward",
@@ -58,6 +65,17 @@ def main() -> int:
                 "note: no migration recorded — if existing data needs one, "
                 "add it and re-run with --migration"
             )
+        return 0
+
+    if args.rebump:
+        if not args.note:
+            print("--rebump requires --note describing the folded change", file=sys.stderr)
+            return 2
+        updated = rebump(args.note, args.migration)
+        print(
+            f"re-fingerprinted contract v{updated['contract_version']} in place "
+            f"over {updated['record_schemas']} record schemas"
+        )
         return 0
 
     ok, message = check()

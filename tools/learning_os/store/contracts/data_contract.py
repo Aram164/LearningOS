@@ -151,3 +151,41 @@ def bump(
     }
     write_contract(updated, path)
     return updated
+
+
+def rebump(
+    note: str,
+    migration: str | None = None,
+    schema_dir: Path = SCHEMA_DIR,
+    path: Path = CONTRACT,
+) -> dict:
+    """Fold a schema iteration into this branch's own top entry, in place.
+
+    A branch may raise ``contract_version`` by at most one over its base
+    (``tests/test_arch_ratchets.py`` checks it against ``LOS_RATCHET_BASE``).
+    v57-v61 were five bumps in one evening for one issue, each moving the
+    fixture snapshot and forcing a re-record. When a reviewed schema
+    iteration lands after this branch already bumped, this rewrites that
+    same entry — same version, new fingerprint and note — instead of
+    appending a version nobody else ever adopted.
+    """
+    contract = load_contract(path)
+    if not contract or not contract.get("history"):
+        raise ValueError("no history entry to re-fingerprint; use --bump")
+    history = list(contract["history"])
+    top = dict(history[-1])
+    top["adopted"] = observations.today().isoformat()
+    top["note"] = note
+    if migration is not None:
+        top["migration"] = migration
+    top["fixture"] = _newest_frozen_fixture(
+        path.parent.parent.parent, int(top["version"]))
+    history[-1] = top
+    updated = {
+        "contract_version": int(contract["contract_version"]),
+        "schema_fingerprint": fingerprint(schema_dir),
+        "record_schemas": len(record_schemas(schema_dir)),
+        "history": history,
+    }
+    write_contract(updated, path)
+    return updated
