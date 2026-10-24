@@ -7,6 +7,7 @@ what Phase 12/13's live push-and-watch steps are for.
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -52,14 +53,28 @@ def test_ordinary_ci_installs_both_dependency_sets():
     assert "npm ci" in runs
 
 
-def test_ordinary_ci_invokes_the_real_system_check():
+def test_ordinary_ci_runs_every_gate_stage():
+    """The sharded gate runs every stage the local `make system-check` runs.
+
+    The suite is split over shard jobs (see the manifest partition test
+    below); the static gates and the paired UI check stay whole. This pins
+    the stage list so a shard redesign cannot quietly drop one: ruff and
+    reachability, mypy, validate, the warning baseline, the complete UI
+    `npm run check`, and the collection-vs-shards completeness proof.
+    """
     runs = "\n".join(_all_run_steps(_load(VALIDATE)))
-    assert re.search(r"\bmake system-check\b", runs), (
-        "ordinary CI must run the exact local paired gate, not a partial duplicate"
-    )
-    # A lesser target must never stand in for it — `make check` alone skips
-    # the mandatory paired recovery harness and the UI's own npm run check.
-    assert "make check\n" not in runs.replace("make system-check", "")
+    for stage in (
+        "ruff check tools tests",
+        "tools/code_reachability.py",
+        "-m mypy",
+        "tools/validate.py --no-report",
+        "tools/warning_baseline.py --check",
+        "npm run check",
+        "--collect-only",
+    ):
+        assert stage in runs, f"validate.yml lost gate stage: {stage}"
+    # A lesser target must never stand in for the full gate.
+    assert "make check\n" not in runs
 
 
 def test_ordinary_ci_cannot_silently_omit_the_recovery_harness():
@@ -105,23 +120,36 @@ def test_ordinary_ci_does_not_run_full_stress():
     assert "stress_check.py" not in runs
 
 
+def _pytest_leg_steps(doc: dict) -> list[dict]:
+    """Steps that run one suite shard: pytest writing JUnit results."""
+    return [step for job in doc.get("jobs", {}).values()
+            for step in job.get("steps", [])
+            if "-m pytest" in step.get("run", "")
+            and "--junitxml" in step.get("run", "")]
+
+
 def test_ci_deselects_only_live_installation_tests():
-    """Both workflows drop exactly the `live_install` marker from the gate.
+    """Every suite shard drops exactly the `live_install` marker.
 
     Those tests need state no checkout carries. Anything broader — `not
-    full_repo`, a `-k` filter, a second marker — would quietly shrink what a
-    green run proves, so the selection is pinned exactly. The gate step may
-    also carry `LOS_RATCHET_BASE` (SPEC §2.3), which selects no tests.
+    full_repo`, a `-k` filter, a second marker — would quietly shrink what
+    a green run proves, so the selection is pinned exactly per shard; the
+    gate job's completeness proof re-derives the expected total from a
+    fresh full collection carrying the same deselection, so a shard that
+    selected less would fail that proof, not pass silently.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
-        gates = [step for job in _load(workflow)["jobs"].values()
-                 for step in job["steps"]
-                 if "make system-check" in step.get("run", "")]
-        assert len(gates) == 1, workflow.name
-        env = gates[0].get("env", {})
-        assert env.get("PYTEST_ADDOPTS") == '-m "not live_install"', workflow.name
-        assert set(env) <= {"PYTEST_ADDOPTS", "LOS_RATCHET_BASE"}, (
-            workflow.name, sorted(env))
+        legs = _pytest_leg_steps(_load(workflow))
+        assert legs, workflow.name
+        for step in legs:
+            env = step.get("env", {})
+            assert env.get("PYTEST_ADDOPTS") == '-m "not live_install"', (
+                workflow.name, step.get("name"))
+            assert set(env) <= {"PYTEST_ADDOPTS", "LOS_RATCHET_BASE",
+                                "SHARD", "PICKED"}, (workflow.name, sorted(env))
+            assert "-k " not in step["run"], (
+                workflow.name, step.get("name"),
+                "a shard leg must not select tests itself")
 
 
 def test_workflow_run_scripts_never_interpolate_github_expressions():
@@ -168,24 +196,31 @@ SCRUT_SHA256 = "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15
 def test_ci_installs_the_pinned_scrut_before_the_gate():
     """The transcript gate (PLAN D11) cannot silently lose its binary in CI.
 
-    Without Scrut, ``tests/test_procedures.py`` fails inside the paired gate;
+    Without Scrut, ``tests/test_procedures.py`` fails inside its shard;
     each workflow therefore installs the pinned archive, checks its digest,
-    and hands the binary to the gate through ``$GITHUB_ENV``.
+    and hands the binary to the shard through ``$GITHUB_ENV`` before any
+    suite-shard step runs.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
-        for job in _load(workflow)["jobs"].values():
+        doc = _load(workflow)
+        legs = _pytest_leg_steps(doc)
+        assert legs, workflow.name
+        leg_scripts = {id(step) for step in legs}
+        for job in doc["jobs"].values():
             steps = job.get("steps", [])
-            gates = [index for index, step in enumerate(steps)
-                     if re.search(r"\bmake system-check\b", step.get("run", ""))]
-            if not gates:
+            job_legs = [index for index, step in enumerate(steps)
+                        if id(step) in leg_scripts]
+            if not job_legs:
                 continue
             installs = [index for index, step in enumerate(steps)
                         if SCRUT_ARCHIVE in step.get("run", "")]
-            assert len(installs) == 1 and installs[0] < gates[0], workflow.name
+            assert len(installs) == 1 and installs[0] < job_legs[0], (
+                workflow.name)
             script = steps[installs[0]]["run"]
             assert f"{SCRUT_SHA256}  " in script, workflow.name
             assert "sha256sum -c -" in script, workflow.name
-            assert 'LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"' in script, workflow.name
+            assert 'LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"' in script, (
+                workflow.name)
 
 
 def test_setup_installs_the_same_pinned_scrut():
@@ -201,66 +236,171 @@ PINNED_PYTHON = "3.14.4"
 
 
 def test_ci_pins_the_verified_interpreter_patch():
-    """Both workflows install exactly the interpreter the campaign verified.
+    """Every Python job installs exactly the interpreter the campaign
+    verified, at most one setup per job.
 
     Argparse renders invalid-choice diagnostics differently across patches
     (landing CI on 3.14.8 quoted the choice the 3.14.4 recordings leave
-    bare); the recordings pin one rendering, so CI must not silently select
-    a new patch.
+    bare); the recordings pin one rendering, so every job that runs the
+    suite or the tools must not silently select a new patch.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
-        setups = [step for job in _load(workflow)["jobs"].values()
-                  for step in job["steps"]
-                  if str(step.get("uses", "")).startswith("actions/setup-python@")]
-        assert len(setups) == 1, workflow.name
-        assert setups[0]["with"]["python-version"] == PINNED_PYTHON, workflow.name
+        doc = _load(workflow)
         text = workflow.read_text(encoding="utf-8")
-        assert len(re.findall(r'python-version:\s*"3\.14\.4"', text)) == 1, (
-            workflow.name)
+        any_setup = False
+        for name, job in doc["jobs"].items():
+            setups = [step for step in job.get("steps", [])
+                      if str(step.get("uses", "")).startswith(
+                          "actions/setup-python@")]
+            assert len(setups) <= 1, (workflow.name, name)
+            for step in setups:
+                assert step["with"]["python-version"] == PINNED_PYTHON, (
+                    workflow.name, name)
+                any_setup = True
+        assert any_setup, workflow.name
         assert not re.search(r'python-version:\s*"3\.14"', text), workflow.name
 
 
 def test_ci_installs_core_dependencies_into_the_project_venv():
-    """The dependency install reproduces the documented project environment.
+    """Every CI job's dependency install reproduces the documented project
+    environment, one per job.
 
     Parser diagnostics are characterized bytes pinned to the 3.14.4
     interpreter, and the procedure transcripts invoke
-    ``$LOS_REPO/.venv/bin/python`` — so CI builds that venv with the pinned
-    interpreter and installs into it, never into the runner's interpreter.
-    Every other Core Python invocation in CI then uses the venv that owns
-    the install; the gate itself resolves it through the Makefile.
+    ``$LOS_REPO/.venv/bin/python`` — so each job that needs Python builds
+    that venv with the pinned interpreter and installs into it, never into
+    the runner's interpreter. Every other Core Python invocation in CI then
+    uses the venv that owns the install.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
         doc = _load(workflow)
-        installs = [step for job in doc["jobs"].values()
-                    for step in job["steps"]
-                    if step.get("name") == "Install Core development dependencies"]
-        assert len(installs) == 1, workflow.name
-        script = installs[0]["run"]
-        venv_at = script.find("python -m venv .venv")
-        assert venv_at >= 0, workflow.name
-        pip_at = script.find('.venv/bin/python -m pip install -e ".[dev]"')
-        assert pip_at > venv_at, workflow.name
-        for script in _all_run_steps(doc):
-            for line in script.splitlines():
-                if "pip install" in line:
-                    assert ".venv/bin/python -m pip install" in line, (
-                        workflow.name, line)
-                if re.search(r"(^|\s)python[\d.]*\s+tools/", line):
-                    assert ".venv/bin/python" in line, (workflow.name, line)
+        for job in doc["jobs"].values():
+            installs = [step for step in job.get("steps", [])
+                        if step.get("name") == "Install Core development dependencies"]
+            assert len(installs) <= 1, workflow.name
+            for install in installs:
+                script = install["run"]
+                venv_at = script.find("python -m venv .venv")
+                assert venv_at >= 0, workflow.name
+                pip_at = script.find('.venv/bin/python -m pip install -e ".[dev]"')
+                assert pip_at > venv_at, workflow.name
+            for script in _all_run_steps(doc):
+                for line in script.splitlines():
+                    if "pip install" in line:
+                        assert ".venv/bin/python -m pip install" in line, (
+                            workflow.name, line)
+                    if re.search(r"(^|\s)python[\d.]*\s+tools/", line):
+                        assert ".venv/bin/python" in line, (workflow.name, line)
 
 
-def test_paired_gate_jobs_carry_the_180_minute_bound():
-    """Every job running the paired gate allows it exactly 180 minutes.
+def test_every_job_carries_a_bounded_timeout():
+    """Every job declares a finite timeout of at most 45 minutes.
 
-    Phase 4 Linux pytest alone took 86 minutes and exact-pair CI exhausted
-    the former 90-minute limit. Keep complete coverage and a finite bound.
+    The unsharded gate needed 180 minutes of pytest alone; the sharded
+    gate's whole point (C3, 2026-10-24) is that no leg — and no join job —
+    may run past the 40-minute target plus margin. A job without a bound
+    can queue forever; a job above 45 minutes means the shard balance has
+    rotted and must be regenerated from fresh CI durations.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
-        found = False
         for name, job in _load(workflow)["jobs"].items():
-            if any("make system-check" in step.get("run", "")
-                   for step in job.get("steps", [])):
-                found = True
-                assert job.get("timeout-minutes") == 180, (workflow.name, name)
-        assert found, workflow.name
+            timeout = job.get("timeout-minutes")
+            assert isinstance(timeout, int) and timeout <= 45, (
+                workflow.name, name)
+
+
+def _shard_manifest(path: Path) -> dict:
+    doc = _load(path)
+    raw = doc.get("env", {}).get("SHARD_MANIFEST")
+    assert raw, f"{path.name}: SHARD_MANIFEST env is missing"
+    return json.loads(raw)
+
+
+#: The files whose witness and audit population the two zz files assert
+#: over. Their session-artifact writers (tests/conftest.py's fixtures,
+#: scenario_harness's case runs, the procedure runner) live in witness-*
+#: CI legs; the assertions themselves live in zz-* legs over the merged
+#: artifacts (conftest premerged mode). Every other suite file that
+#: touches the witness machinery uses private files it creates itself.
+WITNESS_BLOCK = frozenset({
+    "test_procedures.py",
+    "test_scenarios.py",
+    "test_scenarios_effects.py",
+    "test_scenarios_health_shim.py",
+    "test_scenarios_recovery.py",
+    "test_scenarios_session.py",
+    "test_scenarios_zz_operational_owners.py",
+    "test_scenarios_zz_refusal_sites.py",
+})
+
+
+def test_shard_manifest_partitions_the_suite():
+    """CI's shards are exactly the suite: a partition of tests/test_*.py.
+
+    A file missing from the manifest would never run in CI; a file in
+    more legs than its node_shards count would run twice and double-count
+    in the gate's completeness proof; a node-shared file whose carrier
+    legs disagree with its node_shards legs would run some tests twice
+    and others never. Witness-block files may only ride witness-*/zz-*
+    legs: witness legs upload the session population, zz legs merge it
+    (tests/conftest.py premerged mode rebuilds A9's process-local
+    attribution from the sidecars) and assert over it — a witness file
+    in any other leg would be silently unasserted, and A9/A19's
+    population checks would see a partial suite (SPEC §3.3 A9, §3.6 A19).
+    """
+    from collections import Counter
+
+    disk = sorted(f"tests/{p.name}"
+                  for p in (ROOT / "tests").glob("test_*.py"))
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        manifest = _shard_manifest(workflow)
+        legs = manifest["legs"]
+        node_shards = manifest.get("node_shards", {})
+        covered = Counter(f for leg in legs.values() for f in leg)
+        for name, count in sorted(covered.items()):
+            expected = node_shards.get(name, {}).get("count", 1)
+            assert count == expected, (
+                f"{workflow.name}: {name} appears in {count} legs, "
+                f"expected {expected}")
+        assert sorted(covered) == disk, (
+            f"{workflow.name}: SHARD_MANIFEST does not partition tests/: "
+            f"missing={sorted(set(disk) - set(covered))} "
+            f"extra={sorted(set(covered) - set(disk))}")
+        for name, spec in sorted(node_shards.items()):
+            carriers = sorted(leg_id for leg_id, leg in legs.items()
+                              if name in leg)
+            assert carriers == sorted(spec["legs"]), (
+                f"{workflow.name}: node-shared {name} carried by "
+                f"{carriers}, node_shards names {sorted(spec['legs'])}")
+        for leg_id, leg in legs.items():
+            for name in leg:
+                if name.rsplit("/", 1)[-1] in WITNESS_BLOCK:
+                    assert leg_id.startswith(("witness-", "zz-")), (
+                        f"{workflow.name}: witness-block file {name} in "
+                        f"non-witness leg {leg_id!r}")
+
+
+def test_zz_legs_run_after_the_witness_legs():
+    """The zz legs' job depends on the job that runs the witness legs.
+
+    The zz population files assert over the merged witness artifacts of
+    the producer legs; if they ever ran beside them instead of after
+    them, the merge would race the producers and the population checks
+    would assert over a partial suite or nothing.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        doc = _load(workflow)
+        legs = _shard_manifest(workflow)["legs"]
+        carrier_jobs = {}
+        for job_id, job in doc["jobs"].items():
+            matrix = job.get("strategy", {}).get("matrix", {}).get("shard", [])
+            for leg_id in matrix:
+                carrier_jobs[leg_id] = job_id
+        witness_jobs = {carrier_jobs[leg_id]
+                        for leg_id in legs if leg_id.startswith("witness-")}
+        for leg_id in legs:
+            if leg_id.startswith("zz-"):
+                needs = set(doc["jobs"][carrier_jobs[leg_id]].get("needs", []))
+                assert needs & witness_jobs, (
+                    f"{workflow.name}: zz leg {leg_id!r} does not depend on "
+                    f"a witness-leg job ({sorted(witness_jobs)})")
