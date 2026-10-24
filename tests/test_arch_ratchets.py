@@ -1001,7 +1001,8 @@ def test_contract_rises_at_most_one_version_per_branch(base_ref):
     Every bump moved the fixture snapshot and forced a re-record, and no
     other branch ever adopted the intermediate shapes. A branch may raise
     ``contract_version`` by at most one over its base; later schema
-    iterations on the same branch fold into that entry in place.
+    iterations on the same branch fold into that entry in place, and the
+    entries the base already adopted never change.
     """
     from learning_os.store.contracts.data_contract import load_contract
 
@@ -1010,15 +1011,24 @@ def test_contract_rises_at_most_one_version_per_branch(base_ref):
     assert current is not None, rel
     base_text = _git_show(base_ref, rel)
     if base_text is None:
-        base_version = int(current["contract_version"]) - 1
-    else:
-        base_version = int(yaml.safe_load(base_text)["contract_version"])
+        pytest.skip(f"{rel} is absent at the ratchet base {base_ref}")
+    base_contract = yaml.safe_load(base_text)
+    base_version = int(base_contract["contract_version"])
     rose = int(current["contract_version"]) - base_version
     assert rose <= 1, (
         f"{rel} rose {base_version} -> {current['contract_version']} on this "
         "branch; a branch may add at most one contract version — fold the "
         "later schema iterations into the branch's entry with "
         "schema_contract.py --rebump (see test_contract_rebump.py)")
+    base_history = {int(e["version"]): e
+                    for e in base_contract.get("history") or []}
+    for entry in current["history"]:
+        version = int(entry["version"])
+        if version <= base_version:
+            assert entry == base_history.get(version), (
+                f"{rel} history v{version} differs from {base_ref}: "
+                "--rebump may only rewrite an entry this branch added above "
+                "the base, never one the base already adopted")
 
 
 def _owner_purity_docs():

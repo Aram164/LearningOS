@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -153,11 +154,36 @@ def bump(
     return updated
 
 
+def base_contract_version(base: str, path: Path = CONTRACT) -> int | None:
+    """The contract version at git ref `base`, or None when unreadable.
+
+    Fail closed: a base that does not resolve, or a checkout whose contract
+    cannot be read there, is "unknown", never "zero".
+    """
+    repo_root = path.parent.parent.parent
+    resolved = subprocess.run(
+        ["git", "-C", str(repo_root), "rev-parse", "--verify", "--quiet",
+         f"{base}^{{commit}}"],
+        capture_output=True, text=True)
+    if resolved.returncode != 0:
+        return None
+    shown = subprocess.run(
+        ["git", "-C", str(repo_root), "show",
+         f"{base}:{path.relative_to(repo_root)}"],
+        capture_output=True, text=True)
+    if shown.returncode != 0:
+        return None
+    loaded = yaml.safe_load(shown.stdout) or {}
+    version = loaded.get("contract_version")
+    return int(version) if version is not None else None
+
+
 def rebump(
     note: str,
     migration: str | None = None,
     schema_dir: Path = SCHEMA_DIR,
     path: Path = CONTRACT,
+    base: str = "origin/main",
 ) -> dict:
     """Fold a schema iteration into this branch's own top entry, in place.
 
@@ -167,11 +193,24 @@ def rebump(
     fixture snapshot and forcing a re-record. When a reviewed schema
     iteration lands after this branch already bumped, this rewrites that
     same entry — same version, new fingerprint and note — instead of
-    appending a version nobody else ever adopted.
+    appending a version nobody else ever adopted. It refuses to touch an
+    entry at or below the base's version: that entry is the base's own
+    adopted history, not this branch's to rewrite.
     """
     contract = load_contract(path)
     if not contract or not contract.get("history"):
         raise ValueError("no history entry to re-fingerprint; use --bump")
+    at_base = base_contract_version(base, path)
+    top_version = int(contract["history"][-1]["version"])
+    if at_base is None:
+        raise ValueError(
+            f"cannot read the data contract at base {base!r}; refusing to fold "
+            "into history that may not be this branch's")
+    if top_version <= at_base:
+        raise ValueError(
+            f"the top entry (v{top_version}) is at or below base {base} "
+            f"(v{at_base}): --rebump folds only an entry this branch added "
+            "above the base's version; use --bump for a new version")
     history = list(contract["history"])
     top = dict(history[-1])
     top["adopted"] = observations.today().isoformat()

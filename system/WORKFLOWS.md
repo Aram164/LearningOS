@@ -535,11 +535,14 @@ stage. An explicit `--close` deletes only its own session's ledger.
 Execution boundary: [executable transcript](procedures/process-a-lecture.md)
 against a lecture deck present in the materials tree.
 
-**The as-taught deck gates the workflow.** Run the transcript when the
-lecture's scope authority — the slides as taught — is in the materials tree
-(workflow 6a). When it is missing, stop and ask: do not scope a lecture from
-textbook chapter titles, keyword matches, or a source the module never
-adopted; report what is missing and ask (OPERATOR.md boundary 18).
+**The as-taught deck gates the workflow, and Aram gates the plan.** Run the
+transcript when the lecture's scope authority — the slides as taught — is in
+the materials tree (workflow 6a); its plan pass is review-gated: preflight
+the package (`module-plan-import … --check`), show Aram the package and the
+check result, and apply only on his yes. When the deck is missing, stop and
+ask: do not scope a lecture from textbook chapter titles, keyword matches,
+or a source the module never adopted; report what is missing and ask
+(OPERATOR.md boundary 18).
 
 The unit is the module-owned study object between module and stage. For
 university lectures, **slides as taught are the scope authority**: never scope

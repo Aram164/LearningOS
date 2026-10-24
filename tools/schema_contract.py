@@ -34,6 +34,11 @@ def build_parser() -> argparse.ArgumentParser:
              "(same version, new fingerprint); a branch gets one --bump",
     )
     parser.add_argument(
+        "--base", default="origin/main",
+        help="git ref the branch is based on; --rebump folds only an entry "
+             "above this ref's contract version",
+    )
+    parser.add_argument(
         "--note", default=None, help="what changed (required with --bump/--rebump)",
     )
     parser.add_argument(
@@ -71,10 +76,15 @@ def main() -> int:
         if not args.note:
             print("--rebump requires --note describing the folded change", file=sys.stderr)
             return 2
-        updated = rebump(args.note, args.migration)
+        try:
+            updated = rebump(args.note, args.migration, base=args.base)
+        except ValueError as exc:
+            print(f"schema_contract: {exc}", file=sys.stderr)
+            return 2
         print(
             f"re-fingerprinted contract v{updated['contract_version']} in place "
-            f"over {updated['record_schemas']} record schemas"
+            f"over {updated['record_schemas']} record schemas "
+            f"(base {args.base} stays untouched)"
         )
         return 0
 

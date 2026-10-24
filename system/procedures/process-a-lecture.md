@@ -14,9 +14,11 @@ audit names the taught scope; the lecture unit and its scope-authority route
 enter through one reviewed `module.plan.import` package, preflighted with
 zero canonical writes; the learner's material choice is recorded through
 `unit.source-selection.set`; and the tree validates, regenerates, and shows
-its own write footprint. The scoping judgment stays review-gated: this
+its own write footprint. The deck and the plan are gated separately: this
 transcript runs against a deck that exists in the materials tree — with no
-as-taught deck, the operator stops and asks (OPERATOR.md boundary 18).
+as-taught deck, the operator stops and asks — and in production the import
+applies only after Aram has seen the package and its check result
+(OPERATOR.md boundary 18).
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from the
 `LOS_REPO` environment variable the test sets.
 

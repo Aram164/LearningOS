@@ -193,13 +193,18 @@ Skills and projects use modules and units without false academic metadata.
     to an open one are always allowed; closing one is his alone.
 18. Workflow 23 (process a lecture) runs its executable transcript when the
     lecture's scope authority — the slides as taught — exists in the
-    materials tree (workflow 6a). Without it, stop and ask: never scope a
-    lecture from textbook chapter titles, keyword matches, or a source the
-    module never adopted. Workflows 24 (turn the semester) and 27 (promote a
-    future Master's module) still have **no executable transcript**, and the
-    scope authority each needs does not exist in a checkout: a real term
-    boundary with human judgments, a program that has actually begun. When a
-    task reaches one of them, stop and ask, and do not stand in for the human
+    materials tree (workflow 6a), and the plan pass stays review-gated: run
+    the procedure up to and including the `module-plan-import … --check`
+    preflight, show Aram the package and the check result, and apply only on
+    his yes — a green check is not approval (an agent-run plan pass once
+    broadcast wrong locators onto six routes and the validator scored it
+    perfect). Without the deck, stop and ask: never scope a lecture from
+    textbook chapter titles, keyword matches, or a source the module never
+    adopted. Workflows 24 (turn the semester) and 27 (promote a future
+    Master's module) still have **no executable transcript**, and the scope
+    authority each needs does not exist in a checkout: a real term boundary
+    with human judgments, a program that has actually begun. When a task
+    reaches one of them, stop and ask, and do not stand in for the human
     judgment the workflow requires. The gap is declared, not hidden — the
     procedure index reads "Untranscribable" for exactly these two.
 
