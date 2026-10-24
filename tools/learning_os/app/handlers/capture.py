@@ -109,6 +109,15 @@ def capture(ctx: OpContext, req: dict) -> Result:
         target = inbox / src.name
         if target.exists():
             target = inbox / f"{stamp}-{src.name}"
+            # The transaction engine overwrites an existing path, so one
+            # fallback name is not enough: loop for a free name with a
+            # serial, as the text branch does, so a same-second capture of
+            # an already-stamped basename can never replace an earlier
+            # capture's bytes.
+            serial = 2
+            while target.exists():
+                target = inbox / f"{stamp}-{src.stem}-{serial}{src.suffix}"
+                serial += 1
     else:
         capture_text = req.get("text") if req.get("text") is not None else sys.stdin.read()
         if not capture_text.strip():
