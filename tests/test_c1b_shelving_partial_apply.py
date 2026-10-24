@@ -22,10 +22,10 @@ import json
 from pathlib import Path
 
 import yaml
-
 from conftest import build_mini_repo  # noqa: F401  (mini_repo lives in conftest)
 from gateway_helpers import approved_v2_call, approved_v2_envelope, file_sha256, run_v2_capability
-from repo_builders import add_curriculum, run_los, write_yaml
+from repo_builders import add_curriculum, run_los
+
 from learning_os.app.validation_service import collect
 from learning_os.store.warning_baseline import write_baseline
 

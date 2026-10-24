@@ -26,7 +26,6 @@ Observed on base main (d6c47790): the commit refuses with
 from __future__ import annotations
 
 import yaml
-
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 from repo_builders import add_curriculum
 
