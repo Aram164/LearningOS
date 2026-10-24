@@ -832,7 +832,8 @@ jobs:
           from pathlib import Path
 
           manifest = json.loads(os.environ["SHARD_MANIFEST"])
-          disk = sorted(p.name for p in Path("tests").glob("test_*.py"))
+          disk = sorted(f"tests/{p.name}"
+                        for p in Path("tests").glob("test_*.py"))
           from collections import Counter
           covered = Counter(f for leg in manifest["legs"].values()
                             for f in leg)
@@ -854,18 +855,23 @@ jobs:
           # "8520/8521 tests collected (1 deselected) in 7.26s"
           collected = int(tail.split()[0].split("/")[0])
           ran = 0
+          skipped = 0
           for path in sorted(Path("../junit-in").glob("junit-*.xml")):
               root = ET.parse(path).getroot()
               for case in root.iter("testcase"):
                   ran += 1
-                  if list(case):
+                  if case.find("skipped") is not None:
+                      skipped += 1
+                  if (case.find("failure") is not None
+                          or case.find("error") is not None):
                       sys.exit(f"{path.name}: failing testcase "
                                f"{case.get('classname')}::{case.get('name')}")
           assert ran == collected, (
               f"shards ran {ran} tests; the full collection has {collected} "
               "(deselecting live_install) — a test was lost, duplicated "
               "or added")
-          print(f"gate: {ran} tests across shards == full collection")
+          print(f"gate: {ran} tests across shards == full collection "
+                f"({skipped} skipped, visible, never blocking)")
           PY
           .venv/bin/python -m ruff check tools tests
           .venv/bin/python tools/code_reachability.py
