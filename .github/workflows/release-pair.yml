@@ -228,8 +228,10 @@ jobs:
             pytesttmp/site-witness*/sites.jsonl.attribution.json
             pytesttmp/operational-audit*
           if-no-files-found: error
-          # pytest leaves <name>current symlinks beside the session dirs;
-          # following them would upload every session artifact twice.
+          # Intent: never follow symlinks. Empirically the upload still
+          # materializes pytest's <name>current aliases beside the
+          # session dirs, so the merge below collapses the byte-identical
+          # copies — the dedupe there is load-bearing, not this flag.
           follow-symbolic-links: false
 
   # The zz population files, over the merged witness population of every
