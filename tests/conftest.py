@@ -73,26 +73,120 @@ def _site_witness_file(tmp_path_factory):
     processes inherit it through ``os.environ``: the scenario
     harness and the procedure runner both start their child env
     from ``dict(os.environ)``.
+
+    In CI merge mode the merged witness file of the producer shards is
+    used as-is, so A9's session population is the whole suite's.
     """
+    premerged = os.environ.get(PREMERGED_WITNESS_ENV)
+    if premerged:
+        previous = os.environ.get(SITE_WITNESS_ENV)
+        os.environ[SITE_WITNESS_ENV] = premerged
+        _load_premerged_attribution(premerged)
+        yield Path(premerged)
+        if previous is None:
+            os.environ.pop(SITE_WITNESS_ENV, None)
+        else:
+            os.environ[SITE_WITNESS_ENV] = previous
+        return
     path = tmp_path_factory.mktemp("site-witness") / "sites.jsonl"
     path.touch()
     previous = os.environ.get(SITE_WITNESS_ENV)
     os.environ[SITE_WITNESS_ENV] = str(path)
     yield path
+    _dump_attribution_sidecar(path)
     if previous is None:
         os.environ.pop(SITE_WITNESS_ENV, None)
     else:
         os.environ[SITE_WITNESS_ENV] = previous
 
 
+def _dump_attribution_sidecar(witness_path: Path) -> None:
+    """Persist A9 per-case attribution beside the witness file (C3).
+
+    ``scenario_harness.CASE_SITE_WITNESSES`` is process-local memory; a
+    CI merge job cannot see it. The sidecar is the same map serialized
+    (keyed "<operation>:<case-id>", values as sorted [operation, site]
+    pairs), so the zz job can rebuild attribution over the merged witness
+    file. Local runs write it too — harmless, and identical to what CI
+    shards upload.
+    """
+    try:
+        import scenario_harness
+    except ImportError:
+        return
+    data = {
+        key: sorted(list(pair) for pair in sites)
+        for key, sites in scenario_harness.CASE_SITE_WITNESSES.items()
+        if sites
+    }
+    try:
+        witness_path.with_suffix(".jsonl.attribution.json").write_text(
+            json.dumps(data, sort_keys=True), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _load_premerged_attribution(merged_witness: str) -> None:
+    """Rebuild A9 attribution in this process from the producer sidecars.
+
+    Every sidecar's entries are re-keyed onto the merged witness file —
+    A9 looks attribution up by ``(os.environ[LOS_SITE_WITNESS_FILE],
+    "<operation>:<case-id>")``, and in merge mode that env points at the
+    merged file. Cases are disjoint across shards (each scenario case
+    runs exactly once suite-wide), so re-keying cannot collide.
+    """
+    raw = os.environ.get(PREMERGED_ATTRIBUTION_ENV, "")
+    sidecars = [part for part in raw.split() if part]
+    if not sidecars:
+        return
+    import scenario_harness
+
+    merged: dict[tuple[str, str], set[tuple[str, str]]] = {}
+    for sidecar in sidecars:
+        data = json.loads(Path(sidecar).read_text(encoding="utf-8"))
+        for key, pairs in data.items():
+            bucket = merged.setdefault((merged_witness, key), set())
+            bucket.update((pair[0], pair[1]) for pair in pairs)
+    scenario_harness.CASE_SITE_WITNESSES.update(merged)
+
+
 #: The A19 audit directory (SPEC §3.6): every scenario and procedure
 #: case appends its audit log here for the zz ownership population.
 AUDIT_DIR_ENV = "LOS_ARCH_AUDIT_DIR"
 
+#: CI shard merge mode (C3, 2026-10-24). The suite runs as parallel shard
+#: jobs; the zz population files run in later jobs over the *merged*
+#: witness artifacts of the producer shards. These three variables switch
+#: the session fixtures below from "create fresh session files" to "use
+#: the merged ones", so the population checks see the whole suite's
+#: population, not one shard's. They are unset for every local run and
+#: every producer shard.
+PREMERGED_WITNESS_ENV = "LOS_PREMERGED_WITNESS"
+PREMERGED_AUDIT_ENV = "LOS_PREMERGED_AUDIT_DIR"
+#: Space-separated attribution sidecar files (see the sessionfinish hook
+#: below) written by the producer shards; re-keyed onto the merged
+#: witness file and loaded into scenario_harness.CASE_SITE_WITNESSES so
+#: A9's per-case attribution check survives the process boundary.
+PREMERGED_ATTRIBUTION_ENV = "LOS_PREMERGED_ATTRIBUTION"
+
 
 @pytest.fixture(scope="session", autouse=True)
 def _operational_audit_dir(tmp_path_factory):
-    """The session-scoped A19 audit directory, outside the repository."""
+    """The session-scoped A19 audit directory, outside the repository.
+
+    In CI merge mode the merged population directory is used as-is: the
+    zz population tests must assert over every producer shard's logs.
+    """
+    premerged = os.environ.get(PREMERGED_AUDIT_ENV)
+    if premerged:
+        previous = os.environ.get(AUDIT_DIR_ENV)
+        os.environ[AUDIT_DIR_ENV] = premerged
+        yield Path(premerged)
+        if previous is None:
+            os.environ.pop(AUDIT_DIR_ENV, None)
+        else:
+            os.environ[AUDIT_DIR_ENV] = previous
+        return
     path = tmp_path_factory.mktemp("operational-audit")
     previous = os.environ.get(AUDIT_DIR_ENV)
     os.environ[AUDIT_DIR_ENV] = str(path)
@@ -103,8 +197,23 @@ def _operational_audit_dir(tmp_path_factory):
         os.environ[AUDIT_DIR_ENV] = previous
 
 
-def pytest_collection_modifyitems(items):
-    """Apply the area-group marker from tests/group_map.py; fail on drift."""
+#: Node-level shard selection (C3): "tests/test_x.py=1/4 tests/test_y.py=0/2"
+#: — for each named file, this session keeps only items whose stable node-id
+#: hash lands on <index> of <count>. A mod-N split is a partition for every
+#: N, so a file shared by N legs still runs each of its tests exactly once
+#: across the legs; the CI gate's collection-vs-sum proof holds either way.
+#: Unset locally and for every file-level leg.
+NODE_SHARDS_ENV = "LOS_NODE_SHARDS"
+
+
+def pytest_collection_modifyitems(items, config):
+    """Apply the area-group marker from tests/group_map.py; fail on drift.
+
+    Then apply node-level shard selection when LOS_NODE_SHARDS names files
+    carried by this session (the CI zz legs): the named files' items are
+    trimmed to this leg's hash slice and reported to pytest as deselected,
+    so a leg's summary line shows exactly what it dropped.
+    """
     errors = group_map.check_map(Path(__file__).resolve().parent)
     assert not errors, (
         "tests/group_map.py is out of step with tests/: "
@@ -114,6 +223,31 @@ def pytest_collection_modifyitems(items):
         group = group_map.FILE_TO_GROUP.get(name)
         if group is not None:
             item.add_marker(getattr(pytest.mark, group))
+
+    import zlib
+
+    shards = {}
+    for entry in os.environ.get(NODE_SHARDS_ENV, "").split():
+        stem, _, spec = entry.partition("=")
+        index, _, count = spec.partition("/")
+        if stem and count.isdigit() and index.isdigit():
+            shards[stem] = (int(index), int(count))
+    if not shards:
+        return
+    kept, deselected = [], []
+    for item in items:
+        name = Path(str(item.fspath)).name
+        spec = shards.get(name)
+        if spec is not None:
+            index, count = spec
+            bucket = zlib.crc32(item.nodeid.encode("utf-8")) % count
+            if bucket != index:
+                deselected.append(item)
+                continue
+        kept.append(item)
+    if deselected:
+        items[:] = kept
+        config.hook.pytest_deselected(items=deselected)
 
 
 @pytest.fixture(scope="session")

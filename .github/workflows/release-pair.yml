@@ -1,16 +1,30 @@
-# Learning OS v3 — exact-pair release CI (release-hardening plan, Phase 9).
+# Learning OS v3 — CI validation (added 2026-08-03, ADR-003 S5; sharded
+# 2026-10-24, C3). Runs the same checks the local `make system-check` gate
+# runs — the complete test suite, static gates, and the paired UI check —
+# split over parallel shard jobs whose union is provably the whole suite.
+# Weekly run adds --online (URL-rot audit over the sources registry — the
+# job local runs skip).
 #
-# Branch-based CI (validate.yml, ui-ci.yml) is useful but mutable: today's
-# green run says nothing about whether the Core commit it verified is still
-# paired with the same UI commit tomorrow. This workflow is dispatched by
-# hand with two exact, full commit SHAs, checks out precisely those two
-# commits (never a branch), runs the same local paired gate a release
-# requires, and uploads a schema-validated pair-receipt.json plus the four
-# shipped plugin files as one downloadable, independently verifiable proof
-# that this exact Core/UI pair was built and tested together.
+# Shard invariant (why this is not a coverage shrink): every
+# `tests/test_*.py` file appears in exactly one leg of SHARD_MANIFEST —
+# except files under `node_shards`, which a stable node-id hash splits
+# over exactly the listed legs, each test still running exactly once.
+# tests/test_workflows.py pins the manifest against the tree; every leg
+# deselects exactly `live_install`; and the gate job proves that the
+# summed shard results equal a fresh full collection before running the
+# static gates.
 #
-# This workflow never tags, releases, or merges to main — see plan §5 rule 8
-# and §12 out-of-scope items.
+# The witness population (SPEC §3.3 A9, §3.6 A19) crosses the process
+# boundary explicitly: witness-* legs run every file that appends to the
+# session witness file or the audit dir, and upload them; zz-* legs merge
+# those artifacts (tests/conftest.py's premerged-mode envs), rebuild A9's
+# process-local attribution from the sidecars, and run the two
+# `test_scenarios_zz_*` population files — `test_scenarios_zz_refusal_
+# sites.py` node-sharded, because its 799 parametrized site checks are
+# the suite's slowest single file (~40 min unsplit).
+#
+# This workflow never tags, releases, or merges to main — see plan §5
+# rule 8 and §12 out-of-scope items.
 name: release-pair
 
 on:
@@ -28,13 +42,270 @@ permissions:
 
 run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
 
+env:
+  # The shard manifest. `legs` maps leg id -> test files (alphabetical;
+  # `witness-*` legs run their files in one pytest session each, `rest-*`
+  # likewise, `zz-*` after the merge below). `node_shards` maps a file ->
+  # the legs that hash-split it (tests/conftest.py, LOS_NODE_SHARDS).
+  # Regenerate from a CI-measured durations artifact when balance drifts;
+  # the partition test in tests/test_workflows.py fails locally the
+  # moment a new test file is not covered, so this cannot silently rot.
+  SHARD_MANIFEST: |
+    {
+     "legs": {
+      "rest-0": [
+       "tests/test_affected_tests.py",
+       "tests/test_agent_tasks.py",
+       "tests/test_arch_callbacks.py",
+       "tests/test_arch_doc_blocks.py",
+       "tests/test_arch_doc_command_controls.py",
+       "tests/test_arch_idroundtrip.py",
+       "tests/test_arch_json_everywhere.py",
+       "tests/test_arch_layers.py",
+       "tests/test_arch_outcomes.py",
+       "tests/test_arch_output.py",
+       "tests/test_arch_ratchets.py",
+       "tests/test_arch_request_schemas.py",
+       "tests/test_claim_status_audits.py",
+       "tests/test_code_reachability.py",
+       "tests/test_codex_wrapper.py",
+       "tests/test_collection_entry_revise.py",
+       "tests/test_context_dossiers.py",
+       "tests/test_contract_bundle.py",
+       "tests/test_coordination_revision.py",
+       "tests/test_creation_capabilities.py",
+       "tests/test_deep_audit_repairs.py",
+       "tests/test_evidence_parity.py",
+       "tests/test_format_fixtures.py",
+       "tests/test_garden_seed.py",
+       "tests/test_hygiene.py",
+       "tests/test_ingest_transcript.py",
+       "tests/test_intelligence_scan.py",
+       "tests/test_job_quarantine_collapse.py",
+       "tests/test_library_reconciliation.py",
+       "tests/test_local_attachments.py",
+       "tests/test_manifest_reuse.py",
+       "tests/test_material_span.py",
+       "tests/test_module_scope_obligation.py",
+       "tests/test_module_surface.py",
+       "tests/test_ops_check.py",
+       "tests/test_ops_encoders.py",
+       "tests/test_ops_pipeline.py",
+       "tests/test_pilot_replay.py",
+       "tests/test_plan_write_audit.py",
+       "tests/test_plan_write_once.py",
+       "tests/test_pre_push_hook.py",
+       "tests/test_program_semester_update.py",
+       "tests/test_projection_fidelity.py",
+       "tests/test_read_suggestions.py",
+       "tests/test_recovery_conflicts.py",
+       "tests/test_resume_pointer.py",
+       "tests/test_route_identity_migration.py",
+       "tests/test_runtime_efficiency.py",
+       "tests/test_session_compiler.py",
+       "tests/test_session_counts.py",
+       "tests/test_source_intake.py",
+       "tests/test_structural_inspect.py",
+       "tests/test_summaries_migration.py",
+       "tests/test_system_audit_2026_09_05.py",
+       "tests/test_thematic_navigation_projection.py",
+       "tests/test_tool_entrypoint_contract.py",
+       "tests/test_unit_dossier_command.py",
+       "tests/test_verified_operator_questions.py",
+       "tests/test_workflows.py"
+      ],
+      "rest-1": [
+       "tests/test_agent_efficiency.py",
+       "tests/test_arch_error_details.py",
+       "tests/test_arch_plumbing.py",
+       "tests/test_arch_private_names.py",
+       "tests/test_arch_prose.py",
+       "tests/test_arch_suggestions.py",
+       "tests/test_arch_world.py",
+       "tests/test_arch_writes.py",
+       "tests/test_architecture_hardening_adversarial.py",
+       "tests/test_bounded_reads.py",
+       "tests/test_build_materials_tree.py",
+       "tests/test_capability_catalog.py",
+       "tests/test_capability_receipts.py",
+       "tests/test_causal_resolver.py",
+       "tests/test_compute_once.py",
+       "tests/test_contract_differential.py",
+       "tests/test_contract_register.py",
+       "tests/test_derived_engine.py",
+       "tests/test_digest_review.py",
+       "tests/test_domain_stages.py",
+       "tests/test_garden_projection.py",
+       "tests/test_gateway_typed_refusals.py",
+       "tests/test_generation.py",
+       "tests/test_goal_lifecycle_properties.py",
+       "tests/test_goal_select.py",
+       "tests/test_health_vnext.py",
+       "tests/test_improvements.py",
+       "tests/test_learning_plan_contract.py",
+       "tests/test_lecture_study_map_assembly.py",
+       "tests/test_legacy_exit_review.py",
+       "tests/test_material_analysis_save.py",
+       "tests/test_material_context.py",
+       "tests/test_material_context_boundaries.py",
+       "tests/test_material_editing.py",
+       "tests/test_material_locator_fallback.py",
+       "tests/test_material_observation_port.py",
+       "tests/test_material_text_cache.py",
+       "tests/test_materials_catalogue.py",
+       "tests/test_migration_lifecycle.py",
+       "tests/test_mismatches.py",
+       "tests/test_normative_corpus.py",
+       "tests/test_note_evidence.py",
+       "tests/test_operations.py",
+       "tests/test_operations_gate.py",
+       "tests/test_operator_discovery.py",
+       "tests/test_ops_commit.py",
+       "tests/test_ops_context.py",
+       "tests/test_phaseB_prospective_lineage.py",
+       "tests/test_plan_edit_brief.py",
+       "tests/test_plan_inventory.py",
+       "tests/test_policy_query.py",
+       "tests/test_related.py",
+       "tests/test_render.py",
+       "tests/test_resource_integrity.py",
+       "tests/test_resume_dossier.py",
+       "tests/test_runtime_review.py",
+       "tests/test_seal_guards_auto.py",
+       "tests/test_search_hints.py",
+       "tests/test_search_index.py",
+       "tests/test_semantic_lineage.py",
+       "tests/test_source_examination.py",
+       "tests/test_stage_result.py",
+       "tests/test_trace_context.py",
+       "tests/test_transaction_faults.py",
+       "tests/test_transactions.py",
+       "tests/test_verbatim_anchor_admission.py",
+       "tests/test_warning_baseline.py",
+       "tests/test_write_scopes.py"
+      ],
+      "rest-2": [
+       "tests/test_abilities.py",
+       "tests/test_ai_actions.py",
+       "tests/test_arch_caches.py",
+       "tests/test_arch_cli_parity.py",
+       "tests/test_arch_doc_commands.py",
+       "tests/test_arch_engine_neutrality.py",
+       "tests/test_arch_error_vocabulary.py",
+       "tests/test_arch_surface.py",
+       "tests/test_arch_types.py",
+       "tests/test_atlas_authoring.py",
+       "tests/test_capability_dispatch.py",
+       "tests/test_cli.py",
+       "tests/test_compact_module_plan_revision.py",
+       "tests/test_curriculum_v2.py",
+       "tests/test_derived_state.py",
+       "tests/test_diagnostic_store.py",
+       "tests/test_domain_failures.py",
+       "tests/test_evidence_staleness.py",
+       "tests/test_expansion_runnable.py",
+       "tests/test_external_urls.py",
+       "tests/test_failures_prefixed.py",
+       "tests/test_gateway_choice_parity.py",
+       "tests/test_gateway_v2.py",
+       "tests/test_githistory.py",
+       "tests/test_goal_proposals.py",
+       "tests/test_inbox_resolve.py",
+       "tests/test_learning_paths.py",
+       "tests/test_lineage_restamp.py",
+       "tests/test_lineage_writer_interpositions.py",
+       "tests/test_manifest_contract.py",
+       "tests/test_manifest_routes.py",
+       "tests/test_manifest_stages.py",
+       "tests/test_master_promotion.py",
+       "tests/test_material_slices.py",
+       "tests/test_material_summaries.py",
+       "tests/test_materials_manifest.py",
+       "tests/test_model_question_scoring.py",
+       "tests/test_module_concept_atlas.py",
+       "tests/test_module_lifecycle.py",
+       "tests/test_module_plan_warning_gate.py",
+       "tests/test_move_map.py",
+       "tests/test_note_create.py",
+       "tests/test_observation_gesture.py",
+       "tests/test_observations.py",
+       "tests/test_operator_lock.py",
+       "tests/test_perimeter.py",
+       "tests/test_plan_resume.py",
+       "tests/test_plan_rigor.py",
+       "tests/test_projects.py",
+       "tests/test_proof_carrying_change.py",
+       "tests/test_release_pair_receipt.py",
+       "tests/test_scenario_fixtures.py",
+       "tests/test_search_values.py",
+       "tests/test_semantic_contract.py",
+       "tests/test_session_ledger.py",
+       "tests/test_source_discovery.py",
+       "tests/test_source_record_revise.py",
+       "tests/test_study_map_obligation.py",
+       "tests/test_synthesis_analysis_refs.py",
+       "tests/test_tree_contract.py",
+       "tests/test_ui_gateway_recovery.py",
+       "tests/test_unit_plan_revision.py",
+       "tests/test_validation.py",
+       "tests/test_validation_cache.py",
+       "tests/test_verbatim.py",
+       "tests/test_vnext_boundaries.py",
+       "tests/test_workspace_next_action.py",
+       "tests/test_write_payload_clarity.py"
+      ],
+      "witness-0": [
+       "tests/test_scenarios_effects.py"
+      ],
+      "witness-1": [
+       "tests/test_procedures.py",
+       "tests/test_scenarios.py",
+       "tests/test_scenarios_health_shim.py",
+       "tests/test_scenarios_recovery.py",
+       "tests/test_scenarios_session.py"
+      ],
+      "zz-0": [
+       "tests/test_scenarios_zz_operational_owners.py",
+       "tests/test_scenarios_zz_refusal_sites.py"
+      ],
+      "zz-1": [
+       "tests/test_scenarios_zz_refusal_sites.py"
+      ],
+      "zz-2": [
+       "tests/test_scenarios_zz_refusal_sites.py"
+      ],
+      "zz-3": [
+       "tests/test_scenarios_zz_refusal_sites.py"
+      ]
+     },
+     "node_shards": {
+      "tests/test_scenarios_zz_refusal_sites.py": {
+       "count": 4,
+       "legs": [
+        "zz-0",
+        "zz-1",
+        "zz-2",
+        "zz-3"
+       ]
+      }
+     }
+    }
+
 jobs:
-  release-pair:
+  pytest-shards:
     runs-on: ubuntu-latest
-    # Phase 4 Linux pytest alone took 86 minutes; the complete local
-    # source gate took 130 minutes. Keep complete paired coverage with
-    # a bounded allowance for extraction tests and the UI checks.
-    timeout-minutes: 180
+    # The unsharded suite took 2h01m of pytest; legs are balanced to well
+    # under 45 minutes, and a leg that hangs must die rather than queue.
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [witness-0, witness-1, rest-0, rest-1, rest-2]
+    defaults:
+      run:
+        working-directory: repository
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
@@ -50,8 +321,6 @@ jobs:
             || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
           echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
           echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
-          echo "core_sha_short=${core_sha:0:12}" >> "$GITHUB_OUTPUT"
-          echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
 
       - name: Check out Core at the exact SHA
         uses: actions/checkout@v4
@@ -99,7 +368,6 @@ jobs:
       # diagnostics are characterized bytes pinned to this interpreter, and
       # the procedure transcripts invoke $LOS_REPO/.venv/bin/python.
       - name: Install Core development dependencies
-        working-directory: repository
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install -e ".[dev]"
@@ -107,10 +375,11 @@ jobs:
         working-directory: obsidian-ui
         run: npm ci --ignore-scripts
 
-      # The procedure transcripts (tests/test_procedures.py, PLAN D11) run under
-      # Scrut v0.5.0. The release archive is pinned by GitHub's published
-      # SHA-256 and checked before use; the binary stays outside the checkout,
-      # clear of the tree-contract test, and reaches the gate as LOS_SCRUT_BIN.
+      # The procedure transcripts (tests/test_procedures.py, PLAN D11) run
+      # under Scrut v0.5.0. The release archive is pinned by GitHub's
+      # published SHA-256 and checked before use; the binary stays outside
+      # the checkout, clear of the tree-contract test, and reaches the gate
+      # as LOS_SCRUT_BIN.
       - name: Install PDF text extractor
         run: |
           sudo apt-get update
@@ -132,22 +401,464 @@ jobs:
           test "$("$bin" --version)" = "scrut 0.5.0"
           echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
 
-      # The exact local paired gate. Full `make stress` is not run here: the
-      # checkout provisions neither repository's external materials tree, so
-      # it stays the mandatory *local* gate — the receipt below records this
-      # scope explicitly rather than implying stress ran.
-      #
-      # `live_install` tests need state no checkout can carry: the
-      # maintainer's gitignored data, or the wrapper root above repository/.
-      # They are deselected here by name, never skipped, so the summary line
-      # counts them as deselected; the live installation's own
-      # `make system-check` still runs them.
-      - name: paired release gate (make system-check)
-        working-directory: repository
+      - name: Resolve this shard's file list from the manifest
+        id: pick
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -eu
+          files="$(python3 -c '
+          import json, os, sys
+          manifest = json.loads(os.environ["SHARD_MANIFEST"])["legs"]
+          shard = sys.argv[1]
+          try:
+              files = manifest[shard]
+          except KeyError:
+              raise SystemExit(f"shard {shard!r} is not in SHARD_MANIFEST")
+          missing = sorted(f for f in files if not os.path.isfile(f))
+          assert not missing, f"shard {shard}: files missing from tests/: {missing}"
+          print("\n".join(files))
+          ' "$SHARD")"
+          count="$(printf '%s' "$files" | grep -c .)"
+          printf 'shard %s: %s files\n' "$SHARD" "$count"
+          {
+            echo "files<<SHARD_FILES_EOF"
+            printf '%s\n' "$files"
+            echo "SHARD_FILES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Same selection the unsharded gate pinned: deselect exactly the
+      # `live_install` marker, nothing broader. The file list comes only
+      # from the manifest; a leg never adds its own -k or -m filters.
+      # --basetemp pins the session witness file and audit dir under
+      # witness-out/ so the witness legs can upload them for the zz merge.
+      - name: Run this shard of the suite
         env:
           PYTEST_ADDOPTS: '-m "not live_install"'
           LOS_RATCHET_BASE: origin/main
-        run: make system-check
+          SHARD: ${{ matrix.shard }}
+          PICKED: ${{ steps.pick.outputs.files }}
+        run: |
+          set -eu
+          mkdir -p ../junit-out
+          # shellcheck disable=SC2086  # manifest paths contain no spaces
+          .venv/bin/python -m pytest -q --basetemp=../pytesttmp \
+            --junitxml="../junit-out/junit-$SHARD.xml" $PICKED
+
+      - name: Upload this shard's JUnit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ matrix.shard }}
+          path: junit-out/
+          if-no-files-found: error
+
+      # The A9/A19 population artifacts (witness legs only): the session
+      # witness file, its attribution sidecar, and the audit dir with its
+      # cases.txt index. zz legs download exactly these, merge them, and
+      # assert over the whole suite's population.
+      - name: Upload the witness population (witness legs only)
+        if: always() && startsWith(matrix.shard, 'witness')
+        uses: actions/upload-artifact@v4
+        with:
+          name: witness-${{ matrix.shard }}
+          path: |
+            pytesttmp/**/sites.jsonl
+            pytesttmp/**/sites.jsonl.attribution.json
+            pytesttmp/**/operational-audit*
+          if-no-files-found: error
+
+  # The zz population files, over the merged witness population of the
+  # producer legs. test_scenarios_zz_refusal_sites.py (~40 min unsplit,
+  # the slowest file in the suite) is hash-split over the four legs;
+  # test_scenarios_zz_operational_owners.py runs whole in zz-0.
+  zz-shards:
+    needs: [pytest-shards]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [zz-0, zz-1, zz-2, zz-3]
+    defaults:
+      run:
+        working-directory: repository
+    steps:
+      - name: Validate the exact-SHA inputs before checking anything out
+        id: inputs
+        env:
+          CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
+          UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
+        run: |
+          core_sha="$CORE_SHA_INPUT"
+          ui_sha="$UI_SHA_INPUT"
+          echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
+          echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Core at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: ${{ steps.inputs.outputs.core_sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - name: Install Core development dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Install PDF text extractor
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+          pdftotext -v
+      - name: Install Scrut v0.5.0 (pinned digest)
+        run: |
+          set -eu
+          dir="$RUNNER_TEMP/scrut"
+          mkdir -p "$dir"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$dir/scrut.tar.gz" \
+            https://github.com/facebookincubator/scrut/releases/download/v0.5.0/scrut-v0.5.0-linux-x86_64.tar.gz
+          echo "5c373d077a73dc4a5d4b43f3474e0f443dc72fb42f89b312ef55f934e6e6ba15  $dir/scrut.tar.gz" | sha256sum -c -
+          tar -xzf "$dir/scrut.tar.gz" -C "$dir"
+          bin="$(find "$dir" -type f -name scrut | head -n 1)"
+          test -n "$bin"
+          chmod 0755 "$bin"
+          test "$("$bin" --version)" = "scrut 0.5.0"
+          echo "LOS_SCRUT_BIN=$bin" >> "$GITHUB_ENV"
+
+      - name: Download the witness population
+        uses: actions/download-artifact@v4
+        with:
+          pattern: witness-*
+          path: witness-in
+
+      # Deterministic merge (leg order = artifact name order): the witness
+      # lines concatenate, the attribution sidecars re-key onto the merged
+      # file, the audit logs union, and cases.txt keeps its entry set.
+      - name: Merge the witness population
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import json
+          import os
+          import shutil
+          from pathlib import Path
+
+          # pytest's mktemp leaves a <name>current symlink beside each
+          # real session dir; resolve-dedupe so nothing counts twice.
+          src = Path("../witness-in")
+          sites = sorted({p.resolve()
+                          for p in src.glob("witness-*/**/sites.jsonl")})
+          sidecars = sorted({p.resolve() for p in
+                             src.glob("witness-*/**/sites.jsonl.attribution.json")})
+          audits = sorted({p.resolve() for p in
+                           src.glob("witness-*/**/operational-audit*")
+                           if p.is_dir()})
+          assert sites and sidecars and audits, (
+              f"witness population incomplete: {len(sites)} witness files, "
+              f"{len(sidecars)} sidecars, {len(audits)} audit dirs")
+          assert len(sites) == len(sidecars) == len(audits)
+
+          merged = Path("../merged")
+          audit = merged / "audit"
+          audit.mkdir(parents=True)
+          with open(merged / "sites.jsonl", "wb") as out:
+              for part in sites:
+                  out.write(part.read_bytes())
+          attribution = {}
+          for part in sidecars:
+              for key, pairs in json.loads(
+                      part.read_text(encoding="utf-8")).items():
+                  attribution.setdefault(key, []).extend(pairs)
+          (merged / "attr.json").write_text(
+              json.dumps(attribution, sort_keys=True), encoding="utf-8")
+          cases = []
+          for directory in audits:
+              for log in sorted(directory.glob("*.jsonl")):
+                  shutil.copy(log, audit / log.name)
+              index = directory / "cases.txt"
+              if index.is_file():
+                  cases.extend(index.read_text(encoding="utf-8").split())
+          (audit / "cases.txt").write_text(
+              "\n".join(dict.fromkeys(cases)) + "\n", encoding="utf-8")
+          print(f"merged {len(sites)} witness legs: "
+                f"{sum(1 for _ in open(merged / 'sites.jsonl'))} witness lines, "
+                f"{len(list(audit.glob('*.jsonl')))} audit logs")
+          PY
+          merged="$(cd ../merged && pwd)"
+          {
+            echo "LOS_PREMERGED_WITNESS=$merged/sites.jsonl"
+            echo "LOS_PREMERGED_ATTRIBUTION=$merged/attr.json"
+            echo "LOS_PREMERGED_AUDIT_DIR=$merged/audit"
+          } >> "$GITHUB_ENV"
+
+      - name: Resolve this leg's node shard from the manifest
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -eu
+          spec="$(python3 -c '
+          import json, os
+          manifest = json.loads(os.environ["SHARD_MANIFEST"])["node_shards"]
+          shard = os.environ["SHARD"]
+          for fname, spec in manifest.items():
+              legs = spec["legs"]
+              if shard in legs:
+                  stem = fname.rsplit("/", 1)[-1]
+                  print(f"{stem}={legs.index(shard)}/{spec[\"count\"]}")
+                  break
+          else:
+              raise SystemExit(f"zz leg {shard!r} has no node_shards entry")
+          ')"
+          printf 'node shard: %s\n' "$spec"
+          echo "LOS_NODE_SHARDS=$spec" >> "$GITHUB_ENV"
+
+      - name: Resolve this shard's file list from the manifest
+        id: pick
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -eu
+          files="$(python3 -c '
+          import json, os, sys
+          manifest = json.loads(os.environ["SHARD_MANIFEST"])["legs"]
+          shard = sys.argv[1]
+          try:
+              files = manifest[shard]
+          except KeyError:
+              raise SystemExit(f"shard {shard!r} is not in SHARD_MANIFEST")
+          missing = sorted(f for f in files if not os.path.isfile(f))
+          assert not missing, f"shard {shard}: files missing from tests/: {missing}"
+          print("\n".join(files))
+          ' "$SHARD")"
+          count="$(printf '%s' "$files" | grep -c .)"
+          printf 'shard %s: %s files\n' "$SHARD" "$count"
+          {
+            echo "files<<SHARD_FILES_EOF"
+            printf '%s\n' "$files"
+            echo "SHARD_FILES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run this zz shard of the suite
+        env:
+          PYTEST_ADDOPTS: '-m "not live_install"'
+          LOS_RATCHET_BASE: origin/main
+          SHARD: ${{ matrix.shard }}
+          PICKED: ${{ steps.pick.outputs.files }}
+        run: |
+          set -eu
+          mkdir -p ../junit-out
+          # shellcheck disable=SC2086  # manifest paths contain no spaces
+          .venv/bin/python -m pytest -q --basetemp=../pytesttmp \
+            --junitxml="../junit-out/junit-$SHARD.xml" $PICKED
+
+      - name: Upload this shard's JUnit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ matrix.shard }}
+          path: junit-out/
+          if-no-files-found: error
+
+  # The UI's own complete check (build, typecheck, contract gate, fixture
+  # suites, and the real cross-process Gateway recovery harness against
+  # this Core) — the same `npm run check` the local paired gate runs last.
+  ui-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Validate the exact-SHA inputs before checking anything out
+        id: inputs
+        env:
+          CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
+          UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
+        run: |
+          core_sha="$CORE_SHA_INPUT"
+          ui_sha="$UI_SHA_INPUT"
+          echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
+          echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Core at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: ${{ steps.inputs.outputs.core_sha }}
+          fetch-depth: 0
+
+      - name: Check out UI at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          path: obsidian-ui
+          ref: ${{ steps.inputs.outputs.ui_sha }}
+          fetch-depth: 0
+
+      - name: Verify each checkout is exactly the requested commit and clean
+        env:
+          EXPECTED_CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
+          EXPECTED_UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
+        run: |
+          set -eu
+          core_actual="$(git -C repository rev-parse HEAD)"
+          if [ "$core_actual" != "$EXPECTED_CORE_SHA" ]; then
+            echo "Core checked out $core_actual, requested $EXPECTED_CORE_SHA" >&2
+            exit 1
+          fi
+          test -z "$(git -C repository status --porcelain)" \
+            || { echo "Core checkout is not clean" >&2; exit 1; }
+          ui_actual="$(git -C obsidian-ui rev-parse HEAD)"
+          if [ "$ui_actual" != "$EXPECTED_UI_SHA" ]; then
+            echo "UI checked out $ui_actual, requested $EXPECTED_UI_SHA" >&2
+            exit 1
+          fi
+          test -z "$(git -C obsidian-ui status --porcelain)" \
+            || { echo "UI checkout is not clean" >&2; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install UI dependencies
+        working-directory: obsidian-ui
+        run: npm ci --ignore-scripts
+      - name: UI check (npm run check)
+        working-directory: obsidian-ui
+        run: npm run check
+
+  # The join point: nothing is green until the shards are proven to be
+  # exactly the whole suite, the static gates pass, and every leg passed.
+  gate:
+    needs: [pytest-shards, zz-shards, ui-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: repository
+    steps:
+      - name: Validate the exact-SHA inputs before checking anything out
+        id: inputs
+        env:
+          CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
+          UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
+        run: |
+          core_sha="$CORE_SHA_INPUT"
+          ui_sha="$UI_SHA_INPUT"
+          echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
+          echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
+          echo "core_sha_short=${core_sha:0:12}" >> "$GITHUB_OUTPUT"
+          echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Core at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: ${{ steps.inputs.outputs.core_sha }}
+          fetch-depth: 0
+
+      - name: Check out UI at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          path: obsidian-ui
+          ref: ${{ steps.inputs.outputs.ui_sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Core development dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Install UI dependencies
+        working-directory: obsidian-ui
+        run: npm ci --ignore-scripts
+
+      - name: Download every shard's JUnit results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: junit-*
+          merge-multiple: true
+          path: junit-in
+
+      # The completeness proof, run on every trigger: collect the whole
+      # suite fresh, count <testcase> elements across all shard results,
+      # and require set equality — no test lost, none duplicated, none
+      # invented. Then the static gates the local paired gate runs before
+      # pytest: lint, typecheck, validate, warning baseline.
+      - name: Prove the shards are exactly the suite, then run static gates
+        run: |
+          set -eu
+          .venv/bin/python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          manifest = json.loads(os.environ["SHARD_MANIFEST"])
+          disk = sorted(p.name for p in Path("tests").glob("test_*.py"))
+          from collections import Counter
+          covered = Counter(f for leg in manifest["legs"].values()
+                            for f in leg)
+          for name, count in sorted(covered.items()):
+              expected = (manifest.get("node_shards", {}).get(name, {})
+                          .get("count", 1))
+              assert count == expected, (
+                  f"{name} appears in {count} legs, expected {expected}")
+          assert sorted(covered) == disk, (
+              f"SHARD_MANIFEST does not partition tests/: "
+              f"missing={sorted(set(disk) - set(covered))} "
+              f"extra={sorted(set(covered) - set(disk))}")
+
+          out = subprocess.run(
+              [".venv/bin/python", "-m", "pytest", "--collect-only", "-q",
+               "-m", "not live_install"],
+              capture_output=True, text=True, check=True)
+          tail = out.stdout.strip().splitlines()[-1]
+          # "8520/8521 tests collected (1 deselected) in 7.26s"
+          collected = int(tail.split()[0].split("/")[0])
+          ran = 0
+          for path in sorted(Path("../junit-in").glob("junit-*.xml")):
+              root = ET.parse(path).getroot()
+              for case in root.iter("testcase"):
+                  ran += 1
+                  if list(case):
+                      sys.exit(f"{path.name}: failing testcase "
+                               f"{case.get('classname')}::{case.get('name')}")
+          assert ran == collected, (
+              f"shards ran {ran} tests; the full collection has {collected} "
+              "(deselecting live_install) — a test was lost, duplicated "
+              "or added")
+          print(f"gate: {ran} tests across shards == full collection")
+          PY
+          .venv/bin/python -m ruff check tools tests
+          .venv/bin/python tools/code_reachability.py
+          .venv/bin/python -m mypy
+          .venv/bin/python tools/validate.py --no-report
+          .venv/bin/python tools/warning_baseline.py --check
 
       # The UI build always uses its own checked-out Git revision (never a
       # generic GITHUB_SHA, which here would be the *Core* checkout's SHA) —
@@ -157,7 +868,6 @@ jobs:
         run: npm run build:info
 
       - name: Generate the pair receipt
-        working-directory: repository
         env:
           CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
           UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
@@ -175,6 +885,7 @@ jobs:
             --out ../release-pair-artifact/pair-receipt.json
 
       - name: Assemble the fixed upload layout
+        working-directory: .
         run: |
           mkdir -p release-pair-artifact/plugin
           cp obsidian-ui/plugin/main.js release-pair-artifact/plugin/main.js
@@ -183,7 +894,6 @@ jobs:
           cp obsidian-ui/plugin/build-info.json release-pair-artifact/plugin/build-info.json
 
       - name: Verify the assembled artifact against its own receipt
-        working-directory: repository
         run: |
           .venv/bin/python tools/release_pair_receipt.py verify \
             --receipt ../release-pair-artifact/pair-receipt.json \
