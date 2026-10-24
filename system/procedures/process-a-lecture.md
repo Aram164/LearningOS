@@ -106,8 +106,10 @@ p.6: Exam note: state linearity before expanding any sum.
 
 <!-- los:reference {"kind": "command", "text": "los source-intake"} -->
 <!-- los:reference {"kind": "command", "text": "los source-revise --check"} -->
-The deck's source is registered metadata-only with discovery provenance,
-then its bytes attach with the live hash. Both writes go through the
+The deck's source is registered metadata-only with discovery provenance
+through `source.intake.record` (`los source-intake`), then its bytes
+attach with the live hash after `source.record.revise`
+(`los source-revise --check`). Both writes go through the
 gateway: check, bind the diff, seal with derived guards, submit once.
 
 ```scrut
@@ -267,13 +269,15 @@ $ cat > work/active/workspace-demo/outputs/lecture-03-coverage-audit.md <<'EOF'
 
 ## Package and preflight the lecture unit
 
-<!-- los:reference {"kind": "command", "text": "los module-plan-import module-demo --file lecture-03-package.yaml --check"} -->
+<!-- los:reference {"kind": "command", "text": "los module-plan-import --check"} -->
 The package drafts outside the repository, from the canonical template: the
 new lecture unit with its knowledge map, the scope-authority route with its
 exact locator and quoted evidence, the final workspace joins, and the
 complete final source map — the existing book routes reproduced exactly. The
 claim evidence quotes the deck's own pages, so the covers claim is anchored
-to verified bytes.
+to verified bytes. The CLI preflights it with zero canonical writes
+(`los module-plan-import --check`, on the package file and its exact
+bytes), and in production the apply waits for Aram's yes.
 
 ```scrut
 $ cat > "$TMPDIR/lecture-03-package.yaml" <<'EOF'
@@ -468,7 +472,8 @@ $ $H/los-assert-receipt --last --capability module.plan.import
 
 <!-- los:reference {"kind": "command", "text": "los unit-source-selection"} -->
 The complete menu is the source map; the learner's choice is one recorded
-selection on the new route, never a silent preselection.
+selection on the new route through `unit.source-selection.set`
+(`los unit-source-selection`), never a silent preselection.
 
 ```scrut {output_stream: stderr}
 $ $H/los-seal --capability unit.source-selection.set --payload '{"unit_id": "unit-demo-l03", "action": "select", "source_id": "source-demo-lecture", "locator": "lecture-03.pdf, PDF pp. 1-6", "purpose": "Current lecture pass"}' --key s23-select --request-id request-s23-select --guards auto --out "$TMPDIR/s23-select.json"
