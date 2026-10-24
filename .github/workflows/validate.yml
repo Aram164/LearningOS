@@ -133,9 +133,21 @@ jobs:
       # `make system-check` still runs them.
       - name: paired release gate (make system-check)
         env:
-          PYTEST_ADDOPTS: '-m "not live_install"'
+          # C3 measurement branch: per-test durations land in the log
+          # (--durations=0) and as JUnit XML in the artifact below, so
+          # shard balancing never depends on local timings.
+          PYTEST_ADDOPTS: '-m "not live_install" --durations=0 --junitxml=../test-results/junit.xml'
           LOS_RATCHET_BASE: origin/main
         run: make system-check
+
+      - name: Upload per-test durations (C3 measurement)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-durations-${{ github.sha }}
+          path: test-results/
+          if-no-files-found: warn
+
       - name: URL-rot audit (weekly only)
         if: github.event_name == 'schedule'
         run: .venv/bin/python tools/validate.py --online
