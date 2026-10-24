@@ -93,6 +93,7 @@ GROUPS: dict[str, list[str]] = {
     ],
     # Generation, projections, views, derived state, search index, Garden.
     "generation": [
+        "test_c1c_garden_reserved_slug.py",
         "test_derived_engine.py",
         "test_derived_state.py",
         "test_garden_projection.py",

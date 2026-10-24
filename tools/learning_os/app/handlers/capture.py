@@ -175,8 +175,16 @@ def garden_seed_create(ctx: OpContext, req: dict) -> Result:
     garden = root / "knowledge" / "garden"
     slug = _seed_slug(text, title)
 
-    target = garden / f"{slug}.md"
+    # The garden reader skips the readme stem as meta, so a seed named
+    # readme.md would be created and receipted yet invisible to every read
+    # surface (note.content, search, the Nebula). The writer never produces
+    # a stem the reader skips: suffix it, as the collision loop does.
     serial = 2
+    if slug.lower() == "readme":
+        slug = f"{slug}-{serial}"
+        serial += 1
+
+    target = garden / f"{slug}.md"
 
     while target.exists():
         target = garden / f"{slug}-{serial}.md"
