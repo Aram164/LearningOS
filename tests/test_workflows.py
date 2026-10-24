@@ -438,6 +438,11 @@ def test_workflow_matrices_and_population_flow_match_the_manifest():
         assert uploads[0].get("if") == "always()", (
             f"{workflow.name}: the population upload must run even when "
             "the leg's tests fail, and must not filter legs by name")
+        assert uploads[0].get("with", {}).get(
+                "follow-symbolic-links") is False, (
+            f"{workflow.name}: the population upload must not follow "
+            "symbolic links — pytest's <name>current aliases beside the "
+            "session dirs would upload every session artifact twice")
         paths = str(uploads[0].get("with", {}).get("path", ""))
         assert "pytesttmp/site-witness*/sites.jsonl" in paths, (
             f"{workflow.name}: the population upload must name the session "

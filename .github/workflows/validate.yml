@@ -217,6 +217,9 @@ jobs:
             pytesttmp/site-witness*/sites.jsonl.attribution.json
             pytesttmp/operational-audit*
           if-no-files-found: error
+          # pytest leaves <name>current symlinks beside the session dirs;
+          # following them would upload every session artifact twice.
+          follow-symbolic-links: false
 
   # The zz population files, over the merged witness population of every
   # suite leg. test_scenarios_zz_refusal_sites.py (~40 min unsplit, the
@@ -291,26 +294,49 @@ jobs:
           from pathlib import Path
 
           src = Path("../population-in")
+
+          def _sole_identical(paths, what, leg):
+              """All copies must be byte-identical; return one of them."""
+              assert paths, (
+                  f"population artifact of leg {leg!r} has no {what}")
+              first = paths[0].read_bytes()
+              for other in paths[1:]:
+                  assert other.read_bytes() == first, (
+                      f"population artifact of leg {leg!r} holds more "
+                      f"than one different {what}: "
+                      f"{sorted(str(p) for p in paths)}")
+              return paths[0]
+
           parts = {}
           for artifact in sorted(p for p in src.glob("population-*")
                                  if p.is_dir()):
               leg = artifact.name.removeprefix("population-")
-              # pytest's mktemp leaves a <name>current symlink beside
-              # each real session dir; resolve-dedupe so nothing counts
-              # twice.
-              witness = sorted({p.resolve() for p in
-                                artifact.rglob("sites.jsonl")})
-              sidecar = sorted({p.resolve() for p in
-                                artifact.rglob("sites.jsonl.attribution.json")})
+              # pytest leaves a <name>current symlink beside each real
+              # session dir; if the upload materialized it anyway, it is
+              # a byte-identical second copy — identical copies collapse
+              # into one here, and anything that differs is a private
+              # artifact that must never enter the population.
+              witness = _sole_identical(
+                  sorted({p.resolve() for p in artifact.rglob("sites.jsonl")}),
+                  "session witness file", leg)
+              sidecar = _sole_identical(
+                  sorted({p.resolve() for p in
+                          artifact.rglob("sites.jsonl.attribution.json")}),
+                  "attribution sidecar", leg)
               audits = sorted({p.resolve() for p in
                                artifact.rglob("operational-audit*")
                                if p.is_dir()})
-              assert len(witness) == len(sidecar) == len(audits) == 1, (
-                  f"population artifact of leg {leg!r} must hold exactly "
-                  f"one witness file, one attribution sidecar and one "
-                  f"audit dir; found {len(witness)}/{len(sidecar)}/"
-                  f"{len(audits)}")
-              parts[leg] = (witness[0], sidecar[0], audits[0])
+              assert audits, (
+                  f"population artifact of leg {leg!r} has no audit dir")
+              snapshots = [{str(p.relative_to(d)): p.read_bytes()
+                            for p in sorted(d.rglob("*")) if p.is_file()}
+                           for d in audits]
+              for snapshot in snapshots[1:]:
+                  assert snapshot == snapshots[0], (
+                      f"population artifact of leg {leg!r} holds more "
+                      f"than one different audit dir: "
+                      f"{sorted(str(d) for d in audits)}")
+              parts[leg] = (witness, sidecar, audits[0])
           manifest = json.loads(
               Path(".github/shard-manifest.json").read_text(encoding="utf-8"))
           suite_legs = sorted(leg for leg in manifest["legs"]
