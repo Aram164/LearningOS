@@ -103,8 +103,14 @@ def test_note_edit_after_approval_stales_dossier(mini_repo, tmp_path):
     assert validate_unit_material_synthesis(
         mini_repo, "unit-demo-l01", dossier) is dossier
     note_path = mini_repo / "knowledge/notes/mathematics" / f"{NOTE_ID}.md"
+    # The frozen body bytes belong to note.analysis.save (ARCHITECTURE.md
+    # §5.7): note.revise refuses to replace them. A governed edit of a
+    # reference note touches the frontmatter, and the dossier still goes
+    # stale on the note's revision and digest.
     revised = tmp_path / "revised.md"
-    revised.write_bytes(note_path.read_bytes() + b"\nEdited after approval.\n")
+    revised.write_bytes(note_path.read_bytes().replace(
+        b"title: Density analysis\n", b"title: Density analysis, revisited\n"))
+    assert revised.read_bytes() != note_path.read_bytes()
     proc = approved_v2_cli(
         mini_repo, "note-revise", NOTE_ID,
         "--file", str(revised), "--approve",
@@ -120,6 +126,32 @@ def test_note_edit_after_approval_stales_dossier(mini_repo, tmp_path):
         mini_repo, "unit-demo-l01", dossier) == {
             "status": "stale", "reasons": [ANALYSIS_REFS_STALE]}
     assert ANALYSIS_REFS_STALE == "analysis-refs-stale"
+
+
+def test_body_revise_of_analysed_note_refuses(mini_repo, tmp_path):
+    """note.revise cannot replace a reference note's frozen input bytes.
+
+    The binding (note.schema.json material_analysis) pins the body as the
+    file's last N bytes with their sha256; replacing those bytes through
+    the general path would leave the binding false, which §5.7 forbids.
+    Re-analysis is a new note.analysis.save note.
+    """
+    from gateway_helpers import approved_v2_cli, file_sha256
+
+    _seed(mini_repo, "valid")
+    note_path = mini_repo / "knowledge/notes/mathematics" / f"{NOTE_ID}.md"
+    revised = tmp_path / "revised.md"
+    revised.write_bytes(note_path.read_bytes() + b"\nEdited after approval.\n")
+    proc = approved_v2_cli(
+        mini_repo, "note-revise", NOTE_ID,
+        "--file", str(revised), "--approve",
+        "--file-sha256", file_sha256(revised),
+        artifact_ids=[NOTE_ID],
+        idempotency_key="synthesis-ref-body-revise",
+    )
+    assert proc.returncode == 2
+    assert "frozen input bytes" in proc.stdout
+    assert "note.analysis.save owns re-analysis" in proc.stdout
 
 
 def test_wrong_revision_refused(mini_repo):

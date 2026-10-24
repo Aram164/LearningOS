@@ -49,6 +49,28 @@ cases:
     request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:9bc4e6d47ddda6a09ee21992b5ba788fc1da8421581a6a41824d56552b18197b"}
     artifact_ids: []
     expect: {site: note.revise.role-change}
+  - id: target-change
+    kind: sequence
+    expect: {site: note.revise.target-change}
+    steps:
+      - transport: gateway
+        operation: atlas.question.save
+        request:
+          question:
+            id: note-question-demo
+            title: Where does variance live?
+            text: "Is variance the second central moment, and why?"
+            target: {concepts: [concept-variance]}
+        artifact_ids: [note-question-demo]
+      - transport: gateway
+        request: {note_id: note-question-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:988f056204cbf82ea1f9d8406cb7a1a9c0bbe2824f5de8f0b592e88c38817742"}
+        artifact_ids: []
+  - id: binding-change
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo-analysis, file: "<CASEDATA>/revised.md", file_sha256: "sha256:8ca5d3245b367b1a6aae840e60e7c361ea201549a3bdbf5b898737f1374c0293"}
+    artifact_ids: []
+    expect: {site: note.revise.binding-change}
   - id: revise-needs-approve
     kind: refusal
     transport: cli

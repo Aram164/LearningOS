@@ -197,6 +197,45 @@ def note_revise(ctx: OpContext, req: dict) -> Result:
             prefixed=True,
             exit_code=2,
         )
+    if note.meta.get("role") == "question":
+        stored_target = (note.meta.get("atlas_question") or {}).get("target")
+        replacement_target = (meta.get("atlas_question") or {}).get("target")
+        if replacement_target != stored_target:
+            # ARCHITECTURE.md §5.7: the dedicated capabilities exist so
+            # question wording and provenance bindings can never be bypassed
+            # by the general path. The target is atlas.question.save's fact;
+            # revise may reword, never retarget.
+            raise WriteRefused(
+                "note-revise cannot change a question's target "
+                "(atlas.question.save owns it)",
+                site=f"{ctx.operation}.target-change",
+                prefixed=True,
+                exit_code=2,
+            )
+    binding = note.meta.get("material_analysis")
+    if isinstance(binding, dict):
+        written = (content.rstrip() + "\n").encode("utf-8")
+        frozen_sha = str(
+            binding.get("frozen_input_sha256", "")
+        ).removeprefix("sha256:")
+        frozen_size = binding.get("frozen_input_bytes")
+        still_describes = (
+            meta.get("material_analysis") == binding
+            and isinstance(frozen_size, int)
+            and hashlib.sha256(written[-frozen_size:]).hexdigest() == frozen_sha
+        )
+        if not still_describes:
+            # note.schema.json: the note body is exactly the file's last N
+            # bytes, and their sha256 is frozen. A revise that replaces those
+            # bytes leaves the binding false; re-analysis is a new
+            # note.analysis.save.
+            raise WriteRefused(
+                "note-revise cannot replace a reference note's frozen input "
+                "bytes (note.analysis.save owns re-analysis)",
+                site=f"{ctx.operation}.binding-change",
+                prefixed=True,
+                exit_code=2,
+            )
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))
     except ValueError as exc:
