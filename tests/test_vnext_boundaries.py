@@ -1625,7 +1625,6 @@ def test_backup_manifest_preserves_absence_and_symlink_exclusions(mini_repo, tmp
     outside = tmp_path / "outside"
     outside.mkdir()
     (outside / "private.pdf").write_bytes(b"private")
-    (materials / "linked-tree").symlink_to(outside, target_is_directory=True)
     (materials / "linked-file.pdf").symlink_to(outside / "private.pdf")
     # This explicitly declared tree has a genuinely absent parent.
     contract_path = mini_repo / "system/contracts/backup-roots.yaml"
@@ -1635,9 +1634,22 @@ def test_backup_manifest_preserves_absence_and_symlink_exclusions(mini_repo, tmp
     manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
     assert not any(row["root"] == "materials" for row in manifest["entries"])
     assert not any(row["path"].startswith("absent-parent/") for row in manifest["entries"])
+    # A symlinked file inside a declared tree stays a silent exclusion:
+    # the walk never admits it, and _admit_file skips it without a refusal.
+    # A symlinked DIRECTORY inside a declared tree refuses (C1-E-1): the
+    # walk never follows it, so its contents would leave the inventory
+    # without a trace — the rule _refuse_unreadable already enforces for
+    # unreadable subtrees.
+    (materials / "linked-tree").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(BackupManifestError, match="symlinked directory"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    (materials / "linked-tree").unlink()
     # Explicit declarations that traverse a symlink retain their refusal.
-    contract["roots"]["materials"]["trees"].append("linked-tree")
+    # The link sits at the core root, outside every walked tree, so the
+    # declaration's own traversal check is what fires.
+    contract["roots"]["core"]["trees"].append("linked/knowledge")
     contract_path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+    (mini_repo / "linked").symlink_to(outside, target_is_directory=True)
     with pytest.raises(BackupManifestError, match="traverses a symlink"):
         build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
 

@@ -301,6 +301,18 @@ def _admitted_paths(authority: Path, declared: dict[str, Any],
             continue
         for parent, dirs, files in os.walk(tree, onerror=_refuse_unreadable):
             dirs[:] = [name for name in dirs if name not in excluded]
+            for name in dirs:
+                subdir = Path(parent) / name
+                if subdir.is_symlink():
+                    # os.walk never descends into a link, so a symlinked
+                    # subtree would leave the inventory without a trace —
+                    # the failure _refuse_unreadable exists to prevent.
+                    # Refuse, as a declared tree that is itself a symlink
+                    # already does (_inside).
+                    raise BackupManifestError(
+                        f"declared backup tree contains a symlinked "
+                        f"directory: {subdir}"
+                    )
             for name in files:
                 path = Path(parent) / name
                 if _admit_file(authority, path, excluded):
