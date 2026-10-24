@@ -890,7 +890,9 @@ jobs:
       # build.mjs enforces this itself; nothing extra is set here.
       - name: Rebuild the UI once more to record the exact, now-verified pair
         working-directory: obsidian-ui
-        run: npm run build:info
+        run: |
+          npm run build
+          npm run build:info
 
       - name: Generate the pair receipt
         env:
