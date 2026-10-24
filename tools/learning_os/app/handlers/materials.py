@@ -1201,8 +1201,13 @@ def material_context(ctx: OpContext, req: dict) -> Result:
     root = ctx.root
     try:
         try:
+            # An explicit limit passes through verbatim, so 0 reaches the
+            # 1..maximum check and is refused by the existing bad-window
+            # site; only an absent limit takes the default page.
+            req_limit = req.get("limit")
             offset, limit = _window_values(
-                req.get("offset") or 0, req.get("limit") or 20,
+                req.get("offset") or 0,
+                20 if req_limit is None else req_limit,
                 req.get("expected_snapshot"), 20)
         except WriteRefused as exc:
             exc.site = f"{ctx.operation}.bad-window"

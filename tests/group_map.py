@@ -49,6 +49,7 @@ GROUPS: dict[str, list[str]] = {
     # Materials farm, attachments, slices, summaries, ingestion.
     "materials": [
         "test_build_materials_tree.py",
+        "test_c1d_zero_limit_refused.py",
         "test_ingest_transcript.py",
         "test_material_analysis_save.py",
         "test_material_context.py",

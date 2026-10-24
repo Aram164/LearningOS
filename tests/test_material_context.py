@@ -324,9 +324,14 @@ def test_assessment_items_carry_live_dossier_freshness(mini_repo, tmp_path):
     assert items[0]["freshness"] == {"status": "current", "reasons": []}
     # A governed note edit stales the referencing dossier; the stored
     # review status is still reported, now with its freshness warning.
+    # The frozen body bytes belong to note.analysis.save (§5.7), so the
+    # edit touches the frontmatter; the dossier still goes stale on the
+    # note's revision and digest.
     note_path = mini_repo / "knowledge/notes/mathematics" / f"{note_id}.md"
     revised = tmp_path / "revised.md"
-    revised.write_bytes(note_path.read_bytes() + b"\nEdited.\n")
+    revised.write_bytes(note_path.read_bytes().replace(
+        b"title: Planted analysis\n", b"title: Planted analysis, revisited\n"))
+    assert revised.read_bytes() != note_path.read_bytes()
     proc = approved_v2_cli(
         mini_repo, "note-revise", note_id,
         "--file", str(revised), "--approve",
