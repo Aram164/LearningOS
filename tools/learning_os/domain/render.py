@@ -108,10 +108,38 @@ def replace_h2_section(body: str, heading: str, content: str) -> str:
 
     Raises ``ValueError`` if the heading is absent, so a caller cannot silently
     write a section the document never declared.
+
+    The replacement is spliced into the line list: only the edited section's
+    own range changes, so every other section — and the preamble — keeps its
+    exact bytes, blank-line shape included. (Re-serialising the whole document
+    through :func:`serialise` used to normalise blank lines around every
+    heading, re-flowing sections the edit never touched.)
     """
-    preamble, sections = parse_sections(body)
-    for index, section in enumerate(sections):
-        if section.heading == heading:
-            sections[index] = Section(heading=heading, lines=content.strip().split("\n"))
-            return serialise(preamble, sections)
+    lines = body.split("\n")
+    # Section extents: a heading line starts a section that runs to the
+    # line before the next heading (fences accounted for, as iter_blocks
+    # does).
+    starts: list[tuple[int, str]] = []
+    open_fence: str | None = None
+    for index, line in enumerate(lines):
+        delimiter = _fence_delimiter(line)
+        if open_fence is not None:
+            if delimiter == open_fence:
+                open_fence = None
+            continue
+        if delimiter is not None:
+            open_fence = delimiter
+            continue
+        if line.startswith("## "):
+            starts.append((index, line[3:].strip()))
+    for position, (start, text) in enumerate(starts):
+        if text != heading:
+            continue
+        end = starts[position + 1][0] if position + 1 < len(starts) else len(lines)
+        # One blank line between the heading and the content, and one more
+        # than the content needs at the range's end — the trailing "" is
+        # the blank before the next heading, or the file's own newline
+        # artifact when the section is the last.
+        lines[start + 1:end] = ["", *content.strip().split("\n"), ""]
+        return "\n".join(lines)
     raise ValueError(f"workspace section not found: {heading}")

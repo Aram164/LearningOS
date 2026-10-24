@@ -131,6 +131,7 @@ GROUPS: dict[str, list[str]] = {
         "test_c1c_revise_voids_dedicated_guarantees.py",
         "test_c1d_same_second_file_capture.py",
         "test_c1e_backup_symlinked_subtree.py",
+        "test_c1e_coordination_no_reflow.py",
         "test_capability_catalog.py",
         "test_capability_dispatch.py",
         "test_capability_receipts.py",
