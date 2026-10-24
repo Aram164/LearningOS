@@ -114,9 +114,11 @@ def _dump_attribution_sidecar(witness_path: Path) -> None:
         import scenario_harness
     except ImportError:
         return
+    # Keys are (witness file, "operation:case"); only the case id travels —
+    # the loader re-keys every entry onto the merged witness file anyway.
     data = {
         key: sorted(list(pair) for pair in sites)
-        for key, sites in scenario_harness.CASE_SITE_WITNESSES.items()
+        for (_, key), sites in scenario_harness.CASE_SITE_WITNESSES.items()
         if sites
     }
     try:
