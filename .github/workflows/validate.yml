@@ -678,6 +678,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # The UI check's contract:check-production step imports the real
+      # learning_os package from the sibling Core checkout (PYTHON, .venv,
+      # python3, python are probed, in that order) — the same project venv
+      # the paired gate builds before its own npm run check.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.4"
+      - name: Install Core development dependencies
+        working-directory: repository
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -e ".[dev]"
       - name: Install UI dependencies
         working-directory: obsidian-ui
         run: npm ci --ignore-scripts
