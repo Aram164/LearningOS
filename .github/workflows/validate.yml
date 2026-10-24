@@ -588,10 +588,11 @@ jobs:
               legs = spec["legs"]
               if shard in legs:
                   stem = fname.rsplit("/", 1)[-1]
-                  print(f"{stem}={legs.index(shard)}/{spec[\"count\"]}")
+                  print(stem + "=" + str(legs.index(shard)) + "/"
+                        + str(spec["count"]))
                   break
           else:
-              raise SystemExit(f"zz leg {shard!r} has no node_shards entry")
+              raise SystemExit("zz leg " + shard + " has no node_shards entry")
           ')"
           printf 'node shard: %s\n' "$spec"
           echo "LOS_NODE_SHARDS=$spec" >> "$GITHUB_ENV"
