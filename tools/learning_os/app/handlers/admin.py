@@ -121,6 +121,11 @@ def module_attempt(ctx: OpContext, req: dict) -> Result:
     row["result"] = req["result"]
     if grade is not None:
         row["grade"] = grade
+    elif "grade" in row:
+        # An update restates the stated fact (#27): keeping the previous
+        # grade would pin the termin to "passed" forever, because MOD-GRADE
+        # refuses a grade on any other result.
+        del row["grade"]
     if req.get("notes") is not None:
         row["notes"] = req["notes"]
     try:

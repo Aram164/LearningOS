@@ -22,6 +22,7 @@ from pathlib import Path
 GROUPS: dict[str, list[str]] = {
     # Curriculum, study maps, routes, units, plan revisions and promotion.
     "studyplan": [
+        "test_c1a_graded_attempt_dead_end.py",
         "test_curriculum_v2.py",
         "test_creation_capabilities.py",
         "test_lecture_study_map_assembly.py",

@@ -19,8 +19,15 @@ class ChecksCurriculum:
                 self.err("MOD-ORDER", f"module '{mid}' attempt dates are not chronologically ordered",
                          where)
             for i, att in enumerate(attempts):
+                # A failed HU sitting is graded 5,0 (nicht ausreichend) and is
+                # recorded exactly as the official document states it
+                # (CLAUDE.md §3), so exactly failed+5.0 is admitted; any other
+                # grade on a non-passed result of a module that is not yet
+                # completed is an error (#27).
                 if att.get("grade") is not None and att.get("result") != "passed" \
-                        and module.get("status") != "completed":
+                        and module.get("status") != "completed" \
+                        and not (att.get("result") == "failed"
+                                 and att.get("grade") == 5.0):
                     self.err("MOD-GRADE",
                              f"module '{mid}' attempt[{i}] carries a grade but result is "
                              f"'{att.get('result')}' and module is not completed",
