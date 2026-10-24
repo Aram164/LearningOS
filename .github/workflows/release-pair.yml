@@ -309,6 +309,7 @@ jobs:
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
+        working-directory: .
         env:
           CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
           UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
@@ -338,6 +339,7 @@ jobs:
           fetch-depth: 0
 
       - name: Verify each checkout is exactly the requested commit and clean
+        working-directory: .
         env:
           EXPECTED_CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
           EXPECTED_UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
@@ -488,6 +490,7 @@ jobs:
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
+        working-directory: .
         env:
           CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
           UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
@@ -680,6 +683,7 @@ jobs:
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
+        working-directory: .
         env:
           CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
           UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
@@ -709,6 +713,7 @@ jobs:
           fetch-depth: 0
 
       - name: Verify each checkout is exactly the requested commit and clean
+        working-directory: .
         env:
           EXPECTED_CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
           EXPECTED_UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
@@ -764,6 +769,7 @@ jobs:
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
+        working-directory: .
         env:
           CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
           UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
