@@ -512,8 +512,8 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
     _, _, study_map = require_unit_map_or_error(ctx, req["unit_id"])
     data = copy.deepcopy(study_map.data)
     shelving = data.get("shelving") or {}
-    items = [item for item in shelving.get("items", []) or []
-             if item.get("id") in selected]
+    packet_items = shelving.get("items", []) or []
+    items = [item for item in packet_items if item.get("id") in selected]
     if not items or {item.get("id") for item in items} != selected:
         raise WriteRefused(
             "every selected ID must exist in the current proposal",
@@ -540,7 +540,13 @@ def shelving_apply(ctx: OpContext, req: dict) -> Result:
                 exit_code=2,
             )
         writes[target] = content.rstrip() + "\n"
-    shelving["state"] = "applied"
+    # Applied items leave the packet — their receipts record them — and the
+    # packet keeps state "proposed" while unapplied items remain, so the
+    # review queue (which lists shelving only at "proposed") keeps showing
+    # the remainder that still awaits a decision.
+    remaining = [item for item in packet_items if item.get("id") not in selected]
+    shelving["items"] = remaining
+    shelving["state"] = "proposed" if remaining else "applied"
     writes[study_map.path] = _dump_study_map(study_map, data)
     try:
         expected_revisions = parse_expected_revisions(req.get("expected_revision"))

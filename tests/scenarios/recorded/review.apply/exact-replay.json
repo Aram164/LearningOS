@@ -190,7 +190,7 @@
     },
     {
       "canonical_changed": {
-        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "dd312985e0bc46a1ebb08ba457fbe1f2c80dbe79041af7f5a44c12bd7f16875b",
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "94a9aac9f36e59d6ff13597dfe0b1546c56a8517a4221affe2e125dd4efcd1d8",
         "knowledge/garden/kept-idea.md": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c"
       },
       "exit": 0,
@@ -292,7 +292,7 @@
           },
           "id": "TX2",
           "metadata": {
-            "data_roots_sha256": "sha256:e9fe2ebb90b1fd9bcc1b993ee30eb26382abf63c4a9d4786850716619bb1fbec",
+            "data_roots_sha256": "sha256:a3e57639cb4565ed4d6f686b5e26d0addc048d0676410bcb3bf2fb3eb7dbaca1",
             "fingerprint_definition": 2
           },
           "request": {
@@ -314,7 +314,7 @@
             {
               "created": false,
               "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
-              "sha256_after": "dd312985e0bc46a1ebb08ba457fbe1f2c80dbe79041af7f5a44c12bd7f16875b",
+              "sha256_after": "94a9aac9f36e59d6ff13597dfe0b1546c56a8517a4221affe2e125dd4efcd1d8",
               "sha256_before": "348a2ade9867bb664ce5b81860350cdeee81f324ac27917be75990948de0e34c"
             },
             {
@@ -358,7 +358,7 @@
             "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dd312985e0bc46a1ebb08ba457fbe1f2c80dbe79041af7f5a44c12bd7f16875b",
+              "sha256": "94a9aac9f36e59d6ff13597dfe0b1546c56a8517a4221affe2e125dd4efcd1d8",
               "state": "file"
             },
             "knowledge/garden/kept-idea.md": {
@@ -493,7 +493,7 @@
             "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dd312985e0bc46a1ebb08ba457fbe1f2c80dbe79041af7f5a44c12bd7f16875b",
+              "sha256": "94a9aac9f36e59d6ff13597dfe0b1546c56a8517a4221affe2e125dd4efcd1d8",
               "state": "file"
             },
             "knowledge/garden/kept-idea.md": {
@@ -545,7 +545,7 @@
             "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "dd312985e0bc46a1ebb08ba457fbe1f2c80dbe79041af7f5a44c12bd7f16875b",
+              "sha256": "94a9aac9f36e59d6ff13597dfe0b1546c56a8517a4221affe2e125dd4efcd1d8",
               "state": "file"
             },
             "knowledge/garden/kept-idea.md": {
