@@ -215,7 +215,7 @@ note_create note-create ['knowledge/notes/**']
 
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import yaml; d = yaml.safe_load(open("system/contracts/normative-corpus.yaml")); print(len(d["documents"])); e = [x for x in d["documents"] if x["path"] == "system/OPERATOR.md"][0]; print(e["path"], e["class"], e["authority"])'
-81
+82
 system/OPERATOR.md contract binding
 ```
 

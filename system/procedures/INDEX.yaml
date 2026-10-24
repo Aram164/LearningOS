@@ -38,7 +38,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure, transcript: system/procedures/carry-work-across-semesters.md}
   - {doc: system/WORKFLOWS.md, heading: "## 21. Process the inbox", class: procedure, transcript: system/procedures/process-inbox.md}
   - {doc: system/WORKFLOWS.md, heading: "## 22. End a session", class: procedure, transcript: system/procedures/end-a-session.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure, untranscribable: "needs real as-taught decks/recordings as scope authority plus the full plan-creation package; fixture has only the demo book; affected steps: materials-in, scope pass, package and preflight"}
+  - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure, transcript: system/procedures/process-a-lecture.md}
   - {doc: system/WORKFLOWS.md, heading: "## 24. Turn the semester", class: procedure, untranscribable: "composites workflow 19 and a real term boundary with human Garden judgments and push; fixture has no remote; affected steps: close/carry fork, harvest, push"}
   - {doc: system/WORKFLOWS.md, heading: "## 25. The two-layer operating model (ADR-006)", class: rule}
   - {doc: system/WORKFLOWS.md, heading: "## 25a. Revise an existing plan", class: procedure, transcript: system/procedures/revise-an-existing-plan.md}

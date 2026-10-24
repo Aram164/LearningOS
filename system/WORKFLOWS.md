@@ -532,13 +532,14 @@ stage. An explicit `--close` deletes only its own session's ledger.
 
 ## 23. Process a lecture
 
-Execution boundary: [declared fixture limitation](procedures/INDEX.yaml).
+Execution boundary: [executable transcript](procedures/process-a-lecture.md)
+against a lecture deck present in the materials tree.
 
-**Stop and ask first.** This workflow has no executable transcript, and its
-scope authority — the slides as taught — does not exist in a checkout. Do not
-scope a lecture from textbook chapter titles, keyword matches, or a source the
-module never adopted; report what is missing and ask (OPERATOR.md boundary 18).
-The steps below describe the work for someone who has the materials in hand.
+**The as-taught deck gates the workflow.** Run the transcript when the
+lecture's scope authority — the slides as taught — is in the materials tree
+(workflow 6a). When it is missing, stop and ask: do not scope a lecture from
+textbook chapter titles, keyword matches, or a source the module never
+adopted; report what is missing and ask (OPERATOR.md boundary 18).
 
 The unit is the module-owned study object between module and stage. For
 university lectures, **slides as taught are the scope authority**: never scope

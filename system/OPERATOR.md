@@ -77,7 +77,8 @@ always names its file. Fix the defect; do not route around the guard.
 | Changes awaiting a decision | `intelligence-scan --brief --json` | [Read the decision queue](procedures/start-here.md#read-what-wants-a-decision) |
 | Ability evidence | `ability-context` horizon, then a known ability | [Read a bounded ability](procedures/start-here.md#read-one-ability-through-the-bounded-horizon) |
 | Governance question | `semantic --list`, then `semantic PREDICATE --input k=v` | [Ask the semantic surface](procedures/start-here.md#ask-a-governance-question-through-the-semantic-surface) |
-| Process a lecture (23), turn the semester (24), promote a Master's module (27) | none — stop and ask | none: these three have no executable transcript, and the scope authority they need does not exist in a checkout (boundary 18) |
+| Process a lecture (23) | `capabilities module.plan.import --json`, then `plan-edit-context UNIT_ID --brief` | [Process a lecture end to end](procedures/process-a-lecture.md#materials-in-the-deck-lands-in-the-materials-tree), [Package, preflight and apply the lecture unit](procedures/process-a-lecture.md#package-and-preflight-the-lecture-unit) |
+| Turn the semester (24), promote a Master's module (27) | none — stop and ask | none: these two have no executable transcript, and the scope authority they need does not exist in a checkout (boundary 18) |
 
 `capabilities NAME --json` takes a capability, a CLI command, or a task.
 `capabilities resume --json` and `capabilities resume.read --json` answer the
@@ -190,15 +191,17 @@ Skills and projects use modules and units without false academic metadata.
     or "improving" it as a side effect of unrelated work — requires Aram to say
     so in that session. Appending a point verbatim and adding measured evidence
     to an open one are always allowed; closing one is his alone.
-18. Workflows 23 (process a lecture), 24 (turn the semester) and 27 (promote a
-    future Master's module) have **no executable transcript**, and the scope
-    authority each one needs does not exist in a checkout: the slides as
-    taught, a real term boundary with human judgments, a program that has
-    actually begun. When a task reaches one of them, stop and ask. Do not scope
-    a lecture from textbook chapter titles, keyword matches, or a source the
-    module never adopted, and do not stand in for the human judgment the
-    workflow requires. The gap is declared, not hidden — the procedure index
-    reads "Untranscribable" for exactly these three.
+18. Workflow 23 (process a lecture) runs its executable transcript when the
+    lecture's scope authority — the slides as taught — exists in the
+    materials tree (workflow 6a). Without it, stop and ask: never scope a
+    lecture from textbook chapter titles, keyword matches, or a source the
+    module never adopted. Workflows 24 (turn the semester) and 27 (promote a
+    future Master's module) still have **no executable transcript**, and the
+    scope authority each needs does not exist in a checkout: a real term
+    boundary with human judgments, a program that has actually begun. When a
+    task reaches one of them, stop and ask, and do not stand in for the human
+    judgment the workflow requires. The gap is declared, not hidden — the
+    procedure index reads "Untranscribable" for exactly these two.
 
 ## Procedures
 
@@ -229,7 +232,7 @@ Skills and projects use modules and units without false academic metadata.
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 20. Carry work across semesters | [Transcript](procedures/carry-work-across-semesters.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 21. Process the inbox | [Transcript](procedures/process-inbox.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 22. End a session | [Transcript](procedures/end-a-session.md) |
-| [system/WORKFLOWS.md](WORKFLOWS.md) | 23. Process a lecture | Untranscribable: needs real as-taught decks/recordings as scope authority plus the full plan-creation package; fixture has only the demo book; affected steps: materials-in, scope pass, package and preflight |
+| [system/WORKFLOWS.md](WORKFLOWS.md) | 23. Process a lecture | [Transcript](procedures/process-a-lecture.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 24. Turn the semester | Untranscribable: composites workflow 19 and a real term boundary with human Garden judgments and push; fixture has no remote; affected steps: close/carry fork, harvest, push |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 25a. Revise an existing plan | [Transcript](procedures/revise-an-existing-plan.md) |
 | [system/WORKFLOWS.md](WORKFLOWS.md) | 25b. Save a batch of source analyses | [Transcript](procedures/save-a-batch-of-source-analyses.md) |

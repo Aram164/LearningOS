@@ -179,10 +179,6 @@ checks:
   A4-plumbing: []
   A4-plumbing-2: []
   A8-transcripts:
-  - signature: system/WORKFLOWS.md::## 23. Process a lecture
-    count: 1
-    since: approved
-    approved_by: "Aram 2026-10-17: Approve the exact packet (6.1-DEBT-DISPOSITION-20261017.md)"
   - signature: system/WORKFLOWS.md::## 24. Turn the semester
     count: 1
     since: approved

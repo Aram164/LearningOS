@@ -194,15 +194,27 @@ tasks:
       - system/OPERATOR.md
       - system/SEMANTIC-CONTRACT.md
 
-  - id: untranscribable-workflows
-    task: Process a lecture (23), turn the semester (24), promote a Master's module (27)
-    entry_read: none — stop and ask
-    procedures: []
-    procedure_text: >-
-      none: these three have no executable transcript, and the scope authority
-      they need does not exist in a checkout (boundary 18)
+  - id: process-a-lecture
+    task: Process a lecture (23)
+    entry_read: '`capabilities module.plan.import --json`, then `plan-edit-context UNIT_ID --brief`'
+    procedures:
+      - label: Process a lecture end to end
+        target: system/procedures/process-a-lecture.md#materials-in-the-deck-lands-in-the-materials-tree
+      - label: Package, preflight and apply the lecture unit
+        target: system/procedures/process-a-lecture.md#package-and-preflight-the-lecture-unit
     scope:
       - system/OPERATOR.md
       - system/WORKFLOWS.md#23-process-a-lecture
+      - system/WORKFLOWS.md#6-add-or-evaluate-a-source
+
+  - id: untranscribable-workflows
+    task: Turn the semester (24), promote a Master's module (27)
+    entry_read: none — stop and ask
+    procedures: []
+    procedure_text: >-
+      none: these two have no executable transcript, and the scope authority
+      they need does not exist in a checkout (boundary 18)
+    scope:
+      - system/OPERATOR.md
       - system/WORKFLOWS.md#24-turn-the-semester
       - system/WORKFLOWS.md#27-promote-a-future-masters-module
