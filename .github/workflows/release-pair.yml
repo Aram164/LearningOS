@@ -6,22 +6,24 @@
 # job local runs skip).
 #
 # Shard invariant (why this is not a coverage shrink): every
-# `tests/test_*.py` file appears in exactly one leg of SHARD_MANIFEST —
-# except files under `node_shards`, which a stable node-id hash splits
-# over exactly the listed legs, each test still running exactly once.
-# tests/test_workflows.py pins the manifest against the tree; every leg
-# deselects exactly `live_install`; and the gate job proves that the
-# summed shard results equal a fresh full collection before running the
-# static gates.
+# `tests/test_*.py` file appears in exactly one leg of the shard manifest
+# (.github/shard-manifest.json) — except files under `node_shards`, which
+# a stable node-id hash splits over exactly the listed legs, each test
+# still running exactly once. tests/test_workflows.py pins the manifest
+# against the tree; every leg deselects exactly `live_install`; and the
+# gate job proves that the summed shard results equal a fresh full
+# collection before running the static gates. When the balance drifts,
+# regenerate the manifest from a CI-measured durations artifact.
 #
 # The witness population (SPEC §3.3 A9, §3.6 A19) crosses the process
-# boundary explicitly: witness-* legs run every file that appends to the
-# session witness file or the audit dir, and upload them; zz-* legs merge
-# those artifacts (tests/conftest.py's premerged-mode envs), rebuild A9's
-# process-local attribution from the sidecars, and run the two
+# boundary explicitly, from every suite leg: each leg uploads its session
+# witness file, attribution sidecar and audit dir, and the zz-* legs merge
+# all of them (tests/conftest.py's premerged-mode envs) and run the two
 # `test_scenarios_zz_*` population files — `test_scenarios_zz_refusal_
 # sites.py` node-sharded, because its 799 parametrized site checks are
-# the suite's slowest single file (~40 min unsplit).
+# the suite's slowest single file (~40 min unsplit). No leg list decides
+# whose witnesses count: a test in any leg that writes to the session
+# witness file is in the merged population by construction.
 #
 # This workflow never tags, releases, or merges to main — see plan §5
 # rule 8 and §12 out-of-scope items.
@@ -42,254 +44,6 @@ permissions:
 
 run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
 
-env:
-  # The shard manifest. `legs` maps leg id -> test files (alphabetical;
-  # `witness-*` legs run their files in one pytest session each, `rest-*`
-  # likewise, `zz-*` after the merge below). `node_shards` maps a file ->
-  # the legs that hash-split it (tests/conftest.py, LOS_NODE_SHARDS).
-  # Regenerate from a CI-measured durations artifact when balance drifts;
-  # the partition test in tests/test_workflows.py fails locally the
-  # moment a new test file is not covered, so this cannot silently rot.
-  SHARD_MANIFEST: |
-    {
-     "legs": {
-      "rest-0": [
-       "tests/test_affected_tests.py",
-       "tests/test_agent_tasks.py",
-       "tests/test_arch_callbacks.py",
-       "tests/test_arch_doc_blocks.py",
-       "tests/test_arch_doc_command_controls.py",
-       "tests/test_arch_idroundtrip.py",
-       "tests/test_arch_json_everywhere.py",
-       "tests/test_arch_layers.py",
-       "tests/test_arch_outcomes.py",
-       "tests/test_arch_output.py",
-       "tests/test_arch_ratchets.py",
-       "tests/test_arch_request_schemas.py",
-       "tests/test_claim_status_audits.py",
-       "tests/test_code_reachability.py",
-       "tests/test_codex_wrapper.py",
-       "tests/test_collection_entry_revise.py",
-       "tests/test_context_dossiers.py",
-       "tests/test_contract_bundle.py",
-       "tests/test_coordination_revision.py",
-       "tests/test_creation_capabilities.py",
-       "tests/test_deep_audit_repairs.py",
-       "tests/test_evidence_parity.py",
-       "tests/test_format_fixtures.py",
-       "tests/test_garden_seed.py",
-       "tests/test_hygiene.py",
-       "tests/test_ingest_transcript.py",
-       "tests/test_intelligence_scan.py",
-       "tests/test_job_quarantine_collapse.py",
-       "tests/test_library_reconciliation.py",
-       "tests/test_local_attachments.py",
-       "tests/test_manifest_reuse.py",
-       "tests/test_material_span.py",
-       "tests/test_module_scope_obligation.py",
-       "tests/test_module_surface.py",
-       "tests/test_ops_check.py",
-       "tests/test_ops_encoders.py",
-       "tests/test_ops_pipeline.py",
-       "tests/test_pilot_replay.py",
-       "tests/test_plan_write_audit.py",
-       "tests/test_plan_write_once.py",
-       "tests/test_pre_push_hook.py",
-       "tests/test_program_semester_update.py",
-       "tests/test_projection_fidelity.py",
-       "tests/test_read_suggestions.py",
-       "tests/test_recovery_conflicts.py",
-       "tests/test_resume_pointer.py",
-       "tests/test_route_identity_migration.py",
-       "tests/test_runtime_efficiency.py",
-       "tests/test_session_compiler.py",
-       "tests/test_session_counts.py",
-       "tests/test_source_intake.py",
-       "tests/test_structural_inspect.py",
-       "tests/test_summaries_migration.py",
-       "tests/test_system_audit_2026_09_05.py",
-       "tests/test_thematic_navigation_projection.py",
-       "tests/test_tool_entrypoint_contract.py",
-       "tests/test_unit_dossier_command.py",
-       "tests/test_verified_operator_questions.py",
-       "tests/test_workflows.py"
-      ],
-      "rest-1": [
-       "tests/test_agent_efficiency.py",
-       "tests/test_arch_error_details.py",
-       "tests/test_arch_plumbing.py",
-       "tests/test_arch_private_names.py",
-       "tests/test_arch_prose.py",
-       "tests/test_arch_suggestions.py",
-       "tests/test_arch_world.py",
-       "tests/test_arch_writes.py",
-       "tests/test_architecture_hardening_adversarial.py",
-       "tests/test_bounded_reads.py",
-       "tests/test_build_materials_tree.py",
-       "tests/test_capability_catalog.py",
-       "tests/test_capability_receipts.py",
-       "tests/test_causal_resolver.py",
-       "tests/test_compute_once.py",
-       "tests/test_contract_differential.py",
-       "tests/test_contract_register.py",
-       "tests/test_derived_engine.py",
-       "tests/test_digest_review.py",
-       "tests/test_domain_stages.py",
-       "tests/test_garden_projection.py",
-       "tests/test_gateway_typed_refusals.py",
-       "tests/test_generation.py",
-       "tests/test_goal_lifecycle_properties.py",
-       "tests/test_goal_select.py",
-       "tests/test_health_vnext.py",
-       "tests/test_improvements.py",
-       "tests/test_learning_plan_contract.py",
-       "tests/test_lecture_study_map_assembly.py",
-       "tests/test_legacy_exit_review.py",
-       "tests/test_material_analysis_save.py",
-       "tests/test_material_context.py",
-       "tests/test_material_context_boundaries.py",
-       "tests/test_material_editing.py",
-       "tests/test_material_locator_fallback.py",
-       "tests/test_material_observation_port.py",
-       "tests/test_material_text_cache.py",
-       "tests/test_materials_catalogue.py",
-       "tests/test_migration_lifecycle.py",
-       "tests/test_mismatches.py",
-       "tests/test_normative_corpus.py",
-       "tests/test_note_evidence.py",
-       "tests/test_operations.py",
-       "tests/test_operations_gate.py",
-       "tests/test_operator_discovery.py",
-       "tests/test_ops_commit.py",
-       "tests/test_ops_context.py",
-       "tests/test_phaseB_prospective_lineage.py",
-       "tests/test_plan_edit_brief.py",
-       "tests/test_plan_inventory.py",
-       "tests/test_policy_query.py",
-       "tests/test_related.py",
-       "tests/test_render.py",
-       "tests/test_resource_integrity.py",
-       "tests/test_resume_dossier.py",
-       "tests/test_runtime_review.py",
-       "tests/test_seal_guards_auto.py",
-       "tests/test_search_hints.py",
-       "tests/test_search_index.py",
-       "tests/test_semantic_lineage.py",
-       "tests/test_source_examination.py",
-       "tests/test_stage_result.py",
-       "tests/test_trace_context.py",
-       "tests/test_transaction_faults.py",
-       "tests/test_transactions.py",
-       "tests/test_verbatim_anchor_admission.py",
-       "tests/test_warning_baseline.py",
-       "tests/test_write_scopes.py"
-      ],
-      "rest-2": [
-       "tests/test_abilities.py",
-       "tests/test_ai_actions.py",
-       "tests/test_arch_caches.py",
-       "tests/test_arch_cli_parity.py",
-       "tests/test_arch_doc_commands.py",
-       "tests/test_arch_engine_neutrality.py",
-       "tests/test_arch_error_vocabulary.py",
-       "tests/test_arch_surface.py",
-       "tests/test_arch_types.py",
-       "tests/test_atlas_authoring.py",
-       "tests/test_capability_dispatch.py",
-       "tests/test_cli.py",
-       "tests/test_compact_module_plan_revision.py",
-       "tests/test_curriculum_v2.py",
-       "tests/test_derived_state.py",
-       "tests/test_diagnostic_store.py",
-       "tests/test_domain_failures.py",
-       "tests/test_evidence_staleness.py",
-       "tests/test_expansion_runnable.py",
-       "tests/test_external_urls.py",
-       "tests/test_failures_prefixed.py",
-       "tests/test_gateway_choice_parity.py",
-       "tests/test_gateway_v2.py",
-       "tests/test_githistory.py",
-       "tests/test_goal_proposals.py",
-       "tests/test_inbox_resolve.py",
-       "tests/test_learning_paths.py",
-       "tests/test_lineage_restamp.py",
-       "tests/test_lineage_writer_interpositions.py",
-       "tests/test_manifest_contract.py",
-       "tests/test_manifest_routes.py",
-       "tests/test_manifest_stages.py",
-       "tests/test_master_promotion.py",
-       "tests/test_material_slices.py",
-       "tests/test_material_summaries.py",
-       "tests/test_materials_manifest.py",
-       "tests/test_model_question_scoring.py",
-       "tests/test_module_concept_atlas.py",
-       "tests/test_module_lifecycle.py",
-       "tests/test_module_plan_warning_gate.py",
-       "tests/test_move_map.py",
-       "tests/test_note_create.py",
-       "tests/test_observation_gesture.py",
-       "tests/test_observations.py",
-       "tests/test_operator_lock.py",
-       "tests/test_perimeter.py",
-       "tests/test_plan_resume.py",
-       "tests/test_plan_rigor.py",
-       "tests/test_projects.py",
-       "tests/test_proof_carrying_change.py",
-       "tests/test_release_pair_receipt.py",
-       "tests/test_scenario_fixtures.py",
-       "tests/test_search_values.py",
-       "tests/test_semantic_contract.py",
-       "tests/test_session_ledger.py",
-       "tests/test_source_discovery.py",
-       "tests/test_source_record_revise.py",
-       "tests/test_study_map_obligation.py",
-       "tests/test_synthesis_analysis_refs.py",
-       "tests/test_tree_contract.py",
-       "tests/test_ui_gateway_recovery.py",
-       "tests/test_unit_plan_revision.py",
-       "tests/test_validation.py",
-       "tests/test_validation_cache.py",
-       "tests/test_verbatim.py",
-       "tests/test_vnext_boundaries.py",
-       "tests/test_workspace_next_action.py",
-       "tests/test_write_payload_clarity.py"
-      ],
-      "witness-0": [
-       "tests/test_scenarios_effects.py"
-      ],
-      "witness-1": [
-       "tests/test_procedures.py",
-       "tests/test_scenarios.py",
-       "tests/test_scenarios_health_shim.py",
-       "tests/test_scenarios_recovery.py",
-       "tests/test_scenarios_session.py"
-      ],
-      "zz-0": [
-       "tests/test_scenarios_zz_operational_owners.py",
-       "tests/test_scenarios_zz_refusal_sites.py"
-      ],
-      "zz-1": [
-       "tests/test_scenarios_zz_refusal_sites.py"
-      ],
-      "zz-2": [
-       "tests/test_scenarios_zz_refusal_sites.py"
-      ],
-      "zz-3": [
-       "tests/test_scenarios_zz_refusal_sites.py"
-      ]
-     },
-     "node_shards": {
-      "tests/test_scenarios_zz_refusal_sites.py": {
-       "count": 4,
-       "legs": [
-        "zz-0",
-        "zz-1",
-        "zz-2",
-        "zz-3"
-       ]
-      }
-     }
-    }
 
 jobs:
   pytest-shards:
@@ -411,12 +165,13 @@ jobs:
           set -eu
           files="$(python3 -c '
           import json, os, sys
-          manifest = json.loads(os.environ["SHARD_MANIFEST"])["legs"]
+          manifest = json.load(open(".github/shard-manifest.json"))["legs"]
           shard = sys.argv[1]
           try:
               files = manifest[shard]
           except KeyError:
-              raise SystemExit(f"shard {shard!r} is not in SHARD_MANIFEST")
+              raise SystemExit(
+                  f"shard {shard!r} is not in .github/shard-manifest.json")
           missing = sorted(f for f in files if not os.path.isfile(f))
           assert not missing, f"shard {shard}: files missing from tests/: {missing}"
           print("\n".join(files))
@@ -433,7 +188,7 @@ jobs:
       # `live_install` marker, nothing broader. The file list comes only
       # from the manifest; a leg never adds its own -k or -m filters.
       # --basetemp pins the session witness file and audit dir under
-      # witness-out/ so the witness legs can upload them for the zz merge.
+      # pytesttmp/ so this leg can upload them for the zz merge below.
       - name: Run this shard of the suite
         env:
           PYTEST_ADDOPTS: '-m "not live_install"'
@@ -455,24 +210,28 @@ jobs:
           path: junit-out/
           if-no-files-found: error
 
-      # The A9/A19 population artifacts (witness legs only): the session
-      # witness file, its attribution sidecar, and the audit dir with its
-      # cases.txt index. zz legs download exactly these, merge them, and
-      # assert over the whole suite's population.
-      - name: Upload the witness population (witness legs only)
-        if: always() && startsWith(matrix.shard, 'witness')
+      # The A9/A19 population artifacts, from every suite leg — not just
+      # the legs that historically produce witnesses: the session witness
+      # file, its attribution sidecar, and the audit dir with its
+      # cases.txt index (tests/conftest.py creates all three for every
+      # session, so a leg that produced nothing still uploads the empty
+      # triple). The globs name the session fixtures' own basetemp
+      # locations, because private witness files some tests create under
+      # their per-test tmp dirs must never enter the population.
+      - name: Upload this leg's witness population
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: witness-${{ matrix.shard }}
+          name: population-${{ matrix.shard }}
           path: |
-            pytesttmp/**/sites.jsonl
-            pytesttmp/**/sites.jsonl.attribution.json
-            pytesttmp/**/operational-audit*
+            pytesttmp/site-witness*/sites.jsonl
+            pytesttmp/site-witness*/sites.jsonl.attribution.json
+            pytesttmp/operational-audit*
           if-no-files-found: error
 
-  # The zz population files, over the merged witness population of the
-  # producer legs. test_scenarios_zz_refusal_sites.py (~40 min unsplit,
-  # the slowest file in the suite) is hash-split over the four legs;
+  # The zz population files, over the merged witness population of every
+  # suite leg. test_scenarios_zz_refusal_sites.py (~40 min unsplit, the
+  # slowest file in the suite) is hash-split over the four legs;
   # test_scenarios_zz_operational_owners.py runs whole in zz-0.
   zz-shards:
     needs: [pytest-shards]
@@ -540,61 +299,80 @@ jobs:
       - name: Download the witness population
         uses: actions/download-artifact@v4
         with:
-          pattern: witness-*
-          path: witness-in
+          pattern: population-*
+          path: population-in
 
-      # Deterministic merge (leg order = artifact name order): the witness
-      # lines concatenate, the attribution sidecars re-key onto the merged
-      # file, the audit logs union, and cases.txt keeps its entry set.
+      # Deterministic merge over every suite leg's artifacts (leg order =
+      # artifact name order): the witness lines concatenate, the
+      # attribution sidecars re-key onto the merged file, the audit logs
+      # union, and cases.txt keeps its entry set. Every leg the manifest
+      # assigns to the suite phase (all legs but this job's zz-*) must
+      # have contributed exactly one witness file, one sidecar and one
+      # audit dir — a lost or surplus population artifact is loud, never
+      # silent.
       - name: Merge the witness population
         run: |
           set -eu
           python3 - <<'PY'
           import json
-          import os
           import shutil
           from pathlib import Path
 
-          # pytest's mktemp leaves a <name>current symlink beside each
-          # real session dir; resolve-dedupe so nothing counts twice.
-          src = Path("../witness-in")
-          sites = sorted({p.resolve()
-                          for p in src.glob("witness-*/**/sites.jsonl")})
-          sidecars = sorted({p.resolve() for p in
-                             src.glob("witness-*/**/sites.jsonl.attribution.json")})
-          audits = sorted({p.resolve() for p in
-                           src.glob("witness-*/**/operational-audit*")
-                           if p.is_dir()})
-          assert sites and sidecars and audits, (
-              f"witness population incomplete: {len(sites)} witness files, "
-              f"{len(sidecars)} sidecars, {len(audits)} audit dirs")
-          assert len(sites) == len(sidecars) == len(audits)
+          src = Path("../population-in")
+          parts = {}
+          for artifact in sorted(p for p in src.glob("population-*")
+                                 if p.is_dir()):
+              leg = artifact.name.removeprefix("population-")
+              # pytest's mktemp leaves a <name>current symlink beside
+              # each real session dir; resolve-dedupe so nothing counts
+              # twice.
+              witness = sorted({p.resolve() for p in
+                                artifact.rglob("sites.jsonl")})
+              sidecar = sorted({p.resolve() for p in
+                                artifact.rglob("sites.jsonl.attribution.json")})
+              audits = sorted({p.resolve() for p in
+                               artifact.rglob("operational-audit*")
+                               if p.is_dir()})
+              assert len(witness) == len(sidecar) == len(audits) == 1, (
+                  f"population artifact of leg {leg!r} must hold exactly "
+                  f"one witness file, one attribution sidecar and one "
+                  f"audit dir; found {len(witness)}/{len(sidecar)}/"
+                  f"{len(audits)}")
+              parts[leg] = (witness[0], sidecar[0], audits[0])
+          manifest = json.loads(
+              Path(".github/shard-manifest.json").read_text(encoding="utf-8"))
+          suite_legs = sorted(leg for leg in manifest["legs"]
+                              if not leg.startswith("zz-"))
+          assert sorted(parts) == suite_legs, (
+              f"population artifacts {sorted(parts)} do not match the "
+              f"manifest's suite legs {suite_legs} — a leg's witness "
+              f"population would be silently lost")
 
           merged = Path("../merged")
           audit = merged / "audit"
           audit.mkdir(parents=True)
           with open(merged / "sites.jsonl", "wb") as out:
-              for part in sites:
-                  out.write(part.read_bytes())
+              for leg in sorted(parts):
+                  out.write(parts[leg][0].read_bytes())
           attribution = {}
-          for part in sidecars:
+          for leg in sorted(parts):
               for key, pairs in json.loads(
-                      part.read_text(encoding="utf-8")).items():
+                      parts[leg][1].read_text(encoding="utf-8")).items():
                   attribution.setdefault(key, []).extend(pairs)
           (merged / "attr.json").write_text(
               json.dumps(attribution, sort_keys=True), encoding="utf-8")
           cases = []
-          for directory in audits:
-              for log in sorted(directory.glob("*.jsonl")):
+          for leg in sorted(parts):
+              for log in sorted(parts[leg][2].glob("*.jsonl")):
                   shutil.copy(log, audit / log.name)
-              index = directory / "cases.txt"
+              index = parts[leg][2] / "cases.txt"
               if index.is_file():
                   cases.extend(index.read_text(encoding="utf-8").split())
           (audit / "cases.txt").write_text(
               "\n".join(dict.fromkeys(cases)) + "\n", encoding="utf-8")
-          print(f"merged {len(sites)} witness legs: "
-                f"{sum(1 for _ in open(merged / 'sites.jsonl'))} witness lines, "
-                f"{len(list(audit.glob('*.jsonl')))} audit logs")
+          print(f"merged {len(parts)} suite legs: "
+                f"{sum(1 for _ in open(merged / 'sites.jsonl'))} witness "
+                f"lines, {len(list(audit.glob('*.jsonl')))} audit logs")
           PY
           merged="$(cd ../merged && pwd)"
           {
@@ -610,7 +388,7 @@ jobs:
           set -eu
           spec="$(python3 -c '
           import json, os
-          manifest = json.loads(os.environ["SHARD_MANIFEST"])["node_shards"]
+          manifest = json.load(open(".github/shard-manifest.json"))["node_shards"]
           shard = os.environ["SHARD"]
           for fname, spec in manifest.items():
               legs = spec["legs"]
@@ -633,12 +411,13 @@ jobs:
           set -eu
           files="$(python3 -c '
           import json, os, sys
-          manifest = json.loads(os.environ["SHARD_MANIFEST"])["legs"]
+          manifest = json.load(open(".github/shard-manifest.json"))["legs"]
           shard = sys.argv[1]
           try:
               files = manifest[shard]
           except KeyError:
-              raise SystemExit(f"shard {shard!r} is not in SHARD_MANIFEST")
+              raise SystemExit(
+                  f"shard {shard!r} is not in .github/shard-manifest.json")
           missing = sorted(f for f in files if not os.path.isfile(f))
           assert not missing, f"shard {shard}: files missing from tests/: {missing}"
           print("\n".join(files))
@@ -831,13 +610,13 @@ jobs:
           set -eu
           .venv/bin/python - <<'PY'
           import json
-          import os
           import subprocess
           import sys
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
-          manifest = json.loads(os.environ["SHARD_MANIFEST"])
+          manifest = json.loads(
+              Path(".github/shard-manifest.json").read_text(encoding="utf-8"))
           disk = sorted(f"tests/{p.name}"
                         for p in Path("tests").glob("test_*.py"))
           from collections import Counter
@@ -849,7 +628,7 @@ jobs:
               assert count == expected, (
                   f"{name} appears in {count} legs, expected {expected}")
           assert sorted(covered) == disk, (
-              f"SHARD_MANIFEST does not partition tests/: "
+              f".github/shard-manifest.json does not partition tests/: "
               f"missing={sorted(set(disk) - set(covered))} "
               f"extra={sorted(set(covered) - set(disk))}")
 

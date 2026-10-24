@@ -309,29 +309,44 @@ def test_every_job_carries_a_bounded_timeout():
                 workflow.name, name)
 
 
-def _shard_manifest(path: Path) -> dict:
-    doc = _load(path)
-    raw = doc.get("env", {}).get("SHARD_MANIFEST")
-    assert raw, f"{path.name}: SHARD_MANIFEST env is missing"
-    return json.loads(raw)
+#: The one shard manifest (C3-F): both workflows load this file, and the
+#: tests below read the same one — never a second copy that could drift.
+SHARD_MANIFEST_PATH = ROOT / ".github" / "shard-manifest.json"
 
 
-#: The files whose witness and audit population the two zz files assert
-#: over. Their session-artifact writers (tests/conftest.py's fixtures,
-#: scenario_harness's case runs, the procedure runner) live in witness-*
-#: CI legs; the assertions themselves live in zz-* legs over the merged
-#: artifacts (conftest premerged mode). Every other suite file that
-#: touches the witness machinery uses private files it creates itself.
-WITNESS_BLOCK = frozenset({
-    "test_procedures.py",
-    "test_scenarios.py",
-    "test_scenarios_effects.py",
-    "test_scenarios_health_shim.py",
-    "test_scenarios_recovery.py",
-    "test_scenarios_session.py",
-    "test_scenarios_zz_operational_owners.py",
-    "test_scenarios_zz_refusal_sites.py",
-})
+def _shard_manifest() -> dict:
+    return json.loads(SHARD_MANIFEST_PATH.read_text(encoding="utf-8"))
+
+
+def _matrix_legs(job: dict) -> list:
+    return job.get("strategy", {}).get("matrix", {}).get("shard", [])
+
+
+def _jobs_by_leg(doc: dict) -> dict[str, str]:
+    """leg id -> the id of the job whose matrix carries it."""
+    carriers: dict[str, str] = {}
+    for job_id, job in doc.get("jobs", {}).items():
+        for leg_id in _matrix_legs(job):
+            assert leg_id not in carriers, (
+                f"leg {leg_id!r} appears in more than one job matrix")
+            carriers[leg_id] = job_id
+    return carriers
+
+
+def test_both_workflows_read_the_one_shard_manifest():
+    """The shard manifest is a file both workflows load, never a paste.
+
+    The partition used to live as a pasted env block in each workflow;
+    two copies could drift apart. Both CI jobs and these tests now read
+    the same file, and no workflow may resurrect the env copy.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        runs = "\n".join(_all_run_steps(_load(workflow)))
+        assert ".github/shard-manifest.json" in runs, (
+            f"{workflow.name} no longer reads .github/shard-manifest.json")
+        assert "SHARD_MANIFEST" not in workflow.read_text(encoding="utf-8"), (
+            f"{workflow.name} still mentions SHARD_MANIFEST — the pasted "
+            "manifest copy was removed so one file is the whole truth")
 
 
 def test_shard_manifest_partitions_the_suite():
@@ -341,66 +356,97 @@ def test_shard_manifest_partitions_the_suite():
     more legs than its node_shards count would run twice and double-count
     in the gate's completeness proof; a node-shared file whose carrier
     legs disagree with its node_shards legs would run some tests twice
-    and others never. Witness-block files may only ride witness-*/zz-*
-    legs: witness legs upload the session population, zz legs merge it
-    (tests/conftest.py premerged mode rebuilds A9's process-local
-    attribution from the sidecars) and assert over it — a witness file
-    in any other leg would be silently unasserted, and A9/A19's
-    population checks would see a partial suite (SPEC §3.3 A9, §3.6 A19).
+    and others never. Which leg a file rides no longer constrains the
+    witness population (C3-F): every suite leg uploads its session
+    witness file, sidecar and audit dir, and the zz legs merge all of
+    them, so a witness-writing test is asserted over wherever it runs —
+    the hand-kept list of witness-producer files is gone by design.
     """
     from collections import Counter
 
+    manifest = _shard_manifest()
+    legs = manifest["legs"]
+    node_shards = manifest.get("node_shards", {})
     disk = sorted(f"tests/{p.name}"
                   for p in (ROOT / "tests").glob("test_*.py"))
-    for workflow in (VALIDATE, RELEASE_PAIR):
-        manifest = _shard_manifest(workflow)
-        legs = manifest["legs"]
-        node_shards = manifest.get("node_shards", {})
-        covered = Counter(f for leg in legs.values() for f in leg)
-        for name, count in sorted(covered.items()):
-            expected = node_shards.get(name, {}).get("count", 1)
-            assert count == expected, (
-                f"{workflow.name}: {name} appears in {count} legs, "
-                f"expected {expected}")
-        assert sorted(covered) == disk, (
-            f"{workflow.name}: SHARD_MANIFEST does not partition tests/: "
-            f"missing={sorted(set(disk) - set(covered))} "
-            f"extra={sorted(set(covered) - set(disk))}")
-        for name, spec in sorted(node_shards.items()):
-            carriers = sorted(leg_id for leg_id, leg in legs.items()
-                              if name in leg)
-            assert carriers == sorted(spec["legs"]), (
-                f"{workflow.name}: node-shared {name} carried by "
-                f"{carriers}, node_shards names {sorted(spec['legs'])}")
-        for leg_id, leg in legs.items():
-            for name in leg:
-                if name.rsplit("/", 1)[-1] in WITNESS_BLOCK:
-                    assert leg_id.startswith(("witness-", "zz-")), (
-                        f"{workflow.name}: witness-block file {name} in "
-                        f"non-witness leg {leg_id!r}")
+    covered = Counter(f for leg in legs.values() for f in leg)
+    for name, count in sorted(covered.items()):
+        expected = node_shards.get(name, {}).get("count", 1)
+        assert count == expected, (
+            f"{name} appears in {count} legs, expected {expected}")
+    assert sorted(covered) == disk, (
+        f"{SHARD_MANIFEST_PATH.name} does not partition tests/: "
+        f"missing={sorted(set(disk) - set(covered))} "
+        f"extra={sorted(set(covered) - set(disk))}")
+    for name, spec in sorted(node_shards.items()):
+        carriers = sorted(leg_id for leg_id, leg in legs.items()
+                          if name in leg)
+        assert carriers == sorted(spec["legs"]), (
+            f"node-shared {name} carried by {carriers}, "
+            f"node_shards names {sorted(spec['legs'])}")
 
 
-def test_zz_legs_run_after_the_witness_legs():
-    """The zz legs' job depends on the job that runs the witness legs.
+def test_workflow_matrices_and_population_flow_match_the_manifest():
+    """Matrices, artifact flow and merge order follow the manifest.
 
-    The zz population files assert over the merged witness artifacts of
-    the producer legs; if they ever ran beside them instead of after
-    them, the merge would race the producers and the population checks
-    would assert over a partial suite or nothing.
+    The suite phase runs one matrix job over the non-zz legs and the
+    population phase another over the zz legs; a leg in the manifest but
+    no matrix never runs, and a matrix leg missing from the manifest
+    fails its pick step mid-run — both pinned here locally instead of
+    30 minutes into CI. Every suite leg uploads its population artifact
+    unconditionally (a shard-name condition is exactly the hand-kept
+    producer list C3-F removed), the upload names the session fixtures'
+    own basetemp locations (a broad basetemp glob would sweep private
+    witness files some tests create under their per-test tmp dirs into
+    the population), the zz job downloads and merges all of them, and it
+    runs only after the suite job — otherwise the merge would race the
+    producers and assert over a partial population.
     """
+    manifest = _shard_manifest()
+    all_legs = set(manifest["legs"])
+    zz_legs = {leg for leg in all_legs if leg.startswith("zz-")}
+    suite_legs = all_legs - zz_legs
     for workflow in (VALIDATE, RELEASE_PAIR):
         doc = _load(workflow)
-        legs = _shard_manifest(workflow)["legs"]
-        carrier_jobs = {}
-        for job_id, job in doc["jobs"].items():
-            matrix = job.get("strategy", {}).get("matrix", {}).get("shard", [])
-            for leg_id in matrix:
-                carrier_jobs[leg_id] = job_id
-        witness_jobs = {carrier_jobs[leg_id]
-                        for leg_id in legs if leg_id.startswith("witness-")}
-        for leg_id in legs:
-            if leg_id.startswith("zz-"):
-                needs = set(doc["jobs"][carrier_jobs[leg_id]].get("needs", []))
-                assert needs & witness_jobs, (
-                    f"{workflow.name}: zz leg {leg_id!r} does not depend on "
-                    f"a witness-leg job ({sorted(witness_jobs)})")
+        carriers = _jobs_by_leg(doc)
+        assert set(carriers) == all_legs, (
+            f"{workflow.name}: matrix legs {sorted(carriers)} != manifest "
+            f"legs {sorted(all_legs)}")
+        suite_jobs = {carriers[leg] for leg in suite_legs}
+        zz_jobs = {carriers[leg] for leg in zz_legs}
+        assert len(suite_jobs) == 1, (
+            f"{workflow.name}: suite legs split over jobs {sorted(suite_jobs)}")
+        assert len(zz_jobs) == 1, (
+            f"{workflow.name}: zz legs split over jobs {sorted(zz_jobs)}")
+        suite_job_id = next(iter(suite_jobs))
+        zz_job_id = next(iter(zz_jobs))
+        suite_job = doc["jobs"][suite_job_id]
+        zz_job = doc["jobs"][zz_job_id]
+
+        assert suite_job_id in zz_job.get("needs", []), (
+            f"{workflow.name}: zz job {zz_job_id!r} must run after the "
+            f"suite job {suite_job_id!r}")
+
+        uploads = [step for step in suite_job.get("steps", [])
+                   if str(step.get("uses", "")).startswith(
+                       "actions/upload-artifact")
+                   and step.get("with", {}).get("name")
+                   == "population-${{ matrix.shard }}"]
+        assert len(uploads) == 1, (
+            f"{workflow.name}: expected exactly one population upload "
+            "step, run by every suite leg")
+        assert uploads[0].get("if") == "always()", (
+            f"{workflow.name}: the population upload must run even when "
+            "the leg's tests fail, and must not filter legs by name")
+        paths = str(uploads[0].get("with", {}).get("path", ""))
+        assert "pytesttmp/site-witness*/sites.jsonl" in paths, (
+            f"{workflow.name}: the population upload must name the session "
+            "witness file's own location, never a broad basetemp glob")
+
+        downloads = [step for step in zz_job.get("steps", [])
+                     if str(step.get("uses", "")).startswith(
+                         "actions/download-artifact")
+                     and step.get("with", {}).get("pattern") == "population-*"]
+        assert len(downloads) == 1, (
+            f"{workflow.name}: expected exactly one population download "
+            "step, taking every suite leg's artifact")

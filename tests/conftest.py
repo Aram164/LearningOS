@@ -178,6 +178,14 @@ def _operational_audit_dir(tmp_path_factory):
 
     In CI merge mode the merged population directory is used as-is: the
     zz population tests must assert over every producer shard's logs.
+
+    The dir always carries its ``cases.txt`` index, even when no case ran
+    in this session: every CI shard uploads the audit dir as part of its
+    population artifact, and the zz merge asserts that every leg's
+    artifact holds the full triple (witness file, sidecar, audit dir) —
+    an empty directory would not survive the artifact upload, and a shard
+    that produced nothing must still be present in the merge, not
+    silently absent.
     """
     premerged = os.environ.get(PREMERGED_AUDIT_ENV)
     if premerged:
@@ -190,6 +198,7 @@ def _operational_audit_dir(tmp_path_factory):
             os.environ[AUDIT_DIR_ENV] = previous
         return
     path = tmp_path_factory.mktemp("operational-audit")
+    (path / "cases.txt").touch()
     previous = os.environ.get(AUDIT_DIR_ENV)
     os.environ[AUDIT_DIR_ENV] = str(path)
     yield path
