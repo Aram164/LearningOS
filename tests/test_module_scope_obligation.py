@@ -11,12 +11,11 @@ by the read surfaces, so the count, the badge and the queue cannot disagree.
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 import yaml
+from repo_builders import add_curriculum, run_los
 
 from learning_os.derive.semantics.predicates import (
     module_record_is_owned,
@@ -105,45 +104,17 @@ def test_the_compatibility_mirror_owns_nothing():
 # --------------------------------------------------------------------------
 
 @pytest.mark.full_repo
-def test_the_two_empty_modules_are_owed_on_the_checked_in_tree():
-    """BS and ICOP are enrolled and carry no units."""
+def test_no_module_is_owed_on_the_checked_in_tree():
+    """BS and ICOP each carry their first unit, so nothing is owed.
+
+    Both were enrolled with no units when this obligation landed. Their first
+    units (unit-bs-os-structure, unit-icop-l01-linear-programming) reached
+    main with the live takeover records on 2026-10-25, and one unit discharges
+    the obligation (the truth table above). The owed path, through the brief
+    and the scan, is pinned on a synthetic repository below.
+    """
     obs = collect_observations(ROOT)
-    assert "module-hu-icop" in obs.scope_obligations
-    assert "module-hu-betriebssysteme" in obs.scope_obligations
-    # Nothing else is: every other module has units.
-    assert set(obs.scope_obligations) == {
-        "module-hu-icop", "module-hu-betriebssysteme"}
-
-
-@pytest.mark.full_repo
-def test_the_brief_reports_the_owed_modules():
-    proc = subprocess.run(
-        [sys.executable, "tools/los.py", "bootstrap", "--brief", "--json"],
-        cwd=ROOT, capture_output=True, text=True, check=True)
-    payload = json.loads(proc.stdout)
-    assert payload["owed_module_scopes"] == [
-        "module-hu-betriebssysteme", "module-hu-icop"]
-
-
-@pytest.mark.full_repo
-def test_the_scan_proposes_one_goal_per_owed_module():
-    proc = subprocess.run(
-        [sys.executable, "tools/los.py", "intelligence-scan", "--json"],
-        cwd=ROOT, capture_output=True, text=True, check=True)
-    payload = json.loads(proc.stdout)
-    rows = payload if isinstance(payload, list) else payload.get("goals", [])
-    ids = {row["goal_id"] for row in rows
-           if row.get("detector") == "module-scope-obligation"}
-    assert ids == {
-        "module-scope-obligation:module-hu-icop",
-        "module-scope-obligation:module-hu-betriebssysteme",
-    }
-    for row in rows:
-        if row.get("detector") == "module-scope-obligation":
-            # The queue item says planning has not started. It must never
-            # claim the module is covered.
-            assert "planning not started" in row["title"]
-            assert "covered" not in row["title"]
+    assert obs.scope_obligations == ()
 
 
 # --------------------------------------------------------------------------
@@ -187,6 +158,44 @@ def test_an_owned_module_without_units_is_owed(tmp_path):
                   kind="academic", units=[])
     obs = collect_observations(root)
     assert obs.scope_obligations == ("module-empty",)
+
+
+def _write_owed_module(root: Path) -> str:
+    """An enrolled academic module with no units, valid beside module-demo."""
+    add_curriculum(root)
+    module_id = "module-demo-empty"
+    record = yaml.safe_load(
+        (root / "curriculum/modules/module-demo/module.yaml").read_text(encoding="utf-8"))
+    record.update({"id": module_id, "title": "Empty Demo Module", "unit_order": []})
+    module_dir = root / "curriculum/modules" / module_id
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.yaml").write_text(yaml.safe_dump(record), encoding="utf-8")
+    (module_dir / "source-map.yaml").write_text(yaml.safe_dump({
+        "type": "module-source-map", "module_id": module_id, "sources": [],
+    }), encoding="utf-8")
+    return module_id
+
+
+def test_the_brief_reports_the_owed_modules(mini_repo):
+    module_id = _write_owed_module(mini_repo)
+    result = run_los(mini_repo, "bootstrap", "--brief", "--json")
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["owed_module_scopes"] == [module_id]
+
+
+def test_the_scan_proposes_one_goal_per_owed_module(mini_repo):
+    module_id = _write_owed_module(mini_repo)
+    result = run_los(mini_repo, "intelligence-scan", "--json")
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    rows = payload if isinstance(payload, list) else payload.get("goals", [])
+    owed = [row for row in rows if row.get("detector") == "module-scope-obligation"]
+    assert {row["goal_id"] for row in owed} == {f"module-scope-obligation:{module_id}"}
+    for row in owed:
+        # The queue item says planning has not started. It must never
+        # claim the module is covered.
+        assert "planning not started" in row["title"]
+        assert "covered" not in row["title"]
 
 
 def test_emitted_scope_goal_ids_round_trip_through_the_canonical_parser():
