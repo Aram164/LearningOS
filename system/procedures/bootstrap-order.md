@@ -214,9 +214,9 @@ note_create note-create ['knowledge/notes/**']
 ## Consult the corpus before treating a document as binding
 
 ```scrut
-$ $LOS_REPO/.venv/bin/python -c 'import yaml; d = yaml.safe_load(open("system/contracts/normative-corpus.yaml")); print(len(d["documents"])); e = [x for x in d["documents"] if x["path"] == "system/OPERATOR.md"][0]; print(e["path"], e["class"], e["authority"])'
-82
-system/OPERATOR.md contract binding
+$ $LOS_REPO/.venv/bin/python -c 'import yaml; d = yaml.safe_load(open("system/contracts/normative-corpus.yaml")); docs = {x["path"]: x for x in d["documents"]}; [print(d[k], docs[d[k]]["class"], docs[d[k]]["authority"], docs[d[k]]["audience"]) for k in ("entrypoint", "developer_entrypoint")]'
+system/OPERATOR.md contract binding both
+system/DEVELOPER.md contract binding developer
 ```
 
 ## The fixture ships no root CLAUDE.md to link

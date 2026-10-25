@@ -33,7 +33,7 @@ Every declared canonical mutation now passes through `TransactionService`.
 The service applies one bounded write set, checks artifact-level expected
 revisions, validates the resulting repository, republishes disposable views,
 and records exactly one append-only receipt under
-`operations/transactions/`. A failed stage rolls the complete write set back.
+`operations/transactions/`. A pre-commit failure rolls the complete write set back.
 Interfaces discover the executable catalogue in
 `system/contracts/capabilities.yaml`; they do not invent write paths.
 
@@ -41,9 +41,17 @@ Artifact revisions are coordination tokens, not replacements for Git history.
 Revision zero is implicit for authored records that have not yet been changed
 through the transaction service.
 
+Rollback applies before receipt publication is proven durable. Once the receipt
+is durable, a later bookkeeping failure preserves the commit and reports a
+post-commit failure. Uncertain receipt publication preserves forward state and
+the journal unless receipt absence is proven; reconciliation settles it.
+Dependencies on this component may use its read-only fingerprint, digest and
+revision helpers. They do not grant access to the transaction writer.
+
 ## Pinning tests
 
 - `tests/test_transactions.py`
+- `tests/test_transaction_faults.py`
 
 ## Binding ADRs
 

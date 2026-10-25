@@ -46,8 +46,9 @@ sequenceDiagram
 ```
 
 Exact replay returns before recomputing the handler. Check mode validates a
-shadow proposal instead of committing. Publication uncertainty is reported;
-receipt existence must not be confused with completed view publication.
+shadow proposal instead of committing. A durable receipt marks the commit
+boundary. Receipt-publication uncertainty preserves forward state and the
+journal for reconciliation; later bookkeeping failure does not undo a commit.
 
 ## Generate disposable views
 
