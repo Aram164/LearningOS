@@ -28,6 +28,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -39,7 +40,9 @@ from learning_os.store.materials.resolution import (
     MATERIAL_SUFFIX_TOKEN,
     ResolvedMaterialFile,
     leading_material_locator,
+    locator_for_material,
     material_location,
+    material_locator_parts,
     material_uri_authority,
     resolve_route_material_files,
     route_material_checksum,
@@ -98,16 +101,8 @@ def route_material_files(repo, source_id, route) -> set[str]:
             and len(MATERIAL_SUFFIX_TOKEN.findall(locator)) >= 2):
         if authority is None:
             return set()
-        candidates: list[str] = []
-        for part in locator.split(";"):
-            matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
-            if len(matches) != 1:
-                return set()
-            candidate = safe_material_locator(part[:matches[0].end()].strip())
-            if candidate is None:
-                return set()
-            candidates.append(candidate)
-        if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+        candidates = material_locator_parts(locator)
+        if not candidates:
             return set()
         resolved: set[str] = set()
         for candidate in candidates:
@@ -289,23 +284,28 @@ def parse_locator_page_ranges(locator: str) -> list[tuple[int, int]]:
     if not isinstance(locator, str):
         return []
     text = _PRINTED_PAREN.sub("", locator)
-    ranges: list[tuple[int, int]] = []
+    ranges: list[tuple[int, tuple[int, int]]] = []
+    consumed: list[tuple[int, int]] = []
     for pattern in (_PDF_RANGE, _SLIDE_RANGE):
         for match in pattern.finditer(text):
+            consumed.append(match.span())
             start, end = int(match.group(1)), int(match.group(2))
             if 1 <= start <= end:
-                ranges.append((start, end))
+                ranges.append((match.start(), (start, end)))
     for match in _AND_PAGES.finditer(text):
+        consumed.append(match.span())
         for group in (match.group(1), match.group(2)):
             page = int(group)
             if page >= 1:
-                ranges.append((page, page))
+                ranges.append((match.start(), (page, page)))
     for pattern in (_PDF_SINGLE, _BARE_SINGLE):
         for match in pattern.finditer(text):
+            if any(start < match.end() and match.start() < end for start, end in consumed):
+                continue
             page = int(match.group(1))
             if page >= 1:
-                ranges.append((page, page))
-    return list(dict.fromkeys(ranges))
+                ranges.append((match.start(), (page, page)))
+    return list(dict.fromkeys(value for _, value in sorted(ranges, key=lambda row: row[0])))
 
 
 def _select_pages(total: int, requested: list[tuple[int, int]]) -> tuple[tuple[int, ...], str]:
@@ -383,6 +383,10 @@ def _read_text_part(route_id: str, material_uri: str, path: Path) -> SlicePart:
 def read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str) -> SlicePart:
     suffix = resolved.path.suffix.lower()
     if suffix == ".pdf":
+        try:
+            locator = locator_for_material(locator, resolved.material_uri)
+        except ValueError as exc:
+            raise SliceResolutionError(route_id, str(exc)) from exc
         return _read_pdf_part(route_id, resolved.material_uri, resolved.path, locator)
     if suffix in READABLE_TEXT_SUFFIXES:
         return _read_text_part(route_id, resolved.material_uri, resolved.path)
@@ -641,7 +645,7 @@ def plan_continuation(
     route: dict[str, Any],
     *,
     basis: dict[str, Any],
-    inspected: list[int],
+    inspected: list[int] | Mapping[str, list[int]],
     passes_used: int,
     start: int,
     end: int,
@@ -652,8 +656,9 @@ def plan_continuation(
 ) -> tuple[ContinuationRecord, dict[str, Any], bytes]:
     """Validate and extract one targeted follow-up pass, or refuse naming why.
 
-    ``inspected`` is the union of pages previous passes already covered and
+    ``inspected`` maps material URIs to the pages previous passes covered and
     ``passes_used`` their count; both come from the request's slice index.
+    A flat page list is accepted only for a single-file route.
     ``start``/``end`` are explicit 1-based PDF pages — there is no
     "read the next window" default. Every refusal raises ContinuationError;
     unreadable material raises it too, since the earlier passes stay valid
@@ -700,6 +705,12 @@ def plan_continuation(
         if not matches:
             raise ContinuationError(route_id, f"material_uri is not bound by this route: {material_uri}")
         resolved = matches[0]
+    if isinstance(inspected, Mapping):
+        prior_pages = inspected.get(resolved.material_uri, [])
+    elif len(files) == 1:
+        prior_pages = inspected
+    else:
+        raise ContinuationError(route_id, "multi-file inspection history must identify each material_uri")
     if resolved.path.suffix.lower() != ".pdf":
         raise ContinuationError(
             route_id, "continuations read PDF pages; plain-text routes arrive whole in pass 1")
@@ -725,7 +736,7 @@ def plan_continuation(
         raise ContinuationError(
             route_id, f"pages {start}-{end} are outside this {total}-page file")
     pages = tuple(range(start, end + 1))
-    if not set(pages) - set(inspected):
+    if not set(pages) - set(prior_pages):
         raise ContinuationError(
             route_id,
             f"pages {start}-{end} were already inspected; "
@@ -754,7 +765,7 @@ def plan_continuation(
         concept_ids=tuple(concept_ids),
         reason=reason.strip(),
         requested_pages=(start, end),
-        prior_pages=tuple(sorted(set(inspected))),
+        prior_pages=tuple(sorted(set(prior_pages))),
         material_uri=resolved.material_uri,
         material_checksum=checksum,
         file_sha256=sha256_file(resolved.path),

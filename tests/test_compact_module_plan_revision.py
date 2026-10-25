@@ -10,7 +10,14 @@ import sys
 from pathlib import Path
 
 import yaml
-from repo_builders import _audit, _compact_setup, run_los, write_minimal_pdf, write_yaml
+from repo_builders import (
+    SLICED_LECTURE_TEXT,
+    _audit,
+    _compact_setup,
+    run_los,
+    write_minimal_pdf,
+    write_yaml,
+)
 
 from learning_os.app.validation_service import collect
 from learning_os.store.warning_baseline import write_baseline
@@ -88,9 +95,34 @@ def _revision(root: Path) -> dict:
 
 
 def test_compact_batch_reviews_and_commits_both_units_atomically(mini_repo, tmp_path):
+    from learning_os.derive.semantics.claim_status import observe_claims
+    from learning_os.derive.semantics.lineage import (
+        dump_ledger,
+        emit_route_covers,
+        load_ledger,
+        route_content_digest,
+    )
+    from learning_os.store.loader import load_repo
+
     _two_units(mini_repo)
+    records = {}
+    revision = _revision(mini_repo)
+    revision["claim_evidence"] = []
+    for row in load_repo(mini_repo).module_source_maps["module-demo"]["sources"][0]["unit_routes"]:
+        if not isinstance(row, dict):
+            continue
+        prior = emit_route_covers(route_id=row["id"], covers=row["covers"], read_revisions={},
+                                 judged_by="prior", admitted_by={"request_id": "prior", "idempotency_key": "prior"},
+                                 source_hashes={"route-content:" + row["id"]: route_content_digest(
+                                     module_id="module-demo", source_id="source-demo-book", route=row)})
+        records[prior.claim_id] = prior
+        revision["claim_evidence"].append({"claim_id": prior.claim_id, "evidence": [{"kind": "quote",
+            "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": SLICED_LECTURE_TEXT}]})
+    lineage = mini_repo / "operations/transactions/lineage.yaml"
+    lineage.parent.mkdir(parents=True, exist_ok=True)
+    lineage.write_text(dump_ledger(records))
     draft = tmp_path / "compact.yaml"
-    write_yaml(draft, _revision(mini_repo))
+    write_yaml(draft, revision)
     checked = run_los(mini_repo, "module-plan-import", "module-demo",
                       "--file", str(draft), "--check")
     assert checked.returncode == 0, checked.stderr
@@ -104,8 +136,9 @@ def test_compact_batch_reviews_and_commits_both_units_atomically(mini_repo, tmp_
                       "--file", str(draft), "--review-report", str(review),
                       "--apply-reviewed-sha256", report["reviewed_file_sha256"])
     assert applied.returncode == 0, applied.stderr
-    from learning_os.store.loader import load_repo
     repo = load_repo(mini_repo)
+    assert all(observe_claims(mini_repo)[cid].status == "supported" for cid in records)
+    assert all(load_ledger(mini_repo)[cid].supersedes is not None for cid in records)
     routes = {route["id"]: route for source in repo.module_source_maps["module-demo"]["sources"]
               for route in source["unit_routes"]}
     assert routes["route-demo-book"]["angle"] == "First revised angle."

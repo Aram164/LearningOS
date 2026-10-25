@@ -102,6 +102,10 @@ def _slices(root: Path, routes: list[dict]) -> list:
 
 @pytest.mark.parametrize(("locator", "expected"), [
     ("book.pdf, pdf pp. 310-322", [(310, 322)]),
+    ("book.pdf p. 3-5", [(3, 5)]),
+    ("book.pdf PDF p. 13–15", [(13, 15)]),
+    ("book.pdf p. 3 and 5", [(3, 3), (5, 5)]),
+    ("book.pdf p. 9, pp. 1-2", [(9, 9), (1, 2)]),
     ("UE5.pdf, slides 20-38", [(20, 38)]),
     ("Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3", [(1, 1), (3, 3)]),
     ("Physical PDF p. 132 (printed p. 127), Aufgabe 6.19(a-b) only", [(132, 132)]),
@@ -121,6 +125,49 @@ def test_locator_page_ranges_parse_only_pdf_house_style(locator, expected):
 
 def test_locator_page_ranges_rejects_non_strings():
     assert parse_locator_page_ranges(None) == []
+
+
+@pytest.mark.parametrize("locator, expected", [
+    ("part-a.pdf pp. 8-10; part-b.pdf", [(8, 9, 10), (1, 2, 3, 4)]),
+    ("part-a.pdf p. 1-2; part-b.pdf pp. 3-4", [(1, 2), (3, 4)]),
+])
+def test_multi_file_initial_slices_keep_each_files_locator(mini_repo, locator, expected):
+    routes = [_route("route-demo-multi", locator)]
+    _add_sliced_unit(mini_repo, routes, {
+        "part-a.pdf": [f"alpha {n}" for n in range(1, 11)],
+        "part-b.pdf": [f"beta {n}" for n in range(1, 5)],
+    })
+    slice_, _ = _slices(mini_repo, routes)[0]
+    assert [part.pages for part in slice_.parts] == expected
+    inspected = inspected_material_by_route([material_slices.slice_index_entry(slice_)])
+    for name, pages in zip(("part-a.pdf", "part-b.pdf"), expected, strict=True):
+        assert inspected["route-demo-multi"][f"material://source-demo-book/{name}"]["pages"] == list(pages)
+
+
+def test_singular_range_keeps_unrelated_note_pages_out_of_direct_evidence(mini_repo):
+    routes = [_route("route-demo-book", "book.pdf p. 3-5")]
+    _add_sliced_unit(mini_repo, routes, {"book.pdf": ["readable page"] * 10})
+    binding = {"source_id": "source-demo-book", "material": "source-demo-book/book.pdf",
+               "inspected_range": {"start": 50, "end": 60}}
+    assert material_slices.unit_note_scope(load_repo(mini_repo), binding, [("source-demo-book", routes[0])]) == "related"
+
+
+def test_evidence_scaffold_has_exact_file_scopes_and_current_read_integers(mini_repo):
+    from learning_os.app.claim_admission import claim_evidence_scaffolds
+    from learning_os.store.revisions import dump_revisions
+
+    routes = [_route("route-demo-multi", "part-a.pdf p. 1-2; part-b.pdf pp. 3-4")]
+    _add_sliced_unit(mini_repo, routes, {name: ["readable page"] * 4 for name in ("part-a.pdf", "part-b.pdf")})
+    ledger = mini_repo / "operations/transactions/revisions.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(dump_revisions({"module-demo": 3, "unit-demo-l01": 7, "unrelated": 4}))
+    draft = claim_evidence_scaffolds(mini_repo, load_repo(mini_repo), "module-demo", ["covers:route-demo-multi"])
+    scaffold = draft["covers:route-demo-multi"]
+    entry = scaffold["claim_evidence"][0]
+    assert entry["reads"] == {"module-demo": 3, "unit-demo-l01": 7}
+    assert [quote["page"] for quote in entry["evidence"]] == [1, 3]
+    assert all(quote["text"] == "" for quote in entry["evidence"])
+    assert [scope["page_ranges"] for scope in scaffold["material_scope"]] == [[[1, 2]], [[3, 4]]]
 
 
 def test_pdf_parser_and_extraction_errors_are_distinct_from_no_text(tmp_path, monkeypatch):
@@ -588,6 +635,22 @@ def test_multi_file_continuation_uses_route_hash_not_file_hash(mini_repo):
     assert record["material_uri"] == "material://source-demo-book/part-b.pdf"
     assert record["file_sha256"].startswith("sha256:")
     assert record["material_checksum"] != record["file_sha256"]
+    # The same page numbers in the other file are still unread.
+    with pytest.raises(ContinuationRefusedError, match="already inspected"):
+        app.append_slices(
+            request_id=request["id"], route_id="route-demo-multi",
+            start=21, end=24, kind="example", concept_ids=[], reason="repeat",
+            material_uri="material://source-demo-book/part-b.pdf")
+    third = app.append_slices(
+        request_id=request["id"], route_id="route-demo-multi",
+        start=21, end=24, kind="example", concept_ids=[], reason="examples in first file",
+        material_uri="material://source-demo-book/part-a.pdf")
+    assert third["pass"] == 3
+    record = yaml.safe_load((bundle / "attachments/slices/continuations/pass-3-route-demo-multi.yaml").read_text())
+    assert record["prior_inspected_pages"] == list(range(1, 21))
+    index = material_slices.read_bundle_slice_index(bundle)
+    inspected = inspected_material_by_route(index)["route-demo-multi"]
+    assert all(22 in entry["pages"] for entry in inspected.values())
 
 
 def test_continuation_refuses_fully_inspected_ranges(mini_repo):

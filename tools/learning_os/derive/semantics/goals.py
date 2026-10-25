@@ -21,7 +21,7 @@ import datetime as _dt
 import hashlib
 import math
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from learning_os.derive.learning_runtime import requirement_fingerprint
 from learning_os.derive.semantics.claim_audits import (
@@ -115,12 +115,8 @@ def transition(
         raise GoalError(
             f"goal {goal.goal_id!r} reaches {to_state} without rationale "
             "or evidence")
-    return CandidateGoal(
-        goal_id=goal.goal_id,
-        detector=goal.detector,
-        title=goal.title,
-        rationale=goal.rationale,
-        evidence=goal.evidence,
+    return replace(
+        goal,
         state=to_state,
         authorized_by=authorized_by if to_state == "authorized" else goal.authorized_by,
         superseded_by=superseded_by if to_state == "superseded" else goal.superseded_by,
@@ -659,16 +655,7 @@ def _restore_state(goal: CandidateGoal, state: str) -> CandidateGoal:
     """
     if state == "detected":
         return goal
-    return CandidateGoal(
-        goal_id=goal.goal_id,
-        detector=goal.detector,
-        title=goal.title,
-        rationale=goal.rationale,
-        evidence=goal.evidence,
-        state=state,
-        authorized_by=goal.authorized_by,
-        superseded_by=goal.superseded_by,
-    )
+    return replace(goal, state=state)
 
 
 # A reset follows an intentional detector change; decisions before it are not

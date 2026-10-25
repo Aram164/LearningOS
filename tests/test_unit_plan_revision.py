@@ -475,7 +475,8 @@ def test_compact_revision_applies_through_the_gateway(mini_repo, tmp_path):
     assert row["angle"] == "A sharper lecture-specific angle."
 
 
-def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
+@pytest.mark.parametrize("rejudge", [False, True])
+def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path, rejudge):
     """--check, review the SHA, apply it: one receipt, operator approval."""
     import json
 
@@ -483,12 +484,34 @@ def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
     from repo_builders import run_los, write_yaml
 
     _compact_setup(mini_repo)
+    evidence = []
+    if rejudge:
+        from learning_os.derive.semantics.claim_status import observe_claims
+        from learning_os.derive.semantics.lineage import (
+            dump_ledger,
+            emit_route_covers,
+            route_content_digest,
+        )
+        from learning_os.store.loader import load_repo
+
+        row = load_repo(mini_repo).module_source_maps["module-demo"]["sources"][0]["unit_routes"][0]
+        prior = emit_route_covers(route_id=row["id"], covers=row["covers"], read_revisions={},
+                                 judged_by="prior", admitted_by={"request_id": "prior", "idempotency_key": "prior"},
+                                 source_hashes={"route-content:" + row["id"]: route_content_digest(
+                                     module_id="module-demo", source_id="source-demo-book", route=row)})
+        ledger = mini_repo / "operations/transactions/lineage.yaml"
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.write_text(dump_ledger({prior.claim_id: prior}))
+        assert observe_claims(mini_repo)[prior.claim_id].status == "supported"
+        evidence = [{"claim_id": prior.claim_id, "evidence": [{"kind": "quote",
+                     "ref": "material://source-demo-book/lecture-01.pdf", "page": 1, "text": SLICED_LECTURE_TEXT}]}]
     revision_file = tmp_path / "l04-revision.yaml"
     write_yaml(revision_file, _compact_revision(
         mini_repo,
         route_changes={"update": [{
             "route_id": "route-demo-book",
             "fields": {"angle": "A sharper lecture-specific angle."}}]},
+        claim_evidence=evidence,
     ))
     checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
                       "--file", str(revision_file), "--check")
@@ -520,6 +543,12 @@ def test_reviewed_apply_needs_no_hand_built_envelope(mini_repo, tmp_path):
     row = next(r for s in live_map["sources"] for r in s["unit_routes"]
                if r.get("id") == "route-demo-book")
     assert row["angle"] == "A sharper lecture-specific angle."
+    if rejudge:
+        from learning_os.derive.semantics.lineage import load_ledger
+
+        assert observe_claims(mini_repo)[prior.claim_id].status == "supported"
+        assert load_ledger(mini_repo)[prior.claim_id].supersedes is not None
+        assert "operations/transactions/lineage.yaml" in {row["path"] for row in receipt["writes"]}
 
 
 def test_verify_plan_receipt_checks_projection(mini_repo, tmp_path):

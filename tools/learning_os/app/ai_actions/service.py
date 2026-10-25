@@ -14,7 +14,6 @@ from learning_os.derive.garden import project_garden_entries
 from learning_os.derive.material_synthesis import (
     current_unit_material_basis,
     inspected_material_by_route,
-    inspected_pages_by_route,
     publication_lineage,
     synthesis_destination,
     validate_synthesis_page_provenance,
@@ -598,7 +597,8 @@ class AIActionService:
             raise ContinuationRefusedError(
                 f"route {route_id} continuation refused: this request predates "
                 "slice-basis binding; re-prepare the request instead of continuing it")
-        inspected = inspected_pages_by_route(index_records).get(route_id, [])
+        inspected = {uri: entry["pages"] for uri, entry in
+                     inspected_material_by_route(index_records).get(route_id, {}).items()}
         try:
             record, index_entry, body = plan_continuation(
                 repo, route, basis=stored_basis, inspected=inspected,

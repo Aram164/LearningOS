@@ -68,6 +68,8 @@ class ClaimStatus:
 
     @property
     def goal_id(self) -> str:
+        if self.status == "withdrawn":
+            return ""
         detector = ("lineage-stale" if self.status == "stale" else
                     "claims-needing-review" if self.status == "contested" or self.audit == "defective" else "")
         return f"{detector}:{self.claim_id}@{self.occurrence}" if detector else ""
@@ -120,7 +122,9 @@ def interpret_claims(records: Mapping[str, ClaimLineage], revisions: Mapping[str
                 causes.add("coarse-pin")
             if verdict.blocked_by:
                 causes.add("assumption-blocked")
-        audit = "defective" if (cid, basis) in defective else "audited" if (cid, basis) in certified else "unaudited"
+        audit = ("unaudited" if verdict.status == "withdrawn" else
+                 "defective" if (cid, basis) in defective else
+                 "audited" if (cid, basis) in certified else "unaudited")
         occurrence = _digest(dependency_facts(cid)) if verdict.status == "stale" else basis
         out[cid] = ClaimStatus(cid, verdict.status, basis, occurrence, tuple(sorted(causes)),
                                moved, (units or {}).get(cid, ""), audit)

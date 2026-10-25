@@ -22,6 +22,7 @@ from learning_os.derive.semantics.claim_audits import (
     audit_id,
     audit_records,
     authorization_from_mapping,
+    eligible_pool,
     memberships,
     pool_digest,
     sample_pool,
@@ -43,6 +44,7 @@ from learning_os.derive.semantics.lineage import (
     dump_ledger,
     record_claim,
     to_dict,
+    withdraw,
 )
 from learning_os.derive.semantics.scan import intelligence_scan, observe_goal_ledger
 
@@ -197,17 +199,26 @@ def test_failed_audit_defects_match_exact_basis_and_require_repair_before_new_po
     decide(mini_repo, gid, "--authorize", file)
     report = mini_repo.parent / "report.md"
     report.write_text("One sampled route overclaims a node not taught at the locator.")
-    close = {"sample": auth["sample"], "defects": [auth["sample"][0]], "reviewer": "review-session",
+    close = {"sample": auth["sample"], "defects": auth["sample"][:2], "reviewer": "review-session",
              "report_path": str(report), "report_sha256": hashlib.sha256(report.read_bytes()).hexdigest()}
     write_yaml(file, close)
     decide(mini_repo, gid, "--close", file)
     goals = intelligence_scan(mini_repo)
-    assert len(goals) == 1 and goals[0].detector == "claims-needing-review"
+    assert len(goals) == 2 and all(g.detector == "claims-needing-review" for g in goals)
     defective = auth["sample"][0]["claim_id"]
     old = records[defective]
     records[defective] = replace(old, statement="Reviewed repair teaches a narrower node.", supersedes=to_dict(old))
     (mini_repo / "operations/transactions/lineage.yaml").write_text(dump_ledger(records))
     assert observe_claims_with_audits(mini_repo)[defective].audit == "unaudited"
+    remaining = auth["sample"][1]["claim_id"]
+    states = observe_claims_with_audits(mini_repo)
+    assert eligible_pool(states.values()) == ()
+    goals = intelligence_scan(mini_repo)
+    assert len(goals) == 1 and goals[0].detector == "claims-needing-review"
+    # Withdrawal resolves the active defect without erasing its audit history.
+    records = {row.claim_id: row for row in withdraw(list(records.values()), remaining)}
+    (mini_repo / "operations/transactions/lineage.yaml").write_text(dump_ledger(records))
+    assert observe_claims_with_audits(mini_repo)[remaining].goal_id == ""
     goals = intelligence_scan(mini_repo)
     assert len(goals) == 1 and goals[0].detector == "claims-audit" and goals[0].goal_id != gid
     # Historical closure remains bound to the original pool after repair.
@@ -216,6 +227,61 @@ def test_failed_audit_defects_match_exact_basis_and_require_repair_before_new_po
     write_yaml(file, close)
     refused = run_los(mini_repo, "goal", gid, "--close", "--audit-file", str(file), "--check")
     assert refused.returncode == 2 and "immutable result" in refused.stderr
+
+
+def test_known_defect_cannot_be_certified_by_another_historical_pool():
+    pool = tuple(ClaimBasis(f"covers:r-{i}", "a" * 64) for i in range(32))
+    seed = "ab" * 32
+    auth = AuditAuthorization(pool, seed, sample_pool(pool, seed))
+    failure = AuditResult(auth.sample, (auth.sample[0],), "reviewer", "report.md", "a" * 64)
+    clean = AuditResult(auth.sample, (), "reviewer", "report.md", "b" * 64)
+    certified, defective = memberships({"old-failed": AuditRecord(auth, failure),
+                                       "old-clean": AuditRecord(auth, clean)})
+    assert defective and not certified & defective
+
+
+@pytest.mark.parametrize("field", ["angle", "scope", "depth", "title", "node-summary"])
+def test_evidence_for_proposed_digest_drift_is_admitted_atomically(mini_repo, field):
+    from test_verbatim_anchor_admission import _patch_world
+
+    from learning_os.app.claim_admission import prepare_claim_admission
+    from learning_os.derive.semantics.lineage import (
+        emit_route_covers,
+        node_content_digest,
+        route_content_digest,
+    )
+    from learning_os.store.loader import load_repo
+
+    evidence = _patch_world(mini_repo)
+    repo = load_repo(mini_repo)
+    source_map = copy.deepcopy(repo.module_source_maps["module-demo"])
+    route = source_map["sources"][0]["unit_routes"][0]
+    unit = repo.units["unit-demo-l01"]
+    nodes = unit.data["knowledge_map"]["nodes"]
+    record = emit_route_covers(
+        route_id=route["id"], covers=route["covers"], read_revisions={}, judged_by="prior",
+        admitted_by={"request_id": "prior", "idempotency_key": "prior"},
+        source_hashes={"route-content:" + route["id"]: route_content_digest(
+            module_id="module-demo", source_id="source-demo-book", route=route),
+            **{"node-content:" + node["id"]: node_content_digest(node) for node in nodes if node["id"] in route["covers"]}})
+    path = mini_repo / "operations/transactions/lineage.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(dump_ledger({record.claim_id: record}))
+    assert observe_claims(mini_repo, repo=repo)[record.claim_id].status == "supported"
+    package = {"source_map": source_map, "claim_evidence": [evidence]}
+    # Unchanged supported claims still cannot be backfilled.
+    assert prepare_claim_admission(mini_repo, repo, "module-demo", package).problems
+    if field == "node-summary":
+        data = copy.deepcopy(unit.data)
+        for node in data["knowledge_map"]["nodes"]:
+            if node["id"] in route["covers"]:
+                node["summary"] = "A reviewed correction to this knowledge node."
+        package["units"] = [{"unit": data}]
+    else:
+        route[field] = {"scope": "prerequisite", "depth": "overview"}.get(field, "Reviewed updated wording.")
+    admitted = prepare_claim_admission(mini_repo, repo, "module-demo", package, unit_scope=unit.id)
+    assert admitted.problems == []
+    assert route["id"] in admitted.changed
 
 
 def test_incomplete_pool_and_changed_report_refuse_before_writes(mini_repo):

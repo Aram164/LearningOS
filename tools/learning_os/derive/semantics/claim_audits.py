@@ -194,7 +194,8 @@ def memberships(records: Mapping[str, AuditRecord]) -> tuple[frozenset[tuple[str
                 certified.update((p.claim_id, p.basis) for p in record.authorization.pool)
             else:
                 defective.update((p.claim_id, p.basis) for p in record.result.defects)
-    return frozenset(certified), frozenset(defective)
+    # A later clean pool cannot erase a known defect at the same judgment basis.
+    return frozenset(certified - defective), frozenset(defective)
 
 
 class AuditCandidate(Protocol):
@@ -209,6 +210,10 @@ class AuditCandidate(Protocol):
 
 
 def eligible_pool(claims: Iterable[AuditCandidate]) -> tuple[ClaimBasis, ...]:
-    return tuple(sorted(ClaimBasis(row.claim_id, row.basis) for row in claims
+    rows = tuple(claims)
+    # Share the repair-before-next-pool rule with both scans and authorization.
+    if any(row.status != "withdrawn" and row.audit == "defective" for row in rows):
+        return ()
+    return tuple(sorted(ClaimBasis(row.claim_id, row.basis) for row in rows
                         if row.claim_id.startswith("covers:") and row.status == "supported"
-                        and row.audit != "audited"))
+                        and row.audit == "unaudited"))

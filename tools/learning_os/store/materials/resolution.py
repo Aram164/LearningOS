@@ -227,6 +227,29 @@ def leading_material_locator(value) -> str | None:
     return head_path.as_posix()
 
 
+def material_locator_parts(locator: str) -> dict[str, str]:
+    """Exact relative file paths and their spans in a strict multi-file locator."""
+    parts: dict[str, str] = {}
+    for segment in locator.split(";"):
+        candidate = leading_material_locator(segment)
+        if candidate is None or candidate in parts:
+            return {}
+        parts[candidate] = segment.strip()
+    return parts if len(parts) >= 2 else {}
+
+
+def locator_for_material(locator: str, material_uri: str) -> str:
+    """Select this exact file's locator without borrowing another file's pages."""
+    if ";" not in locator or len(MATERIAL_SUFFIX_TOKEN.findall(locator)) < 2:
+        return locator
+    authority = material_uri_authority(material_uri)
+    relative = material_uri.removeprefix(f"{MATERIAL_SCHEME}{authority}/")
+    segment = material_locator_parts(locator).get(relative)
+    if segment is None:
+        raise ValueError("multi-file locator does not identify the file's page span")
+    return segment
+
+
 def single_file_material(source_material) -> str | None:
     """A source's own ``material://`` URI when it names one concrete file.
 
@@ -386,16 +409,8 @@ def resolve_route_material_files(
     if not isinstance(locator, str) or ";" not in locator or not authority:
         return []
 
-    candidates: list[str] = []
-    for part in locator.split(";"):
-        matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
-        if len(matches) != 1:
-            return []
-        candidate = safe_material_locator(part[:matches[0].end()].strip())
-        if candidate is None:
-            return []
-        candidates.append(candidate)
-    if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+    candidates = material_locator_parts(locator)
+    if not candidates:
         return []
 
     files: list[ResolvedMaterialFile] = []

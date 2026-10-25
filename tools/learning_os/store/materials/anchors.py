@@ -18,6 +18,7 @@ from learning_os.store.materials.resolution import (
     MATERIAL_SUFFIX_TOKEN,
     ResolvedMaterialFile,
     canonical_material_uri,
+    locator_for_material,
     material_location,
     material_uri_authority,
     materials_mount,
@@ -263,17 +264,14 @@ class AnchorReader:
 
     def _pdf_text(self, route: RouteMaterial, file: ResolvedMaterialFile,
                   snapshot: MaterialSnapshot, page: int, page_end: int | None) -> str:
-        locator = route.locator
-        if ";" in locator:
-            name = file.material_uri.rsplit("/", 1)[-1]
-            parts = [part for part in locator.split(";") if name in part]
-            if len(parts) != 1:
-                raise AnchorError("multi-file locator does not identify the quoted file's page span")
-            locator = parts[0]
+        try:
+            locator = locator_for_material(route.locator, file.material_uri)
+        except ValueError as exc:
+            raise AnchorError(str(exc)) from exc
         ranges = parse_locator_page_ranges(locator)
         pages = (page,) if page_end is None else (page, page_end)
-        if ranges and (min(pages) < min(start for start, _ in ranges)
-                       or max(pages) > max(end for _, end in ranges)):
+        if ranges and not all(any(start <= number <= end for start, end in ranges)
+                              for number in range(page, (page_end or page) + 1)):
             raise AnchorError("quote page is outside this file's locator span")
         return "\n".join(self._page(snapshot, number) for number in pages)
 

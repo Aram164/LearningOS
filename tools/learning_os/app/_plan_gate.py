@@ -15,6 +15,7 @@ import yaml
 from learning_os.app.admin.masters_planning import MasterPromotionPlan
 from learning_os.app.check import real_perimeter_errors
 from learning_os.app.check import staged_shadow as _staged_shadow
+from learning_os.app.claim_admission import claim_evidence_scaffolds
 from learning_os.derive.material_synthesis import (
     MaterialSynthesisError,
     synthesis_destination,
@@ -849,6 +850,11 @@ def module_plan_check_report(root: Path, module_id: str, package: dict,
         after_claims = observe_claims(shadow, repo=staged_repo, route_ids=touched_routes & set(staged_rows))
         rejudged = [row["claim_id"] for row in package.get("claim_evidence", []) or [] if isinstance(row, dict)]
         claims = claim_impacts(before_claims, after_claims, rejudged)
+        scaffolds = claim_evidence_scaffolds(root, staged_repo, module_id,
+                                            [str(row["claim_id"]) for row in claims if row["after"] == "will-be-stale"])
+        for row in claims:
+            if scaffold := scaffolds.get(str(row["claim_id"])):
+                row["claim_evidence_scaffold"] = scaffold
 
         units: dict[str, dict] = {}
         for uid in sorted(seen_units):
