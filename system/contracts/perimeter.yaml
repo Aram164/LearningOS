@@ -212,17 +212,15 @@ entries:
 # and none is performed on this file's say-so. Each entry states what must be
 # proved first.
 
-pending_disposition:
-  - path: original_research.txt
-    disposition: >-
-      operator files it with the intelligence-plane audit record or promotes
-      it to a declared wrapper entry. Already proved not a duplicate: sha256
-      4345cf71…a27483 differs from the workbench RESEARCH.txt (53f66bdf…bbe4),
-      so it must not be disposed of as a shadow.
-  - path: HANDOFF.md
-    disposition: >-
-      transient cross-session handoff at the wrapper root (2026-09-29 issue
-      cleanup). Delete when consumed and remove this entry with the file.
+pending_disposition: []
+  # 2026-10-25, end-state reconciliation (Aram: "remove every redundant thing,
+  # just leave the end state"): both remaining strays were disposed of as their
+  # entries said. HANDOFF.md was consumed — every task it handed off had
+  # landed. original_research.txt was filed with the intelligence-plane audit
+  # record: both left the umbrella together, with the rest of the finished
+  # workbench contents, for the off-tree reconciliation archive of that date.
+  # workbench/ and outputs/ stay as declared, empty scratch directories.
+  #
   # 2026-09-10: the consolidated research/autonomy/runtime dossier moved to
   # LearningOS/workbench/ per Aram (active handoff artifact, explicitly
   # non-canonical) and this entry was removed; workbench/ is a declared
