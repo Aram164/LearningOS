@@ -16,9 +16,12 @@ from __future__ import annotations
 import json
 
 
-def _build_ui(parent):
-    """The UI authority the default layout expects next to the repository."""
-    ui = parent / "obsidian-ui"
+def _build_ui(workspace):
+    """The UI authority the default layout expects next to the repository.
+
+    A synthetic fixture in the test's own tmp workspace, never the live
+    sibling checkout (see test_pre_push_hook's live-UI-reader guard)."""
+    ui = workspace / "obsidian-ui"
     (ui / "plugin").mkdir(parents=True, exist_ok=True)
     for name in ("main.js", "styles.css", "manifest.json", "build-info.json"):
         (ui / "plugin" / name).write_text("void 0;\n", encoding="utf-8")
