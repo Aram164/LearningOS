@@ -152,7 +152,13 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
         scopes: list[dict[str, object]] = []
         files = resolve_route_material_files(repo, {**row, "source_id": sid})
         for file in files:
-            locator = locator_for_material(str(row.get("locator") or ""), file.material_uri)
+            authored_locator = str(row.get("locator") or "")
+            try:
+                locator = locator_for_material(authored_locator, file.material_uri)
+            except ValueError as exc:
+                scopes.append({"ref": file.material_uri, "locator": authored_locator,
+                               "page_ranges": [], "scope_error": str(exc)})
+                continue
             ranges = parse_locator_page_ranges(locator)
             scopes.append({"ref": file.material_uri, "locator": locator,
                            "page_ranges": [list(span) for span in ranges]})
@@ -173,7 +179,9 @@ def claim_evidence_scaffolds(root: Path, repo: Repo, module_id: str,
             "claim_evidence": [{"claim_id": cid, "evidence": evidence,
                                 "reads": {key: value for key, value in sorted(revisions.items()) if key in owners}}],
             "material_scope": scopes,
-            "instruction": "Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence.",
+            "instruction": ("Resolve the reported file/locator mismatch before drafting evidence; this draft is not admitted evidence."
+                            if any("scope_error" in scope for scope in scopes) else
+                            "Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence."),
         }
     return result
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 
@@ -168,6 +169,31 @@ def test_evidence_scaffold_has_exact_file_scopes_and_current_read_integers(mini_
     assert [quote["page"] for quote in entry["evidence"]] == [1, 3]
     assert all(quote["text"] == "" for quote in entry["evidence"])
     assert [scope["page_ranges"] for scope in scaffold["material_scope"]] == [[[1, 2]], [[3, 4]]]
+
+
+def test_scaffold_reports_vault_locator_mismatch_without_widening_evidence(mini_repo):
+    from learning_os.app.claim_admission import prepare_claim_admission
+    from learning_os.store.fingerprint import canonical_fingerprint
+
+    route = _route("route-demo-bound", "target.pdf pp. 1-2")
+    _add_sliced_unit(mini_repo, [route], {"target.pdf": ["readable page"] * 4})
+    repo = load_repo(mini_repo)
+    proposed = copy.deepcopy(repo.module_source_maps["module-demo"])
+    changed = proposed["sources"][0]["unit_routes"][0]
+    changed.update(vault_path="material://source-demo-book/target.pdf",
+                   locator="other-a.pdf pp. 1-2; other-b.pdf pp. 3-4")
+    before = canonical_fingerprint(mini_repo)
+    admission = prepare_claim_admission(mini_repo, repo, "module-demo", {"source_map": proposed})
+    assert any("without claim evidence" in problem for problem in admission.problems)
+    diagnostic = next(problem for problem in admission.problems if problem.startswith("claim_evidence scaffold"))
+    scaffold = json.loads(diagnostic.split(": ", 1)[1])
+    assert scaffold["claim_evidence"][0]["evidence"] == []
+    scope = scaffold["material_scope"][0]
+    assert scope["ref"] == changed["vault_path"]
+    assert scope["locator"] == changed["locator"]
+    assert scope["page_ranges"] == []
+    assert "does not identify" in scope["scope_error"]
+    assert admission.evidence == {} and canonical_fingerprint(mini_repo) == before
 
 
 def test_pdf_parser_and_extraction_errors_are_distinct_from_no_text(tmp_path, monkeypatch):

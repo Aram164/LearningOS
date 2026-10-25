@@ -168,7 +168,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"route.patch\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"schema_version\": 1,\n    \"unit_id\": \"unit-demo-l01\",\n    \"route_id\": \"route-b2f1f80014860a929a3af0bc\",\n    \"changes\": {\n      \"angle\": {\n        \"before\": \"Derives the weighted sum and works a discrete example.\",\n        \"after\": \"Scenario characterization angle.\"\n      }\n    },\n    \"claim_anchors\": [],\n    \"claims\": [\n      {\n        \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\",\n        \"before\": \"stale\",\n        \"after\": \"will-be-stale\",\n        \"warning\": \"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\n        \"next\": \"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\"\n      }\n    ],\n    \"plan_sha256\": \"sha256:50a79e3fd996e71f5c562cbdce8dd09613a1789af043da1dfb33ae55d2f04a7a\",\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/source-map.yaml\",\n      \"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"\n    ],\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"study-map-demo-l01\",\n      \"unit-demo-l01\"\n    ],\n    \"expected_revisions\": {\n      \"module-demo\": 0,\n      \"study-map-demo-l01\": 0,\n      \"unit-demo-l01\": 3\n    },\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"module-demo\": 1,\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"route.patch\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"schema_version\": 1,\n    \"unit_id\": \"unit-demo-l01\",\n    \"route_id\": \"route-b2f1f80014860a929a3af0bc\",\n    \"changes\": {\n      \"angle\": {\n        \"before\": \"Derives the weighted sum and works a discrete example.\",\n        \"after\": \"Scenario characterization angle.\"\n      }\n    },\n    \"claim_anchors\": [],\n    \"claims\": [\n      {\n        \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\",\n        \"before\": \"stale\",\n        \"after\": \"will-be-stale\",\n        \"warning\": \"covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\n        \"next\": \"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\",\n        \"claim_evidence_scaffold\": {\n          \"claim_evidence\": [\n            {\n              \"claim_id\": \"covers:route-b2f1f80014860a929a3af0bc\",\n              \"evidence\": [\n                {\n                  \"kind\": \"quote\",\n                  \"ref\": \"material://source-demo-book/lecture-01.pdf\",\n                  \"text\": \"\",\n                  \"page\": null\n                }\n              ],\n              \"reads\": {\n                \"unit-demo-l01\": 3\n              }\n            }\n          ],\n          \"material_scope\": [\n            {\n              \"ref\": \"material://source-demo-book/lecture-01.pdf\",\n              \"locator\": \"lecture-01.pdf\",\n              \"page_ranges\": []\n            }\n          ],\n          \"instruction\": \"Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence.\"\n        }\n      }\n    ],\n    \"plan_sha256\": \"sha256:50a79e3fd996e71f5c562cbdce8dd09613a1789af043da1dfb33ae55d2f04a7a\",\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/source-map.yaml\",\n      \"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"\n    ],\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"study-map-demo-l01\",\n      \"unit-demo-l01\"\n    ],\n    \"expected_revisions\": {\n      \"module-demo\": 0,\n      \"study-map-demo-l01\": 0,\n      \"unit-demo-l01\": 3\n    },\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"module-demo\": 1,\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "route.patch",
         "error": null,
@@ -203,6 +203,32 @@
             {
               "after": "will-be-stale",
               "before": "stale",
+              "claim_evidence_scaffold": {
+                "claim_evidence": [
+                  {
+                    "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
+                    "evidence": [
+                      {
+                        "kind": "quote",
+                        "page": null,
+                        "ref": "material://source-demo-book/lecture-01.pdf",
+                        "text": ""
+                      }
+                    ],
+                    "reads": {
+                      "unit-demo-l01": 3
+                    }
+                  }
+                ],
+                "instruction": "Fill an exact quotation and its place, or the actual external verification note; this draft is not admitted evidence.",
+                "material_scope": [
+                  {
+                    "locator": "lecture-01.pdf",
+                    "page_ranges": [],
+                    "ref": "material://source-demo-book/lecture-01.pdf"
+                  }
+                ]
+              },
               "claim_id": "covers:route-b2f1f80014860a929a3af0bc",
               "next": "unit-plan-revise unit-demo-l01 --file REVISION.yaml --check",
               "warning": "covers:route-b2f1f80014860a929a3af0bc remains stale; re-judge with unit-plan-revise unit-demo-l01 --file REVISION.yaml --check"
