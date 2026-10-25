@@ -30,6 +30,7 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
     root = Path(__file__).resolve().parents[1]
     operator = (root / "system/OPERATOR.md").read_text(encoding="utf-8")
     claude = (root / "system/CLAUDE.md").read_text(encoding="utf-8")
+    policy = (root / "system/OPERATOR-POLICY.md").read_text(encoding="utf-8")
     agents = (root / "AGENTS.md").read_text(encoding="utf-8")
     readme = " ".join((root / "README.md").read_text(encoding="utf-8").split())
     procedures = root / "system/procedures"
@@ -68,8 +69,9 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(tmp_path):
     assert "procedures/bootstrap-order.md" in bootstrap_section
     assert "capabilities --compact --json" in " ".join(bootstrap_order.split())
     assert "bootstrap --brief" in " ".join(bootstrap_order.split())
-    assert ".venv/bin/python tools/validate.py --compact" in claude
-    assert ".venv/bin/python tools/warning_baseline.py --check" in claude
+    assert "[OPERATOR-POLICY.md](OPERATOR-POLICY.md)" in claude
+    assert ".venv/bin/python tools/validate.py --compact" in policy
+    assert ".venv/bin/python tools/warning_baseline.py --check" in policy
 
     scrut = _scrut_bin()
     assert scrut.is_file(), f"Scrut binary missing: {scrut}"
