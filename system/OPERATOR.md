@@ -9,12 +9,20 @@ It is the **declared** entry point, not merely the customary one:
 the validator fails if that declaration points anywhere else, or at a document
 that is not both current and binding.
 
+Detailed permissions and note-handling policy live in
+[OPERATOR-POLICY.md](OPERATOR-POLICY.md); the automatic Claude adapter only routes
+the task. Code, contract, test and documentation changes start at
+[DEVELOPER.md](DEVELOPER.md). This operator entry governs learner operations.
+The corpus records each document's `audience` separately from its authority;
+operator task routes may name only `operator` or `both` documents.
+
 ## What binds, and what does not
 
 `system/` holds several thousand lines of prose. Not all of it is rules. The
 index at `system/contracts/normative-corpus.yaml` classifies every
 owned `AGENTS.md`, `README.md`, `system/*.md`, `system/adr/*.md`, and
-`system/skills/*/SKILL.md` file exactly once — class, status,
+`system/skills/*/SKILL.md` and `system/developer/` document exactly once —
+audience, class, status,
 authority, owner, and its supersession edges — and `make check` fails if a
 document is added without being classified, or if a retired document is still
 marked binding.

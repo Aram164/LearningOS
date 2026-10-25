@@ -551,10 +551,10 @@ def test_an_unindexed_operator_skill_is_an_error():
         "# demo skill\n", encoding="utf-8")
     entry = {
         "path": "system/OPERATOR.md", "class": "contract", "status": "current",
-        "authority": "binding", "owner": "test", "summary": "the contract",
+        "authority": "binding", "audience": "both", "owner": "test", "summary": "the contract",
     }
     (root / nc.CORPUS_RELATIVE).write_text(
-        _yaml.safe_dump({"corpus_version": 1, "entrypoint": "system/OPERATOR.md",
+        _yaml.safe_dump({"corpus_version": 1, "entrypoint": "system/OPERATOR.md", "developer_entrypoint": "system/OPERATOR.md",
                          "documents": [entry]}, sort_keys=False),
         encoding="utf-8")
 
@@ -565,11 +565,11 @@ def test_an_unindexed_operator_skill_is_an_error():
     # Classifying it clears the gate; the schema admits the skill path shape.
     skill_entry = {
         "path": "system/skills/demo/SKILL.md", "class": "adapter",
-        "status": "current", "authority": "binding", "owner": "test",
+        "status": "current", "authority": "binding", "audience": "both", "owner": "test",
         "summary": "a runbook",
     }
     (root / nc.CORPUS_RELATIVE).write_text(
-        _yaml.safe_dump({"corpus_version": 1, "entrypoint": "system/OPERATOR.md",
+        _yaml.safe_dump({"corpus_version": 1, "entrypoint": "system/OPERATOR.md", "developer_entrypoint": "system/OPERATOR.md",
                          "documents": [entry, skill_entry]}, sort_keys=False),
         encoding="utf-8")
     assert nc.check(root) == []

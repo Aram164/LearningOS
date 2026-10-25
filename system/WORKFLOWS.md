@@ -285,13 +285,10 @@ identity, retain its registry row with `lifecycle: retired`; its observations
 stay readable, but it cannot receive new observations or candidates and cannot
 support a current ability through a bridge. Do not delete or reuse the ID.
 
-Both sets live in `system/contracts/capabilities.yaml` (`admission:` and
-`admission_channels:`) and `tools/learning_os/commands/capability.py`
-(`GESTURE_ALLOWLIST`, `UI_REVIEWED_ALLOWLIST`); the contract describes the
-policy, the Python sets enforce it, and `tests/test_observation_gesture.py`
-fails when they disagree. An interface keeps its own copy — the Obsidian UI's
-is `UI_GESTURE_CAPABILITIES`, checked against this one by its
-`scripts/check-contract.mjs`. Refusals name the route back to a permitted
+The admission policy is declared in `system/contracts/capabilities.yaml`
+(`admission:` and `admission_channels:`). Implementation and consumer parity:
+[operation pipeline](developer/components/operation-pipeline.md).
+Refusals name the route back to a permitted
 write rather than the approval kind: until 2026-09-13 the list held only the
 three writers that existed when it was introduced, while the installed UI
 drove eleven more through the same gesture, and four ordinary study actions
@@ -601,7 +598,7 @@ registrations). Pure orchestration — every step is an existing workflow:
 1. **Walk the term's partitioned academic modules**: each one is either
    truly done → close it (workflow 19), or something outlives it → carry it
    (workflow 20). No module skips this fork.
-2. **Harvest the Garden** (CLAUDE.md §14): promote the ripe, prune the dead,
+2. **Harvest the Garden** (OPERATOR-POLICY.md §14): promote the ripe, prune the dead,
    let the rest gestate.
 3. **Prune operational residue:** `COORDINATION.md` mentions no closed module
    (workflow 19 step 4); collections drop entries that served only the closed
@@ -914,8 +911,8 @@ Procedure: [transcript](procedures/review-a-stage-material-angle.md).
 A route describes a material's general contribution; a placement may narrow
 that purpose for one stage. Preserve that distinction after reviewing both
 texts. The optional resource `angle_review` records `kind: refinement`, the
-actual reviewer, date, rationale, and `angle_review_fingerprint` from
-`learning_os.derive.validation.plan_rigor`. It is canonical operator evidence; the manifest
+actual reviewer, date, rationale, and `angle_review_fingerprint` computed by the governed preflight. Developer owner:
+[validation](developer/components/validation.md). It is canonical operator evidence; the manifest
 continues to publish the descriptions under its existing interface contract.
 A refinement attests only to the relationship between those descriptions.
 
@@ -957,8 +954,8 @@ nonempty `--note`. For an audit, prepare the authorization YAML outside Core:
 `pool` is the complete currently eligible sorted list of `{claim_id, basis}`
 pairs; `pool_sha256` is its full digest; `seed` is 64 lowercase hex digits from
 system randomness; `algorithm` is `python-mt19937-shuffle-v1`; `sample` is the
-30 pairs returned by the recorded seeded shuffle. The pure reference helpers
-are in `tools/learning_os/derive/semantics/claim_audits.py`.
+30 pairs returned by the recorded seeded shuffle. The algorithm and its implementation are mapped in
+[semantics](developer/components/semantics.md).
 
 Run `goal AUDIT_ID --authorize --audit-file FILE --check`, review the exact
 pool/seed/sample and returned hash, then apply those same arguments with

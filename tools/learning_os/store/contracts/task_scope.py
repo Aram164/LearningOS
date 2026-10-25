@@ -214,6 +214,18 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
         for document in corpus.documents
         if document.authority == "binding" and document.status == "current"
     }
+    by_path = corpus.by_path()
+
+    def operator_document(identifier: str, relative: str) -> None:
+        document = by_path.get(relative)
+        if relative not in binding or document is None:
+            raise TaskScopeError(
+                f"task scope {identifier} names {relative!r}, which is not "
+                "a current binding document")
+        if document.audience not in {"operator", "both"}:
+            raise TaskScopeError(
+                f"task scope {identifier} names {relative!r} with audience "
+                f"{document.audience!r}; operator tasks require operator or both")
     verbs = _parser_verbs(root)
     procedures_root = root / PROCEDURES_RELATIVE
     # A synthetic repository carries the contracts without the prose spine.
@@ -254,6 +266,7 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
                     f"task scope {identifier} procedure {label!r} needs a "
                     f"path#anchor target")
             relative, _, anchor = target.partition("#")
+            operator_document(identifier, relative)
             target_path = (root / relative).resolve()
             if transcripts_present:
                 if target_path.parent != procedures_root.resolve() \
@@ -298,6 +311,7 @@ def load_task_scope(root: Path) -> dict[str, TaskScope]:
                 raise TaskScopeError(
                     f"task scope {identifier} scopes {document!r}, which is not "
                     f"a current binding document")
+            operator_document(identifier, relative)
             # Checked where the document is present, as procedure anchors
             # are where the transcripts are: a synthetic repository carries
             # the contracts without the prose they scope.

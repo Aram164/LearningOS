@@ -35,6 +35,25 @@ from learning_os.store.contracts.verb_catalogue import build_verb_catalogue
 ROOT = Path(__file__).resolve().parents[1]
 
 
+@pytest.mark.parametrize("target", ["scope", "procedure"])
+def test_operator_routes_reject_developer_only_documents(mini_repo, target):
+    import yaml
+
+    from learning_os.store.contracts.task_scope import TaskScopeError
+
+    root = mini_repo
+    tasks = yaml.safe_load((root / "system/contracts/task-scope.yaml").read_text())["tasks"]
+    task = next(t for t in tasks if t.get("procedures"))
+    relative = (task["scope"][0] if target == "scope" else
+                task["procedures"][0]["target"]).partition("#")[0]
+    path = root / "system/contracts/normative-corpus.yaml"
+    corpus = yaml.safe_load(path.read_text())
+    next(d for d in corpus["documents"] if d["path"] == relative)["audience"] = "developer"
+    path.write_text(yaml.safe_dump(corpus, sort_keys=False))
+    with pytest.raises(TaskScopeError, match="audience 'developer'"):
+        load_task_scope(root)
+
+
 def _parser_commands() -> set[str]:
     import los
 
@@ -311,3 +330,14 @@ def test_a_scoped_section_must_exist(mini_repo):
         "      - system/SEMANTIC-CONTRACT.md#no-such-section\n", 1), encoding="utf-8")
     with pytest.raises(TaskScopeError, match="section that does not exist"):
         load_task_scope(mini_repo)
+
+
+def test_automatic_adapter_routes_both_audiences_without_loading_deep_policy():
+    adapter = (ROOT / "system/CLAUDE.md").read_text()
+    assert len(adapter.splitlines()) <= 40
+    assert "DEVELOPER.md" in adapter and "OPERATOR-POLICY.md" in adapter
+    assert "## 2. Bootstrap order" in adapter
+    assert "## 7. Retrieval behavior" in adapter
+    assert "## 14. Garden" not in adapter
+    policy = (ROOT / "system/OPERATOR-POLICY.md").read_text()
+    assert "## 14. Garden" in policy and "## 5. Changes requiring explicit approval" in policy

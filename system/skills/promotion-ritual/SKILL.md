@@ -5,7 +5,7 @@ description: Harvest the Garden — walk every idea in knowledge/garden/, promot
 
 # Promotion Ritual — Harvest the Garden (Learning OS v3)
 
-Implements the **Harvest the Garden** routine in `system/CLAUDE.md` §14, with
+Implements the **Harvest the Garden** routine in `system/OPERATOR-POLICY.md` §14, with
 `system/WORKFLOWS.md` §3 (create or evolve a note), §4–§6a (register concepts,
 relations, sources) and §15 (deprecate or supersede) as the atomic steps. Read
 §14 before running it; the six-step routine lives there and is not restated
@@ -33,7 +33,7 @@ oldest-touched first. Read it first; it is a disposable view, so never edit it.
 
 ## Hard constraints
 
-**Promotion is a visible-review change** (CLAUDE.md §4): it assigns a role and
+**Promotion is a visible-review change** (OPERATOR-POLICY.md §4): it assigns a role and
 creates a canonical note. Propose full frontmatter (id, title, role, concepts,
 sources, state) and the target `knowledge/notes/<domain>/` path, then get
 approval per note or per batch before moving anything.

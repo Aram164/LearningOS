@@ -1,4 +1,9 @@
-# AI operator entry point
+# AI task entry points
+
+For code, architecture, contracts, tests or documentation changes, start with
+[`system/DEVELOPER.md`](system/DEVELOPER.md). For operating learner state, use
+the operator route below. Audience selects reading order, never an exemption
+from relevant binding rules.
 
 Read and obey [`system/OPERATOR.md`](system/OPERATOR.md). Discover capabilities
 with `.venv/bin/python tools/los.py capabilities --compact --json`; start with the entry

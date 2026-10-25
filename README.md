@@ -44,7 +44,7 @@ The rest of this file is the full manual; the four commands are under
 
 - **What binds:** `system/contracts/normative-corpus.yaml` — every `system/*.md` and `system/adr/*.md` file classified exactly once (class, status, authority, owner, supersession). Read it before treating anything under `system/` as law; `make check` fails if a document is added without being classified or if a retired one still claims to bind.
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
-- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the Claude adapter and deeper policy reference. Root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to `system/CLAUDE.md`
+- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the short task adapter; deeper policy lives in `system/OPERATOR-POLICY.md`. Root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to `system/CLAUDE.md`
 - **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed the same day (`migration/final-report.md`). This repository is the operational root.
 - **Legacy:** the frozen pre-v3 tree is shelved at `../legacy/`; the former Job source retained after ADR-013 is at `../legacy/Job/`.
@@ -176,72 +176,10 @@ installed into the sibling UI checkout when it is present. Each installed hook
 checks itself against its tracked canonical source; if they differ, the gate
 fails with the single repair command `make hooks`.
 
-## Changing a schema (the data contract)
+## Developer changes
 
-Every record schema is `additionalProperties: false`, and canonical records carry
-no per-record version. That is strict by design, but it means editing a schema
-silently redefines what "valid" means for data already on disk — and years later
-there is no way to ask "what format was this note written under, and what brings
-it forward?"
-
-`system/contracts/data-contract.yaml` records the current format version and a
-fingerprint over `system/schema/*.schema.json` (the schemas governing stored
-records; capability payload schemas are excluded — they validate requests, not
-data at rest). `make check` compares them, so a schema edit cannot land without a
-deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
-
-1. **Does existing data still validate?** `tests/fixtures/formats/v<N>/` holds a
-   frozen snapshot of each historical format and is loaded against the *current*
-   schemas. If those tests still pass, the change is backward-compatible.
-2. **If not, write the migration** under `tools/migrations/` — idempotent,
-   dry-run by default, and bounded to the last data-contract generation it
-   understands. A completed migration cannot be replayed on a later live
-   format; write a new migration instead. See `tools/migrations/README.md`.
-3. **Bump the contract:**
-   `.venv/bin/python tools/schema_contract.py --bump --note "…" [--migration …]`
-4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
-   it to `FORMATS` in `tests/test_format_fixtures.py`.
-
-Never edit or regenerate an existing fixture — see
-`tests/fixtures/formats/README.md`. A fixture that tracks current code can never
-fail, and one that gets edited to pass destroys the record of the format it was
-supposed to preserve.
-
-## Changing the manifest (the interface contract)
-
-The data contract above governs what this repository *stores*. What it
-*publishes* is a separate contract with separate consumers:
-`generated/manifest.json` is the one shape every interface reads, and
-`system/contracts/manifest-contract.yaml` declares its version and its exact key
-sets.
-
-They are versioned independently and deliberately: a record can gain an optional
-field without changing the projection, and the projection can be reshaped
-without touching a single stored record.
-
-| what | contract | version owner |
-|---|---|---|
-| canonical record format | `system/contracts/data-contract.yaml` | read from this file; `make contract` reports it |
-| published manifest shape | `system/contracts/manifest-contract.yaml` | read from this file; `make contract` reports it |
-
-`build_manifest` checks itself against that declaration on every build, so a
-change to the published shape fails here rather than downstream. That is the
-point: until 2026-08-08 only the consumer declared the version (in the Obsidian
-UI's lock file), so Core could add a top-level key, pass its own tests, push —
-and break the other repository. It happened, with `topics`.
-
-When `MANIFEST-CONTRACT-DRIFT` fires:
-
-1. **Bump:** `.venv/bin/python tools/manifest_contract.py --bump --note "…"` — it rebuilds
-   with enforcement off, adopts the shape actually produced, and records the
-   history entry. `--show` prints the current shape without changing anything.
-2. **Mirror into the UI in the same change** — `contracts/manifest-v<N>.lock.json`,
-   `MANIFEST_CONTRACT_VERSION`, `ManifestV<N>`, and the fixture vault manifest.
-   Core and the UI release together; a bump that lands alone is the exact bug
-   this contract exists to prevent.
-
-Additive still bumps. Consumers declare an exact version and fail closed, so
-"only added a key" is not "invisible".
+Start at [system/DEVELOPER.md](system/DEVELOPER.md). Schema and manifest
+change procedures live in [changing-contracts](system/developer/changing-contracts.md).
 
 ## Materials durability
 
@@ -285,9 +223,6 @@ removing sources, and commit it with the change that caused it.
 
 ## Transactional writes and Projects
 
-Canonical UI/CLI mutations are declared in
-`system/contracts/capabilities.yaml` and committed atomically through the
-shared transaction service. Successful writes produce receipts and increment
-only the affected artifact revisions. The Bachelor thesis is the first
-first-class Project; its former module ID remains a compatibility alias while
-the legacy module identifier is still supported.
+See [ARCHITECTURE](system/ARCHITECTURE.md#first-class-projects) for Project
+ownership and [transactions](system/developer/components/transactions.md)
+for the canonical write boundary.

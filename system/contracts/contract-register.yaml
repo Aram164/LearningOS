@@ -71,7 +71,7 @@ contracts:
   - declaration: system/contracts/normative-corpus.yaml
     governs: >-
       Which documents under system/ bind, which are retired, and where an
-      operator enters. Set-identical against the corpus globs; supersession
+      operator or developer enters, with independently declared audiences. Set-identical against the corpus globs; supersession
       edges, retirement notices and index order all checked.
     enforced_by: validator
     checker: learning_os.store.contracts.normative_corpus

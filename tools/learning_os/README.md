@@ -4,25 +4,13 @@ This package owns LearningOS semantics.  The sibling Obsidian UI presents the
 state; it does not reimplement these rules.  The supported cross-process surface
 is `tools/los.py` (or the installed `los` command), not an internal Python module.
 
+Developer routing and the checked architecture map live in
+`system/DEVELOPER.md` and `system/developer/CODEMAP.md`.
+
 ## Dependency direction
 
-```text
-human / agent / Obsidian UI
-            |
-            v
-tools/los.py and focused tools/*.py entrypoints
-            |
-            v
-learning_os.adapters        command parsing and CLI types
-            |
-            v
-learning_os.app             the operation surface
-       |            |
-       v            v
-domain owners     store owners      (semantics, contracts, loading, transactions)
-       |            |
-       +-----> derive/  projections, validation and semantics over loaded state
-```
+`adapters → app → derive → store → domain` (from `pyproject.toml`).
+See `system/developer/C4.md` for generated component views.
 
 The package has five subpackages.  Dependencies point inward from entrypoints to
 semantic owners:

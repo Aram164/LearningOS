@@ -57,6 +57,8 @@ directories:
         purpose: documents — indexed in system/contracts/normative-corpus.yaml
       - path: system/adr
         purpose: decision records — indexed in the same file
+      - path: system/developer
+        purpose: developer routing, architecture map and component pages
       - path: system/contracts
         purpose: machine-checked declarations — see contract-register.yaml
       - path: system/procedures

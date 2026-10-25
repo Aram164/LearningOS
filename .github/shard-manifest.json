@@ -130,6 +130,7 @@
    "tests/test_semantic_lineage.py",
    "tests/test_source_examination.py",
    "tests/test_stage_result.py",
+   "tests/test_system_map.py",
    "tests/test_trace_context.py",
    "tests/test_transaction_faults.py",
    "tests/test_transactions.py",

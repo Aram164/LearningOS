@@ -28,7 +28,7 @@ workspace is frozen, so promotion afterwards is too late and the knowledge is
 stranded. `standing: true` efforts (degree planning, job) are exempt and never
 close on a boundary.
 
-**Harvest the Garden** (CLAUDE.md §14) — the `promotion-ritual` skill. Promote
+**Harvest the Garden** (OPERATOR-POLICY.md §14) — the `promotion-ritual` skill. Promote
 the ripe, prune the dead, name what is left to gestate.
 
 **Prune operational residue.** `COORDINATION.md` must mention no closed module

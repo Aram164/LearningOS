@@ -24,6 +24,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `verify_plan_receipt.py` | supported gate | Receipt/projection check for one plan transaction (`make plan-check`). |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
+| `system_map.py` | supported development gate | Checks module ownership, named references, layers and generated developer-map blocks; `--write` regenerates those blocks. Never a canonical validation rule. |
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
 | `doc_blocks.py` | supported contract tool | Checks or regenerates documentation counts, command names and procedure links from their metadata owners; validation blocks stale or malformed projections. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |

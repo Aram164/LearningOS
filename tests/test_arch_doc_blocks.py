@@ -41,10 +41,10 @@ def docs(tmp_path):
     contracts.mkdir()
     shutil.copy2(ROOT / "system/contracts/normative-corpus.schema.json", contracts)
     (contracts / "normative-corpus.yaml").write_text(yaml.safe_dump({
-        "corpus_version": 1, "entrypoint": "system/OPERATOR.md", "documents": [
+        "corpus_version": 1, "entrypoint": "system/OPERATOR.md", "developer_entrypoint": "system/OPERATOR.md", "documents": [
             {"path": relative, "class": "reference", "status": "current",
              "authority": "informative" if relative == "README.md" else "binding",
-             "owner": "test", "summary": "Synthetic documentation projection."}
+             "owner": "test", "audience": "both", "summary": "Synthetic documentation projection."}
             for relative in blocks.OWNERS.values()]}))
     (contracts / "capabilities.yaml").write_text(yaml.safe_dump({
         "contract": "learningos-capabilities", "schema_version": 1, "contract_version": 2,

@@ -41,6 +41,7 @@ def _corpus(tmp_path: Path, documents: list[dict], *, entrypoint: str | None = N
         yaml.safe_dump({
             "corpus_version": 1,
             "entrypoint": entrypoint or documents[0]["path"],
+            "developer_entrypoint": entrypoint or documents[0]["path"],
             "documents": documents,
         }, sort_keys=False),
         encoding="utf-8",
@@ -56,6 +57,7 @@ def _entry(path: str, **overrides) -> dict:
         "authority": "binding",
         "owner": "test",
         "summary": "a document",
+        "audience": "both",
     }
     entry.update(overrides)
     return entry
@@ -63,6 +65,53 @@ def _entry(path: str, **overrides) -> dict:
 
 def _codes(issues) -> set[str]:
     return {issue.code for issue in issues}
+
+
+@pytest.mark.parametrize("value", [None, "unknown"])
+def test_document_audience_is_required_and_closed(tmp_path, value):
+    entry = _entry("system/OPERATOR.md")
+    if value is None:
+        entry.pop("audience")
+    else:
+        entry["audience"] = value
+    root = _corpus(tmp_path, [entry])
+    issues = nc.check(root)
+    assert "UNREADABLE" in _codes(issues)
+    assert "audience" in str(issues[0])
+
+
+@pytest.mark.parametrize("change", ["missing", "unindexed", "retired", "informative", "audience"])
+def test_developer_entrypoint_is_declared_and_compatible(tmp_path, change):
+    root = _corpus(tmp_path, [_entry("system/OPERATOR.md"), _entry("system/DEVELOPER.md")])
+    path = root / nc.CORPUS_RELATIVE
+    raw = yaml.safe_load(path.read_text())
+    raw["developer_entrypoint"] = "system/DEVELOPER.md"
+    if change == "missing":
+        raw.pop("developer_entrypoint")
+    elif change == "unindexed":
+        raw["developer_entrypoint"] = "system/GONE.md"
+    elif change == "retired":
+        raw["documents"][1].update(status="frozen", authority="historical")
+    elif change == "informative":
+        raw["documents"][1]["authority"] = "informative"
+    else:
+        raw["documents"][1]["audience"] = "operator"
+    path.write_text(yaml.safe_dump(raw))
+    assert ("UNREADABLE" if change == "missing" else "ENTRYPOINT") in _codes(nc.check(root))
+
+
+def test_operator_entrypoint_rejects_developer_only_audience(tmp_path):
+    root = _corpus(tmp_path, [_entry("system/OPERATOR.md", audience="developer")])
+    assert any(issue.code == "ENTRYPOINT" and "operator" in issue.message
+               and "audience" in issue.message for issue in nc.check(root))
+
+
+def test_developer_component_prose_must_be_indexed(tmp_path):
+    root = _corpus(tmp_path, [_entry("system/OPERATOR.md")])
+    page = root / "system/developer/components/new.md"
+    page.parent.mkdir(parents=True)
+    page.write_text("# new\n")
+    assert any(i.code == "MISSING" and i.path.endswith("components/new.md") for i in nc.check(root))
 
 
 # ---- the synthetic half ----------------------------------------------------

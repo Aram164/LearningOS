@@ -13,9 +13,8 @@ This layer is **interpretation, not stored truth**:
 - Nothing here writes canonical data, touches rebuilt views, or calls
   gateway capabilities. Semantic mutation proposals carry evidence and are
   validated before admission; only Aram authorizes them.
-- The evaluator lives at `tools/learning_os/derive/semantics/`. The producer
-  (`genout.projection`) keeps answering derivations per row; the contract
-  owns their meaning so agents read one declared layer.
+- This contract owns the meaning of derived judgments; implementations and
+  their tests are mapped in [semantics](developer/components/semantics.md).
 
 ## Predicates (Phase 1)
 
@@ -61,8 +60,7 @@ layer reverts cleanly — canonical data is untouched by every phase.
 
 ## Policy queries (Phase 1.5)
 
-Predicates own judgments; `tools/learning_os/derive/semantics/policy.py` owns the
-query surface agents program against: one rule name in, one structured
+Predicates own judgments; the policy-query surface accepts one rule name in, one structured
 `PolicyDecision` out — a normalized verdict (`allow`, `deny`, `defer`,
 `needs-review`) plus the reasons behind it. `defer` is not `deny`: a
 deferred critique point may return with authorization, while a denied
@@ -98,9 +96,8 @@ prospective claims are bound at admission: a `module.plan.import` or
 `unit.plan.revise` that creates, repairs, or removes a covers edge carries
 per-claim evidence or refuses before apply. The gateway persists the admitted records
 (`admitted_by` request binding, `supersedes` repair chain) in the same
-transaction as the canonical mutation. Readers:
-`tools/learning_os/derive/semantics/lineage.py`, proven by
-`tests/test_semantic_lineage.py`.
+transaction as the canonical mutation. Implementation and pinning tests:
+[semantics](developer/components/semantics.md).
 
 Prospective admission is shared by plan import, unit revision and evidence-bearing
 `route.patch`. Coverage or material identity changes require admitted evidence;
@@ -131,12 +128,10 @@ Detectors propose investigations with rationale and evidence. Aram alone
 records explicit attention decisions through `los goal`: `authorized` means
 intent to act, never completion, and remains detectable. Reject requires a
 note. Reject, defer and close suppress that exact occurrence; a dated deferral
-reappears when due. The proposal lifecycle remains in
-`tools/learning_os/derive/semantics/goals.py`; decisions live in
+reappears when due. The proposal lifecycle is derived; decisions live in
 `operations/goal-ledger.yaml`.
 
-`tools/learning_os/derive/semantics/claim_status.py` owns claim interpretation
-for scans, admission and workflow reads. Lineage remains the sole freshness
+Claim interpretation is shared by scans, admission and workflow reads. Lineage remains the sole freshness
 predicate. A judgment basis binds statement, evidence, judge and admission,
 excluding restamp/read shape. A stale occurrence additionally binds relevant
 current drift and blocking assumptions, excluding clocks, unrelated snapshots
@@ -181,11 +176,7 @@ full JSON retains their findings marked `quiet`, and route claim facts remain
 visible. Silent fixes supply no measurement. A deliberate detector change may
 reset its measurement window.
 
-Readers: `tools/learning_os/derive/semantics/goals.py`,
-`tools/learning_os/derive/semantics/claim_audits.py` and
-`tools/learning_os/derive/semantics/scan.py`. Tests:
-`tests/test_claim_status_audits.py`, `tests/test_intelligence_scan.py`,
-`tests/test_goal_proposals.py` and `tests/test_goal_select.py`.
+Implementation and pinning tests: [semantics](developer/components/semantics.md).
 
 ## Agent tasks (Phase 4, amended: no tracking, no costs)
 
@@ -206,9 +197,8 @@ mutation, and never for acquisitions whose content identity is unproved.
 Static dispatch applies policy vetoes — unpublished material never leaves
 the repository, model-only steps refuse deterministic executors — and the
 first feasible executor wins. No prices, no telemetry, no learning:
-nothing here tracks what tasks cost or how models perform. Readers:
-`tools/learning_os/derive/semantics/tasks.py`, proven by
-`tests/test_agent_tasks.py`.
+nothing here tracks what tasks cost or how models perform. Implementation:
+[semantics](developer/components/semantics.md).
 
 ## Context dossiers (Phase 5)
 
@@ -228,14 +218,11 @@ sitting, and the single top-ranked goal cluster (best-effort, read-only;
 seeing it files nothing) as `context://<unit-id>/resume-dossier@<digest>`,
 resolved from the pointer, the last result, or the last touch, in that
 labeled order.
-The resume builder is `tools/learning_os/derive/projection/resume_dossier.py`, proven by
-`tests/test_resume_dossier.py`; `los resume` renders its result without storing
-a cache file. Semantic dossiers live under `generated/dossiers/`, covered by
-the existing no-hand-edit path — no canonical file may reference them. Readers:
-`tools/learning_os/derive/semantics/dossiers.py`, proven by
-`tests/test_context_dossiers.py`. Served by the read-only
-`los dossier UNIT_ID` caller (`tools/learning_os/app/handlers/resume.py`,
-proven by `tests/test_unit_dossier_command.py`).
+`los resume` renders its result without storing a cache file. Semantic dossiers
+live under `generated/dossiers/`, covered by the existing no-hand-edit path;
+no canonical file may reference them. The read-only `los dossier UNIT_ID`
+serves a semantic dossier. Implementation and tests: [semantics](developer/components/semantics.md)
+and [projection](developer/components/projection.md).
 
 ## Proof-carrying change (Phase 6, hardened: claims, not verdicts)
 
@@ -261,9 +248,8 @@ clean. Anything else returns conflict, replan, or deny, never an
 overwrite.
 Conflicting writes cannot both succeed: the second read loses its
 snapshot race by construction. The gateway still applies; the envelope
-is preflight, and the snapshot guard stays the final word. Readers:
-`tools/learning_os/derive/semantics/changes.py`, proven by
-`tests/test_proof_carrying_change.py`.
+is preflight, and the snapshot guard stays the final word. Implementation:
+[semantics](developer/components/semantics.md).
 
 <!-- los:reference {"kind": "command", "text": "los observe"} -->
 Asymmetric admission: proof-carrying assumes an *untrusted* producer, so
@@ -303,7 +289,7 @@ An admitted remote envelope still asserts its full snapshot and intent.
 Until 2026-09-13 this paragraph described a three-capability allowlist
 that the code and WORKFLOWS had already outgrown; a contract that
 disagrees with its enforcement is the failure this document exists to
-prevent. Proven by `tests/test_observation_gesture.py`.
+prevent. Implementation and parity tests: [operation pipeline](developer/components/operation-pipeline.md).
 
 ## Intelligence scan
 
@@ -325,11 +311,9 @@ older publications gain no invented historical judgments. Question, inspection,
 and correction counts have no
 observable source inside the repository and those detectors stay
 caller-fed: a live caller counts ephemerally
-(`session_counts.SessionCounts`, in memory only, never persisted) and
+(in memory only, never persisted) and
 hands the counts via `--feed` or `ScanInput` fields; an empty feed
-behaves exactly like no feed. Readers:
-`tools/learning_os/derive/semantics/scan.py`, proven by
-`tests/test_intelligence_scan.py`.
+behaves exactly like no feed. Implementation: [semantics](developer/components/semantics.md).
 
 The scan also checks declared `file:` evidence against current in-repository
 bytes and `manifest:` evidence against the current registered checksum.
@@ -341,18 +325,11 @@ review. Scanning reports candidates; it never rewrites the lineage ledger.
 
 ## Verified Operator Questions
 
-~20 trial records under `tests/fixtures/verified_operator_questions/`
-(15 examples, 5 held out), run by
-`tests/test_verified_operator_questions.py`. Each record carries public
-task facts (`id`, `class`, `question`, `notes`) plus an evaluator-side
-`reference` (the `procedure`, the single-op answer key, and the
-adjudicated-equivalent procedures). Examples prove the predicates
-answer; held-out questions score as eval and are never illustrated — a
-leaked held-out id fails the suite. Per-model question-to-procedure
-scoring (format 2: the model submits a structured procedure and answer
-against the public package only) runs outside the suite via
-`tools/evaluate_operator_questions.py`, proven by
-`tests/test_model_question_scoring.py`.
+Verified operator questions separate public task facts from evaluator-only
+reference procedures and answer keys. Examples demonstrate behavior; held-out
+questions score as evaluation and must never be illustrated or leaked. The
+model submits a structured procedure and answer against the public package only.
+Evaluation mechanics and pinning tests live in [semantics](developer/components/semantics.md).
 
 Before scoring an accepted alternative's answer, the evaluator executes
 that procedure and checks its result against the key. An unexecutable or
@@ -362,7 +339,7 @@ procedures outside the adjudicated set remain `unadjudicated`.
 
 ## Contract version
 
-`CONTRACT_VERSION` in `tools/learning_os/derive/semantics/predicates.py` is
+The semantic contract version is
 currently **3**. Lineage sidecars (Phase 2) cite it so "what goes stale if
 the contract changes" stays answerable. A bump must be a deliberate diff
 with updated predicates, fixtures, and lineage.
@@ -388,9 +365,8 @@ manifest contract is a separate version and did not move with it.
 27 predicates
 <!-- /los:generated -->
 
-Phase 1 (contract + VOQs): predicates end-to-end with registry plus
-`evaluate()` entry point, proven by `tests/test_semantic_contract.py` and
-the VOQ suite. Phase 1.5 adds the policy-query envelope; Phase 2 adds
+Phase 1 (contract + VOQs): predicates end-to-end with registry and evaluation
+entry point; implementation and tests are mapped in [semantics](developer/components/semantics.md). Phase 1.5 adds the policy-query envelope; Phase 2 adds
 lineage above. Full vision and work plan:
 `work/proposals/intelligence-plane-plan.md`; phase records:
 `work/proposals/intelligence-plane-phase0-record.md`,

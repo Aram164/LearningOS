@@ -29,7 +29,7 @@ It is not primarily:
 
 It *does* include a deliberately minimal operational layer (coordination + module records), because the alternative — operational facts leaking into notes and hand-maintained status files — is the drift disease this redesign eliminates.
 
-**Operator independence:** this document defines *what the system is* — canonical artifacts, layout, ownership, lifetimes, routing, generated views, invariants. It assumes no particular operator. The current operator is Claude, whose behavior is defined solely in `CLAUDE.md`; any capable agent, application, or human could operate the repository from the same contracts.
+**Operator independence:** this document defines *what the system is* — canonical artifacts, layout, ownership, lifetimes, routing, generated views, invariants. It assumes no particular operator. Operator behavior enters through `OPERATOR.md`; platform adapters route assigned tasks and `OPERATOR-POLICY.md` holds the shared deeper policy; any capable agent, application, or human could operate the repository from the same contracts.
 
 ---
 
@@ -108,11 +108,8 @@ Produced by the operator through reasoning, never canonical: study plans, source
 
 ### 2.7 Enforced operation boundary
 
-[ADR-018](adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md)
-records the operation boundary and enforcement decisions. The shared pipeline
-is `tools/learning_os/app/pipeline.py`; `pyproject.toml` declares the enforced
-package layers, and `tests/architecture/` holds the enforcement inventories and
-ratchets. These references complement the artifact ownership model here.
+Implementation boundaries and their checks are mapped in
+[the developer codemap](developer/CODEMAP.md). ADR-018 remains binding.
 
 ---
 
@@ -174,8 +171,9 @@ authored repository and interface as independent Git repositories.
 ```text
 repository/
 ├── system/                normative prose, contracts, schemas, skills and templates
-│   ├── *.md               16 documents — indexed in system/contracts/normative-corpus.yaml
+│   ├── *.md               18 documents — indexed in system/contracts/normative-corpus.yaml
 │   ├── adr/               decision records — indexed in the same file
+│   ├── developer/         developer routing, architecture map and component pages
 │   ├── contracts/         machine-checked declarations — see contract-register.yaml
 │   ├── procedures/        executable procedure transcripts (PLAN D11)
 │   ├── schema/            stored-record schemas — fingerprinted by data-contract.yaml
@@ -246,16 +244,6 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
 | Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
 
-Shared stage material descriptions are owned by the existing module source-map
-route. A stored study-map resource can name `material_ref: {route_id, inherit}`
-instead of repeating selected fields. The explicit field list preserves absent
-fields and stage-specific overrides; priority, action kind, resource identity,
-feedback and progress stay stage-owned. The loader expands references within
-the same module and unit, refusing missing or ambiguous routes and overlapping
-inherited/local fields. Runtime consumers and the manifest declared in
-`system/contracts/manifest-contract.yaml` retain their complete expanded
-shape. Editing context exposes the compact shape with its route
-definitions once; ordinary state saves preserve that storage form.
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
@@ -267,6 +255,13 @@ definitions once; ordinary state saves preserve that storage form.
 | External material not yet registered | `LearningOS/materials/_unsorted/` | temporary; registered then moved |
 | Code repositories | `LearningOS/projects/<name>/` | untouched internally |
 | Generated outputs | `generated/` | fixed names, gitignored |
+
+Shared stage material descriptions are owned by the existing module source-map
+route. A stored study-map resource can name `material_ref: {route_id, inherit}`
+instead of repeating selected fields. The explicit field list preserves absent
+fields and stage-specific overrides; priority, action kind, resource identity,
+feedback and progress stay stage-owned.
+Implementation: [loading component](developer/components/loading.md).
 
 **Rules:**
 
@@ -672,7 +667,7 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 16. Git remains the history of semantic evolution; `generated/` is gitignored.
 17. Migration must preserve original content before normalization.
 18. A note's identity survives normal evolution; identity changes (split, merge, replacement, re-scoping) are explicit, approved events with a supersession trail.
-19. The repository defines what the system is; operator-specific behavior lives only in the operator contract (`CLAUDE.md` for Claude).
+19. The repository defines what the system is; operator behavior follows OPERATOR.md and OPERATOR-POLICY.md; platform adapters route tasks without adding authority.
 20. Every unit belongs to exactly one module; an optional component belongs to
     that same module.
 21. A unit's knowledge map and complete material menu remain usable without a
@@ -747,17 +742,9 @@ or action-ledger session protocol in ADR-018.
 
 ## Gate B — transactional canonical writes
 
-Every declared canonical mutation now passes through `TransactionService`.
-The service applies one bounded write set, checks artifact-level expected
-revisions, validates the resulting repository, republishes disposable views,
-and records exactly one append-only receipt under
-`operations/transactions/`. A failed stage rolls the complete write set back.
-Interfaces discover the executable catalogue in
-`system/contracts/capabilities.yaml`; they do not invent write paths.
-
-Artifact revisions are coordination tokens, not replacements for Git history.
-Revision zero is implicit for authored records that have not yet been changed
-through the transaction service.
+Canonical mutations use the governed transaction boundary; interfaces never invent
+write paths. Implementation, rollback and receipt guarantees:
+[transactions component](developer/components/transactions.md).
 
 ## First-class Projects
 
@@ -767,5 +754,4 @@ workstreams, or nested steps. Project relationships are explicit records under
 `projects/relations/`; aliases preserve old deep links during compatibility
 gates. The manifest projection declared in `system/contracts/manifest-contract.yaml`
 exposes Projects together with
-Core-owned Review and Garden state. Projection changes remain producer-owned
-and must be mirrored in the UI contract lock in the same release.
+Core-owned Review and Garden state. Producer/consumer change mechanics: [projection component](developer/components/projection.md).

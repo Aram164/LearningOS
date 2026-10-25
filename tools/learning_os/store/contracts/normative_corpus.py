@@ -64,7 +64,8 @@ SCHEMA_RELATIVE = "system/contracts/normative-corpus.schema.json"
 #: demand a warning gate the contract does not set, and drop the qualification
 #: on which units owe a study map. Covering only the top-level documents left
 #: the drift where nothing was looking.
-CORPUS_GLOBS = ("AGENTS.md", "README.md", "system/*.md", "system/adr/*.md", "system/skills/*/SKILL.md", "system/procedures/*.md")
+CORPUS_GLOBS = ("AGENTS.md", "README.md", "system/*.md", "system/adr/*.md", "system/skills/*/SKILL.md", "system/procedures/*.md",
+                "system/developer/*.md", "system/developer/components/*.md")
 
 RETIRED_STATUSES = frozenset({"superseded", "frozen"})
 
@@ -81,6 +82,7 @@ class Document:
     authority: str
     owner: str
     summary: str
+    audience: str
     supersedes: tuple[str, ...] = ()
     amends: tuple[str, ...] = ()
     applies_to: tuple[str, ...] | None = None
@@ -91,6 +93,7 @@ class Corpus:
     corpus_version: int
     entrypoint: str
     documents: tuple[Document, ...]
+    developer_entrypoint: str
 
     #: Derived, never stored — see the module docstring.
     superseded_by: dict[str, tuple[str, ...]] = field(default_factory=dict)
@@ -140,6 +143,7 @@ def load(root: Path) -> Corpus:
             authority=str(entry["authority"]),
             owner=str(entry["owner"]),
             summary=str(entry["summary"]).strip(),
+            audience=str(entry["audience"]),
             supersedes=tuple(entry.get("supersedes") or ()),
             amends=tuple(entry.get("amends") or ()),
             applies_to=tuple(entry["applies_to"]) if "applies_to" in entry else None,
@@ -150,6 +154,7 @@ def load(root: Path) -> Corpus:
         corpus_version=int(raw["corpus_version"]),
         entrypoint=str(raw["entrypoint"]),
         documents=documents,
+        developer_entrypoint=str(raw["developer_entrypoint"]),
     )
     corpus.superseded_by = _reverse(documents, "supersedes")
     corpus.amended_by = _reverse(documents, "amends")
@@ -328,25 +333,26 @@ def check(root: Path) -> list[CorpusIssue]:
                     doc.path,
                 ))
 
-    entry = by_path.get(corpus.entrypoint)
-    if entry is None:
-        issues.append(CorpusIssue(
-            "ENTRYPOINT",
-            f"declared entry point '{corpus.entrypoint}' is not indexed",
-            CORPUS_RELATIVE,
-        ))
-    else:
+    for audience, declared in (("operator", corpus.entrypoint),
+                               ("developer", corpus.developer_entrypoint)):
+        entry = by_path.get(declared)
+        if entry is None:
+            issues.append(CorpusIssue(
+                "ENTRYPOINT", f"declared {audience} entry point '{declared}' is not indexed",
+                CORPUS_RELATIVE))
+            continue
         if entry.status != "current":
             issues.append(CorpusIssue(
-                "ENTRYPOINT",
-                f"entry point is '{entry.status}', not 'current'", entry.path))
+                "ENTRYPOINT", f"{audience} entry point is '{entry.status}', not 'current'",
+                entry.path))
         if entry.authority != "binding":
             issues.append(CorpusIssue(
-                "ENTRYPOINT",
-                f"entry point has authority '{entry.authority}'; the one "
-                "document every operator enters through must bind",
-                entry.path,
-            ))
+                "ENTRYPOINT", f"{audience} entry point has authority '{entry.authority}'; "
+                "the entry document must bind", entry.path))
+        if entry.audience not in {audience, "both"}:
+            issues.append(CorpusIssue(
+                "ENTRYPOINT", f"{audience} entry point has incompatible audience "
+                f"'{entry.audience}'", entry.path))
 
     return issues
 
